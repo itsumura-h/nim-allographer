@@ -1,7 +1,7 @@
 import unittest, json
-include ../src/generators
+include allographer
+import ../src/generators
 
-include ../src/grammars
 
 suite "selectSql":
   test "select *":

@@ -1,8 +1,8 @@
 import db_sqlite, db_mysql, db_postgres, json
-import builders
-import generators
 from strformat import `&`
 from strutils import parseInt
+import builders
+import generators
 
 
 ## ==================================================

@@ -12,4 +12,5 @@ backend       = "cpp"
 
 requires "nim >= 1.0.0"
 
-skipDirs = @["docker", "tests"]
+skipDirs = @["coverage", "docker", "tests"]
+skipExt = @["sh"]

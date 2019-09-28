@@ -1,0 +1,10 @@
+FROM nimlang/nim:alpine
+
+RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositories
+RUN apk update && \
+    apk upgrade --no-cache && \
+    apk add --no-cache libpq ca-certificates openssl sqlite pcre bsd-compat-headers lcov && \
+    update-ca-certificates
+RUN git config --global http.sslVerify false
+RUN nimble install -y coco
+WORKDIR /home/www

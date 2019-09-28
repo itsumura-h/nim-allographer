@@ -3,6 +3,11 @@ allographer
 
 A Nim query builder library inspired by [Laravel/PHP](https://readouble.com/laravel/6.0/en/queries.html) and [Orator/Python](https://orator-orm.com)
 
+## Install
+```
+nimble install https://github.com/itsumura-h/nim-allographer
+```
+
 ## How to use
 ### SELECT
 ```
@@ -10,6 +15,8 @@ import db_sqlite
 import allographer
 
 let db = open("db.sqlite3", "", "", "")
+# let db = open("rdb:5432","user","password","db_name") # in PostgreSQL
+# let db = open("rdb:3306","user","password","db_name") # in MySQL
 
 var result = table("users")
             .select("id", "email", "name")
@@ -26,6 +33,29 @@ echo result
     @["14", "user14@gmail.com", "user14"],
     @["15", "user15@gmail.com", "user15"]
 ]
+```
+```
+let resultRow = table("users").select().where("id", "=", 3).get(db)
+echo resultRow
+
+>> SELECT * FROM users WHERE id = 3
+>> @[
+  @["3", "user3", "user3@gmail.com", "246 Ferguson Village Apt. 582\nNew Joshua, IL 24200", "$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny", "$2a$10$gmKpgtO535lkw0eAcGiRye", "2012-11-24", "2", "2019-09-26 19:11:28.159367", "2019-09-26 19:11:28.159369"]
+]
+```
+```
+let resultRow = table("users").select("id", "name", "email").where("id", ">", 5).first(db)
+echo resultRow
+
+>> SELECT id, name, email FROM users WHERE id > 5
+>> @["6", "user6", "user6@gmail.com"]
+```
+```
+let resultRow = table("users").find(3, db)
+echo resultRow
+
+>> SELECT * FROM users WHERE id = 3
+>> @["3", "user3", "user3@gmail.com", "246 Ferguson Village Apt. 582\nNew Joshua, IL 24200", "$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny", "$2a$10$gmKpgtO535lkw0eAcGiRye", "2012-11-24", "2", "2019-09-26 19:11:28.159367", "2019-09-26 19:11:28.159369"]
 ```
 ```
 let result = table("users")
@@ -46,16 +76,29 @@ echo result
 ]
 ```
 ```
-let resultRow = table("users").find(3, db)
-echo resultRow
+let result = table("users")
+            .select("users.name", "users.auth_id")
+            .join("auth", "auth.id", "=", "users.auth_id")
+            .where("users.auth_id", "=", 1)
+            .where("users.id", "<", 5)
+            .get(db)
+echo result
 
->> SELECT * FROM users WHERE id = 3
->> @["3", "user3", "user3@gmail.com", "246 Ferguson Village Apt. 582\nNew Joshua, IL 24200", "$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny", "$2a$10$gmKpgtO535lkw0eAcGiRye", "2012-11-24", "2", "2019-09-26 19:11:28.159367", "2019-09-26 19:11:28.159369"]
+>> SELECT users.name, users.auth_id FROM users JOIN auth ON auth.id = users.auth_id WHERE users.auth_id = 1 AND users.id < 5
+>> @[
+  @["user1", "1"],
+  @["user2", "1"],
+  @["user4", "1"]
+]
 ```
+
 ### INSERT
 ```
 table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).exec(db)
 
+>> INSERT INTO users (name, email) VALUES ("John", "John@gmail.com")
+```
+```
 table("users").insert(
   [
     %*{"name": "John", "email": "John@gmail.com", "address": "London"},
@@ -65,6 +108,9 @@ table("users").insert(
 )
 .exec(db)
 
+>> INSERT INTO users (name, email, address) VALUES ("John", "John@gmail.com", "London"), ("Paul", "Paul@gmail.com", "London"), ("George", "George@gmail.com", "London")
+```
+```
 table("users").insertDifferentColumns(
   [
     %*{"name": "John", "email": "John@gmail.com", "address": "London"},
@@ -73,6 +119,10 @@ table("users").insertDifferentColumns(
   ]
 )
 .exec(db)
+
+>> INSERT INTO users (name, email, address) VALUES ("John", "John@gmail.com", "London")
+>> INSERT INTO users (name, email, address) VALUES ("Paul", "Paul@gmail.com", "London")
+>> INSERT INTO users (name, birth_date, address) VALUES ("George", "1960-1-1", "London")
 ```
 
 ### UPDATE

@@ -1,7 +1,6 @@
 import unittest, json
+include allographer
 
-include ../src/builders
-include ../src/grammars
 
 suite "select":
   test "buildSelectSql":

@@ -1,5 +1,5 @@
 import unittest, json
-include ../src/grammars
+include allographer
 
 
 suite "table":
