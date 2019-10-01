@@ -15,3 +15,5 @@ nimcache/
 
 coverage/*
 lcov.info
+
+*.sqlite3
