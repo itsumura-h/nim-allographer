@@ -32,10 +32,18 @@ db.exec(
   sql "INSERT INTO auth (id, auth) VALUES (1, \"admin\"), (2, \"user\")"
 )
 
+var sqlParams = ""
 for i in 1..100:
   let salt = genSalt(10)
   let password = hash(&"password{i}", salt)
   let authId = if i mod 2 == 0: 1 else: 2
-  db.exec(
-    sql(&"INSERT INTO users (id, name, email, password, auth_id) VALUES ({i}, \"user{i}\", \"user{i}@gmail.com\", {password}, {auth_id})")
+  if i > 1:
+    sqlParams.add(",")
+
+  sqlParams.add(
+    &" (\"user{i}\", \"user{i}@gmail.com\", \"{password}\", {auth_id})"
   )
+
+var sqlString = &"INSERT INTO users (name, email, password, auth_id) VALUES{sqlParams}"
+db.exec(sql sqlString)
+db.close()
