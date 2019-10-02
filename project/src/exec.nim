@@ -28,3 +28,42 @@ proc find*(thisArg: RDB, id: int, db: proc): seq =
   echo this.sqlString
   result = db.getRow(sql this.sqlString)
   defer: db.close()
+
+
+## ==================== INSERT ====================
+
+proc insert*(this: RDB, items: JsonNode): RDB =
+  this.sqlStringSeq.add(
+    this
+    .insertSql()
+    .insertValueSql(items)
+    .sqlString
+  )
+  return this
+
+proc insert*(this: RDB, rows: openArray[JsonNode]): RDB =
+  this.sqlStringSeq.add(
+    this
+    .insertSql()
+    .insertValuesSql(rows)
+    .sqlString
+  )
+  return this
+
+proc insertDifferentColumns*(this: RDB, rows: openArray[JsonNode]): RDB =
+  for items in rows:
+    this.sqlStringSeq.add(
+      this
+      .insertSql()
+      .insertValueSql(items)
+      .sqlString
+    )
+  return this
+
+proc exec*(this: RDB, db: proc) =
+  let db = db()
+  for sqlString in this.sqlStringSeq:
+    echo sqlString
+    db.exec(sql sqlString)
+
+  defer: db.close()

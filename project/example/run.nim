@@ -30,3 +30,21 @@ echo RDB().table("users").select("id", "email").limit(5).get(db)
 echo RDB().table("users").select("id", "email").limit(5).first(db)
 echo RDB().table("users").find(4, db)
 echo RDB().table("users").select("id", "email").limit(5).find(3, db)
+
+echo ""
+
+RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).exec(db)
+RDB().table("users").insert(
+    [
+        %*{"name": "John", "email": "John@gmail.com"},
+        %*{"name": "Paul", "email": "Paul@gmail.com"}
+    ]
+)
+.exec(db)
+RDB().table("users").insertDifferentColumns(
+    [
+        %*{"name": "John", "email": "John@gmail.com"},
+        %*{"name": "Paul", "password": "PaulPass"}
+    ]
+)
+.exec(db)

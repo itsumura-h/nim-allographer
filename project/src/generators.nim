@@ -87,3 +87,58 @@ proc offsetSql*(this: RDB): RDB =
     this.sqlString.add(&" OFFSET {num}")
 
   return this
+
+
+# ==================== INSERT ====================
+
+proc insertSql*(this: RDB): RDB =
+  let table = this.query["table"].getStr()
+  this.sqlString = &"INSERT INTO {table}"
+  return this
+
+
+proc insertValueSql*(this: RDB, items: JsonNode): RDB =
+  var columns = ""
+  var values = ""
+
+  var i = 0
+  for item in items.pairs:
+    if i > 0:
+      columns.add(", ")
+      values.add(", ")
+    i += 1
+    columns.add(&"{item.key}")
+    values.add(&"{item.val}")
+
+  this.sqlString.add(&" ({columns}) VALUES ({values})")
+  return this
+
+
+proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
+  var columns = ""
+  var rowsCount = 0
+
+  for key, value in rows[0]:
+    if rowsCount > 0:
+      columns.add(", ")
+    rowsCount += 1
+    columns.add(&"{key}")
+
+  var values = ""
+  var valuesCount = 0
+  for items in rows:
+    var valueCount = 0
+    var value = ""
+    for item in items.pairs:
+      if valueCount > 0:
+        value.add(", ")
+      valueCount += 1
+      value.add(&"{item.val}")
+
+    if valuesCount > 0:
+      values.add(", ")
+    valuesCount += 1
+    values.add(&"({value})")
+
+  this.sqlString.add(&" ({columns}) VALUES {values}")
+  return this
