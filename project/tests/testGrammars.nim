@@ -1,77 +1,68 @@
 import unittest, json
-include allographer
-
-
-suite "table":
-  test "table generate JsonNode":
-    check table("users") == %*{"table": "users"}
+import ../src/allographer
+import ../example/conf/database
 
 suite "select":
-  test "select empty arg":
-    check table("users").select()["select"] == %*["*"]
-  test "select with args":
-    check table("users").select("id", "name")["select"] == %*["id", "name"]
+  test "all":
+    var sql = RDB()
+              .table("users")
+              .select("id", "email")
+              .where("name", "=", "John")
+              .where("id", "=", 3)
+              .orWhere("name", "=", "George")
+              .orWhere("name", "=", "Paul")
+              .orWhere("id", "=", 4)
+              .orWhere("id", "=", 5)
+              .join("auth", "auth.id", "=", "auth_id")
+              .join("auth", "auth.id", "=", "auth_id")
+              .limit(10)
+              .offset(5)
+              .checkSql()
+              .sqlString
+    check sql == "SELECT id, email FROM users JOIN auth ON auth.id = auth_id JOIN auth ON auth.id = auth_id WHERE name = \"John\" AND id = 3 OR name = \"George\" OR name = \"Paul\" OR id = 4 OR id = 5 LIMIT 10 OFFSET 5"
 
-suite "where":
-  test "one where, arge string":
-    check table("users").where("name", "=", "John")["where"] == %*[{"column": "name", "symbol": "=", "value": "John"}]
-  test "one where, args int":
-    check table("users").where("id", "=", 1)["where"] == %*[{"column": "id", "symbol": "=", "value": 1}]
-  test "multi where":
-    let query = table("users").where("name", "=", "John").where("id", "=", 1)
-    check query["where"] == %*[
-                                {"column": "name", "symbol": "=", "value": "John"},
-                                {"column": "id", "symbol": "=", "value": 1}
-                              ]
+    test "select * where int and string or int":
+      var sql = RDB()
+                .table("users")
+                .select()
+                .where("id", "=", 3)
+                .where("name", "LIKE", "%user%")
+                .orWhere("id", "=", 4)
+                .checkSql()
+                .sqlString
+      check sql == "SELECT * FROM users WHERE id = 3 AND name LIKE \"%user%\" OR id = 4"
 
-suite "orWhere":
-  test "one orWhere":
-    check table("users").orWhere("name", "=", "John")["or_where"] == %*[{"column": "name", "symbol": "=", "value": "John"}]
+    test "select * id = int":
+      var result = RDB()
+                .table("users")
+                .find(1, db)
+      check result[1] == "user1"
 
-  test "multi orWhere strng":
-    let query = table("users").orWhere("name", "=", "John").orWhere("name", "=", "Paul")
-    check query["or_where"] == %*[
-                                  {"column": "name", "symbol": "=", "value": "John"},
-                                  {"column": "name", "symbol": "=", "value": "Paul"}
-                                ]
-  test "multi orWhere int":
-    let query = table("users").orWhere("name", "=", "John").orWhere("id", "=", 1)
-    check query["or_where"] == %*[
-                                  {"column": "name", "symbol": "=", "value": "John"},
-                                  {"column": "id", "symbol": "=", "value": 1}
-                                ]
+suite "insert":
+  test "insert one":
+    var sql = RDB()
+              .table("users")
+              .insert(%*{"name": "John", "email": "John@gmail.com"})
+              .sqlString
+    check sql == "INSERT INTO users (name, email) VALUES (\"John\", \"John@gmail.com\")"
 
-suite "join":
-  test "one join":
-    let query = table("users").join("auth", "user.auth_id", "=", "auth.id")
-    check query["join"] == %*[{"table": "auth",
-                              "column1": "user.auth_id",
-                              "symbol": "=",
-                              "column2": "auth.id"
-                            }]
+  test "insert multi":
+    var sql = RDB()
+              .table("users")
+              .insert([
+                %*{"name": "John", "email": "John@gmail.com"},
+                %*{"name": "Paul", "email": "Paul@gmail.com"}
+              ])
+              .sqlString
+    check sql == "INSERT INTO users (name, email) VALUES (\"John\", \"John@gmail.com\"), (\"Paul\", \"Paul@gmail.com\")"
 
-  test "multi join":
-    let query = table("users")
-                .join("auth", "user.auth_id", "=", "auth.id")
-                .join("a", "user.a_id", "=", "a.id")
-    
-    check query["join"] == %*[
-                            {"table": "auth",
-                              "column1": "user.auth_id",
-                              "symbol": "=",
-                              "column2": "auth.id"
-                            },
-                            {"table": "a",
-                              "column1": "user.a_id",
-                              "symbol": "=",
-                              "column2": "a.id"
-                            }
-                          ]
-
-suite "offset":
-  test "offset":
-    check table("users").offset(3)["offset"].getInt() == 3
-
-suite "limit":
-  test "limit":
-    check table("users").limit(3)["limit"].getInt() == 3
+  test "inserts":
+    var sql = RDB()
+              .table("users")
+              .inserts([
+                %*{"name": "John"},
+                %*{"email": "Paul@gmail.com"}
+              ])
+              .sqlStringSeq
+    check sql[0] == "INSERT INTO users (name) VALUES (\"John\")"
+    check sql[1] == "INSERT INTO users (email) VALUES (\"Paul@gmail.com\")"

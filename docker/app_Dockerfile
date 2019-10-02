@@ -6,5 +6,5 @@ RUN apk update && \
     apk add --no-cache libpq ca-certificates openssl sqlite pcre bsd-compat-headers lcov && \
     update-ca-certificates
 RUN git config --global http.sslVerify false
-RUN nimble install -y bcrypt cligen
+RUN nimble install -y bcrypt cligen coco
 WORKDIR /home/www

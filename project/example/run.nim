@@ -41,10 +41,19 @@ RDB().table("users").insert(
     ]
 )
 .exec(db)
-RDB().table("users").insertDifferentColumns(
+RDB().table("users").inserts(
     [
         %*{"name": "John", "email": "John@gmail.com"},
         %*{"name": "Paul", "password": "PaulPass"}
     ]
 )
 .exec(db)
+
+
+RDB().table("users").where("id", "=", 2).update(%*{"name": "David"}).exec(db)
+echo RDB().table("users").select().where("name", "=", "David").get(db)
+
+echo ""
+
+RDB().table("users").where("name", "=", "David").delete().exec(db)
+RDB().table("users").delete(3).exec(db)

@@ -1,11 +1,15 @@
 import db_sqlite, db_mysql, db_postgres
-import json, os, strformat, strutils, parsecfg
+import json, parsecfg
 
-import base, builders, generators
+import base, builders
+
+
+proc checkSql*(this: RDB): RDB =
+  return this.selectBuilder()
 
 
 proc get*(this: RDB, db: proc): seq =
-  let sqlString = this.select().sqlString
+  let sqlString = this.selectBuilder().sqlString
   let db = db()
   echo sqlString
   result = db.getAllRows(sql sqlString)
@@ -13,20 +17,18 @@ proc get*(this: RDB, db: proc): seq =
 
 
 proc first*(this: RDB, db: proc): seq =
-  let sqlString = this.select().sqlString
+  let sqlString = this.selectBuilder().sqlString
   let db = db()
   echo sqlString
   result = db.getRow(sql sqlString)
   defer: db.close()
 
 
-proc find*(thisArg: RDB, id: int, db: proc): seq =
-  var this = thisArg.selectSql().fromSql()
-  this.sqlString.add(&" WHERE id = {$id}")
-
+proc find*(this: RDB, id: int, db: proc): seq =
+  let sqlString = this.selectFindBuilder(id).sqlString
   let db = db()
   echo this.sqlString
-  result = db.getRow(sql this.sqlString)
+  result = db.getRow(sql sqlString)
   defer: db.close()
 
 
@@ -34,31 +36,49 @@ proc find*(thisArg: RDB, id: int, db: proc): seq =
 
 proc insert*(this: RDB, items: JsonNode): RDB =
   this.sqlStringSeq.add(
-    this
-    .insertSql()
-    .insertValueSql(items)
-    .sqlString
+    this.insertValueBuilder(items).sqlString
   )
   return this
 
 proc insert*(this: RDB, rows: openArray[JsonNode]): RDB =
   this.sqlStringSeq.add(
-    this
-    .insertSql()
-    .insertValuesSql(rows)
-    .sqlString
+    this.insertValuesBuilder(rows).sqlString
   )
   return this
 
-proc insertDifferentColumns*(this: RDB, rows: openArray[JsonNode]): RDB =
+proc inserts*(this: RDB, rows: openArray[JsonNode]): RDB =
   for items in rows:
     this.sqlStringSeq.add(
-      this
-      .insertSql()
-      .insertValueSql(items)
-      .sqlString
+      this.insertValueBuilder(items).sqlString
     )
   return this
+
+
+## ==================== UPDATE ====================
+
+proc update*(this: RDB, items: JsonNode): RDB =
+  this.sqlStringSeq.add(
+    this.updateBuilder(items).sqlString
+  )
+  return this
+
+
+## ==================== DELETE ====================
+
+proc delete*(this: RDB): RDB =
+  this.sqlStringSeq.add(
+    this.deleteBuilder().sqlString
+  )
+  return this
+
+proc delete*(this: RDB, id: int): RDB =
+  this.sqlStringSeq.add(
+    this.deleteByIdBuilder(id).sqlString
+  )
+  return this
+
+
+## ==================== EXEC ====================
 
 proc exec*(this: RDB, db: proc) =
   let db = db()
@@ -67,3 +87,4 @@ proc exec*(this: RDB, db: proc) =
     db.exec(sql sqlString)
 
   defer: db.close()
+

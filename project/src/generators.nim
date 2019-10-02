@@ -30,6 +30,11 @@ proc fromSql*(this: RDB): RDB =
   return this
 
 
+proc byIdSql*(this: RDB, id: int): RDB =
+  this.sqlString.add(&" WHERE id = {$id}")
+  return this
+
+
 proc joinSql*(this: RDB): RDB =
   if this.query.hasKey("join"):
     for row in this.query["join"]:
@@ -141,4 +146,35 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
     values.add(&"({value})")
 
   this.sqlString.add(&" ({columns}) VALUES {values}")
+  return this
+
+
+## ==================== UPDATE ====================
+
+proc updateSql*(this: RDB): RDB =
+  this.sqlString.add("UPDATE")
+
+  let table = this.query["table"].getStr()
+  this.sqlString.add(&" {table} SET ")
+  return this
+
+
+proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
+  var value = ""
+
+  var i = 0
+  for item in items.pairs:
+    if i > 0:
+      value.add(", ")
+    i += 1
+    value.add(&"{item.key} = {item.val}")
+
+  this.sqlString.add(value)
+  return this
+
+
+## ==================== DELETE ====================
+
+proc deleteSql*(this: RDB): RDB =
+  this.sqlString.add("DELETE")
   return this
