@@ -4,9 +4,11 @@ version       = "0.2.0"
 author        = "Hidenobu Itsumura"
 description   = "A Nim query builder library inspired by Laravel/PHP and Orator/Python"
 license       = "MIT"
-srcDir        = "project/src"
-
+srcDir        = "src"
 backend       = "cpp"
+bin           = @["allographer"] # ここはパッケージの名前によって変わる
+binDir        = "src"
+installExt    = @["nim"]
 
 # Dependencies
 
