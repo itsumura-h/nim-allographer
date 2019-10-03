@@ -1,6 +1,5 @@
 import unittest, json
 import ../src/allographer
-import ../example/conf/database
 
 suite "select":
   test "all":

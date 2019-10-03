@@ -9,16 +9,47 @@ nimble install https://github.com/itsumura-h/nim-allographer
 ```
 
 ## How to use
+### Create config file
+```
+cd /your/working/dir
+allographer makeConf
+```
+`/your/working/dir/conf/database.ini` will be generated
+
+### Edit confing file
+By default, config file is set to use sqlite
+
+```
+[Connection]
+driver: "sqlite"
+conn: "/your/working/dir/db.sqlite3"
+user: ""
+password: ""
+database: ""
+
+[Log]
+display: "true"
+file: "true"
+```
+
+- driver: sqlite/mysql/postgres
+- conn: sqlite file path / host:port
+- user: login user name
+- password: login password
+- database: specify the database
+
+### Load config file
+```
+allographer loadConf
+```
+settings will be applied
+
 ### SELECT
 ```
-import db_sqlite
 import allographer
 
-let db = open("db.sqlite3", "", "", "")
-# let db = open("rdb:5432","user","password","db_name") # in PostgreSQL
-# let db = open("rdb:3306","user","password","db_name") # in MySQL
-
-var result = table("users")
+var result = RDB()
+            .table("users")
             .select("id", "email", "name")
             .limit(5)
             .offset(10)
@@ -35,7 +66,9 @@ echo result
 ]
 ```
 ```
-let resultRow = table("users").select().where("id", "=", 3).get(db)
+import allographer
+
+let resultRow = RDB().table("users").select().where("id", "=", 3).get(db)
 echo resultRow
 
 >> SELECT * FROM users WHERE id = 3
@@ -44,21 +77,28 @@ echo resultRow
 ]
 ```
 ```
-let resultRow = table("users").select("id", "name", "email").where("id", ">", 5).first(db)
+import allographer
+
+let resultRow = RDB().table("users").select("id", "name", "email").where("id", ">", 5).first(db)
 echo resultRow
 
 >> SELECT id, name, email FROM users WHERE id > 5
 >> @["6", "user6", "user6@gmail.com"]
 ```
 ```
-let resultRow = table("users").find(3, db)
+import allographer
+
+let resultRow = RDB().table("users").find(3, db)
 echo resultRow
 
 >> SELECT * FROM users WHERE id = 3
 >> @["3", "user3", "user3@gmail.com", "246 Ferguson Village Apt. 582\nNew Joshua, IL 24200", "$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny", "$2a$10$gmKpgtO535lkw0eAcGiRye", "2012-11-24", "2", "2019-09-26 19:11:28.159367", "2019-09-26 19:11:28.159369"]
 ```
 ```
-let result = table("users")
+import allographer
+
+let result = RDB()
+            .table("users")
             .select("id", "email", "name")
             .where("id", ">", 4)
             .where("id", "<=", 10)
@@ -76,7 +116,10 @@ echo result
 ]
 ```
 ```
-let result = table("users")
+import allographer
+
+let result = RDB()
+            .table("users")
             .select("users.name", "users.auth_id")
             .join("auth", "auth.id", "=", "users.auth_id")
             .where("users.auth_id", "=", 1)
@@ -94,12 +137,16 @@ echo result
 
 ### INSERT
 ```
-table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).exec(db)
+import allographer
+
+RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).exec(db)
 
 >> INSERT INTO users (name, email) VALUES ("John", "John@gmail.com")
 ```
 ```
-table("users").insert(
+import allographer
+
+RDB().table("users").insert(
   [
     %*{"name": "John", "email": "John@gmail.com", "address": "London"},
     %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
@@ -111,7 +158,9 @@ table("users").insert(
 >> INSERT INTO users (name, email, address) VALUES ("John", "John@gmail.com", "London"), ("Paul", "Paul@gmail.com", "London"), ("George", "George@gmail.com", "London")
 ```
 ```
-table("users").insertDifferentColumns(
+import allographer
+
+RDB().table("users").insertDifferentColumns(
   [
     %*{"name": "John", "email": "John@gmail.com", "address": "London"},
     %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
@@ -127,7 +176,10 @@ table("users").insertDifferentColumns(
 
 ### UPDATE
 ```
-table("users")
+import allographer
+
+RDB()
+.table("users")
 .where("id", "=", 100)
 .update(%*{"name": "Mick", "address": "NY"})
 .exec(db)
@@ -137,12 +189,16 @@ table("users")
 
 ### DELETE
 ```
-table("users").delete(1).exec(db)
+import allographer
+
+RDB().table("users").delete(1).exec(db)
 
 >> DELETE FROM users WHERE id = 1
 ```
 ```
-table("users").where("address", "=", "London").delete().exec(db)
+import allographer
+
+RDB().table("users").where("address", "=", "London").delete().exec(db)
 
 >> DELETE FROM users WHERE address = "London"
 ```
