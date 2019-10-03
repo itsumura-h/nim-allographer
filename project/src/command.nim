@@ -1,59 +1,66 @@
-import os, terminal
+import os, terminal, parsecfg, strformat
 
 
-proc conf*(driver="sqlite", path="database", args: seq[string]): int =
-  ## Generate config file
-
+proc makeConf*(args: seq[string]): int =
   var message = ""
-  # driver validate check
-  if driver != "sqlite" and driver != "mysql" and driver != "postgres":
-    message = "Database driver shoule be sqlite or mysql or postgres"
-    styledWriteLine(stdout, fgRed, bgDefault, message, resetStyle)
-    return 1
+  # define path
+  let projectPath = getCurrentDir()
+  let confPath = projectPath & "/config/database.ini"
+  let content = &"""
+[Connection]
+driver: "sqlite"
+conn: "{getCurrentDir()}/db.sqlite3"
+user: ""
+password: ""
+database: ""
 
-  # create conf file path
-  let currentPath = getCurrentDir()
-  var confPath = currentPath & "/" & path & ".nim"
+[Log]
+display: "true"
+file: "true"
+"""
 
-  # create file content
-  var content = ""
-  if driver == "sqlite":
-    content = """
-import allographer
-import db_sqlite
-
-proc db*(): DbConn =
-  open("/home/www/example/db.sqlite3", "", "", "")
-
-export RDB, allographer
-    """
-  elif driver == "mysql":
-    content = """
-import allographer
-import db_mysql
-
-proc db*(): DbConn =
-  open("localhost:3306", "db_user", "db_password", "db_name")
-
-export RDB, allographer
-    """
-  elif driver == "postgres":
-    content = """
-import allographer
-import db_postgres
-
-proc db*(): DbConn =
-  open("localhost:5432", "db_user", "db_password", "db_name")
-
-export RDB, allographer
-    """
-
-  # generate file
   block:
+    createDir(parentDir(confPath))
     let f = open(confPath, fmWrite)
     f.write(content)
     defer:
       f.close()
 
   message = confPath & " is successfully created!!!"
+  styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
+
+proc loadConf*(args: seq[string]): int =
+  var message = ""
+  # define path
+  let projectPath = getCurrentDir()
+  let confPath = projectPath & "/config/database.ini"
+
+  # load conf
+  var conf = loadConfig(confPath)
+  let driver = conf.getSectionValue("Connection","driver")
+  let conn = conf.getSectionValue("Connection","conn")
+  let user = conf.getSectionValue("Connection","user")
+  let password = conf.getSectionValue("Connection","password")
+  let database = conf.getSectionValue("Connection","database")
+
+  if driver != "sqlite" and driver != "mysql" and driver != "postgres":
+    message = "Connection.driver shoule be sqlite or mysql or postgres"
+    styledWriteLine(stdout, fgRed, bgDefault, message, resetStyle)
+    return 1
+
+  let targetPath = getAppDir() & "/database.nim"
+  let content = &"""
+import db_{driver}
+
+proc db*(): DbConn =
+  open("{conn}", "{user}", "{password}", "{database}")
+"""
+  block:
+    let f = open(targetPath, fmWrite)
+    f.write(content)
+    defer:
+      f.close()
+    # removeFile(targetPath)
+
+  message = confPath & " is successfully loaded!!!"
   styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)

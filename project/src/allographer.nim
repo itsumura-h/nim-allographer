@@ -1,8 +1,8 @@
-import base, grammars, exec
-export base, grammars, exec
+import base, grammars, exec, database
+export base, grammars, exec, database
 
 
 when isMainModule:
   import cligen
   import command
-  dispatchMulti([command.conf])
+  dispatchMulti([command.makeConf], [command.loadConf])

@@ -1,7 +1,7 @@
 import db_sqlite, db_mysql, db_postgres
 import json, parsecfg
 
-import base, builders
+import base, builders, logger
 
 
 proc checkSql*(this: RDB): RDB =
@@ -10,24 +10,24 @@ proc checkSql*(this: RDB): RDB =
 
 proc get*(this: RDB, db: proc): seq =
   let sqlString = this.selectBuilder().sqlString
+  logger(sqlString)
   let db = db()
-  echo sqlString
   result = db.getAllRows(sql sqlString)
   defer: db.close()
 
 
 proc first*(this: RDB, db: proc): seq =
   let sqlString = this.selectBuilder().sqlString
+  logger(sqlString)
   let db = db()
-  echo sqlString
   result = db.getRow(sql sqlString)
   defer: db.close()
 
 
 proc find*(this: RDB, id: int, db: proc): seq =
   let sqlString = this.selectFindBuilder(id).sqlString
+  logger(sqlString)
   let db = db()
-  echo this.sqlString
   result = db.getRow(sql sqlString)
   defer: db.close()
 
@@ -83,7 +83,7 @@ proc delete*(this: RDB, id: int): RDB =
 proc exec*(this: RDB, db: proc) =
   let db = db()
   for sqlString in this.sqlStringSeq:
-    echo sqlString
+    logger(sqlString)
     db.exec(sql sqlString)
 
   defer: db.close()

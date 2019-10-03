@@ -1,6 +1,6 @@
-import conf/database
+# import conf/database
+import ../src/allographer
 import json
-import db_sqlite, db_mysql, db_postgres
 
 
 # echo RDB().table("users").get(conn)

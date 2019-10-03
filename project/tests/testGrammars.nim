@@ -66,3 +66,28 @@ suite "insert":
               .sqlStringSeq
     check sql[0] == "INSERT INTO users (name) VALUES (\"John\")"
     check sql[1] == "INSERT INTO users (email) VALUES (\"Paul@gmail.com\")"
+
+suite "update":
+  test "update where":
+    var sql = RDB()
+              .table("users")
+              .where("name", "=", "John")
+              .update(%*{"name": "Paul", "email": "Paul@gmail.com"})
+              .sqlStringSeq
+    check sql[0] == "UPDATE users SET name = \"Paul\", email = \"Paul@gmail.com\" WHERE name = \"John\""
+
+suite "delete":
+  test "delete where":
+    var sql = RDB()
+              .table("users")
+              .where("name", "=", "David")
+              .delete()
+              .sqlStringSeq
+    check sql[0] == "DELETE FROM users WHERE name = \"David\""
+
+  test "delete by id":
+    var sql = RDB()
+              .table("users")
+              .delete(4)
+              .sqlStringSeq
+    check sql[0] == "DELETE FROM users WHERE id = 4"

@@ -1,49 +1,53 @@
 import db_sqlite
-import os, strformat
+import os, strformat, json
 import bcrypt
+import ../src/allographer
 
 # ファイル削除
 os.removeFile("db.sqlite3")
 
-let db = open("db.sqlite3", "", "", "")
-
 # マイグレーション
-db.exec(
+db().exec(
   sql"""
   CREATE TABLE auth(
     id INTEGER PRIMARY KEY,
-    auth varchar
+    auth VARCHAR
   )"""
 )
 
-db.exec(
+db().exec(
   sql"""
   CREATE TABLE users(
     id INTEGER PRIMARY KEY,
-    name varchar,
-    email vachar,
-    password varchar,
+    name VARCHAR,
+    email VARCHAR,
+    password VARCHAR,
+    salt VARCHAR,
+    address VARCHAR,
+    birth_date DATE,
     auth_id INT
   )"""
 )
 
+RDB().table("auth").insert([
+  %*{"auth": "admin"},
+  %*{"auth": "user"}
+])
+.exec(db)
 
-db.exec(
-  sql "INSERT INTO auth (id, auth) VALUES (1, \"admin\"), (2, \"user\")"
-)
 
-var sqlParams = ""
+var insertData: seq[JsonNode]
 for i in 1..100:
   let salt = genSalt(10)
   let password = hash(&"password{i}", salt)
   let authId = if i mod 2 == 0: 1 else: 2
-  if i > 1:
-    sqlParams.add(",")
-
-  sqlParams.add(
-    &" (\"user{i}\", \"user{i}@gmail.com\", \"{password}\", {auth_id})"
+  insertData.add(
+    %*{
+      "name": &"user{i}",
+      "email": &"user{i}@gmail.com",
+      "password": password,
+      "salt": salt,
+      "auth_id": authId
+    }
   )
-
-var sqlString = &"INSERT INTO users (name, email, password, auth_id) VALUES{sqlParams}"
-db.exec(sql sqlString)
-db.close()
+RDB().table("users").insert(insertData).exec(db)
