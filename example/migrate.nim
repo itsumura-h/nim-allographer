@@ -4,7 +4,7 @@ import bcrypt
 import ../src/allographer
 
 # ファイル削除
-os.removeFile("db.sqlite3")
+os.removeFile(getCurrentDir() & "/test.sqlite3")
 
 # マイグレーション
 db().exec(

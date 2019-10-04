@@ -1,1 +1,0 @@
-coco --target "tests/*.nim" --cov 'src' --compiler="--hints:off"

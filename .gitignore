@@ -13,8 +13,7 @@ nimcache/
 !LICENSE
 !app_Dockerfile
 
-project/coverage/*
+coverage/*
 lcov.info
 
 *.sqlite3
-project/config/*

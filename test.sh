@@ -1,0 +1,1 @@
+coco --target "tests/*.nim" --cov 'src/modules' --compiler="--hints:off"
