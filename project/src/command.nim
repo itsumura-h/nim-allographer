@@ -48,7 +48,7 @@ proc loadConf*(args: seq[string]): int =
     styledWriteLine(stdout, fgRed, bgDefault, message, resetStyle)
     return 1
 
-  let targetPath = getAppDir() & "/database.nim"
+  let targetPath = getAppDir() & "/../src/database.nim"
   let content = &"""
 import db_{driver}
 
@@ -63,4 +63,7 @@ proc db*(): DbConn =
     # removeFile(targetPath)
 
   message = confPath & " is successfully loaded!!!"
+  styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
+
+  message = targetPath & " is successfully edited!!!"
   styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)

@@ -6,8 +6,8 @@ description   = "A Nim query builder library inspired by Laravel/PHP and Orator/
 license       = "MIT"
 srcDir        = "src"
 backend       = "cpp"
-bin           = @["allographer"] # ここはパッケージの名前によって変わる
-binDir        = "src"
+bin           = @["attorney"] # ここはパッケージの名前によって変わる
+binDir        = "bin"
 installExt    = @["nim"]
 
 # Dependencies

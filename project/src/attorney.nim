@@ -1,3 +1,5 @@
+import command
+
 when isMainModule:
   import cligen
   import command
