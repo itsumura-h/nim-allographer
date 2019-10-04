@@ -1,4 +1,4 @@
 import db_sqlite
 
 proc db*(): DbConn =
-  open("/home/www/test.sqlite3", "", "", "")
+  open("/home/www/db.sqlite3", "", "", "")

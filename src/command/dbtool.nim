@@ -1,7 +1,7 @@
 import os, terminal, parsecfg, strformat
 
 
-proc makeConf*(args: seq[string]): int =
+proc makeConf(args: seq[string]): int =
   ## Generate config/database.ini for setup DB connection infomations
 
   var message = ""
@@ -31,7 +31,7 @@ file: "true"
   styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
 
 
-proc loadConf*(args: seq[string]): int =
+proc loadConf(args: seq[string]): int =
   ## Apply DB connection informations to framework
 
   var message = ""
@@ -51,8 +51,7 @@ proc loadConf*(args: seq[string]): int =
     styledWriteLine(stdout, fgRed, bgDefault, message, resetStyle)
     return 1
 
-  var targetPath = getAppDir() & "/../modules/database.nim"
-  echo targetPath
+  var targetPath = normalizedPath(getAppDir() & "/../modules/database.nim")
   let content = &"""
 import db_{driver}
 
