@@ -13,7 +13,7 @@ First of all, add nim binary path
 ```
 export PATH=$PATH:~/.nimble/bin
 ```
-After install allographer, "dbtool" command is going to be able to use.  
+After install allographer, "dbtool" command is going to be available.  
 
 ### Create config file
 ```
