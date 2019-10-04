@@ -4,10 +4,10 @@ version       = "0.2.0"
 author        = "Hidenobu Itsumura"
 description   = "A Nim query builder library inspired by Laravel/PHP and Orator/Python"
 license       = "MIT"
-srcDir        = "src"
+srcDir        = "project/src"
 backend       = "cpp"
-bin           = @["attorney"] # ここはパッケージの名前によって変わる
-binDir        = "bin"
+bin           = @["command/attorney"] # ここはパッケージの名前によって変わる
+binDir        = "project/bin"
 installExt    = @["nim"]
 
 # Dependencies

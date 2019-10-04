@@ -9,10 +9,16 @@ nimble install https://github.com/itsumura-h/nim-allographer
 ```
 
 ## How to use
+First of all, add nim binary path
+```
+export PATH=$PATH:~/.nimble/bin
+```
+After install allographer, "attorney" command is going to be used.  
+
 ### Create config file
 ```
 cd /your/working/dir
-allographer makeConf
+attorney makeConf
 ```
 `/your/working/dir/conf/database.ini` will be generated
 
@@ -38,9 +44,14 @@ file: "true"
 - password: login password
 - database: specify the database
 
+From "conn" to "database", these are correspond to args of open proc of Nim std db package
+```
+let db = open(conn, user, password, database)
+```
+
 ### Load config file
 ```
-allographer loadConf
+attorney loadConf
 ```
 settings will be applied
 

@@ -4,8 +4,7 @@ import os, terminal, parsecfg, strformat
 proc makeConf*(args: seq[string]): int =
   var message = ""
   # define path
-  let projectPath = getCurrentDir()
-  let confPath = projectPath & "/config/database.ini"
+  let confPath = getCurrentDir() & "/config/database.ini"
   let content = &"""
 [Connection]
 driver: "sqlite"
@@ -29,26 +28,27 @@ file: "true"
   message = confPath & " is successfully created!!!"
   styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
 
+
 proc loadConf*(args: seq[string]): int =
   var message = ""
   # define path
-  let projectPath = getCurrentDir()
-  let confPath = projectPath & "/config/database.ini"
+  let confPath = getCurrentDir() & "/config/database.ini"
 
   # load conf
   var conf = loadConfig(confPath)
-  let driver = conf.getSectionValue("Connection","driver")
-  let conn = conf.getSectionValue("Connection","conn")
-  let user = conf.getSectionValue("Connection","user")
-  let password = conf.getSectionValue("Connection","password")
-  let database = conf.getSectionValue("Connection","database")
+  let driver = conf.getSectionValue("Connection", "driver")
+  let conn = conf.getSectionValue("Connection", "conn")
+  let user = conf.getSectionValue("Connection", "user")
+  let password = conf.getSectionValue("Connection", "password")
+  let database = conf.getSectionValue("Connection", "database")
 
   if driver != "sqlite" and driver != "mysql" and driver != "postgres":
     message = "Connection.driver shoule be sqlite or mysql or postgres"
     styledWriteLine(stdout, fgRed, bgDefault, message, resetStyle)
     return 1
 
-  let targetPath = getAppDir() & "/../src/database.nim"
+  var targetPath = getAppDir() & "/../../src/modules/database.nim"
+  echo targetPath
   let content = &"""
 import db_{driver}
 
@@ -60,10 +60,14 @@ proc db*(): DbConn =
     f.write(content)
     defer:
       f.close()
-    # removeFile(targetPath)
 
   message = confPath & " is successfully loaded!!!"
   styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
 
   message = targetPath & " is successfully edited!!!"
   styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
+
+
+when isMainModule:
+  import cligen
+  dispatchMulti([makeConf], [loadConf])

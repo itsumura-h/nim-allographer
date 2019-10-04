@@ -6,4 +6,4 @@ services:
       dockerfile: app_Dockerfile
     tty: true
     volumes:
-      - ./project:/home/www
+      - .:/home/www
