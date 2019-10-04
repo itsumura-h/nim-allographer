@@ -1,6 +1,7 @@
-# import conf/database
 import ../src/allographer
+# import allographer
 import json
+import db_sqlite
 
 
 # echo RDB().table("users").get(conn)
@@ -27,6 +28,8 @@ echo RDB().table("users").select("id", "email").limit(5).find(3, db)
 echo ""
 
 RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).exec(db)
+echo RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).execID(db)
+
 RDB().table("users").insert(
     [
         %*{"name": "John", "email": "John@gmail.com"},
@@ -44,6 +47,7 @@ RDB().table("users").inserts(
 
 
 RDB().table("users").where("id", "=", 2).update(%*{"name": "David"}).exec(db)
+echo RDB().table("users").where("id", "=", 2).update(%*{"name": "David"}).execID(db)
 echo RDB().table("users").select().where("name", "=", "David").get(db)
 
 echo ""

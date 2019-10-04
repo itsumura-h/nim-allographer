@@ -1,5 +1,5 @@
 import db_sqlite, db_mysql, db_postgres
-import json, parsecfg
+import json, parsecfg, strutils
 
 import base, builders, logger
 
@@ -88,3 +88,19 @@ proc exec*(this: RDB, db: proc) =
 
   defer: db.close()
 
+proc execID*(this: RDB, db: proc): int64 =
+  let db = db()
+
+  # insert Multi
+  if this.sqlStringSeq.len == 1 and this.sqlString.contains("INSERT"):
+    logger(this.sqlString)
+    result = db.tryInsertID(
+      sql this.sqlString
+    )
+  else:
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString)
+      db.exec(sql sqlString)
+    result = 0   
+
+  defer: db.close()

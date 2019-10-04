@@ -13,14 +13,14 @@ First of all, add nim binary path
 ```
 export PATH=$PATH:~/.nimble/bin
 ```
-After install allographer, "attorney" command is going to be used.  
+After install allographer, "attorney" command is going to be able to use.  
 
 ### Create config file
 ```
-cd /your/working/dir
+cd /your/project/dir
 attorney makeConf
 ```
-`/your/working/dir/conf/database.ini` will be generated
+`/your/project/dir/conf/database.ini` will be generated
 
 ### Edit confing file
 By default, config file is set to use sqlite
@@ -28,7 +28,7 @@ By default, config file is set to use sqlite
 ```
 [Connection]
 driver: "sqlite"
-conn: "/your/working/dir/db.sqlite3"
+conn: "/your/project/dir/db.sqlite3"
 user: ""
 password: ""
 database: ""
@@ -55,6 +55,7 @@ attorney loadConf
 ```
 settings will be applied
 
+## Examples
 ### SELECT
 ```
 import allographer
@@ -79,7 +80,11 @@ echo result
 ```
 import allographer
 
-let resultRow = RDB().table("users").select().where("id", "=", 3).get(db)
+let resultRow = RDB()
+                .table("users")
+                .select()
+                .where("id", "=", 3)
+                .get(db)
 echo resultRow
 
 >> SELECT * FROM users WHERE id = 3
@@ -150,9 +155,29 @@ echo result
 ```
 import allographer
 
-RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).exec(db)
+RDB()
+.table("users")
+.insert(%*{
+  "name": "John",
+  "email": "John@gmail.com"
+})
+.exec(db)
 
 >> INSERT INTO users (name, email) VALUES ("John", "John@gmail.com")
+```
+```
+import allographer
+
+echo RDB()
+.table("users")
+.insert(%*{
+  "name": "John",
+  "email": "John@gmail.com"
+})
+.execID(db)
+
+>> INSERT INTO users (name, email) VALUES ("John", "John@gmail.com")
+>> 1 # ID of new row is return
 ```
 ```
 import allographer
@@ -171,7 +196,7 @@ RDB().table("users").insert(
 ```
 import allographer
 
-RDB().table("users").insertDifferentColumns(
+RDB().table("users").inserts(
   [
     %*{"name": "John", "email": "John@gmail.com", "address": "London"},
     %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
@@ -202,19 +227,26 @@ RDB()
 ```
 import allographer
 
-RDB().table("users").delete(1).exec(db)
+RDB()
+.table("users")
+.delete(1)
+.exec(db)
 
 >> DELETE FROM users WHERE id = 1
 ```
 ```
 import allographer
 
-RDB().table("users").where("address", "=", "London").delete().exec(db)
+RDB()
+.table("users")
+.where("address", "=", "London")
+.delete()
+.exec(db)
 
 >> DELETE FROM users WHERE address = "London"
 ```
 
 ## Todo
-- [ ] Mapping with column and data
+- [ ] Mapping with column and data then return JsonNode
 - [ ] Database migration
 - [ ] Aggregate methods (count, max, min, avg, and sum)
