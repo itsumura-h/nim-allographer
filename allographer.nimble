@@ -7,9 +7,9 @@ license       = "MIT"
 srcDir        = "src"
 backend       = "cpp"
 bin           = @["command/attorney"] # ここはパッケージの名前によって変わる
-binDir        = "bin"
+binDir        = "src/bin"
 installExt    = @["nim"]
-
+skipDirs      = @["command"]
 # Dependencies
 
 requires "nim >= 1.0.0"

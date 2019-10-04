@@ -13,14 +13,14 @@ First of all, add nim binary path
 ```
 export PATH=$PATH:~/.nimble/bin
 ```
-After install allographer, "attorney" command is going to be used.  
+After install allographer, "attorney" command is going to be able to use.  
 
 ### Create config file
 ```
-cd /your/working/dir
+cd /your/project/dir
 attorney makeConf
 ```
-`/your/working/dir/conf/database.ini` will be generated
+`/your/project/dir/conf/database.ini` will be generated
 
 ### Edit confing file
 By default, config file is set to use sqlite
@@ -28,7 +28,7 @@ By default, config file is set to use sqlite
 ```
 [Connection]
 driver: "sqlite"
-conn: "/your/working/dir/db.sqlite3"
+conn: "/your/project/dir/db.sqlite3"
 user: ""
 password: ""
 database: ""

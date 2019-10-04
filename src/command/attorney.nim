@@ -2,6 +2,8 @@ import os, terminal, parsecfg, strformat
 
 
 proc makeConf*(args: seq[string]): int =
+  ## Generate config/database.ini for setup DB connection infomations
+
   var message = ""
   # define path
   let confPath = getCurrentDir() & "/config/database.ini"
@@ -30,6 +32,8 @@ file: "true"
 
 
 proc loadConf*(args: seq[string]): int =
+  ## Apply DB connection informations to framework
+
   var message = ""
   # define path
   let confPath = getCurrentDir() & "/config/database.ini"
@@ -47,7 +51,7 @@ proc loadConf*(args: seq[string]): int =
     styledWriteLine(stdout, fgRed, bgDefault, message, resetStyle)
     return 1
 
-  var targetPath = getAppDir() & "/../../src/modules/database.nim"
+  var targetPath = getAppDir() & "/../modules/database.nim"
   echo targetPath
   let content = &"""
 import db_{driver}
