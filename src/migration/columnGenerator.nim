@@ -31,3 +31,19 @@ proc intGenerator*(name: string, notNull: bool): string =
 
   if notNull:
     result.add(" NOT NULL")
+
+proc boolGenerator*(name: string, notNull: bool): string =
+  let driver = getDriver()
+  if driver == "sqlite":
+    result = &"{name} TINYINT"
+
+  if notNull:
+    result.add(" NOT NULL")
+
+proc blobGenerator*(name: string, notNull:bool): string =
+  let driver = getDriver()
+  if driver == "sqlite":
+    result = &"{name} BLOB"
+
+  if notNull:
+    result.add(" NOT NULL")

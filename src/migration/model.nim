@@ -22,7 +22,7 @@ proc migrate*(this:Model) =
   var i = 0
   var primaryColumn = ""
   for column in this.columns:
-    echo repr column
+    # echo repr column
     if i > 0:
       columnString.add(", ")
     i += 1
@@ -35,6 +35,15 @@ proc migrate*(this:Model) =
     elif column.typ.kind == dbInt:
       columnString.add(
         intGenerator(column.name, column.typ.notNull)
+      )
+    elif column.typ.kind == dbBool:
+      columnString.add(
+        boolGenerator(column.name, column.typ.notNull)
+      )
+    elif column.typ.kind == dbBlob:
+      echo repr column
+      columnString.add(
+        blobGenerator(column.name, column.typ.notNull)
       )
 
   # create table
