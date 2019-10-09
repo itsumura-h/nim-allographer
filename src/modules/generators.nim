@@ -30,8 +30,8 @@ proc fromSql*(this: RDB): RDB =
   return this
 
 
-proc byIdSql*(this: RDB, id: int): RDB =
-  this.sqlString.add(&" WHERE id = {$id}")
+proc selectByIdSql*(this: RDB, id: int): RDB =
+  this.sqlString.add(&" WHERE id = {$id} LIMIT 1")
   return this
 
 
@@ -177,4 +177,8 @@ proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
 
 proc deleteSql*(this: RDB): RDB =
   this.sqlString.add("DELETE")
+  return this
+
+proc deleteByIdSql*(this: RDB, id: int): RDB =
+  this.sqlString.add(&" WHERE id = {id}")
   return this

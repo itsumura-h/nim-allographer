@@ -19,7 +19,7 @@ proc selectFindBuilder*(this: RDB, id: int): RDB =
   return this
           .selectSql()
           .fromSql()
-          .byIdSql(id)
+          .selectByIdSql(id)
 
 
 ## ==================== INSERT ====================
@@ -64,4 +64,4 @@ proc deleteByIdBuilder*(this: RDB, id: int): RDB =
   return this
         .deleteSql()
         .fromSql()
-        .byIdSql(id)
+        .deleteByIdSql(id)

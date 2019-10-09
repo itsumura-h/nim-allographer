@@ -1,29 +1,52 @@
-import db_common
+import db_common, strformat
+import columnGenerator
 
-type
-  Column* = ref object of RootObj
-    name*: string
-    kind*: DbTypeKind
-    primaryKey*: bool
-    foreignKey*: bool
-    foreignTable*: string
+type  Model* = ref object of RootObj
+  name*: string
+  columns*: seq[DbColumn]
 
-  Model* = ref object of RootObj
-    name*: string
-    columns*: seq[Column]
-
-proc new*(this:Model, name:string, columns:varargs[Column]): Model =
+proc new*(this:Model, name:string, columns:varargs[DbColumn]): Model =
   Model(
     name: name,
     columns: @columns
   )
 
-proc new*(this:Column, name:string, kind:DbTypeKind, primaryKey=false,
-          foreignKey=false, foreignTable=""): Column =
-  Column(
-    name:name,
-    kind: kind,
-    primaryKey: primaryKey,
-    foreignKey: foreignKey,
-    foreignTable: foreignTable
-  )
+proc driverTypeError() =
+  let driver = getDriver()
+  if driver != "sqlite" and driver != "mysql" and driver != "postgres":
+    raise newException(OSError, "invalid driver type")
+
+proc migrate*(this:Model) =
+  driverTypeError()
+  var columnString = ""
+  var i = 0
+  var primaryColumn = ""
+  for column in this.columns:
+    # echo repr column
+    if i > 0:
+      columnString.add(", ")
+    i += 1
+
+    if column.typ.kind == dbSerial:
+      primaryColumn = column.name
+      columnString.add(
+        serialGenerator(column.name)
+      )
+    elif column.typ.kind == dbInt:
+      columnString.add(
+        intGenerator(column.name, column.typ.notNull)
+      )
+    elif column.typ.kind == dbBool:
+      columnString.add(
+        boolGenerator(column.name, column.typ.notNull)
+      )
+    elif column.typ.kind == dbBlob:
+      echo repr column
+      columnString.add(
+        blobGenerator(column.name, column.typ.notNull)
+      )
+
+  # create table
+  var charset = getCharset()
+  var query =  &"CREATE TABLE {this.name} ({columnString}, PRIMARY KEY ({primaryColumn})) {charset}"
+  echo query
