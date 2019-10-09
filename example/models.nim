@@ -1,4 +1,4 @@
-import db_common
+import db_common, strformat
 import ../src/migration/schemaBuilders
 
 
@@ -7,7 +7,17 @@ type Model* = ref object of RootObj
   columns*: seq[DbColumn]
 
 proc migrate*(this:Model) =
-  echo repr this
+  # echo repr this
+  var query = ""
+
+  # create table
+  query.add(
+    &"CREATE TABLE {this.name};"
+  )
+  for column in this.columns:
+    echo repr column
+
+  echo query
 
 
 #=================================================================
