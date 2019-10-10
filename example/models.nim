@@ -10,7 +10,8 @@ Model().new(
     Schema().boolean("bool"),
     Schema().binary("binary"),
     Schema().char("char", 4),
-    Schema().char("default char", 4, default=""),
-    Schema().date("date"),
+    Schema().char("default_char", 5, default=""),
+    Schema().char("default_char", 6, default="default"),
+    Schema().date("date", nullable=true),
   ]
 ).migrate()

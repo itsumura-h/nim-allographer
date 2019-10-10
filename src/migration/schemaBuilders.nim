@@ -6,28 +6,28 @@ type Schema* = ref object of RootObj
 proc bigIncrements*(this: Schema, name:string): DbColumn =
   DbColumn(
     name: name,
-    typ: DbType(kind: dbSerial, notNull:true)
+    typ: DbType(kind: dbSerial, notNull: true)
   )
 
-proc bigInteger*(this: Schema, name:string, notNull=true): DbColumn =
+proc bigInteger*(this: Schema, name:string, nullable=false): DbColumn =
   DbColumn(
     name: name,
-    typ: DbType(kind: dbInt, notNull: notNull)
+    typ: DbType(kind: dbInt, notNull: not nullable)
   )
 
-proc binary*(this: Schema, name:string, notNull=true): DbColumn =
+proc binary*(this: Schema, name:string, nullable=false): DbColumn =
   DbColumn(
     name: name,
-    typ: DbType(kind: dbBlob, notNull: notNull)
+    typ: DbType(kind: dbBlob, notNull: not nullable)
   )
 
-proc boolean*(this: Schema, name:string, notNull=true): DbColumn =
+proc boolean*(this: Schema, name:string, nullable=false): DbColumn =
   DbColumn(
     name: name,
-    typ: DbType(kind: dbBool, notNull: notNull)
+    typ: DbType(kind: dbBool, notNull: not nullable)
   )
 
-proc char*(this: Schema, name:string, maxReprLen:int, notNull=true,
+proc char*(this: Schema, name:string, maxReprLen:int, nullable=false,
             default="default null"): DbColumn =
   if default == "default null":
     DbColumn(
@@ -35,7 +35,7 @@ proc char*(this: Schema, name:string, maxReprLen:int, notNull=true,
       typ: DbType(
         kind: dbFixedChar,
         maxReprLen: maxReprLen,
-        notNull: notNull
+        notNull: not nullable
       ),
     )
   else:
@@ -44,19 +44,19 @@ proc char*(this: Schema, name:string, maxReprLen:int, notNull=true,
       typ: DbType(
         kind: dbFixedChar,
         maxReprLen: maxReprLen,
-        notNull: notNull,
+        notNull: not nullable,
         validValues: @[default]
       ),
     )
 
-proc date*(this: Schema, name:string, notNull=true): DbColumn =
+proc date*(this: Schema, name:string, nullable=false): DbColumn =
   DbColumn(
     name: name,
-    typ: DbType(kind: dbDate, notNull: notNull)
+    typ: DbType(kind: dbDate, notNull: not nullable)
   )
 
-proc datetime*(this: Schema, name: string, notNull=true): DbColumn =
+proc datetime*(this: Schema, name: string, nullable=false): DbColumn =
   DbColumn(
     name: name,
-    typ: DbType(kind: dbDatetime, notNull: notNull)
+    typ: DbType(kind: dbDatetime, notNull: not nullable)
   )

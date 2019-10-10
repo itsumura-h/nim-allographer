@@ -14,7 +14,7 @@ proc new*(this:Model, name:string, columns:varargs[DbColumn]): Model =
 proc driverTypeError() =
   let driver = getDriver()
   if driver != "sqlite" and driver != "mysql" and driver != "postgres":
-    raise newException(OSError, "invalid driver type")
+    raise newException(OSError, "invalid DB driver type")
 
 proc migrate*(this:Model) =
   driverTypeError()
@@ -22,7 +22,7 @@ proc migrate*(this:Model) =
   var i = 0
   var primaryColumn = ""
   for column in this.columns:
-    # echo repr column
+    echo repr column
     if i > 0:
       columnString.add(", ")
     i += 1
@@ -41,12 +41,35 @@ proc migrate*(this:Model) =
         boolGenerator(column.name, column.typ.notNull)
       )
     elif column.typ.kind == dbBlob:
-      echo repr column
       columnString.add(
         blobGenerator(column.name, column.typ.notNull)
       )
+    elif column.typ.kind == dbFixedChar:
+      # echo repr column
+      let name = column.name
+      let maxReprLen = column.typ.maxReprLen
+      let notNull = column.typ.notNull
+      let default = column.typ.validValues
+      columnString.add(
+        charGenerator(name, maxReprLen, notNull, default)
+      )
+    elif column.typ.kind == dbDate:
+      columnString.add(
+        dateGenerator(column.name, column.typ.notNull)
+      )
+
+  # primary key
+  var primaryString = ""
+  if primaryColumn.len > 0:
+    primaryString.add(
+      &", PRIMARY KEY ({primaryColumn})"
+    )
 
   # create table
+  var query =  &"CREATE TABLE {this.name} ({columnString}{primaryString})"
+  
   var charset = getCharset()
-  var query =  &"CREATE TABLE {this.name} ({columnString}, PRIMARY KEY ({primaryColumn})) {charset}"
+  query.add(
+    &" {charset}"
+  )
   echo query
