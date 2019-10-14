@@ -1,17 +1,21 @@
 import ../src/migration/model
-import ../src/migration/schemaBuilders
+import ../src/migration/SchemaBuilders
 
 
 Model().new(
-  "users",
+  "test",
   @[
     Schema().bigIncrements("id"),
-    Schema().bigInteger("bigInteger"),
-    Schema().boolean("bool"),
+    Schema().bigInteger("bigInteger_with_default", default="1"),
+    Schema().bigInteger("bigInteger", nullable=true),
     Schema().binary("binary"),
+    Schema().boolean("bool"),
+    Schema().boolean("bool_true", default="true"),
+    Schema().boolean("bool_false", default="false"),
     Schema().char("char", 4),
-    Schema().char("default_char", 5, default=""),
-    Schema().char("default_char", 6, default="default"),
-    Schema().date("date", nullable=true),
+    Schema().char("default_char1", 5, default=""),
+    Schema().char("default_char2", 6, default="default"),
+    # Schema().date("date", nullable=true),
+    # Schema().datetime("datetime")
   ]
 ).migrate()
