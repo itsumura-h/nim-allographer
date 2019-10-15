@@ -63,10 +63,10 @@ proc migrate*(this:Model) =
       columnString.add(
         charGenerator(name, maxLength, nullable, default)
       )
-    # elif column.typ.kind == dbDate:
-    #   columnString.add(
-    #     dateGenerator(column.name, column.typ.notNull)
-    #   )
+    elif column.typ == dbDate:
+      columnString.add(
+        dateGenerator(column.name, column.nullable)
+      )
     # elif column.typ.kind == dbDatetime:
     #   columnString.add(
     #     datetimeGenerator(column.name, column.typ.notNull)

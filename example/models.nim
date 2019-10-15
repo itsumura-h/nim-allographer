@@ -15,7 +15,8 @@ Model().new(
     Schema().char("char", 4),
     Schema().char("default_char1", 5, default=""),
     Schema().char("default_char2", 6, default="default"),
-    # Schema().date("date", nullable=true),
+    Schema().date("date"),
+    Schema().date("date_null", nullable=true),
     # Schema().datetime("datetime")
   ]
 ).migrate()

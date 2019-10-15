@@ -37,7 +37,7 @@ proc boolean*(this: Schema, name:string, nullable=false,
   )
 
 proc char*(this: Schema, name:string, maxLength:int, nullable=false,
-            default="default null"): Column =
+            default="default_value"): Column =
   Column(
     name: name,
     typ: dbFixedChar,
@@ -48,10 +48,11 @@ proc char*(this: Schema, name:string, maxLength:int, nullable=false,
     }
   )
 
-proc date*(this: Schema, name:string, nullable=false): DbColumn =
-  DbColumn(
+proc date*(this: Schema, name:string, nullable=false): Column =
+  Column(
     name: name,
-    typ: DbType(kind: dbDate, notNull: not nullable)
+    typ: dbDate,
+    nullable: nullable
   )
 
 proc datetime*(this: Schema, name: string, nullable=false): DbColumn =

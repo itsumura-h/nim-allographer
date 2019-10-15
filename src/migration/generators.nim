@@ -68,7 +68,7 @@ proc charGenerator*(name:string, maxLength:int, nullable:bool,
     result = &"{name} VARCHAR"
     if default != "default_value":
       result.add(
-        &" DEFAULT {default}"
+        &" DEFAULT '{default}'"
       )
 
   if not nullable:
