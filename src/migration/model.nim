@@ -10,11 +10,15 @@ type
   Column* = ref object
     name*: string
     typ*: DbTypeKind
-    nullable*: bool
-    default*: string
+    isNullable*: bool
+    isUnsigned*: bool
+    isDefault*: bool
+    defaultBool*: bool
+    defaultInt*: int
+    defaultFloat*: float
+    defaultString*: string
     info*: JsonNode
 
-export Column
 
 proc new*(this:Model, name:string, columns:varargs[Column]): Model =
   Model(
@@ -45,28 +49,38 @@ proc migrate*(this:Model) =
       )
     elif column.typ == dbInt:
       columnString.add(
-        intGenerator(column.name, column.nullable, column.default)
+        intGenerator(
+          column.name,
+          column.isNullable,
+          column.isDefault,
+          column.defaultInt
+        )
       )
     elif column.typ == dbBlob:
       columnString.add(
-        blobGenerator(column.name, column.nullable)
+        blobGenerator(column.name, column.isNullable)
       )
     elif column.typ == dbBool:
       columnString.add(
-        boolGenerator(column.name, column.nullable, column.default)
+        boolGenerator(
+          column.name,
+          column.isNullable,
+          column.isDefault,
+          column.defaultBool
+        )
       )
-    elif column.typ == dbFixedChar:
-      let name = column.name
-      let maxLength = parseInt($column.info["maxLength"])
-      let nullable = column.nullable
-      let default = column.default
-      columnString.add(
-        charGenerator(name, maxLength, nullable, default)
-      )
-    elif column.typ == dbDate:
-      columnString.add(
-        dateGenerator(column.name, column.nullable)
-      )
+    # elif column.typ == dbFixedChar:
+    #   let name = column.name
+    #   let maxLength = parseInt($column.info["maxLength"])
+    #   let nullable = column.nullable
+    #   let default = column.default
+    #   columnString.add(
+    #     charGenerator(name, maxLength, nullable, default)
+    #   )
+    # elif column.typ == dbDate:
+    #   columnString.add(
+    #     dateGenerator(column.name, column.nullable)
+    #   )
     # elif column.typ.kind == dbDatetime:
     #   columnString.add(
     #     datetimeGenerator(column.name, column.typ.notNull)

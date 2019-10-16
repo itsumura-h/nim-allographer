@@ -23,31 +23,15 @@ proc serialGenerator*(name:string):string =
   elif driver == "postgres":
     result = &"{name} serial PRIMARY KEY"
 
-proc intGenerator*(name:string, nullable:bool, default:string):string =
+proc intGenerator*(name:string, nullable:bool, isDefault:bool,
+                    default:int):string =
   let driver = util.getDriver()
   if driver == "sqlite":
     result = &"{name} INTEGER"
 
-  if default != "default_value":
+  if isDefault:
     result.add(
       &" DEFAULT {default}"
-    )
-
-  if not nullable:
-    result.add(" NOT NULL")
-
-proc boolGenerator*(name:string, nullable:bool, default:string):string =
-  let driver = util.getDriver()
-  if driver == "sqlite":
-    result = &"{name} TINYINT"
-
-  if default == "false":
-    result.add(
-      &" DEFAULT 0"
-    )
-  elif default == "true":
-    result.add(
-      &" DEFAULT 1"
     )
 
   if not nullable:
@@ -57,6 +41,20 @@ proc blobGenerator*(name:string, nullable:bool):string =
   let driver = util.getDriver()
   if driver == "sqlite":
     result = &"{name} BLOB"
+
+  if not nullable:
+    result.add(" NOT NULL")
+
+proc boolGenerator*(name:string, nullable:bool, isDefault:bool, 
+                    default:bool):string =
+  let driver = util.getDriver()
+  if driver == "sqlite":
+    result = &"{name} TINYINT"
+
+  if isDefault:
+    result.add(
+      &" DEFAULT {default}"
+    )
 
   if not nullable:
     result.add(" NOT NULL")
