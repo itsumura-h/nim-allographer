@@ -6,19 +6,14 @@ type Schema* = ref object
 proc nullable*(cArg: Column): Column =
   var c = cArg
   c.isNullable = true
-  echo repr c
   return c
 
 proc unsigned*(c: Column): Column =
   c.isUnsigned = true
   return c
 
-export
-  nullable,
-  unsigned
 
-# =======================================================
-
+# =============================================================================
 proc bigIncrements*(this: Schema, name:string): Column =
   Column(
     name: name,
@@ -27,6 +22,7 @@ proc bigIncrements*(this: Schema, name:string): Column =
     isUnsigned: true
   )
 
+# =============================================================================
 proc bigInteger*(this: Schema, name:string): Column =
   Column(
     name: name,
@@ -41,12 +37,14 @@ proc bigInteger*(this: Schema, name:string, default:int): Column =
     defaultInt: default
   )
 
+# =============================================================================
 proc binary*(this: Schema, name:string): Column =
   Column(
     name: name,
     typ: dbBlob
   )
 
+# =============================================================================
 proc boolean*(this: Schema, name:string): Column =
   Column(
     name: name,
@@ -61,27 +59,37 @@ proc boolean*(this: Schema, name:string, default:bool): Column =
     defaultBool: default
   )
 
-# proc char*(this: Schema, name:string, maxLength:int, nullable=false,
-#             default="default_value"): Column =
-#   Column(
-#     name: name,
-#     typ: dbFixedChar,
-#     nullable: nullable,
-#     default: default,
-#     info: %*{
-#       "maxLength": maxLength
-#     }
-#   )
+# =============================================================================
+proc char*(this: Schema, name:string, maxLength:int): Column =
+  Column(
+    name: name,
+    typ: dbFixedChar,
+    info: %*{
+    "maxLength": maxLength
+    }
+  )
 
-# proc date*(this: Schema, name:string, nullable=false): Column =
-#   Column(
-#     name: name,
-#     typ: dbDate,
-#     nullable: nullable
-#   )
+proc char*(this: Schema, name:string, maxLength:int, default:string): Column =
+  Column(
+    name: name,
+    typ: dbFixedChar,
+    isDefault: true,
+    defaultString: default,
+    info: %*{
+      "maxLength": maxLength
+    }
+  )
 
-# proc datetime*(this: Schema, name: string, nullable=false): DbColumn =
-#   DbColumn(
-#     name: name,
-#     typ: DbType(kind: dbDatetime, notNull: not nullable)
-#   )
+# =============================================================================
+proc date*(this: Schema, name:string): Column =
+  Column(
+    name: name,
+    typ: dbDate
+  )
+
+# =============================================================================
+proc datetime*(this: Schema, name: string): Column =
+  Column(
+    name: name,
+    typ: dbDatetime
+  )

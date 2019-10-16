@@ -42,49 +42,60 @@ proc migrate*(this:Model) =
       columnString.add(", ")
     i += 1
 
-    if column.typ == dbSerial:
-      primaryColumn = column.name
-      columnString.add(
-        serialGenerator(column.name)
-      )
-    elif column.typ == dbInt:
-      columnString.add(
-        intGenerator(
-          column.name,
-          column.isNullable,
-          column.isDefault,
-          column.defaultInt
+    case column.typ:
+      of dbSerial:
+        primaryColumn = column.name
+        columnString.add(
+          serialGenerator(column.name)
         )
-      )
-    elif column.typ == dbBlob:
-      columnString.add(
-        blobGenerator(column.name, column.isNullable)
-      )
-    elif column.typ == dbBool:
-      columnString.add(
-        boolGenerator(
-          column.name,
-          column.isNullable,
-          column.isDefault,
-          column.defaultBool
+      of dbInt:
+        columnString.add(
+          intGenerator(
+            column.name,
+            column.isNullable,
+            column.isDefault,
+            column.defaultInt
+          )
         )
-      )
-    # elif column.typ == dbFixedChar:
-    #   let name = column.name
-    #   let maxLength = parseInt($column.info["maxLength"])
-    #   let nullable = column.nullable
-    #   let default = column.default
-    #   columnString.add(
-    #     charGenerator(name, maxLength, nullable, default)
-    #   )
-    # elif column.typ == dbDate:
-    #   columnString.add(
-    #     dateGenerator(column.name, column.nullable)
-    #   )
-    # elif column.typ.kind == dbDatetime:
-    #   columnString.add(
-    #     datetimeGenerator(column.name, column.typ.notNull)
-    #   )
+      of dbBlob:
+        columnString.add(
+          blobGenerator(column.name, column.isNullable)
+        )
+      of dbBool:
+        columnString.add(
+          boolGenerator(
+            column.name,
+            column.isNullable,
+            column.isDefault,
+            column.defaultBool
+          )
+        )
+      of dbFixedChar:
+        let name = column.name
+        let maxLength = parseInt($column.info["maxLength"])
+        let isNullable = column.isNullable
+        let isDefault = column.isDefault
+        let default = column.defaultString
+        columnString.add(
+          charGenerator(
+            name,
+            maxLength,
+            isNullable,
+            isDefault,
+            default
+          )
+        )
+      of dbDate:
+        columnString.add(
+          dateGenerator(column.name, column.isNullable)
+        )
+      of dbDatetime:
+        columnString.add(
+          datetimeGenerator(column.name, column.isNullable)
+        )
+      else:
+        echo ""
+      
 
   # primary key
   var primaryString = ""

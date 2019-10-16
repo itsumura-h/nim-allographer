@@ -5,7 +5,7 @@ import ../src/migration/SchemaBuilders
 Model().new(
   "test",
   [
-    # Schema().bigIncrements("id"),
+    Schema().bigIncrements("id"),
     # Schema().bigInteger("bigInteger"),
     # Schema().bigInteger("bigInteger_with_default", default=11),
     # Schema().bigInteger("bigInteger_null").nullable(),
@@ -13,12 +13,13 @@ Model().new(
     # Schema().binary("binary_null").nullable(),
     Schema().boolean("bool"),
     Schema().boolean("bool_true", default=true),
-    Schema().boolean("bool_false").nullable(),
+    Schema().boolean("bool_null").nullable(),
     # Schema().char("char", 4),
-    # Schema().char("default_char1", 5, default=""),
-    # Schema().char("default_char2", 6, default="default"),
+    # Schema().char("char_default", 5, default=""),
+    # Schema().char("char_null", 6).nullable(),
     # Schema().date("date"),
-    # Schema().date("date_null", nullable=true),
-    # Schema().datetime("datetime")
+    # Schema().date("date_null").nullable(),
+    # Schema().datetime("datetime"),
+    # Schema().datetime("datetime_null").nullable()
   ]
 ).migrate()

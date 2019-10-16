@@ -1,5 +1,5 @@
 import strformat
-import util
+import ../util
 
 
 proc getCharset*():string =
@@ -23,15 +23,31 @@ proc serialGenerator*(name:string):string =
   elif driver == "postgres":
     result = &"{name} serial PRIMARY KEY"
 
-proc intGenerator*(name:string, nullable:bool, isDefault:bool,
-                    default:int):string =
+proc intGenerator*(name:string, nullable:bool, default:string):string =
   let driver = util.getDriver()
   if driver == "sqlite":
     result = &"{name} INTEGER"
 
-  if isDefault:
+  if default != "default_value":
     result.add(
       &" DEFAULT {default}"
+    )
+
+  if not nullable:
+    result.add(" NOT NULL")
+
+proc boolGenerator*(name:string, nullable:bool, default:string):string =
+  let driver = util.getDriver()
+  if driver == "sqlite":
+    result = &"{name} TINYINT"
+
+  if default == "false":
+    result.add(
+      &" DEFAULT 0"
+    )
+  elif default == "true":
+    result.add(
+      &" DEFAULT 1"
     )
 
   if not nullable:
@@ -45,26 +61,12 @@ proc blobGenerator*(name:string, nullable:bool):string =
   if not nullable:
     result.add(" NOT NULL")
 
-proc boolGenerator*(name:string, nullable:bool, isDefault:bool, 
-                    default:bool):string =
-  let driver = util.getDriver()
-  if driver == "sqlite":
-    result = &"{name} TINYINT"
-
-  if isDefault:
-    result.add(
-      &" DEFAULT {default}"
-    )
-
-  if not nullable:
-    result.add(" NOT NULL")
-
-proc charGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
+proc charGenerator*(name:string, maxLength:int, nullable:bool,
                     default:string):string =
   let driver = util.getDriver()
   if driver == "sqlite":
     result = &"{name} VARCHAR"
-    if isDefault:
+    if default != "default_value":
       result.add(
         &" DEFAULT '{default}'"
       )
@@ -72,18 +74,18 @@ proc charGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
   if not nullable:
     result.add(" NOT NULL")
 
-proc dateGenerator*(name:string, nullable:bool):string =
-  let driver = util.getDriver()
-  if driver == "sqlite":
-    result = &"{name} DATE"
+# proc dateGenerator*(name:string, nullable:bool):string =
+#   let driver = util.getDriver()
+#   if driver == "sqlite":
+#     result = &"{name} DATE"
 
-  if not nullable:
-    result.add(" NOT NULL")
+#   if not nullable:
+#     result.add(" NOT NULL")
 
-proc datetimeGenerator*(name:string, nullable:bool):string =
-  let driver = util.getDriver()
-  if driver == "sqlite":
-    result = &"{name} DATETIME"
+# proc datetimeGenerator*(name:string, nullable:bool):string =
+#   let driver = util.getDriver()
+#   if driver == "sqlite":
+#     result = &"{name} DATETIME"
 
-  if nullable:
-    result.add(" NOT NULL")
+#   if not nullable:
+#     result.add(" NOT NULL")
