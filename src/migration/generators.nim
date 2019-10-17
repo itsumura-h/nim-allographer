@@ -1,4 +1,4 @@
-import strformat
+import json, strformat
 import util
 
 
@@ -120,23 +120,15 @@ proc floatGenerator*(name:string, maximum:int, digit:int, nullable:bool,
   if not nullable:
     result.add(" NOT NULL")
 
-proc enumGenerator*(name:string, options:varargs[string], nullable:bool,
-                    isDefault:bool, default:string):string =
-  var optionStrings = ""
-  for i, option in options:
-    if i > 0:
-      optionStrings.add(" ,")
-    optionStrings.add(option)
-
-  echo optionStrings
-
+proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool, isDefault:bool, 
+                    default:string):string =
   let driver = util.getDriver()
   if driver == "sqlite":
     result = &"{name} VARCHAR"
   elif driver == "mysql":
-    result = &"{name} ENUM ({optionStrings})"
+    result = &"{name} ENUM"
   elif driver == "postgres":
-    result = &"{name} character"
+    result = &"{name} ENUM"
 
   if isDefault:
     result.add(
@@ -145,3 +137,13 @@ proc enumGenerator*(name:string, options:varargs[string], nullable:bool,
 
   if not nullable:
     result.add(" NOT NULL")
+
+proc enumOptionsGenerator*(options:varargs[JsonNode]):string =
+  var optionStrings = ""
+  for i, option in options:
+    if i > 0:
+      optionStrings.add(", ")
+
+    optionStrings.add($option)
+
+  echo optionStrings

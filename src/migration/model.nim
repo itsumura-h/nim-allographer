@@ -34,13 +34,11 @@ proc driverTypeError() =
 proc migrate*(this:Model) =
   driverTypeError()
   var columnString = ""
-  var i = 0
   var primaryColumn = ""
-  for column in this.columns:
+  for i, column in this.columns:
     echo repr column
     if i > 0:
       columnString.add(", ")
-    i += 1
 
     case column.typ:
       of dbSerial:
@@ -111,14 +109,14 @@ proc migrate*(this:Model) =
           )
         )
       of dbEnum:
-        columnString.add(
-          enumGenerator(
-            column.name,
-            column.info["options"],
-            column.isNullable,
-            column.isDefault,
-            column.defaultString
-          )
+        let columnDifiniton = enumGenerator(
+          column.name,
+          column.isNullable,
+          column.isDefault,
+          column.defaultString
+        )
+        let options = enumOptionsGenerator(
+          column.info["options"].getElems,
         )
       else:
         echo ""

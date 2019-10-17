@@ -28,7 +28,7 @@ Model().new(
     # Schema().double("double_default", 6, 3, default=0.1),
     # Schema().double("double_null", 7, 4).nullable(),
     Schema().enumField("enum", ["a", "b", "c"]),
-    Schema().enumField("enum_default", ["a", "b", "c"], default="a"),
-    Schema().enumField("enum_null", ["a", "b", "c"]).nullable(),
+    Schema().enumField("enum_default", ["d", "e"], default="a"),
+    Schema().enumField("enum_null", ["f", "g"]).nullable(),
   ]
 ).migrate()
