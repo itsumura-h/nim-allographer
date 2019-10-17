@@ -246,6 +246,39 @@ RDB()
 >> DELETE FROM users WHERE address = "London"
 ```
 
+## Migrations
+```
+import allographer
+
+Model().new(
+  "table_name",
+  [
+    Schema().increments("id"),
+    Schema().bigInteger("bigInteger"),
+    Schema().bigInteger("bigInteger_default", default=11),
+    Schema().bigInteger("bigInteger_null").nullable(),
+    Schema().binary("binary"),
+    Schema().binary("binary_null").nullable(),
+    Schema().boolean("bool"),
+    Schema().boolean("bool_default", default=true),
+    Schema().boolean("bool_null").nullable(),
+    Schema().char("char", 4),
+    Schema().char("char_default", 5, default=""),
+    Schema().char("char_null", 6).nullable(),
+    Schema().date("date"),
+    Schema().date("date_null").nullable(),
+    Schema().datetime("datetime"),
+    Schema().datetime("datetime_null").nullable(),
+    Schema().decimal("decimal", 5, 2),
+    Schema().decimal("decimal_default", 6, 3, default=0.1),
+    Schema().decimal("decimal_null", 7, 4).nullable(),
+    Schema().double("double", 5, 1),
+    Schema().double("double_default", 6, 3, default=0.1),
+    Schema().double("double_null", 7, 4).nullable()
+  ]
+).migrate()
+```
+
 ## Todo
 - [ ] Mapping with column and data then return JsonNode
 - [ ] Database migration

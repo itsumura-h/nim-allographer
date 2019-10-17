@@ -85,5 +85,63 @@ proc datetimeGenerator*(name:string, nullable:bool):string =
   if driver == "sqlite":
     result = &"{name} DATETIME"
 
-  if nullable:
+  if not nullable:
+    result.add(" NOT NULL")
+
+proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
+                        isDefault:bool, default:float):string =
+  let driver = util.getDriver()
+  if driver == "sqlite":
+    result = &"{name} NUMERIC"
+  elif driver == "mysql":
+    result = &"{name} DECIMAL({maximum}, {digit})"
+  
+  if isDefault:
+    result.add(
+      &" DEFAULT {default}"
+    )
+
+  if not nullable:
+    result.add(" NOT NULL")
+
+proc floatGenerator*(name:string, maximum:int, digit:int, nullable:bool,
+                      isDefault:bool, default:float):string =
+  let driver = util.getDriver()
+  if driver == "sqlite":
+    result = &"{name} FLOAT"
+  elif driver == "mysql":
+    result = &"{name} DOUBLE ({maximum}, {digit})"
+  
+  if isDefault:
+    result.add(
+      &" DEFAULT {default}"
+    )
+
+  if not nullable:
+    result.add(" NOT NULL")
+
+proc enumGenerator*(name:string, options:varargs[string], nullable:bool,
+                    isDefault:bool, default:string):string =
+  var optionStrings = ""
+  for i, option in options:
+    if i > 0:
+      optionStrings.add(" ,")
+    optionStrings.add(option)
+
+  echo optionStrings
+
+  let driver = util.getDriver()
+  if driver == "sqlite":
+    result = &"{name} VARCHAR"
+  elif driver == "mysql":
+    result = &"{name} ENUM ({optionStrings})"
+  elif driver == "postgres":
+    result = &"{name} character"
+
+  if isDefault:
+    result.add(
+      &" DEFAULT '{default}'"
+    )
+
+  if not nullable:
     result.add(" NOT NULL")

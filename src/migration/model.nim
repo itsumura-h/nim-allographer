@@ -71,18 +71,13 @@ proc migrate*(this:Model) =
           )
         )
       of dbFixedChar:
-        let name = column.name
-        let maxLength = parseInt($column.info["maxLength"])
-        let isNullable = column.isNullable
-        let isDefault = column.isDefault
-        let default = column.defaultString
         columnString.add(
           charGenerator(
-            name,
-            maxLength,
-            isNullable,
-            isDefault,
-            default
+            column.name,
+            parseInt($column.info["maxLength"]),
+            column.isNullable,
+            column.isDefault,
+            column.defaultString
           )
         )
       of dbDate:
@@ -92,6 +87,38 @@ proc migrate*(this:Model) =
       of dbDatetime:
         columnString.add(
           datetimeGenerator(column.name, column.isNullable)
+        )
+      of dbDecimal:
+        columnString.add(
+          decimalGenerator(
+            column.name,
+            parseInt($column.info["maximum"]),
+            parseInt($column.info["digit"]),
+            column.isNullable,
+            column.isDefault,
+            column.defaultFloat
+          )
+        )
+      of dbFloat:
+        columnString.add(
+          floatGenerator(
+            column.name,
+            parseInt($column.info["maximum"]),
+            parseInt($column.info["digit"]),
+            column.isNullable,
+            column.isDefault,
+            column.defaultFloat
+          )
+        )
+      of dbEnum:
+        columnString.add(
+          enumGenerator(
+            column.name,
+            column.info["options"],
+            column.isNullable,
+            column.isDefault,
+            column.defaultString
+          )
         )
       else:
         echo ""
@@ -128,7 +155,7 @@ proc migrate*(this:Model) =
   echo query
   let db = db()
   try:
-    db.exec(sql"drop table test")
+    db.exec(sql"drop table table_name")
   except Exception:
     echo getCurrentExceptionMsg()
 
