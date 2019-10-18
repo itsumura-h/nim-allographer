@@ -120,15 +120,25 @@ proc floatGenerator*(name:string, maximum:int, digit:int, nullable:bool,
   if not nullable:
     result.add(" NOT NULL")
 
-proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool, isDefault:bool, 
-                    default:string):string =
+proc enumOptionsGenerator*(options:varargs[JsonNode]):string =
+  var optionStrings = ""
+  for i, option in options:
+    if i > 0:
+      optionStrings.add(", ")
+    optionStrings.add($option)
+  
+  return optionStrings
+
+proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
+                    isDefault:bool, default:string):string =
+  let optionsString = enumOptionsGenerator(options)
   let driver = util.getDriver()
   if driver == "sqlite":
     result = &"{name} VARCHAR"
   elif driver == "mysql":
-    result = &"{name} ENUM"
+    result = &"{name} ENUM ({optionsString})"
   elif driver == "postgres":
-    result = &"{name} ENUM"
+    result = &"{name} ENUM ({optionsString})"
 
   if isDefault:
     result.add(
@@ -138,12 +148,3 @@ proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool, isDef
   if not nullable:
     result.add(" NOT NULL")
 
-proc enumOptionsGenerator*(options:varargs[JsonNode]):string =
-  var optionStrings = ""
-  for i, option in options:
-    if i > 0:
-      optionStrings.add(", ")
-
-    optionStrings.add($option)
-
-  echo optionStrings

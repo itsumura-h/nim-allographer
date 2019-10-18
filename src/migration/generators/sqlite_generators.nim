@@ -1,34 +1,15 @@
-import strformat
+import json, strformat
 import ../util
 
 
-proc getCharset*():string =
-  let driver = util.getDriver()
-  if driver == "sqlite":
-    result = ""
-  elif driver == "mysql":
-    result = &" DEFAULT CHARSET=utf8mb4"
-  elif driver == "postgres":
-    result = ""
-
-
-# ==================== generate querty ====================
-
 proc serialGenerator*(name:string):string =
-  let driver = util.getDriver()
-  if driver == "sqlite":
-    result = &"{name} INTEGER PRIMARY KEY"
-  elif driver == "mysql":
-    result = &"{name} BIGMINT NOT NULL AUTO_INCREMENT"
-  elif driver == "postgres":
-    result = &"{name} serial PRIMARY KEY"
+  result = &"{name} INTEGER PRIMARY KEY"
 
-proc intGenerator*(name:string, nullable:bool, default:string):string =
-  let driver = util.getDriver()
-  if driver == "sqlite":
-    result = &"{name} INTEGER"
+proc intGenerator*(name:string, nullable:bool, isDefault:bool,
+                    default:int):string =
+  result = &"{name} INTEGER"
 
-  if default != "default_value":
+  if isDefault:
     result.add(
       &" DEFAULT {default}"
     )
@@ -36,56 +17,95 @@ proc intGenerator*(name:string, nullable:bool, default:string):string =
   if not nullable:
     result.add(" NOT NULL")
 
-proc boolGenerator*(name:string, nullable:bool, default:string):string =
-  let driver = util.getDriver()
-  if driver == "sqlite":
-    result = &"{name} TINYINT"
-
-  if default == "false":
-    result.add(
-      &" DEFAULT 0"
-    )
-  elif default == "true":
-    result.add(
-      &" DEFAULT 1"
-    )
-
-  if not nullable:
-    result.add(" NOT NULL")
-
 proc blobGenerator*(name:string, nullable:bool):string =
-  let driver = util.getDriver()
-  if driver == "sqlite":
-    result = &"{name} BLOB"
+  result = &"{name} BLOB"
 
   if not nullable:
     result.add(" NOT NULL")
 
-proc charGenerator*(name:string, maxLength:int, nullable:bool,
+proc boolGenerator*(name:string, nullable:bool, isDefault:bool, 
+                    default:bool):string =
+  result = &"{name} TINYINT"
+
+  if isDefault:
+    result.add(
+      &" DEFAULT {default}"
+    )
+
+  if not nullable:
+    result.add(" NOT NULL")
+
+proc charGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
                     default:string):string =
-  let driver = util.getDriver()
-  if driver == "sqlite":
-    result = &"{name} VARCHAR"
-    if default != "default_value":
-      result.add(
-        &" DEFAULT '{default}'"
-      )
+  result = &"{name} VARCHAR"
+  if isDefault:
+    result.add(
+      &" DEFAULT '{default}'"
+    )
 
   if not nullable:
     result.add(" NOT NULL")
 
-# proc dateGenerator*(name:string, nullable:bool):string =
-#   let driver = util.getDriver()
-#   if driver == "sqlite":
-#     result = &"{name} DATE"
+proc dateGenerator*(name:string, nullable:bool):string =
+  result = &"{name} DATE"
 
-#   if not nullable:
-#     result.add(" NOT NULL")
+  if not nullable:
+    result.add(" NOT NULL")
 
-# proc datetimeGenerator*(name:string, nullable:bool):string =
-#   let driver = util.getDriver()
-#   if driver == "sqlite":
-#     result = &"{name} DATETIME"
+proc datetimeGenerator*(name:string, nullable:bool):string =
+  result = &"{name} DATETIME"
 
-#   if not nullable:
-#     result.add(" NOT NULL")
+  if not nullable:
+    result.add(" NOT NULL")
+
+proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
+                        isDefault:bool, default:float):string =
+  result = &"{name} NUMERIC"
+
+  if isDefault:
+    result.add(
+      &" DEFAULT {default}"
+    )
+
+  if not nullable:
+    result.add(" NOT NULL")
+
+proc floatGenerator*(name:string, maximum:int, digit:int, nullable:bool,
+                      isDefault:bool, default:float):string =
+  result = &"{name} FLOAT"
+
+  if isDefault:
+    result.add(
+      &" DEFAULT {default}"
+    )
+
+  if not nullable:
+    result.add(" NOT NULL")
+
+proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
+  var optionStrings = ""
+  for i, option in options:
+    if i > 0:
+      optionStrings.add(" OR ")
+    optionStrings.add(
+      &"{name} = '{option.getStr}'"
+    )
+  
+  return optionStrings
+
+proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
+                    isDefault:bool, default:string):string =
+  let optionsString = enumOptionsGenerator(name, options)
+  result = &"{name} VARCHAR"
+
+  if isDefault:
+    result.add(
+      &" DEFAULT '{default}'"
+    )
+
+  if not nullable:
+    result.add(" NOT NULL")
+
+  result.add(
+    &" CHECK ({optionsString})"
+  )
