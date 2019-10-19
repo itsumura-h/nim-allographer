@@ -38,7 +38,8 @@ proc migrate*(this:Model):string =
             parseInt($column.info["digit"]),
             column.isNullable,
             column.isDefault,
-            column.defaultFloat
+            column.defaultFloat,
+            column.isUnsigned
           )
         )
       of dbFloat:
@@ -47,7 +48,8 @@ proc migrate*(this:Model):string =
             column.name,
             column.isNullable,
             column.isDefault,
-            column.defaultFloat
+            column.defaultFloat,
+            column.isUnsigned
           )
         )
       # char ==================================================================
