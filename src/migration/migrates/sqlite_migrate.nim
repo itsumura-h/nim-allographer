@@ -85,11 +85,28 @@ proc migrate*(this:Model):string =
       # date ==================================================================
       of dbDate:
         columnString.add(
-          dateGenerator(column.name, column.isNullable)
+          dateGenerator(column.name, column.isNullable, column.isDefault)
         )
       of dbDatetime:
         columnString.add(
-          datetimeGenerator(column.name, column.isNullable)
+          datetimeGenerator(column.name, column.isNullable, column.isDefault)
+        )
+      of dbTime:
+        columnString.add(
+          timeGenerator(
+            column.name,
+            column.isNullable,
+            column.isDefault
+          )
+        )
+      of dbTimestamp:
+        columnString.add(
+          timestampGenerator(
+            column.name,
+            column.isNullable,
+            column.isDefault,
+            column.info["status"].getStr
+          )
         )
       # others ================================================================
       of dbBlob:

@@ -104,17 +104,57 @@ proc textGenerator*(name:string, nullable:bool, isDefault:bool,
 # =============================================================================
 # date
 # =============================================================================
-proc dateGenerator*(name:string, nullable:bool):string =
+proc dateGenerator*(name:string, nullable:bool, isDefault:bool):string =
   result = &"{name} DATE"
 
   if not nullable:
     result.add(" NOT NULL")
 
-proc datetimeGenerator*(name:string, nullable:bool):string =
+  if isDefault:
+    result.add(
+      &" DEFAULT (DATE('now','localtime'))"
+    )
+
+proc datetimeGenerator*(name:string, nullable:bool, isDefault:bool):string =
   result = &"{name} DATETIME"
 
   if not nullable:
     result.add(" NOT NULL")
+
+  if isDefault:
+    result.add(
+      &" DEFAULT (DATETIME('now','localtime'))"
+    )
+
+proc timeGenerator*(name:string, nullable:bool, isDefault:bool):string =
+  result = &"{name} TIME"
+
+  if not nullable:
+    result.add(" NOT NULL")
+
+  if isDefault:
+    result.add(
+      &" DEFAULT (TIME('now','localtime'))"
+    )
+
+proc timestampGenerator*(name:string, nullable:bool, isDefault:bool,
+                          status:string):string =
+  if status == "timestamp":
+    result = &"{name} DATETIME"
+
+    if not nullable:
+      result.add(" NOT NULL")
+
+    if isDefault:
+      result.add(
+        &" DEFAULT (DATETIME('now','localtime'))"
+      )
+  elif status == "timestamps":
+    result = "created_at DATETIME DEFAULT (DATETIME('now','localtime')), "
+    result.add("updated_at DATETIME DEFAULT (DATETIME('now','localtime'))")
+  elif status == "softDeletes":
+    result = "deleted_at DATETIME DEFAULT (DATETIME('now','localtime'))"
+
 # =============================================================================
 # others
 # =============================================================================

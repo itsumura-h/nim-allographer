@@ -29,6 +29,11 @@ proc default*(cArg: Column, value:string): Column =
   c.defaultString = value
   return c
 
+proc default*(cArg:Column):Column =
+  var c = cArg
+  c.isDefault = true
+  return c
+
 proc nullable*(cArg: Column): Column =
   var c = cArg
   c.isNullable = true
@@ -144,17 +149,47 @@ proc longText*(this:Schema, name:string):Column =
 # =============================================================================
 # date
 # =============================================================================
-proc date*(this:Schema, name:string): Column =
+proc date*(this:Schema, name:string):Column =
   Column(
     name: name,
     typ: dbDate
   )
 
-# =============================================================================
-proc datetime*(this:Schema, name:string): Column =
+proc datetime*(this:Schema, name:string):Column =
   Column(
     name: name,
     typ: dbDatetime
+  )
+
+proc time*(this:Schema, name:string):Column =
+  Column(
+    name: name,
+    typ: dbTime
+  )
+
+proc timestamp*(this:Schema, name:string):Column =
+  Column(
+    name: name,
+    typ: dbTimestamp,
+    info: %*{
+      "status": "timestamp"
+    }
+  )
+
+proc timestamps*(this:Schema):Column =
+  Column(
+    typ: dbTimestamp,
+    info: %*{
+      "status": "timestamps"
+    }
+  )
+
+proc softDeletes*(this:Schema):Column =
+  Column(
+    typ: dbTimestamp,
+    info: %*{
+      "status": "softDeletes"
+    }
   )
 
 # =============================================================================

@@ -66,8 +66,22 @@ Model().new(
     # date
     Schema().date("date"),
     Schema().date("date_null").nullable(),
+    Schema().date("date_defualt").default(),
+    Schema().date("date_null_defualt").nullable().default(),
     Schema().datetime("datetime"),
     Schema().datetime("datetime_null").nullable(),
+    Schema().datetime("datetime_default").default(),
+    Schema().datetime("datetime_null_default").nullable().default(),
+    Schema().time("time"),
+    Schema().time("time_null").nullable(),
+    Schema().time("time_default").default(),
+    Schema().time("time_null_default").nullable().default(),
+    Schema().timestamp("timestamp"),
+    Schema().timestamp("timestamp_null").nullable(),
+    Schema().timestamp("timestamp_default").default(),
+    Schema().timestamp("timestamp_null_default").nullable().default(),
+    Schema().timestamps(),
+    Schema().softDeletes(),
 
     # other
     Schema().binary("binary"),
