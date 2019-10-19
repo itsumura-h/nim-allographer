@@ -13,6 +13,7 @@ proc migrate*(this:Model):string =
       columnString.add(", ")
 
     case column.typ:
+      # int ===================================================================
       of dbSerial:
         primaryColumn = column.name
         columnString.add(
@@ -24,40 +25,11 @@ proc migrate*(this:Model):string =
             column.name,
             column.isNullable,
             column.isDefault,
-            column.defaultInt
+            column.defaultInt,
+            column.isUnsigned
           )
         )
-      of dbBlob:
-        columnString.add(
-          blobGenerator(column.name, column.isNullable)
-        )
-      of dbBool:
-        columnString.add(
-          boolGenerator(
-            column.name,
-            column.isNullable,
-            column.isDefault,
-            column.defaultBool
-          )
-        )
-      of dbFixedChar:
-        columnString.add(
-          charGenerator(
-            column.name,
-            parseInt($column.info["maxLength"]),
-            column.isNullable,
-            column.isDefault,
-            column.defaultString
-          )
-        )
-      of dbDate:
-        columnString.add(
-          dateGenerator(column.name, column.isNullable)
-        )
-      of dbDatetime:
-        columnString.add(
-          datetimeGenerator(column.name, column.isNullable)
-        )
+      # float =================================================================
       of dbDecimal:
         columnString.add(
           decimalGenerator(
@@ -76,6 +48,59 @@ proc migrate*(this:Model):string =
             column.isNullable,
             column.isDefault,
             column.defaultFloat
+          )
+        )
+      # char ==================================================================
+      of dbFixedChar:
+        columnString.add(
+          charGenerator(
+            column.name,
+            parseInt($column.info["maxLength"]),
+            column.isNullable,
+            column.isDefault,
+            column.defaultString
+          )
+        )
+      of dbVarchar:
+        columnString.add(
+          varcharGenerator(
+            column.name,
+            parseInt($column.info["maxLength"]),
+            column.isNullable,
+            column.isDefault,
+            column.defaultString
+          )
+        )
+      of dbXml:
+        columnString.add(
+          textGenerator(
+            column.name,
+            column.isNullable,
+            column.isDefault,
+            column.defaultString
+          )
+        )
+      # date ==================================================================
+      of dbDate:
+        columnString.add(
+          dateGenerator(column.name, column.isNullable)
+        )
+      of dbDatetime:
+        columnString.add(
+          datetimeGenerator(column.name, column.isNullable)
+        )
+      # others ================================================================
+      of dbBlob:
+        columnString.add(
+          blobGenerator(column.name, column.isNullable)
+        )
+      of dbBool:
+        columnString.add(
+          boolGenerator(
+            column.name,
+            column.isNullable,
+            column.isDefault,
+            column.defaultBool
           )
         )
       of dbEnum:

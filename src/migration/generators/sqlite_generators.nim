@@ -1,12 +1,14 @@
 import json, strformat
 import ../util
 
-
+# =============================================================================
+# int
+# =============================================================================
 proc serialGenerator*(name:string):string =
   result = &"{name} INTEGER PRIMARY KEY"
 
 proc intGenerator*(name:string, nullable:bool, isDefault:bool,
-                    default:int):string =
+                    default:int, isUnsigned:bool):string =
   result = &"{name} INTEGER"
 
   if isDefault:
@@ -17,47 +19,12 @@ proc intGenerator*(name:string, nullable:bool, isDefault:bool,
   if not nullable:
     result.add(" NOT NULL")
 
-proc blobGenerator*(name:string, nullable:bool):string =
-  result = &"{name} BLOB"
+  if isUnsigned:
+    result.add(&" CHECK ({name} > -1)")
 
-  if not nullable:
-    result.add(" NOT NULL")
-
-proc boolGenerator*(name:string, nullable:bool, isDefault:bool, 
-                    default:bool):string =
-  result = &"{name} TINYINT"
-
-  if isDefault:
-    result.add(
-      &" DEFAULT {default}"
-    )
-
-  if not nullable:
-    result.add(" NOT NULL")
-
-proc charGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
-                    default:string):string =
-  result = &"{name} VARCHAR"
-  if isDefault:
-    result.add(
-      &" DEFAULT '{default}'"
-    )
-
-  if not nullable:
-    result.add(" NOT NULL")
-
-proc dateGenerator*(name:string, nullable:bool):string =
-  result = &"{name} DATE"
-
-  if not nullable:
-    result.add(" NOT NULL")
-
-proc datetimeGenerator*(name:string, nullable:bool):string =
-  result = &"{name} DATETIME"
-
-  if not nullable:
-    result.add(" NOT NULL")
-
+# =============================================================================
+# float
+# =============================================================================
 proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
                         isDefault:bool, default:float):string =
   result = &"{name} NUMERIC"
@@ -73,6 +40,80 @@ proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
 proc floatGenerator*(name:string, nullable:bool, isDefault:bool,
                       default:float):string =
   result = &"{name} FLOAT"
+
+  if isDefault:
+    result.add(
+      &" DEFAULT {default}"
+    )
+
+  if not nullable:
+    result.add(" NOT NULL")
+# =============================================================================
+# char
+# =============================================================================
+proc charGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
+                    default:string):string =
+  result = &"{name} VARCHAR"
+  if isDefault:
+    result.add(
+      &" DEFAULT '{default}'"
+    )
+
+  if not nullable:
+    result.add(" NOT NULL")
+
+  result.add(&" CHECK (length({name}) <= {maxLength})")
+
+proc varcharGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
+                    default:string):string =
+  result = &"{name} VARCHAR"
+  if isDefault:
+    result.add(
+      &" DEFAULT '{default}'"
+    )
+
+  if not nullable:
+    result.add(" NOT NULL")
+
+  result.add(&" CHECK (length({name}) <= {maxLength})")
+
+proc textGenerator*(name:string, nullable:bool, isDefault:bool,
+                    default:string):string =
+  result = &"{name} TEXT"
+  if isDefault:
+    result.add(
+      &" DEFAULT '{default}'"
+    )
+
+  if not nullable:
+    result.add(" NOT NULL")
+
+# =============================================================================
+# date
+# =============================================================================
+proc dateGenerator*(name:string, nullable:bool):string =
+  result = &"{name} DATE"
+
+  if not nullable:
+    result.add(" NOT NULL")
+
+proc datetimeGenerator*(name:string, nullable:bool):string =
+  result = &"{name} DATETIME"
+
+  if not nullable:
+    result.add(" NOT NULL")
+# =============================================================================
+# others
+# =============================================================================
+proc blobGenerator*(name:string, nullable:bool):string =
+  result = &"{name} BLOB"
+
+  if not nullable:
+    result.add(" NOT NULL")
+
+proc boolGenerator*(name:string, nullable:bool, isDefault:bool, 
+                    default:bool):string =
+  result = &"{name} TINYINT"
 
   if isDefault:
     result.add(

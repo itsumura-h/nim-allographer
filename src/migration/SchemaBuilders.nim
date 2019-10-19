@@ -1,7 +1,33 @@
 import json
-import db_common, base
+import db_common
+import base
 
 type Schema* = ref object
+
+
+proc default*(cArg: Column, value:bool): Column =
+  var c = cArg
+  c.isDefault = true
+  c.defaultBool = value
+  return c
+
+proc default*(cArg: Column, value:int): Column =
+  var c = cArg
+  c.isDefault = true
+  c.defaultInt = value
+  return c
+
+proc default*(cArg: Column, value:float): Column =
+  var c = cArg
+  c.isDefault = true
+  c.defaultFloat = value
+  return c
+
+proc default*(cArg: Column, value:string): Column =
+  var c = cArg
+  c.isDefault = true
+  c.defaultString = value
+  return c
 
 proc nullable*(cArg: Column): Column =
   var c = cArg
@@ -12,7 +38,8 @@ proc unsigned*(c: Column): Column =
   c.isUnsigned = true
   return c
 
-
+# =============================================================================
+# int
 # =============================================================================
 proc increments*(this:Schema, name:string): Column =
   Column(
@@ -22,109 +49,100 @@ proc increments*(this:Schema, name:string): Column =
     isUnsigned: true
   )
 
-# =============================================================================
 proc integer*(this:Schema, name:string):Column =
   Column(
     name: name,
     typ: dbInt
   )
 
-proc integer*(this:Schema, name:string, default:int):Column =
-  Column(
-    name: name,
-    typ: dbInt,
-    isDefault: true,
-    defaultInt: default
-  )
-
-# =============================================================================
 proc smallInteger*(this:Schema, name:string):Column =
   Column(
     name: name,
     typ: dbInt
   )
 
-proc smallInteger*(this:Schema, name:string, default:int):Column =
-  Column(
-    name: name,
-    typ: dbInt,
-    isDefault: true,
-    defaultInt: default
-  )
-
-# =============================================================================
 proc mediumInteger*(this:Schema, name:string):Column =
   Column(
     name: name,
     typ: dbInt
   )
 
-proc mediumInteger*(this:Schema, name:string, default:int):Column =
-  Column(
-    name: name,
-    typ: dbInt,
-    isDefault: true,
-    defaultInt: default
-  )
-
-# =============================================================================
 proc bigInteger*(this:Schema, name:string):Column =
   Column(
     name: name,
     typ: dbInt
   )
 
-proc bigInteger*(this:Schema, name:string, default:int):Column =
+# =============================================================================
+# float
+# =============================================================================
+proc decimal*(this:Schema, name:string, maximum:int, digit:int): Column =
   Column(
     name: name,
-    typ: dbInt,
-    isDefault: true,
-    defaultInt: default
+    typ: dbDecimal,
+    info: %*{
+      "maximum": maximum,
+      "digit": digit
+    }
+  )
+
+proc double*(this:Schema, name:string, maximum:int, digit:int):Column =
+  Column(
+    name: name,
+    typ: dbFloat,
+    info: %*{
+      "maximum": maximum,
+      "digit": digit
+    }
+  )
+
+proc float*(this:Schema, name:string):Column =
+  Column(
+    name: name,
+    typ: dbFloat
   )
 
 # =============================================================================
-proc binary*(this:Schema, name:string): Column =
-  Column(
-    name: name,
-    typ: dbBlob
-  )
-
-# =============================================================================
-proc boolean*(this:Schema, name:string): Column =
-  Column(
-    name: name,
-    typ: dbBool
-  )
-
-proc boolean*(this:Schema, name:string, default:bool): Column =
-  Column(
-    name: name,
-    typ: dbBool,
-    isDefault: true,
-    defaultBool: default
-  )
-
+# char
 # =============================================================================
 proc char*(this:Schema, name:string, maxLength:int): Column =
   Column(
     name: name,
     typ: dbFixedChar,
     info: %*{
-    "maxLength": maxLength
-    }
-  )
-
-proc char*(this:Schema, name:string, maxLength:int, default:string): Column =
-  Column(
-    name: name,
-    typ: dbFixedChar,
-    isDefault: true,
-    defaultString: default,
-    info: %*{
       "maxLength": maxLength
     }
   )
 
+proc string*(this:Schema, name:string, length=255):Column =
+  Column(
+    name: name,
+    typ: dbVarchar,
+    info: %*{
+      "maxLength": length
+    }
+  )
+
+proc text*(this:Schema, name:string):Column =
+  Column(
+    name: name,
+    typ: dbXml
+  )
+
+proc mediumText*(this:Schema, name:string):Column =
+  Column(
+    name: name,
+    typ: dbXml
+  )
+
+proc longText*(this:Schema, name:string):Column =
+  Column(
+    name: name,
+    typ: dbXml
+  )
+
+# =============================================================================
+# date
 # =============================================================================
 proc date*(this:Schema, name:string): Column =
   Column(
@@ -140,54 +158,21 @@ proc datetime*(this:Schema, name:string): Column =
   )
 
 # =============================================================================
-proc decimal*(this:Schema, name:string, maximum:int, digit:int): Column =
+# others
+# =============================================================================
+proc binary*(this:Schema, name:string): Column =
   Column(
     name: name,
-    typ: dbDecimal,
-    info: %*{
-      "maximum": maximum,
-      "digit": digit
-    }
-  )
-
-proc decimal*(this:Schema, name:string, maximum:int, digit:int,
-              default: float): Column =
-  Column(
-    name: name,
-    typ: dbDecimal,
-    isDefault: true,
-    defaultFloat: default,
-    info: %*{
-      "maximum": maximum,
-      "digit": digit
-    }
+    typ: dbBlob
   )
 
 # =============================================================================
-proc double*(this:Schema, name:string, maximum:int, digit:int):Column =
+proc boolean*(this:Schema, name:string): Column =
   Column(
     name: name,
-    typ: dbFloat,
-    info: %*{
-      "maximum": maximum,
-      "digit": digit
-    }
+    typ: dbBool
   )
 
-proc double*(this:Schema, name:string, maximum:int, digit:int,
-              default:float):Column =
-  Column(
-    name: name,
-    typ: dbFloat,
-    isDefault: true,
-    defaultFloat: default,
-    info: %*{
-      "maximum": maximum,
-      "digit": digit
-    }
-  )
-
-# =============================================================================
 proc enumField*(this:Schema, name:string, options:varargs[string]):Column =
   Column(
     name: name,
@@ -196,33 +181,3 @@ proc enumField*(this:Schema, name:string, options:varargs[string]):Column =
       "options": options
     }
   )
-
-proc enumField*(this:Schema, name:string, options:varargs[string],
-            default:string):Column =
-  Column(
-    name: name,
-    typ: dbEnum,
-    isDefault: true,
-    defaultString: default,
-    info: %*{
-      "options": options
-    }
-  )
-
-# =============================================================================
-proc float*(this:Schema, name:string):Column =
-  Column(
-    name: name,
-    typ: dbFloat
-  )
-
-proc float*(this:Schema, name:string, default:float):Column =
-  Column(
-    name: name,
-    typ: dbFloat,
-    isDefault: true,
-    defaultFloat: default
-  )
-
-# =============================================================================
-

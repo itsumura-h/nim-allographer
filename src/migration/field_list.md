@@ -49,7 +49,6 @@
 |---|---|---|---|---|
 |char|dbFixedChar|VARCHAR|254,char|character
 |string|dbVarchar|VARCHAR|253,varchar|character
-|string_with_len|dbVarchar|VARCHAR|253,varchar|character
 |text|dbXml|TEXT|252,text|text
 |medium_text|dbXml|TEXT|252,mediumtext|text
 |long_text|dbXml|TEXT|252,longtext|text
