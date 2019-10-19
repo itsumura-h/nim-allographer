@@ -73,8 +73,6 @@ proc migrate*(this:Model):string =
         columnString.add(
           floatGenerator(
             column.name,
-            parseInt($column.info["maximum"]),
-            parseInt($column.info["digit"]),
             column.isNullable,
             column.isDefault,
             column.defaultFloat

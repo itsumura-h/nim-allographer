@@ -23,13 +23,58 @@ proc increments*(this:Schema, name:string): Column =
   )
 
 # =============================================================================
-proc bigInteger*(this:Schema, name:string): Column =
+proc integer*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ:dbInt
+    typ: dbInt
   )
 
-proc bigInteger*(this:Schema, name:string, default:int): Column =
+proc integer*(this:Schema, name:string, default:int):Column =
+  Column(
+    name: name,
+    typ: dbInt,
+    isDefault: true,
+    defaultInt: default
+  )
+
+# =============================================================================
+proc smallInteger*(this:Schema, name:string):Column =
+  Column(
+    name: name,
+    typ: dbInt
+  )
+
+proc smallInteger*(this:Schema, name:string, default:int):Column =
+  Column(
+    name: name,
+    typ: dbInt,
+    isDefault: true,
+    defaultInt: default
+  )
+
+# =============================================================================
+proc mediumInteger*(this:Schema, name:string):Column =
+  Column(
+    name: name,
+    typ: dbInt
+  )
+
+proc mediumInteger*(this:Schema, name:string, default:int):Column =
+  Column(
+    name: name,
+    typ: dbInt,
+    isDefault: true,
+    defaultInt: default
+  )
+
+# =============================================================================
+proc bigInteger*(this:Schema, name:string):Column =
+  Column(
+    name: name,
+    typ: dbInt
+  )
+
+proc bigInteger*(this:Schema, name:string, default:int):Column =
   Column(
     name: name,
     typ: dbInt,
@@ -163,3 +208,21 @@ proc enumField*(this:Schema, name:string, options:varargs[string],
       "options": options
     }
   )
+
+# =============================================================================
+proc float*(this:Schema, name:string):Column =
+  Column(
+    name: name,
+    typ: dbFloat
+  )
+
+proc float*(this:Schema, name:string, default:float):Column =
+  Column(
+    name: name,
+    typ: dbFloat,
+    isDefault: true,
+    defaultFloat: default
+  )
+
+# =============================================================================
+

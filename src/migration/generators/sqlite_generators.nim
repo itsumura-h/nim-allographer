@@ -70,8 +70,8 @@ proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
   if not nullable:
     result.add(" NOT NULL")
 
-proc floatGenerator*(name:string, maximum:int, digit:int, nullable:bool,
-                      isDefault:bool, default:float):string =
+proc floatGenerator*(name:string, nullable:bool, isDefault:bool,
+                      default:float):string =
   result = &"{name} FLOAT"
 
   if isDefault:
@@ -83,19 +83,18 @@ proc floatGenerator*(name:string, maximum:int, digit:int, nullable:bool,
     result.add(" NOT NULL")
 
 proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
-  var optionStrings = ""
+  var optionsString = ""
   for i, option in options:
     if i > 0:
-      optionStrings.add(" OR ")
-    optionStrings.add(
+      optionsString.add(" OR ")
+    optionsString.add(
       &"{name} = '{option.getStr}'"
     )
   
-  return optionStrings
+  return optionsString
 
 proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
                     isDefault:bool, default:string):string =
-  let optionsString = enumOptionsGenerator(name, options)
   result = &"{name} VARCHAR"
 
   if isDefault:
@@ -106,6 +105,7 @@ proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
   if not nullable:
     result.add(" NOT NULL")
 
+  let optionsString = enumOptionsGenerator(name, options)
   result.add(
     &" CHECK ({optionsString})"
   )

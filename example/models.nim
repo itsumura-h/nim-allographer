@@ -5,7 +5,17 @@ import ../src/migration/SchemaBuilders
 Model().new(
   "table_name",
   [
+    # int
     Schema().increments("id"),
+    Schema().integer("integer"),
+    Schema().integer("integer_default", default=2),
+    Schema().integer("integer_null").nullable(),
+    Schema().smallInteger("smallInteger"),
+    Schema().smallInteger("smallInteger_default", default=3),
+    Schema().smallInteger("smallInteger_null").nullable(),
+    Schema().mediumInteger("mediumInteger"),
+    Schema().mediumInteger("mediumInteger_default", default=4),
+    Schema().mediumInteger("mediumInteger_null").nullable(),
     Schema().bigInteger("bigInteger"),
     Schema().bigInteger("bigInteger_default", default=11),
     Schema().bigInteger("bigInteger_null").nullable(),
@@ -30,5 +40,8 @@ Model().new(
     Schema().enumField("enum", ["a", "b", "c"]),
     Schema().enumField("enum_default", ["d", "e"], default="a"),
     Schema().enumField("enum_null", ["f", "g"]).nullable(),
+    Schema().float("float"),
+    Schema().float("float_default", default=1.1),
+    Schema().float("float_null").nullable(),
   ]
 ).migrate()
