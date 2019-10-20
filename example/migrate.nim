@@ -4,10 +4,15 @@ import bcrypt
 import ../src/allographer
 
 # ファイル削除
-os.removeFile(getCurrentDir() & "/db.sqlite3")
+let rdb = db()
+try:
+  rdb.exec(sql"drop table auth")
+  rdb.exec(sql"drop table users")
+except Exception:
+  echo getCurrentExceptionMsg()
 
 # マイグレーション
-db().exec(
+rdb.exec(
   sql"""
   CREATE TABLE auth(
     id INTEGER PRIMARY KEY,
@@ -15,7 +20,7 @@ db().exec(
   )"""
 )
 
-db().exec(
+rdb.exec(
   sql"""
   CREATE TABLE users(
     id INTEGER PRIMARY KEY,
@@ -28,6 +33,7 @@ db().exec(
     auth_id INT
   )"""
 )
+rdb.close()
 
 RDB().table("auth").insert([
   %*{"auth": "admin"},

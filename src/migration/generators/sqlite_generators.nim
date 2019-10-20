@@ -200,6 +200,13 @@ proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
     result.add(" NOT NULL")
 
   let optionsString = enumOptionsGenerator(name, options)
-  result.add(
-    &" CHECK ({optionsString})"
-  )
+  if nullable:
+    result.add(&" CHECK ({name} = null OR {optionsString})")
+  else:
+    result.add(&" CHECK ({optionsString})")
+
+proc jsonGenerator*(name:string, nullable:bool):string =
+  result = &"{name} TEXT"
+
+  if not nullable:
+    result.add(" NOT NULL")

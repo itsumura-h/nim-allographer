@@ -87,10 +87,14 @@ Model().new(
     Schema().binary("binary"),
     Schema().binary("binary_null").nullable(),
     Schema().boolean("bool"),
-    Schema().boolean("bool_default").default(true),
     Schema().boolean("bool_null").nullable(),
+    Schema().boolean("bool_default").default(true),
+    Schema().boolean("bool_null_default").nullable().default(true),
     Schema().enumField("enum", ["a", "b", "c"]),
-    Schema().enumField("enum_default", ["d", "e"]).default("d"),
     Schema().enumField("enum_null", ["f", "g"]).nullable(),
+    Schema().enumField("enum_default", ["d", "e"]).default("d"),
+    Schema().enumField("enum_null_default", ["f", "g"]).nullable().default("e"),
+    Schema().json("json"),
+    Schema().json("json_null").nullable(),
   ]
 ).migrate()

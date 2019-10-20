@@ -132,6 +132,13 @@ proc migrate*(this:Model):string =
             column.defaultString
           )
         )
+      of dbJson:
+        columnString.add(
+          jsonGenerator(
+            column.name,
+            column.isNullable
+          )
+        )
       else:
         echo ""
 

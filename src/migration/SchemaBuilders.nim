@@ -216,3 +216,9 @@ proc enumField*(this:Schema, name:string, options:varargs[string]):Column =
       "options": options
     }
   )
+
+proc json*(this:Schema, name:string):Column =
+  Column(
+    name: name,
+    typ: dbJson
+  )
