@@ -1,7 +1,7 @@
 import db_common
 import base, util, strformat
 import migrates/sqlite_migrate, migrates/mysql_migrate
-include ../modules/database
+include ../database
 
 export Model, Column
 

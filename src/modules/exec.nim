@@ -1,7 +1,8 @@
 import db_sqlite, db_mysql, db_postgres
 import json, parsecfg, strutils
 
-import database, base, builders, logger
+import base, builders, logger
+import ../database
 
 
 proc checkSql*(this: RDB): RDB =

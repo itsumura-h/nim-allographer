@@ -2,7 +2,7 @@ import
   ../modules/base,
   ../modules/grammars,
   ../modules/exec,
-  ../modules/database
+  ../database
   
 export
   base,
