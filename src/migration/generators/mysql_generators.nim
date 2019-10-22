@@ -1,15 +1,14 @@
 import json, strformat
-# import ../util
 
 # =============================================================================
 # int
 # =============================================================================
 proc serialGenerator*(name:string):string =
-  result = &"{name} INTEGER PRIMARY KEY"
+  result = &"{name} INT NOT NULL PRIMARY KEY"
 
 proc intGenerator*(name:string, nullable:bool, isDefault:bool,
                     default:int, isUnsigned:bool):string =
-  result = &"{name} INTEGER"
+  result = &"{name} INT"
 
   if isDefault:
     result.add(
@@ -19,10 +18,8 @@ proc intGenerator*(name:string, nullable:bool, isDefault:bool,
   if not nullable:
     result.add(" NOT NULL")
 
-  if nullable and isUnsigned:
-    result.add(&" CHECK ({name} = null OR {name} >= 0)")
-  elif isUnsigned:
-    result.add(&" CHECK ({name} >= 0)")
+  if isUnsigned:
+    result.add(" UNSIGNED")
 
 # =============================================================================
 # float

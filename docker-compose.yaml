@@ -7,3 +7,11 @@ services:
     tty: true
     volumes:
       - .:/home/www
+  mysql:
+    image: mariadb
+    tty: true
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: allographer
+      MYSQL_USER: user
+      MYSQL_PASSWORD: Password!

@@ -1,4 +1,4 @@
-import db_sqlite
+import db_mysql
 
 proc db*(): DbConn =
-  open("/home/www/db.sqlite3", "", "", "")
+  open("mysql:3306", "user", "Password", "allographer")
