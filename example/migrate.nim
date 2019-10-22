@@ -1,45 +1,32 @@
-import db_sqlite
-import os, strformat, json
+import strformat, json
 import bcrypt
-import ../src/allographer
+import ../src/allographer/QueryBuilder
+import ../src/allographer/SchemaBuilder
 
-# ファイル削除
-let rdb = db()
-try:
-  rdb.exec(sql"drop table auth")
-  rdb.exec(sql"drop table users")
-except Exception:
-  echo getCurrentExceptionMsg()
 
 # マイグレーション
-rdb.exec(
-  sql"""
-  CREATE TABLE auth(
-    id INTEGER PRIMARY KEY,
-    auth VARCHAR
-  )"""
-)
+Model().new("auth",[
+  Schema().increments("id"),
+  Schema().string("auth")
+]).migrate()
 
-rdb.exec(
-  sql"""
-  CREATE TABLE users(
-    id INTEGER PRIMARY KEY,
-    name VARCHAR,
-    email VARCHAR,
-    password VARCHAR,
-    salt VARCHAR,
-    address VARCHAR,
-    birth_date DATE,
-    auth_id INT
-  )"""
-)
-rdb.close()
+Model().new("users",[
+  Schema().increments("id"),
+  Schema().string("name").nullable(),
+  Schema().string("email").nullable(),
+  Schema().string("password").nullable(),
+  Schema().string("salt").nullable(),
+  Schema().string("address").nullable(),
+  Schema().date("birth_date").nullable(),
+  Schema().integer("auth_id").nullable(),
+]).migrate()
 
+# シーダー
 RDB().table("auth").insert([
   %*{"auth": "admin"},
   %*{"auth": "user"}
 ])
-.exec(db)
+.exec()
 
 
 var insertData: seq[JsonNode]
@@ -56,4 +43,4 @@ for i in 1..100:
       "auth_id": authId
     }
   )
-RDB().table("users").insert(insertData).exec(db)
+RDB().table("users").insert(insertData).exec()

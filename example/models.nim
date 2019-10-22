@@ -1,6 +1,5 @@
-import ../src/migration/model
-import ../src/migration/SchemaBuilders
-# from ../src/migration/SchemaBuilders import nullable, unsigned
+import ../src/allographer/SchemaBuilder
+
 
 Model().new(
   "table_name",
@@ -98,3 +97,4 @@ Model().new(
     Schema().json("json_null").nullable(),
   ]
 ).migrate()
+# )

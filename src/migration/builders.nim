@@ -1,5 +1,4 @@
-import json
-import db_common
+import db_common, json
 import base
 
 type Schema* = ref object

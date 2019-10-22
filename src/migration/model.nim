@@ -1,7 +1,6 @@
-import db_common, strformat, strutils, json
-import base
-import util, generators
-import migrates/sqlite_migrate
+import db_common
+import base, util, strformat
+import migrates/sqlite_migrate, migrates/mysql_migrate
 include ../modules/database
 
 export Model, Column
@@ -20,21 +19,25 @@ proc driverTypeError() =
 proc migrate*(this: Model) =
   driverTypeError()
 
-  var columnString = ""
+  var query = ""
   let driver = util.getDriver()
   case driver:
     of "sqlite":
-      columnString.add(
-        sqlite_migrate.migrate(this)
-      )
+      query = sqlite_migrate.migrate(this)
     of "mysql":
-      columnString.add(
-        ""
-      )
+      query = mysql_migrate.migrate(this)
     of "postgres":
-      columnString.add(
-        ""
-      )
+      query = ""
     else:
       echo ""
-  echo columnString
+  echo query
+
+  let table_name = this.name
+  let db = db()
+  try:
+    db.exec(sql &"drop table {table_name}")
+    db.exec(sql query)
+  except Exception:
+    echo getCurrentExceptionMsg()
+
+  defer: db.close()

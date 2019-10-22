@@ -1,10 +1,6 @@
-import ../src/allographer
-# import allographer
 import json
-import db_sqlite
+import ../src/allographer/QueryBuilder
 
-
-# echo RDB().table("users").get(conn)
 
 echo RDB()
     .table("users")
@@ -20,37 +16,37 @@ echo RDB()
     .sqlString
 
 
-echo RDB().table("users").select("id", "email").limit(5).get(db)
-echo RDB().table("users").select("id", "email").limit(5).first(db)
-echo RDB().table("users").find(4, db)
-echo RDB().table("users").select("id", "email").limit(5).find(3, db)
+echo RDB().table("users").select("id", "email").limit(5).get()
+echo RDB().table("users").select("id", "email").limit(5).first()
+echo RDB().table("users").find(4)
+echo RDB().table("users").select("id", "email").limit(5).find(3)
 
 echo ""
 
-# RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).exec(db)
-# echo RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).execID(db)
+RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).exec()
+echo RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).execID()
 
-# RDB().table("users").insert(
-#     [
-#         %*{"name": "John", "email": "John@gmail.com"},
-#         %*{"name": "Paul", "email": "Paul@gmail.com"}
-#     ]
-# )
-# .exec(db)
-# RDB().table("users").inserts(
-#     [
-#         %*{"name": "John", "email": "John@gmail.com"},
-#         %*{"name": "Paul", "password": "PaulPass"}
-#     ]
-# )
-# .exec(db)
+RDB().table("users").insert(
+    [
+        %*{"name": "John", "email": "John@gmail.com"},
+        %*{"name": "Paul", "email": "Paul@gmail.com"}
+    ]
+)
+.exec()
+RDB().table("users").inserts(
+    [
+        %*{"name": "John", "email": "John@gmail.com"},
+        %*{"name": "Paul", "password": "PaulPass"}
+    ]
+)
+.exec()
 
 
-# RDB().table("users").where("id", "=", 2).update(%*{"name": "David"}).exec(db)
-# echo RDB().table("users").where("id", "=", 2).update(%*{"name": "David"}).execID(db)
-# echo RDB().table("users").select().where("name", "=", "David").get(db)
+RDB().table("users").where("id", "=", 2).update(%*{"name": "David"}).exec()
+echo RDB().table("users").where("id", "=", 2).update(%*{"name": "David"}).execID()
+echo RDB().table("users").select().where("name", "=", "David").get()
 
-# echo ""
+echo ""
 
-# RDB().table("users").where("name", "=", "David").delete().exec(db)
-# RDB().table("users").delete(3).exec(db)
+RDB().table("users").where("name", "=", "David").delete().exec()
+RDB().table("users").delete(3).exec()

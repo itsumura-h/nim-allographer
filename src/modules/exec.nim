@@ -1,14 +1,14 @@
 import db_sqlite, db_mysql, db_postgres
 import json, parsecfg, strutils
 
-import base, builders, logger
+import database, base, builders, logger
 
 
 proc checkSql*(this: RDB): RDB =
   return this.selectBuilder()
 
 
-proc get*(this: RDB, db: proc): seq =
+proc get*(this: RDB): seq =
   let sqlString = this.selectBuilder().sqlString
   logger(sqlString)
   let db = db()
@@ -16,7 +16,7 @@ proc get*(this: RDB, db: proc): seq =
   defer: db.close()
 
 
-proc first*(this: RDB, db: proc): seq =
+proc first*(this: RDB): seq =
   let sqlString = this.selectBuilder().sqlString
   logger(sqlString)
   let db = db()
@@ -24,7 +24,7 @@ proc first*(this: RDB, db: proc): seq =
   defer: db.close()
 
 
-proc find*(this: RDB, id: int, db: proc): seq =
+proc find*(this: RDB, id: int): seq =
   let sqlString = this.selectFindBuilder(id).sqlString
   logger(sqlString)
   let db = db()
@@ -80,7 +80,7 @@ proc delete*(this: RDB, id: int): RDB =
 
 ## ==================== EXEC ====================
 
-proc exec*(this: RDB, db: proc) =
+proc exec*(this: RDB) =
   let db = db()
   for sqlString in this.sqlStringSeq:
     logger(sqlString)
@@ -88,7 +88,7 @@ proc exec*(this: RDB, db: proc) =
 
   defer: db.close()
 
-proc execID*(this: RDB, db: proc): int64 =
+proc execID*(this: RDB): int64 =
   let db = db()
 
   # insert Multi

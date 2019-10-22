@@ -1,14 +1,14 @@
-import db_common, db_sqlite, strformat, strutils, json
-import ../util
+import db_common, strformat, strutils, json
 import ../base
-import ../generators/sqlite_generators
+import ../generators/mysql_generators
+
 
 proc migrate*(this:Model):string =
 
   var columnString = ""
   var primaryColumn = ""
   for i, column in this.columns:
-    # echo repr column
+    echo repr column
     if i > 0:
       columnString.add(", ")
 
