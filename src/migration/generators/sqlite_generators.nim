@@ -20,9 +20,9 @@ proc intGenerator*(name:string, nullable:bool, isDefault:bool,
     result.add(" NOT NULL")
 
   if nullable and isUnsigned:
-    result.add(&" CHECK ({name} = null OR {name} >= 0)")
+    result.add(&" CHECK ({name} = null OR {name} > 0)")
   elif isUnsigned:
-    result.add(&" CHECK ({name} >= 0)")
+    result.add(&" CHECK ({name} > 0)")
 
 # =============================================================================
 # float

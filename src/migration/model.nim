@@ -1,6 +1,9 @@
 import db_common
 import base, util, strformat
-import migrates/sqlite_migrate, migrates/mysql_migrate
+import
+  migrates/sqlite_migrate,
+  migrates/mysql_migrate,
+  migrates/postgres_migrate
 include ../database
 
 export Model, Column
@@ -27,7 +30,7 @@ proc migrate*(this: Model) =
     of "mysql":
       query = mysql_migrate.migrate(this)
     of "postgres":
-      query = ""
+      query = postgres_migrate.migrate(this)
     else:
       echo ""
   echo query
