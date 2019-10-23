@@ -91,7 +91,6 @@ proc migrate*(this:Model):string =
         columnString.add(
           textGenerator(
             column.name,
-            column.info["size"].getStr(),
             column.isNullable,
             column.isDefault,
             column.defaultString

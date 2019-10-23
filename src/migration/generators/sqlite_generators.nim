@@ -41,13 +41,13 @@ proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
     result.add(" NOT NULL")
 
   if nullable and isUnsigned:
-    result.add(&" CHECK ({name} = null OR {name} >= 0)")
+    result.add(&" CHECK ({name} = null OR {name} > 0)")
   elif isUnsigned:
-    result.add(&" CHECK ({name} >= 0)")
+    result.add(&" CHECK ({name} > 0)")
 
 proc floatGenerator*(name:string, nullable:bool, isDefault:bool,
                       default:float, isUnsigned:bool):string =
-  result = &"{name} FLOAT"
+  result = &"{name} DOUBLE"
 
   if isDefault:
     result.add(
@@ -58,9 +58,9 @@ proc floatGenerator*(name:string, nullable:bool, isDefault:bool,
     result.add(" NOT NULL")
 
   if nullable and isUnsigned:
-    result.add(&" CHECK ({name} = null OR {name} >= 0)")
+    result.add(&" CHECK ({name} = null OR {name} > 0)")
   elif isUnsigned:
-    result.add(&" CHECK ({name} >= 0)")
+    result.add(&" CHECK ({name} > 0)")
 # =============================================================================
 # char
 # =============================================================================
