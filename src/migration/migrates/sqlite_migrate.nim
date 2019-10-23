@@ -1,6 +1,6 @@
 import db_common, strformat, strutils, json
 import ../base
-import ../generators/mysql_generators
+import ../generators/sqlite_generators
 
 proc migrate*(this:Model):string =
 

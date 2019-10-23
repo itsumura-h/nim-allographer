@@ -56,25 +56,37 @@ proc increments*(this:Schema, name:string): Column =
 proc integer*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbInt
+    typ: dbInt,
+    info: %*{
+      "size": "normal"
+    }
   )
 
 proc smallInteger*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbInt
+    typ: dbInt,
+    info: %*{
+      "size": "small"
+    }
   )
 
 proc mediumInteger*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbInt
+    typ: dbInt,
+    info: %*{
+      "size": "medium"
+    }
   )
 
 proc bigInteger*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbInt
+    typ: dbInt,
+    info: %*{
+      "size": "big"
+    }
   )
 
 # =============================================================================
@@ -130,19 +142,28 @@ proc string*(this:Schema, name:string, length=255):Column =
 proc text*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbXml
+    typ: dbXml,
+    info: %*{
+      "size": "normal"
+    }
   )
 
 proc mediumText*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbXml
+    typ: dbXml,
+    info: %*{
+      "size": "medium"
+    }
   )
 
 proc longText*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbXml
+    typ: dbXml,
+    info: %*{
+      "size": "long"
+    }
   )
 
 # =============================================================================

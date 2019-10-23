@@ -26,7 +26,8 @@ proc migrate*(this:Model):string =
             column.isNullable,
             column.isDefault,
             column.defaultInt,
-            column.isUnsigned
+            column.isUnsigned,
+            column.info["size"].getStr()
           )
         )
       # float =================================================================
@@ -43,9 +44,22 @@ proc migrate*(this:Model):string =
           )
         )
       of dbFloat:
+        var
+          isWithOption = false
+          maximum = 0
+          digit = 0
+
+        if column.info != nil:
+          isWithOption = true
+          maximum = parseInt($column.info["maximum"])
+          digit = parseInt($column.info["digit"])
+
         columnString.add(
           floatGenerator(
             column.name,
+            isWithOption,
+            maximum,
+            digit,
             column.isNullable,
             column.isDefault,
             column.defaultFloat,
@@ -77,6 +91,7 @@ proc migrate*(this:Model):string =
         columnString.add(
           textGenerator(
             column.name,
+            column.info["size"].getStr(),
             column.isNullable,
             column.isDefault,
             column.defaultString

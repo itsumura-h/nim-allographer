@@ -36,6 +36,10 @@ proc migrate*(this: Model) =
   let db = db()
   try:
     db.exec(sql &"drop table {table_name}")
+  except Exception:
+    echo getCurrentExceptionMsg()
+
+  try:
     db.exec(sql query)
   except Exception:
     echo getCurrentExceptionMsg()
