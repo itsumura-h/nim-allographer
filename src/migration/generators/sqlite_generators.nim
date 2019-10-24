@@ -1,5 +1,5 @@
 import json, strformat
-# import ../../util
+import ../base
 
 # =============================================================================
 # int
@@ -211,6 +211,18 @@ proc jsonGenerator*(name:string, nullable:bool):string =
   if not nullable:
     result.add(" NOT NULL")
 
-proc foreignGenerator*(name:string, table:string, column:string):string =
-  result = &"{name} INTEGER, "
-  result.add(&"FOREIGN KEY({name}) REFERENCES {table}({column})")
+proc foreignColumnGenerator*(name:string):string =
+  result = &"{name} INTEGER"
+
+proc foreignGenerator*(name:string, table:string, column:string,
+                        foreignOnDelete:ForeignOnDelete):string =
+  var onDeleteString = "RESTRICT"
+  if foreignOnDelete == CASCADE:
+    onDeleteString = "CASCADE"
+  elif foreignOnDelete == SET_NULL:
+    onDeleteString = "SET NULL"
+  elif foreignOnDelete == NO_ACTION:
+    onDeleteString = "NO ACTION"
+
+  result = &", FOREIGN KEY({name}) REFERENCES {table}({column})"
+  result.add(&" ON DELETE {onDeleteString}")

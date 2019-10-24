@@ -7,14 +7,16 @@ services:
     tty: true
     volumes:
       - .:/home/www
-  # mysql:
-  #   image: mariadb
-  #   tty: true
-  #   environment:
-  #     MYSQL_ROOT_PASSWORD: root
-  #     MYSQL_DATABASE: allographer
-  #     MYSQL_USER: user
-  #     MYSQL_PASSWORD: Password!
+  mysql:
+    image: mariadb
+    tty: true
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: allographer
+      MYSQL_USER: user
+      MYSQL_PASSWORD: Password!
+      default_authentication_plugin: mysql_native_password
   postgres:
     image: postgres:alpine
     tty: true

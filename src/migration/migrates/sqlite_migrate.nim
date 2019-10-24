@@ -1,11 +1,11 @@
-import db_common, strformat, strutils, json
+import strformat, strutils, json
 import ../base
 import ../generators/sqlite_generators
 
 proc migrate*(this:Model):string =
 
   var columnString = ""
-  var primaryColumn = ""
+  var foreignString = ""
   for i, column in this.columns:
     # echo repr column
     if i > 0:
@@ -14,7 +14,6 @@ proc migrate*(this:Model):string =
     case column.typ:
       # int ===================================================================
       of rdbIncrements:
-        primaryColumn = column.name
         columnString.add(
           serialGenerator(column.name)
         )
@@ -208,19 +207,17 @@ proc migrate*(this:Model):string =
         )
       of rdbForeign:
         columnString.add(
+          foreignColumnGenerator(column.name)
+        )
+        foreignString.add(
           foreignGenerator(
             column.name,
             column.info["table"].getStr(),
-            column.info["column"].getStr()
+            column.info["column"].getStr(),
+            column.foreignOnDelete
           )
         )
 
-  # primary key
-  var primaryString = ""
-  if primaryColumn.len > 0:
-    primaryString.add(
-      &", PRIMARY KEY ({primaryColumn})"
-    )
 
-  var query = &"CREATE TABLE {this.name} ({columnString})"
+  var query = &"CREATE TABLE {this.name} ({columnString}{foreignString})"
   return query

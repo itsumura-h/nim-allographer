@@ -47,10 +47,7 @@ proc unsigned*(c: Column): Column =
 # =============================================================================
 proc increments*(this:Schema, name:string): Column =
   Column(
-    name: name,
-    typ: rdbIncrements,
-    isNullable: false,
-    isUnsigned: true
+    name: name
   )
 
 proc integer*(this:Schema, name:string):Column =
@@ -130,28 +127,19 @@ proc string*(this:Schema, name:string, length=255):Column =
 proc text*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: rdbText,
-    info: %*{
-      "size": "normal"
-    }
+    typ: rdbText
   )
 
 proc mediumText*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: rdbMediumText,
-    info: %*{
-      "size": "medium"
-    }
+    typ: rdbMediumText
   )
 
 proc longText*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: rdbLongText,
-    info: %*{
-      "size": "long"
-    }
+    typ: rdbLongText
   )
 
 # =============================================================================
@@ -241,4 +229,9 @@ proc reference*(this:Column, column:string):Column =
 proc on*(this:Column, table:string):Column =
   var c = this
   c.info["table"] = %*table
+  return c
+
+proc onDelete*(this:Column, kind:ForeignOnDelete):Column =
+  var c = this
+  c.foreignOnDelete = kind
   return c

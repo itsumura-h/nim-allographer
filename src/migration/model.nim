@@ -1,8 +1,8 @@
 import db_common
 import base, util, strformat
 import
-  migrates/sqlite_migrate
-  # migrates/mysql_migrate,
+  migrates/sqlite_migrate,
+  migrates/mysql_migrate
   # migrates/postgres_migrate
 include ../database
 
@@ -28,8 +28,8 @@ proc new*(this:Model, name:string, columns:varargs[Column]) =
   case driver:
     of "sqlite":
       query = sqlite_migrate.migrate(newModel)
-    # of "mysql":
-    #   query = mysql_migrate.migrate(newModel)
+    of "mysql":
+      query = mysql_migrate.migrate(newModel)
     # of "postgres":
     #   query = postgres_migrate.migrate(newModel)
     else:

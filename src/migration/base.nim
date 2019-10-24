@@ -15,6 +15,7 @@ type
     defaultInt*: int
     defaultFloat*: float
     defaultString*: string
+    foreignOnDelete*: ForeignOnDelete
     info*: JsonNode
 
   RdbTypekind* = enum
@@ -48,3 +49,9 @@ type
     rdbEnumField,
     rdbJson,
     rdbForeign
+
+  ForeignOnDelete* = enum
+    RESTRICT
+    CASCADE
+    SET_NULL
+    NO_ACTION
