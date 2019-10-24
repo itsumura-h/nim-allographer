@@ -137,23 +137,23 @@ proc timeGenerator*(name:string, nullable:bool, isDefault:bool):string =
       &" DEFAULT (TIME('now','localtime'))"
     )
 
-proc timestampGenerator*(name:string, nullable:bool, isDefault:bool,
-                          status:string):string =
-  if status == "timestamp":
-    result = &"{name} DATETIME"
+proc timestampGenerator*(name:string, nullable:bool, isDefault:bool):string =
+  result = &"{name} DATETIME"
 
-    if not nullable:
-      result.add(" NOT NULL")
+  if not nullable:
+    result.add(" NOT NULL")
 
-    if isDefault:
-      result.add(
-        &" DEFAULT (DATETIME('now','localtime'))"
-      )
-  elif status == "timestamps":
-    result = "created_at DATETIME DEFAULT (DATETIME('now','localtime')), "
-    result.add("updated_at DATETIME DEFAULT (DATETIME('now','localtime'))")
-  elif status == "softDeletes":
-    result = "deleted_at DATETIME DEFAULT (DATETIME('now','localtime'))"
+  if isDefault:
+    result.add(
+      &" DEFAULT (DATETIME('now','localtime'))"
+    )
+
+proc timestampsGenerator*():string =
+  result = "created_at DATETIME, "
+  result.add("updated_at DATETIME DEFAULT (DATETIME('now','localtime'))")
+
+proc softDeleteGenerator*():string =
+  result = "deleted_at DATETIME"
 
 # =============================================================================
 # others
@@ -210,3 +210,7 @@ proc jsonGenerator*(name:string, nullable:bool):string =
 
   if not nullable:
     result.add(" NOT NULL")
+
+proc foreignGenerator*(name:string, table:string, column:string):string =
+  result = &"{name} INTEGER, "
+  result.add(&"FOREIGN KEY({name}) REFERENCES {table}({column})")

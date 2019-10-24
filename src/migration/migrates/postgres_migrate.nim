@@ -1,4 +1,4 @@
-import db_common, strformat, strutils, json
+import strformat, strutils, json
 import ../base
 import ../generators/postgres_generators
 
@@ -14,12 +14,12 @@ proc migrate*(this:Model):string =
 
     case column.typ:
       # int ===================================================================
-      of dbSerial:
+      of rdbIncrements:
         primaryColumn = column.name
         columnString.add(
           serialGenerator(column.name)
         )
-      of dbInt:
+      of rdbInt:
         columnString.add(
           intGenerator(
             column.name,

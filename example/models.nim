@@ -62,7 +62,7 @@ Model().new(
     Schema().longText("longText_default").default("e"),
     Schema().longText("longText_null").nullable(),
 
-    # # date
+    # date
     Schema().date("date"),
     Schema().date("date_null").nullable(),
     Schema().date("date_defualt").default(),
@@ -80,9 +80,9 @@ Model().new(
     Schema().timestamp("timestamp_default").default(),
     Schema().timestamp("timestamp_null_default").nullable().default(),
     Schema().timestamps(),
-    Schema().softDeletes(),
+    Schema().softDelete(),
 
-    # # other
+    # other
     Schema().binary("_binary"),
     Schema().binary("binary_null").nullable(),
     Schema().boolean("bool"),
@@ -96,4 +96,16 @@ Model().new(
     Schema().json("json"),
     Schema().json("json_null").nullable(),
   ]
-).migrate()
+)
+
+Model().new("auth", [
+  Schema().increments("id"),
+  Schema().string("name"),
+  Schema().timestamps()
+])
+
+Model().new("user", [
+  Schema().increments("id"),
+  Schema().string("name"),
+  Schema().foreign("auth_id").reference("id").on("auth")
+])

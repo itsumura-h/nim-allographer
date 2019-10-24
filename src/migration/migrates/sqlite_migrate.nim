@@ -13,12 +13,42 @@ proc migrate*(this:Model):string =
 
     case column.typ:
       # int ===================================================================
-      of dbSerial:
+      of rdbIncrements:
         primaryColumn = column.name
         columnString.add(
           serialGenerator(column.name)
         )
-      of dbInt:
+      of rdbInteger:
+        columnString.add(
+          intGenerator(
+            column.name,
+            column.isNullable,
+            column.isDefault,
+            column.defaultInt,
+            column.isUnsigned
+          )
+        )
+      of rdbSmallInteger:
+        columnString.add(
+          intGenerator(
+            column.name,
+            column.isNullable,
+            column.isDefault,
+            column.defaultInt,
+            column.isUnsigned
+          )
+        )
+      of rdbMediumInteger:
+        columnString.add(
+          intGenerator(
+            column.name,
+            column.isNullable,
+            column.isDefault,
+            column.defaultInt,
+            column.isUnsigned
+          )
+        )
+      of rdbBigInteger:
         columnString.add(
           intGenerator(
             column.name,
@@ -29,7 +59,7 @@ proc migrate*(this:Model):string =
           )
         )
       # float =================================================================
-      of dbDecimal:
+      of rdbDecimal:
         columnString.add(
           decimalGenerator(
             column.name,
@@ -41,7 +71,19 @@ proc migrate*(this:Model):string =
             column.isUnsigned
           )
         )
-      of dbFloat:
+      of rdbDouble:
+        columnString.add(
+          decimalGenerator(
+            column.name,
+            parseInt($column.info["maximum"]),
+            parseInt($column.info["digit"]),
+            column.isNullable,
+            column.isDefault,
+            column.defaultFloat,
+            column.isUnsigned
+          )
+        )
+      of rdbFloat:
         columnString.add(
           floatGenerator(
             column.name,
@@ -52,7 +94,7 @@ proc migrate*(this:Model):string =
           )
         )
       # char ==================================================================
-      of dbFixedChar:
+      of rdbChar:
         columnString.add(
           charGenerator(
             column.name,
@@ -62,7 +104,7 @@ proc migrate*(this:Model):string =
             column.defaultString
           )
         )
-      of dbVarchar:
+      of rdbString:
         columnString.add(
           varcharGenerator(
             column.name,
@@ -72,7 +114,26 @@ proc migrate*(this:Model):string =
             column.defaultString
           )
         )
-      of dbXml:
+      # text ==================================================================
+      of rdbText:
+        columnString.add(
+          textGenerator(
+            column.name,
+            column.isNullable,
+            column.isDefault,
+            column.defaultString
+          )
+        )
+      of rdbMediumText:
+        columnString.add(
+          textGenerator(
+            column.name,
+            column.isNullable,
+            column.isDefault,
+            column.defaultString
+          )
+        )
+      of rdbLongText:
         columnString.add(
           textGenerator(
             column.name,
@@ -82,15 +143,15 @@ proc migrate*(this:Model):string =
           )
         )
       # date ==================================================================
-      of dbDate:
+      of rdbDate:
         columnString.add(
           dateGenerator(column.name, column.isNullable, column.isDefault)
         )
-      of dbDatetime:
+      of rdbDatetime:
         columnString.add(
           datetimeGenerator(column.name, column.isNullable, column.isDefault)
         )
-      of dbTime:
+      of rdbTime:
         columnString.add(
           timeGenerator(
             column.name,
@@ -98,21 +159,28 @@ proc migrate*(this:Model):string =
             column.isDefault
           )
         )
-      of dbTimestamp:
+      of rdbTimestamp:
         columnString.add(
           timestampGenerator(
             column.name,
             column.isNullable,
-            column.isDefault,
-            column.info["status"].getStr
+            column.isDefault
           )
         )
+      of rdbTimestamps:
+        columnString.add(
+          timestampsGenerator()
+        )
+      of rdbSoftDelete:
+        columnString.add(
+          softDeleteGenerator()
+        )
       # others ================================================================
-      of dbBlob:
+      of rdbBinary:
         columnString.add(
           blobGenerator(column.name, column.isNullable)
         )
-      of dbBool:
+      of rdbBoolean:
         columnString.add(
           boolGenerator(
             column.name,
@@ -121,7 +189,7 @@ proc migrate*(this:Model):string =
             column.defaultBool
           )
         )
-      of dbEnum:
+      of rdbEnumField:
         columnString.add(
           enumGenerator(
             column.name,
@@ -131,15 +199,21 @@ proc migrate*(this:Model):string =
             column.defaultString
           )
         )
-      of dbJson:
+      of rdbJson:
         columnString.add(
           jsonGenerator(
             column.name,
             column.isNullable
           )
         )
-      else:
-        echo ""
+      of rdbForeign:
+        columnString.add(
+          foreignGenerator(
+            column.name,
+            column.info["table"].getStr(),
+            column.info["column"].getStr()
+          )
+        )
 
   # primary key
   var primaryString = ""

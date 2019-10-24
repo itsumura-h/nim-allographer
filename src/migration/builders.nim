@@ -1,4 +1,4 @@
-import db_common, json
+import json
 import base
 
 type Schema* = ref object
@@ -48,7 +48,7 @@ proc unsigned*(c: Column): Column =
 proc increments*(this:Schema, name:string): Column =
   Column(
     name: name,
-    typ: dbSerial,
+    typ: rdbIncrements,
     isNullable: false,
     isUnsigned: true
   )
@@ -56,37 +56,25 @@ proc increments*(this:Schema, name:string): Column =
 proc integer*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbInt,
-    info: %*{
-      "size": "normal"
-    }
+    typ: rdbInteger
   )
 
 proc smallInteger*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbInt,
-    info: %*{
-      "size": "small"
-    }
+    typ: rdbSmallInteger,
   )
 
 proc mediumInteger*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbInt,
-    info: %*{
-      "size": "medium"
-    }
+    typ: rdbMediumInteger
   )
 
 proc bigInteger*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbInt,
-    info: %*{
-      "size": "big"
-    }
+    typ: rdbBigInteger
   )
 
 # =============================================================================
@@ -95,7 +83,7 @@ proc bigInteger*(this:Schema, name:string):Column =
 proc decimal*(this:Schema, name:string, maximum:int, digit:int): Column =
   Column(
     name: name,
-    typ: dbDecimal,
+    typ: rdbDecimal,
     info: %*{
       "maximum": maximum,
       "digit": digit
@@ -105,7 +93,7 @@ proc decimal*(this:Schema, name:string, maximum:int, digit:int): Column =
 proc double*(this:Schema, name:string, maximum:int, digit:int):Column =
   Column(
     name: name,
-    typ: dbFloat,
+    typ: rdbDouble,
     info: %*{
       "maximum": maximum,
       "digit": digit
@@ -115,7 +103,7 @@ proc double*(this:Schema, name:string, maximum:int, digit:int):Column =
 proc float*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbFloat
+    typ: rdbFloat
   )
 
 # =============================================================================
@@ -124,7 +112,7 @@ proc float*(this:Schema, name:string):Column =
 proc char*(this:Schema, name:string, maxLength:int): Column =
   Column(
     name: name,
-    typ: dbFixedChar,
+    typ: rdbChar,
     info: %*{
       "maxLength": maxLength
     }
@@ -133,7 +121,7 @@ proc char*(this:Schema, name:string, maxLength:int): Column =
 proc string*(this:Schema, name:string, length=255):Column =
   Column(
     name: name,
-    typ: dbVarchar,
+    typ: rdbString,
     info: %*{
       "maxLength": length
     }
@@ -142,7 +130,7 @@ proc string*(this:Schema, name:string, length=255):Column =
 proc text*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbXml,
+    typ: rdbText,
     info: %*{
       "size": "normal"
     }
@@ -151,7 +139,7 @@ proc text*(this:Schema, name:string):Column =
 proc mediumText*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbXml,
+    typ: rdbMediumText,
     info: %*{
       "size": "medium"
     }
@@ -160,7 +148,7 @@ proc mediumText*(this:Schema, name:string):Column =
 proc longText*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbXml,
+    typ: rdbLongText,
     info: %*{
       "size": "long"
     }
@@ -172,44 +160,35 @@ proc longText*(this:Schema, name:string):Column =
 proc date*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbDate
+    typ: rdbDate
   )
 
 proc datetime*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbDatetime
+    typ: rdbDatetime
   )
 
 proc time*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbTime
+    typ: rdbTime
   )
 
 proc timestamp*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbTimestamp,
-    info: %*{
-      "status": "timestamp"
-    }
+    typ: rdbTimestamp
   )
 
 proc timestamps*(this:Schema):Column =
   Column(
-    typ: dbTimestamp,
-    info: %*{
-      "status": "timestamps"
-    }
+    typ: rdbTimestamps
   )
 
-proc softDeletes*(this:Schema):Column =
+proc softDelete*(this:Schema):Column =
   Column(
-    typ: dbTimestamp,
-    info: %*{
-      "status": "softDeletes"
-    }
+    typ: rdbSoftDelete
   )
 
 # =============================================================================
@@ -218,20 +197,20 @@ proc softDeletes*(this:Schema):Column =
 proc binary*(this:Schema, name:string): Column =
   Column(
     name: name,
-    typ: dbBlob
+    typ: rdbBinary
   )
 
 # =============================================================================
 proc boolean*(this:Schema, name:string): Column =
   Column(
     name: name,
-    typ: dbBool
+    typ: rdbBoolean
   )
 
 proc enumField*(this:Schema, name:string, options:varargs[string]):Column =
   Column(
     name: name,
-    typ: dbEnum,
+    typ: rdbEnumField,
     info: %*{
       "options": options
     }
@@ -240,5 +219,26 @@ proc enumField*(this:Schema, name:string, options:varargs[string]):Column =
 proc json*(this:Schema, name:string):Column =
   Column(
     name: name,
-    typ: dbJson
+    typ: rdbJson
   )
+
+# =============================================================================
+# Foreign
+# =============================================================================
+proc foreign*(this:Schema, name:string):Column =
+  Column(
+    name: name,
+    typ: rdbForeign
+  )
+
+proc reference*(this:Column, column:string):Column =
+  var c = this
+  c.info = %*{
+    "column": column
+  }
+  return c
+
+proc on*(this:Column, table:string):Column =
+  var c = this
+  c.info["table"] = %*table
+  return c
