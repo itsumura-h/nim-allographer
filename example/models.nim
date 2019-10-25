@@ -112,6 +112,6 @@ Model().new("a", [
 Model().new("users", [
   Schema().increments("id"),
   Schema().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL),
-  Schema().foreign("a_id").reference("id").on("a").onDelete(CASCADE),
+  Schema().foreign("a_id").reference("id").on("a").onDelete(SET_NULL),
   Schema().string("name"),
 ])

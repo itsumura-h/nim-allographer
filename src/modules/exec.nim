@@ -1,7 +1,8 @@
 import db_sqlite, db_mysql, db_postgres
 import json, parsecfg, strutils
 
-import base, builders, logger
+import base, builders
+import ../util
 import ../database
 
 

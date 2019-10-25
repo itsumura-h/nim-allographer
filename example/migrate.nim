@@ -8,7 +8,7 @@ import ../src/allographer/SchemaBuilder
 Model().new("auth",[
   Schema().increments("id"),
   Schema().string("auth")
-]).migrate()
+])
 
 Model().new("users",[
   Schema().increments("id"),
@@ -18,8 +18,8 @@ Model().new("users",[
   Schema().string("salt").nullable(),
   Schema().string("address").nullable(),
   Schema().date("birth_date").nullable(),
-  Schema().integer("auth_id").nullable(),
-]).migrate()
+  Schema().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+])
 
 # シーダー
 RDB().table("auth").insert([

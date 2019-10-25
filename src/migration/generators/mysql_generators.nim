@@ -229,6 +229,7 @@ proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
   for i, option in options:
     if i > 0:
       optionsString.add(", ")
+
     optionsString.add(
       &"'{option.getStr}'"
     )

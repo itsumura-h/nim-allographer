@@ -8,7 +8,7 @@ proc migrate*(this:Model):string =
   var columnString = ""
   var foreignString = ""
   for i, column in this.columns:
-    echo repr column
+    # echo repr column
     if i > 0:
       columnString.add(", ")
 
@@ -146,11 +146,7 @@ proc migrate*(this:Model):string =
         )
       of rdbTime:
         columnString.add(
-          timeGenerator(
-            column.name,
-            column.isNullable,
-            column.isDefault
-          )
+          timeGenerator(column.name, column.isNullable, column.isDefault)
         )
       of rdbTimestamp:
         columnString.add(

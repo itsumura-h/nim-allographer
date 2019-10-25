@@ -1,21 +1,15 @@
 import json, strformat
+import ../base
 
 # =============================================================================
 # int
 # =============================================================================
-proc serialGenerator*(name:string):string =
+proc incrementGenerator*(name:string):string =
   result = &"{name} INTEGER NOT NULL PRIMARY KEY"
 
 proc intGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
-                    isUnsigned:bool, size:string):string =
-  if size == "normal":
-    result = &"{name} INTEGER"
-  elif size == "small":
-    result = &"{name} SMALLINT"
-  elif size == "medium":
-    result = &"{name} INTEGER"
-  elif size == "big":
-    result = &"{name} BIGINT"
+                    isUnsigned:bool):string =
+  result = &"{name} INTEGER"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
@@ -28,13 +22,56 @@ proc intGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
   elif isUnsigned:
     result.add(&" CHECK ({name} > 0)")
 
+proc smallIntGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
+                        isUnsigned:bool):string =
+  result = &"{name} SMALLINT"
+
+  if isDefault:
+    result.add(&" DEFAULT {default}")
+  
+  if not nullable:
+    result.add(" NOT NULL")
+
+  if nullable and isUnsigned:
+    result.add(&" CHECK ({name} = null OR {name} > 0)")
+  elif isUnsigned:
+    result.add(&" CHECK ({name} > 0)")
+
+proc mediumIntGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
+                          isUnsigned:bool):string =
+  result = &"{name} INTEGER"
+
+  if isDefault:
+    result.add(&" DEFAULT {default}")
+  
+  if not nullable:
+    result.add(" NOT NULL")
+
+  if nullable and isUnsigned:
+    result.add(&" CHECK ({name} = null OR {name} > 0)")
+  elif isUnsigned:
+    result.add(&" CHECK ({name} > 0)")
+
+proc bigIntGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
+                      isUnsigned:bool):string =
+  result = &"{name} BIGINT"
+
+  if isDefault:
+    result.add(&" DEFAULT {default}")
+  
+  if not nullable:
+    result.add(" NOT NULL")
+
+  if nullable and isUnsigned:
+    result.add(&" CHECK ({name} = null OR {name} > 0)")
+  elif isUnsigned:
+    result.add(&" CHECK ({name} > 0)")
 
 # =============================================================================
 # float
 # =============================================================================
 proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
-                        isDefault:bool, default:float,
-                        isUnsigned:bool):string =
+                      isDefault:bool, default:float, isUnsigned:bool):string =
   result = &"{name} NUMERIC({maximum}, {digit})"
 
   if isDefault:
@@ -50,13 +87,28 @@ proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
   elif isUnsigned:
     result.add(&" CHECK ({name} > 0)")
 
-proc floatGenerator*(name:string, isWithOption:bool, maximum:int, digit:int,
-                      nullable:bool, isDefault:bool, default:float,
+proc doubleGenerator*(name:string, maximum:int, digit:int, nullable:bool,
+                      isDefault:bool, default:float, isUnsigned:bool):string =
+  result = &"{name} NUMERIC({maximum}, {digit})"
+
+  if isDefault:
+    result.add(&" DEFAULT {default}")
+
+  if not nullable:
+    result.add(" NOT NULL")
+
+  if nullable and isUnsigned:
+    result.add(&" CHECK ({name} = null OR {name} > 0)")
+  elif isUnsigned:
+    result.add(&" CHECK ({name} > 0)")
+
+proc floatGenerator*(name:string, nullable:bool, isDefault:bool, default:float,
                       isUnsigned:bool):string =
-  if isWithOption:
-    result = &"{name} NUMERIC({maximum}, {digit})"
-  else:
-    result = &"{name} NUMERIC"
+  result = &"{name} NUMERIC"
+  # if isWithOption:
+  #   result = &"{name} NUMERIC({maximum}, {digit})"
+  # else:
+  #   result = &"{name} NUMERIC"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
@@ -83,7 +135,7 @@ proc charGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
   if not nullable:
     result.add(" NOT NULL")
 
-proc varcharGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
+proc stringGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
                     default:string):string =
   result = &"{name} VARCHAR({maxLength})"
 
@@ -143,23 +195,23 @@ proc timeGenerator*(name:string, nullable:bool, isDefault:bool):string =
       &" DEFAULT (NOW())"
     )
 
-proc timestampGenerator*(name:string, nullable:bool, isDefault:bool,
-                          status:string):string =
-  if status == "timestamp":
-    result = &"{name} TIMESTAMP"
+proc timestampGenerator*(name:string, nullable:bool, isDefault:bool):string =
+  result = &"{name} TIMESTAMP"
 
-    if not nullable:
-      result.add(" NOT NULL")
+  if not nullable:
+    result.add(" NOT NULL")
 
-    if isDefault:
-      result.add(
-        &" DEFAULT (NOW())"
-      )
-  elif status == "timestamps":
-    result = "created_at TIMESTAMP, "
-    result.add("updated_at TIMESTAMP DEFAULT (NOW())")
-  elif status == "softDeletes":
-    result = "deleted_at TIMESTAMP"
+  if isDefault:
+    result.add(
+      &" DEFAULT (NOW())"
+    )
+
+proc timestampsGenerator*():string =
+  result = "created_at TIMESTAMP, "
+  result.add("updated_at TIMESTAMP DEFAULT (NOW())")
+
+proc softDeleteGenetator*():string =
+  result = "deleted_at TIMESTAMP"
 
 # =============================================================================
 # others
@@ -187,6 +239,7 @@ proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
   for i, option in options:
     if i > 0:
       optionsString.add(" OR ")
+
     optionsString.add(
       &"{name} = '{option.getStr}'"
     )
@@ -216,3 +269,20 @@ proc jsonGenerator*(name:string, nullable:bool):string =
 
   if not nullable:
     result.add(" NOT NULL")
+
+proc foreignColumnGenerator*(name:string):string =
+  result = &"{name} INT"
+
+proc foreignGenerator*(name:string, table:string, column:string,
+                        foreignOnDelete:ForeignOnDelete):string =
+  var onDeleteString = "RESTRICT"
+  if foreignOnDelete == CASCADE:
+    onDeleteString = "CASCADE"
+  elif foreignOnDelete == SET_NULL:
+    onDeleteString = "SET NULL"
+  elif foreignOnDelete == NO_ACTION:
+    onDeleteString = "NO ACTION"
+
+
+  result = &", FOREIGN KEY({name}) REFERENCES {table}({column})"
+  result.add(&" ON DELETE {onDeleteString}")
