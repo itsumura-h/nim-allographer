@@ -16,7 +16,7 @@ proc driverTypeError() =
     raise newException(OSError, "invalid DB driver type")
 
 
-proc new*(this:Model, name:string, columns:varargs[Column]) =
+proc create*(this:Model, name:string, columns:varargs[Column]) =
   var newModel = Model(
     name: name,
     columns: @columns
