@@ -28,11 +28,11 @@ proc create*(this:Model, name:string, columns:varargs[Column]) =
   let driver = util.getDriver()
   case driver:
     of "sqlite":
-      query = sqlite_migrate.migrate(newModel)
+      query = sqlite_migrate.create(newModel)
     of "mysql":
-      query = mysql_migrate.migrate(newModel)
+      query = mysql_migrate.create(newModel)
     of "postgres":
-      query = postgres_migrate.migrate(newModel)
+      query = postgres_migrate.create(newModel)
     else:
       echo ""
   logger(query)

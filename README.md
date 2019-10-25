@@ -94,8 +94,8 @@ display: "true"
 file: "true"
 ```
 
-- driver: sqlite/mysql/postgres
-- conn: sqlite file path / host:port
+- driver: `sqlite` or `mysql` or `postgres`
+- conn: `sqlite/file/path` or `host:port`
 - user: login user name
 - password: login password
 - database: specify the database
