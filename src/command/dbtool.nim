@@ -51,24 +51,28 @@ proc loadConf(args: seq[string]): int =
     styledWriteLine(stdout, fgRed, bgDefault, message, resetStyle)
     return 1
 
-  var targetPath = normalizedPath(getAppDir() & "/../modules/database.nim")
+  var targetPath = normalizedPath(getAppDir() & "/../connection.nim")
   let content = &"""
 import db_{driver}
 
 proc db*(): DbConn =
   open("{conn}", "{user}", "{password}", "{database}")
 """
-  block:
-    let f = open(targetPath, fmWrite)
-    f.write(content)
-    defer:
-      f.close()
 
-  message = confPath & " is successfully loaded!!!"
-  styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
+  try:
+    block:
+      let f = open(targetPath, fmWrite)
+      f.write(content)
+      defer:
+        f.close()
 
-  message = targetPath & " is successfully edited!!!"
-  styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
+    message = confPath & " is successfully loaded!!!"
+    styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
+
+    message = targetPath & " is successfully edited!!!"
+    styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
+  except:
+    echo getCurrentExceptionMsg()
 
 
 when isMainModule:
