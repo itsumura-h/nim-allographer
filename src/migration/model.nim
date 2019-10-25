@@ -5,7 +5,7 @@ import
   migrates/sqlite_migrate,
   migrates/mysql_migrate,
   migrates/postgres_migrate
-include ../database
+include ../connection
 
 export Model, Column
 

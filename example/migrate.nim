@@ -2,6 +2,8 @@ import strformat, json
 import bcrypt
 import ../src/allographer/QueryBuilder
 import ../src/allographer/SchemaBuilder
+# import allographer/QueryBuilder
+# import allographer/SchemaBuilder
 
 
 # マイグレーション

@@ -2,10 +2,10 @@ import
   ../modules/base,
   ../modules/grammars,
   ../modules/exec,
-  ../database
+  ../connection
   
 export
   base,
   grammars,
   exec,
-  database
+  connection

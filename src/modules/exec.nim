@@ -3,7 +3,7 @@ import json, parsecfg, strutils
 
 import base, builders
 import ../util
-import ../database
+import ../connection
 
 
 proc checkSql*(this: RDB): RDB =

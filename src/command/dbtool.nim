@@ -51,20 +51,21 @@ proc loadConf(args: seq[string]): int =
     styledWriteLine(stdout, fgRed, bgDefault, message, resetStyle)
     return 1
 
-  var targetPath = normalizedPath(getAppDir() & "/../database.nim")
+  var targetPath = normalizedPath(getAppDir() & "/../connection.nim")
   let content = &"""
 import db_{driver}
 
 proc db*(): DbConn =
   open("{conn}", "{user}", "{password}", "{database}")
 """
-  block:
-    let f = open(targetPath, fmWrite)
-    f.write(content)
-    defer:
-      f.close()
 
   try:
+    block:
+      let f = open(targetPath, fmWrite)
+      f.write(content)
+      defer:
+        f.close()
+
     message = confPath & " is successfully loaded!!!"
     styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
 
