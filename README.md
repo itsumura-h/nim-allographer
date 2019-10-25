@@ -3,6 +3,62 @@ allographer
 
 A Nim query builder library inspired by [Laravel/PHP](https://readouble.com/laravel/6.0/en/queries.html) and [Orator/Python](https://orator-orm.com)
 
+## Easy to access RDB
+### Query Builder
+```
+import allographer/QueryBuilder
+
+var result = RDB()
+            .table("users")
+            .select("id", "email", "name")
+            .limit(5)
+            .offset(10)
+            .get()
+echo result
+
+>> SELECT id, email, name FROM users LIMIT 5 OFFSET 10
+>> @[
+    @["11", "user11@gmail.com", "user11"],
+    @["12", "user12@gmail.com", "user12"],
+    @["13", "user13@gmail.com", "user13"],
+    @["14", "user14@gmail.com", "user14"],
+    @["15", "user15@gmail.com", "user15"]
+]
+```
+
+### Schema Builder
+```
+import allographer/SchemaBuilder
+
+Model().create("auth", [
+  Schema().increments("id"),
+  Schema().string("name").nullable(),
+  Schema().timestamp("created_at").default()
+])
+
+>> CREATE TABLE auth (
+    id INT NOT NULL PRIMARY KEY,
+    name VARCHAR,
+    created_at DATETIME DEFAULT (NOW())
+)
+
+
+Model().create("users", [
+  Schema().increments("id"),
+  Schema().string("name"),
+  Schema().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+])
+
+>> CREATE TABLE users (
+    id INT NOT NULL PRIMARY KEY,
+    name VARCHAR NOT NULL,
+    auth_id INT,
+    FOREIGN KEY(auth_id) REFERENCES auth(id) ON DELETE SET NULL
+) 
+```
+
+---
+
 ## Install
 ```
 nimble install https://github.com/itsumura-h/nim-allographer
