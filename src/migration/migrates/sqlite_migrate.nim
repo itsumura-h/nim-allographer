@@ -2,7 +2,7 @@ import strformat, strutils, json
 import ../base
 import ../generators/sqlite_generators
 
-proc migrate*(this:Model):string =
+proc create*(this:Model):string =
   var columnString = ""
   var foreignString = ""
   for i, column in this.columns:
