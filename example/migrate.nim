@@ -1,39 +1,34 @@
-import db_sqlite
-import os, strformat, json
+import strformat, json
 import bcrypt
-import ../src/allographer
+import ../src/allographer/QueryBuilder
+import ../src/allographer/SchemaBuilder
+# import allographer/QueryBuilder
+# import allographer/SchemaBuilder
 
-# ファイル削除
-os.removeFile(getCurrentDir() & "/test.sqlite3")
 
 # マイグレーション
-db().exec(
-  sql"""
-  CREATE TABLE auth(
-    id INTEGER PRIMARY KEY,
-    auth VARCHAR
-  )"""
-)
+Model().new("auth",[
+  Schema().increments("id"),
+  Schema().string("auth")
+])
 
-db().exec(
-  sql"""
-  CREATE TABLE users(
-    id INTEGER PRIMARY KEY,
-    name VARCHAR,
-    email VARCHAR,
-    password VARCHAR,
-    salt VARCHAR,
-    address VARCHAR,
-    birth_date DATE,
-    auth_id INT
-  )"""
-)
+Model().new("users",[
+  Schema().increments("id"),
+  Schema().string("name").nullable(),
+  Schema().string("email").nullable(),
+  Schema().string("password").nullable(),
+  Schema().string("salt").nullable(),
+  Schema().string("address").nullable(),
+  Schema().date("birth_date").nullable(),
+  Schema().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+])
 
+# シーダー
 RDB().table("auth").insert([
   %*{"auth": "admin"},
   %*{"auth": "user"}
 ])
-.exec(db)
+.exec()
 
 
 var insertData: seq[JsonNode]
@@ -50,4 +45,4 @@ for i in 1..100:
       "auth_id": authId
     }
   )
-RDB().table("users").insert(insertData).exec(db)
+RDB().table("users").insert(insertData).exec()
