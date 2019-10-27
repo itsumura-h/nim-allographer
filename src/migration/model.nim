@@ -15,14 +15,18 @@ proc driverTypeError() =
   if driver != "sqlite" and driver != "mysql" and driver != "postgres":
     raise newException(OSError, "invalid DB driver type")
 
+proc migrateJsonSchema(Model) =
+  discard
 
 proc create*(this:Model, name:string, columns:varargs[Column]) =
+  driverTypeError()
+
   var newModel = Model(
     name: name,
     columns: @columns
   )
 
-  driverTypeError()
+  migrateJsonSchema(newModel)
 
   var query = ""
   let driver = util.getDriver()
