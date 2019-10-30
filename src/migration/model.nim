@@ -1,4 +1,4 @@
-import db_common, json
+import db_common, json, os
 import base, strformat
 import ../util
 import
@@ -7,7 +7,7 @@ import
   migrates/postgres_migrate
 include ../connection
 
-export Model, Column
+export Schema, Table, Column
 
 
 proc driverTypeError() =
@@ -15,57 +15,81 @@ proc driverTypeError() =
   if driver != "sqlite" and driver != "mysql" and driver != "postgres":
     raise newException(OSError, "invalid DB driver type")
 
-proc migrateJsonSchema(model: Model) =
-  var columns = %*[]
-  for column in model.columns:
-    columns.add(%*column)
+proc migrateJsonSchema(tablesArg:varargs[Table]) =
+  var tables = %*[]
+  for table in tablesArg:
 
-  var modelJson = %*{
-    "name": model.name,
-    "columns": columns
-  }
+    var columns = %*[]
+    for column in table.columns:
+      columns.add(%*{
+        "name": column.name,
+        "typ": column.typ,
+        "isNullable": column.isNullable,
+        "isUnsigned": column.isUnsigned,
+        "isDefault": column.isDefault,
+        "defaultBool": column.defaultBool,
+        "defaultInt": column.defaultInt,
+        "defaultFloat": column.defaultFloat,
+        "defaultString": column.defaultString,
+        "foreignOnDelete": column.foreignOnDelete,
+        "info": if column.info != nil: $column.info else: ""
+      })
 
-  let f = open("tmp.json", FileMode.fmWrite)
-  f.write(modelJson.pretty())
-  f.close()
-  
-  
+    tables.add(
+      %*{"name": table.name, "columns": columns}
+    )
 
-proc create*(this:Model, name:string, columns:varargs[Column]) =
+  block:
+    let f = open("tmp.json", FileMode.fmAppend)
+    f.write(tables.pretty())
+    defer:
+      f.close()
+
+# =============================================================================
+
+proc create*(this:Schema, tables:varargs[Table]) =
+  echo tryRemoveFile("tmp.json")
+  migrateJsonSchema(tables)
+
+  for table in tables:
+    # echo repr table
+
+    var query = ""
+    let driver = util.getDriver()
+    case driver:
+      of "sqlite":
+        query = sqlite_migrate.migrate(table)
+      of "mysql":
+        query = mysql_migrate.migrate(table)
+      of "postgres":
+        query = postgres_migrate.migrate(table)
+      else:
+        echo ""
+    logger(query)
+
+    let table_name = table.name
+
+    block:
+      let db = db()
+      try:
+        db.exec(sql &"drop table {table_name}")
+      except Exception:
+        echo getCurrentExceptionMsg()
+
+      try:
+        db.exec(sql query)
+      except Exception:
+        echo getCurrentExceptionMsg()
+
+      defer: db.close()
+
+
+proc create*(this:Table, name:string, columns:varargs[Column]): Table =
   driverTypeError()
 
-  var newModel = Model(
+  var table = Table(
     name: name,
     columns: @columns
   )
 
-  migrateJsonSchema(newModel)
-
-  var query = ""
-  let driver = util.getDriver()
-  case driver:
-    of "sqlite":
-      query = sqlite_migrate.migrate(newModel)
-    of "mysql":
-      query = mysql_migrate.migrate(newModel)
-    of "postgres":
-      query = postgres_migrate.migrate(newModel)
-    else:
-      echo ""
-  logger(query)
-
-  let table_name = newModel.name
-
-  block:
-    let db = db()
-    try:
-      db.exec(sql &"drop table {table_name}")
-    except Exception:
-      echo getCurrentExceptionMsg()
-
-    try:
-      db.exec(sql query)
-    except Exception:
-      echo getCurrentExceptionMsg()
-
-    defer: db.close()
+  return table

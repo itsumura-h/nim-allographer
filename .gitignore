@@ -17,3 +17,4 @@ coverage/*
 lcov.info
 
 *.sqlite3
+tmp.json
