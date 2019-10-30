@@ -1,4 +1,4 @@
-import db_common
+import db_common, json
 import base, strformat
 import ../util
 import
@@ -15,8 +15,21 @@ proc driverTypeError() =
   if driver != "sqlite" and driver != "mysql" and driver != "postgres":
     raise newException(OSError, "invalid DB driver type")
 
-proc migrateJsonSchema(Model) =
-  discard
+proc migrateJsonSchema(model: Model) =
+  var columns = %*[]
+  for column in model.columns:
+    columns.add(%*column)
+
+  var modelJson = %*{
+    "name": model.name,
+    "columns": columns
+  }
+
+  let f = open("tmp.json", FileMode.fmWrite)
+  f.write(modelJson.pretty())
+  f.close()
+  
+  
 
 proc create*(this:Model, name:string, columns:varargs[Column]) =
   driverTypeError()
