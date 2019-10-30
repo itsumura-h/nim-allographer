@@ -1,9 +1,20 @@
+# import
+#   ../migration/base,
+#   ../migration/builders,
+#   ../migration/model
+
+# export
+#   base,
+#   builders,
+#   model
+
 import
-  ../migration/base,
-  ../migration/builders,
-  ../migration/model
+  ../migration2/schema,
+  ../migration2/column,
+  ../migration2/table
+
 
 export
-  base,
-  builders,
-  model
+  schema,
+  column,
+  table
