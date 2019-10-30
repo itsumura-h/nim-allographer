@@ -1,5 +1,5 @@
 import json
-import base, builders, model
+import schema, table, column
 
 type DiffCheck* = ref object
 export DiffCheck

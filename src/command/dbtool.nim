@@ -1,8 +1,10 @@
 import
-  functions/config
-  # functions/migrate
+  functions/config,
+  functions/migration
 
 
 when isMainModule:
   import cligen
-  dispatchMulti([config.makeConf], [config.loadConf])
+  dispatchMulti(
+    [config.makeConf], [config.loadConf], [migration.migrate]
+  )
