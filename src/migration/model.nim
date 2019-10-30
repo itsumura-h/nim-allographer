@@ -1,5 +1,5 @@
-import db_common, json, os
-import base, strformat
+import db_common, strformat, os
+import base, diffCheck
 import ../util
 import
   migrates/sqlite_migrate,
@@ -15,41 +15,41 @@ proc driverTypeError() =
   if driver != "sqlite" and driver != "mysql" and driver != "postgres":
     raise newException(OSError, "invalid DB driver type")
 
-proc migrateJsonSchema(tablesArg:varargs[Table]) =
-  var tables = %*[]
-  for table in tablesArg:
+# proc migrateJsonSchema(tablesArg:varargs[Table]) =
+#   var tables = %*[]
+#   for table in tablesArg:
 
-    var columns = %*[]
-    for column in table.columns:
-      columns.add(%*{
-        "name": column.name,
-        "typ": column.typ,
-        "isNullable": column.isNullable,
-        "isUnsigned": column.isUnsigned,
-        "isDefault": column.isDefault,
-        "defaultBool": column.defaultBool,
-        "defaultInt": column.defaultInt,
-        "defaultFloat": column.defaultFloat,
-        "defaultString": column.defaultString,
-        "foreignOnDelete": column.foreignOnDelete,
-        "info": if column.info != nil: $column.info else: ""
-      })
+#     var columns = %*[]
+#     for column in table.columns:
+#       columns.add(%*{
+#         "name": column.name,
+#         "typ": column.typ,
+#         "isNullable": column.isNullable,
+#         "isUnsigned": column.isUnsigned,
+#         "isDefault": column.isDefault,
+#         "defaultBool": column.defaultBool,
+#         "defaultInt": column.defaultInt,
+#         "defaultFloat": column.defaultFloat,
+#         "defaultString": column.defaultString,
+#         "foreignOnDelete": column.foreignOnDelete,
+#         "info": if column.info != nil: $column.info else: ""
+#       })
 
-    tables.add(
-      %*{"name": table.name, "columns": columns}
-    )
+#     tables.add(
+#       %*{"name": table.name, "columns": columns}
+#     )
 
-  block:
-    let f = open("tmp.json", FileMode.fmAppend)
-    f.write(tables.pretty())
-    defer:
-      f.close()
+#   block:
+#     let f = open("tmp.json", FileMode.fmAppend)
+#     f.write(tables.pretty())
+#     defer:
+#       f.close()
 
 # =============================================================================
 
 proc create*(this:Schema, tables:varargs[Table]) =
   echo tryRemoveFile("tmp.json")
-  migrateJsonSchema(tables)
+  DiffCheck().check(tables)
 
   for table in tables:
     # echo repr table
