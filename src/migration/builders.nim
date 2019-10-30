@@ -47,7 +47,8 @@ proc unsigned*(c: Column): Column =
 # =============================================================================
 proc increments*(this:Column, name:string): Column =
   Column(
-    name: name
+    name: name,
+    typ: rdbIncrements
   )
 
 proc integer*(this:Column, name:string):Column =
