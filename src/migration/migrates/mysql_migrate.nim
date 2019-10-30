@@ -3,7 +3,7 @@ import ../base
 import ../generators/mysql_generators
 
 
-proc migrate*(this:Model):string =
+proc migrate*(this:Table):string =
 
   var columnString = ""
   var foreignString = ""

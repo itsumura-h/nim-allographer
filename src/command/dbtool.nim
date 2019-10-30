@@ -1,6 +1,6 @@
 import
-  functions/config,
-  functions/migrate
+  functions/config
+  # functions/migrate
 
 
 when isMainModule:
