@@ -1,4 +1,5 @@
-import os, strformat, json
+import os, strformat, json, strutils, times
+from strformat import `&`
 import
   migrates/sqlite_migrate,
   migrates/mysql_migrate,
@@ -12,8 +13,7 @@ import table
 type Schema* = ref object
   tables*: seq[Table]
 
-
-proc generateJsonSchema(tablesArg:varargs[Table]) =
+proc generateJsonSchema(tablesArg:varargs[Table]):JsonNode =
   var tables = %*[]
   for table in tablesArg:
 
@@ -36,17 +36,47 @@ proc generateJsonSchema(tablesArg:varargs[Table]) =
     tables.add(
       %*{"name": table.name, "columns": columns}
     )
+  
+  return tables
 
-  block:
-    let f = open("tmp.json", FileMode.fmAppend)
-    f.write(tables.pretty())
-    defer:
-      f.close()
 
+proc checkDiff(path:string, newTables:JsonNode) =
+  # load json
+  var diffs = %*[]
+  let oldTables = parseFile(path)
+  for i, oldTable in oldTables.getElems:
+    echo "========================="
+    var newTable = newTables[i]
+    echo oldTable
+    if oldTable["name"].getStr != newTable["name"].getStr:
+      diffs.add(
+        %*{"name": newTable["name"].getStr}
+      )
+
+  echo diffs
+
+
+proc generateMigrationFile(path:string, tablesArg:JsonNode) =
+  let f = open(path, FileMode.fmWrite)
+  f.write(tablesArg.pretty())
+  defer:
+    f.close()
+
+
+proc check*(this:Schema, tablesArg:varargs[Table]) =
+  let tablesJson = generateJsonSchema(tablesArg)
+  const path = "migration.json"
+  if fileExists(path):
+    checkDiff(path, tablesJson)
+    # generateMigrationFile(path, tablesJson)
+  else:
+    generateMigrationFile(path, tablesJson)
+  
+
+# =============================================================================
 
 proc create*(this:Schema, tables:varargs[Table]) =
-  echo tryRemoveFile("tmp.json")
-  generateJsonSchema(tables)
+  this.check(tables)
 
   for table in tables:
     # echo repr table
@@ -68,10 +98,11 @@ proc create*(this:Schema, tables:varargs[Table]) =
 
     block:
       let db = db()
-      # try:
-      #   db.exec(sql &"drop table {table_name}")
-      # except Exception:
-      #   echo getCurrentExceptionMsg()
+      if table.isRebuild:
+        try:
+          db.exec(sql &"drop table {table_name}")
+        except Exception:
+          echo getCurrentExceptionMsg()
 
       try:
         db.exec(sql query)
