@@ -6,18 +6,21 @@ Example: Schema Builder
 ```
 import allographer/SchemaBuilder
 
-Model().create("auth", [
-  Schema().increments("id"),
-  Schema().string("name"),
-  Schema().timestamps()
-])
-
-Model().create("users", [
-  Schema().increments("id"),
-  Schema().string("name"),
-  Schema().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+Schema().create([
+  Table().create("auth", [
+    Column().increments("id"),
+    Column().string("name"),
+    Column().timestamps()
+  ]),
+  Table().create("users", [
+    Column().increments("id"),
+    Column().string("name"),
+    Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+  ], isRebuild=true)
 ])
 ```
+
+If you set `isRebuild=true` in args of `Table().create`, `DROP TABLE` and `CREATE TABLE` will be run.
 
 ## integer
 |COMMAND|DESCRIPTION|

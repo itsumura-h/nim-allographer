@@ -10,8 +10,14 @@ include ../connection
 import table
 
 
-type Schema* = ref object
-  tables*: seq[Table]
+type 
+  Schema* = ref object
+    tables*: seq[Table]
+
+  AlterType* = enum
+    ADD = "add"
+    CHANGE = "change"
+    DROP = "drop"
 
 proc generateJsonSchema(tablesArg:varargs[Table]):JsonNode =
   var tables = %*[]
@@ -45,9 +51,7 @@ proc checkDiff(path:string, newTables:JsonNode) =
   var diffs = %*[]
   let oldTables = parseFile(path)
   for i, oldTable in oldTables.getElems:
-    echo "========================="
     var newTable = newTables[i]
-    echo oldTable
     if oldTable["name"].getStr != newTable["name"].getStr:
       diffs.add(
         %*{"name": newTable["name"].getStr}
@@ -76,7 +80,7 @@ proc check*(this:Schema, tablesArg:varargs[Table]) =
 # =============================================================================
 
 proc create*(this:Schema, tables:varargs[Table]) =
-  this.check(tables)
+  # this.check(tables)
 
   for table in tables:
     # echo repr table
