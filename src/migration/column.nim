@@ -1,7 +1,56 @@
 import json
-import base
 
-type Schema* = ref object
+type 
+  Column* = ref object
+    name*: string
+    typ*: RdbTypekind
+    isNullable*: bool
+    isUnsigned*: bool
+    isDefault*: bool
+    defaultBool*: bool
+    defaultInt*: int
+    defaultFloat*: float
+    defaultString*: string
+    foreignOnDelete*: ForeignOnDelete
+    info*: JsonNode
+
+  RdbTypekind* = enum
+    # int
+    rdbIncrements = "rdbIncrements"
+    rdbInteger = "rdbInteger"
+    rdbSmallInteger = "rdbSmallInteger"
+    rdbMediumInteger = "rdbMediumInteger"
+    rdbBigInteger = "rdbBigInteger"
+    # float
+    rdbDecimal = "rdbDecimal"
+    rdbDouble = "rdbDouble"
+    rdbFloat = "rdbFloat"
+    # char
+    rdbChar = "rdbChar"
+    rdbString = "rdbString"
+    # text
+    rdbText = "rdbText"
+    rdbMediumText = "rdbMediumText"
+    rdbLongText = "rdbLongText"
+    # date
+    rdbDate = "rdbDate"
+    rdbDatetime = "rdbDatetime"
+    rdbTime = "rdbTime"
+    rdbTimestamp = "rdbTimestamp"
+    rdbTimestamps = "rdbTimestamps"
+    rdbSoftDelete = "rdbSoftDelete"
+    # others
+    rdbBinary = "rdbBinary"
+    rdbBoolean = "rdbBoolean"
+    rdbEnumField = "rdbEnumField"
+    rdbJson = "rdbJson"
+    rdbForeign = "rdbForeign"
+
+  ForeignOnDelete* = enum
+    RESTRICT = "RESTRICT"
+    CASCADE = "CASCADE"
+    SET_NULL = "SET_NULL"
+    NO_ACTION = "NO_ACTION"
 
 
 proc default*(cArg: Column, value:bool): Column =
@@ -42,33 +91,35 @@ proc unsigned*(c: Column): Column =
   c.isUnsigned = true
   return c
 
+
 # =============================================================================
 # int
 # =============================================================================
-proc increments*(this:Schema, name:string): Column =
+proc increments*(this:Column, name:string): Column =
   Column(
-    name: name
+    name: name,
+    typ: rdbIncrements
   )
 
-proc integer*(this:Schema, name:string):Column =
+proc integer*(this:Column, name:string):Column =
   Column(
     name: name,
     typ: rdbInteger
   )
 
-proc smallInteger*(this:Schema, name:string):Column =
+proc smallInteger*(this:Column, name:string):Column =
   Column(
     name: name,
     typ: rdbSmallInteger,
   )
 
-proc mediumInteger*(this:Schema, name:string):Column =
+proc mediumInteger*(this:Column, name:string):Column =
   Column(
     name: name,
     typ: rdbMediumInteger
   )
 
-proc bigInteger*(this:Schema, name:string):Column =
+proc bigInteger*(this:Column, name:string):Column =
   Column(
     name: name,
     typ: rdbBigInteger
@@ -77,7 +128,7 @@ proc bigInteger*(this:Schema, name:string):Column =
 # =============================================================================
 # float
 # =============================================================================
-proc decimal*(this:Schema, name:string, maximum:int, digit:int): Column =
+proc decimal*(this:Column, name:string, maximum:int, digit:int): Column =
   Column(
     name: name,
     typ: rdbDecimal,
@@ -87,7 +138,7 @@ proc decimal*(this:Schema, name:string, maximum:int, digit:int): Column =
     }
   )
 
-proc double*(this:Schema, name:string, maximum:int, digit:int):Column =
+proc double*(this:Column, name:string, maximum:int, digit:int):Column =
   Column(
     name: name,
     typ: rdbDouble,
@@ -97,7 +148,7 @@ proc double*(this:Schema, name:string, maximum:int, digit:int):Column =
     }
   )
 
-proc float*(this:Schema, name:string):Column =
+proc float*(this:Column, name:string):Column =
   Column(
     name: name,
     typ: rdbFloat
@@ -106,7 +157,7 @@ proc float*(this:Schema, name:string):Column =
 # =============================================================================
 # char
 # =============================================================================
-proc char*(this:Schema, name:string, maxLength:int): Column =
+proc char*(this:Column, name:string, maxLength:int): Column =
   Column(
     name: name,
     typ: rdbChar,
@@ -115,7 +166,7 @@ proc char*(this:Schema, name:string, maxLength:int): Column =
     }
   )
 
-proc string*(this:Schema, name:string, length=255):Column =
+proc string*(this:Column, name:string, length=255):Column =
   Column(
     name: name,
     typ: rdbString,
@@ -124,19 +175,19 @@ proc string*(this:Schema, name:string, length=255):Column =
     }
   )
 
-proc text*(this:Schema, name:string):Column =
+proc text*(this:Column, name:string):Column =
   Column(
     name: name,
     typ: rdbText
   )
 
-proc mediumText*(this:Schema, name:string):Column =
+proc mediumText*(this:Column, name:string):Column =
   Column(
     name: name,
     typ: rdbMediumText
   )
 
-proc longText*(this:Schema, name:string):Column =
+proc longText*(this:Column, name:string):Column =
   Column(
     name: name,
     typ: rdbLongText
@@ -145,36 +196,36 @@ proc longText*(this:Schema, name:string):Column =
 # =============================================================================
 # date
 # =============================================================================
-proc date*(this:Schema, name:string):Column =
+proc date*(this:Column, name:string):Column =
   Column(
     name: name,
     typ: rdbDate
   )
 
-proc datetime*(this:Schema, name:string):Column =
+proc datetime*(this:Column, name:string):Column =
   Column(
     name: name,
     typ: rdbDatetime
   )
 
-proc time*(this:Schema, name:string):Column =
+proc time*(this:Column, name:string):Column =
   Column(
     name: name,
     typ: rdbTime
   )
 
-proc timestamp*(this:Schema, name:string):Column =
+proc timestamp*(this:Column, name:string):Column =
   Column(
     name: name,
     typ: rdbTimestamp
   )
 
-proc timestamps*(this:Schema):Column =
+proc timestamps*(this:Column):Column =
   Column(
     typ: rdbTimestamps
   )
 
-proc softDelete*(this:Schema):Column =
+proc softDelete*(this:Column):Column =
   Column(
     typ: rdbSoftDelete
   )
@@ -182,20 +233,20 @@ proc softDelete*(this:Schema):Column =
 # =============================================================================
 # others
 # =============================================================================
-proc binary*(this:Schema, name:string): Column =
+proc binary*(this:Column, name:string): Column =
   Column(
     name: name,
     typ: rdbBinary
   )
 
 # =============================================================================
-proc boolean*(this:Schema, name:string): Column =
+proc boolean*(this:Column, name:string): Column =
   Column(
     name: name,
     typ: rdbBoolean
   )
 
-proc enumField*(this:Schema, name:string, options:varargs[string]):Column =
+proc enumField*(this:Column, name:string, options:varargs[string]):Column =
   Column(
     name: name,
     typ: rdbEnumField,
@@ -204,7 +255,7 @@ proc enumField*(this:Schema, name:string, options:varargs[string]):Column =
     }
   )
 
-proc json*(this:Schema, name:string):Column =
+proc json*(this:Column, name:string):Column =
   Column(
     name: name,
     typ: rdbJson
@@ -213,7 +264,7 @@ proc json*(this:Schema, name:string):Column =
 # =============================================================================
 # Foreign
 # =============================================================================
-proc foreign*(this:Schema, name:string):Column =
+proc foreign*(this:Column, name:string):Column =
   Column(
     name: name,
     typ: rdbForeign

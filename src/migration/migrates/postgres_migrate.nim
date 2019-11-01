@@ -1,9 +1,11 @@
 import strformat, strutils, json
-import ../base
+import
+  ../table,
+  ../column
 import ../generators/postgres_generators
 
 
-proc create*(this:Model):string =
+proc create*(this:Table):string =
 
   var columnString = ""
   var foreignString = ""
