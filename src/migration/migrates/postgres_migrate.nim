@@ -1,5 +1,7 @@
 import strformat, strutils, json
-import ../base
+import
+  ../table,
+  ../column
 import ../generators/postgres_generators
 
 

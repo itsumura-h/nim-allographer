@@ -30,10 +30,12 @@ echo result
 ```
 import allographer/SchemaBuilder
 
-Model().create("auth", [
-  Schema().increments("id"),
-  Schema().string("name").nullable(),
-  Schema().timestamp("created_at").default()
+Schema().create([
+  Model().create("auth", [
+    Column().increments("id"),
+    Column().string("name").nullable(),
+    Column().timestamp("created_at").default()
+  ])
 ])
 
 >> CREATE TABLE auth (
@@ -42,11 +44,12 @@ Model().create("auth", [
     created_at DATETIME DEFAULT (NOW())
 )
 
-
-Model().create("users", [
-  Schema().increments("id"),
-  Schema().string("name"),
-  Schema().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+Schema().create([
+  Table().create("users", [
+    Column().increments("id"),
+    Column().string("name"),
+    Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+  ])
 ])
 
 >> CREATE TABLE users (
