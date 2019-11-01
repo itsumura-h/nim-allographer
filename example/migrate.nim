@@ -1,4 +1,4 @@
-import strformat, json
+import strformat, json, progress
 import bcrypt
 import ../src/allographer/QueryBuilder
 import ../src/allographer/SchemaBuilder
@@ -7,20 +7,21 @@ import ../src/allographer/SchemaBuilder
 
 
 # マイグレーション
-Model().new("auth",[
-  Schema().increments("id"),
-  Schema().string("auth")
-])
-
-Model().new("users",[
-  Schema().increments("id"),
-  Schema().string("name").nullable(),
-  Schema().string("email").nullable(),
-  Schema().string("password").nullable(),
-  Schema().string("salt").nullable(),
-  Schema().string("address").nullable(),
-  Schema().date("birth_date").nullable(),
-  Schema().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+Schema().create([
+  Table().create("auth",[
+    Column().increments("id"),
+    Column().string("auth")
+  ], isRebuild=true),
+  Table().create("users",[
+    Column().increments("id"),
+    Column().string("name").nullable(),
+    Column().string("email").nullable(),
+    Column().string("password").nullable(),
+    Column().string("salt").nullable(),
+    Column().string("address").nullable(),
+    Column().date("birth_date").nullable(),
+    Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+  ], isRebuild=true)
 ])
 
 # シーダー
@@ -30,9 +31,13 @@ RDB().table("auth").insert([
 ])
 .exec()
 
+# プログレスバー
+let total = 100
+var pb = newProgressBar(total=total) # totalは分母
 
+pb.start()
 var insertData: seq[JsonNode]
-for i in 1..100:
+for i in 1..total:
   let salt = genSalt(10)
   let password = hash(&"password{i}", salt)
   let authId = if i mod 2 == 0: 1 else: 2
@@ -45,4 +50,7 @@ for i in 1..100:
       "auth_id": authId
     }
   )
+  pb.increment()
+
+pb.finish()
 RDB().table("users").insert(insertData).exec()

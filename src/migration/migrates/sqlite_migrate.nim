@@ -1,8 +1,10 @@
 import strformat, strutils, json
-import ../base
+import
+  ../table,
+  ../column
 import ../generators/sqlite_generators
 
-proc create*(this:Model):string =
+proc create*(this:Table):string =
   var columnString = ""
   var foreignString = ""
   for i, column in this.columns:

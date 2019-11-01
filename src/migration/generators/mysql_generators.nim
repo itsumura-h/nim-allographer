@@ -1,5 +1,5 @@
 import json, strformat
-import ../base
+import ../column
 
 # =============================================================================
 # int

@@ -1,9 +1,9 @@
 import
-  ../migration/base,
-  ../migration/builders,
-  ../migration/model
+  ../migration/schema,
+  ../migration/column,
+  ../migration/table
 
 export
-  base,
-  builders,
-  model
+  schema,
+  column,
+  table
