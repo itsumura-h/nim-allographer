@@ -1,6 +1,6 @@
 import ../../allographer/SchemaBuilder
 
-proc migrate*(args:seq[string]):int =
+proc migrate*(rebuild=false, args:seq[string]):int =
   ## Create migrations table
 
   try:
@@ -9,7 +9,7 @@ proc migrate*(args:seq[string]):int =
         Column().increments("id"),
         Column().json("schema"),
         Column().datetime("created_at").default()
-      ])
+      ], isRebuild=rebuild)
     ])
   except:
     echo getCurrentExceptionMsg()
