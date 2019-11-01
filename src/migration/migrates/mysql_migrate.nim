@@ -5,8 +5,7 @@ import
 import ../generators/mysql_generators
 
 
-proc create*(this:Table):string =
-
+proc migrate*(this:Table):string =
   var columnString = ""
   var foreignString = ""
   for i, column in this.columns:
