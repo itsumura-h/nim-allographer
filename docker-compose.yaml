@@ -19,7 +19,6 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: Password!
       TZ: Asia/Tokyo
-      # default_authentication_plugin: mysql_native_password
   postgres:
     image: postgres:alpine
     tty: true

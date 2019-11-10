@@ -1,7 +1,7 @@
 import
-  ../migration/schema,
-  ../migration/column,
-  ../migration/table
+  ../schema_builder/schema,
+  ../schema_builder/column,
+  ../schema_builder/table
 
 export
   schema,
