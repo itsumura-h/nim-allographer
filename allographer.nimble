@@ -6,10 +6,10 @@ description   = "A Nim query builder library inspired by Laravel/PHP and Orator/
 license       = "MIT"
 srcDir        = "src"
 backend       = "c"
-bin           = @["command/dbtool"] # ここはパッケージの名前によって変わる
+bin           = @["cli/dbtool"] # ここはパッケージの名前によって変わる
 binDir        = "src/bin"
 installExt    = @["nim"]
-skipDirs      = @["command"]
+skipDirs      = @["cli"]
 # Dependencies
 
 requires "nim >= 1.0.0"
