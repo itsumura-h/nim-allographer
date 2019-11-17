@@ -18,11 +18,11 @@ echo result
 
 >> SELECT id, email, name FROM users LIMIT 5 OFFSET 10
 >> @[
-    @["11", "user11@gmail.com", "user11"],
-    @["12", "user12@gmail.com", "user12"],
-    @["13", "user13@gmail.com", "user13"],
-    @["14", "user14@gmail.com", "user14"],
-    @["15", "user15@gmail.com", "user15"]
+  {"id":"11","email":"user11@gmail.com","name":"user11"},
+  {"id":"12","email":"user12@gmail.com","name":"user12"},
+  {"id":"13","email":"user13@gmail.com","name":"user13"},
+  {"id":"14","email":"user14@gmail.com","name":"user14"},
+  {"id":"15","email":"user15@gmail.com","name":"user15"}
 ]
 ```
 

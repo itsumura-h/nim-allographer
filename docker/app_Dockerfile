@@ -9,4 +9,5 @@ RUN apk update && \
     update-ca-certificates
 RUN git config --global http.sslVerify false
 RUN nimble install -y bcrypt cligen coco
+ENV PATH $PATH:/root/.nimble/bin
 WORKDIR /home/www

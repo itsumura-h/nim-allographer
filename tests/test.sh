@@ -1,0 +1,1 @@
+coco --target "./*.nim" --cov '../src/query_builder' --cov '../src/schema_builder' --compiler="--hints:off"
