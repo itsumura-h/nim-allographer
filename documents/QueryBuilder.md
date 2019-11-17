@@ -16,11 +16,11 @@ echo result
 
 >> SELECT id, email, name FROM users LIMIT 5 OFFSET 10
 >> @[
-    @["11", "user11@gmail.com", "user11"],
-    @["12", "user12@gmail.com", "user12"],
-    @["13", "user13@gmail.com", "user13"],
-    @["14", "user14@gmail.com", "user14"],
-    @["15", "user15@gmail.com", "user15"]
+  {"id":"11","email":"user11@gmail.com","name":"user11"},
+  {"id":"12","email":"user12@gmail.com","name":"user12"},
+  {"id":"13","email":"user13@gmail.com","name":"user13"},
+  {"id":"14","email":"user14@gmail.com","name":"user14"},
+  {"id":"15","email":"user15@gmail.com","name":"user15"}
 ]
 ```
 ```
@@ -35,7 +35,17 @@ echo resultRow
 
 >> SELECT * FROM users WHERE id = 3
 >> @[
-  @["3", "user3", "user3@gmail.com", "246 Ferguson Village Apt. 582\nNew Joshua, IL 24200", "$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny", "$2a$10$gmKpgtO535lkw0eAcGiRye", "2012-11-24", "2", "2019-09-26 19:11:28.159367", "2019-09-26 19:11:28.159369"]
+  {
+    "id":"3",
+    "name":"user3",
+    "email":"user3@gmail.com",
+    "address":"246 Ferguson Village Apt. 582\nNew Joshua, IL 24200", "password":"$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny",
+    "salt":"$2a$10$gmKpgtO535lkw0eAcGiRye",
+    "birth_date":"2012-11-24",
+    "auth":"2",
+    "created_at":"2019-09-26 19:11:28.159367",
+    "updated_at":"2019-09-26 19:11:28.159369"
+  }
 ]
 ```
 ```
@@ -45,7 +55,7 @@ let resultRow = RDB().table("users").select("id", "name", "email").where("id", "
 echo resultRow
 
 >> SELECT id, name, email FROM users WHERE id > 5
->> @["6", "user6", "user6@gmail.com"]
+>> {"id":"6", "name":"user6", "email":"user6@gmail.com"}
 ```
 ```
 import allographer/QueryBuilder
@@ -54,7 +64,17 @@ let resultRow = RDB().table("users").find(3)
 echo resultRow
 
 >> SELECT * FROM users WHERE id = 3
->> @["3", "user3", "user3@gmail.com", "246 Ferguson Village Apt. 582\nNew Joshua, IL 24200", "$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny", "$2a$10$gmKpgtO535lkw0eAcGiRye", "2012-11-24", "2", "2019-09-26 19:11:28.159367", "2019-09-26 19:11:28.159369"]
+>> {
+    "id":"3",
+    "name":"user3",
+    "email":"user3@gmail.com",
+    "address":"246 Ferguson Village Apt. 582\nNew Joshua, IL 24200", "password":"$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny",
+    "salt":"$2a$10$gmKpgtO535lkw0eAcGiRye",
+    "birth_date":"2012-11-24",
+    "auth":"2",
+    "created_at":"2019-09-26 19:11:28.159367",
+    "updated_at":"2019-09-26 19:11:28.159369"
+  }
 ```
 ```
 import allographer/QueryBuilder
@@ -69,12 +89,12 @@ echo result
 
 >> SELECT id, email, name FROM users WHERE id > 4 AND id <= 10
 >> @[
-    @["5", "user5@gmail.com", "user5"],
-    @["6", "user6@gmail.com", "user6"],
-    @["7", "user7@gmail.com", "user7"],
-    @["8", "user8@gmail.com", "user8"],
-    @["9", "user9@gmail.com", "user9"],
-    @["10", "user10@gmail.com", "user10"]
+    {"id":"5", "email":"user5@gmail.com", "name":"user5"},
+    {"id":"6", "email":"user6@gmail.com", "name":"user6"},
+    {"id":"7", "email":"user7@gmail.com", "name":"user7"},
+    {"id":"8", "email":"user8@gmail.com", "name":"user8"},
+    {"id":"9", "email":"user9@gmail.com", "name":"user9"},
+    {"id":"10", "email":"user10@gmail.com", "name":"user10"}
 ]
 ```
 ```
@@ -91,9 +111,8 @@ echo result
 
 >> SELECT users.name, users.auth_id FROM users JOIN auth ON auth.id = users.auth_id WHERE users.auth_id = 1 AND users.id < 5
 >> @[
-  @["user1", "1"],
-  @["user2", "1"],
-  @["user4", "1"]
+  {"name":"user2","auth_id":"1"},
+  {"name":"user4","auth_id":"1"}
 ]
 ```
 
