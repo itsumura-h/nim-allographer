@@ -3,15 +3,15 @@ import json
 import ../src/allographer/QueryBuilder
 import ../src/allographer/SchemaBuilder
 
-# echo RDB().table("users").select("id", "name", "address")
-#     .limit(2).get()
+echo RDB().table("users").select("id", "name", "address")
+    .limit(2).get()
 
-# echo RDB().table("users").select("id", "name", "address")
-#     .first()
+echo RDB().table("users").select("id", "name", "address")
+    .first()
 
-# echo RDB().table("users")
-#     .select("id", "name", "address")
-#     .find(3)
+echo RDB().table("users")
+    .select("id", "name", "address")
+    .find(3)
 
 # Schema().create([
 #   Table().create("sample", [
@@ -32,18 +32,20 @@ import ../src/allographer/SchemaBuilder
 #   "is_admin": true
 # }).exec()
 
-# echo RDB().table("sample")
-#   .select("id", "float", "string", "datetime", "null", "is_admin")
-#   .get()
+echo RDB().table("sample")
+  .select("id", "float", "string", "datetime", "null", "is_admin")
+  .get()
 
-# var r = RDB().table("sample")
-#   .select("id", "float", "string", "datetime", "null", "is_admin")
-#   .get()
+echo RDB().table("sample")
+  .select("id", "float", "string", "datetime", "null", "is_admin")
+  .get()
 
-# echo r[0]["float"].getStr
 
 var sql = "update users set name='John' where id = 1"
 RDB().raw(sql).exec()
 
 sql = "select * from users where id = 1"
 echo RDB().raw(sql).getRaw()
+
+transaction:
+  RDB().table("asaasa").insert(%*{"name": "John"}).exec()
