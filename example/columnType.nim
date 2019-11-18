@@ -13,25 +13,31 @@ echo RDB().table("users")
     .select("id", "name", "address")
     .find(3)
 
-Schema().create([
-  Table().create("sample", [
-    Column().increments("id"),
-    Column().float("float"),
-    Column().string("string"),
-    Column().datetime("datetime"),
-    Column().string("'null'").nullable(),
-    Column().boolean("is_admin")
-  ], isRebuild=true)
-])
+# Schema().create([
+#   Table().create("sample", [
+#     Column().increments("id"),
+#     Column().float("float"),
+#     Column().string("string"),
+#     Column().datetime("datetime"),
+#     Column().string("'null'").nullable(),
+#     Column().boolean("is_admin")
+#   ], isRebuild=true)
+# ])
 
-RDB().table("sample").insert(%*{
-  "id": 1,
-  "float": 3.14,
-  "string": "string",
-  "datetime": "2019-01-01 12:00:00.1234",
-  "is_admin": true
-}).exec()
+# RDB().table("sample").insert(%*{
+#   "id": 1,
+#   "float": 3.14,
+#   "string": "string",
+#   "datetime": "2019-01-01 12:00:00.1234",
+#   "is_admin": true
+# }).exec()
 
 echo RDB().table("sample")
   .select("id", "float", "string", "datetime", "null", "is_admin")
   .get()
+
+var r = RDB().table("sample")
+  .select("id", "float", "string", "datetime", "null", "is_admin")
+  .get()
+
+echo r[0]["float"].getStr
