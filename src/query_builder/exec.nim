@@ -15,6 +15,7 @@ proc getColumns(this:RDB, sqlString:string):seq[JsonNode] =
   let db = db()
   for row in db.instantRows(db_columns, sql sqlString):
     discard
+  defer: db.close()
   var columns: seq[JsonNode]
   for i, row in db_columns:
     columns.add(

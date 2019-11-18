@@ -1,5 +1,6 @@
 import unittest, json
-import ../src/allographer
+import ../src/allographer/QueryBuilder
+include ../src/query_builder/exec
 
 suite "select":
   test "all":
@@ -20,22 +21,22 @@ suite "select":
               .sqlString
     check sql == "SELECT id, email FROM users JOIN auth ON auth.id = auth_id JOIN auth ON auth.id = auth_id WHERE name = \"John\" AND id = 3 OR name = \"George\" OR name = \"Paul\" OR id = 4 OR id = 5 LIMIT 10 OFFSET 5"
 
-    test "select * where int and string or int":
-      var sql = RDB()
-                .table("users")
-                .select()
-                .where("id", "=", 3)
-                .where("name", "LIKE", "%user%")
-                .orWhere("id", "=", 4)
-                .checkSql()
-                .sqlString
-      check sql == "SELECT * FROM users WHERE id = 3 AND name LIKE \"%user%\" OR id = 4"
+  test "select * where int and string or int":
+    var sql = RDB()
+              .table("users")
+              .select()
+              .where("id", "=", 3)
+              .where("name", "LIKE", "%user%")
+              .orWhere("id", "=", 4)
+              .checkSql()
+              .sqlString
+    check sql == "SELECT * FROM users WHERE id = 3 AND name LIKE \"%user%\" OR id = 4"
 
-    test "select * id = int":
-      var result = RDB()
-                .table("users")
-                .find(1, db)
-      check result[1] == "user1"
+  test "select * id = int":
+    var result = RDB()
+              .table("users")
+              .find(1)
+    check result["name"].getStr == "user1"
 
 suite "insert":
   test "insert one":
