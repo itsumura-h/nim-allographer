@@ -9,14 +9,14 @@ Example: Query Builder
 import allographer/QueryBuilder
 
 echo RDB().table("test")
-    .select("id", "float", "char", "datetime", ""null)
+    .select("id", "float", "char", "datetime", "null", "is_admin")
     .get()
 ```
 When it returns following table
 
-|id|float|char|datetime|null|
-|---|---|---|---|---|
-|1|3.14|char|2019-01-01 12:00:00.1234||
+|id|float|char|datetime|null|is_admin|
+|---|---|---|---|---|---|
+|1|3.14|char|2019-01-01 12:00:00.1234||1|
 
 result is here
 
@@ -28,6 +28,7 @@ result is here
     "char": "char",                         # JString
     "datetime": "2019-01-01 12:00:00.1234", # JString
     "null": null                            # JNull
+    "is_admin": true                        # JBool
   }
 ]
 ```
