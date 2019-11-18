@@ -5,6 +5,12 @@ proc table*(this: RDB, tableArg: string): RDB =
   this.query = %*{"table": tableArg}
   return this
 
+## ============================== Raw query ==============================
+
+proc raw*(this:RDB, sql:string): RDB =
+  this.sqlString = sql
+  this.sqlStringseq = @[sql]
+  return this
 
 ## ============================== SELECT ==============================
 

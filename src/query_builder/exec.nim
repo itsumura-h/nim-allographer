@@ -78,6 +78,15 @@ proc get*(this: RDB): seq[JsonNode] =
   let columns = getColumns(this, sqlString)
   return toJson(results, columns) # seq[JsonNode]
 
+proc getRaw*(this: RDB): seq[JsonNode] =
+  let sqlString = this.sqlString
+  logger(sqlString)
+  let db = db()
+  let results = db.getAllRows(sql sqlString) # seq[seq[string]]
+  defer: db.close()
+  let columns = getColumns(this, sqlString)
+  return toJson(results, columns) # seq[JsonNode]
+
 
 proc first*(this: RDB): JsonNode =
   let sqlString = this.selectBuilder().sqlString
@@ -154,6 +163,13 @@ proc exec*(this: RDB) =
     db.exec(sql sqlString)
 
   defer: db.close()
+
+# proc execRaw*(this:RDB): seq[JsonNode] =
+#   let db = db()
+#   let results = db.exec(sql this.sqlStringSeq[0])
+#   defer: db.close()
+#   let columns = getColumns(this, this.sqlStringSeq[0])
+#   return toJson(results, columns) # seq[JsonNode]
 
 proc execID*(this: RDB): int64 =
   let db = db()
