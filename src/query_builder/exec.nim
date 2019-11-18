@@ -1,7 +1,6 @@
 import db_sqlite, db_mysql, db_postgres
 # import json, parsecfg, strutils
-from strutils import contains
-import json
+import json, strutils
 
 import base, builders
 import ../util
@@ -26,34 +25,44 @@ proc getColumns(this:RDB, sqlString:string):seq[JsonNode] =
     )
   return columns
 
-proc mapping(results:seq[string], columns:seq[JsonNode]):JsonNode =
+proc toJson(results:seq[string], columns:seq[JsonNode]):JsonNode =
   var response_row = %*{}
   for i, row in results:
-    # response_row.add(
-    #   %*{
-    #     "name": columns[i]["name"].getStr,
-    #     "typ": columns[i]["typ"].getStr,
-    #     "value": row
-    #   }
-    # )
     var key = columns[i]["name"].getStr
-    response_row[key] = newJString(row)
+    var typ = columns[i]["typ"].getStr
+    if row == "":
+      response_row[key] = newJNull()
+    elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
+      response_row[key] = newJInt(row.parseInt)
+    elif ["NUMERIC", "DECIMAL", "DOUBLE"].contains(typ):
+      response_row[key] = newJFloat(row.parseFloat)
+    elif ["TINYINT", "BOOLEAN"].contains(typ):
+      response_row[key] = newJBool(row.parseBool)
+    else:
+      response_row[key] = newJString(row)
+    # var key = columns[i]["name"].getStr
+    # response_row[key] = newJString(row)
   return response_row
 
-proc mapping(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
+proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
   var response_table: seq[JsonNode]
   for rows in results:
     var response_row = %*{}
     for i, row in rows:
-      # response_row.add(
-      #   %*{
-      #     "name": columns[i]["name"].getStr,
-      #     "typ": columns[i]["typ"].getStr,
-      #     "value": row
-      #   }
-      # )
       var key = columns[i]["name"].getStr
-      response_row[key] = newJString(row)
+      var typ = columns[i]["typ"].getStr
+      if row == "":
+        response_row[key] = newJNull()
+      elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
+        response_row[key] = newJInt(row.parseInt)
+      elif ["NUMERIC", "DECIMAL", "DOUBLE"].contains(typ):
+        response_row[key] = newJFloat(row.parseFloat)
+      elif ["TINYINT", "BOOLEAN"].contains(typ):
+        response_row[key] = newJBool(row.parseBool)
+      else:
+        response_row[key] = newJString(row)
+      # var key = columns[i]["name"].getStr
+      # response_row[key] = newJString(row)
     response_table.add(response_row)
   return response_table
 
@@ -63,10 +72,10 @@ proc get*(this: RDB): seq[JsonNode] =
   let sqlString = this.selectBuilder().sqlString
   logger(sqlString)
   let db = db()
-  let results = db.getAllRows(sql sqlString)
+  let results = db.getAllRows(sql sqlString) # seq[seq[string]]
   defer: db.close()
   let columns = getColumns(this, sqlString)
-  return mapping(results, columns)
+  return toJson(results, columns) # seq[JsonNode]
 
 
 proc first*(this: RDB): JsonNode =
@@ -76,7 +85,7 @@ proc first*(this: RDB): JsonNode =
   let results = db.getRow(sql sqlString)
   defer: db.close()
   let columns = getColumns(this, sqlString)
-  return mapping(results, columns)
+  return toJson(results, columns)
 
 
 proc find*(this: RDB, id: int): JsonNode =
@@ -86,7 +95,7 @@ proc find*(this: RDB, id: int): JsonNode =
   let results = db.getRow(sql sqlString)
   defer: db.close()
   let columns = getColumns(this, sqlString)
-  return mapping(results, columns)
+  return toJson(results, columns)
 
 
 ## ==================== INSERT ====================
