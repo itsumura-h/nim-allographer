@@ -1,0 +1,34 @@
+name: Build and test Nim
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+          - windows-latest
+          - macOS-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Cache choosenim
+      id: cache-choosenim
+      uses: actions/cache@v1
+      with:
+        path: ~/.choosenim
+        key: ${{ runner.os }}-choosenim-stable
+    - name: Cache nimble
+      id: cache-nimble
+      uses: actions/cache@v1
+      with:
+        path: ~/.nimble
+        key: ${{ runner.os }}-nimble-stable
+    - uses: jiro4989/setup-nim-action@v1.0.1
+    - name: Build
+      run: nimble build -Y
+    - name: Test
+      run: nimble test -Y
+    - name: Command test
+      run: ./src/bin/cli/dbtool -h
