@@ -2,7 +2,15 @@ Example: Query Builder
 ===
 [back](../README.md)
 
+## index
+- [SLECT](#SELECT)
+- [INSERT](#INSERT)
+- [UPDATE](#UPDATE)
+- [DELETE](#DELETE)
+- [RAW_SQL](#RAW_SQL)
+
 ### SELECT
+[to index](#index)
 
 #### Return Types
 ```
@@ -149,6 +157,8 @@ echo result
 ```
 
 ### INSERT
+[to index](#index)
+
 ```
 import allographer/QueryBuilder
 
@@ -208,6 +218,8 @@ RDB().table("users").inserts(
 ```
 
 ### UPDATE
+[to index](#index)
+
 ```
 import allographer/QueryBuilder
 
@@ -221,6 +233,8 @@ RDB()
 ```
 
 ### DELETE
+[to index](#index)
+
 ```
 import allographer/QueryBuilder
 
@@ -241,4 +255,25 @@ RDB()
 .exec()
 
 >> DELETE FROM users WHERE address = "London"
+```
+
+
+### Raw_SQL
+[to index](#INDEX)
+
+```
+import allographer/QueryBuilder
+
+let sql = """
+SELECT ProductName
+  FROM Product 
+ WHERE Id IN (SELECT ProductId 
+                FROM OrderItem
+               WHERE Quantity > 100)
+"""
+echo RDB().raw(sql).getRaw()
+```
+```
+let sql = "UPDATE users SET name='John' where id = 1"
+RDB().raw(sql).exec()
 ```
