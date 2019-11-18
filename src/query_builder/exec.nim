@@ -1,6 +1,6 @@
 import db_sqlite, db_mysql, db_postgres
 # import json, parsecfg, strutils
-import json, strutils
+import json, strutils, macros
 
 import base, builders
 import ../util
@@ -184,15 +184,20 @@ proc execID*(this: RDB): int64 =
 ## ==================== Transaction ====================
 
 template transaction*(body: untyped) =
+  # echo treeRepr NimNode(body)
   block :
-    var sqlStrings = ["BEGIN", "ROLLBACK", "COMMIT"]
-
     let db = db()
-    db.exec(sql sqlStrings[0])
+    db.exec(sql"BEGIN")
     try:
-      body
-      db.exec(sql sqlStrings[2])
+      for s in body:
+        echo repr s
+        db.exec(sql s.sqlString)
+      # echo "commit"
+      # db.exec(sql"COMMIT")
+      echo "rollback"
+      db.exec(sql"ROLLBACK")
     except:
-      db.exec(sql sqlStrings[1])
+      db.exec(sql"ROLLBACK")
+      echo "rollback"
       echo getCurrentExceptionMsg()
     defer: db.close()
