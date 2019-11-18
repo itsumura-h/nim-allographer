@@ -1,5 +1,5 @@
-# import ../src/allographer/SchemaBuilder
-import allographer/SchemaBuilder
+import ../src/allographer/SchemaBuilder
+# import allographer/SchemaBuilder
 
 Schema().create([
   Table().create("table_name", [

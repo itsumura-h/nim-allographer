@@ -18,11 +18,11 @@ echo result
 
 >> SELECT id, email, name FROM users LIMIT 5 OFFSET 10
 >> @[
-  {"id":"11","email":"user11@gmail.com","name":"user11"},
-  {"id":"12","email":"user12@gmail.com","name":"user12"},
-  {"id":"13","email":"user13@gmail.com","name":"user13"},
-  {"id":"14","email":"user14@gmail.com","name":"user14"},
-  {"id":"15","email":"user15@gmail.com","name":"user15"}
+  {"id":11,"email":"user11@gmail.com","name":"user11"},
+  {"id":12,"email":"user12@gmail.com","name":"user12"},
+  {"id":13,"email":"user13@gmail.com","name":"user13"},
+  {"id":14,"email":"user14@gmail.com","name":"user14"},
+  {"id":15,"email":"user15@gmail.com","name":"user15"}
 ]
 ```
 
@@ -123,5 +123,5 @@ settings will be applied
 
 ## Todo
 - [x] Database migration
-- [ ] Mapping with column and data then return JsonNode
+- [x] Mapping with column and data then return JsonNode
 - [ ] Aggregate methods (count, max, min, avg, and sum)
