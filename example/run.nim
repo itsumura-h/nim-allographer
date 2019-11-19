@@ -1,5 +1,5 @@
 import json
-import ../src/allographer/QueryBuilder
+import ../src/allographer/query_builder
 
 
 echo RDB()

@@ -1,7 +1,7 @@
 import json
 
-import ../src/allographer/QueryBuilder
-import ../src/allographer/SchemaBuilder
+import ../src/allographer/query_builder
+import ../src/allographer/schema_builder
 
 echo RDB().table("users").select("id", "name", "address")
     .limit(2).get()
@@ -36,8 +36,13 @@ echo RDB().table("sample")
   .select("id", "float", "string", "datetime", "null", "is_admin")
   .get()
 
-var r = RDB().table("sample")
+echo RDB().table("sample")
   .select("id", "float", "string", "datetime", "null", "is_admin")
   .get()
 
-echo r[0]["float"].getStr
+
+var sql = "update users set name='John' where id = 1"
+RDB().raw(sql).exec()
+
+sql = "select * from users where id = 1"
+echo RDB().raw(sql).getRaw()

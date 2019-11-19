@@ -8,7 +8,7 @@ A query builder library inspired by [Laravel/PHP](https://readouble.com/laravel/
 ## Easy to access RDB
 ### Query Builder
 ```
-import allographer/QueryBuilder
+import allographer/query_builder
 
 var result = RDB()
             .table("users")
@@ -30,7 +30,7 @@ echo result
 
 ### Schema Builder
 ```
-import allographer/SchemaBuilder
+import allographer/schema_builder
 
 Schema().create([
   Model().create("auth", [
@@ -119,8 +119,8 @@ dbtool loadConf
 settings will be applied
 
 ## Examples
-[Query Builder](./documents/QueryBuilder.md)  
-[Schema Builder](./documents/SchemaBuilder.md)  
+[Query Builder](./documents/query_builder.md)  
+[Schema Builder](./documents/schema_builder.md)  
 
 
 ## Todo
