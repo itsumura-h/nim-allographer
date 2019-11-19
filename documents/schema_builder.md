@@ -4,7 +4,7 @@ Example: Schema Builder
 
 ## Bacic useage
 ```
-import allographer/SchemaBuilder
+import allographer/schema_builder
 
 Schema().create([
   Table().create("auth", [
