@@ -1,8 +1,46 @@
-import unittest, json
-import ../src/allographer/QueryBuilder
-include ../src/query_builder/exec
+import unittest, json, strformat
+import ../src/allographer/schema_builder
+import ../src/allographer/query_builder
+# include ../src/allographer/query_builder_pkg/exec
+
+
+proc setup() =
+  Schema().create([
+    Table().create("auth", [
+      Column().increments("id"),
+      Column().string("auth")
+    ], isRebuild=true),
+    Table().create("users", [
+      Column().increments("id"),
+      Column().string("name"),
+      Column().string("email"),
+      Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+    ], isRebuild=true)
+  ])
+
+  RDB().table("auth").insert([
+    %*{"id": 1, "auth": "admin"},
+    %*{"id": 2, "auth": "user"}
+  ])
+  .exec()
+
+  var users: seq[JsonNode]
+  for i in 1..10:
+    users.add(
+      %*{
+        "id": i,
+        "name": &"user{i}",
+        "email": &"user{i}@gmail.com",
+        "auth_id": if i mod 2 == 0: 1 else: 2
+      }
+    )
+  RDB().table("users").insert(users).exec()
+
+# =============================================================================
 
 suite "select":
+  setup:
+    setup()
   test "all":
     var sql = RDB()
               .table("users")
