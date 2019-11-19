@@ -1,9 +1,9 @@
 import strformat, json, progress
 import bcrypt
-import ../src/allographer/QueryBuilder
-import ../src/allographer/SchemaBuilder
-# import allographer/QueryBuilder
-# import allographer/SchemaBuilder
+import ../src/allographer/query_builder
+import ../src/allographer/schema_builder
+# import allographer/query_builder
+# import allographer/schema_builder
 
 
 # マイグレーション

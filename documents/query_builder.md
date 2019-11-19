@@ -2,11 +2,20 @@ Example: Query Builder
 ===
 [back](../README.md)
 
+## index
+- [SLECT](#SELECT)
+- [INSERT](#INSERT)
+- [UPDATE](#UPDATE)
+- [DELETE](#DELETE)
+- [RAW_SQL](#RAW_SQL)
+- [TARANSACTION](#TARANSACTION)
+
 ### SELECT
+[to index](#index)
 
 #### Return Types
 ```
-import allographer/QueryBuilder
+import allographer/query_builder
 
 echo RDB().table("test")
     .select("id", "float", "char", "datetime", "null", "is_admin")
@@ -36,7 +45,7 @@ result is here
 #### Examples
 
 ```
-import allographer/QueryBuilder
+import allographer/query_builder
 
 var result = RDB()
             .table("users")
@@ -56,7 +65,7 @@ echo result
 ]
 ```
 ```
-import allographer/QueryBuilder
+import allographer/query_builder
 
 let resultRow = RDB()
                 .table("users")
@@ -81,7 +90,7 @@ echo resultRow
 ]
 ```
 ```
-import allographer/QueryBuilder
+import allographer/query_builder
 
 let resultRow = RDB().table("users").select("id", "name", "email").where("id", ">", 5).first()
 echo resultRow
@@ -90,7 +99,7 @@ echo resultRow
 >> {"id":6, "name":"user6", "email":"user6@gmail.com"}
 ```
 ```
-import allographer/QueryBuilder
+import allographer/query_builder
 
 let resultRow = RDB().table("users").find(3)
 echo resultRow
@@ -109,7 +118,7 @@ echo resultRow
   }
 ```
 ```
-import allographer/QueryBuilder
+import allographer/query_builder
 
 let result = RDB()
             .table("users")
@@ -130,7 +139,7 @@ echo result
 ]
 ```
 ```
-import allographer/QueryBuilder
+import allographer/query_builder
 
 let result = RDB()
             .table("users")
@@ -149,8 +158,10 @@ echo result
 ```
 
 ### INSERT
+[to index](#index)
+
 ```
-import allographer/QueryBuilder
+import allographer/query_builder
 
 RDB()
 .table("users")
@@ -163,7 +174,7 @@ RDB()
 >> INSERT INTO users (name, email) VALUES ("John", "John@gmail.com")
 ```
 ```
-import allographer/QueryBuilder
+import allographer/query_builder
 
 echo RDB()
 .table("users")
@@ -177,7 +188,7 @@ echo RDB()
 >> 1 # ID of new row is return
 ```
 ```
-import allographer/QueryBuilder
+import allographer/query_builder
 
 RDB().table("users").insert(
   [
@@ -191,7 +202,7 @@ RDB().table("users").insert(
 >> INSERT INTO users (name, email, address) VALUES ("John", "John@gmail.com", "London"), ("Paul", "Paul@gmail.com", "London"), ("George", "George@gmail.com", "London")
 ```
 ```
-import allographer/QueryBuilder
+import allographer/query_builder
 
 RDB().table("users").inserts(
   [
@@ -208,8 +219,10 @@ RDB().table("users").inserts(
 ```
 
 ### UPDATE
+[to index](#index)
+
 ```
-import allographer/QueryBuilder
+import allographer/query_builder
 
 RDB()
 .table("users")
@@ -221,8 +234,10 @@ RDB()
 ```
 
 ### DELETE
+[to index](#index)
+
 ```
-import allographer/QueryBuilder
+import allographer/query_builder
 
 RDB()
 .table("users")
@@ -232,7 +247,7 @@ RDB()
 >> DELETE FROM users WHERE id = 1
 ```
 ```
-import allographer/QueryBuilder
+import allographer/query_builder
 
 RDB()
 .table("users")
@@ -241,4 +256,25 @@ RDB()
 .exec()
 
 >> DELETE FROM users WHERE address = "London"
+```
+
+
+### Raw_SQL
+[to index](#INDEX)
+
+```
+import allographer/query_builder
+
+let sql = """
+SELECT ProductName
+  FROM Product 
+ WHERE Id IN (SELECT ProductId 
+                FROM OrderItem
+               WHERE Quantity > 100)
+"""
+echo RDB().raw(sql).getRaw()
+```
+```
+let sql = "UPDATE users SET name='John' where id = 1"
+RDB().raw(sql).exec()
 ```
