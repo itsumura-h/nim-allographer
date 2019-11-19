@@ -1,16 +1,16 @@
 import os, parsecfg
 
+var
+  configFile* = getCurrentDir() / "/config/database.ini"
+
 proc getDriver*():string =
-  let confPath = getCurrentDir() & "/config/database.ini"
-  let conf = loadConfig(confPath)
+  let conf = loadConfig(configFile)
   let driver = conf.getSectionValue("Connection", "driver")
   return driver
 
 proc logger*(output: any) =
   # get Config file
-  let confPath = getCurrentDir() & "/config/database.ini"
-
-  var conf = loadConfig(confPath)
+  var conf = loadConfig(configFile)
   var isDisplayString = conf.getSectionValue("Log", "display")
   if isDisplayString == "true":
     echo $output
