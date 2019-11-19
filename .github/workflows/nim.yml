@@ -30,7 +30,7 @@ jobs:
     - name: Build
       run: nimble build -Y
     - name: Command test
-      run: ./src/bin/cli/dbtool -h
+      run: ./src/bin/dbtool -h
 
   test-on-docker:
     runs-on: ubuntu-latest
