@@ -1,7 +1,7 @@
 import json
 
-import ../src/allographer/QueryBuilder
-import ../src/allographer/SchemaBuilder
+import ../src/allographer/query_builder
+import ../src/allographer/schema_builder
 
 echo RDB().table("users").select("id", "name", "address")
     .limit(2).get()
