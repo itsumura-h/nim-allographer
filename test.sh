@@ -1,1 +1,1 @@
-coco --target "tests/*.nim" --cov 'src/modules' --compiler="--hints:off"
+coco --target "tests/*.nim" --cov 'src/allographer/' --compiler="--hints:off"
