@@ -1,8 +1,18 @@
 import unittest, json
-import ../src/allographer/QueryBuilder
-include ../src/query_builder/exec
+import allographer/query_builder
+include allographer/query_builder_pkg/exec
+
+configFile = "tests/config/database.ini"
 
 suite "select":
+  setup:
+    let d = db()
+    d.exec(sql"CREATE TABLE users (id, name)")
+    d.exec(sql"INSERT INTO users (id, name) VALUES (1, 'user1')")
+
+  teardown:
+    d.exec(sql"DROP TABLE IF EXISTS users")
+
   test "all":
     var sql = RDB()
               .table("users")
