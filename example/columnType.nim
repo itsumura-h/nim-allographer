@@ -46,12 +46,3 @@ RDB().raw(sql).exec()
 
 sql = "select * from users where id = 1"
 echo RDB().raw(sql).getRaw()
-
-echo "=================================="
-echo RDB().table("users").find(1)["name"]
-
-transaction:
-  RDB().table("users").where("id", "=", 1).update(%*{"name": "Paul"})
-  RDB().table("asaasa").insert(%*{"name": "John"})
-
-echo RDB().table("users").find(1)["name"]

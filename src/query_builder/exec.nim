@@ -90,37 +90,32 @@ proc getRow(sqlString:string): JsonNode =
 # =============================================================================
 
 proc get*(this: RDB): seq[JsonNode] =
-  let sqlString = this.selectBuilder().sqlString
-  logger(sqlString)
-  return getAllRows(sqlString)
+  this.sqlStringSeq = @[this.selectBuilder().sqlString]
+  logger(this.sqlStringSeq[0])
+  return getAllRows(this.sqlStringSeq[0])
 
 proc getRaw*(this: RDB): seq[JsonNode] =
-  let sqlString = this.sqlString
-  logger(sqlString)
-  return getAllRows(sqlString)
+  logger(this.sqlStringSeq[0])
+  return getAllRows(this.sqlStringSeq[0])
 
 proc first*(this: RDB): JsonNode =
-  let sqlString = this.selectBuilder().sqlString
-  logger(sqlString)
-  return getRow(sqlString)
+  this.sqlStringSeq = @[this.selectBuilder().sqlString]
+  logger(this.sqlStringSeq[0])
+  return getRow(this.sqlStringSeq[0])
 
 proc find*(this: RDB, id: int): JsonNode =
-  let sqlString = this.selectFindBuilder(id).sqlString
-  logger(sqlString)
-  return getRow(sqlString)
+  this.sqlStringSeq = @[this.selectFindBuilder(id).sqlString]
+  logger(this.sqlStringSeq[0])
+  return getRow(this.sqlStringSeq[0])
 
 ## ==================== INSERT ====================
 
 proc insert*(this: RDB, items: JsonNode): RDB =
-  this.sqlStringSeq.add(
-    this.insertValueBuilder(items).sqlString
-  )
+  this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
   return this
 
 proc insert*(this: RDB, rows: openArray[JsonNode]): RDB =
-  this.sqlStringSeq.add(
-    this.insertValuesBuilder(rows).sqlString
-  )
+  this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
   return this
 
 proc inserts*(this: RDB, rows: openArray[JsonNode]): RDB =
@@ -143,15 +138,11 @@ proc update*(this: RDB, items: JsonNode): RDB =
 ## ==================== DELETE ====================
 
 proc delete*(this: RDB): RDB =
-  this.sqlStringSeq.add(
-    this.deleteBuilder().sqlString
-  )
+  this.sqlStringSeq = @[this.deleteBuilder().sqlString]
   return this
 
 proc delete*(this: RDB, id: int): RDB =
-  this.sqlStringSeq.add(
-    this.deleteByIdBuilder(id).sqlString
-  )
+  this.sqlStringSeq = @[this.deleteByIdBuilder(id).sqlString]
   return this
 
 
@@ -171,7 +162,7 @@ proc execID*(this: RDB): int64 =
   if this.sqlStringSeq.len == 1 and this.sqlString.contains("INSERT"):
     logger(this.sqlString)
     result = db.tryInsertID(
-      sql this.sqlString
+      sql this.sqlStringSeq[0]
     )
   else:
     for sqlString in this.sqlStringSeq:
@@ -183,21 +174,19 @@ proc execID*(this: RDB): int64 =
 
 ## ==================== Transaction ====================
 
-template transaction*(body: untyped) =
+template transaction(body: untyped) =
+  # TODO fix
   # echo treeRepr NimNode(body)
   block :
     let db = db()
     db.exec(sql"BEGIN")
     try:
       for s in body:
-        echo repr s
-        db.exec(sql s.sqlString)
-      # echo "commit"
-      # db.exec(sql"COMMIT")
-      echo "rollback"
+        for query in s.sqlStringSeq:
+          db.exec(sql query)
+      db.exec(sql"COMMIT")
       db.exec(sql"ROLLBACK")
     except:
       db.exec(sql"ROLLBACK")
-      echo "rollback"
       echo getCurrentExceptionMsg()
     defer: db.close()

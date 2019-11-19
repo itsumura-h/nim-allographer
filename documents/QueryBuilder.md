@@ -278,12 +278,3 @@ echo RDB().raw(sql).getRaw()
 let sql = "UPDATE users SET name='John' where id = 1"
 RDB().raw(sql).exec()
 ```
-
-### TARANSACTION
-[to index](#INDEX)
-
-```
-transaction:
-  RDB().table("exests").insert(%*{"name": "John"}).exec()
-  RDB().table("not_exest").insert(%*{"name": "John"}).exec()
-```
