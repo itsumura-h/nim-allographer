@@ -29,8 +29,6 @@ jobs:
     - uses: jiro4989/setup-nim-action@v1.0.1
     - name: Build
       run: nimble build -Y
-    - name: Command test
-      run: ./src/bin/dbtool -h
 
   test-on-docker:
     runs-on: ubuntu-latest
