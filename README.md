@@ -1,7 +1,7 @@
 allographer
 ===
 
-![Build Status](https://github.com/itsumura-h/nim-allographer/workflows/.github/workflows/Build%20and%20test%20Nim/badge.svg)
+![Build Status](https://github.com/itsumura-h/nim-allographer/workflows/Build%20and%20test%20Nim/badge.svg)
 
 A query builder library inspired by [Laravel/PHP](https://readouble.com/laravel/6.0/en/queries.html) and [Orator/Python](https://orator-orm.com) for Nim
 
