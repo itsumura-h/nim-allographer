@@ -3,7 +3,7 @@ name: Build and test Nim
 on: [push]
 
 jobs:
-  test:
+  build:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -29,7 +29,12 @@ jobs:
     - uses: jiro4989/setup-nim-action@v1.0.1
     - name: Build
       run: nimble build -Y
-    - name: Test
-      run: nimble test -Y
     - name: Command test
       run: ./src/bin/cli/dbtool -h
+
+  test-on-docker:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Test
+      run: docker-compose run allographer nimble test
