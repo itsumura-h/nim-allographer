@@ -1,6 +1,6 @@
 import db_sqlite, db_mysql, db_postgres
 # import json, parsecfg, strutils
-import json, strutils, macros
+import json, strutils
 
 import base, builders
 import ../util
