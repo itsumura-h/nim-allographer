@@ -1,5 +1,4 @@
 import db_sqlite
 
 proc db*(): DbConn =
-  open("/home/www/db.sqlite3", "", "", "")
-  # open(":memory:", "", "", "")
+  open("/home/www/example/sqliteTest.sqlite3", "user", "Password!", "allographer")
