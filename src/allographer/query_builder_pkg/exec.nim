@@ -108,7 +108,7 @@ proc find*(this: RDB, id: int): JsonNode =
   logger(this.sqlStringSeq[0])
   return getRow(this.sqlStringSeq[0])
 
-## ==================== INSERT ====================
+# ==================== INSERT ====================
 
 proc insert*(this: RDB, items: JsonNode): RDB =
   this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
@@ -126,7 +126,7 @@ proc inserts*(this: RDB, rows: openArray[JsonNode]): RDB =
   return this
 
 
-## ==================== UPDATE ====================
+# ==================== UPDATE ====================
 
 proc update*(this: RDB, items: JsonNode): RDB =
   this.sqlStringSeq.add(
@@ -135,7 +135,7 @@ proc update*(this: RDB, items: JsonNode): RDB =
   return this
 
 
-## ==================== DELETE ====================
+# ==================== DELETE ====================
 
 proc delete*(this: RDB): RDB =
   this.sqlStringSeq = @[this.deleteBuilder().sqlString]
@@ -146,7 +146,7 @@ proc delete*(this: RDB, id: int): RDB =
   return this
 
 
-## ==================== EXEC ====================
+# ==================== EXEC ====================
 
 proc exec*(this: RDB) =
   let db = db()
@@ -172,7 +172,7 @@ proc execID*(this: RDB): int64 =
 
   defer: db.close()
 
-## ==================== Transaction ====================
+# ==================== Transaction ====================
 
 template transaction(body: untyped) =
   # TODO fix

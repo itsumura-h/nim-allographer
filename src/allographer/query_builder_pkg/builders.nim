@@ -3,7 +3,7 @@ import json
 import base, generators
 
 
-## ==================== SELECT ====================
+# ==================== SELECT ====================
 
 proc selectBuilder*(this: RDB): RDB =
   return this
@@ -22,7 +22,7 @@ proc selectFindBuilder*(this: RDB, id: int): RDB =
           .selectByIdSql(id)
 
 
-## ==================== INSERT ====================
+# ==================== INSERT ====================
 proc insertValueBuilder*(this: RDB, items: JsonNode): RDB =
   return this
         .insertSql()
@@ -34,7 +34,7 @@ proc insertValuesBuilder*(this: RDB, rows: openArray[JsonNode]): RDB =
         .insertValuesSql(rows)
 
 
-## ==================== UPDATE ====================
+# ==================== UPDATE ====================
 
 proc updateBuilder*(this: RDB, items: JsonNode): RDB =
   return this
@@ -47,7 +47,7 @@ proc updateBuilder*(this: RDB, items: JsonNode): RDB =
         .offsetSql()
 
 
-## ==================== DELETE ====================
+# ==================== DELETE ====================
 
 proc deleteBuilder*(this: RDB): RDB =
   return this
