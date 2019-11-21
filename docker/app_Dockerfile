@@ -19,7 +19,11 @@ RUN apk update && \
 RUN git config --global http.sslVerify false
 
 COPY . .
-RUN nimble install -y
+RUN nimble install -y && \
+    nimble install -y \
+           bcrypt \
+           coco \
+           ;
 
 ENV PATH $PATH:/root/.nimble/bin
 WORKDIR /home/www
