@@ -129,11 +129,11 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
     rowsCount += 1
     columns.add(&"{key}")
 
-  var values = ""
+  var values: string
   var valuesCount = 0
   for items in rows:
     var valueCount = 0
-    var value = ""
+    var value: string
     for item in items.pairs:
       if valueCount > 0:
         value.add(", ")
