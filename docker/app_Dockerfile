@@ -18,9 +18,7 @@ RUN apk update && \
     update-ca-certificates
 RUN git config --global http.sslVerify false
 
-COPY . .
-RUN nimble install -y && \
-    nimble install -y \
+RUN nimble install -y \
            bcrypt \
            coco \
            ;
