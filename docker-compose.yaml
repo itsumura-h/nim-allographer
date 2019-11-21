@@ -2,8 +2,8 @@ version: '3'
 services:
   allographer:
     build:
-      context: ./docker
-      dockerfile: app_Dockerfile
+      context: .
+      dockerfile: ./docker/app_Dockerfile
     tty: true
     environment:
       TZ: Asia/Tokyo
