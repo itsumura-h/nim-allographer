@@ -4,14 +4,14 @@ RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositor
 RUN apk update && \
     apk upgrade --no-cache && \
     apk add --no-cache \
+        bsd-compat-headers \
         ca-certificates \
+        lcov \
+        libpq \
+        mariadb-dev \
         openssl \
         pcre \
-        bsd-compat-headers \
-        lcov \
         sqlite \
-        mariadb-dev \
-        libpq \
         && \
     rm /usr/lib/mysqld* -fr && \
     rm /usr/bin/mysql* -fr && \
