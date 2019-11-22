@@ -13,6 +13,5 @@ skipDirs      = @["allographer/cli"]
 # Dependencies
 
 requires "nim >= 1.0.0"
-requires "bcrypt >= 0.2.1"
 requires "cligen >= 0.9.38"
 requires "progress >= 1.1.1"
