@@ -179,8 +179,7 @@ proc boolGenerator*(name:string, nullable:bool, isDefault:bool,
 proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
   var optionsString = ""
   for i, option in options:
-    if i > 0:
-      optionsString.add(" OR ")
+    if i > 0: optionsString.add(" OR ")
     optionsString.add(
       &"{name} = '{option.getStr}'"
     )
