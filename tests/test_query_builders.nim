@@ -69,3 +69,60 @@ suite "builders":
       ]
     )
     check t.sqlString == "INSERT INTO sample (name) VALUES (\"John\"), (\"Paul\")"
+
+# =============================================================================
+
+  test "update":
+    var t = RDB(
+      query: %*{
+        "table": "sample",
+        "join": [
+          %*{"table": "t1", "column1": "t1.c1", "symbol": "=", "column2": "sample.c1"},
+          %*{"table": "t2", "column1": "t2.c1", "symbol": "=", "column2": "t1.c1"}
+        ],
+        "where": [
+          %*{"column": "c1", "symbol": "=", "value": "v1"},
+          %*{"column": "c2", "symbol": "=", "value": "v2"}
+        ],
+        "or_where": [
+          %*{"column": "or_c1", "symbol": "=", "value": "or_v1"},
+          %*{"column": "or_c2", "symbol": "=", "value": "or_v2"}
+        ],
+        "limit": 5,
+        "offset": 3
+      }
+    )
+    check t.updateBuilder(%*{"name": "John"})
+      .sqlString == "UPDATE sample SET name = \"John\" JOIN t1 ON t1.c1 = sample.c1 JOIN t2 ON t2.c1 = t1.c1 WHERE c1 = \"v1\" AND c2 = \"v2\" OR or_c1 = \"or_v1\" OR or_c2 = \"or_v2\" LIMIT 5 OFFSET 3"
+
+# =============================================================================
+
+  test "delete":
+    var t = RDB(
+      query: %*{
+        "table": "sample",
+        "join": [
+          %*{"table": "t1", "column1": "t1.c1", "symbol": "=", "column2": "sample.c1"},
+          %*{"table": "t2", "column1": "t2.c1", "symbol": "=", "column2": "t1.c1"}
+        ],
+        "where": [
+          %*{"column": "c1", "symbol": "=", "value": "v1"},
+          %*{"column": "c2", "symbol": "=", "value": "v2"}
+        ],
+        "or_where": [
+          %*{"column": "or_c1", "symbol": "=", "value": "or_v1"},
+          %*{"column": "or_c2", "symbol": "=", "value": "or_v2"}
+        ],
+        "limit": 5,
+        "offset": 3
+      }
+    )
+    check t.deleteBuilder().sqlString == "DELETE FROM sample JOIN t1 ON t1.c1 = sample.c1 JOIN t2 ON t2.c1 = t1.c1 WHERE c1 = \"v1\" AND c2 = \"v2\" OR or_c1 = \"or_v1\" OR or_c2 = \"or_v2\" LIMIT 5 OFFSET 3"
+
+  test "delete by id":
+    var t = RDB(
+      query: %*{
+        "table": "sample"
+      }
+    )
+    check t.deleteByIdBuilder(3).sqlString == "DELETE FROM sample WHERE id = 3"

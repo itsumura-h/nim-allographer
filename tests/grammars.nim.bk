@@ -56,7 +56,6 @@ suite "select":
               .limit(10)
               .offset(5)
               .checkSql()
-              .sqlString
     check sql == "SELECT id, email FROM users JOIN auth ON auth.id = auth_id JOIN auth ON auth.id = auth_id WHERE name = \"John\" AND id = 3 OR name = \"George\" OR name = \"Paul\" OR id = 4 OR id = 5 LIMIT 10 OFFSET 5"
 
   test "select * where int and string or int":
@@ -67,7 +66,6 @@ suite "select":
               .where("name", "LIKE", "%user%")
               .orWhere("id", "=", 4)
               .checkSql()
-              .sqlString
     check sql == "SELECT * FROM users WHERE id = 3 AND name LIKE \"%user%\" OR id = 4"
 
   test "select * id = int":

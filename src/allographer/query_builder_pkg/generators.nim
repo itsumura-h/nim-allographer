@@ -4,7 +4,7 @@ from strutils import contains
 
 import base
 
-## ==================== SELECT ====================
+# ==================== SELECT ====================
 
 proc selectSql*(this: RDB): RDB =
   var queryString = ""
@@ -126,11 +126,11 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
     rowsCount += 1
     columns.add(&"{key}")
 
-  var values: string
+  var values = ""
   var valuesCount = 0
   for items in rows:
     var valueCount = 0
-    var value: string
+    var value = ""
     for item in items.pairs:
       if valueCount > 0: value.add(", ")
       valueCount += 1
@@ -144,7 +144,7 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
   return this
 
 
-## ==================== UPDATE ====================
+# ==================== UPDATE ====================
 
 proc updateSql*(this: RDB): RDB =
   this.sqlString.add("UPDATE")
@@ -167,7 +167,7 @@ proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
   return this
 
 
-## ==================== DELETE ====================
+# ==================== DELETE ====================
 
 proc deleteSql*(this: RDB): RDB =
   this.sqlString.add("DELETE")
