@@ -1,18 +1,46 @@
-import unittest, json
-import allographer/query_builder
-include allographer/query_builder_pkg/exec
+import unittest, json, strformat
+import ../src/allographer/schema_builder
+import ../src/allographer/query_builder
+# include ../src/allographer/query_builder_pkg/exec
 
-configFile = "tests/config/database.ini"
+
+proc setup() =
+  Schema().create([
+    Table().create("auth", [
+      Column().increments("id"),
+      Column().string("auth")
+    ], isRebuild=true),
+    Table().create("users", [
+      Column().increments("id"),
+      Column().string("name"),
+      Column().string("email"),
+      Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+    ], isRebuild=true)
+  ])
+
+  RDB().table("auth").insert([
+    %*{"id": 1, "auth": "admin"},
+    %*{"id": 2, "auth": "user"}
+  ])
+  .exec()
+
+  var users: seq[JsonNode]
+  for i in 1..10:
+    users.add(
+      %*{
+        "id": i,
+        "name": &"user{i}",
+        "email": &"user{i}@gmail.com",
+        "auth_id": if i mod 2 == 0: 1 else: 2
+      }
+    )
+  RDB().table("users").insert(users).exec()
+
+# =============================================================================
 
 suite "select":
   setup:
-    let d = db()
-    d.exec(sql"CREATE TABLE users (id, name)")
-    d.exec(sql"INSERT INTO users (id, name) VALUES (1, 'user1')")
-
-  teardown:
-    d.exec(sql"DROP TABLE IF EXISTS users")
-
+    setup()
   test "all":
     var sql = RDB()
               .table("users")
@@ -28,7 +56,6 @@ suite "select":
               .limit(10)
               .offset(5)
               .checkSql()
-              .sqlString
     check sql == "SELECT id, email FROM users JOIN auth ON auth.id = auth_id JOIN auth ON auth.id = auth_id WHERE name = \"John\" AND id = 3 OR name = \"George\" OR name = \"Paul\" OR id = 4 OR id = 5 LIMIT 10 OFFSET 5"
 
   test "select * where int and string or int":
@@ -39,7 +66,6 @@ suite "select":
               .where("name", "LIKE", "%user%")
               .orWhere("id", "=", 4)
               .checkSql()
-              .sqlString
     check sql == "SELECT * FROM users WHERE id = 3 AND name LIKE \"%user%\" OR id = 4"
 
   test "select * id = int":

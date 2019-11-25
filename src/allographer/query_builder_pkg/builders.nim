@@ -3,11 +3,10 @@ import json
 import base, generators
 
 
-## ==================== SELECT ====================
+# ===================== SELECT ====================
 
 proc selectBuilder*(this: RDB): RDB =
-  return this
-        .selectSql()
+  return this.selectSql()
         .fromSql()
         .joinSql()
         .whereSql()
@@ -16,29 +15,26 @@ proc selectBuilder*(this: RDB): RDB =
         .offsetSql()
 
 proc selectFindBuilder*(this: RDB, id: int): RDB =
-  return this
-          .selectSql()
-          .fromSql()
-          .selectByIdSql(id)
+  return this.selectSql()
+        .fromSql()
+        .selectByIdSql(id)
 
 
-## ==================== INSERT ====================
+# ===================== INSERT ====================
+
 proc insertValueBuilder*(this: RDB, items: JsonNode): RDB =
-  return this
-        .insertSql()
+  return this.insertSql()
         .insertValueSql(items)
 
 proc insertValuesBuilder*(this: RDB, rows: openArray[JsonNode]): RDB =
-  return this
-        .insertSql()
+  return this.insertSql()
         .insertValuesSql(rows)
 
 
-## ==================== UPDATE ====================
+# ===================== UPDATE ====================
 
 proc updateBuilder*(this: RDB, items: JsonNode): RDB =
-  return this
-        .updateSql()
+  return this.updateSql()
         .updateValuesSql(items)
         .joinSql()
         .whereSql()
@@ -47,11 +43,10 @@ proc updateBuilder*(this: RDB, items: JsonNode): RDB =
         .offsetSql()
 
 
-## ==================== DELETE ====================
+# ===================== DELETE ====================
 
 proc deleteBuilder*(this: RDB): RDB =
-  return this
-        .deleteSql()
+  return this.deleteSql()
         .fromSql()
         .joinSql()
         .whereSql()
@@ -59,9 +54,7 @@ proc deleteBuilder*(this: RDB): RDB =
         .limitSql()
         .offsetSql()
 
-
 proc deleteByIdBuilder*(this: RDB, id: int): RDB =
-  return this
-        .deleteSql()
+  return this.deleteSql()
         .fromSql()
         .deleteByIdSql(id)
