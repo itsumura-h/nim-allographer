@@ -5,11 +5,11 @@ import ../column
 # int
 # =============================================================================
 proc incrementGenerator*(name:string):string =
-  result = &"{name} INTEGER NOT NULL PRIMARY KEY"
+  result = &"'{name}' INTEGER NOT NULL PRIMARY KEY"
 
 proc intGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
                     isUnsigned:bool):string =
-  result = &"{name} INTEGER"
+  result = &"'{name}' INTEGER"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
@@ -18,13 +18,13 @@ proc intGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
     result.add(" NOT NULL")
 
   if nullable and isUnsigned:
-    result.add(&" CHECK ({name} = null OR {name} > 0)")
+    result.add(&" CHECK ('{name}' = null OR '{name}' > 0)")
   elif isUnsigned:
-    result.add(&" CHECK ({name} > 0)")
+    result.add(&" CHECK ('{name}' > 0)")
 
 proc smallIntGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
                         isUnsigned:bool):string =
-  result = &"{name} SMALLINT"
+  result = &"'{name}' SMALLINT"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
@@ -33,13 +33,13 @@ proc smallIntGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
     result.add(" NOT NULL")
 
   if nullable and isUnsigned:
-    result.add(&" CHECK ({name} = null OR {name} > 0)")
+    result.add(&" CHECK ('{name}' = null OR '{name}' > 0)")
   elif isUnsigned:
-    result.add(&" CHECK ({name} > 0)")
+    result.add(&" CHECK ('{name}' > 0)")
 
 proc mediumIntGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
                           isUnsigned:bool):string =
-  result = &"{name} INTEGER"
+  result = &"'{name}' INTEGER"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
@@ -48,13 +48,13 @@ proc mediumIntGenerator*(name:string, nullable:bool, isDefault:bool, default:int
     result.add(" NOT NULL")
 
   if nullable and isUnsigned:
-    result.add(&" CHECK ({name} = null OR {name} > 0)")
+    result.add(&" CHECK ('{name}' = null OR '{name}' > 0)")
   elif isUnsigned:
-    result.add(&" CHECK ({name} > 0)")
+    result.add(&" CHECK ('{name}' > 0)")
 
 proc bigIntGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
                       isUnsigned:bool):string =
-  result = &"{name} BIGINT"
+  result = &"'{name}' BIGINT"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
@@ -63,16 +63,16 @@ proc bigIntGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
     result.add(" NOT NULL")
 
   if nullable and isUnsigned:
-    result.add(&" CHECK ({name} = null OR {name} > 0)")
+    result.add(&" CHECK ('{name}' = null OR '{name}' > 0)")
   elif isUnsigned:
-    result.add(&" CHECK ({name} > 0)")
+    result.add(&" CHECK ('{name}' > 0)")
 
 # =============================================================================
 # float
 # =============================================================================
 proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
                       isDefault:bool, default:float, isUnsigned:bool):string =
-  result = &"{name} NUMERIC({maximum}, {digit})"
+  result = &"'{name}' NUMERIC({maximum}, {digit})"
 
   if isDefault:
     result.add(
@@ -83,13 +83,13 @@ proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
     result.add(" NOT NULL")
 
   if nullable and isUnsigned:
-    result.add(&" CHECK ({name} = null OR {name} > 0)")
+    result.add(&" CHECK ('{name}' = null OR '{name}' > 0)")
   elif isUnsigned:
-    result.add(&" CHECK ({name} > 0)")
+    result.add(&" CHECK ('{name}' > 0)")
 
 proc doubleGenerator*(name:string, maximum:int, digit:int, nullable:bool,
                       isDefault:bool, default:float, isUnsigned:bool):string =
-  result = &"{name} NUMERIC({maximum}, {digit})"
+  result = &"'{name}' NUMERIC({maximum}, {digit})"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
@@ -98,17 +98,17 @@ proc doubleGenerator*(name:string, maximum:int, digit:int, nullable:bool,
     result.add(" NOT NULL")
 
   if nullable and isUnsigned:
-    result.add(&" CHECK ({name} = null OR {name} > 0)")
+    result.add(&" CHECK ('{name}' = null OR '{name}' > 0)")
   elif isUnsigned:
-    result.add(&" CHECK ({name} > 0)")
+    result.add(&" CHECK ('{name}' > 0)")
 
 proc floatGenerator*(name:string, nullable:bool, isDefault:bool, default:float,
                       isUnsigned:bool):string =
-  result = &"{name} NUMERIC"
+  result = &"'{name}' NUMERIC"
   # if isWithOption:
-  #   result = &"{name} NUMERIC({maximum}, {digit})"
+  #   result = &"'{name}' NUMERIC({maximum}, {digit})"
   # else:
-  #   result = &"{name} NUMERIC"
+  #   result = &"'{name}' NUMERIC"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
@@ -117,15 +117,15 @@ proc floatGenerator*(name:string, nullable:bool, isDefault:bool, default:float,
     result.add(" NOT NULL")
 
   if nullable and isUnsigned:
-    result.add(&" CHECK ({name} = null OR {name} > 0)")
+    result.add(&" CHECK ('{name}' = null OR '{name}' > 0)")
   elif isUnsigned:
-    result.add(&" CHECK ({name} > 0)")
+    result.add(&" CHECK ('{name}' > 0)")
 # =============================================================================
 # char
 # =============================================================================
 proc charGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
                     default:string):string =
-  result = &"{name} CHAR({maxLength})"
+  result = &"'{name}' CHAR({maxLength})"
 
   if isDefault:
     result.add(
@@ -137,7 +137,7 @@ proc charGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
 
 proc stringGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
                     default:string):string =
-  result = &"{name} VARCHAR({maxLength})"
+  result = &"'{name}' VARCHAR({maxLength})"
 
   if isDefault:
     result.add(
@@ -149,7 +149,7 @@ proc stringGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
 
 proc textGenerator*(name:string, nullable:bool, isDefault:bool,
                     default:string):string =
-  result = &"{name} TEXT"
+  result = &"'{name}' TEXT"
 
   if isDefault:
     result.add(
@@ -163,7 +163,7 @@ proc textGenerator*(name:string, nullable:bool, isDefault:bool,
 # date
 # =============================================================================
 proc dateGenerator*(name:string, nullable:bool, isDefault:bool):string =
-  result = &"{name} DATE"
+  result = &"'{name}' DATE"
 
   if not nullable:
     result.add(" NOT NULL")
@@ -174,7 +174,7 @@ proc dateGenerator*(name:string, nullable:bool, isDefault:bool):string =
     )
 
 proc datetimeGenerator*(name:string, nullable:bool, isDefault:bool):string =
-  result = &"{name} TIMESTAMP"
+  result = &"'{name}' TIMESTAMP"
 
   if not nullable:
     result.add(" NOT NULL")
@@ -185,7 +185,7 @@ proc datetimeGenerator*(name:string, nullable:bool, isDefault:bool):string =
     )
 
 proc timeGenerator*(name:string, nullable:bool, isDefault:bool):string =
-  result = &"{name} TIME"
+  result = &"'{name}' TIME"
 
   if not nullable:
     result.add(" NOT NULL")
@@ -196,7 +196,7 @@ proc timeGenerator*(name:string, nullable:bool, isDefault:bool):string =
     )
 
 proc timestampGenerator*(name:string, nullable:bool, isDefault:bool):string =
-  result = &"{name} TIMESTAMP"
+  result = &"'{name}' TIMESTAMP"
 
   if not nullable:
     result.add(" NOT NULL")
@@ -217,14 +217,14 @@ proc softDeleteGenetator*():string =
 # others
 # =============================================================================
 proc blobGenerator*(name:string, nullable:bool):string =
-  result = &"{name} BYTEA"
+  result = &"'{name}' BYTEA"
 
   if not nullable:
     result.add(" NOT NULL")
 
 proc boolGenerator*(name:string, nullable:bool, isDefault:bool, 
                     default:bool):string =
-  result = &"{name} BOOLEAN"
+  result = &"'{name}' BOOLEAN"
 
   if isDefault:
     result.add(
@@ -237,18 +237,16 @@ proc boolGenerator*(name:string, nullable:bool, isDefault:bool,
 proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
   var optionsString = ""
   for i, option in options:
-    if i > 0:
-      optionsString.add(" OR ")
-
+    if i > 0: optionsString.add(" OR ")
     optionsString.add(
-      &"{name} = '{option.getStr}'"
+      &"'{name}' = '{option.getStr}'"
     )
 
   return optionsString
 
 proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
                     isDefault:bool, default:string):string =
-  result = &"{name} CHARACTER"
+  result = &"'{name}' CHARACTER"
 
   if isDefault:
     result.add(
@@ -260,18 +258,18 @@ proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
 
   let optionsString = enumOptionsGenerator(name, options)
   if nullable:
-    result.add(&" CHECK ({name} = null OR {optionsString})")
+    result.add(&" CHECK ('{name}' = null OR {optionsString})")
   else:
     result.add(&" CHECK ({optionsString})")
 
 proc jsonGenerator*(name:string, nullable:bool):string =
-  result = &"{name} JSON"
+  result = &"'{name}' JSON"
 
   if not nullable:
     result.add(" NOT NULL")
 
 proc foreignColumnGenerator*(name:string):string =
-  result = &"{name} INT"
+  result = &"'{name}' INT"
 
 proc foreignGenerator*(name:string, table:string, column:string,
                         foreignOnDelete:ForeignOnDelete):string =
@@ -284,5 +282,5 @@ proc foreignGenerator*(name:string, table:string, column:string,
     onDeleteString = "NO ACTION"
 
 
-  result = &", FOREIGN KEY({name}) REFERENCES {table}({column})"
+  result = &", FOREIGN KEY('{name}') REFERENCES {table}({column})"
   result.add(&" ON DELETE {onDeleteString}")

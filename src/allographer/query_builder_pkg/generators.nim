@@ -4,7 +4,7 @@ from strutils import contains
 
 import base
 
-## ==================== SELECT ====================
+# ==================== SELECT ====================
 
 proc selectSql*(this: RDB): RDB =
   var queryString = ""
@@ -13,9 +13,7 @@ proc selectSql*(this: RDB): RDB =
 
   if this.query.hasKey("select"):
     for i, item in this.query["select"].getElems():
-      if i > 0:
-        queryString.add(",")
-
+      if i > 0: queryString.add(",")
       queryString.add(&" {item.getStr()}")
   else:
     queryString.add(" *")
@@ -124,8 +122,7 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
   var rowsCount = 0
 
   for key, value in rows[0]:
-    if rowsCount > 0:
-      columns.add(", ")
+    if rowsCount > 0: columns.add(", ")
     rowsCount += 1
     columns.add(&"{key}")
 
@@ -135,13 +132,11 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
     var valueCount = 0
     var value = ""
     for item in items.pairs:
-      if valueCount > 0:
-        value.add(", ")
+      if valueCount > 0: value.add(", ")
       valueCount += 1
       value.add(&"{item.val}")
 
-    if valuesCount > 0:
-      values.add(", ")
+    if valuesCount > 0: values.add(", ")
     valuesCount += 1
     values.add(&"({value})")
 
@@ -149,7 +144,7 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
   return this
 
 
-## ==================== UPDATE ====================
+# ==================== UPDATE ====================
 
 proc updateSql*(this: RDB): RDB =
   this.sqlString.add("UPDATE")
@@ -164,8 +159,7 @@ proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
 
   var i = 0
   for item in items.pairs:
-    if i > 0:
-      value.add(", ")
+    if i > 0: value.add(", ")
     i += 1
     value.add(&"{item.key} = {item.val}")
 
@@ -173,7 +167,7 @@ proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
   return this
 
 
-## ==================== DELETE ====================
+# ==================== DELETE ====================
 
 proc deleteSql*(this: RDB): RDB =
   this.sqlString.add("DELETE")

@@ -5,11 +5,11 @@ import ../column
 # int
 # =============================================================================
 proc incrementGenerator*(name:string):string =
-  result = &"`{name}` INT NOT NULL PRIMARY KEY"
+  result = &"`'{name}'` INT NOT NULL PRIMARY KEY"
 
 proc intGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
                     isUnsigned:bool):string =
-  result = &"`{name}` INT"
+  result = &"`'{name}'` INT"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
@@ -22,7 +22,7 @@ proc intGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
 
 proc smallIntGenerator*(name:string, nullable:bool, isDefault:bool, 
                         default:int, isUnsigned:bool):string =
-    result = &"`{name}` SMALLINT"
+    result = &"`'{name}'` SMALLINT"
 
     if isDefault:
       result.add(&" DEFAULT {default}")
@@ -35,7 +35,7 @@ proc smallIntGenerator*(name:string, nullable:bool, isDefault:bool,
 
 proc mediumIntGenerator*(name:string, nullable:bool, isDefault:bool, 
                         default:int, isUnsigned:bool):string =
-    result = &"`{name}` MEDIUMINT"
+    result = &"`'{name}'` MEDIUMINT"
 
     if isDefault:
       result.add(&" DEFAULT {default}")
@@ -48,7 +48,7 @@ proc mediumIntGenerator*(name:string, nullable:bool, isDefault:bool,
 
 proc bigIntGenerator*(name:string, nullable:bool, isDefault:bool, 
                         default:int, isUnsigned:bool):string =
-    result = &"`{name}` BIGINT"
+    result = &"`'{name}'` BIGINT"
 
     if isDefault:
       result.add(&" DEFAULT {default}")
@@ -65,7 +65,7 @@ proc bigIntGenerator*(name:string, nullable:bool, isDefault:bool,
 # =============================================================================
 proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
                       isDefault:bool, default:float, isUnsigned:bool):string =
-  result = &"`{name}` DECIMAL({maximum}, {digit})"
+  result = &"`'{name}'` DECIMAL({maximum}, {digit})"
 
   if isDefault:
     result.add(
@@ -80,7 +80,7 @@ proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
 
 proc doubleGenerator*(name:string, maximum:int, digit:int, nullable:bool,
                       isDefault:bool, default:float, isUnsigned:bool):string =
-  result = &"`{name}` DOUBLE({maximum}, {digit})"
+  result = &"`'{name}'` DOUBLE({maximum}, {digit})"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
@@ -93,7 +93,7 @@ proc doubleGenerator*(name:string, maximum:int, digit:int, nullable:bool,
 
 proc floatGenerator*(name:string, nullable:bool, isDefault:bool, default:float,
                       isUnsigned:bool):string =
-  result = &"`{name}` DOUBLE"
+  result = &"`'{name}'` DOUBLE"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
@@ -108,7 +108,7 @@ proc floatGenerator*(name:string, nullable:bool, isDefault:bool, default:float,
 # =============================================================================
 proc charGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
                     default:string):string =
-  result = &"`{name}` CHAR({maxLength})"
+  result = &"`'{name}'` CHAR({maxLength})"
 
   if isDefault:
     result.add(
@@ -120,7 +120,7 @@ proc charGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
 
 proc stringGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
                     default:string):string =
-  result = &"`{name}` VARCHAR({maxLength})"
+  result = &"`'{name}'` VARCHAR({maxLength})"
 
   if isDefault:
     result.add(
@@ -131,19 +131,19 @@ proc stringGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
     result.add(" NOT NULL")
 
 proc textGenerator*(name:string, nullable:bool):string =
-  result = &"`{name}` TEXT"
+  result = &"`'{name}'` TEXT"
 
   if not nullable:
     result.add(" NOT NULL")
 
 proc mediumTextGenerator*(name:string, nullable:bool):string =
-  result = &"`{name}` MEDIUMTEXT"
+  result = &"`'{name}'` MEDIUMTEXT"
 
   if not nullable:
     result.add(" NOT NULL")
 
 proc longTextGenerator*(name:string, nullable:bool):string =
-  result = &"`{name}` LONGTEXT"
+  result = &"`'{name}'` LONGTEXT"
 
   if not nullable:
     result.add(" NOT NULL")
@@ -152,7 +152,7 @@ proc longTextGenerator*(name:string, nullable:bool):string =
 # date
 # =============================================================================
 proc dateGenerator*(name:string, nullable:bool, isDefault:bool):string =
-  result = &"`{name}` DATE"
+  result = &"`'{name}'` DATE"
 
   if not nullable:
     result.add(" NOT NULL")
@@ -163,7 +163,7 @@ proc dateGenerator*(name:string, nullable:bool, isDefault:bool):string =
     )
 
 proc datetimeGenerator*(name:string, nullable:bool, isDefault:bool):string =
-  result = &"`{name}` DATETIME"
+  result = &"`'{name}'` DATETIME"
 
   if not nullable:
     result.add(" NOT NULL")
@@ -174,7 +174,7 @@ proc datetimeGenerator*(name:string, nullable:bool, isDefault:bool):string =
     )
 
 proc timeGenerator*(name:string, nullable:bool, isDefault:bool):string =
-  result = &"`{name}` TIME"
+  result = &"`'{name}'` TIME"
 
   if not nullable:
     result.add(" NOT NULL")
@@ -185,7 +185,7 @@ proc timeGenerator*(name:string, nullable:bool, isDefault:bool):string =
     )
 
 proc timestampGenerator*(name:string, nullable:bool, isDefault:bool):string =
-  result = &"`{name}` DATETIME"
+  result = &"`'{name}'` DATETIME"
 
   if not nullable:
       result.add(" NOT NULL")
@@ -206,14 +206,14 @@ proc softDeleteGenetator*():string =
 # others
 # =============================================================================
 proc blobGenerator*(name:string, nullable:bool):string =
-  result = &"`{name}` BLOB"
+  result = &"`'{name}'` BLOB"
 
   if not nullable:
     result.add(" NOT NULL")
 
 proc boolGenerator*(name:string, nullable:bool, isDefault:bool, 
                     default:bool):string =
-  result = &"`{name}` TINYINT"
+  result = &"`'{name}'` TINYINT"
 
   if isDefault:
     let defaultInt = if default: 1 else: 0
@@ -227,9 +227,7 @@ proc boolGenerator*(name:string, nullable:bool, isDefault:bool,
 proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
   var optionsString = ""
   for i, option in options:
-    if i > 0:
-      optionsString.add(", ")
-
+    if i > 0: optionsString.add(", ")
     optionsString.add(
       &"'{option.getStr}'"
     )
@@ -239,7 +237,7 @@ proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
 proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
                     isDefault:bool, default:string):string =
   let optionsString = enumOptionsGenerator(name, options)
-  result = &"`{name}` ENUM({optionsString})"
+  result = &"`'{name}'` ENUM({optionsString})"
 
   if isDefault:
     result.add(
@@ -250,13 +248,13 @@ proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
     result.add(" NOT NULL")
 
 proc jsonGenerator*(name:string, nullable:bool):string =
-  result = &"{name} JSON"
+  result = &"'{name}' JSON"
 
   if not nullable:
     result.add(" NOT NULL")
 
 proc foreignColumnGenerator*(name:string):string =
-  result = &"{name} INT"
+  result = &"'{name}' INT"
 
 proc foreignGenerator*(name:string, table:string, column:string,
                         foreignOnDelete:ForeignOnDelete):string =
@@ -269,5 +267,5 @@ proc foreignGenerator*(name:string, table:string, column:string,
     onDeleteString = "NO ACTION"
 
 
-  result = &", FOREIGN KEY({name}) REFERENCES {table}({column})"
+  result = &", FOREIGN KEY('{name}') REFERENCES {table}({column})"
   result.add(&" ON DELETE {onDeleteString}")
