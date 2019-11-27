@@ -80,7 +80,7 @@ proc check*(this:Schema, tablesArg:varargs[Table]) =
 # =============================================================================
 
 proc create*(this:Schema, tables:varargs[Table]) =
-  # this.check(tables)
+  driverTypeError()
 
   for table in tables:
     # echo repr table
@@ -102,15 +102,15 @@ proc create*(this:Schema, tables:varargs[Table]) =
 
     block:
       let db = db()
-      if table.isRebuild:
+      if table.reset:
         try:
           db.exec(sql &"drop table {table_name}")
         except Exception:
-          echo getCurrentExceptionMsg()
+          getCurrentExceptionMsg().echoErrorMsg()
 
       try:
         db.exec(sql query)
       except Exception:
-        echo getCurrentExceptionMsg()
+        getCurrentExceptionMsg().echoErrorMsg()
 
       defer: db.close()

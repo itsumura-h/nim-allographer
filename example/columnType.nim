@@ -21,7 +21,7 @@ echo RDB().table("users")
 #     Column().datetime("datetime"),
 #     Column().string("'null'").nullable(),
 #     Column().boolean("is_admin")
-#   ], isRebuild=true)
+#   ], reset=true)
 # ])
 
 # RDB().table("sample").insert(%*{

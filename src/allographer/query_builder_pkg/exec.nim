@@ -188,5 +188,5 @@ template transaction(body: untyped) =
       db.exec(sql"ROLLBACK")
     except:
       db.exec(sql"ROLLBACK")
-      echo getCurrentExceptionMsg()
+      getCurrentExceptionMsg().echoErrorMsg()
     defer: db.close()

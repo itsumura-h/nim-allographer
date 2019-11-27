@@ -94,7 +94,7 @@ Schema().create([
     Column().enumField("enum_null_default", ["h", "i"]).nullable().default("h"),
     Column().json("json"),
     Column().json("json_null").nullable(),
-  ], isRebuild=true),
+  ], reset=true),
 
   Table().create("auth", [
     Column().increments("id"),
