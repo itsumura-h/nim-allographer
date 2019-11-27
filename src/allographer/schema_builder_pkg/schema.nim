@@ -88,14 +88,13 @@ proc create*(this:Schema, tables:varargs[Table]) =
     var query = ""
     let driver = util.getDriver()
     case driver:
-      of "sqlite":
-        query = sqlite_migrate.migrate(table)
-      of "mysql":
-        query = mysql_migrate.migrate(table)
-      of "postgres":
-        query = postgres_migrate.migrate(table)
-      else:
-        echo ""
+    of "sqlite":
+      query = sqlite_migrate.migrate(table)
+    of "mysql":
+      query = mysql_migrate.migrate(table)
+    of "postgres":
+      query = postgres_migrate.migrate(table)
+
     logger(query)
 
     let table_name = table.name
