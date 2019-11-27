@@ -34,7 +34,7 @@ suite "column options":
     var t = Column().unsigned()
     check t.isUnsigned == true
 
-suite "column type":
+suite "column type int":
   test "increment":
     var t = Column().increments("id")
     check t.name == "id"
@@ -60,6 +60,7 @@ suite "column type":
     check t.name == "int"
     check t.typ == rdbBigInteger
 
+suite "column type float":
   test "decimal":
     var t = Column().decimal("decimal", 5, 2)
     check t.name == "decimal"
@@ -77,6 +78,7 @@ suite "column type":
     check t.name == "float"
     check t.typ == rdbFloat
 
+suite "column type char":
   test "char":
     var t = Column().char("char", 10)
     check t.name == "char"
@@ -103,3 +105,64 @@ suite "column type":
     var t = Column().longText("longText")
     check t.name == "longText"
     check t.typ == rdbLongText
+
+suite "column type date":
+  test "date":
+    var t = Column().date("date")
+    check t.name == "date"
+    check t.typ == rdbDate
+
+  test "datetime":
+    var t = Column().datetime("datetime")
+    check t.name == "datetime"
+    check t.typ == rdbDatetime
+
+  test "time":
+    var t = Column().time("time")
+    check t.name == "time"
+    check t.typ == rdbTime
+
+  test "timestamp":
+    var t = Column().timestamp("timestamp")
+    check t.name == "timestamp"
+    check t.typ == rdbTimestamp
+
+  test "timestamps":
+    var t = Column().timestamps()
+    check t.typ == rdbTimestamps
+
+  test "softDelete":
+    var t = Column().softDelete()
+    check t.typ == rdbSoftDelete
+
+suite "column type others":
+  test "binary":
+    var t = Column().binary("binary")
+    check t.name == "binary"
+    check t.typ == rdbBinary
+
+  test "boolean":
+    var t = Column().boolean("boolean")
+    check t.name == "boolean"
+    check t.typ == rdbBoolean
+
+  test "enumField":
+    var t = Column().enumField("enumField", ["a", "b", "c"])
+    check t.name == "enumField"
+    check t.typ == rdbEnumField
+    check t.info == %*{"options": ["a", "b", "c"]}
+
+  test "json":
+    var t = Column().json("json")
+    check t.name == "json"
+    check t.typ == rdbJson
+
+  test "foreign key":
+    var t = Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+    check t.name == "auth_id"
+    check t.typ == rdbForeign
+    check t.info == %*{
+      "column": "id",
+      "table": "auth"
+    }
+    check t.foreignOnDelete == SET_NULL
