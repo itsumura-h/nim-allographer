@@ -9,7 +9,7 @@ proc resetDB() =
       Column().increments("id"),
       Column().string("name"),
       Column().string("null").nullable()
-    ], isRebuild=true)
+    ], reset=true)
   ])
   RDB().table("testDB").insert(%*{"name": "John"}).exec()
 
