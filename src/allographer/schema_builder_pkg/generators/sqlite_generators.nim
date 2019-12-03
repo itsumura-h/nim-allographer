@@ -5,11 +5,11 @@ import ../column
 # int
 # =============================================================================
 proc serialGenerator*(name:string):string =
-  result = &"'{name}' INTEGER PRIMARY KEY"
+  result = &"{name} INTEGER PRIMARY KEY"
 
 proc intGenerator*(name:string, nullable:bool, isDefault:bool,
                     default:int, isUnsigned:bool):string =
-  result = &"'{name}' INTEGER"
+  result = &"{name} INTEGER"
 
   if isDefault:
     result.add(
@@ -20,9 +20,9 @@ proc intGenerator*(name:string, nullable:bool, isDefault:bool,
     result.add(" NOT NULL")
 
   if nullable and isUnsigned:
-    result.add(&" CHECK ('{name}' = null OR '{name}' > 0)")
+    result.add(&" CHECK ({name} = null OR {name} > 0)")
   elif isUnsigned:
-    result.add(&" CHECK ('{name}' > 0)")
+    result.add(&" CHECK ({name} > 0)")
 
 # =============================================================================
 # float
@@ -30,7 +30,7 @@ proc intGenerator*(name:string, nullable:bool, isDefault:bool,
 proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
                         isDefault:bool, default:float,
                         isUnsigned:bool):string =
-  result = &"'{name}' NUMERIC"
+  result = &"{name} NUMERIC"
 
   if isDefault:
     result.add(
@@ -41,13 +41,13 @@ proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
     result.add(" NOT NULL")
 
   if nullable and isUnsigned:
-    result.add(&" CHECK ('{name}' = null OR '{name}' > 0)")
+    result.add(&" CHECK ({name} = null OR {name} > 0)")
   elif isUnsigned:
-    result.add(&" CHECK ('{name}' > 0)")
+    result.add(&" CHECK ({name} > 0)")
 
 proc floatGenerator*(name:string, nullable:bool, isDefault:bool,
                       default:float, isUnsigned:bool):string =
-  result = &"'{name}' DOUBLE"
+  result = &"`'{name}'` DOUBLE"
 
   if isDefault:
     result.add(
@@ -58,15 +58,15 @@ proc floatGenerator*(name:string, nullable:bool, isDefault:bool,
     result.add(" NOT NULL")
 
   if nullable and isUnsigned:
-    result.add(&" CHECK ('{name}' = null OR '{name}' > 0)")
+    result.add(&" CHECK ({name} = null OR {name} > 0)")
   elif isUnsigned:
-    result.add(&" CHECK ('{name}' > 0)")
+    result.add(&" CHECK ({name} > 0)")
 # =============================================================================
 # char
 # =============================================================================
 proc charGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
                     default:string):string =
-  result = &"'{name}' VARCHAR"
+  result = &"{name} VARCHAR"
   if isDefault:
     result.add(
       &" DEFAULT '{default}'"
@@ -75,11 +75,11 @@ proc charGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
   if not nullable:
     result.add(" NOT NULL")
 
-  result.add(&" CHECK (length('{name}') <= {maxLength})")
+  result.add(&" CHECK (length({name}) <= {maxLength})")
 
 proc varcharGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
                     default:string):string =
-  result = &"'{name}' VARCHAR"
+  result = &"{name} VARCHAR"
   if isDefault:
     result.add(
       &" DEFAULT '{default}'"
@@ -88,11 +88,11 @@ proc varcharGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool
   if not nullable:
     result.add(" NOT NULL")
 
-  result.add(&" CHECK (length('{name}') <= {maxLength})")
+  result.add(&" CHECK (length({name}) <= {maxLength})")
 
 proc textGenerator*(name:string, nullable:bool, isDefault:bool,
                     default:string):string =
-  result = &"'{name}' TEXT"
+  result = &"{name} TEXT"
   if isDefault:
     result.add(
       &" DEFAULT '{default}'"
@@ -105,7 +105,7 @@ proc textGenerator*(name:string, nullable:bool, isDefault:bool,
 # date
 # =============================================================================
 proc dateGenerator*(name:string, nullable:bool, isDefault:bool):string =
-  result = &"'{name}' DATE"
+  result = &"{name} DATE"
 
   if not nullable:
     result.add(" NOT NULL")
@@ -116,41 +116,41 @@ proc dateGenerator*(name:string, nullable:bool, isDefault:bool):string =
     )
 
 proc datetimeGenerator*(name:string, nullable:bool, isDefault:bool):string =
-  result = &"'{name}' DATETIME"
+  result = &"{name} DATETIME"
 
   if not nullable:
     result.add(" NOT NULL")
 
   if isDefault:
     result.add(
-      &" DEFAULT (DATETIME('now','localtime'))"
+      &" DEFAULT (DATETIME('now', 'localtime'))"
     )
 
 proc timeGenerator*(name:string, nullable:bool, isDefault:bool):string =
-  result = &"'{name}' TIME"
+  result = &"{name} TIME"
 
   if not nullable:
     result.add(" NOT NULL")
 
   if isDefault:
     result.add(
-      &" DEFAULT (TIME('now','localtime'))"
+      &" DEFAULT (DATETIME('now', 'localtime'))"
     )
 
 proc timestampGenerator*(name:string, nullable:bool, isDefault:bool):string =
-  result = &"'{name}' DATETIME"
+  result = &"{name} DATETIME"
 
   if not nullable:
     result.add(" NOT NULL")
 
   if isDefault:
     result.add(
-      &" DEFAULT (DATETIME('now','localtime'))"
+      &" DEFAULT (DATETIME(now, localtime))"
     )
 
 proc timestampsGenerator*():string =
   result = "created_at DATETIME, "
-  result.add("updated_at DATETIME DEFAULT (DATETIME('now','localtime'))")
+  result.add("updated_at DATETIME DEFAULT (DATETIME(now ,localtime))")
 
 proc softDeleteGenerator*():string =
   result = "deleted_at DATETIME"
@@ -159,14 +159,14 @@ proc softDeleteGenerator*():string =
 # others
 # =============================================================================
 proc blobGenerator*(name:string, nullable:bool):string =
-  result = &"'{name}' BLOB"
+  result = &"{name} BLOB"
 
   if not nullable:
     result.add(" NOT NULL")
 
 proc boolGenerator*(name:string, nullable:bool, isDefault:bool, 
                     default:bool):string =
-  result = &"'{name}' TINYINT"
+  result = &"{name} TINYINT"
 
   if isDefault:
     result.add(
@@ -181,14 +181,14 @@ proc enumOptionsGenerator(name:string, options:openArray[JsonNode]):string =
   for i, option in options:
     if i > 0: optionsString.add(" OR ")
     optionsString.add(
-      &"'{name}' = '{option.getStr}'"
+      &"{name} = '{option.getStr}'"
     )
   
   return optionsString
 
 proc enumGenerator*(name:string, options:openArray[JsonNode], nullable:bool,
                     isDefault:bool, default:string):string =
-  result = &"'{name}' VARCHAR"
+  result = &"{name} VARCHAR"
 
   if isDefault:
     result.add(
@@ -200,18 +200,18 @@ proc enumGenerator*(name:string, options:openArray[JsonNode], nullable:bool,
 
   let optionsString = enumOptionsGenerator(name, options)
   if nullable:
-    result.add(&" CHECK ('{name}' = null OR {optionsString})")
+    result.add(&" CHECK ({name} = null OR {optionsString})")
   else:
     result.add(&" CHECK ({optionsString})")
 
 proc jsonGenerator*(name:string, nullable:bool):string =
-  result = &"'{name}' TEXT"
+  result = &"{name} TEXT"
 
   if not nullable:
     result.add(" NOT NULL")
 
 proc foreignColumnGenerator*(name:string):string =
-  result = &"'{name}' INTEGER"
+  result = &"{name} INTEGER"
 
 proc foreignGenerator*(name:string, table:string, column:string,
                         foreignOnDelete:ForeignOnDelete):string =
@@ -223,5 +223,5 @@ proc foreignGenerator*(name:string, table:string, column:string,
   elif foreignOnDelete == NO_ACTION:
     onDeleteString = "NO ACTION"
 
-  result = &", FOREIGN KEY('{name}') REFERENCES {table}({column})"
+  result = &", FOREIGN KEY({name}) REFERENCES {table}({column})"
   result.add(&" ON DELETE {onDeleteString}")
