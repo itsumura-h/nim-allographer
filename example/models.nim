@@ -30,13 +30,11 @@ Schema().create([
     Column().decimal("decimal", 5, 2),
     Column().decimal("decimal_default", 6, 3).default(0.1),
     Column().decimal("decimal_null", 7, 4).nullable(),
-    Column().decimal("decimal_unsigned", 7, 4).unsigned(),
-    Column().decimal("decimal_null_unsigned", 7, 4).nullable().unsigned(),
+    Column().decimal("decimal_default_unsigned", 7, 4).default(0.1).unsigned(),
     Column().double("double", 5, 1),
     Column().double("double_default", 6, 2).default(0.2),
     Column().double("double_null", 7, 3).nullable(),
-    Column().double("double_unsigned", 8, 4).unsigned(),
-    Column().double("double_null_unsigned", 9, 5).nullable().unsigned(),
+    Column().double("double_default_unsigned", 7, 4).default(0.2).unsigned(),
     Column().float("float"),
     Column().float("float_default").default(0.3),
     Column().float("float_null").nullable(),
@@ -100,11 +98,11 @@ Schema().create([
     Column().increments("id"),
     Column().string("name"),
     Column().timestamps()
-  ]),
+  ], reset=true),
 
   Table().create("users", [
     Column().increments("id"),
     Column().string("name"),
     Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-  ])
+  ], reset=true)
 ])

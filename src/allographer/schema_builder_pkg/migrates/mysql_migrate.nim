@@ -16,7 +16,7 @@ proc migrate*(this:Table):string =
       # int ===================================================================
       of rdbIncrements:
         columnString.add(
-          incrementGenerator(column.name)
+          serialGenerator(column.name)
         )
       of rdbInteger:
         columnString.add(
@@ -67,8 +67,7 @@ proc migrate*(this:Table):string =
             parseInt($column.info["digit"]),
             column.isNullable,
             column.isDefault,
-            column.defaultFloat,
-            column.isUnsigned
+            column.defaultFloat
           )
         )
       of rdbDouble:
@@ -79,8 +78,7 @@ proc migrate*(this:Table):string =
             parseInt($column.info["digit"]),
             column.isNullable,
             column.isDefault,
-            column.defaultFloat,
-            column.isUnsigned
+            column.defaultFloat
           )
         )
       of rdbFloat:

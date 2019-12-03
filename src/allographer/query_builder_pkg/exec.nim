@@ -28,6 +28,7 @@ proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
     for i, row in rows:
       var key = columns[i]["name"].getStr
       var typ = columns[i]["typ"].getStr
+      echo typ
       if row == "":
         response_row[key] = newJNull()
       elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):

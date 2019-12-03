@@ -176,7 +176,7 @@ proc boolGenerator*(name:string, nullable:bool, isDefault:bool,
   if not nullable:
     result.add(" NOT NULL")
 
-proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
+proc enumOptionsGenerator(name:string, options:openArray[JsonNode]):string =
   var optionsString = ""
   for i, option in options:
     if i > 0: optionsString.add(" OR ")
@@ -186,7 +186,7 @@ proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
   
   return optionsString
 
-proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
+proc enumGenerator*(name:string, options:openArray[JsonNode], nullable:bool,
                     isDefault:bool, default:string):string =
   result = &"'{name}' VARCHAR"
 
