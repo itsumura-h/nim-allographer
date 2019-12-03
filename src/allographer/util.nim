@@ -1,7 +1,7 @@
 import os, parsecfg, terminal
 
 var
-  configFile* = getCurrentDir() / "/config/database.ini"
+  configFile* = getCurrentDir() & "/config/database.ini"
 
 proc getDriver*():string =
   let conf = loadConfig(configFile)

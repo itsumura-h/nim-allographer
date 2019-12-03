@@ -13,6 +13,7 @@ proc checkSql*(this: RDB): string =
 proc getColumns(db_columns:DbColumns):seq[JsonNode] =
   var columns: seq[JsonNode]
   for i, row in db_columns:
+    echo row.typ
     columns.add(
       %*{
         "name": row.name,
@@ -28,7 +29,6 @@ proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
     for i, row in rows:
       var key = columns[i]["name"].getStr
       var typ = columns[i]["typ"].getStr
-      echo typ
       if row == "":
         response_row[key] = newJNull()
       elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):

@@ -1,4 +1,4 @@
-import db_mysql
+import db_postgres
 
 proc db*(): DbConn =
-  open("mysql:3306", "user", "Password!", "allographer")
+  open("postgres:5432", "user", "Password!", "allographer")

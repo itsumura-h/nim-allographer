@@ -87,6 +87,7 @@ proc create*(this:Schema, tables:varargs[Table]) =
 
     var query = ""
     let driver = util.getDriver()
+    echo driver
     case driver:
     of "sqlite":
       query = sqlite_migrate.migrate(table)

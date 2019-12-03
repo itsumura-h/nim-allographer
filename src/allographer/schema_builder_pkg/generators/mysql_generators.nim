@@ -5,7 +5,7 @@ import ../column
 # int
 # =============================================================================
 proc serialGenerator*(name:string):string =
-  result = &"`{name}` INT NOT NULL PRIMARY KEY AUTO_INCREMENT"
+  result = &"{name} INT NOT NULL PRIMARY KEY AUTOINCREMENT"
 
 proc intGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
                     isUnsigned:bool):string =

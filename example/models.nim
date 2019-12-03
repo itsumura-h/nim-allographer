@@ -94,15 +94,15 @@ Schema().create([
     Column().json("json_null").nullable(),
   ], reset=true),
 
-  Table().create("auth", [
-    Column().increments("id"),
-    Column().string("name"),
-    Column().timestamps()
-  ], reset=true),
+#   Table().create("auth", [
+#     Column().increments("id"),
+#     Column().string("name"),
+#     Column().timestamps()
+#   ], reset=true),
 
-  Table().create("users", [
-    Column().increments("id"),
-    Column().string("name"),
-    Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-  ], reset=true)
+#   Table().create("users", [
+#     Column().increments("id"),
+#     Column().string("name"),
+#     Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+#   ], reset=true)
 ])
