@@ -12,23 +12,66 @@ proc checkSql*(this: RDB): string =
 
 proc getColumns(db_columns:DbColumns):seq[JsonNode] =
   var columns: seq[JsonNode]
+  const DRIVER = getDriver()
   for i, row in db_columns:
-    echo row.typ
-    columns.add(
-      %*{
-        "name": row.name,
-        "typ": row.typ.name
-      }
-    )
+    case DRIVER:
+    of "sqlite":
+      columns.add(
+        %*{"name": row.name, "typ": row.typ.name}
+      )
+    of "mysql":
+      columns.add(
+        %*{"name": row.name, "typ": row.typ.kind}
+      )
+    of "postgres":
+      columns.add(
+        %*{"name": row.name, "typ": row.typ.name}
+      )
   return columns
 
 proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
   var response_table: seq[JsonNode]
+  const DRIVER = getDriver()
   for rows in results:
     var response_row = %*{}
     for i, row in rows:
       var key = columns[i]["name"].getStr
       var typ = columns[i]["typ"].getStr
+      case DRIVER:
+      of "sqlite":
+        if row == "":
+          response_row[key] = newJNull()
+        elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
+          response_row[key] = newJInt(row.parseInt)
+        elif ["NUMERIC", "DECIMAL", "DOUBLE"].contains(typ):
+          response_row[key] = newJFloat(row.parseFloat)
+        elif ["TINYINT", "BOOLEAN"].contains(typ):
+          response_row[key] = newJBool(row.parseBool)
+        else:
+          response_row[key] = newJString(row)
+      of "mysql":
+        if row == "":
+          response_row[key] = newJNull()
+        elif [$dbInt, $dbUInt].contains(typ):
+          response_row[key] = newJInt(row.parseInt)
+        elif [$dbDecimal, $dbFloat].contains(typ):
+          response_row[key] = newJFloat(row.parseFloat)
+        elif [$dbBool].contains(typ):
+          response_row[key] = newJBool(row.parseBool)
+        else:
+          response_row[key] = newJString(row)
+
+    response_table.add(response_row)
+  return response_table
+
+proc toJson(results:seq[string], columns:seq[JsonNode]):JsonNode =
+  var response_row = %*{}
+  const DRIVER = getDriver()
+  for i, row in results:
+    var key = columns[i]["name"].getStr
+    var typ = columns[i]["typ"].getStr
+    case DRIVER:
+    of "sqlite":
       if row == "":
         response_row[key] = newJNull()
       elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
@@ -39,26 +82,17 @@ proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
         response_row[key] = newJBool(row.parseBool)
       else:
         response_row[key] = newJString(row)
-      # var key = columns[i]["name"].getStr
-      # response_row[key] = newJString(row)
-    response_table.add(response_row)
-  return response_table
-
-proc toJson(results:seq[string], columns:seq[JsonNode]):JsonNode =
-  var response_row = %*{}
-  for i, row in results:
-    var key = columns[i]["name"].getStr
-    var typ = columns[i]["typ"].getStr
-    if row == "":
-      response_row[key] = newJNull()
-    elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
-      response_row[key] = newJInt(row.parseInt)
-    elif ["NUMERIC", "DECIMAL", "DOUBLE"].contains(typ):
-      response_row[key] = newJFloat(row.parseFloat)
-    elif ["TINYINT", "BOOLEAN"].contains(typ):
-      response_row[key] = newJBool(row.parseBool)
-    else:
-      response_row[key] = newJString(row)
+    of "mysql":
+      if row == "":
+        response_row[key] = newJNull()
+      elif [$dbInt, $dbUInt].contains(typ):
+        response_row[key] = newJInt(row.parseInt)
+      elif [$dbDecimal, $dbFloat].contains(typ):
+        response_row[key] = newJFloat(row.parseFloat)
+      elif [$dbBool].contains(typ):
+        response_row[key] = newJBool(row.parseBool)
+      else:
+        response_row[key] = newJString(row)
     # var key = columns[i]["name"].getStr
     # response_row[key] = newJString(row)
   return response_row

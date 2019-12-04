@@ -59,6 +59,8 @@ import db_{driver}
 
 proc db*(): DbConn =
   open("{conn}", "{user}", "{password}", "{database}")
+
+const DRIVER* = "{driver}"
 """
 
   try:
