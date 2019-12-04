@@ -1,12 +1,11 @@
 import os, parsecfg, terminal
+import connection
 
 var
   configFile* = getCurrentDir() & "/config/database.ini"
 
 proc getDriver*():string =
-  let conf = loadConfig(configFile)
-  let driver = conf.getSectionValue("Connection", "driver")
-  return driver
+  return connection.DRIVER
 
 proc driverTypeError*() =
   let driver = getDriver()
