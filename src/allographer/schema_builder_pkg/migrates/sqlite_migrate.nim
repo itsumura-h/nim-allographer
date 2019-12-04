@@ -220,5 +220,5 @@ proc migrate*(this:Table):string =
         )
 
 
-  var query = &"CREATE TABLE {this.name} ({columnString}{foreignString})"
+  var query = &"CREATE TABLE \"{this.name}\" ({columnString}{foreignString})"
   return query
