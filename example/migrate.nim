@@ -32,7 +32,7 @@ RDB().table("auth").insert([
 .exec()
 
 # プログレスバー
-let total = 100
+let total = 50
 var pb = newProgressBar(total=total) # totalは分母
 
 pb.start()
