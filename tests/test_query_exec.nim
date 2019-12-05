@@ -24,6 +24,8 @@ suite "exec":
         "table": "testDB"
       }
     )
+    echo "===================="
+    echo t.get()
     check t.get() == @[%*{"id":1, "name":"John", "null":newJNull()}]
 
   test "get raw":
