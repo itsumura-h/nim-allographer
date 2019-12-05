@@ -4,7 +4,7 @@ include ../src/allographer/schema_builder_pkg/generators/sqlite_generators
 
 suite "sqlite generators int":
   test "serialGenerator":
-    check serialGenerator("id") == "'id' INTEGER PRIMARY KEY"
+    check serialGenerator("id") == "'id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"
 
   test "intGenerator":
     check intGenerator("int", true, false, 0, false) == "'int' INTEGER"
@@ -40,21 +40,21 @@ suite "sqlite generators float":
 
   test "floatGenerator":
     check floatGenerator("decimal", true, false, 0.0, false) ==
-      "'decimal' DOUBLE"
+      "'decimal' REAL"
 
   test "floatGenerator not null":
     check floatGenerator("decimal", false, false, 0.0, false) ==
-      "'decimal' DOUBLE NOT NULL"
+      "'decimal' REAL NOT NULL"
 
   test "floatGenerator default":
     check floatGenerator("decimal", true, true, 0.0, false) ==
-      "'decimal' DOUBLE DEFAULT 0.0"
+      "'decimal' REAL DEFAULT 0.0"
 
   test "floatGenerator unsigned":
     check floatGenerator("decimal", true, false, 0.0, true) ==
-      "'decimal' DOUBLE CHECK ('decimal' = null OR 'decimal' > 0)"
+      "'decimal' REAL CHECK ('decimal' = null OR 'decimal' > 0)"
     check floatGenerator("decimal", false, false, 0.0, true) ==
-      "'decimal' DOUBLE NOT NULL CHECK ('decimal' > 0)"
+      "'decimal' REAL NOT NULL CHECK ('decimal' > 0)"
 
 suite "sqlite generators char":
   test "charGenerator":
@@ -104,7 +104,7 @@ suite "sqlite generators date":
 
   test "dateGenerator default":
     check dateGenerator("date", true, true) ==
-      "'date' DATE DEFAULT (DATE('now','localtime'))"
+      "'date' DATE DEFAULT CURRENT_TIMESTAMP"
 
   test "datetimeGenerator":
     check datetimeGenerator("date", true, false) ==
@@ -116,7 +116,7 @@ suite "sqlite generators date":
 
   test "datetimeGenerator default":
     check datetimeGenerator("date", true, true) ==
-      "'date' DATETIME DEFAULT (DATETIME('now','localtime'))"
+      "'date' DATETIME DEFAULT CURRENT_TIMESTAMP"
 
   test "timeGenerator":
     check timeGenerator("date", true, false) ==
@@ -128,7 +128,7 @@ suite "sqlite generators date":
 
   test "timeGenerator default":
     check timeGenerator("date", true, true) ==
-      "'date' TIME DEFAULT (TIME('now','localtime'))"
+      "'date' TIME DEFAULT CURRENT_TIMESTAMP"
 
   test "timestampGenerator":
     check timestampGenerator("date", true, false) ==
@@ -140,11 +140,11 @@ suite "sqlite generators date":
 
   test "timestampGenerator default":
     check timestampGenerator("date", true, true) ==
-      "'date' DATETIME DEFAULT (DATETIME('now','localtime'))"
+      "'date' DATETIME DEFAULT CURRENT_TIMESTAMP"
 
   test "timestampsGenerator":
     check timestampsGenerator() ==
-      "created_at DATETIME, updated_at DATETIME DEFAULT (DATETIME('now','localtime'))"
+      "created_at DATETIME DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP"
 
   test "softDeleteGenerator":
     check softDeleteGenerator() == "deleted_at DATETIME"
