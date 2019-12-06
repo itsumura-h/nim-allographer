@@ -135,7 +135,8 @@ proc getAllRows(sqlString:string): seq[JsonNode] =
 
 proc getRow(sqlString:string): JsonNode =
   let db = db()
-  let results = db.getRow(sql sqlString)
+  # let results = db.getRow(sql sqlString)
+  let results = db.getAllRows(sql sqlString)[0]
   
   var db_columns: DbColumns
   for row in db.instantRows(db_columns, sql sqlString):
