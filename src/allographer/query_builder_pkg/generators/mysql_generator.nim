@@ -111,7 +111,16 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
       values.add(", ")
     i += 1
     columns.add(item.key)
-    values.add(&"'{item.val.getStr}'")
+    # values.add(&"'{item.val.getStr}'")
+    case item.val.kind:
+    of JInt:
+      values.add(&"{item.val.getInt}")
+    of JFloat:
+      values.add(&"{item.val.getFloat}")
+    of JBool:
+      values.add(&"{item.val.getBool}")
+    else:
+      values.add(&"'{item.val.getStr}'")
 
   this.sqlString.add(&" ({columns}) VALUES ({values})")
   return this
@@ -134,7 +143,16 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
     for item in items.pairs:
       if valueCount > 0: value.add(", ")
       valueCount += 1
-      value.add(&"{item.val}")
+      # value.add(&"{item.val}")
+      case item.val.kind:
+      of JInt:
+        value.add(&"{item.val.getInt}")
+      of JFloat:
+        value.add(&"{item.val.getFloat}")
+      of JBool:
+        value.add(&"{item.val.getBool}")
+      else:
+        value.add(&"'{item.val.getStr}'")
 
     if valuesCount > 0: values.add(", ")
     valuesCount += 1

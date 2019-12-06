@@ -134,7 +134,7 @@ proc timeGenerator*(name:string, nullable:bool, isDefault:bool):string =
 
   if isDefault:
     result.add(
-      &" DEFAULT CURRENT_TIMESTAMP "
+      &" DEFAULT CURRENT_TIMESTAMP"
     )
 
 proc timestampGenerator*(name:string, nullable:bool, isDefault:bool):string =
