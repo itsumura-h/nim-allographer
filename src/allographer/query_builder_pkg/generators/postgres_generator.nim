@@ -49,29 +49,87 @@ proc joinSql*(this: RDB): RDB =
 proc whereSql*(this: RDB): RDB =
   if this.query.hasKey("where"):
     for i, row in this.query["where"].getElems():
-      var column = row["column"].getStr()
-      var symbol = row["symbol"].getStr()
-      var value = row["value"].getStr()
-      
-      if i == 0:
-        this.sqlString.add(&" WHERE {column} {symbol} '{value}'")
+      case row["value"].kind:
+      of JInt:
+        var column = row["column"].getStr()
+        var symbol = row["symbol"].getStr()
+        var value = row["value"].getInt()
+        if i == 0:
+          this.sqlString.add(&" WHERE {column} {symbol} {value}")
+        else:
+          this.sqlString.add(&" AND {column} {symbol} {value}")
+      of JFloat:
+        var column = row["column"].getStr()
+        var symbol = row["symbol"].getStr()
+        var value = row["value"].getInt()
+        if i == 0:
+          this.sqlString.add(&" WHERE {column} {symbol} {value}")
+        else:
+          this.sqlString.add(&" AND {column} {symbol} {value}")
+      of JBool:
+        var column = row["column"].getStr()
+        var symbol = row["symbol"].getStr()
+        var value = row["value"].getBool()
+        if i == 0:
+          this.sqlString.add(&" WHERE {column} {symbol} {value}")
+        else:
+          this.sqlString.add(&" AND {column} {symbol} {value}")
       else:
-        this.sqlString.add(&" AND {column} {symbol} '{value}'")
+        var column = row["column"].getStr()
+        var symbol = row["symbol"].getStr()
+        var value = row["value"].getStr()
+        if i == 0:
+          this.sqlString.add(&" WHERE {column} {symbol} '{value}'")
+        else:
+          this.sqlString.add(&" AND {column} {symbol} '{value}'")
 
   return this
 
 
 proc orWhereSql*(this: RDB): RDB =
   if this.query.hasKey("or_where"):
-    for row in this.query["or_where"]:
-      var column = row["column"].getStr()
-      var symbol = row["symbol"].getStr()
-      var value = row["value"].getStr()
+    for i, row in this.query["or_where"].getElems():
+      # var column = row["column"].getStr()
+      # var symbol = row["symbol"].getStr()
+      # var value = row["value"]
       
-      if this.sqlString.contains("WHERE"):
-        this.sqlString.add(&" OR {column} {symbol} '{value}'")
+      # if this.sqlString.contains("WHERE"):
+      #   this.sqlString.add(&" OR {column} {symbol} '{value}'")
+      # else:
+      #   this.sqlString.add(&" WHERE {column} {symbol} '{value}'")
+      case row["value"].kind:
+      of JInt:
+        var column = row["column"].getStr()
+        var symbol = row["symbol"].getStr()
+        var value = row["value"].getInt()
+        if i == 0:
+          this.sqlString.add(&" OR {column} {symbol} {value}")
+        else:
+          this.sqlString.add(&" WHERE {column} {symbol} {value}")
+      of JFloat:
+        var column = row["column"].getStr()
+        var symbol = row["symbol"].getStr()
+        var value = row["value"].getInt()
+        if i == 0:
+          this.sqlString.add(&" OR {column} {symbol} {value}")
+        else:
+          this.sqlString.add(&" WHERE {column} {symbol} {value}")
+      of JBool:
+        var column = row["column"].getStr()
+        var symbol = row["symbol"].getStr()
+        var value = row["value"].getBool()
+        if i == 0:
+          this.sqlString.add(&" OR {column} {symbol} {value}")
+        else:
+          this.sqlString.add(&" WHERE {column} {symbol} {value}")
       else:
-        this.sqlString.add(&" WHERE {column} {symbol} '{value}'")
+        var column = row["column"].getStr()
+        var symbol = row["symbol"].getStr()
+        var value = row["value"].getStr()
+        if i == 0:
+          this.sqlString.add(&" OR {column} {symbol} '{value}'")
+        else:
+          this.sqlString.add(&" WHERE {column} {symbol} '{value}'")
 
   return this
 
@@ -111,7 +169,16 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
       values.add(", ")
     i += 1
     columns.add(item.key)
-    values.add(&"'{item.val.getStr}'")
+    # values.add(&"'{item.val.getStr}'")
+    case item.val.kind:
+    of JInt:
+      values.add(&"{item.val.getInt}")
+    of JFloat:
+      values.add(&"{item.val.getFloat}")
+    of JBool:
+      values.add(&"{item.val.getBool}")
+    else:
+      values.add(&"'{item.val.getStr}'")
 
   this.sqlString.add(&" ({columns}) VALUES ({values})")
   return this
@@ -136,11 +203,11 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
       valueCount += 1
       case val.kind:
       of JInt:
-        value.add(&"'{val.getInt}'")
+        value.add(&"{val.getInt}")
       of JFloat:
-        value.add(&"'{val.getFloat}'")
+        value.add(&"{val.getFloat}")
       of JBool:
-        value.add(&"'{val.getBool}'")
+        value.add(&"{val.getBool}")
       else:
         value.add(&"'{val.getStr}'")
 
@@ -148,7 +215,7 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
     valuesCount += 1
     values.add(&"({value})")
 
-  this.sqlString.add(&" ({columns}) VALUES {values};")
+  this.sqlString.add(&" ({columns}) VALUES {values}")
   return this
 
 
@@ -169,7 +236,16 @@ proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
   for item in items.pairs:
     if i > 0: value.add(", ")
     i += 1
-    value.add(&"{item.key} = {item.val}")
+    # value.add(&"{item.key} = {item.val}")
+    case item.val.kind:
+    of JInt:
+      value.add(&"{item.key} = {item.val.getInt}")
+    of JFloat:
+      value.add(&"{item.key} = {item.val.getFloat}")
+    of JBool:
+      value.add(&"{item.key} = {item.val.getBool}")
+    else:
+      value.add(&"{item.key} = '{item.val.getStr}'")
 
   this.sqlString.add(value)
   return this

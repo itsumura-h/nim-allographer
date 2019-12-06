@@ -14,6 +14,7 @@ proc getColumns(db_columns:DbColumns):seq[JsonNode] =
   var columns: seq[JsonNode]
   const DRIVER = getDriver()
   for i, row in db_columns:
+    # echo row
     case DRIVER:
     of "sqlite":
       columns.add(
@@ -25,7 +26,7 @@ proc getColumns(db_columns:DbColumns):seq[JsonNode] =
       )
     of "postgres":
       columns.add(
-        %*{"name": row.name, "typ": row.typ.name}
+        %*{"name": row.name, "typ": row.typ.kind}
       )
   return columns
 
@@ -60,6 +61,17 @@ proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
           response_row[key] = newJBool(row.parseBool)
         else:
           response_row[key] = newJString(row)
+      of "postgres":
+        if row == "":
+          response_row[key] = newJNull()
+        elif [$dbInt, $dbUInt].contains(typ):
+          response_row[key] = newJInt(row.parseInt)
+        elif [$dbDecimal, $dbFloat].contains(typ):
+          response_row[key] = newJFloat(row.parseFloat)
+        elif [$dbBool].contains(typ):
+          response_row[key] = newJBool(row.parseBool)
+        else:
+          response_row[key] = newJString(row)
 
     response_table.add(response_row)
   return response_table
@@ -83,6 +95,17 @@ proc toJson(results:seq[string], columns:seq[JsonNode]):JsonNode =
       else:
         response_row[key] = newJString(row)
     of "mysql":
+      if row == "":
+        response_row[key] = newJNull()
+      elif [$dbInt, $dbUInt].contains(typ):
+        response_row[key] = newJInt(row.parseInt)
+      elif [$dbDecimal, $dbFloat].contains(typ):
+        response_row[key] = newJFloat(row.parseFloat)
+      elif [$dbBool].contains(typ):
+        response_row[key] = newJBool(row.parseBool)
+      else:
+        response_row[key] = newJString(row)
+    of "postgres":
       if row == "":
         response_row[key] = newJNull()
       elif [$dbInt, $dbUInt].contains(typ):

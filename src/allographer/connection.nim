@@ -1,6 +1,6 @@
-import db_postgres
+import db_sqlite
 
 proc db*(): DbConn =
-  open("postgres:5432", "user", "Password!", "allographer")
+  open("/home/www/db.sqlite3", "user", "Password!", "allographer")
 
-const DRIVER* = "postgres"
+const DRIVER* = "sqlite"
