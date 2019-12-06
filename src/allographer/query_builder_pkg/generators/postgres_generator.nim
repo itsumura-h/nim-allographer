@@ -89,20 +89,12 @@ proc whereSql*(this: RDB): RDB =
 proc orWhereSql*(this: RDB): RDB =
   if this.query.hasKey("or_where"):
     for i, row in this.query["or_where"].getElems():
-      # var column = row["column"].getStr()
-      # var symbol = row["symbol"].getStr()
-      # var value = row["value"]
-      
-      # if this.sqlString.contains("WHERE"):
-      #   this.sqlString.add(&" OR {column} {symbol} '{value}'")
-      # else:
-      #   this.sqlString.add(&" WHERE {column} {symbol} '{value}'")
       case row["value"].kind:
       of JInt:
         var column = row["column"].getStr()
         var symbol = row["symbol"].getStr()
         var value = row["value"].getInt()
-        if i == 0:
+        if this.sqlString.contains("WHERE"):
           this.sqlString.add(&" OR {column} {symbol} {value}")
         else:
           this.sqlString.add(&" WHERE {column} {symbol} {value}")
@@ -110,7 +102,7 @@ proc orWhereSql*(this: RDB): RDB =
         var column = row["column"].getStr()
         var symbol = row["symbol"].getStr()
         var value = row["value"].getInt()
-        if i == 0:
+        if this.sqlString.contains("WHERE"):
           this.sqlString.add(&" OR {column} {symbol} {value}")
         else:
           this.sqlString.add(&" WHERE {column} {symbol} {value}")
@@ -118,7 +110,7 @@ proc orWhereSql*(this: RDB): RDB =
         var column = row["column"].getStr()
         var symbol = row["symbol"].getStr()
         var value = row["value"].getBool()
-        if i == 0:
+        if this.sqlString.contains("WHERE"):
           this.sqlString.add(&" OR {column} {symbol} {value}")
         else:
           this.sqlString.add(&" WHERE {column} {symbol} {value}")
@@ -126,7 +118,7 @@ proc orWhereSql*(this: RDB): RDB =
         var column = row["column"].getStr()
         var symbol = row["symbol"].getStr()
         var value = row["value"].getStr()
-        if i == 0:
+        if this.sqlString.contains("WHERE"):
           this.sqlString.add(&" OR {column} {symbol} '{value}'")
         else:
           this.sqlString.add(&" WHERE {column} {symbol} '{value}'")
@@ -169,7 +161,6 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
       values.add(", ")
     i += 1
     columns.add(item.key)
-    # values.add(&"'{item.val.getStr}'")
     case item.val.kind:
     of JInt:
       values.add(&"{item.val.getInt}")
@@ -236,7 +227,6 @@ proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
   for item in items.pairs:
     if i > 0: value.add(", ")
     i += 1
-    # value.add(&"{item.key} = {item.val}")
     case item.val.kind:
     of JInt:
       value.add(&"{item.key} = {item.val.getInt}")

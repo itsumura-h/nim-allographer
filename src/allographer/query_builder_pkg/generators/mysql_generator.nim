@@ -111,7 +111,6 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
       values.add(", ")
     i += 1
     columns.add(item.key)
-    # values.add(&"'{item.val.getStr}'")
     case item.val.kind:
     of JInt:
       values.add(&"{item.val.getInt}")
@@ -143,7 +142,6 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
     for item in items.pairs:
       if valueCount > 0: value.add(", ")
       valueCount += 1
-      # value.add(&"{item.val}")
       case item.val.kind:
       of JInt:
         value.add(&"{item.val.getInt}")
