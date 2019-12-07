@@ -14,10 +14,10 @@ proc selectBuilder*(this: RDB): RDB =
         .limitSql()
         .offsetSql()
 
-proc selectFindBuilder*(this: RDB, id: int): RDB =
+proc selectFindBuilder*(this: RDB, id: int, key: string): RDB =
   return this.selectSql()
         .fromSql()
-        .selectByIdSql(id)
+        .selectByIdSql(id, key)
 
 
 # ===================== INSERT ====================
@@ -54,7 +54,7 @@ proc deleteBuilder*(this: RDB): RDB =
         .limitSql()
         .offsetSql()
 
-proc deleteByIdBuilder*(this: RDB, id: int): RDB =
+proc deleteByIdBuilder*(this: RDB, id: int, key: string): RDB =
   return this.deleteSql()
         .fromSql()
-        .deleteByIdSql(id)
+        .deleteByIdSql(id, key)
