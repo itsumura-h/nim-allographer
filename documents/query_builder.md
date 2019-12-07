@@ -117,6 +117,29 @@ echo resultRow
     "updated_at":"2019-09-26 19:11:28.159369"
   }
 ```
+
+If column name of primary key is not exactory "id", you can specify it's name.
+```
+import allographer/query_builder
+
+let resultRow = RDB().table("users").find(3, key="user_id")
+echo resultRow
+
+>> SELECT * FROM users WHERE user_id = 3
+>> {
+    "user_id":3,
+    "name":"user3",
+    "email":"user3@gmail.com",
+    "address":"246 Ferguson Village Apt. 582\nNew Joshua, IL 24200", "password":"$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny",
+    "salt":"$2a$10$gmKpgtO535lkw0eAcGiRye",
+    "birth_date":"2012-11-24",
+    "auth":2,
+    "created_at":"2019-09-26 19:11:28.159367",
+    "updated_at":"2019-09-26 19:11:28.159369"
+  }
+```
+
+
 ```
 import allographer/query_builder
 
@@ -246,6 +269,21 @@ RDB()
 
 >> DELETE FROM users WHERE id = 1
 ```
+
+If column name of primary key is not exactory "id", you can specify it's name.
+
+```
+import allographer/query_builder
+
+RDB()
+.table("users")
+.delete(1, key="user_id")
+.exec()
+
+>> DELETE FROM users WHERE user_id = 1
+```
+
+
 ```
 import allographer/query_builder
 

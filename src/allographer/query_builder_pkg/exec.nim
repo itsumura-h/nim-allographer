@@ -162,8 +162,8 @@ proc first*(this: RDB): JsonNode =
   logger(this.sqlStringSeq[0])
   return getRow(this.sqlStringSeq[0])
 
-proc find*(this: RDB, id: int): JsonNode =
-  this.sqlStringSeq = @[this.selectFindBuilder(id).sqlString]
+proc find*(this: RDB, id: int, key="id"): JsonNode =
+  this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
   logger(this.sqlStringSeq[0])
   return getRow(this.sqlStringSeq[0])
 
@@ -200,8 +200,8 @@ proc delete*(this: RDB): RDB =
   this.sqlStringSeq = @[this.deleteBuilder().sqlString]
   return this
 
-proc delete*(this: RDB, id: int): RDB =
-  this.sqlStringSeq = @[this.deleteByIdBuilder(id).sqlString]
+proc delete*(this: RDB, id: int, key="id"): RDB =
+  this.sqlStringSeq = @[this.deleteByIdBuilder(id, key).sqlString]
   return this
 
 
