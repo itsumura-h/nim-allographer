@@ -10,14 +10,13 @@ proc migrate*(this:Table):string =
   var foreignString = ""
   for i, column in this.columns:
     # echo repr column
-    if i > 0:
-      columnString.add(", ")
+    if i > 0: columnString.add(", ")
 
     case column.typ:
       # int ===================================================================
       of rdbIncrements:
         columnString.add(
-          incrementGenerator(column.name)
+          serialGenerator(column.name)
         )
       of rdbInteger:
         columnString.add(

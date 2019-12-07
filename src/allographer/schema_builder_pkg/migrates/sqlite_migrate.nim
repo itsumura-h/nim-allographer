@@ -10,8 +10,7 @@ proc migrate*(this:Table):string =
   var foreignString = ""
   for i, column in this.columns:
     # echo repr column
-    if i > 0:
-      columnString.add(", ")
+    if i > 0: columnString.add(", ")
 
     case column.typ:
       # int ===================================================================
@@ -221,5 +220,5 @@ proc migrate*(this:Table):string =
         )
 
 
-  var query = &"CREATE TABLE {this.name} ({columnString}{foreignString})"
+  var query = &"CREATE TABLE \"{this.name}\" ({columnString}{foreignString})"
   return query
