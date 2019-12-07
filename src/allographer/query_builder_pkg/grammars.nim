@@ -5,14 +5,16 @@ proc table*(this: RDB, tableArg: string): RDB =
   this.query = %*{"table": tableArg}
   return this
 
-# =============================== Raw query ==============================
+
+# ============================== Raw query ==============================
 
 proc raw*(this:RDB, sql:string): RDB =
   this.sqlString = sql
   this.sqlStringseq = @[sql]
   return this
 
-# =============================== SELECT ==============================
+
+# ============================== SELECT ==============================
 
 proc select*(this: RDB, columnsArg: varargs[string]): RDB =
   if columnsArg.len == 0:
@@ -23,7 +25,7 @@ proc select*(this: RDB, columnsArg: varargs[string]): RDB =
   return this
 
 
-# =============================== Conditions ==============================
+# ============================== Conditions ==============================
 
 proc where*(this: RDB, column: string, symbol: string, value: string): RDB =
   if this.query.hasKey("where") == false:
