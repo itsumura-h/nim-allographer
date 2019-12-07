@@ -5,7 +5,7 @@ import ../column
 # int
 # =============================================================================
 proc serialGenerator*(name:string):string =
-  result = &"'{name}' INTEGER PRIMARY KEY"
+  result = &"'{name}' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"
 
 proc intGenerator*(name:string, nullable:bool, isDefault:bool,
                     default:int, isUnsigned:bool):string =
@@ -47,7 +47,7 @@ proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
 
 proc floatGenerator*(name:string, nullable:bool, isDefault:bool,
                       default:float, isUnsigned:bool):string =
-  result = &"'{name}' DOUBLE"
+  result = &"'{name}' REAL"
 
   if isDefault:
     result.add(
@@ -112,7 +112,7 @@ proc dateGenerator*(name:string, nullable:bool, isDefault:bool):string =
 
   if isDefault:
     result.add(
-      &" DEFAULT (DATE('now','localtime'))"
+      &" DEFAULT CURRENT_TIMESTAMP"
     )
 
 proc datetimeGenerator*(name:string, nullable:bool, isDefault:bool):string =
@@ -123,7 +123,7 @@ proc datetimeGenerator*(name:string, nullable:bool, isDefault:bool):string =
 
   if isDefault:
     result.add(
-      &" DEFAULT (DATETIME('now','localtime'))"
+      &" DEFAULT CURRENT_TIMESTAMP"
     )
 
 proc timeGenerator*(name:string, nullable:bool, isDefault:bool):string =
@@ -134,7 +134,7 @@ proc timeGenerator*(name:string, nullable:bool, isDefault:bool):string =
 
   if isDefault:
     result.add(
-      &" DEFAULT (TIME('now','localtime'))"
+      &" DEFAULT CURRENT_TIMESTAMP"
     )
 
 proc timestampGenerator*(name:string, nullable:bool, isDefault:bool):string =
@@ -145,12 +145,12 @@ proc timestampGenerator*(name:string, nullable:bool, isDefault:bool):string =
 
   if isDefault:
     result.add(
-      &" DEFAULT (DATETIME('now','localtime'))"
+      &" DEFAULT CURRENT_TIMESTAMP"
     )
 
 proc timestampsGenerator*():string =
-  result = "created_at DATETIME, "
-  result.add("updated_at DATETIME DEFAULT (DATETIME('now','localtime'))")
+  result = "created_at DATETIME DEFAULT CURRENT_TIMESTAMP, "
+  result.add("updated_at DATETIME DEFAULT CURRENT_TIMESTAMP")
 
 proc softDeleteGenerator*():string =
   result = "deleted_at DATETIME"
@@ -176,7 +176,7 @@ proc boolGenerator*(name:string, nullable:bool, isDefault:bool,
   if not nullable:
     result.add(" NOT NULL")
 
-proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
+proc enumOptionsGenerator(name:string, options:openArray[JsonNode]):string =
   var optionsString = ""
   for i, option in options:
     if i > 0: optionsString.add(" OR ")
@@ -186,7 +186,7 @@ proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
   
   return optionsString
 
-proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
+proc enumGenerator*(name:string, options:openArray[JsonNode], nullable:bool,
                     isDefault:bool, default:string):string =
   result = &"'{name}' VARCHAR"
 

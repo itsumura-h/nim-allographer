@@ -1,4 +1,5 @@
 import os, terminal, strformat, parsecfg
+import ../../util
 
 proc makeConf*(args: seq[string]): int =
   ## Generate config/database.ini for setup DB connection infomations
@@ -30,7 +31,7 @@ file: "true"
     message = confPath & " is successfully created!!!"
     styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
   except:
-    echo getCurrentExceptionMsg()
+    getCurrentExceptionMsg().echoErrorMsg()
 
 proc loadConf*(args: seq[string]): int =
   ## Apply DB connection informations to framework
@@ -58,6 +59,8 @@ import db_{driver}
 
 proc db*(): DbConn =
   open("{conn}", "{user}", "{password}", "{database}")
+
+const DRIVER* = "{driver}"
 """
 
   try:
@@ -73,4 +76,4 @@ proc db*(): DbConn =
     message = targetPath & " is successfully edited!!!"
     styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
   except:
-    echo getCurrentExceptionMsg()
+    getCurrentExceptionMsg().echoErrorMsg()

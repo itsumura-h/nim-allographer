@@ -16,7 +16,7 @@ proc migrate*(this:Table):string =
       # int ===================================================================
       of rdbIncrements:
         columnString.add(
-          incrementGenerator(column.name)
+          serialGenerator(column.name)
         )
       of rdbInteger:
         columnString.add(

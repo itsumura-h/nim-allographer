@@ -16,11 +16,11 @@ Schema().create([
     Column().increments("id"),
     Column().string("name"),
     Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-  ], isRebuild=true)
+  ], reset=true)
 ])
 ```
 
-If you set `isRebuild=true` in args of `Table().create`, `DROP TABLE` and `CREATE TABLE` will be run.
+If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TABLE` will be run.
 
 ## integer
 |COMMAND|DESCRIPTION|

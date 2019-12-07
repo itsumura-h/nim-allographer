@@ -11,7 +11,7 @@ Schema().create([
   Table().create("auth",[
     Column().increments("id"),
     Column().string("auth")
-  ], isRebuild=true),
+  ], reset=true),
   Table().create("users",[
     Column().increments("id"),
     Column().string("name").nullable(),
@@ -21,7 +21,7 @@ Schema().create([
     Column().string("address").nullable(),
     Column().date("birth_date").nullable(),
     Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-  ], isRebuild=true)
+  ], reset=true)
 ])
 
 # シーダー
@@ -32,7 +32,7 @@ RDB().table("auth").insert([
 .exec()
 
 # プログレスバー
-let total = 100
+let total = 50
 var pb = newProgressBar(total=total) # totalは分母
 
 pb.start()
