@@ -30,7 +30,7 @@ suite "generators":
   
   test "select by id":
     let t = RDB()
-    check t.selectByIdSql(3).sqlString == " WHERE id = 3 LIMIT 1"
+    check t.selectByIdSql(3, key="id").sqlString == " WHERE id = 3 LIMIT 1"
 
   test "join":
     let t = RDB(
@@ -150,4 +150,4 @@ suite "generators":
     check RDB().deleteSql().sqlString == "DELETE"
 
   test "delete by id":
-    check RDB().deleteByIdSql(3).sqlString == " WHERE id = 3"
+    check RDB().deleteByIdSql(3, key="id").sqlString == " WHERE id = 3"

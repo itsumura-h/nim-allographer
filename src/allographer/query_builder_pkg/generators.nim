@@ -31,15 +31,15 @@ proc fromSql*(this: RDB): RDB =
     result = postgres_generator.fromSql(this)
 
 
-proc selectByIdSql*(this: RDB, id: int): RDB =
+proc selectByIdSql*(this:RDB, id:int, key:string): RDB =
   let driver = util.getDriver()
   case driver:
   of "sqlite":
-    result = sqlite_generator.selectByIdSql(this, id)
+    result = sqlite_generator.selectByIdSql(this, id, key)
   of "mysql":
-    result = mysql_generator.selectByIdSql(this, id)
+    result = mysql_generator.selectByIdSql(this, id, key)
   of "postgres":
-    result = postgres_generator.selectByIdSql(this, id)
+    result = postgres_generator.selectByIdSql(this, id, key)
 
 
 proc joinSql*(this: RDB): RDB =
@@ -168,12 +168,12 @@ proc deleteSql*(this: RDB): RDB =
   of "postgres":
     result = postgres_generator.deleteSql(this)
 
-proc deleteByIdSql*(this: RDB, id: int): RDB =
+proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
   let driver = util.getDriver()
   case driver:
   of "sqlite":
-    result = sqlite_generator.deleteByIdSql(this, id)
+    result = sqlite_generator.deleteByIdSql(this, id, key)
   of "mysql":
-    result = mysql_generator.deleteByIdSql(this, id)
+    result = mysql_generator.deleteByIdSql(this, id, key)
   of "postgres":
-    result = postgres_generator.deleteByIdSql(this, id)
+    result = postgres_generator.deleteByIdSql(this, id, key)
