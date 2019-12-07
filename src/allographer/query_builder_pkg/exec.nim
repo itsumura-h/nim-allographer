@@ -1,33 +1,89 @@
 import db_sqlite, db_mysql, db_postgres
 # import json, parsecfg, strutils
-import json, strutils, macros
+import json, strutils
 
 import base, builders
 import ../util
 import ../connection
 
 
-proc checkSql*(this: RDB): RDB =
-  return this.selectBuilder()
+proc checkSql*(this: RDB): string =
+  return this.selectBuilder().sqlString
 
 proc getColumns(db_columns:DbColumns):seq[JsonNode] =
   var columns: seq[JsonNode]
+  const DRIVER = getDriver()
   for i, row in db_columns:
-    columns.add(
-      %*{
-        "name": row.name,
-        "typ": row.typ.name
-      }
-    )
+    # echo row
+    case DRIVER:
+    of "sqlite":
+      columns.add(
+        %*{"name": row.name, "typ": row.typ.name}
+      )
+    of "mysql":
+      columns.add(
+        %*{"name": row.name, "typ": row.typ.kind}
+      )
+    of "postgres":
+      columns.add(
+        %*{"name": row.name, "typ": row.typ.kind}
+      )
   return columns
 
 proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
   var response_table: seq[JsonNode]
+  const DRIVER = getDriver()
   for rows in results:
     var response_row = %*{}
     for i, row in rows:
       var key = columns[i]["name"].getStr
       var typ = columns[i]["typ"].getStr
+      case DRIVER:
+      of "sqlite":
+        if row == "":
+          response_row[key] = newJNull()
+        elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
+          response_row[key] = newJInt(row.parseInt)
+        elif ["NUMERIC", "DECIMAL", "DOUBLE"].contains(typ):
+          response_row[key] = newJFloat(row.parseFloat)
+        elif ["TINYINT", "BOOLEAN"].contains(typ):
+          response_row[key] = newJBool(row.parseBool)
+        else:
+          response_row[key] = newJString(row)
+      of "mysql":
+        if row == "":
+          response_row[key] = newJNull()
+        elif [$dbInt, $dbUInt].contains(typ):
+          response_row[key] = newJInt(row.parseInt)
+        elif [$dbDecimal, $dbFloat].contains(typ):
+          response_row[key] = newJFloat(row.parseFloat)
+        elif [$dbBool].contains(typ):
+          response_row[key] = newJBool(row.parseBool)
+        else:
+          response_row[key] = newJString(row)
+      of "postgres":
+        if row == "":
+          response_row[key] = newJNull()
+        elif [$dbInt, $dbUInt].contains(typ):
+          response_row[key] = newJInt(row.parseInt)
+        elif [$dbDecimal, $dbFloat].contains(typ):
+          response_row[key] = newJFloat(row.parseFloat)
+        elif [$dbBool].contains(typ):
+          response_row[key] = newJBool(row.parseBool)
+        else:
+          response_row[key] = newJString(row)
+
+    response_table.add(response_row)
+  return response_table
+
+proc toJson(results:seq[string], columns:seq[JsonNode]):JsonNode =
+  var response_row = %*{}
+  const DRIVER = getDriver()
+  for i, row in results:
+    var key = columns[i]["name"].getStr
+    var typ = columns[i]["typ"].getStr
+    case DRIVER:
+    of "sqlite":
       if row == "":
         response_row[key] = newJNull()
       elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
@@ -38,26 +94,28 @@ proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
         response_row[key] = newJBool(row.parseBool)
       else:
         response_row[key] = newJString(row)
-      # var key = columns[i]["name"].getStr
-      # response_row[key] = newJString(row)
-    response_table.add(response_row)
-  return response_table
-
-proc toJson(results:seq[string], columns:seq[JsonNode]):JsonNode =
-  var response_row = %*{}
-  for i, row in results:
-    var key = columns[i]["name"].getStr
-    var typ = columns[i]["typ"].getStr
-    if row == "":
-      response_row[key] = newJNull()
-    elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
-      response_row[key] = newJInt(row.parseInt)
-    elif ["NUMERIC", "DECIMAL", "DOUBLE"].contains(typ):
-      response_row[key] = newJFloat(row.parseFloat)
-    elif ["TINYINT", "BOOLEAN"].contains(typ):
-      response_row[key] = newJBool(row.parseBool)
-    else:
-      response_row[key] = newJString(row)
+    of "mysql":
+      if row == "":
+        response_row[key] = newJNull()
+      elif [$dbInt, $dbUInt].contains(typ):
+        response_row[key] = newJInt(row.parseInt)
+      elif [$dbDecimal, $dbFloat].contains(typ):
+        response_row[key] = newJFloat(row.parseFloat)
+      elif [$dbBool].contains(typ):
+        response_row[key] = newJBool(row.parseBool)
+      else:
+        response_row[key] = newJString(row)
+    of "postgres":
+      if row == "":
+        response_row[key] = newJNull()
+      elif [$dbInt, $dbUInt].contains(typ):
+        response_row[key] = newJInt(row.parseInt)
+      elif [$dbDecimal, $dbFloat].contains(typ):
+        response_row[key] = newJFloat(row.parseFloat)
+      elif [$dbBool].contains(typ):
+        response_row[key] = newJBool(row.parseBool)
+      else:
+        response_row[key] = newJString(row)
     # var key = columns[i]["name"].getStr
     # response_row[key] = newJString(row)
   return response_row
@@ -77,7 +135,8 @@ proc getAllRows(sqlString:string): seq[JsonNode] =
 
 proc getRow(sqlString:string): JsonNode =
   let db = db()
-  let results = db.getRow(sql sqlString)
+  # let results = db.getRow(sql sqlString)
+  let results = db.getAllRows(sql sqlString)[0]
   
   var db_columns: DbColumns
   for row in db.instantRows(db_columns, sql sqlString):
@@ -103,10 +162,11 @@ proc first*(this: RDB): JsonNode =
   logger(this.sqlStringSeq[0])
   return getRow(this.sqlStringSeq[0])
 
-proc find*(this: RDB, id: int): JsonNode =
-  this.sqlStringSeq = @[this.selectFindBuilder(id).sqlString]
+proc find*(this: RDB, id: int, key="id"): JsonNode =
+  this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
   logger(this.sqlStringSeq[0])
   return getRow(this.sqlStringSeq[0])
+
 
 # ==================== INSERT ====================
 
@@ -141,8 +201,8 @@ proc delete*(this: RDB): RDB =
   this.sqlStringSeq = @[this.deleteBuilder().sqlString]
   return this
 
-proc delete*(this: RDB, id: int): RDB =
-  this.sqlStringSeq = @[this.deleteByIdBuilder(id).sqlString]
+proc delete*(this: RDB, id: int, key="id"): RDB =
+  this.sqlStringSeq = @[this.deleteByIdBuilder(id, key).sqlString]
   return this
 
 
@@ -172,6 +232,7 @@ proc execID*(this: RDB): int64 =
 
   defer: db.close()
 
+
 # ==================== Transaction ====================
 
 template transaction(body: untyped) =
@@ -188,5 +249,5 @@ template transaction(body: untyped) =
       db.exec(sql"ROLLBACK")
     except:
       db.exec(sql"ROLLBACK")
-      echo getCurrentExceptionMsg()
+      getCurrentExceptionMsg().echoErrorMsg()
     defer: db.close()

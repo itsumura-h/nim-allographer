@@ -1,6 +1,6 @@
 name: Build and test Nim
 
-on: [push]
+on: [push, pull_request]
 
 jobs:
   build:
@@ -11,9 +11,11 @@ jobs:
       matrix:
         os:
           - ubuntu-latest
-          - macOS-latest
+          # - macOS-latest
           # Need sqlite3_64.dll
           # - windows-latest
+    env:
+      NIM_VERSION: 1.0.4
     steps:
     - uses: actions/checkout@v1
     - name: Cache choosenim
@@ -27,8 +29,10 @@ jobs:
       uses: actions/cache@v1
       with:
         path: ~/.nimble
-        key: ${{ runner.os }}-nimble-${{ hashFiles('*.nimble') }}
+        key: ${{ runner.os }}-nimble-${{ env.NIM_VERSION }}
     - uses: jiro4989/setup-nim-action@v1.0.1
+      with:
+        nim-version: ${{ env.NIM_VERSION }}
     - name: Build
       run: nimble build -Y
 

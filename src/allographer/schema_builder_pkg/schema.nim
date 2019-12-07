@@ -80,37 +80,52 @@ proc check*(this:Schema, tablesArg:varargs[Table]) =
 # =============================================================================
 
 proc create*(this:Schema, tables:varargs[Table]) =
-  # this.check(tables)
+  driverTypeError()
+
+  # create delete target table list
+  var deleteList: seq[string]
+  for table in tables:
+    if table.reset:
+      deleteList.add(table.name)
+  # delete table in reverse loop
+  let db = db()
+  for i, v in deleteList:
+    var index = i+1
+    try:
+      db.exec(sql &"drop table {deleteList[^index]}")
+    except Exception:
+      getCurrentExceptionMsg().echoErrorMsg()
+  defer: db.close()
 
   for table in tables:
     # echo repr table
 
     var query = ""
     let driver = util.getDriver()
+    echo driver
     case driver:
-      of "sqlite":
-        query = sqlite_migrate.migrate(table)
-      of "mysql":
-        query = mysql_migrate.migrate(table)
-      of "postgres":
-        query = postgres_migrate.migrate(table)
-      else:
-        echo ""
+    of "sqlite":
+      query = sqlite_migrate.migrate(table)
+    of "mysql":
+      query = mysql_migrate.migrate(table)
+    of "postgres":
+      query = postgres_migrate.migrate(table)
+
     logger(query)
 
-    let table_name = table.name
+    # let table_name = table.name
 
     block:
       let db = db()
-      if table.isRebuild:
-        try:
-          db.exec(sql &"drop table {table_name}")
-        except Exception:
-          echo getCurrentExceptionMsg()
+      # if table.reset:
+      #   try:
+      #     db.exec(sql &"drop table {table_name}")
+      #   except Exception:
+      #     getCurrentExceptionMsg().echoErrorMsg()
 
       try:
         db.exec(sql query)
       except Exception:
-        echo getCurrentExceptionMsg()
+        getCurrentExceptionMsg().echoErrorMsg()
 
       defer: db.close()

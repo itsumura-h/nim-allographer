@@ -4,8 +4,8 @@ import ../column
 # =============================================================================
 # int
 # =============================================================================
-proc incrementGenerator*(name:string):string =
-  result = &"`{name}` INT NOT NULL PRIMARY KEY"
+proc serialGenerator*(name:string):string =
+  result = &"`{name}` INT NOT NULL PRIMARY KEY AUTO_INCREMENT"
 
 proc intGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
                     isUnsigned:bool):string =
@@ -64,7 +64,7 @@ proc bigIntGenerator*(name:string, nullable:bool, isDefault:bool,
 # float
 # =============================================================================
 proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
-                      isDefault:bool, default:float, isUnsigned:bool):string =
+                      isDefault:bool, default:float):string =
   result = &"`{name}` DECIMAL({maximum}, {digit})"
 
   if isDefault:
@@ -72,21 +72,15 @@ proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
       &" DEFAULT {default}"
     )
 
-  if isUnsigned:
-    result.add(" UNSIGNED")
-
   if not nullable:
     result.add(" NOT NULL")
 
 proc doubleGenerator*(name:string, maximum:int, digit:int, nullable:bool,
-                      isDefault:bool, default:float, isUnsigned:bool):string =
+                      isDefault:bool, default:float):string =
   result = &"`{name}` DOUBLE({maximum}, {digit})"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
-
-  if isUnsigned:
-    result.add(" UNSIGNED")
 
   if not nullable:
     result.add(" NOT NULL")
@@ -227,9 +221,7 @@ proc boolGenerator*(name:string, nullable:bool, isDefault:bool,
 proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
   var optionsString = ""
   for i, option in options:
-    if i > 0:
-      optionsString.add(", ")
-
+    if i > 0: optionsString.add(", ")
     optionsString.add(
       &"'{option.getStr}'"
     )
@@ -250,13 +242,13 @@ proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
     result.add(" NOT NULL")
 
 proc jsonGenerator*(name:string, nullable:bool):string =
-  result = &"{name} JSON"
+  result = &"`{name}` JSON"
 
   if not nullable:
     result.add(" NOT NULL")
 
 proc foreignColumnGenerator*(name:string):string =
-  result = &"{name} INT"
+  result = &"`{name}` INT"
 
 proc foreignGenerator*(name:string, table:string, column:string,
                         foreignOnDelete:ForeignOnDelete):string =
@@ -269,5 +261,5 @@ proc foreignGenerator*(name:string, table:string, column:string,
     onDeleteString = "NO ACTION"
 
 
-  result = &", FOREIGN KEY({name}) REFERENCES {table}({column})"
+  result = &", FOREIGN KEY(`{name}`) REFERENCES {table}({column})"
   result.add(&" ON DELETE {onDeleteString}")

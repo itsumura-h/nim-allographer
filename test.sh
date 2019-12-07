@@ -1,1 +1,1 @@
-coco --target "tests/*.nim" --cov 'src/modules' --compiler="--hints:off"
+coco --cov='!tests' --cov='!nimcache' --compiler='--hints:off'
