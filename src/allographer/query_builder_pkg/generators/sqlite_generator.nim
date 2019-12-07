@@ -28,8 +28,8 @@ proc fromSql*(this: RDB): RDB =
   return this
 
 
-proc selectByIdSql*(this: RDB, id: int): RDB =
-  this.sqlString.add(&" WHERE id = {$id} LIMIT 1")
+proc selectByIdSql*(this: RDB, id: int, key: string): RDB =
+  this.sqlString.add(&" WHERE {key} = {$id} LIMIT 1")
   return this
 
 
@@ -173,6 +173,6 @@ proc deleteSql*(this: RDB): RDB =
   this.sqlString.add("DELETE")
   return this
 
-proc deleteByIdSql*(this: RDB, id: int): RDB =
-  this.sqlString.add(&" WHERE id = {id}")
+proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
+  this.sqlString.add(&" WHERE {key} = {id}")
   return this

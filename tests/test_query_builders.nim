@@ -39,7 +39,7 @@ suite "builders":
         "table": "sample"
       }
     )
-    check t.selectFindBuilder(3).sqlString == "SELECT * FROM sample WHERE id = 3 LIMIT 1"
+    check t.selectFindBuilder(3, key="id").sqlString == "SELECT * FROM sample WHERE id = 3 LIMIT 1"
 
 # =============================================================================
 
@@ -125,4 +125,4 @@ suite "builders":
         "table": "sample"
       }
     )
-    check t.deleteByIdBuilder(3).sqlString == "DELETE FROM sample WHERE id = 3"
+    check t.deleteByIdBuilder(3, key="id").sqlString == "DELETE FROM sample WHERE id = 3"
