@@ -22,14 +22,21 @@ for i in 1..5:
 
 RDB().table("users").insert(users).exec()
 
-type Type = ref object of ResponseType
-  id: int
-  name: string
-  birth_date: DateTime
-var typ = Type()
-# echo RDB().table("users").get(Typ)
 
-proc orm(response:JsonNode): seq[Type] =
-  
+template orm(head, body: untyped) =
+  echo head
+  echo body
+  "a"
 
-RDB().table("users").getWithType(typ)
+  # var response: seq[body.type]
+  # for row in head:
+  #   body.id = row["id"].getInt()
+  #   body.name = row["name"].getStr()
+  #   body.birth_date = row["birth_date"].getStr().parse("yyyy-MM-dd")
+  #   response.add(typ)
+  # response
+
+
+var typ: tuple[id:int, name:string, birth_date:DateTime]
+var response = RDB().table("users").get().orm(typ)
+echo response
