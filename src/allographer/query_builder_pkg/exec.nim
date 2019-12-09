@@ -1,6 +1,6 @@
 import db_sqlite, db_mysql, db_postgres
 # import json, parsecfg, strutils
-import json, strutils
+import json, strutils, times
 
 import base, builders
 import ../util
@@ -133,6 +133,18 @@ proc getAllRows(sqlString:string): seq[JsonNode] =
   let columns = getColumns(db_columns)
   return toJson(results, columns) # seq[JsonNode]
 
+
+proc getAllRowsWithType(sqlString:string, typ:tuple) =
+  let db = db()
+
+  var db_columns: DbColumns
+  for row in db.instantRows(db_columns, sql sqlString):
+    discard
+  defer: db.close()
+
+  echo db_columns
+
+
 proc getRow(sqlString:string): JsonNode =
   let db = db()
   # let results = db.getRow(sql sqlString)
@@ -152,6 +164,41 @@ proc get*(this: RDB): seq[JsonNode] =
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
   logger(this.sqlStringSeq[0])
   return getAllRows(this.sqlStringSeq[0])
+
+proc getWithType*(this: RDB, typ:ResponseType) =
+  this.sqlStringSeq = @[this.selectBuilder().sqlString]
+  logger(this.sqlStringSeq[0])
+
+  let db = db()
+  let results = db.getAllRows(sql this.sqlStringSeq[0])
+  echo results
+  var db_columns: DbColumns
+  for row in db.instantRows(db_columns, sql this.sqlStringSeq[0]):
+    discard
+  defer: db.close()
+
+  # echo db_columns
+  echo repr typ
+
+  var response: seq[typ.type]
+  for rows in results:
+    echo "======================="
+    for i, row in rows.pairs:
+      echo "-----------------------"
+      echo row
+      # echo db_columns[i].`"typ"`
+      var columnName = db_columns[i].name
+      echo columnName
+      typ[`columnName`] = row
+      # if db_columns[i].typ.name == "INTEGER":
+      #   typ[db_columns[i].name] = row.parseInt()
+      # elif db_columns[i].typ.name == "VARCHAR":
+      #   typ[db_columns[i].name] = row
+      # elif db_columns[i].typ.name == "VARCHAR":
+      #   typ[db_columns[i].name] = row.parse("yyyy-MM-dd")
+    response.add(typ)
+  echo response
+
 
 proc getRaw*(this: RDB): seq[JsonNode] =
   logger(this.sqlStringSeq[0])
