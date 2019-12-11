@@ -11,35 +11,28 @@ proc checkSql*(this: RDB): string =
   return this.selectBuilder().sqlString
 
 proc getColumns(db_columns:DbColumns):seq[JsonNode] =
-  var columns: seq[JsonNode]
+  var columns = newSeq[JsonNode](db_columns.len)
   const DRIVER = getDriver()
   for i, row in db_columns:
     # echo row
     case DRIVER:
     of "sqlite":
-      columns.add(
-        %*{"name": row.name, "typ": row.typ.name}
-      )
+      columns[i] = %*{"name": row.name, "typ": row.typ.name}
     of "mysql":
-      columns.add(
-        %*{"name": row.name, "typ": row.typ.kind}
-      )
+      columns[i] = %*{"name": row.name, "typ": row.typ.kind}
     of "postgres":
-      columns.add(
-        %*{"name": row.name, "typ": row.typ.kind}
-      )
+      columns[i] = %*{"name": row.name, "typ": row.typ.kind}
   return columns
 
 proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
-  var response_table: seq[JsonNode]
+  var response_table = newSeq[JsonNode](results.len)
   const DRIVER = getDriver()
-  for rows in results:
+  for index, rows in results.pairs:
     var response_row = %*{}
     for i, row in rows:
       var key = columns[i]["name"].getStr
       var typ = columns[i]["typ"].getStr
-      case DRIVER:
-      of "sqlite":
+      if DRIVER == "sqlite":
         if row == "":
           response_row[key] = newJNull()
         elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
@@ -50,18 +43,7 @@ proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
           response_row[key] = newJBool(row.parseBool)
         else:
           response_row[key] = newJString(row)
-      of "mysql":
-        if row == "":
-          response_row[key] = newJNull()
-        elif [$dbInt, $dbUInt].contains(typ):
-          response_row[key] = newJInt(row.parseInt)
-        elif [$dbDecimal, $dbFloat].contains(typ):
-          response_row[key] = newJFloat(row.parseFloat)
-        elif [$dbBool].contains(typ):
-          response_row[key] = newJBool(row.parseBool)
-        else:
-          response_row[key] = newJString(row)
-      of "postgres":
+      else:
         if row == "":
           response_row[key] = newJNull()
         elif [$dbInt, $dbUInt].contains(typ):
@@ -73,7 +55,7 @@ proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
         else:
           response_row[key] = newJString(row)
 
-    response_table.add(response_row)
+    response_table[index] = response_row
   return response_table
 
 proc toJson(results:seq[string], columns:seq[JsonNode]):JsonNode =
