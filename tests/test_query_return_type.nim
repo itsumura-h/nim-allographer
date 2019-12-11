@@ -26,18 +26,19 @@ RDB().table("users").insert(users).exec()
 
 
 macro orm(head, body: untyped): untyped =
+  for column in body:
+    echo column
+  
+  
   var strBody = ""
   strBody.add(fmt"""
-proc toTuple(response_arg:openarray[JsonNode], typ:tuple):seq[]
-  var response: seq[typ.type]
-  for row in response_arg:
-    typ.id = row["id"].getInt()
-    typ.name = row["name"].getStr()
-    typ.birth_date = row["birth_date"].getStr().parse("yyyy-MM-dd")
-    response.add(typ)
-  return response
+var typedResponse: seq[{repr body}.type]
+for row in {repr head}:
+  {repr body}.id = row["id"].getInt()
+  {repr body}.name = row["name"].getStr()
+  {repr body}.birth_date = row["birth_date"].getStr().parse("yyyy-MM-dd")
+  typedResponse.add(typ)""")
 
-return toTuple({repr head}, {repr body})""")
   result = parseStmt(strBody)
 
 
@@ -52,6 +53,8 @@ return toTuple({repr head}, {repr body})""")
 
 var typ: tuple[id:int, name:string, birth_date:DateTime]
 RDB().table("users").get().orm(typ)
+echo typedResponse
+# echo r
 # var response = RDB().table("users").get().orm(typ)
 # echo response
 # echo response[0]["id"]
