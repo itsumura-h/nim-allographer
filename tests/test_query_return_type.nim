@@ -25,36 +25,46 @@ for i in 1..5:
 RDB().table("users").insert(users).exec()
 
 
-macro orm(head, body: untyped): untyped =
-  for column in body:
-    echo column
-  
-  
-  var strBody = ""
-  strBody.add(fmt"""
-var typedResponse: seq[{repr body}.type]
-for row in {repr head}:
-  {repr body}.id = row["id"].getInt()
-  {repr body}.name = row["name"].getStr()
-  {repr body}.birth_date = row["birth_date"].getStr().parse("yyyy-MM-dd")
-  typedResponse.add(typ)""")
+macro orm(response_arg, typ, responseName: untyped): untyped =
+  var strBody = fmt"""
+var {responseName}: seq[{repr typ}.type]
+for i, row in {repr response_arg}.pairs:
+  echo {repr typ}[0]
+  {repr typ}.id = row["id"].getInt()
+  {repr typ}.name = row["name"].getStr()
+  {repr typ}.birth_date = row["birth_date"].getStr().parse("yyyy-MM-dd")
+  {responseName}.add(typ)"""
 
   result = parseStmt(strBody)
 
 
-  # var response: seq[body.type]
-  # for row in head:
-  #   body.id = row["id"].getInt()
-  #   body.name = row["name"].getStr()
-  #   body.birth_date = row["birth_date"].getStr().parse("yyyy-MM-dd")
-  #   response.add(typ)
-  # response
-
-
 var typ: tuple[id:int, name:string, birth_date:DateTime]
-RDB().table("users").get().orm(typ)
-echo typedResponse
-# echo r
-# var response = RDB().table("users").get().orm(typ)
-# echo response
-# echo response[0]["id"]
+RDB().table("users").get().orm(typ, "response")
+echo response
+
+
+#[
+
+macro orm(response_arg, typ, responseName: untyped): untyped =
+  var strBody = fmt"""
+var {responseName}: seq[{repr typ}.type]
+for i, row in {repr response_arg}.pairs:
+  echo {repr typ}[0]
+  {repr typ}.id = row["id"].getInt()
+  {repr typ}.name = row["name"].getStr()
+  {repr typ}.birth_date = row["birth_date"].getStr().parse("yyyy-MM-dd")
+  {responseName}.add(typ)"""
+
+  result = parseStmt(strBody)
+
+
+
+var response: seq[body.type]
+for row in head:
+  body.id = row["id"].getInt()
+  body.name = row["name"].getStr()
+  body.birth_date = row["birth_date"].getStr().parse("yyyy-MM-dd")
+  response.add(typ)
+response
+
+]#
