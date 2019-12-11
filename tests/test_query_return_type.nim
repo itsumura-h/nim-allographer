@@ -7,7 +7,8 @@ Schema().create(
   Table().create("users", [
     Column().increments("id"),
     COlumn().string("name").nullable(),
-    Column().date("birth_date").nullable()
+    Column().date("birth_date").nullable(),
+    Column().string("null").nullable()
   ], reset=true)
 )
 
@@ -26,7 +27,6 @@ RDB().table("users").insert(users).exec()
 template orm(head, body: untyped) =
   echo head
   echo body
-  "a"
 
   # var response: seq[body.type]
   # for row in head:
@@ -38,5 +38,6 @@ template orm(head, body: untyped) =
 
 
 var typ: tuple[id:int, name:string, birth_date:DateTime]
-var response = RDB().table("users").get().orm(typ)
+var response = RDB().table("users").get()
 echo response
+echo response[0]["id"]
