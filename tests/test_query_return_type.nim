@@ -1,5 +1,4 @@
-from macros import parseStmt
-import times, strformat, json, strutils
+import macros, times, strformat, json, strutils, re, options
 
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
@@ -25,33 +24,46 @@ for i in 1..5:
 RDB().table("users").insert(users).exec()
 
 
-proc orm(response_arg:seq[seq[string]], typ:var tuple, responseName:string) =
+proc ormProc(response_arg:seq[seq[string]], typ:var tuple, responseName:string) =
   var response: seq[typ.type]
+  var responseRaw = newNimNode(nnkTupleTy)
+  echo repr responseRaw
   for row in response_arg:
-    var i = 0
     for typRow in typ.fields:
-      # echo "-----------------------"
+      echo "-----------------------"
       # echo row[i]
-      # echo repr typRow
-      # echo typRow.type
-      var typPtr = typRow.addr
-      echo repr typPtr
-      var column = row[i]
-      if typRow.type is int:
-        typ.id = column.parseInt
-      elif typRow.type is "".type:
-        typ.name = column
-      elif typRow.type is DateTime:
-        typ.birth_date = column.parse("yyyy-MM-dd")
-      i.inc()
+      echo typRow
+      echo typRow.type
     response.add(typ)
   echo response
-  
+
+proc checkRegex(str:string, pattern:string): seq[string] =
+  return str.findAll(re pattern)
+
+macro ormMacro(response_arg, typ, responseName:typed):untyped =
+  echo typ.getTypeInst.repr.type
+  echo typ.getTypeInst.repr
+  echo checkRegex(typ.getTypeInst.repr, "(\\w*:)*")
+
+
+  var strBody = fmt"""
+var {responseName}: seq[{repr typ}.type]
+for i, row in {repr response_arg}.pairs:
+  if {repr typ}[i].type == int:
+    {repr typ}.id = row[i].parseInt()
+  elif {repr typ}[i].tpye == "".type:
+    {repr typ}.name = row[i]
+  elif {repr typ}[i].tpye == Datetime:
+    {repr typ}.birth_date = row[i].parse("yyyy-MM-dd")
+  {responseName}.add(typ)"""
+
+  result = parseStmt(strBody)
 
 var typ: tuple[id:int, name:string, birth_date:DateTime]
 # var RDB().table("users").get().orm(typ, "response")
-RDB().table("users").getString().orm(typ, "response")
-# echo response
+# RDB().table("users").getString().ormProc(typ, "response")
+RDB().table("users").getString().ormMacro(typ, "response")
+echo response
 
 #[
 
