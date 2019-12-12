@@ -115,6 +115,7 @@ proc getAllRows(sqlString:string): seq[JsonNode] =
   let columns = getColumns(db_columns)
   return toJson(results, columns) # seq[JsonNode]
 
+
 proc getRow(sqlString:string): JsonNode =
   let db = db()
   # let results = db.getRow(sql sqlString)
@@ -134,6 +135,13 @@ proc get*(this: RDB): seq[JsonNode] =
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
   logger(this.sqlStringSeq[0])
   return getAllRows(this.sqlStringSeq[0])
+
+proc getString*(this: RDB): seq[seq[string]] =
+  this.sqlStringSeq = @[this.selectBuilder().sqlString]
+  logger(this.sqlStringSeq[0])
+  let db = db()
+  result = db.getAllRows(sql this.sqlStringSeq[0])
+  defer: db.close()
 
 proc getRaw*(this: RDB): seq[JsonNode] =
   logger(this.sqlStringSeq[0])
