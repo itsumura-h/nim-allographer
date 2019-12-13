@@ -37,35 +37,53 @@ proc ormProc(response_arg:seq[seq[string]], typ:var tuple, responseName:string) 
     response.add(typ)
   echo response
 
-proc checkRegex(str:string, pattern:string): seq[string] =
-  return str.findAll(re pattern)
 
 macro ormMacro(response_arg, typ, responseName:typed):untyped =
   echo typ.getTypeInst.repr.type
-  echo typ.getTypeInst.repr
-  echo checkRegex(typ.getTypeInst.repr, "(\\w*:)*")
+  var typKeys: seq[string]
+  for m in typ.getTypeInst.repr.split({'[', ' ', ']'}):
+    if m.contains(":"):
+      var typKey = m.split(":")[0] 
+      typKeys.add(typKey)
+  echo typKeys
+
+  var i = 0
+  result = parseStmt(fmt"""
+for i, row in {response_arg.repr}:
+  echo {i.repr}, "   ", i, "   ", row
+
+""")
 
 
-  var strBody = fmt"""
-var {responseName}: seq[{repr typ}.type]
-for i, row in {repr response_arg}.pairs:
-  if {repr typ}[i].type == int:
-    {repr typ}.id = row[i].parseInt()
-  elif {repr typ}[i].tpye == "".type:
-    {repr typ}.name = row[i]
-  elif {repr typ}[i].tpye == Datetime:
-    {repr typ}.birth_date = row[i].parse("yyyy-MM-dd")
-  {responseName}.add(typ)"""
+#   var strBody = fmt"""
+# var {responseName}: seq[{repr typ}.type]
+# for i, typKey in {typKeys}.pairs:
+#   echo i, "  ", typKey
+#   if {repr typ}[i].type == int:
+#     {repr typ}.{typKey} = row[i].parseInt()
+#   elif {repr typ}[i].tpye == "".type:
+#     {repr typ}.{typKey} = row[i]
+#   elif {repr typ}[i].tpye == Datetime:
+#     {repr typ}.{typKey} = row[i].parse("yyyy-MM-dd")
+# {responseName}.add(typ)"""
 
-  result = parseStmt(strBody)
+#   result = parseStmt(strBody)
+
 
 var typ: tuple[id:int, name:string, birth_date:DateTime]
-# var RDB().table("users").get().orm(typ, "response")
 # RDB().table("users").getString().ormProc(typ, "response")
 RDB().table("users").getString().ormMacro(typ, "response")
-echo response
+# echo response
+
 
 #[
+
+if {repr typ}[i].type == int:
+  {repr typ}.{typKey} = row[i].parseInt()
+elif {repr typ}[i].tpye == "".type:
+  {repr typ}.{typKey} = row[i]
+elif {repr typ}[i].tpye == Datetime:
+  {repr typ}.{typKey} = row[i].parse("yyyy-MM-dd")
 
 macro orm(response_arg, typ, responseName: untyped): untyped =
   var strBody = fmt"""
