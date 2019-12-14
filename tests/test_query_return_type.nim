@@ -47,12 +47,19 @@ macro ormMacro(response_arg, typ, responseName:typed):untyped =
       typKeys.add(typKey)
   echo typKeys
 
-  var i = 0
-  result = parseStmt(fmt"""
-for i, row in {response_arg.repr}:
-  echo {i.repr}, "   ", i, "   ", row
 
-""")
+  result = parseStmt("")
+  for i, typKey in typKeys:
+    result.add(parseStmt(fmt"""
+echo {typ.repr}.{typKey}, "    ", {i}
+"""))
+
+  result.add(parseStmt(fmt"""
+for i, row in {response_arg.repr}:
+  echo "-------------------"
+  for i, column in row:
+    echo i, "     ", column
+"""))
 
 
 #   var strBody = fmt"""
