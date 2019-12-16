@@ -129,6 +129,15 @@ proc getRow(sqlString:string): JsonNode =
   let columns = getColumns(db_columns)
   return toJson(results, columns)
 
+proc orm[T](rows:seq[JsonNode], typ:T):seq[T] =
+  var response: seq[T]
+  for i, row in rows:
+    response.add(row.to(T))
+  return response
+
+proc orm[T](row:JsonNode, typ:T):T =
+  return row.to(T)
+
 # =============================================================================
 
 proc get*(this: RDB): seq[JsonNode] =
@@ -136,26 +145,41 @@ proc get*(this: RDB): seq[JsonNode] =
   logger(this.sqlStringSeq[0])
   return getAllRows(this.sqlStringSeq[0])
 
-proc getString*(this: RDB): seq[seq[string]] =
+proc get*[T](this: RDB, typ: T): seq[T] =
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
   logger(this.sqlStringSeq[0])
-  let db = db()
-  result = db.getAllRows(sql this.sqlStringSeq[0])
-  defer: db.close()
+  return getAllRows(this.sqlStringSeq[0]).orm(typ)
+
 
 proc getRaw*(this: RDB): seq[JsonNode] =
   logger(this.sqlStringSeq[0])
   return getAllRows(this.sqlStringSeq[0])
+
+proc getRaw*[T](this: RDB, typ: T): seq[T] =
+  logger(this.sqlStringSeq[0])
+  return getAllRows(this.sqlStringSeq[0]).orm(typ)
+
 
 proc first*(this: RDB): JsonNode =
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
   logger(this.sqlStringSeq[0])
   return getRow(this.sqlStringSeq[0])
 
+proc first*[T](this: RDB, typ: T): T =
+  this.sqlStringSeq = @[this.selectBuilder().sqlString]
+  logger(this.sqlStringSeq[0])
+  return getRow(this.sqlStringSeq[0]).orm(typ)
+
+
 proc find*(this: RDB, id: int, key="id"): JsonNode =
   this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
   logger(this.sqlStringSeq[0])
   return getRow(this.sqlStringSeq[0])
+
+proc find*[T](this: RDB, id: int, typ:T, key="id"): T =
+  this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
+  logger(this.sqlStringSeq[0])
+  return getRow(this.sqlStringSeq[0]).orm(typ)
 
 
 # ==================== INSERT ====================
