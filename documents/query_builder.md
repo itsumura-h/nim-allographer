@@ -53,23 +53,31 @@ type Typ = ref object
   char: string
   datetime: string
   null: string
+  is_admin: bool
 
-echo RDB().table("test")
-    .select("id", "float", "char", "datetime", "null", "is_admin")
-    .get(Typ())
+var rows = RDB().table("test")
+          .select("id", "float", "char", "datetime", "null", "is_admin")
+          .get(Typ())
 ```
 
 ```
->> @[
-  {
-    "id": 1,                                # int
-    "float": 3.14,                          # float
-    "char": "char",                         # string
-    "datetime": "2019-01-01 12:00:00.1234", # string
-    "null": null                            # string
-    "is_admin": true                        # bool
-  }
-]
+echo rows[0].id
+>> 1                            # int
+
+echo rows[0].float
+>> 3.14                         # float
+
+echo rows[0].char
+>> char                         # string
+
+echo rows[0].datetime
+>> "2019-01-01 12:00:00.1234"   # string
+
+echo rows[0].null
+>> null                         # string
+
+echo rows[0].is_admin
+>> true                         # bool
 ```
 
 #### Examples
