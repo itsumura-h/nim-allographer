@@ -6,3 +6,5 @@ type
     query*: JsonNode
     sqlString*: string
     sqlStringSeq*: seq[string]
+
+  ResponseType* = ref object of RootObj

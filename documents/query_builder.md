@@ -13,7 +13,13 @@ Example: Query Builder
 ### SELECT
 [to index](#index)
 
-#### Return Types
+When it returns following table
+
+|id|float|char|datetime|null|is_admin|
+|---|---|---|---|---|---|
+|1|3.14|char|2019-01-01 12:00:00.1234||1|
+
+#### return JsonNode
 ```
 import allographer/query_builder
 
@@ -21,13 +27,6 @@ echo RDB().table("test")
     .select("id", "float", "char", "datetime", "null", "is_admin")
     .get()
 ```
-When it returns following table
-
-|id|float|char|datetime|null|is_admin|
-|---|---|---|---|---|---|
-|1|3.14|char|2019-01-01 12:00:00.1234||1|
-
-result is here
 
 ```
 >> @[
@@ -38,6 +37,37 @@ result is here
     "datetime": "2019-01-01 12:00:00.1234", # JString
     "null": null                            # JNull
     "is_admin": true                        # JBool
+  }
+]
+```
+
+#### return Object
+If object is defined and set arg of get/getRaw/first/find, response will be object as ORM
+
+```
+import allographer/query_builder
+
+type Typ = ref object
+  id: int
+  float: float
+  char: string
+  datetime: string
+  null: string
+
+echo RDB().table("test")
+    .select("id", "float", "char", "datetime", "null", "is_admin")
+    .get(Typ())
+```
+
+```
+>> @[
+  {
+    "id": 1,                                # int
+    "float": 3.14,                          # float
+    "char": "char",                         # string
+    "datetime": "2019-01-01 12:00:00.1234", # string
+    "null": null                            # string
+    "is_admin": true                        # bool
   }
 ]
 ```

@@ -51,9 +51,9 @@ for i in 1..total:
 
 pb.finish()
 RDB().table("users").insert(insertData).exec()
-discard RDB().table("users").get()
+echo RDB().table("users").get()
 
-discard RDB()
+echo RDB()
     .table("users")
     .select("users.id", "users.email")
     .where("name", "=", "user3")
@@ -64,15 +64,15 @@ discard RDB()
     .get()
 
 
-discard RDB().table("users").select("id", "email").limit(5).get()
-discard RDB().table("users").select("id", "email").limit(5).first()
-discard RDB().table("users").find(4)
-discard RDB().table("users").select("id", "email").limit(5).find(3)
+echo RDB().table("users").select("id", "email").limit(5).get()
+echo RDB().table("users").select("id", "email").limit(5).first()
+echo RDB().table("users").find(4)
+echo RDB().table("users").select("id", "email").limit(5).find(3)
 
 echo ""
 
 RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).exec()
-discard RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).execID()
+echo RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).execID()
 
 
 RDB().table("users").insert(
@@ -92,16 +92,16 @@ RDB().table("users").inserts(
 
 
 RDB().table("users").where("id", "=", 2).update(%*{"name": "David"}).exec()
-discard RDB().table("users").where("id", "=", 2).update(%*{"name": "David"}).execID()
-discard RDB().table("users").select().where("name", "=", "David").get()
-discard RDB().table("users").find(2)
+echo RDB().table("users").where("id", "=", 2).update(%*{"name": "David"}).execID()
+echo RDB().table("users").select().where("name", "=", "David").get()
+echo RDB().table("users").find(2)
 
 RDB().table("users").where("name", "=", "David").delete().exec()
 RDB().table("users").delete(3).exec()
-discard RDB().table("users").limit(5).get()
+echo RDB().table("users").limit(5).get()
 
 # sql check
-discard RDB()
+let r = RDB()
     .table("users")
     .select("users.id", "users.email")
     .where("name", "=", "user3")
@@ -112,3 +112,7 @@ discard RDB()
     .join("auth", "auth.id", "=", "users.auth_id")
     .limit(10)
     .get()
+echo r[0]["id"]
+echo r[0]["id"].type
+echo r[0]["email"]
+echo r[0]["email"].type
