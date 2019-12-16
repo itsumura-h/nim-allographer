@@ -1,7 +1,7 @@
 import
-  query_builder_pkg/base,
-  query_builder_pkg/grammars,
-  query_builder_pkg/exec,
+  query_builder/base,
+  query_builder/grammars,
+  query_builder/exec,
   connection
 
 export

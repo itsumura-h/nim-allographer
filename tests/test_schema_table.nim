@@ -1,6 +1,6 @@
 import unittest
 
-include ../src/allographer/schema_builder_pkg/table
+include ../src/allographer/schema_builder/table
 
 suite "schema table":
   test "table":

@@ -1,5 +1,5 @@
 import unittest, json
-include ../src/allographer/schema_builder_pkg/column
+include ../src/allographer/schema_builder/column
 
 suite "column options":
   test "default bool":

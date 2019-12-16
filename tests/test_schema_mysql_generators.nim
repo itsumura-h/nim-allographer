@@ -1,5 +1,5 @@
 import unittest
-include ../src/allographer/schema_builder_pkg/generators/mysql_generators
+include ../src/allographer/schema_builder/generators/mysql_generators
 
 suite "mysql generators int":
   test "serialGenerator":

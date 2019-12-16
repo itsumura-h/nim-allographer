@@ -1,5 +1,5 @@
 import unittest, json
-include ../src/allographer/query_builder_pkg/builders
+include ../src/allographer/query_builder/builders
 
 suite "builders":
   test "select *":
