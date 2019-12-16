@@ -1,6 +1,6 @@
 import db_sqlite, db_mysql, db_postgres
 # import json, parsecfg, strutils
-import json, strutils
+import json, strutils, times
 
 import base, builders
 import ../util
@@ -11,35 +11,28 @@ proc checkSql*(this: RDB): string =
   return this.selectBuilder().sqlString
 
 proc getColumns(db_columns:DbColumns):seq[JsonNode] =
-  var columns: seq[JsonNode]
+  var columns = newSeq[JsonNode](db_columns.len)
   const DRIVER = getDriver()
   for i, row in db_columns:
     # echo row
     case DRIVER:
     of "sqlite":
-      columns.add(
-        %*{"name": row.name, "typ": row.typ.name}
-      )
+      columns[i] = %*{"name": row.name, "typ": row.typ.name}
     of "mysql":
-      columns.add(
-        %*{"name": row.name, "typ": row.typ.kind}
-      )
+      columns[i] = %*{"name": row.name, "typ": row.typ.kind}
     of "postgres":
-      columns.add(
-        %*{"name": row.name, "typ": row.typ.kind}
-      )
+      columns[i] = %*{"name": row.name, "typ": row.typ.kind}
   return columns
 
 proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
-  var response_table: seq[JsonNode]
+  var response_table = newSeq[JsonNode](results.len)
   const DRIVER = getDriver()
-  for rows in results:
+  for index, rows in results.pairs:
     var response_row = %*{}
     for i, row in rows:
       var key = columns[i]["name"].getStr
       var typ = columns[i]["typ"].getStr
-      case DRIVER:
-      of "sqlite":
+      if DRIVER == "sqlite":
         if row == "":
           response_row[key] = newJNull()
         elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
@@ -50,18 +43,7 @@ proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
           response_row[key] = newJBool(row.parseBool)
         else:
           response_row[key] = newJString(row)
-      of "mysql":
-        if row == "":
-          response_row[key] = newJNull()
-        elif [$dbInt, $dbUInt].contains(typ):
-          response_row[key] = newJInt(row.parseInt)
-        elif [$dbDecimal, $dbFloat].contains(typ):
-          response_row[key] = newJFloat(row.parseFloat)
-        elif [$dbBool].contains(typ):
-          response_row[key] = newJBool(row.parseBool)
-        else:
-          response_row[key] = newJString(row)
-      of "postgres":
+      else:
         if row == "":
           response_row[key] = newJNull()
         elif [$dbInt, $dbUInt].contains(typ):
@@ -73,7 +55,7 @@ proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
         else:
           response_row[key] = newJString(row)
 
-    response_table.add(response_row)
+    response_table[index] = response_row
   return response_table
 
 proc toJson(results:seq[string], columns:seq[JsonNode]):JsonNode =
@@ -133,6 +115,7 @@ proc getAllRows(sqlString:string): seq[JsonNode] =
   let columns = getColumns(db_columns)
   return toJson(results, columns) # seq[JsonNode]
 
+
 proc getRow(sqlString:string): JsonNode =
   let db = db()
   # let results = db.getRow(sql sqlString)
@@ -146,6 +129,15 @@ proc getRow(sqlString:string): JsonNode =
   let columns = getColumns(db_columns)
   return toJson(results, columns)
 
+proc orm[T](rows:seq[JsonNode], typ:T):seq[T] =
+  var response: seq[T]
+  for i, row in rows:
+    response.add(row.to(T))
+  return response
+
+proc orm[T](row:JsonNode, typ:T):T =
+  return row.to(T)
+
 # =============================================================================
 
 proc get*(this: RDB): seq[JsonNode] =
@@ -153,19 +145,41 @@ proc get*(this: RDB): seq[JsonNode] =
   logger(this.sqlStringSeq[0])
   return getAllRows(this.sqlStringSeq[0])
 
+proc get*[T](this: RDB, typ: T): seq[T] =
+  this.sqlStringSeq = @[this.selectBuilder().sqlString]
+  logger(this.sqlStringSeq[0])
+  return getAllRows(this.sqlStringSeq[0]).orm(typ)
+
+
 proc getRaw*(this: RDB): seq[JsonNode] =
   logger(this.sqlStringSeq[0])
   return getAllRows(this.sqlStringSeq[0])
+
+proc getRaw*[T](this: RDB, typ: T): seq[T] =
+  logger(this.sqlStringSeq[0])
+  return getAllRows(this.sqlStringSeq[0]).orm(typ)
+
 
 proc first*(this: RDB): JsonNode =
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
   logger(this.sqlStringSeq[0])
   return getRow(this.sqlStringSeq[0])
 
+proc first*[T](this: RDB, typ: T): T =
+  this.sqlStringSeq = @[this.selectBuilder().sqlString]
+  logger(this.sqlStringSeq[0])
+  return getRow(this.sqlStringSeq[0]).orm(typ)
+
+
 proc find*(this: RDB, id: int, key="id"): JsonNode =
   this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
   logger(this.sqlStringSeq[0])
   return getRow(this.sqlStringSeq[0])
+
+proc find*[T](this: RDB, id: int, typ:T, key="id"): T =
+  this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
+  logger(this.sqlStringSeq[0])
+  return getRow(this.sqlStringSeq[0]).orm(typ)
 
 
 # ==================== INSERT ====================
