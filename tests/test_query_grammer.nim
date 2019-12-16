@@ -1,6 +1,6 @@
 import unittest
 
-include ../src/allographer/query_builder_pkg/grammars
+include ../src/allographer/query_builder/grammars
 
 suite "grammer":
   test "table":
