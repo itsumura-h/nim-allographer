@@ -25,8 +25,7 @@ file: "true"
       createDir(parentDir(confPath))
       let f = open(confPath, fmWrite)
       f.write(content)
-      defer:
-        f.close()
+      defer: f.close()
 
     message = confPath & " is successfully created!!!"
     styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
@@ -67,8 +66,7 @@ const DRIVER* = "{driver}"
     block:
       let f = open(targetPath, fmWrite)
       f.write(content)
-      defer:
-        f.close()
+      defer: f.close()
 
     message = confPath & " is successfully loaded!!!"
     styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
