@@ -61,10 +61,10 @@ proc checkDiff(path:string, newTables:JsonNode) =
 
 
 proc generateMigrationFile(path:string, tablesArg:JsonNode) =
-  let f = open(path, FileMode.fmWrite)
-  f.write(tablesArg.pretty())
-  defer:
-    f.close()
+  block:
+    let f = open(path, FileMode.fmWrite)
+    f.write(tablesArg.pretty())
+    defer: f.close()
 
 
 proc check*(this:Schema, tablesArg:varargs[Table]) =
@@ -82,24 +82,19 @@ proc check*(this:Schema, tablesArg:varargs[Table]) =
 proc create*(this:Schema, tables:varargs[Table]) =
   driverTypeError()
 
-  # create delete target table list
-  var deleteList: seq[string]
-  for table in tables:
-    if table.reset:
-      deleteList.add(table.name)
-  # delete table in reverse loop
-  let db = db()
-  for i, v in deleteList:
-    var index = i+1
-    try:
-      db.exec(sql &"drop table {deleteList[^index]}")
-    except Exception:
-      getCurrentExceptionMsg().echoErrorMsg()
-  defer: db.close()
+  block:
+    let db = db()
+    for i, table in tables:
+      if table.reset:
+        try:
+          let sqlString = &"drop table {table.name}"
+          logger(sqlString)
+          db.exec(sql sqlString)
+        except Exception:
+          getCurrentExceptionMsg().echoErrorMsg()
+    defer: db.close()
 
   for table in tables:
-    # echo repr table
-
     var query = ""
     let driver = util.getDriver()
     echo driver
@@ -113,16 +108,8 @@ proc create*(this:Schema, tables:varargs[Table]) =
 
     logger(query)
 
-    # let table_name = table.name
-
     block:
       let db = db()
-      # if table.reset:
-      #   try:
-      #     db.exec(sql &"drop table {table_name}")
-      #   except Exception:
-      #     getCurrentExceptionMsg().echoErrorMsg()
-
       try:
         db.exec(sql query)
       except Exception:
