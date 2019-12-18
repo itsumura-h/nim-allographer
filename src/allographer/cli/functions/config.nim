@@ -6,18 +6,14 @@ proc makeConf*(args: seq[string]): int =
 
   var message = ""
   # define path
-  let confPath = getCurrentDir() & "/config/database.ini"
-  let content = &"""
-[Connection]
+  var confPath = getCurrentDir() & "/config/database.ini"
+  var content = &"""
+[RDB]
 driver: "sqlite"
 conn: "{getCurrentDir()}/db.sqlite3"
 user: ""
 password: ""
 database: ""
-
-[Log]
-display: "true"
-file: "true"
 """
 
   try:
@@ -32,6 +28,28 @@ file: "true"
   except:
     getCurrentExceptionMsg().echoErrorMsg()
 
+  # Generate Logging conf file
+  confPath = getCurrentDir() & "/config/logging.ini"
+  content = &"""
+[Log]
+display: "true"
+file: "true"
+path: "{getCurrentDir()}/logs/log.log"
+"""
+
+  try:
+    block:
+      createDir(parentDir(confPath))
+      let f = open(confPath, fmWrite)
+      f.write(content)
+      defer: f.close()
+
+    message = confPath & " is successfully created!!!"
+    styledWriteLine(stdout, fgGreen, bgDefault, message, resetStyle)
+  except:
+    getCurrentExceptionMsg().echoErrorMsg()
+
+
 proc loadConf*(args: seq[string]): int =
   ## Apply DB connection informations to framework
 
@@ -41,14 +59,14 @@ proc loadConf*(args: seq[string]): int =
 
   # load conf
   var conf = loadConfig(confPath)
-  let driver = conf.getSectionValue("Connection", "driver")
-  let conn = conf.getSectionValue("Connection", "conn")
-  let user = conf.getSectionValue("Connection", "user")
-  let password = conf.getSectionValue("Connection", "password")
-  let database = conf.getSectionValue("Connection", "database")
+  let driver = conf.getSectionValue("RDB", "driver")
+  let conn = conf.getSectionValue("RDB", "conn")
+  let user = conf.getSectionValue("RDB", "user")
+  let password = conf.getSectionValue("RDB", "password")
+  let database = conf.getSectionValue("RDB", "database")
 
   if driver != "sqlite" and driver != "mysql" and driver != "postgres":
-    message = "Connection.driver shoule be sqlite or mysql or postgres"
+    message = "RDB.driver shoule be sqlite or mysql or postgres"
     styledWriteLine(stdout, fgRed, bgDefault, message, resetStyle)
     return 1
 
