@@ -1,8 +1,7 @@
-import os, parsecfg, terminal
+import os, parsecfg, terminal, logging, strutils
 import connection
 
-var
-  configFile* = getCurrentDir() & "/config/database.ini"
+let logConfigFile* = getCurrentDir() & "/config/logging.ini"
 
 proc getDriver*():string =
   return connection.DRIVER
@@ -14,10 +13,30 @@ proc driverTypeError*() =
 
 proc logger*(output: any) =
   # get Config file
-  var conf = loadConfig(configFile)
-  var isDisplayString = conf.getSectionValue("Log", "display")
+  let conf = loadConfig(logConfigFile)
+  # console log
+  let isDisplayString = conf.getSectionValue("Log", "display")
   if isDisplayString == "true":
-    echo $output
+    let logger = newConsoleLogger()
+    logger.log(lvlInfo, $output)
+  # file log
+  let isFileOutString = conf.getSectionValue("Log", "file")
+  if isFileOutString == "true":
+    let path = conf.getSectionValue("Log", "logDir") & "/log.log"
+    createDir(parentDir(path))
+    let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
+    var newOutput = $output
+    newOutput.removeSuffix
+    logger.log(lvlInfo, newOutput)
+
 
 proc echoErrorMsg*(msg:string) =
   styledWriteLine(stdout, fgRed, bgDefault, msg, resetStyle)
+  # file log
+  let conf = loadConfig(logConfigFile)
+  let isFileOutString = conf.getSectionValue("Log", "file")
+  if isFileOutString == "true":
+    let path = conf.getSectionValue("Log", "logDir") & "/error.log"
+    createDir(parentDir(path))
+    let logger = newRollingFileLogger(path)
+    logger.log(lvlInfo, msg)

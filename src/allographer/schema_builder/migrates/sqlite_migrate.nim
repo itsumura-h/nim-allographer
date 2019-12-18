@@ -9,7 +9,6 @@ proc migrate*(this:Table):string =
   var columnString = ""
   var foreignString = ""
   for i, column in this.columns:
-    # echo repr column
     if i > 0: columnString.add(", ")
 
     case column.typ:

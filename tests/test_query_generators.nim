@@ -1,7 +1,7 @@
 import unittest
 
-import ../src/allographer/query_builder/grammars
 include ../src/allographer/query_builder/generators
+
 
 suite "generators":
   test "selectSql id":

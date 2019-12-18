@@ -1,6 +1,5 @@
 import db_sqlite, db_mysql, db_postgres
-# import json, parsecfg, strutils
-import json, strutils, times
+import json, strutils
 
 import base, builders
 import ../util
@@ -14,7 +13,6 @@ proc getColumns(db_columns:DbColumns):seq[JsonNode] =
   var columns = newSeq[JsonNode](db_columns.len)
   const DRIVER = getDriver()
   for i, row in db_columns:
-    # echo row
     case DRIVER:
     of "sqlite":
       columns[i] = %*{"name": row.name, "typ": row.typ.name}
@@ -206,7 +204,6 @@ proc inserts*(this: RDB, rows: openArray[JsonNode]): RDB =
 
 proc update*(this: RDB, items: JsonNode): RDB =
   this.sqlStringSeq = @[this.updateBuilder(items).sqlString]
-  echo this.sqlStringSeq
   return this
 
 
