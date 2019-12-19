@@ -1,6 +1,5 @@
 import db_sqlite, db_mysql, db_postgres
-# import json, parsecfg, strutils
-import json, strutils, times
+import json, strutils
 
 import base, builders
 import ../util
@@ -14,7 +13,6 @@ proc getColumns(db_columns:DbColumns):seq[JsonNode] =
   var columns = newSeq[JsonNode](db_columns.len)
   const DRIVER = getDriver()
   for i, row in db_columns:
-    # echo row
     case DRIVER:
     of "sqlite":
       columns[i] = %*{"name": row.name, "typ": row.typ.name}
@@ -24,7 +22,7 @@ proc getColumns(db_columns:DbColumns):seq[JsonNode] =
       columns[i] = %*{"name": row.name, "typ": row.typ.kind}
   return columns
 
-proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
+proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[JsonNode] =
   var response_table = newSeq[JsonNode](results.len)
   const DRIVER = getDriver()
   for index, rows in results.pairs:
@@ -58,7 +56,7 @@ proc toJson(results:seq[seq[string]], columns:seq[JsonNode]):seq[JsonNode] =
     response_table[index] = response_row
   return response_table
 
-proc toJson(results:seq[string], columns:seq[JsonNode]):JsonNode =
+proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
   var response_row = %*{}
   const DRIVER = getDriver()
   for i, row in results:
@@ -108,9 +106,10 @@ proc getAllRows(sqlString:string): seq[JsonNode] =
   let results = db.getAllRows(sql sqlString) # seq[seq[string]]
 
   var db_columns: DbColumns
-  for row in db.instantRows(db_columns, sql sqlString):
-    discard
-  defer: db.close()
+  block:
+    for row in db.instantRows(db_columns, sql sqlString):
+      discard
+    defer: db.close()
 
   let columns = getColumns(db_columns)
   return toJson(results, columns) # seq[JsonNode]
@@ -118,21 +117,23 @@ proc getAllRows(sqlString:string): seq[JsonNode] =
 
 proc getRow(sqlString:string): JsonNode =
   let db = db()
+  # # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
   # let results = db.getRow(sql sqlString)
   let results = db.getAllRows(sql sqlString)[0]
   
   var db_columns: DbColumns
-  for row in db.instantRows(db_columns, sql sqlString):
-    discard
-  defer: db.close()
+  block:
+    for row in db.instantRows(db_columns, sql sqlString):
+      discard
+    defer: db.close()
 
   let columns = getColumns(db_columns)
   return toJson(results, columns)
 
-proc orm[T](rows:seq[JsonNode], typ:T):seq[T] =
-  var response: seq[T]
+proc orm[T](rows:openArray[JsonNode], typ:T):seq[T] =
+  var response = newSeq[T](rows.len)
   for i, row in rows:
-    response.add(row.to(T))
+    response[i] = row.to(T)
   return response
 
 proc orm[T](row:JsonNode, typ:T):T =
@@ -193,19 +194,16 @@ proc insert*(this: RDB, rows: openArray[JsonNode]): RDB =
   return this
 
 proc inserts*(this: RDB, rows: openArray[JsonNode]): RDB =
-  for items in rows:
-    this.sqlStringSeq.add(
-      this.insertValueBuilder(items).sqlString
-    )
+  this.sqlStringSeq = newSeq[string](rows.len)
+  for i, items in rows:
+    this.sqlStringSeq[i] = this.insertValueBuilder(items).sqlString
   return this
 
 
 # ==================== UPDATE ====================
 
 proc update*(this: RDB, items: JsonNode): RDB =
-  this.sqlStringSeq.add(
-    this.updateBuilder(items).sqlString
-  )
+  this.sqlStringSeq = @[this.updateBuilder(items).sqlString]
   return this
 
 
@@ -223,28 +221,30 @@ proc delete*(this: RDB, id: int, key="id"): RDB =
 # ==================== EXEC ====================
 
 proc exec*(this: RDB) =
-  let db = db()
-  for sqlString in this.sqlStringSeq:
-    logger(sqlString)
-    db.exec(sql sqlString)
-  defer: db.close()
-
-proc execID*(this: RDB): int64 =
-  let db = db()
-
-  # insert Multi
-  if this.sqlStringSeq.len == 1 and this.sqlString.contains("INSERT"):
-    logger(this.sqlString)
-    result = db.tryInsertID(
-      sql this.sqlStringSeq[0]
-    )
-  else:
+  block:
+    let db = db()
     for sqlString in this.sqlStringSeq:
       logger(sqlString)
       db.exec(sql sqlString)
-    result = 0
+    defer: db.close()
+  
 
-  defer: db.close()
+proc execID*(this: RDB): int64 =
+  block:
+    let db = db()
+    # insert Multi
+    if this.sqlStringSeq.len == 1 and this.sqlString.contains("INSERT"):
+      logger(this.sqlString)
+      result = db.tryInsertID(
+        sql this.sqlStringSeq[0]
+      )
+    else:
+      for sqlString in this.sqlStringSeq:
+        logger(sqlString)
+        db.exec(sql sqlString)
+      result = 0
+    
+    defer: db.close()
 
 
 # ==================== Transaction ====================

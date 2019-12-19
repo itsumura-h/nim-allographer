@@ -21,6 +21,7 @@ RUN git config --global http.sslVerify false
 RUN nimble install -y \
            bcrypt \
            coco \
+           progress \
            ;
 
 ENV PATH $PATH:/root/.nimble/bin

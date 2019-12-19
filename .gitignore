@@ -20,3 +20,5 @@ lcov.info
 migration.json
 
 /deploy/
+
+*.log
