@@ -1,7 +1,15 @@
-import os, parsecfg, terminal, logging, strutils
+import os, parsecfg, terminal, logging
 import connection
 
+# file logging setting
 let logConfigFile* = getCurrentDir() & "/config/logging.ini"
+let conf = loadConfig(logConfigFile)
+let isFileOutString = conf.getSectionValue("Log", "file")
+if isFileOutString == "true":
+  let path = conf.getSectionValue("Log", "logDir") & "/log.log"
+  createDir(parentDir(path))
+  newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr).addHandler()
+
 
 proc getDriver*():string =
   return connection.DRIVER
@@ -10,6 +18,7 @@ proc driverTypeError*() =
   let driver = getDriver()
   if driver != "sqlite" and driver != "mysql" and driver != "postgres":
     raise newException(OSError, "invalid DB driver type")
+
 
 proc logger*(output: any) =
   # get Config file
@@ -22,14 +31,7 @@ proc logger*(output: any) =
   # file log
   let isFileOutString = conf.getSectionValue("Log", "file")
   if isFileOutString == "true":
-    let path = conf.getSectionValue("Log", "logDir") & "/log.log"
-    createDir(parentDir(path))
-    newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr).addHandler()
-    # newRollingFileLogger(path, mode=fmReadWrite?, fmtStr=verboseFmtStr).addHandler()
     info $output
-
-    # let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
-    # logger.log(lvlInfo, $output)
 
 
 proc echoErrorMsg*(msg:string) =
@@ -39,6 +41,6 @@ proc echoErrorMsg*(msg:string) =
   let isFileOutString = conf.getSectionValue("Log", "file")
   if isFileOutString == "true":
     let path = conf.getSectionValue("Log", "logDir") & "/error.log"
-    createDir(parentDir(path))
+    # createDir(parentDir(path))
     let logger = newRollingFileLogger(path)
     logger.log(lvlInfo, msg)
