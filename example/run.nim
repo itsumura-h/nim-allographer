@@ -117,3 +117,19 @@ echo r[0]["id"]
 echo r[0]["id"].type
 echo r[0]["email"]
 echo r[0]["email"].type
+
+type User = ref object
+  id:int
+  name:string
+  email:string
+  password:string
+  salt:string
+  address:string
+  birth_date:string
+  auth_id:int
+let users = RDB().table("users").limit(5).get(User())
+for user in users:
+  echo user.name
+
+RDB().raw("DROP TABLE users").exec()
+RDB().raw("DROP TABLE auth").exec()

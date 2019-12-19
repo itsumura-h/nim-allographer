@@ -34,7 +34,7 @@ database: ""
 [Log]
 display: "true"
 file: "true"
-path: "{getCurrentDir()}/logs/log.log"
+logDir: "{getCurrentDir()}/logs"
 """
 
   try:
