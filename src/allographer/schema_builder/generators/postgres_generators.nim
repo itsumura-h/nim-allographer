@@ -105,10 +105,6 @@ proc doubleGenerator*(name:string, maximum:int, digit:int, nullable:bool,
 proc floatGenerator*(name:string, nullable:bool, isDefault:bool, default:float,
                       isUnsigned:bool):string =
   result = &"\"{name}\" NUMERIC"
-  # if isWithOption:
-  #   result = &"\"{name}\" NUMERIC({maximum}, {digit})"
-  # else:
-  #   result = &"\"{name}\" NUMERIC"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
