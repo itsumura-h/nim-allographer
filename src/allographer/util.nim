@@ -2,13 +2,16 @@ import os, parsecfg, terminal, logging
 import connection
 
 # file logging setting
-let logConfigFile* = getCurrentDir() & "/config/logging.ini"
-let conf = loadConfig(logConfigFile)
-let isFileOutString = conf.getSectionValue("Log", "file")
-if isFileOutString == "true":
-  let path = conf.getSectionValue("Log", "logDir") & "/log.log"
-  createDir(parentDir(path))
-  newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr).addHandler()
+let logConfigFile = getCurrentDir() & "/config/logging.ini"
+try:
+  let conf = loadConfig(logConfigFile)
+  let isFileOutString = conf.getSectionValue("Log", "file")
+  if isFileOutString == "true":
+    let logPath = conf.getSectionValue("Log", "logDir") & "/log.log"
+    createDir(parentDir(logPath))
+    newRollingFileLogger(logPath, mode=fmAppend, fmtStr=verboseFmtStr).addHandler()
+except:
+  discard
 
 
 proc getDriver*():string =
@@ -35,12 +38,12 @@ proc logger*(output: any) =
 
 
 proc echoErrorMsg*(msg:string) =
+  # console log
   styledWriteLine(stdout, fgRed, bgDefault, msg, resetStyle)
   # file log
   let conf = loadConfig(logConfigFile)
   let isFileOutString = conf.getSectionValue("Log", "file")
   if isFileOutString == "true":
     let path = conf.getSectionValue("Log", "logDir") & "/error.log"
-    # createDir(parentDir(path))
-    let logger = newRollingFileLogger(path)
-    logger.log(lvlInfo, msg)
+    let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
+    logger.log(lvlError, msg)
