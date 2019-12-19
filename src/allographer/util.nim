@@ -24,10 +24,12 @@ proc logger*(output: any) =
   if isFileOutString == "true":
     let path = conf.getSectionValue("Log", "logDir") & "/log.log"
     createDir(parentDir(path))
-    let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
-    var newOutput = $output
-    newOutput.removeSuffix
-    logger.log(lvlInfo, newOutput)
+    newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr).addHandler()
+    # newRollingFileLogger(path, mode=fmReadWrite?, fmtStr=verboseFmtStr).addHandler()
+    info $output
+
+    # let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
+    # logger.log(lvlInfo, $output)
 
 
 proc echoErrorMsg*(msg:string) =
