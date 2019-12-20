@@ -3,11 +3,11 @@ import json
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
 
-echo RDB().table("users").select("id", "name", "address")
-    .limit(2).get()
+echo repr RDB().table("users").select("id", "name", "address")
+    .limit(2)
+    .get()
 
-echo RDB().table("users").select("id", "name", "address")
-    .first()
+echo RDB().table("users").select("id", "name", "address").first()
 
 echo RDB().table("users")
     .select("id", "name", "address")
@@ -21,7 +21,7 @@ echo RDB().table("users")
 #     Column().datetime("datetime"),
 #     Column().string("'null'").nullable(),
 #     Column().boolean("is_admin")
-#   ], isRebuild=true)
+#   ], reset=true)
 # ])
 
 # RDB().table("sample").insert(%*{

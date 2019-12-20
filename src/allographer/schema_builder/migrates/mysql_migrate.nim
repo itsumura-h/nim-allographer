@@ -2,22 +2,20 @@ import strformat, strutils, json
 import
   ../table,
   ../column
-import ../generators/postgres_generators
+import ../generators/mysql_generators
 
 
 proc migrate*(this:Table):string =
   var columnString = ""
   var foreignString = ""
   for i, column in this.columns:
-    # echo repr column
-    if i > 0:
-      columnString.add(", ")
+    if i > 0: columnString.add(", ")
 
     case column.typ:
       # int ===================================================================
       of rdbIncrements:
         columnString.add(
-          incrementGenerator(column.name)
+          serialGenerator(column.name)
         )
       of rdbInteger:
         columnString.add(
@@ -59,7 +57,7 @@ proc migrate*(this:Table):string =
             column.isUnsigned
           )
         )
-      # float =================================================================
+      # # float =================================================================
       of rdbDecimal:
         columnString.add(
           decimalGenerator(
@@ -68,8 +66,7 @@ proc migrate*(this:Table):string =
             parseInt($column.info["digit"]),
             column.isNullable,
             column.isDefault,
-            column.defaultFloat,
-            column.isUnsigned
+            column.defaultFloat
           )
         )
       of rdbDouble:
@@ -80,8 +77,7 @@ proc migrate*(this:Table):string =
             parseInt($column.info["digit"]),
             column.isNullable,
             column.isDefault,
-            column.defaultFloat,
-            column.isUnsigned
+            column.defaultFloat
           )
         )
       of rdbFloat:
@@ -94,7 +90,7 @@ proc migrate*(this:Table):string =
             column.isUnsigned
           )
         )
-      # char ==================================================================
+      # # char ==================================================================
       of rdbChar:
         columnString.add(
           charGenerator(
@@ -119,30 +115,24 @@ proc migrate*(this:Table):string =
         columnString.add(
           textGenerator(
             column.name,
-            column.isNullable,
-            column.isDefault,
-            column.defaultString
+            column.isNullable
           )
         )
       of rdbMediumText:
         columnString.add(
-          textGenerator(
+          mediumTextGenerator(
             column.name,
-            column.isNullable,
-            column.isDefault,
-            column.defaultString
+            column.isNullable
           )
         )
       of rdbLongText:
         columnString.add(
-          textGenerator(
+          longTextGenerator(
             column.name,
-            column.isNullable,
-            column.isDefault,
-            column.defaultString
+            column.isNullable
           )
         )
-      # date ==================================================================
+      # # date ==================================================================
       of rdbDate:
         columnString.add(
           dateGenerator(column.name, column.isNullable, column.isDefault)
@@ -157,7 +147,11 @@ proc migrate*(this:Table):string =
         )
       of rdbTimestamp:
         columnString.add(
-          timestampGenerator(column.name, column.isNullable, column.isDefault)
+          timestampGenerator(
+            column.name,
+            column.isNullable,
+            column.isDefault
+          )
         )
       of rdbTimestamps:
         columnString.add(

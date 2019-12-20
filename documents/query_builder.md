@@ -13,23 +13,22 @@ Example: Query Builder
 ### SELECT
 [to index](#index)
 
-#### Return Types
-```
-import allographer/query_builder
-
-echo RDB().table("test")
-    .select("id", "float", "char", "datetime", "null", "is_admin")
-    .get()
-```
 When it returns following table
 
 |id|float|char|datetime|null|is_admin|
 |---|---|---|---|---|---|
 |1|3.14|char|2019-01-01 12:00:00.1234||1|
 
-result is here
+#### return JsonNode
+```nim
+import allographer/query_builder
 
+echo RDB().table("test")
+    .select("id", "float", "char", "datetime", "null", "is_admin")
+    .get()
 ```
+
+```nim
 >> @[
   {
     "id": 1,                                # JInt
@@ -42,9 +41,48 @@ result is here
 ]
 ```
 
+#### return Object
+If object is defined and set arg of get/getRaw/first/find, response will be object as ORM
+
+```nim
+import allographer/query_builder
+
+type Typ = ref object
+  id: int
+  float: float
+  char: string
+  datetime: string
+  null: string
+  is_admin: bool
+
+var rows = RDB().table("test")
+          .select("id", "float", "char", "datetime", "null", "is_admin")
+          .get(Typ())
+```
+
+```nim
+echo rows[0].id
+>> 1                            # int
+
+echo rows[0].float
+>> 3.14                         # float
+
+echo rows[0].char
+>> "char"                       # string
+
+echo rows[0].datetime
+>> "2019-01-01 12:00:00.1234"   # string
+
+echo rows[0].null
+>> ""                           # string
+
+echo rows[0].is_admin
+>> true                         # bool
+```
+
 #### Examples
 
-```
+```nim
 import allographer/query_builder
 
 var result = RDB()
@@ -64,7 +102,7 @@ echo result
   {"id":15,"email":"user15@gmail.com","name":"user15"}
 ]
 ```
-```
+```nim
 import allographer/query_builder
 
 let resultRow = RDB()
@@ -89,7 +127,7 @@ echo resultRow
   }
 ]
 ```
-```
+```nim
 import allographer/query_builder
 
 let resultRow = RDB().table("users").select("id", "name", "email").where("id", ">", 5).first()
@@ -98,7 +136,7 @@ echo resultRow
 >> SELECT id, name, email FROM users WHERE id > 5
 >> {"id":6, "name":"user6", "email":"user6@gmail.com"}
 ```
-```
+```nim
 import allographer/query_builder
 
 let resultRow = RDB().table("users").find(3)
@@ -117,7 +155,30 @@ echo resultRow
     "updated_at":"2019-09-26 19:11:28.159369"
   }
 ```
+
+If column name of primary key is not exactory "id", you can specify it's name.
+```nim
+import allographer/query_builder
+
+let resultRow = RDB().table("users").find(3, key="user_id")
+echo resultRow
+
+>> SELECT * FROM users WHERE user_id = 3
+>> {
+    "user_id":3,
+    "name":"user3",
+    "email":"user3@gmail.com",
+    "address":"246 Ferguson Village Apt. 582\nNew Joshua, IL 24200", "password":"$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny",
+    "salt":"$2a$10$gmKpgtO535lkw0eAcGiRye",
+    "birth_date":"2012-11-24",
+    "auth":2,
+    "created_at":"2019-09-26 19:11:28.159367",
+    "updated_at":"2019-09-26 19:11:28.159369"
+  }
 ```
+
+
+```nim
 import allographer/query_builder
 
 let result = RDB()
@@ -138,7 +199,7 @@ echo result
     {"id":10, "email":"user10@gmail.com", "name":"user10"}
 ]
 ```
-```
+```nim
 import allographer/query_builder
 
 let result = RDB()
@@ -160,7 +221,7 @@ echo result
 ### INSERT
 [to index](#index)
 
-```
+```nim
 import allographer/query_builder
 
 RDB()
@@ -173,7 +234,7 @@ RDB()
 
 >> INSERT INTO users (name, email) VALUES ("John", "John@gmail.com")
 ```
-```
+```nim
 import allographer/query_builder
 
 echo RDB()
@@ -187,7 +248,7 @@ echo RDB()
 >> INSERT INTO users (name, email) VALUES ("John", "John@gmail.com")
 >> 1 # ID of new row is return
 ```
-```
+```nim
 import allographer/query_builder
 
 RDB().table("users").insert(
@@ -201,7 +262,7 @@ RDB().table("users").insert(
 
 >> INSERT INTO users (name, email, address) VALUES ("John", "John@gmail.com", "London"), ("Paul", "Paul@gmail.com", "London"), ("George", "George@gmail.com", "London")
 ```
-```
+```nim
 import allographer/query_builder
 
 RDB().table("users").inserts(
@@ -221,7 +282,7 @@ RDB().table("users").inserts(
 ### UPDATE
 [to index](#index)
 
-```
+```nim
 import allographer/query_builder
 
 RDB()
@@ -236,7 +297,7 @@ RDB()
 ### DELETE
 [to index](#index)
 
-```
+```nim
 import allographer/query_builder
 
 RDB()
@@ -246,7 +307,21 @@ RDB()
 
 >> DELETE FROM users WHERE id = 1
 ```
+
+If column name of primary key is not exactory "id", you can specify it's name.
+
+```nim
+import allographer/query_builder
+
+RDB()
+.table("users")
+.delete(1, key="user_id")
+.exec()
+
+>> DELETE FROM users WHERE user_id = 1
 ```
+
+```nim
 import allographer/query_builder
 
 RDB()
@@ -262,7 +337,7 @@ RDB()
 ### Raw_SQL
 [to index](#INDEX)
 
-```
+```nim
 import allographer/query_builder
 
 let sql = """
@@ -274,7 +349,7 @@ SELECT ProductName
 """
 echo RDB().raw(sql).getRaw()
 ```
-```
+```nim
 let sql = "UPDATE users SET name='John' where id = 1"
 RDB().raw(sql).exec()
 ```

@@ -2,9 +2,9 @@ import json
 from strformat import `&`
 from strutils import contains
 
-import base
+import ../base
 
-## ==================== SELECT ====================
+# ==================== SELECT ====================
 
 proc selectSql*(this: RDB): RDB =
   var queryString = ""
@@ -13,9 +13,7 @@ proc selectSql*(this: RDB): RDB =
 
   if this.query.hasKey("select"):
     for i, item in this.query["select"].getElems():
-      if i > 0:
-        queryString.add(",")
-
+      if i > 0: queryString.add(",")
       queryString.add(&" {item.getStr()}")
   else:
     queryString.add(" *")
@@ -30,8 +28,8 @@ proc fromSql*(this: RDB): RDB =
   return this
 
 
-proc selectByIdSql*(this: RDB, id: int): RDB =
-  this.sqlString.add(&" WHERE id = {$id} LIMIT 1")
+proc selectByIdSql*(this: RDB, id: int, key: string): RDB =
+  this.sqlString.add(&" WHERE {key} = {$id} LIMIT 1")
   return this
 
 
@@ -112,8 +110,16 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
       columns.add(", ")
       values.add(", ")
     i += 1
-    columns.add(&"{item.key}")
-    values.add(&"{item.val}")
+    columns.add(item.key)
+    case item.val.kind:
+    of JInt:
+      values.add(&"{item.val.getInt}")
+    of JFloat:
+      values.add(&"{item.val.getFloat}")
+    of JBool:
+      values.add(&"{item.val.getBool}")
+    else:
+      values.add(&"'{item.val.getStr}'")
 
   this.sqlString.add(&" ({columns}) VALUES ({values})")
   return this
@@ -124,8 +130,7 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
   var rowsCount = 0
 
   for key, value in rows[0]:
-    if rowsCount > 0:
-      columns.add(", ")
+    if rowsCount > 0: columns.add(", ")
     rowsCount += 1
     columns.add(&"{key}")
 
@@ -135,13 +140,19 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
     var valueCount = 0
     var value = ""
     for item in items.pairs:
-      if valueCount > 0:
-        value.add(", ")
+      if valueCount > 0: value.add(", ")
       valueCount += 1
-      value.add(&"{item.val}")
+      case item.val.kind:
+      of JInt:
+        value.add(&"{item.val.getInt}")
+      of JFloat:
+        value.add(&"{item.val.getFloat}")
+      of JBool:
+        value.add(&"{item.val.getBool}")
+      else:
+        value.add(&"'{item.val.getStr}'")
 
-    if valuesCount > 0:
-      values.add(", ")
+    if valuesCount > 0: values.add(", ")
     valuesCount += 1
     values.add(&"({value})")
 
@@ -149,7 +160,7 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
   return this
 
 
-## ==================== UPDATE ====================
+# ==================== UPDATE ====================
 
 proc updateSql*(this: RDB): RDB =
   this.sqlString.add("UPDATE")
@@ -164,8 +175,7 @@ proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
 
   var i = 0
   for item in items.pairs:
-    if i > 0:
-      value.add(", ")
+    if i > 0: value.add(", ")
     i += 1
     value.add(&"{item.key} = {item.val}")
 
@@ -173,12 +183,12 @@ proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
   return this
 
 
-## ==================== DELETE ====================
+# ==================== DELETE ====================
 
 proc deleteSql*(this: RDB): RDB =
   this.sqlString.add("DELETE")
   return this
 
-proc deleteByIdSql*(this: RDB, id: int): RDB =
-  this.sqlString.add(&" WHERE id = {id}")
+proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
+  this.sqlString.add(&" WHERE {key} = {id}")
   return this

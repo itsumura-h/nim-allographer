@@ -3,7 +3,7 @@ Example: Schema Builder
 [back](../README.md)
 
 ## Bacic useage
-```
+```nim
 import allographer/schema_builder
 
 Schema().create([
@@ -16,11 +16,11 @@ Schema().create([
     Column().increments("id"),
     Column().string("name"),
     Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-  ], isRebuild=true)
+  ], reset=true)
 ])
 ```
 
-If you set `isRebuild=true` in args of `Table().create`, `DROP TABLE` and `CREATE TABLE` will be run.
+If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TABLE` will be run.
 
 ## integer
 |COMMAND|DESCRIPTION|
@@ -75,7 +75,7 @@ If you set `isRebuild=true` in args of `Table().create`, `DROP TABLE` and `CREAT
 
 ## Foreign Key Constraints
 For example, let's define a `user_id` column on the table that references the `id` column on a `users` table:
-```
+```nim
 Schema().foreign("user_id")
 .reference("id")
 .on("users")

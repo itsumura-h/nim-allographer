@@ -1,7 +1,7 @@
 import
-  schema_builder_pkg/schema,
-  schema_builder_pkg/column,
-  schema_builder_pkg/table
+  schema_builder/schema,
+  schema_builder/column,
+  schema_builder/table
 
 export
   schema,

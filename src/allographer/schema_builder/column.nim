@@ -246,7 +246,7 @@ proc boolean*(this:Column, name:string): Column =
     typ: rdbBoolean
   )
 
-proc enumField*(this:Column, name:string, options:varargs[string]):Column =
+proc enumField*(this:Column, name:string, options:openArray[string]):Column =
   Column(
     name: name,
     typ: rdbEnumField,

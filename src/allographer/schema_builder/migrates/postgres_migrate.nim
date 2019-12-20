@@ -2,16 +2,14 @@ import strformat, strutils, json
 import
   ../table,
   ../column
-import ../generators/sqlite_generators
+import ../generators/postgres_generators
 
 
 proc migrate*(this:Table):string =
   var columnString = ""
   var foreignString = ""
   for i, column in this.columns:
-    # echo repr column
-    if i > 0:
-      columnString.add(", ")
+    if i > 0: columnString.add(", ")
 
     case column.typ:
       # int ===================================================================
@@ -31,7 +29,7 @@ proc migrate*(this:Table):string =
         )
       of rdbSmallInteger:
         columnString.add(
-          intGenerator(
+          smallIntGenerator(
             column.name,
             column.isNullable,
             column.isDefault,
@@ -41,7 +39,7 @@ proc migrate*(this:Table):string =
         )
       of rdbMediumInteger:
         columnString.add(
-          intGenerator(
+          mediumIntGenerator(
             column.name,
             column.isNullable,
             column.isDefault,
@@ -51,7 +49,7 @@ proc migrate*(this:Table):string =
         )
       of rdbBigInteger:
         columnString.add(
-          intGenerator(
+          bigIntGenerator(
             column.name,
             column.isNullable,
             column.isDefault,
@@ -74,7 +72,7 @@ proc migrate*(this:Table):string =
         )
       of rdbDouble:
         columnString.add(
-          decimalGenerator(
+          doubleGenerator(
             column.name,
             parseInt($column.info["maximum"]),
             parseInt($column.info["digit"]),
@@ -107,7 +105,7 @@ proc migrate*(this:Table):string =
         )
       of rdbString:
         columnString.add(
-          varcharGenerator(
+          stringGenerator(
             column.name,
             parseInt($column.info["maxLength"]),
             column.isNullable,
@@ -115,7 +113,6 @@ proc migrate*(this:Table):string =
             column.defaultString
           )
         )
-      # text ==================================================================
       of rdbText:
         columnString.add(
           textGenerator(
@@ -154,19 +151,11 @@ proc migrate*(this:Table):string =
         )
       of rdbTime:
         columnString.add(
-          timeGenerator(
-            column.name,
-            column.isNullable,
-            column.isDefault
-          )
+          timeGenerator(column.name, column.isNullable, column.isDefault)
         )
       of rdbTimestamp:
         columnString.add(
-          timestampGenerator(
-            column.name,
-            column.isNullable,
-            column.isDefault
-          )
+          timestampGenerator(column.name, column.isNullable, column.isDefault)
         )
       of rdbTimestamps:
         columnString.add(
@@ -174,9 +163,9 @@ proc migrate*(this:Table):string =
         )
       of rdbSoftDelete:
         columnString.add(
-          softDeleteGenerator()
+          softDeleteGenetator()
         )
-      # others ================================================================
+      # # others ================================================================
       of rdbBinary:
         columnString.add(
           blobGenerator(column.name, column.isNullable)
@@ -219,7 +208,6 @@ proc migrate*(this:Table):string =
             column.foreignOnDelete
           )
         )
-
 
   var query = &"CREATE TABLE {this.name} ({columnString}{foreignString})"
   return query
