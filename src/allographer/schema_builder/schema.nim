@@ -83,15 +83,29 @@ proc create*(this:Schema, tables:varargs[Table]) =
   driverTypeError()
 
   block:
-    let db = db()
-    for i, table in tables:
+    # let db = db()
+    # for i in tables.len-1..0:
+    #   if tables[i].reset:
+    #     try:
+    #       echo tables[i].name
+    #       let sqlString = &"drop table {tables[i].name}"
+    #       logger(sqlString)
+    #       db.exec(sql sqlString)
+    #     except Exception:
+    #       getCurrentExceptionMsg().echoErrorMsg()
+    # defer: db.close()
+    var deleteList: seq[string]
+    for table in tables:
       if table.reset:
-        try:
-          let sqlString = &"drop table {table.name}"
-          logger(sqlString)
-          db.exec(sql sqlString)
-        except Exception:
-          getCurrentExceptionMsg().echoErrorMsg()
+        deleteList.add(table.name)
+    # delete table in reverse loop
+    let db = db()
+    for i, v in deleteList:
+      var index = i+1
+      try:
+        db.exec(sql &"drop table {deleteList[^index]}")
+      except Exception:
+        getCurrentExceptionMsg().echoErrorMsg()
     defer: db.close()
 
   for table in tables:

@@ -1,5 +1,6 @@
 import base
 import json
+from ../connection import dbQuote
 
 proc table*(this: RDB, tableArg: string): RDB =
   this.query = %*{"table": tableArg}
@@ -107,7 +108,7 @@ proc join*(this: RDB,
             column2: string): RDB =
   if this.query.hasKey("join") == false:
     this.query["join"] = %*[{
-      "table": table,
+      "table": table.dbQuote(),
       "column1": column1,
       "symbol": symbol,
       "column2": column2

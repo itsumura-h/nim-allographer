@@ -16,6 +16,10 @@ except:
 
 proc getDriver*():string =
   return connection.DRIVER
+  # let logConfigFile = getCurrentDir() & "/config/database.ini"
+  # let conf = loadConfig(logConfigFile)
+  # return conf.getSectionValue("RDB", "driver")
+
 
 proc driverTypeError*() =
   let driver = getDriver()
