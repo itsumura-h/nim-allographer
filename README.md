@@ -7,7 +7,7 @@ A query builder library inspired by [Laravel/PHP](https://readouble.com/laravel/
 
 ## Easy to access RDB
 ### Query Builder
-```
+```nim
 import allographer/query_builder
 
 var result = RDB()
@@ -29,7 +29,7 @@ echo result
 ```
 
 ### Schema Builder
-```
+```nim
 import allographer/schema_builder
 
 Schema().create([
@@ -65,19 +65,19 @@ Schema().create([
 ---
 
 ## Install
-```
+```bach
 nimble install https://github.com/itsumura-h/nim-allographer
 ```
 
 ## Set up
 First of all, add nim binary path
-```
+```bash
 export PATH=$PATH:~/.nimble/bin
 ```
 After install allographer, "dbtool" command is going to be available.  
 
 ### Create config file
-```
+```bash
 cd /your/project/dir
 dbtool makeConf
 ```
@@ -86,7 +86,7 @@ dbtool makeConf
 ### Edit confing file
 By default, config file is set to use sqlite
 
-```
+```ini
 [Connection]
 driver: "sqlite"
 conn: "/your/project/dir/db.sqlite3"
@@ -106,14 +106,14 @@ file: "true"
 - database: specify the database
 
 From "conn" to "database", these are correspond to args of open proc of Nim std db package
-```
+```nim
 let db = open(conn, user, password, database)
 ```
 
 If you set "true" in "display" of "Log", SQL query will be display in terminal, otherwise nothing will be display.
 
 ### Load config file
-```
+```bash
 dbtool loadConf
 ```
 settings will be applied

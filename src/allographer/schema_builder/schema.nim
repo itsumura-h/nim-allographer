@@ -61,10 +61,10 @@ proc checkDiff(path:string, newTables:JsonNode) =
 
 
 proc generateMigrationFile(path:string, tablesArg:JsonNode) =
-  let f = open(path, FileMode.fmWrite)
-  f.write(tablesArg.pretty())
-  defer:
-    f.close()
+  block:
+    let f = open(path, FileMode.fmWrite)
+    f.write(tablesArg.pretty())
+    defer: f.close()
 
 
 proc check*(this:Schema, tablesArg:varargs[Table]) =
@@ -80,37 +80,38 @@ proc check*(this:Schema, tablesArg:varargs[Table]) =
 # =============================================================================
 
 proc create*(this:Schema, tables:varargs[Table]) =
-  # this.check(tables)
+  driverTypeError()
+
+  block:
+    let db = db()
+    for i, table in tables:
+      if table.reset:
+        try:
+          let sqlString = &"drop table {table.name}"
+          logger(sqlString)
+          db.exec(sql sqlString)
+        except Exception:
+          getCurrentExceptionMsg().echoErrorMsg()
+    defer: db.close()
 
   for table in tables:
-    # echo repr table
-
     var query = ""
     let driver = util.getDriver()
     case driver:
-      of "sqlite":
-        query = sqlite_migrate.migrate(table)
-      of "mysql":
-        query = mysql_migrate.migrate(table)
-      of "postgres":
-        query = postgres_migrate.migrate(table)
-      else:
-        echo ""
-    logger(query)
+    of "sqlite":
+      query = sqlite_migrate.migrate(table)
+    of "mysql":
+      query = mysql_migrate.migrate(table)
+    of "postgres":
+      query = postgres_migrate.migrate(table)
 
-    let table_name = table.name
+    logger(query)
 
     block:
       let db = db()
-      if table.isRebuild:
-        try:
-          db.exec(sql &"drop table {table_name}")
-        except Exception:
-          echo getCurrentExceptionMsg()
-
       try:
         db.exec(sql query)
       except Exception:
-        echo getCurrentExceptionMsg()
+        getCurrentExceptionMsg().echoErrorMsg()
 
       defer: db.close()

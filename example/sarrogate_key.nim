@@ -1,19 +1,17 @@
 import strformat, json, progress
 import bcrypt
+
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
-# import allographer/query_builder
-# import allographer/schema_builder
 
 
-# マイグレーション
 Schema().create([
   Table().create("auth",[
     Column().increments("id"),
-    Column().string("auth")
+    Column().string("name")
   ], reset=true),
   Table().create("users",[
-    Column().increments("id"),
+    Column().increments("user_id"),
     Column().string("name").nullable(),
     Column().string("email").nullable(),
     Column().string("password").nullable(),
@@ -26,13 +24,13 @@ Schema().create([
 
 # シーダー
 RDB().table("auth").insert([
-  %*{"auth": "admin"},
-  %*{"auth": "user"}
+  %*{"name": "admin"},
+  %*{"name": "user"}
 ])
 .exec()
 
 # プログレスバー
-let total = 50
+let total = 20
 var pb = newProgressBar(total=total) # totalは分母
 
 pb.start()
@@ -54,3 +52,12 @@ for i in 1..total:
 
 pb.finish()
 RDB().table("users").insert(insertData).exec()
+echo RDB().table("users").get()
+
+echo RDB().table("users").find(2, key="user_id")
+echo RDB().table("auth").find(1)
+
+RDB().table("users").delete(2, key="user_id").exec()
+RDB().table("auth").delete(2).exec()
+echo RDB().table("users").limit(3).get()
+echo RDB().table("auth").limit(3).get()

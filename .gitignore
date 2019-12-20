@@ -18,3 +18,7 @@ lcov.info
 
 *.sqlite3
 migration.json
+
+/deploy/
+
+*.log
