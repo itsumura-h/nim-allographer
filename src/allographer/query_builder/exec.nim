@@ -101,13 +101,13 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
   return response_row
 
 
-proc getAllRows(sqlString:string): seq[JsonNode] =
+proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
   let db = db()
-  let results = db.getAllRows(sql sqlString) # seq[seq[string]]
+  let results = db.getAllRows(sql sqlString, args) # seq[seq[string]]
 
   var db_columns: DbColumns
   block:
-    for row in db.instantRows(db_columns, sql sqlString):
+    for row in db.instantRows(db_columns, sql sqlString, args):
       discard
     defer: db.close()
 
@@ -143,8 +143,8 @@ proc orm[T](row:JsonNode, typ:T):T =
 
 proc get*(this: RDB): seq[JsonNode] =
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
-  logger(this.sqlStringSeq[0])
-  return getAllRows(this.sqlStringSeq[0])
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  return getAllRows(this.sqlStringSeq[0], this.placeHolder)
 
 proc get*[T](this: RDB, typ: T): seq[T] =
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
@@ -202,9 +202,9 @@ proc inserts*(this: RDB, rows: openArray[JsonNode]): RDB =
 
 # ==================== UPDATE ====================
 
-proc update*(this: RDB, items: JsonNode): RDB =
-  this.sqlStringSeq = @[this.updateBuilder(items).sqlString]
-  return this
+# proc update*(this: RDB, items: JsonNode): RDB =
+#   this.sqlStringSeq = @[this.updateBuilder(items).sqlString]
+#   return this
 
 
 # ==================== DELETE ====================
@@ -221,11 +221,14 @@ proc delete*(this: RDB, id: int, key="id"): RDB =
 # ==================== EXEC ====================
 
 proc exec*(this: RDB) =
+  if this.query.hasKey("update"):
+    this.sqlStringSeq = @[this.updateBuilder(this.query["update"]).sqlString]
+
   block:
     let db = db()
     for sqlString in this.sqlStringSeq:
-      logger(sqlString)
-      db.exec(sql sqlString)
+      logger(sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
     defer: db.close()
   
 
@@ -234,14 +237,14 @@ proc execID*(this: RDB): int64 =
     let db = db()
     # insert Multi
     if this.sqlStringSeq.len == 1 and this.sqlString.contains("INSERT"):
-      logger(this.sqlString)
+      logger(this.sqlString, this.placeHolder)
       result = db.tryInsertID(
-        sql this.sqlStringSeq[0]
+        sql this.sqlStringSeq[0], this.placeHolder
       )
     else:
       for sqlString in this.sqlStringSeq:
-        logger(sqlString)
-        db.exec(sql sqlString)
+        logger(sqlString, this.placeHolder)
+        db.exec(sql sqlString, this.placeHolder)
       result = 0
     
     defer: db.close()
