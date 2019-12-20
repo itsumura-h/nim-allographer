@@ -92,44 +92,44 @@ RDB().table("users").inserts(
 .exec()
 
 
-RDB().table("users").where("id", "=", 2).update(%*{"name": "David"}).exec()
-echo RDB().table("users").where("id", "=", 2).update(%*{"name": "David"}).execID()
+RDB().table("users").update(%*{"name": "David"}).where("id", "=", 2).exec()
+echo RDB().table("users").update(%*{"name": "David"}).where("id", "=", 2).execID()
 echo RDB().table("users").select().where("name", "=", "David").get()
 echo RDB().table("users").find(2)
 
-RDB().table("users").where("name", "=", "David").delete().exec()
-RDB().table("users").delete(3).exec()
-echo RDB().table("users").limit(5).get()
+# RDB().table("users").where("name", "=", "David").delete().exec()
+# RDB().table("users").delete(3).exec()
+# echo RDB().table("users").limit(5).get()
 
-# sql check
-let r = RDB()
-    .table("users")
-    .select("users.id", "users.email")
-    .where("name", "=", "user3")
-    .where("name", "=", "user4")
-    .where("users.id", "=", 5)
-    .orWhere("name", "=", "user6")
-    .orWhere("users.id", "=", 7)
-    .join("auth", "auth.id", "=", "users.auth_id")
-    .limit(10)
-    .get()
-echo r[0]["id"]
-echo r[0]["id"].type
-echo r[0]["email"]
-echo r[0]["email"].type
+# # sql check
+# let r = RDB()
+#     .table("users")
+#     .select("users.id", "users.email")
+#     .where("name", "=", "user3")
+#     .where("name", "=", "user4")
+#     .where("users.id", "=", 5)
+#     .orWhere("name", "=", "user6")
+#     .orWhere("users.id", "=", 7)
+#     .join("auth", "auth.id", "=", "users.auth_id")
+#     .limit(10)
+#     .get()
+# echo r[0]["id"]
+# echo r[0]["id"].type
+# echo r[0]["email"]
+# echo r[0]["email"].type
 
-type User = ref object
-  id:int
-  name:string
-  email:string
-  password:string
-  salt:string
-  address:string
-  birth_date:string
-  auth_id:int
-let users = RDB().table("users").limit(5).get(User())
-for user in users:
-  echo user.name
+# type User = ref object
+#   id:int
+#   name:string
+#   email:string
+#   password:string
+#   salt:string
+#   address:string
+#   birth_date:string
+#   auth_id:int
+# let users = RDB().table("users").limit(5).get(User())
+# for user in users:
+#   echo user.name
 
-RDB().raw("DROP TABLE users").exec()
-RDB().raw("DROP TABLE auth").exec()
+# RDB().raw("DROP TABLE users").exec()
+# RDB().raw("DROP TABLE auth").exec()

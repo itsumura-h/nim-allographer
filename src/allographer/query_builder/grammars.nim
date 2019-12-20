@@ -29,72 +29,83 @@ proc select*(this: RDB, columnsArg: varargs[string]): RDB =
 # ============================== Conditions ==============================
 
 proc where*(this: RDB, column: string, symbol: string, value: string): RDB =
+  this.placeHolder.add(value)
+
+  if not ["=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"].contains(symbol):
+    raise newException(Exception, "symbol error")
+
   if this.query.hasKey("where") == false:
     this.query["where"] = %*[{
       "column": column,
       "symbol": symbol,
-      "value": value
+      "value": "?"
     }]
   else:
     this.query["where"].add(
       %*{
         "column": column,
         "symbol": symbol,
-        "value": value
+        "value": "?"
       }
     )
 
   return this
 
 proc where*(this: RDB, column: string, symbol: string, value: int): RDB =
+  this.placeHolder.add($value)
+
+  if not ["=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"].contains(symbol):
+    raise newException(Exception, "symbol error")
+
   if this.query.hasKey("where") == false:
     this.query["where"] = %*[{
       "column": column,
       "symbol": symbol,
-      "value": value
+      "value": "?"
     }]
   else:
     this.query["where"].add(
       %*{
         "column": column,
         "symbol": symbol,
-        "value": value
+        "value": "?"
       }
     )
-
   return this
 
 proc orWhere*(this: RDB, column: string, symbol: string, value: string): RDB =
+  this.placeHolder.add(value)
   if this.query.hasKey("or_where") == false:
     this.query["or_where"] = %*[{
       "column": column,
       "symbol": symbol,
-      "value": value
+      "value": "?"
     }]
   else:
     this.query["or_where"].add(
       %*{
         "column": column,
         "symbol": symbol,
-        "value": value
+        "value": "?"
       }
     )
 
   return this
 
 proc orWhere*(this: RDB, column: string, symbol: string, value: int): RDB =
+  this.placeHolder.add($value)
   if this.query.hasKey("or_where") == false:
     this.query["or_where"] = %*[{
       "column": column,
       "symbol": symbol,
-      "value": value
+      "value": "?"
     }]
   else:
     this.query["or_where"].add(
       %*{
         "column": column,
         "symbol": symbol,
-        "value": value
+        "value": "?"
       }
     )
 
@@ -133,4 +144,16 @@ proc limit*(this: RDB, num: int): RDB =
 
 proc offset*(this: RDB, num: int): RDB =
   this.query["offset"] = %num
+  return this
+
+proc update*(this: RDB, items: JsonNode): RDB =
+  for item in items.pairs:
+    if item.val.kind == JInt:
+      this.placeHolder.add($(item.val.getInt()))
+    elif item.val.kind == JFloat:
+      this.placeHolder.add($(item.val.getFloat()))
+    else:
+      this.placeHolder.add(item.val.getStr())
+
+    this.query["update"] = items
   return this
