@@ -3,6 +3,7 @@ from strformat import `&`
 from strutils import contains
 
 import ../base
+import ../../connection
 
 # ==================== SELECT ====================
 
@@ -41,7 +42,9 @@ proc joinSql*(this: RDB): RDB =
       var symbol = row["symbol"].getStr()
       var column2 = row["column2"].getStr()
 
-      this.sqlString.add(&" JOIN {table} ON {column1} {symbol} {column2}")
+      this.sqlString.add(
+        &" JOIN {table} ON {column1} {symbol} {column2}"
+      )
 
   return this
 
