@@ -97,9 +97,9 @@ echo RDB().table("users").update(%*{"name": "David"}).where("id", "=", 2).execID
 echo RDB().table("users").select().where("name", "=", "David").get()
 echo RDB().table("users").find(2)
 
-# RDB().table("users").where("name", "=", "David").delete().exec()
-# RDB().table("users").delete(3).exec()
-# echo RDB().table("users").limit(5).get()
+RDB().table("users").where("name", "=", "David").delete().exec()
+RDB().table("users").delete(3).exec()
+echo RDB().table("users").limit(5).get()
 
 # # sql check
 # let r = RDB()
