@@ -214,6 +214,8 @@ proc delete*(this: RDB): RDB =
   return this
 
 proc delete*(this: RDB, id: int, key="id"): RDB =
+  # this.placeHolder.add(key)
+  this.placeHolder.add($id)
   this.sqlStringSeq = @[this.deleteByIdBuilder(id, key).sqlString]
   return this
 

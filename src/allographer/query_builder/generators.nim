@@ -172,7 +172,8 @@ proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
   let driver = util.getDriver()
   case driver:
   of "sqlite":
-    result = sqlite_generator.deleteByIdSql(this, id, key)
+    # result = sqlite_generator.deleteByIdSql(this, id, key)
+    result = sqlite_generator.deleteByIdSql(this, key)
   of "mysql":
     result = mysql_generator.deleteByIdSql(this, id, key)
   of "postgres":
