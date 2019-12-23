@@ -3,7 +3,6 @@ from strformat import `&`
 from strutils import contains
 
 import ../base
-import ../../connection
 
 # ==================== SELECT ====================
 
@@ -150,15 +149,15 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
   for items in rows:
     var valueCount = 0
     var value = ""
-    for item in items.pairs:
+    for key, val in items.pairs:
       if valueCount > 0: value.add(", ")
       valueCount += 1
-      if item.val.kind == JInt:
-        this.placeHolder.add($(item.val.getInt()))
-      elif item.val.kind == JFloat:
-        this.placeHolder.add($(item.val.getFloat()))
+      if val.kind == JInt:
+        this.placeHolder.add($(val.getInt()))
+      elif val.kind == JFloat:
+        this.placeHolder.add($(val.getFloat()))
       else:
-        this.placeHolder.add(item.val.getStr())
+        this.placeHolder.add(val.getStr())
       value.add("?")
       # case item.val.kind:
       # of JInt:
@@ -192,11 +191,11 @@ proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
   var value = ""
 
   var i = 0
-  for item in items.pairs:
+  for key, val in items.pairs:
     if i > 0: value.add(", ")
     i += 1
     # value.add(&"{item.key} = {item.val}")
-    value.add(&"{item.key} = ?")
+    value.add(&"{key} = ?")
 
   this.sqlString.add(value)
   return this
