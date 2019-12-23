@@ -101,6 +101,7 @@ RDB().table("users").where("name", "=", "David").delete().exec()
 RDB().table("users").delete(3).exec()
 # echo RDB().table("users").find(3)
 echo RDB().table("users").limit(5).get()
+echo RDB().table("users").select("name").where("address", "is", nil).get()
 
 # # sql check
 # let r = RDB()
