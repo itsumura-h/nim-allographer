@@ -1,6 +1,6 @@
 import base
 import json
-from ../connection import dbQuote
+
 
 proc table*(this: RDB, tableArg: string): RDB =
   this.query = %*{"table": tableArg}
@@ -31,7 +31,7 @@ proc select*(this: RDB, columnsArg: varargs[string]): RDB =
 proc where*(this: RDB, column: string, symbol: string, value: string): RDB =
   this.placeHolder.add(value)
 
-  if not ["=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"].contains(symbol):
+  if not ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"].contains(symbol):
     raise newException(Exception, "symbol error")
 
   if this.query.hasKey("where") == false:
@@ -54,7 +54,7 @@ proc where*(this: RDB, column: string, symbol: string, value: string): RDB =
 proc where*(this: RDB, column: string, symbol: string, value: int): RDB =
   this.placeHolder.add($value)
 
-  if not ["=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"].contains(symbol):
+  if not ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"].contains(symbol):
     raise newException(Exception, "symbol error")
 
   if this.query.hasKey("where") == false:
@@ -71,6 +71,27 @@ proc where*(this: RDB, column: string, symbol: string, value: int): RDB =
         "value": "?"
       }
     )
+  return this
+
+proc where*(this: RDB, column: string, symbol: string, value: nil.type): RDB =
+  if not ["is", "is not", "="].contains(symbol):
+    raise newException(Exception, "symbol error")
+
+  if this.query.hasKey("where") == false:
+    this.query["where"] = %*[{
+      "column": column,
+      "symbol": symbol,
+      "value": "null"
+    }]
+  else:
+    this.query["where"].add(
+      %*{
+        "column": column,
+        "symbol": symbol,
+        "value": "null"
+      }
+    )
+
   return this
 
 proc orWhere*(this: RDB, column: string, symbol: string, value: string): RDB =
@@ -119,7 +140,7 @@ proc join*(this: RDB,
             column2: string): RDB =
   if this.query.hasKey("join") == false:
     this.query["join"] = %*[{
-      "table": table.dbQuote(),
+      "table": table,
       "column1": column1,
       "symbol": symbol,
       "column2": column2

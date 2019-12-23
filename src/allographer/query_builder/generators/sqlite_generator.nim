@@ -42,9 +42,7 @@ proc joinSql*(this: RDB): RDB =
       var symbol = row["symbol"].getStr()
       var column2 = row["column2"].getStr()
 
-      this.sqlString.add(
-        &" JOIN {table} ON {column1} {symbol} {column2}"
-      )
+      this.sqlString.add(&" JOIN {table} ON {column1} {symbol} {column2}")
 
   return this
 
@@ -69,7 +67,7 @@ proc orWhereSql*(this: RDB): RDB =
     for row in this.query["or_where"]:
       var column = row["column"].getStr()
       var symbol = row["symbol"].getStr()
-      var value = row["value"]
+      var value = row["value"].getStr()
       
       if this.sqlString.contains("WHERE"):
         this.sqlString.add(&" OR {column} {symbol} {value}")
@@ -114,7 +112,12 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
       values.add(", ")
     i += 1
     columns.add(&"{item.key}")
-    this.placeHolder.add($item.val)
+    if item.val.kind == JInt:
+      this.placeHolder.add($(item.val.getInt()))
+    elif item.val.kind == JFloat:
+      this.placeHolder.add($(item.val.getFloat()))
+    else:
+      this.placeHolder.add(item.val.getStr())
     values.add("?")
     # values.add(&"{item.val}")
 
