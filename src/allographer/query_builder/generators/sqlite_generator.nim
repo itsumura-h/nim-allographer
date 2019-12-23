@@ -184,6 +184,8 @@ proc deleteSql*(this: RDB): RDB =
   this.sqlString.add("DELETE")
   return this
 
-proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
-  this.sqlString.add(&" WHERE {key} = {id}")
+# proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
+proc deleteByIdSql*(this: RDB, key: string): RDB =
+  # this.sqlString.add(&" WHERE {key} = {id}")
+  this.sqlString.add(&" WHERE {key} = ?")
   return this

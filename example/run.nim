@@ -99,6 +99,7 @@ echo RDB().table("users").find(2)
 
 RDB().table("users").where("name", "=", "David").delete().exec()
 RDB().table("users").delete(3).exec()
+# echo RDB().table("users").find(3)
 echo RDB().table("users").limit(5).get()
 
 # # sql check
