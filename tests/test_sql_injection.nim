@@ -70,7 +70,11 @@ suite "sql injection":
     check x != y
   test "4":
     var x = RDB().table("users").where("id", "=", 1).get()
-    var y = RDB().table("users").where("id", "=", "2-1").get()
+    var y: seq[JsonNode]
+    try:
+      y = RDB().table("users").where("id", "=", "2-1").get()
+    except Exception:
+      y = @[]
     echo x
     echo y
     check x != y
@@ -78,9 +82,13 @@ suite "sql injection":
     var x = RDB().table("users").select("name", "email")
             .join("auth", "auth.id", "=", "users.auth_id")
             .where("auth.id", "=", 1).get()
-    var y = RDB().table("users").select("name", "email")
-            .join("auth", "auth.id", "=", "users.auth_id")
-            .where("auth.id", "=", "2-1").get()
+    var y: seq[JsonNode]
+    try:
+      y = RDB().table("users").select("name", "email")
+              .join("auth", "auth.id", "=", "users.auth_id")
+              .where("auth.id", "=", "2-1").get()
+    except Exception:
+      y = @[]
     echo x
     echo y
     check x != y
