@@ -209,14 +209,46 @@ proc insert*(this: RDB, rows: openArray[JsonNode]) =
 
 proc inserts*(this: RDB, rows: openArray[JsonNode]) =
   this.sqlStringSeq = newSeq[string](rows.len)
-  for i, items in rows:
-    this.sqlStringSeq[i] = this.insertValueBuilder(items).sqlString
+  block:
+    let db = db()
+    for i, items in rows:
+      var sqlString = this.insertValueBuilder(items).sqlString
+      logger(sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
+    defer: db.close()
+
+
+proc insertID*(this: RDB, items: JsonNode):int64 =
+  this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
   block:
     let db = db()
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
-      db.exec(sql sqlString, this.placeHolder)
+      result = db.tryInsertID(sql sqlString, this.placeHolder)
     defer: db.close()
+
+proc insertID*(this: RDB, rows: openArray[JsonNode]):seq[int64] =
+  this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
+  var response = newSeq[int64](rows.len)
+  block:
+    let db = db()
+    for i, sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      response[i] = db.tryInsertID(sql sqlString, this.placeHolder)
+    defer: db.close()
+  return response
+
+proc insertsID*(this: RDB, rows: openArray[JsonNode]):seq[int64] =
+  this.sqlStringSeq = newSeq[string](rows.len)
+  var response = newSeq[int64](rows.len)
+  block:
+    let db = db()
+    for i, items in rows:
+      let sqlString = this.insertValueBuilder(items).sqlString
+      logger(sqlString, this.placeHolder)
+      response[i] = db.tryInsertID(sql sqlString, this.placeHolder)
+    defer: db.close()
+  return response
 
 
 # ==================== UPDATE ====================
