@@ -78,5 +78,12 @@ suite "select":
       %*{"id": 9, "name": "user9", "email": "user9@gmail.com", "address":newJNull(), "auth_id": 2}
     ]
 
+
 RDB().table("users").where("id", "=", "2").update(%*{"name": "John"})
 echo RDB().table("users").find(2)
+
+echo RDB().table("users").insertID(%*{"name": "John"})
+echo RDB().table("users").insertsID([
+  %*{"name": "John"},
+  %*{"email": "Paul@gmail.com"},
+])
