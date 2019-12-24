@@ -24,7 +24,6 @@ proc setup() =
     %*{"auth": "admin"},
     %*{"auth": "user"}
   ])
-  .exec()
 
   var insertData: seq[JsonNode]
   for i in 1..10:
@@ -37,7 +36,8 @@ proc setup() =
       }
     )
 
-  RDB().table("users").insert(insertData).exec()
+  RDB().table("users").insert(insertData)
+
 
 suite "select":
   setup:
@@ -77,3 +77,6 @@ suite "select":
       %*{"id": 7, "name": "user7", "email": "user7@gmail.com", "address":newJNull(), "auth_id": 2},
       %*{"id": 9, "name": "user9", "email": "user9@gmail.com", "address":newJNull(), "auth_id": 2}
     ]
+
+RDB().table("users").where("id", "=", "2").update(%*{"name": "John"})
+echo RDB().table("users").find(2)

@@ -167,32 +167,3 @@ proc limit*(this: RDB, num: int): RDB =
 proc offset*(this: RDB, num: int): RDB =
   this.query["offset"] = %num
   return this
-
-# ==================== INSERT ====================
-
-proc insert*(this: RDB, items: JsonNode): RDB =
-  this.query["insert"] = %items
-  return this
-
-proc insert*(this: RDB, rows: openArray[JsonNode]): RDB =
-  this.query["insertRows"] = %rows
-  return this
-
-proc inserts*(this: RDB, rows: openArray[JsonNode]): RDB =
-  this.query["inserts"] = %rows
-  return this
-
-
-# ==================== UPDATE ====================
-
-proc update*(this: RDB, items: JsonNode): RDB =
-  for item in items.pairs:
-    if item.val.kind == JInt:
-      this.placeHolder.add($(item.val.getInt()))
-    elif item.val.kind == JFloat:
-      this.placeHolder.add($(item.val.getFloat()))
-    else:
-      this.placeHolder.add(item.val.getStr())
-
-    this.query["update"] = items
-  return this
