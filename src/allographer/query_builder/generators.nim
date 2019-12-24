@@ -35,11 +35,11 @@ proc selectByIdSql*(this:RDB, id:int, key:string): RDB =
   let driver = util.getDriver()
   case driver:
   of "sqlite":
-    result = sqlite_generator.selectByIdSql(this, id, key)
+    result = sqlite_generator.selectByIdSql(this, key)
   of "mysql":
-    result = mysql_generator.selectByIdSql(this, id, key)
+    result = mysql_generator.selectByIdSql(this, key)
   of "postgres":
-    result = postgres_generator.selectByIdSql(this, id, key)
+    result = postgres_generator.selectByIdSql(this, key)
 
 
 proc joinSql*(this: RDB): RDB =
@@ -172,7 +172,8 @@ proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
   let driver = util.getDriver()
   case driver:
   of "sqlite":
-    result = sqlite_generator.deleteByIdSql(this, id, key)
+    # result = sqlite_generator.deleteByIdSql(this, id, key)
+    result = sqlite_generator.deleteByIdSql(this, key)
   of "mysql":
     result = mysql_generator.deleteByIdSql(this, id, key)
   of "postgres":

@@ -28,8 +28,8 @@ proc fromSql*(this: RDB): RDB =
   return this
 
 
-proc selectByIdSql*(this: RDB, id: int, key: string): RDB =
-  this.sqlString.add(&" WHERE {key} = {$id} LIMIT 1")
+proc selectByIdSql*(this: RDB, key: string): RDB =
+  this.sqlString.add(&" WHERE {key} = ? LIMIT 1")
   return this
 
 
@@ -51,7 +51,7 @@ proc whereSql*(this: RDB): RDB =
     for i, row in this.query["where"].getElems():
       var column = row["column"].getStr()
       var symbol = row["symbol"].getStr()
-      var value = row["value"]
+      var value = row["value"].getStr()
       
       if i == 0:
         this.sqlString.add(&" WHERE {column} {symbol} {value}")
@@ -66,7 +66,7 @@ proc orWhereSql*(this: RDB): RDB =
     for row in this.query["or_where"]:
       var column = row["column"].getStr()
       var symbol = row["symbol"].getStr()
-      var value = row["value"]
+      var value = row["value"].getStr()
       
       if this.sqlString.contains("WHERE"):
         this.sqlString.add(&" OR {column} {symbol} {value}")
@@ -111,7 +111,14 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
       values.add(", ")
     i += 1
     columns.add(&"{item.key}")
-    values.add(&"{item.val}")
+    if item.val.kind == JInt:
+      this.placeHolder.add($(item.val.getInt()))
+    elif item.val.kind == JFloat:
+      this.placeHolder.add($(item.val.getFloat()))
+    else:
+      this.placeHolder.add(item.val.getStr())
+    values.add("?")
+    # values.add(&"{item.val}")
 
   this.sqlString.add(&" ({columns}) VALUES ({values})")
   return this
@@ -134,7 +141,14 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
     for item in items.pairs:
       if valueCount > 0: value.add(", ")
       valueCount += 1
-      value.add(&"{item.val}")
+      # value.add(&"{item.val}")
+      if item.val.kind == JInt:
+        this.placeHolder.add($(item.val.getInt()))
+      elif item.val.kind == JFloat:
+        this.placeHolder.add($(item.val.getFloat()))
+      else:
+        this.placeHolder.add(item.val.getStr())
+      value.add("?")
 
     if valuesCount > 0: values.add(", ")
     valuesCount += 1
@@ -156,12 +170,11 @@ proc updateSql*(this: RDB): RDB =
 
 proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
   var value = ""
-
   var i = 0
   for item in items.pairs:
     if i > 0: value.add(", ")
     i += 1
-    value.add(&"{item.key} = {item.val}")
+    value.add(&"{item.key} = ?")
 
   this.sqlString.add(value)
   return this
@@ -173,6 +186,8 @@ proc deleteSql*(this: RDB): RDB =
   this.sqlString.add("DELETE")
   return this
 
-proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
-  this.sqlString.add(&" WHERE {key} = {id}")
+# proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
+proc deleteByIdSql*(this: RDB, key: string): RDB =
+  # this.sqlString.add(&" WHERE {key} = {id}")
+  this.sqlString.add(&" WHERE {key} = ?")
   return this

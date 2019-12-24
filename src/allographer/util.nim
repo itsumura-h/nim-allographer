@@ -16,6 +16,10 @@ except:
 
 proc getDriver*():string =
   return connection.DRIVER
+  # let logConfigFile = getCurrentDir() & "/config/database.ini"
+  # let conf = loadConfig(logConfigFile)
+  # return conf.getSectionValue("RDB", "driver")
+
 
 proc driverTypeError*() =
   let driver = getDriver()
@@ -23,18 +27,18 @@ proc driverTypeError*() =
     raise newException(OSError, "invalid DB driver type")
 
 
-proc logger*(output: any) =
+proc logger*(output: any, args:varargs[string]) =
   # get Config file
   let conf = loadConfig(logConfigFile)
   # console log
   let isDisplayString = conf.getSectionValue("Log", "display")
   if isDisplayString == "true":
     let logger = newConsoleLogger()
-    logger.log(lvlInfo, $output)
+    logger.log(lvlInfo, $output & $args)
   # file log
   let isFileOutString = conf.getSectionValue("Log", "file")
   if isFileOutString == "true":
-    info $output
+    info $output & $args
 
 
 proc echoErrorMsg*(msg:string) =
