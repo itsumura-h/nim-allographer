@@ -22,7 +22,7 @@ suite "builders":
         "offset": 3
       }
     )
-    check t.selectBuilder().sqlString == "SELECT * FROM sample JOIN t1 ON t1.c1 = t.c1 JOIN t2 ON t2.c2 = t1.c2 WHERE name = \"John\" AND name = \"Paul\" OR name = \"John\" OR name = \"Paul\" LIMIT 5 OFFSET 3"
+    check t.selectBuilder().sqlString == "SELECT * FROM sample JOIN t1 ON t1.c1 = t.c1 JOIN t2 ON t2.c2 = t1.c2 WHERE name = John AND name = Paul OR name = John OR name = Paul LIMIT 5 OFFSET 3"
 
   test "select id, name":
     let t = RDB(
@@ -39,7 +39,7 @@ suite "builders":
         "table": "sample"
       }
     )
-    check t.selectFindBuilder(3, key="id").sqlString == "SELECT * FROM sample WHERE id = 3 LIMIT 1"
+    check t.selectFindBuilder(3, key="id").sqlString == "SELECT * FROM sample WHERE id = ? LIMIT 1"
 
 # =============================================================================
 
@@ -56,7 +56,7 @@ suite "builders":
     t = t.insertValueBuilder(
       %*{"name": "John", "email":"John@gmail.com"}
     )
-    check t.sqlString == "INSERT INTO sample (name, email) VALUES (\"John\", \"John@gmail.com\")"
+    check t.sqlString == "INSERT INTO sample (name, email) VALUES (?, ?)"
 
   test "insert values":
     var t = RDB(
@@ -68,7 +68,7 @@ suite "builders":
         %*{"name": "Paul"}
       ]
     )
-    check t.sqlString == "INSERT INTO sample (name) VALUES (\"John\"), (\"Paul\")"
+    check t.sqlString == "INSERT INTO sample (name) VALUES (?), (?)"
 
 # =============================================================================
 
@@ -93,7 +93,7 @@ suite "builders":
       }
     )
     check t.updateBuilder(%*{"name": "John"})
-      .sqlString == "UPDATE sample SET name = \"John\" JOIN t1 ON t1.c1 = sample.c1 JOIN t2 ON t2.c1 = t1.c1 WHERE c1 = \"v1\" AND c2 = \"v2\" OR or_c1 = \"or_v1\" OR or_c2 = \"or_v2\" LIMIT 5 OFFSET 3"
+      .sqlString == "UPDATE sample SET name = ? JOIN t1 ON t1.c1 = sample.c1 JOIN t2 ON t2.c1 = t1.c1 WHERE c1 = v1 AND c2 = v2 OR or_c1 = or_v1 OR or_c2 = or_v2 LIMIT 5 OFFSET 3"
 
 # =============================================================================
 
@@ -117,7 +117,7 @@ suite "builders":
         "offset": 3
       }
     )
-    check t.deleteBuilder().sqlString == "DELETE FROM sample JOIN t1 ON t1.c1 = sample.c1 JOIN t2 ON t2.c1 = t1.c1 WHERE c1 = \"v1\" AND c2 = \"v2\" OR or_c1 = \"or_v1\" OR or_c2 = \"or_v2\" LIMIT 5 OFFSET 3"
+    check t.deleteBuilder().sqlString == "DELETE FROM sample JOIN t1 ON t1.c1 = sample.c1 JOIN t2 ON t2.c1 = t1.c1 WHERE c1 = v1 AND c2 = v2 OR or_c1 = or_v1 OR or_c2 = or_v2 LIMIT 5 OFFSET 3"
 
   test "delete by id":
     var t = RDB(

@@ -29,8 +29,8 @@ proc fromSql*(this: RDB): RDB =
   return this
 
 
-proc selectByIdSql*(this: RDB, id: int, key: string): RDB =
-  this.sqlString.add(&" WHERE {key} = {$id} LIMIT 1")
+proc selectByIdSql*(this: RDB, key: string): RDB =
+  this.sqlString.add(&" WHERE {key} = ? LIMIT 1")
   return this
 
 

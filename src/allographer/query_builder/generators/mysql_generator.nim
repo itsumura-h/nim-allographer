@@ -28,8 +28,8 @@ proc fromSql*(this: RDB): RDB =
   return this
 
 
-proc selectByIdSql*(this: RDB, id: int, key: string): RDB =
-  this.sqlString.add(&" WHERE {key} = {$id} LIMIT 1")
+proc selectByIdSql*(this: RDB, key: string): RDB =
+  this.sqlString.add(&" WHERE {key} = ? LIMIT 1")
   return this
 
 
@@ -111,7 +111,6 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
       values.add(", ")
     i += 1
     columns.add(&"{item.key}")
-    # this.placeHolder.add(item.val.getStr())
     if item.val.kind == JInt:
       this.placeHolder.add($(item.val.getInt()))
     elif item.val.kind == JFloat:
@@ -119,17 +118,6 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
     else:
       this.placeHolder.add(item.val.getStr())
     values.add("?")
-    # columns.add(item.key)
-    # case item.val.kind:
-    # of JInt:
-    #   values.add(&"{item.val.getInt}")
-    # of JFloat:
-    #   values.add(&"{item.val.getFloat}")
-    # of JBool:
-    #   values.add(&"{item.val.getBool}")
-    # else:
-    #   values.add(&"'{item.val.getStr}'")
-
 
   this.sqlString.add(&" ({columns}) VALUES ({values})")
   return this
@@ -159,15 +147,6 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
       else:
         this.placeHolder.add(val.getStr())
       value.add("?")
-      # case item.val.kind:
-      # of JInt:
-      #   value.add(&"{item.val.getInt}")
-      # of JFloat:
-      #   value.add(&"{item.val.getFloat}")
-      # of JBool:
-      #   value.add(&"{item.val.getBool}")
-      # else:
-      #   value.add(&"'{item.val.getStr}'")
 
     if valuesCount > 0: values.add(", ")
     valuesCount += 1
@@ -194,7 +173,6 @@ proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
   for key, val in items.pairs:
     if i > 0: value.add(", ")
     i += 1
-    # value.add(&"{item.key} = {item.val}")
     value.add(&"{key} = ?")
 
   this.sqlString.add(value)
@@ -208,6 +186,5 @@ proc deleteSql*(this: RDB): RDB =
   return this
 
 proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
-  # this.sqlString.add(&" WHERE {key} = {id}")
   this.sqlString.add(&" WHERE {key} = ?")
   return this

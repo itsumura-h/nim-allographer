@@ -9,9 +9,10 @@ proc table*(this: RDB, tableArg: string): RDB =
 
 # ============================== Raw query ==============================
 
-proc raw*(this:RDB, sql:string): RDB =
+proc raw*(this:RDB, sql:string, arges:varargs[string]): RDB =
   this.sqlString = sql
   this.sqlStringseq = @[sql]
+  this.placeHolder = @arges
   return this
 
 
@@ -166,6 +167,23 @@ proc limit*(this: RDB, num: int): RDB =
 proc offset*(this: RDB, num: int): RDB =
   this.query["offset"] = %num
   return this
+
+# ==================== INSERT ====================
+
+proc insert*(this: RDB, items: JsonNode): RDB =
+  this.query["insert"] = %items
+  return this
+
+proc insert*(this: RDB, rows: openArray[JsonNode]): RDB =
+  this.query["insertRows"] = %rows
+  return this
+
+proc inserts*(this: RDB, rows: openArray[JsonNode]): RDB =
+  this.query["inserts"] = %rows
+  return this
+
+
+# ==================== UPDATE ====================
 
 proc update*(this: RDB, items: JsonNode): RDB =
   for item in items.pairs:
