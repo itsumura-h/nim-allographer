@@ -125,4 +125,4 @@ suite "builders":
         "table": "sample"
       }
     )
-    check t.deleteByIdBuilder(3, key="id").sqlString == "DELETE FROM sample WHERE id = 3"
+    check t.deleteByIdBuilder(3, key="id").sqlString == "DELETE FROM sample WHERE id = ?"
