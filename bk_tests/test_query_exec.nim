@@ -63,7 +63,7 @@ when getDriver() == "sqlite":
 
     test "insert multi":
       var t = RDB().table("sample").insert([%*{"name": "John"}, %*{"name": "Paul"}])
-      check t.sqlStringSeq == @["INSERT INTO sample (name) VALUES (\"John\"), (\"Paul\")"]
+      check t.sqlStringSeq == @["INSERT INTO sample (name) VALUES (John), (Paul)"]
 
     test "inserts":
       var t = RDB().table("sample").inserts([
@@ -71,8 +71,8 @@ when getDriver() == "sqlite":
         %*{"email": "Paul@gmail.com"}
       ])
       check t.sqlStringSeq == @[
-        "INSERT INTO sample (name) VALUES (\"John\")",
-        "INSERT INTO sample (email) VALUES (\"Paul@gmail.com\")"
+        "INSERT INTO sample (name) VALUES (John)",
+        "INSERT INTO sample (email) VALUES (Paul@gmail.com)"
       ]
 
   # =============================================================================
@@ -80,7 +80,7 @@ when getDriver() == "sqlite":
     test "update":
       var t = RDB().table("sample").where("name", "=", "John").update(%*{"name": "Paul"})
       check t.sqlStringSeq == @[
-        "UPDATE sample SET name = \"Paul\" WHERE name = \"John\""
+        "UPDATE sample SET name = Paul WHERE name = John"
       ]
 
   # =============================================================================
@@ -88,7 +88,7 @@ when getDriver() == "sqlite":
     test "delete":
       var t = RDB().table("sample").where("name", "=", "John").delete()
       check t.sqlStringSeq == @[
-        "DELETE FROM sample WHERE name = \"John\""
+        "DELETE FROM sample WHERE name = John"
       ]
 
     test "delete id":

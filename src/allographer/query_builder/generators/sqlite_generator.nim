@@ -3,7 +3,6 @@ from strformat import `&`
 from strutils import contains
 
 import ../base
-import ../../connection
 
 # ==================== SELECT ====================
 

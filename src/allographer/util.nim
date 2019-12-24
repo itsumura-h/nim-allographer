@@ -34,11 +34,11 @@ proc logger*(output: any, args:varargs[string]) =
   let isDisplayString = conf.getSectionValue("Log", "display")
   if isDisplayString == "true":
     let logger = newConsoleLogger()
-    logger.log(lvlInfo, string(output) & $args)
+    logger.log(lvlInfo, $output & $args)
   # file log
   let isFileOutString = conf.getSectionValue("Log", "file")
   if isFileOutString == "true":
-    info string(output) & $args
+    info $output & $args
 
 
 proc echoErrorMsg*(msg:string) =
