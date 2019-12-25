@@ -99,4 +99,16 @@ suite "select":
     t = RDB().table("users").find(ids[1])
     check t["email"].getStr() == "Paul@gmail.com"
 
-echo RDB().table("users").select("id", "name").distinct().get()
+  test "distinct":
+    var t = RDB().table("users").select("id", "name").distinct()
+    check t.query.hasKey("distinct") == true
+
+  test "whereBetween()":
+    var t = RDB()
+            .table("users")
+            .select("id", "name")
+            .where("id", ">", "3")
+            .whereBetween("auth_id", [1, 2])
+            .get()
+    echo t
+    check t[0]["name"].getStr() == "user1"

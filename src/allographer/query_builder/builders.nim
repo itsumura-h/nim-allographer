@@ -11,6 +11,7 @@ proc selectBuilder*(this: RDB): RDB =
         .joinSql()
         .whereSql()
         .orWhereSql()
+        .whereBetweenSql()
         .limitSql()
         .offsetSql()
 
