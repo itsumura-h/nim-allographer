@@ -9,7 +9,10 @@ import ../base
 proc selectSql*(this: RDB): RDB =
   var queryString = ""
 
-  queryString.add("SELECT")
+  if this.query.hasKey("distinct"):
+    queryString.add("SELECT DISTINCT")
+  else:
+    queryString.add("SELECT")
 
   if this.query.hasKey("select"):
     for i, item in this.query["select"].getElems():
