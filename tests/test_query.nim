@@ -87,3 +87,5 @@ echo RDB().table("users").insertsID([
   %*{"name": "John"},
   %*{"email": "Paul@gmail.com"},
 ])
+
+echo RDB().table("users").select("id", "name").onDistinct().get()

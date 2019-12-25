@@ -23,9 +23,13 @@ proc select*(this: RDB, columnsArg: varargs[string]): RDB =
     this.query["select"] = %["*"]
   else:
     this.query["select"] = %*columnsArg
-  
+
   return this
 
+
+proc onDistinct*(this: RDB): RDB =
+  this.query["distinct"] = %true
+  return this
 
 # ============================== Conditions ==============================
 
