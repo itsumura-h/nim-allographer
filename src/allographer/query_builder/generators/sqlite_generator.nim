@@ -79,6 +79,22 @@ proc orWhereSql*(this: RDB): RDB =
   return this
 
 
+proc whereBetweenSql*(this:RDB): RDB =
+  if this.query.hasKey("where_between"):
+    for row in this.query["where_between"]:
+      var column = row["column"].getStr()
+      var start = row["width"][0].getInt()
+      var stop = row["width"][1].getInt()
+      echo column, start, stop
+
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" {column} BETWEEN {start} AND {stop}")
+      else:
+        this.sqlString.add(&" WHERE {column} BETWEEN {start} AND {stop}")
+  echo this.sqlString
+  return this
+
+
 proc limitSql*(this: RDB): RDB =
   if this.query.hasKey("limit"):
     var num = this.query["limit"].getInt()

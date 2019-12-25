@@ -127,16 +127,27 @@ proc orWhere*(this: RDB, column: string, symbol: string, value: int): RDB =
       "value": "?"
     }]
   else:
-    this.query["or_where"].add(
-      %*{
-        "column": column,
-        "symbol": symbol,
-        "value": "?"
-      }
-    )
+    this.query["or_where"].add(%*{
+      "column": column,
+      "symbol": symbol,
+      "value": "?"
+    })
 
   return this
 
+proc whereBetween*(this:RDB, column:string, width:array[2, int]): RDB =
+  if this.query.hasKey("where_between") == false:
+    this.query["where_between"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    this.query["where_between"].add(%*{
+      "column": column,
+      "width": width
+    })
+
+  return this
 
 proc join*(this: RDB,
             table: string, 
@@ -151,14 +162,12 @@ proc join*(this: RDB,
       "column2": column2
     }]
   else:
-    this.query["join"].add(
-      %*{
+    this.query["join"].add(%*{
       "table": table,
       "column1": column1,
       "symbol": symbol,
       "column2": column2
-      }
-    )
+    })
 
   return this
 
