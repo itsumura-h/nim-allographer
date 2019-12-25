@@ -27,7 +27,7 @@ proc select*(this: RDB, columnsArg: varargs[string]): RDB =
   return this
 
 
-proc onDistinct*(this: RDB): RDB =
+proc `distinct`*(this: RDB): RDB =
   this.query["distinct"] = %true
   return this
 

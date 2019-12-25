@@ -133,23 +133,25 @@ proc getRow(sqlString:string, args:varargs[string]): JsonNode =
   let columns = getColumns(db_columns)
   return toJson(results, columns)
 
-proc orm[T](rows:openArray[JsonNode], typ:T):seq[T] =
-  var response = newSeq[T](rows.len)
+# proc orm[T](rows:openArray[JsonNode], typ:T):seq[T] =
+proc orm(rows:openArray[JsonNode], typ:typedesc):seq[typ.type] =
+  var response = newSeq[typ.type](rows.len)
   for i, row in rows:
-    response[i] = row.to(T)
+    response[i] = row.to(typ.type)
   return response
 
-proc orm[T](row:JsonNode, typ:T):T =
-  return row.to(T)
+proc orm(row:JsonNode, typ:typedesc):typ.type =
+  return row.to(typ)
 
 # =============================================================================
+
 
 proc get*(this: RDB): seq[JsonNode] =
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
   logger(this.sqlStringSeq[0], this.placeHolder)
   return getAllRows(this.sqlStringSeq[0], this.placeHolder)
 
-proc get*[T](this: RDB, typ: T): seq[T] =
+proc get*(this: RDB, typ: typedesc): seq[typ.type] =
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
   logger(this.sqlStringSeq[0])
   return getAllRows(this.sqlStringSeq[0]).orm(typ)
@@ -159,7 +161,7 @@ proc getRaw*(this: RDB): seq[JsonNode] =
   logger(this.sqlStringSeq[0], this.placeHolder)
   return getAllRows(this.sqlStringSeq[0], this.placeHolder)
 
-proc getRaw*[T](this: RDB, typ: T): seq[T] =
+proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
   logger(this.sqlStringSeq[0], this.placeHolder)
   return getAllRows(this.sqlStringSeq[0], this.placeHolder).orm(typ)
 
@@ -169,7 +171,7 @@ proc first*(this: RDB): JsonNode =
   logger(this.sqlStringSeq[0], this.placeHolder)
   return getRow(this.sqlStringSeq[0], this.placeHolder)
 
-proc first*[T](this: RDB, typ: T): T =
+proc first*(this: RDB, typ: typedesc): typ.type =
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
   logger(this.sqlStringSeq[0], this.placeHolder)
   return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
@@ -181,7 +183,8 @@ proc find*(this: RDB, id: int, key="id"): JsonNode =
   logger(this.sqlStringSeq[0], this.placeHolder)
   return getRow(this.sqlStringSeq[0], this.placeHolder)
 
-proc find*[T](this: RDB, id: int, typ:T, key="id"): T =
+proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
+  this.placeHolder.add($id)
   this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
   logger(this.sqlStringSeq[0], this.placeHolder)
   return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
@@ -218,35 +221,36 @@ proc inserts*(this: RDB, rows: openArray[JsonNode]) =
     defer: db.close()
 
 
-proc insertID*(this: RDB, items: JsonNode):int64 =
+proc insertID*(this: RDB, items: JsonNode):int =
   this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
   block:
     let db = db()
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
-      result = db.tryInsertID(sql sqlString, this.placeHolder)
+      result = db.tryInsertID(sql sqlString, this.placeHolder).int()
     defer: db.close()
 
-proc insertID*(this: RDB, rows: openArray[JsonNode]):seq[int64] =
+proc insertID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
   this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
-  var response = newSeq[int64](rows.len)
+  var response = newSeq[int](rows.len)
   block:
     let db = db()
     for i, sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
-      response[i] = db.tryInsertID(sql sqlString, this.placeHolder)
+      response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
     defer: db.close()
   return response
 
-proc insertsID*(this: RDB, rows: openArray[JsonNode]):seq[int64] =
+proc insertsID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
   this.sqlStringSeq = newSeq[string](rows.len)
-  var response = newSeq[int64](rows.len)
+  var response = newSeq[int](rows.len)
   block:
     let db = db()
     for i, items in rows:
       let sqlString = this.insertValueBuilder(items).sqlString
       logger(sqlString, this.placeHolder)
-      response[i] = db.tryInsertID(sql sqlString, this.placeHolder)
+      response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
+      this.placeHolder = @[]
     defer: db.close()
   return response
 
@@ -295,6 +299,16 @@ proc delete*(this: RDB, id: int, key="id") =
       db.exec(sql sqlString, this.placeHolder)
     defer: db.close()
 
+
+# ==================== EXEC ====================
+
+proc exec*(this: RDB) =
+  block:
+    let db = db()
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
+    defer: db.close()
 
 # ==================== Transaction ====================
 

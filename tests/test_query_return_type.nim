@@ -23,7 +23,7 @@ for i in 1..5:
     }
   )
 
-RDB().table("users").insert(users).exec()
+RDB().table("users").insert(users)
 
 
 type Typ = ref object
@@ -36,7 +36,7 @@ type Typ = ref object
 suite "return with type":
   test "get":
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = RDB().table("users").get(Typ())[0]
+    var r = RDB().table("users").get(Typ)[0]
     check t.id == r.id
     check t.name == r.name
     check t.birth_date == r.birth_date
@@ -44,7 +44,7 @@ suite "return with type":
     check t.bool == r.bool
   test "getRaw":
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = RDB().raw("select * from users").getRaw(Typ())[0]
+    var r = RDB().raw("select * from users").getRaw(Typ)[0]
     check t.id == r.id
     check t.name == r.name
     check t.birth_date == r.birth_date
@@ -52,7 +52,7 @@ suite "return with type":
     check t.bool == r.bool
   test "first":
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = RDB().table("users").first(Typ())
+    var r = RDB().table("users").first(Typ)
     check t.id == r.id
     check t.name == r.name
     check t.birth_date == r.birth_date
@@ -60,7 +60,7 @@ suite "return with type":
     check t.bool == r.bool
   test "find":
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = RDB().table("users").find(1, Typ())
+    var r = RDB().table("users").find(1, Typ)
     check t.id == r.id
     check t.name == r.name
     check t.birth_date == r.birth_date
