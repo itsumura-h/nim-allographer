@@ -19,7 +19,7 @@ proc setup() =
     ], reset=true)
   ])
 
-  # シーダー
+  # seeder
   RDB().table("auth").insert([
     %*{"auth": "admin"},
     %*{"auth": "user"}
@@ -42,22 +42,23 @@ proc setup() =
 suite "select":
   setup:
     setup()
-  test "Retrieving all row from a table":
+  test "get()":
     var t = RDB().table("users").get()
     check t[0] == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 2}
 
-  test "Retrieving a single row from a table":
+  test "first()":
     var t = RDB().table("users").where("name", "=", "user1").first()
     check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 2}
 
-  test "Specifying a select clause":
+  test "select()":
     var t = RDB().table("users").select("name", "email").get()
     check t[0] == %*{"name": "user1", "email": "user1@gmail.com"}
-
-    t = RDB().table("users").select("name as user_name", "email").get()
+  
+  test "select(as)":
+    var t = RDB().table("users").select("name as user_name", "email").get()
     check t[0] == %*{"user_name": "user1", "email": "user1@gmail.com"}
 
-  test "Using where operators":
+  test "where":
     var t = RDB().table("users").where("auth_id", ">", "1").get()
     check t == @[
       %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 2},
@@ -67,7 +68,7 @@ suite "select":
       %*{"id": 9, "name": "user9", "email": "user9@gmail.com", "address":newJNull(), "auth_id": 2}
     ]
 
-  test "Or statements":
+  test "orWhere":
     var t = RDB().table("users").where("auth_id", ">", "1").orWhere("name", "=", "user2").get()
     check t == @[
       %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 2},
@@ -78,14 +79,24 @@ suite "select":
       %*{"id": 9, "name": "user9", "email": "user9@gmail.com", "address":newJNull(), "auth_id": 2}
     ]
 
+  test "update()":
+    RDB().table("users").where("id", "=", "2").update(%*{"name": "John"})
+    var t = RDB().table("users").find(2)
+    check t["name"].getStr() == "John"
 
-RDB().table("users").where("id", "=", "2").update(%*{"name": "John"})
-echo RDB().table("users").find(2)
+  test "insertID()":
+    var id = RDB().table("users").insertID(%*{"name": "John"})
+    var t = RDB().table("users").find(id)
+    check t["name"].getStr() == "John"
 
-echo RDB().table("users").insertID(%*{"name": "John"})
-echo RDB().table("users").insertsID([
-  %*{"name": "John"},
-  %*{"email": "Paul@gmail.com"},
-])
+  test "insertsID()":
+    var ids = RDB().table("users").insertsID([
+      %*{"name": "John"},
+      %*{"email": "Paul@gmail.com"},
+    ])
+    var t = RDB().table("users").find(ids[0])
+    check t["name"].getStr() == "John"
+    t = RDB().table("users").find(ids[1])
+    check t["email"].getStr() == "Paul@gmail.com"
 
-echo RDB().table("users").select("id", "name").onDistinct().get()
+echo RDB().table("users").select("id", "name").distinct().get()

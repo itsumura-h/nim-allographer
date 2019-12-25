@@ -57,7 +57,7 @@ type Typ = ref object
 
 var rows = RDB().table("test")
           .select("id", "float", "char", "datetime", "null", "is_admin")
-          .get(Typ())
+          .get(Typ)
 ```
 
 ```nim
