@@ -94,6 +94,16 @@ proc whereNotBetweenSql*(this:RDB): RDB =
   of "postgres":
     result = postgres_generator.whereNotBetweenSql(this)
 
+proc whereInSql*(this:RDB): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.whereInSql(this)
+  of "mysql":
+    result = mysql_generator.whereInSql(this)
+  of "postgres":
+    result = postgres_generator.whereInSql(this)
+
 
 proc limitSql*(this: RDB): RDB =
   let driver = util.getDriver()

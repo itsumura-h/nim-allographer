@@ -105,6 +105,7 @@ proc where*(this: RDB, column: string, symbol: string, value: nil.type): RDB =
     )
   return this
 
+
 proc orWhere*(this: RDB, column: string, symbol: string, value: string): RDB =
   if not ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"].contains(symbol):
     raise newException(
@@ -176,6 +177,7 @@ proc orWhere*(this: RDB, column: string, symbol: string, value: float): RDB =
     })
   return this
 
+
 proc whereBetween*(this:RDB, column:string, width:array[2, int]): RDB =
   if this.query.hasKey("where_between") == false:
     this.query["where_between"] = %*[{
@@ -202,6 +204,7 @@ proc whereBetween*(this:RDB, column:string, width:array[2, float]): RDB =
     })
   return this
 
+
 proc whereNotBetween*(this:RDB, column:string, width:array[2, int]): RDB =
   if this.query.hasKey("where_not_between") == false:
     this.query["where_not_between"] = %*[{
@@ -227,6 +230,34 @@ proc whereNotBetween*(this:RDB, column:string, width:array[2, float]): RDB =
       "width": width
     })
   return this
+
+
+proc whereIn*(this:RDB, column:string, width:seq[int]): RDB =
+  if this.query.hasKey("where_in") == false:
+    this.query["where_in"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    this.query["where_in"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return this
+
+proc whereIn*(this:RDB, column:string, width:seq[float]): RDB =
+  if this.query.hasKey("where_in") == false:
+    this.query["where_in"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    this.query["where_in"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return this
+
 
 proc join*(this: RDB, table: string, column1: string, symbol: string,
             column2: string): RDB =
