@@ -33,7 +33,7 @@ echo result
 import allographer/schema_builder
 
 Schema().create([
-  Model().create("auth", [
+  Table().create("auth", [
     Column().increments("id"),
     Column().string("name").nullable(),
     Column().timestamp("created_at").default()
