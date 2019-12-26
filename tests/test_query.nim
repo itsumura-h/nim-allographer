@@ -110,5 +110,13 @@ suite "select":
             .where("auth_id", "=", 1)
             .whereBetween("id", [6, 9])
             .get()
-    echo t
     check t[0]["name"].getStr() == "user7"
+
+  test "whereNotBetween()":
+    var t = RDB()
+            .table("users")
+            .select("id", "name")
+            .where("auth_id", "=", 1)
+            .whereNotBetween("id", [1, 4])
+            .get()
+    check t[0]["name"].getStr() == "user5"
