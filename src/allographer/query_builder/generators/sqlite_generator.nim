@@ -88,10 +88,9 @@ proc whereBetweenSql*(this:RDB): RDB =
       echo column, start, stop
 
       if this.sqlString.contains("WHERE"):
-        this.sqlString.add(&" {column} BETWEEN {start} AND {stop}")
+        this.sqlString.add(&" AND {column} BETWEEN {start} AND {stop}")
       else:
         this.sqlString.add(&" WHERE {column} BETWEEN {start} AND {stop}")
-  echo this.sqlString
   return this
 
 

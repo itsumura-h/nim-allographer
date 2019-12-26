@@ -86,7 +86,10 @@ proc whereBetweenSql*(this:RDB): RDB =
       var start = row["width"][0].getInt()
       var stop = row["width"][1].getInt()
 
-      this.sqlString.add(&"WHERE {column} BETWEEN {start} AND {stop}")
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" AND {column} BETWEEN {start} AND {stop}")
+      else:
+        this.sqlString.add(&" WHERE {column} BETWEEN {start} AND {stop}")
 
   return this
 

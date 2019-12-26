@@ -27,7 +27,7 @@ proc setup() =
 
   var insertData: seq[JsonNode]
   for i in 1..10:
-    let authId = if i mod 2 == 0: 1 else: 2
+    let authId = if i mod 2 == 0: 2 else: 1
     insertData.add(
       %*{
         "name": &"user{i}",
@@ -44,11 +44,11 @@ suite "select":
     setup()
   test "get()":
     var t = RDB().table("users").get()
-    check t[0] == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 2}
+    check t[0] == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
 
   test "first()":
     var t = RDB().table("users").where("name", "=", "user1").first()
-    check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 2}
+    check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
 
   test "select()":
     var t = RDB().table("users").select("name", "email").get()
@@ -59,28 +59,28 @@ suite "select":
     check t[0] == %*{"user_name": "user1", "email": "user1@gmail.com"}
 
   test "where":
-    var t = RDB().table("users").where("auth_id", ">", "1").get()
+    var t = RDB().table("users").where("auth_id", "=", "1").get()
     check t == @[
-      %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 2},
-      %*{"id": 3, "name": "user3", "email": "user3@gmail.com", "address":newJNull(), "auth_id": 2},
-      %*{"id": 5, "name": "user5", "email": "user5@gmail.com", "address":newJNull(), "auth_id": 2},
-      %*{"id": 7, "name": "user7", "email": "user7@gmail.com", "address":newJNull(), "auth_id": 2},
-      %*{"id": 9, "name": "user9", "email": "user9@gmail.com", "address":newJNull(), "auth_id": 2}
+      %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 3, "name": "user3", "email": "user3@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 5, "name": "user5", "email": "user5@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 7, "name": "user7", "email": "user7@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 9, "name": "user9", "email": "user9@gmail.com", "address":newJNull(), "auth_id": 1}
     ]
 
   test "orWhere":
-    var t = RDB().table("users").where("auth_id", ">", "1").orWhere("name", "=", "user2").get()
+    var t = RDB().table("users").where("auth_id", "=", "1").orWhere("name", "=", "user2").get()
     check t == @[
-      %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 2},
-      %*{"id": 2, "name": "user2", "email": "user2@gmail.com", "address":newJNull(), "auth_id": 1},
-      %*{"id": 3, "name": "user3", "email": "user3@gmail.com", "address":newJNull(), "auth_id": 2},
-      %*{"id": 5, "name": "user5", "email": "user5@gmail.com", "address":newJNull(), "auth_id": 2},
-      %*{"id": 7, "name": "user7", "email": "user7@gmail.com", "address":newJNull(), "auth_id": 2},
-      %*{"id": 9, "name": "user9", "email": "user9@gmail.com", "address":newJNull(), "auth_id": 2}
+      %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 2, "name": "user2", "email": "user2@gmail.com", "address":newJNull(), "auth_id": 2},
+      %*{"id": 3, "name": "user3", "email": "user3@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 5, "name": "user5", "email": "user5@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 7, "name": "user7", "email": "user7@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 9, "name": "user9", "email": "user9@gmail.com", "address":newJNull(), "auth_id": 1}
     ]
 
   test "update()":
-    RDB().table("users").where("id", "=", "2").update(%*{"name": "John"})
+    RDB().table("users").where("id", "=", 2).update(%*{"name": "John"})
     var t = RDB().table("users").find(2)
     check t["name"].getStr() == "John"
 
@@ -107,8 +107,8 @@ suite "select":
     var t = RDB()
             .table("users")
             .select("id", "name")
-            .where("id", ">", "3")
-            .whereBetween("auth_id", [1, 2])
+            .where("auth_id", "=", 1)
+            .whereBetween("id", [6, 9])
             .get()
     echo t
-    check t[0]["name"].getStr() == "user1"
+    check t[0]["name"].getStr() == "user7"
