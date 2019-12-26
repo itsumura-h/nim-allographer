@@ -105,6 +105,28 @@ proc whereInSql*(this:RDB): RDB =
     result = postgres_generator.whereInSql(this)
 
 
+proc whereNotInSql*(this:RDB): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.whereNotInSql(this)
+  of "mysql":
+    result = mysql_generator.whereNotInSql(this)
+  of "postgres":
+    result = postgres_generator.whereNotInSql(this)
+
+
+proc whereNullSql*(this:RDB): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.whereNullSql(this)
+  of "mysql":
+    result = mysql_generator.whereNullSql(this)
+  of "postgres":
+    result = postgres_generator.whereNullSql(this)
+
+
 proc limitSql*(this: RDB): RDB =
   let driver = util.getDriver()
   case driver:

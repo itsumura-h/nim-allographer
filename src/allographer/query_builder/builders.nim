@@ -14,6 +14,8 @@ proc selectBuilder*(this: RDB): RDB =
         .whereBetweenSql()
         .whereNotBetweenSql()
         .whereInSql()
+        .whereNotInSql()
+        .whereNullSql()
         .limitSql()
         .offsetSql()
 

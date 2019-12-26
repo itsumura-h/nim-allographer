@@ -85,7 +85,6 @@ proc whereBetweenSql*(this:RDB): RDB =
       var column = row["column"].getStr()
       var start = row["width"][0].getFloat()
       var stop = row["width"][1].getFloat()
-      echo column, start, stop
 
       if this.sqlString.contains("WHERE"):
         this.sqlString.add(&" AND {column} BETWEEN {start} AND {stop}")
@@ -124,6 +123,37 @@ proc whereInSql*(this:RDB): RDB =
         this.sqlString.add(&" AND {column} IN ({widthString})")
       else:
         this.sqlString.add(&" WHERE {column} IN ({widthString})")
+  return this
+
+
+proc whereNotInSql*(this:RDB): RDB =
+  if this.query.hasKey("where_not_in"):
+    var widthString = ""
+    for row in this.query["where_not_in"]:
+      var column = row["column"].getStr()
+      for i, val in row["width"].getElems():
+        if i > 0: widthString.add(", ")
+        if val.kind == JInt:
+          widthString.add($(val.getInt()))
+        elif val.kind == JFloat:
+          widthString.add($(val.getFloat()))
+
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" AND {column} NOT IN ({widthString})")
+      else:
+        this.sqlString.add(&" WHERE {column} NOT IN ({widthString})")
+  return this
+
+
+proc whereNullSql*(this:RDB): RDB =
+  if this.query.hasKey("where_null"):
+    for row in this.query["where_null"]:
+      var column = row["column"].getStr()
+
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" AND {column} is null")
+      else:
+        this.sqlString.add(&" WHERE {column} is null")
   return this
 
 
