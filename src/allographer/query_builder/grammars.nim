@@ -259,6 +259,46 @@ proc whereIn*(this:RDB, column:string, width:seq[float]): RDB =
   return this
 
 
+proc whereNotIn*(this:RDB, column:string, width:seq[int]): RDB =
+  if this.query.hasKey("where_not_in") == false:
+    this.query["where_not_in"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    this.query["where_not_in"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return this
+
+
+proc whereNotIn*(this:RDB, column:string, width:seq[float]): RDB =
+  if this.query.hasKey("where_not_in") == false:
+    this.query["where_not_in"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    this.query["where_not_in"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return this
+
+
+proc whereNull*(this:RDB, column:string): RDB =
+  if this.query.hasKey("where_null") == false:
+    this.query["where_null"] = %*[{
+      "column": column
+    }]
+  else:
+    this.query["where_null"].add(%*{
+      "column": column
+    })
+  return this
+
+
 proc join*(this: RDB, table: string, column1: string, symbol: string,
             column2: string): RDB =
   if this.query.hasKey("join") == false:

@@ -130,3 +130,27 @@ suite "select":
             .get()
     echo t
     check t[0]["name"].getStr() == "user5"
+
+  test "whereNotIn()":
+    var t = RDB()
+            .table("users")
+            .select("id", "name")
+            .whereBetween("id", [4, 10])
+            .whereNotIn("id", @[5, 6, 7])
+            .get()
+    echo t
+    check t == @[
+      %*{"id":4, "name": "user4"},
+      %*{"id":8, "name": "user8"},
+      %*{"id":9, "name": "user9"},
+      %*{"id":10, "name": "user10"},
+    ]
+
+  test "whereNull()":
+    var t = RDB()
+            .table("users")
+            .select("id", "name")
+            .whereNull("address")
+            .get()
+    echo t
+    check t[0]["name"].getStr() == "user1"
