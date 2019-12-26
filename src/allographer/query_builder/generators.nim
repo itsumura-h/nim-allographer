@@ -127,6 +127,39 @@ proc whereNullSql*(this:RDB): RDB =
     result = postgres_generator.whereNullSql(this)
 
 
+proc groupBySql*(this:RDB): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.groupBySql(this)
+  of "mysql":
+    result = mysql_generator.groupBySql(this)
+  of "postgres":
+    result = postgres_generator.groupBySql(this)
+
+
+proc havingSql*(this:RDB): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.havingSql(this)
+  of "mysql":
+    result = mysql_generator.havingSql(this)
+  of "postgres":
+    result = postgres_generator.havingSql(this)
+
+
+proc orderBySql*(this:RDB): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.orderBySql(this)
+  of "mysql":
+    result = mysql_generator.orderBySql(this)
+  of "postgres":
+    result = postgres_generator.orderBySql(this)
+
+
 proc limitSql*(this: RDB): RDB =
   let driver = util.getDriver()
   case driver:
