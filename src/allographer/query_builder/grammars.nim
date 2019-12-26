@@ -23,7 +23,6 @@ proc select*(this: RDB, columnsArg: varargs[string]): RDB =
     this.query["select"] = %["*"]
   else:
     this.query["select"] = %*columnsArg
-
   return this
 
 
@@ -34,10 +33,13 @@ proc `distinct`*(this: RDB): RDB =
 # ============================== Conditions ==============================
 
 proc where*(this: RDB, column: string, symbol: string, value: string): RDB =
-  this.placeHolder.add(value)
-
   if not ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"].contains(symbol):
-    raise newException(Exception, "symbol error")
+    raise newException(
+      Exception,
+      """Arg position 3 is only allowed of ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"]"""
+    )
+
+  this.placeHolder.add(value)
 
   if this.query.hasKey("where") == false:
     this.query["where"] = %*[{
@@ -53,14 +55,16 @@ proc where*(this: RDB, column: string, symbol: string, value: string): RDB =
         "value": "?"
       }
     )
-
   return this
 
 proc where*(this: RDB, column: string, symbol: string, value: int): RDB =
-  this.placeHolder.add($value)
-
   if not ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"].contains(symbol):
-    raise newException(Exception, "symbol error")
+    raise newException(
+      Exception,
+      """Arg position 3 is only allowed of ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"]"""
+    )
+
+  this.placeHolder.add($value)
 
   if this.query.hasKey("where") == false:
     this.query["where"] = %*[{
@@ -79,8 +83,11 @@ proc where*(this: RDB, column: string, symbol: string, value: int): RDB =
   return this
 
 proc where*(this: RDB, column: string, symbol: string, value: nil.type): RDB =
-  if not ["is", "is not", "="].contains(symbol):
-    raise newException(Exception, "symbol error")
+  if not ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"].contains(symbol):
+    raise newException(
+      Exception,
+      """Arg position 3 is only allowed of ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"]"""
+    )
 
   if this.query.hasKey("where") == false:
     this.query["where"] = %*[{
@@ -96,11 +103,17 @@ proc where*(this: RDB, column: string, symbol: string, value: nil.type): RDB =
         "value": "null"
       }
     )
-
   return this
 
 proc orWhere*(this: RDB, column: string, symbol: string, value: string): RDB =
+  if not ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"].contains(symbol):
+    raise newException(
+      Exception,
+      """Arg position 3 is only allowed of ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"]"""
+    )
+
   this.placeHolder.add(value)
+
   if this.query.hasKey("or_where") == false:
     this.query["or_where"] = %*[{
       "column": column,
@@ -115,11 +128,17 @@ proc orWhere*(this: RDB, column: string, symbol: string, value: string): RDB =
         "value": "?"
       }
     )
-
   return this
 
 proc orWhere*(this: RDB, column: string, symbol: string, value: int): RDB =
+  if not ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"].contains(symbol):
+    raise newException(
+      Exception,
+      """Arg position 3 is only allowed of ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"]"""
+    )
+
   this.placeHolder.add($value)
+
   if this.query.hasKey("or_where") == false:
     this.query["or_where"] = %*[{
       "column": column,
@@ -132,7 +151,29 @@ proc orWhere*(this: RDB, column: string, symbol: string, value: int): RDB =
       "symbol": symbol,
       "value": "?"
     })
+  return this
 
+proc orWhere*(this: RDB, column: string, symbol: string, value: float): RDB =
+  if not ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"].contains(symbol):
+    raise newException(
+      Exception,
+      """Arg position 3 is only allowed of ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"]"""
+    )
+
+  this.placeHolder.add($value)
+
+  if this.query.hasKey("or_where") == false:
+    this.query["or_where"] = %*[{
+      "column": column,
+      "symbol": symbol,
+      "value": "?"
+    }]
+  else:
+    this.query["or_where"].add(%*{
+      "column": column,
+      "symbol": symbol,
+      "value": "?"
+    })
   return this
 
 proc whereBetween*(this:RDB, column:string, width:array[2, int]): RDB =
@@ -146,13 +187,48 @@ proc whereBetween*(this:RDB, column:string, width:array[2, int]): RDB =
       "column": column,
       "width": width
     })
-
   return this
 
-proc join*(this: RDB,
-            table: string, 
-            column1: string, 
-            symbol: string, 
+proc whereBetween*(this:RDB, column:string, width:array[2, float]): RDB =
+  if this.query.hasKey("where_between") == false:
+    this.query["where_between"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    this.query["where_between"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return this
+
+proc whereNotBetween*(this:RDB, column:string, width:array[2, int]): RDB =
+  if this.query.hasKey("where_not_between") == false:
+    this.query["where_not_between"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    this.query["where_not_between"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return this
+
+proc whereNotBetween*(this:RDB, column:string, width:array[2, float]): RDB =
+  if this.query.hasKey("where_not_between") == false:
+    this.query["where_not_between"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    this.query["where_not_between"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return this
+
+proc join*(this: RDB, table: string, column1: string, symbol: string,
             column2: string): RDB =
   if this.query.hasKey("join") == false:
     this.query["join"] = %*[{
@@ -168,7 +244,6 @@ proc join*(this: RDB,
       "symbol": symbol,
       "column2": column2
     })
-
   return this
 
 

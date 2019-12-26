@@ -83,14 +83,28 @@ proc whereBetweenSql*(this:RDB): RDB =
   if this.query.hasKey("where_between"):
     for row in this.query["where_between"]:
       var column = row["column"].getStr()
-      var start = row["width"][0].getInt()
-      var stop = row["width"][1].getInt()
+      var start = row["width"][0].getFloat()
+      var stop = row["width"][1].getFloat()
       echo column, start, stop
 
       if this.sqlString.contains("WHERE"):
         this.sqlString.add(&" AND {column} BETWEEN {start} AND {stop}")
       else:
         this.sqlString.add(&" WHERE {column} BETWEEN {start} AND {stop}")
+  return this
+
+
+proc whereNotBetweenSql*(this:RDB): RDB =
+  if this.query.hasKey("where_not_between"):
+    for row in this.query["where_not_between"]:
+      var column = row["column"].getStr()
+      var start = row["width"][0].getFloat()
+      var stop = row["width"][1].getFloat()
+
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" AND {column} NOT BETWEEN {start} AND {stop}")
+      else:
+        this.sqlString.add(&" WHERE {column} NOT BETWEEN {start} AND {stop}")
   return this
 
 

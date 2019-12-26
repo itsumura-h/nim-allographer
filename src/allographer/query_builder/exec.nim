@@ -303,6 +303,7 @@ proc delete*(this: RDB, id: int, key="id") =
 # ==================== EXEC ====================
 
 proc exec*(this: RDB) =
+  ## It is only used with raw()
   block:
     let db = db()
     for sqlString in this.sqlStringSeq:
