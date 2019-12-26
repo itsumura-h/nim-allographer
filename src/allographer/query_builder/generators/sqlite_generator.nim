@@ -157,6 +157,46 @@ proc whereNullSql*(this:RDB): RDB =
   return this
 
 
+proc groupBySql*(this:RDB): RDB =
+  if this.query.hasKey("group_by"):
+    for row in this.query["group_by"]:
+      var column = row["column"].getStr()
+
+      if this.sqlString.contains("GROUP BY"):
+        this.sqlString.add(&", {column}")
+      else:
+        this.sqlString.add(&" GROUP BY {column}")
+  return this
+
+
+proc havingSql*(this:RDB): RDB =
+  if this.query.hasKey("having"):
+    for i, row in this.query["having"].getElems():
+      var column = row["column"].getStr()
+      var symbol = row["symbol"].getStr()
+      var value = row["value"].getStr()
+      
+      if i == 0:
+        this.sqlString.add(&" HAVING {column} {symbol} {value}")
+      else:
+        this.sqlString.add(&" AND {column} {symbol} {value}")
+
+  return this
+
+
+proc orderBySql*(this:RDB): RDB =
+  if this.query.hasKey("order_by"):
+    for row in this.query["order_by"]:
+      var column = row["column"].getStr()
+      var order = row["order"].getStr()
+
+      if this.sqlString.contains("ORDER BY"):
+        this.sqlString.add(&", {column} {order}")
+      else:
+        this.sqlString.add(&" ORDER BY {column} {order}")
+  return this
+
+
 proc limitSql*(this: RDB): RDB =
   if this.query.hasKey("limit"):
     var num = this.query["limit"].getInt()

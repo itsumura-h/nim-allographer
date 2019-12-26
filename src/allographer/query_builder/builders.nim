@@ -16,6 +16,9 @@ proc selectBuilder*(this: RDB): RDB =
         .whereInSql()
         .whereNotInSql()
         .whereNullSql()
+        .groupBySql()
+        .havingSql()
+        .orderBySql()
         .limitSql()
         .offsetSql()
 

@@ -2,7 +2,7 @@ import unittest, json, strformat
 
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
-
+from ../src/allographer/connection import DRIVER
 
 proc setup() =
   Schema().create([
@@ -147,10 +147,43 @@ suite "select":
     ]
 
   test "whereNull()":
+    RDB().table("users").insert(%*{"email": "user11@gmail.com"})
+    var t = RDB()
+            .table("users")
+            .select("id", "name", "email")
+            .whereNull("name")
+            .get()
+    echo t
+    check t[0]["id"].getInt() == 11
+
+  test "groupBy()":
+    var t = RDB()
+            .table("users")
+            .select("max(id)")
+            .groupBy("auth_id")
+            .get()
+    echo t
+    when connection.DRIVER is "sqlite":
+      check t[0]["max(id)"].getStr() == "9"
+    when connection.DRIVER is "mysql":
+      check t[0]["max(id)"].getInt() == 9
+    when connection.DRIVER is "postgres":
+      check t[0]["max"].getInt() == 9
+    
+  test "having()":
     var t = RDB()
             .table("users")
             .select("id", "name")
-            .whereNull("address")
+            .groupBy("auth_id")
+            .having("auth_id", "=", 1)
             .get()
     echo t
-    check t[0]["name"].getStr() == "user1"
+    check t[0]["id"].getInt() == 1
+
+  test "orderBy()":
+    var t = RDB().table("users")
+            .orderBy("auth_id", Asc)
+            .orderBy("id", Desc)
+            .get()
+    echo t
+    check t[0]["id"].getInt() == 9
