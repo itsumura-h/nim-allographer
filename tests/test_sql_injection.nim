@@ -29,7 +29,6 @@ suite "sql injection":
       %*{"auth": "admin"},
       %*{"auth": "user"}
     ])
-    .exec()
 
     # プログレスバー
     let total = 10
@@ -49,7 +48,7 @@ suite "sql injection":
       pb.increment()
     pb.finish()
 
-    RDB().table("users").insert(insertData).exec()
+    RDB().table("users").insert(insertData)
   test "1":
     var x = RDB().table("users").where("name", "=", "user1").get()
     var y = RDB().table("users").where("name", "=", "user1' AND 'A' = 'A").get()

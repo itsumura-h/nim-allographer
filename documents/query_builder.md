@@ -3,7 +3,7 @@ Example: Query Builder
 [back](../README.md)
 
 ## index
-- [SLECT](#SELECT)
+- [SELECT](#SELECT)
 - [INSERT](#INSERT)
 - [UPDATE](#UPDATE)
 - [DELETE](#DELETE)
@@ -57,7 +57,7 @@ type Typ = ref object
 
 var rows = RDB().table("test")
           .select("id", "float", "char", "datetime", "null", "is_admin")
-          .get(Typ())
+          .get(Typ)
 ```
 
 ```nim
@@ -118,8 +118,8 @@ echo resultRow
     "id":3,
     "name":"user3",
     "email":"user3@gmail.com",
-    "address":"246 Ferguson Village Apt. 582\nNew Joshua, IL 24200", "password":"$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny",
-    "salt":"$2a$10$gmKpgtO535lkw0eAcGiRye",
+    "address":"246 Ferguson Village Apt. 582\nNew Joshua, IL 24200",
+    "password":"$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny",
     "birth_date":"2012-11-24",
     "auth":2,
     "created_at":"2019-09-26 19:11:28.159367",
@@ -147,8 +147,8 @@ echo resultRow
     "id":3,
     "name":"user3",
     "email":"user3@gmail.com",
-    "address":"246 Ferguson Village Apt. 582\nNew Joshua, IL 24200", "password":"$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny",
-    "salt":"$2a$10$gmKpgtO535lkw0eAcGiRye",
+    "address":"246 Ferguson Village Apt. 582\nNew Joshua, IL 24200",
+    "password":"$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny",
     "birth_date":"2012-11-24",
     "auth":2,
     "created_at":"2019-09-26 19:11:28.159367",
@@ -168,8 +168,8 @@ echo resultRow
     "user_id":3,
     "name":"user3",
     "email":"user3@gmail.com",
-    "address":"246 Ferguson Village Apt. 582\nNew Joshua, IL 24200", "password":"$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny",
-    "salt":"$2a$10$gmKpgtO535lkw0eAcGiRye",
+    "address":"246 Ferguson Village Apt. 582\nNew Joshua, IL 24200",
+    "password":"$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny",
     "birth_date":"2012-11-24",
     "auth":2,
     "created_at":"2019-09-26 19:11:28.159367",
@@ -230,7 +230,6 @@ RDB()
   "name": "John",
   "email": "John@gmail.com"
 })
-.exec()
 
 >> INSERT INTO users (name, email) VALUES ("John", "John@gmail.com")
 ```
@@ -243,7 +242,6 @@ echo RDB()
   "name": "John",
   "email": "John@gmail.com"
 })
-.execID()
 
 >> INSERT INTO users (name, email) VALUES ("John", "John@gmail.com")
 >> 1 # ID of new row is return
@@ -258,7 +256,6 @@ RDB().table("users").insert(
     %*{"name": "George", "email": "George@gmail.com", "address": "London"},
   ]
 )
-.exec()
 
 >> INSERT INTO users (name, email, address) VALUES ("John", "John@gmail.com", "London"), ("Paul", "Paul@gmail.com", "London"), ("George", "George@gmail.com", "London")
 ```
@@ -272,7 +269,6 @@ RDB().table("users").inserts(
     %*{"name": "George", "birth_date": "1943-02-25", "address": "London"},
   ]
 )
-.exec()
 
 >> INSERT INTO users (name, email, address) VALUES ("John", "John@gmail.com", "London")
 >> INSERT INTO users (name, email, address) VALUES ("Paul", "Paul@gmail.com", "London")
@@ -289,7 +285,6 @@ RDB()
 .table("users")
 .where("id", "=", 100)
 .update(%*{"name": "Mick", "address": "NY"})
-.exec()
 
 >> UPDATE users SET name = "Mick", address = "NY" WHERE id = 100
 ```
@@ -303,7 +298,6 @@ import allographer/query_builder
 RDB()
 .table("users")
 .delete(1)
-.exec()
 
 >> DELETE FROM users WHERE id = 1
 ```
@@ -316,7 +310,6 @@ import allographer/query_builder
 RDB()
 .table("users")
 .delete(1, key="user_id")
-.exec()
 
 >> DELETE FROM users WHERE user_id = 1
 ```
@@ -328,7 +321,6 @@ RDB()
 .table("users")
 .where("address", "=", "London")
 .delete()
-.exec()
 
 >> DELETE FROM users WHERE address = "London"
 ```
@@ -343,7 +335,7 @@ import allographer/query_builder
 let sql = """
 SELECT ProductName
   FROM Product 
- WHERE Id IN (SELECT ProductId 
+  WHERE Id IN (SELECT ProductId 
                 FROM OrderItem
                WHERE Quantity > 100)
 """

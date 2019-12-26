@@ -9,7 +9,10 @@ import ../base
 proc selectSql*(this: RDB): RDB =
   var queryString = ""
 
-  queryString.add("SELECT")
+  if this.query.hasKey("distinct"):
+    queryString.add("SELECT DISTINCT")
+  else:
+    queryString.add("SELECT")
 
   if this.query.hasKey("select"):
     for i, item in this.query["select"].getElems():
@@ -73,6 +76,125 @@ proc orWhereSql*(this: RDB): RDB =
       else:
         this.sqlString.add(&" WHERE {column} {symbol} {value}")
 
+  return this
+
+
+proc whereBetweenSql*(this:RDB): RDB =
+  if this.query.hasKey("where_between"):
+    for row in this.query["where_between"]:
+      var column = row["column"].getStr()
+      var start = row["width"][0].getInt()
+      var stop = row["width"][1].getInt()
+
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" AND {column} BETWEEN {start} AND {stop}")
+      else:
+        this.sqlString.add(&" WHERE {column} BETWEEN {start} AND {stop}")
+
+  return this
+
+
+proc whereNotBetweenSql*(this:RDB): RDB =
+  if this.query.hasKey("where_not_between"):
+    for row in this.query["where_not_between"]:
+      var column = row["column"].getStr()
+      var start = row["width"][0].getFloat()
+      var stop = row["width"][1].getFloat()
+
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" AND {column} NOT BETWEEN {start} AND {stop}")
+      else:
+        this.sqlString.add(&" WHERE {column} NOT BETWEEN {start} AND {stop}")
+  return this
+
+
+proc whereInSql*(this:RDB): RDB =
+  if this.query.hasKey("where_in"):
+    var widthString = ""
+    for row in this.query["where_in"]:
+      var column = row["column"].getStr()
+      for i, val in row["width"].getElems():
+        if i > 0: widthString.add(", ")
+        if val.kind == JInt:
+          widthString.add($(val.getInt()))
+        elif val.kind == JFloat:
+          widthString.add($(val.getFloat()))
+
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" AND {column} IN ({widthString})")
+      else:
+        this.sqlString.add(&" WHERE {column} IN ({widthString})")
+  return this
+
+
+proc whereNotInSql*(this:RDB): RDB =
+  if this.query.hasKey("where_not_in"):
+    var widthString = ""
+    for row in this.query["where_not_in"]:
+      var column = row["column"].getStr()
+      for i, val in row["width"].getElems():
+        if i > 0: widthString.add(", ")
+        if val.kind == JInt:
+          widthString.add($(val.getInt()))
+        elif val.kind == JFloat:
+          widthString.add($(val.getFloat()))
+
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" AND {column} NOT IN ({widthString})")
+      else:
+        this.sqlString.add(&" WHERE {column} NOT IN ({widthString})")
+  return this
+
+
+proc whereNullSql*(this:RDB): RDB =
+  if this.query.hasKey("where_null"):
+    for row in this.query["where_null"]:
+      var column = row["column"].getStr()
+
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" AND {column} is null")
+      else:
+        this.sqlString.add(&" WHERE {column} is null")
+  return this
+
+
+proc groupBySql*(this:RDB): RDB =
+  if this.query.hasKey("group_by"):
+    for row in this.query["group_by"]:
+      var column = row["column"].getStr()
+
+      if this.sqlString.contains("GROUP BY"):
+        this.sqlString.add(&", {column}")
+      else:
+        this.sqlString.add(&" GROUP BY {column}")
+  return this
+
+
+proc havingSql*(this:RDB): RDB =
+  if this.query.hasKey("having"):
+    for i, row in this.query["having"].getElems():
+      var column = row["column"].getStr()
+      var symbol = row["symbol"].getStr()
+      var value = row["value"].getStr()
+      
+      if i == 0:
+        this.sqlString.add(&" HAVING {column} {symbol} {value}")
+      else:
+        this.sqlString.add(&" AND {column} {symbol} {value}")
+
+  return this
+
+
+proc orderBySql*(this:RDB): RDB =
+  if this.query.hasKey("order_by"):
+    for row in this.query["order_by"]:
+      var column = row["column"].getStr()
+      var order = row["order"].getStr()
+
+      if this.sqlString.contains("ORDER BY"):
+        this.sqlString.add(&", {column} {order}")
+      else:
+        this.sqlString.add(&" ORDER BY {column} {order}")
   return this
 
 

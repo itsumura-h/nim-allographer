@@ -1,6 +1,18 @@
 import base
 import json
 
+#[
+FROM
+ON
+JOIN
+WHERE
+GROUP BY
+HAVING
+SELECT
+DISTINCT
+ORDER BY
+TOP（LIMIT）
+]#
 
 proc table*(this: RDB, tableArg: string): RDB =
   this.query = %*{"table": tableArg}
@@ -23,41 +35,47 @@ proc select*(this: RDB, columnsArg: varargs[string]): RDB =
     this.query["select"] = %["*"]
   else:
     this.query["select"] = %*columnsArg
-  
   return this
 
+
+proc `distinct`*(this: RDB): RDB =
+  this.query["distinct"] = %true
+  return this
 
 # ============================== Conditions ==============================
 
-proc where*(this: RDB, column: string, symbol: string, value: string): RDB =
-  this.placeHolder.add(value)
-
-  if not ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"].contains(symbol):
-    raise newException(Exception, "symbol error")
-
-  if this.query.hasKey("where") == false:
-    this.query["where"] = %*[{
-      "column": column,
+proc join*(this: RDB, table: string, column1: string, symbol: string,
+            column2: string): RDB =
+  if this.query.hasKey("join") == false:
+    this.query["join"] = %*[{
+      "table": table,
+      "column1": column1,
       "symbol": symbol,
-      "value": "?"
+      "column2": column2
     }]
   else:
-    this.query["where"].add(
-      %*{
-        "column": column,
-        "symbol": symbol,
-        "value": "?"
-      }
-    )
-
+    this.query["join"].add(%*{
+      "table": table,
+      "column1": column1,
+      "symbol": symbol,
+      "column2": column2
+    })
   return this
 
-proc where*(this: RDB, column: string, symbol: string, value: int): RDB =
+
+const whereSymbols = ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"]
+const whereSymbolsError = """Arg position 3 is only allowed of ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"]"""
+
+proc where*(this: RDB, column: string, symbol: string,
+            value: string|int|float|bool): RDB =
+  if not whereSymbols.contains(symbol):
+    raise newException(
+      Exception,
+      whereSymbolsError
+    )
+
   this.placeHolder.add($value)
 
-  if not ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"].contains(symbol):
-    raise newException(Exception, "symbol error")
-
   if this.query.hasKey("where") == false:
     this.query["where"] = %*[{
       "column": column,
@@ -74,9 +92,13 @@ proc where*(this: RDB, column: string, symbol: string, value: int): RDB =
     )
   return this
 
+
 proc where*(this: RDB, column: string, symbol: string, value: nil.type): RDB =
-  if not ["is", "is not", "="].contains(symbol):
-    raise newException(Exception, "symbol error")
+  if not whereSymbols.contains(symbol):
+    raise newException(
+      Exception,
+      whereSymbolsError
+    )
 
   if this.query.hasKey("where") == false:
     this.query["where"] = %*[{
@@ -92,11 +114,19 @@ proc where*(this: RDB, column: string, symbol: string, value: nil.type): RDB =
         "value": "null"
       }
     )
-
   return this
 
-proc orWhere*(this: RDB, column: string, symbol: string, value: string): RDB =
+
+proc orWhere*(this: RDB, column: string, symbol: string,
+              value: string|int|float|bool): RDB =
+  if not whereSymbols.contains(symbol):
+    raise newException(
+      Exception,
+      whereSymbolsError
+    )
+
   this.placeHolder.add(value)
+
   if this.query.hasKey("or_where") == false:
     this.query["or_where"] = %*[{
       "column": column,
@@ -111,51 +141,170 @@ proc orWhere*(this: RDB, column: string, symbol: string, value: string): RDB =
         "value": "?"
       }
     )
-
   return this
 
-proc orWhere*(this: RDB, column: string, symbol: string, value: int): RDB =
+proc orWhere*(this: RDB, column: string, symbol: string, value: nil.type): RDB =
+  if not whereSymbols.contains(symbol):
+    raise newException(
+      Exception,
+      whereSymbolsError
+    )
+
+  if this.query.hasKey("or_where") == false:
+    this.query["or_where"] = %*[{
+      "column": column,
+      "symbol": symbol,
+      "value": "null"
+    }]
+  else:
+    this.query["or_where"].add(%*{
+      "column": column,
+      "symbol": symbol,
+      "value": "null"
+    })
+  return this
+
+
+proc whereBetween*(this:RDB, column:string, width:array[2, int|float]): RDB =
+  if this.query.hasKey("where_between") == false:
+    this.query["where_between"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    this.query["where_between"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return this
+
+
+proc whereNotBetween*(this:RDB, column:string, width:array[2, int|float]): RDB =
+  if this.query.hasKey("where_not_between") == false:
+    this.query["where_not_between"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    this.query["where_not_between"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return this
+
+
+proc whereIn*(this:RDB, column:string, width:seq[int|float]): RDB =
+  if this.query.hasKey("where_in") == false:
+    this.query["where_in"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    this.query["where_in"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return this
+
+
+proc whereNotIn*(this:RDB, column:string, width:seq[int|float]): RDB =
+  if this.query.hasKey("where_not_in") == false:
+    this.query["where_not_in"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    this.query["where_not_in"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return this
+
+
+proc whereNull*(this:RDB, column:string): RDB =
+  if this.query.hasKey("where_null") == false:
+    this.query["where_null"] = %*[{
+      "column": column
+    }]
+  else:
+    this.query["where_null"].add(%*{
+      "column": column
+    })
+  return this
+
+
+proc groupBy*(this:RDB, column:string): RDB =
+  if this.query.hasKey("group_by") == false:
+    this.query["group_by"] = %*[{"column": column}]
+  else:
+    this.query["group_by"].add(%*{"column": column})
+  return this
+
+
+proc having*(this: RDB, column: string, symbol: string,
+              value: string|int|float|bool): RDB =
+  if not whereSymbols.contains(symbol):
+    raise newException(
+      Exception,
+      whereSymbolsError
+    )
+    
   this.placeHolder.add($value)
-  if this.query.hasKey("or_where") == false:
-    this.query["or_where"] = %*[{
+
+  if this.query.hasKey("having") == false:
+    this.query["having"] = %*[{
       "column": column,
       "symbol": symbol,
       "value": "?"
     }]
   else:
-    this.query["or_where"].add(
+    this.query["having"].add(
       %*{
         "column": column,
         "symbol": symbol,
         "value": "?"
       }
     )
-
   return this
 
-
-proc join*(this: RDB,
-            table: string, 
-            column1: string, 
-            symbol: string, 
-            column2: string): RDB =
-  if this.query.hasKey("join") == false:
-    this.query["join"] = %*[{
-      "table": table,
-      "column1": column1,
-      "symbol": symbol,
-      "column2": column2
-    }]
-  else:
-    this.query["join"].add(
-      %*{
-      "table": table,
-      "column1": column1,
-      "symbol": symbol,
-      "column2": column2
-      }
+proc having*(this: RDB, column: string, symbol: string, value: nil.type): RDB =
+  if not whereSymbols.contains(symbol):
+    raise newException(
+      Exception,
+      whereSymbolsError
     )
 
+  if this.query.hasKey("having") == false:
+    this.query["having"] = %*[{
+      "column": column,
+      "symbol": symbol,
+      "value": "null"
+    }]
+  else:
+    this.query["having"].add(
+      %*{
+        "column": column,
+        "symbol": symbol,
+        "value": "null"
+      }
+    )
+  return this
+
+type Order* = enum
+  Asc = "ASC"
+  Desc = "DESC"
+
+proc orderBy*(this:RDB, column:string, order:Order): RDB =
+  if this.query.hasKey("order_by") == false:
+    this.query["order_by"] = %*[{
+      "column": column,
+      "order": $order
+    }]
+  else:
+    this.query["order_by"].add(%*{
+      "column": column,
+      "order": $order
+    })
   return this
 
 
@@ -166,33 +315,4 @@ proc limit*(this: RDB, num: int): RDB =
 
 proc offset*(this: RDB, num: int): RDB =
   this.query["offset"] = %num
-  return this
-
-# ==================== INSERT ====================
-
-proc insert*(this: RDB, items: JsonNode): RDB =
-  this.query["insert"] = %items
-  return this
-
-proc insert*(this: RDB, rows: openArray[JsonNode]): RDB =
-  this.query["insertRows"] = %rows
-  return this
-
-proc inserts*(this: RDB, rows: openArray[JsonNode]): RDB =
-  this.query["inserts"] = %rows
-  return this
-
-
-# ==================== UPDATE ====================
-
-proc update*(this: RDB, items: JsonNode): RDB =
-  for item in items.pairs:
-    if item.val.kind == JInt:
-      this.placeHolder.add($(item.val.getInt()))
-    elif item.val.kind == JFloat:
-      this.placeHolder.add($(item.val.getFloat()))
-    else:
-      this.placeHolder.add(item.val.getStr())
-
-    this.query["update"] = items
   return this

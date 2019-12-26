@@ -74,6 +74,91 @@ proc orWhereSql*(this: RDB): RDB =
   of "postgres":
     result = postgres_generator.orWhereSql(this)
 
+proc whereBetweenSql*(this:RDB): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.whereBetweenSql(this)
+  of "mysql":
+    result = mysql_generator.whereBetweenSql(this)
+  of "postgres":
+    result = postgres_generator.whereBetweenSql(this)
+
+proc whereNotBetweenSql*(this:RDB): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.whereNotBetweenSql(this)
+  of "mysql":
+    result = mysql_generator.whereNotBetweenSql(this)
+  of "postgres":
+    result = postgres_generator.whereNotBetweenSql(this)
+
+proc whereInSql*(this:RDB): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.whereInSql(this)
+  of "mysql":
+    result = mysql_generator.whereInSql(this)
+  of "postgres":
+    result = postgres_generator.whereInSql(this)
+
+
+proc whereNotInSql*(this:RDB): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.whereNotInSql(this)
+  of "mysql":
+    result = mysql_generator.whereNotInSql(this)
+  of "postgres":
+    result = postgres_generator.whereNotInSql(this)
+
+
+proc whereNullSql*(this:RDB): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.whereNullSql(this)
+  of "mysql":
+    result = mysql_generator.whereNullSql(this)
+  of "postgres":
+    result = postgres_generator.whereNullSql(this)
+
+
+proc groupBySql*(this:RDB): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.groupBySql(this)
+  of "mysql":
+    result = mysql_generator.groupBySql(this)
+  of "postgres":
+    result = postgres_generator.groupBySql(this)
+
+
+proc havingSql*(this:RDB): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.havingSql(this)
+  of "mysql":
+    result = mysql_generator.havingSql(this)
+  of "postgres":
+    result = postgres_generator.havingSql(this)
+
+
+proc orderBySql*(this:RDB): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.orderBySql(this)
+  of "mysql":
+    result = mysql_generator.orderBySql(this)
+  of "postgres":
+    result = postgres_generator.orderBySql(this)
+
 
 proc limitSql*(this: RDB): RDB =
   let driver = util.getDriver()
