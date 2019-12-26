@@ -108,6 +108,25 @@ proc whereNotBetweenSql*(this:RDB): RDB =
   return this
 
 
+proc whereInSql*(this:RDB): RDB =
+  if this.query.hasKey("where_in"):
+    var widthString = ""
+    for row in this.query["where_in"]:
+      var column = row["column"].getStr()
+      for i, val in row["width"].getElems():
+        if i > 0: widthString.add(", ")
+        if val.kind == JInt:
+          widthString.add($(val.getInt()))
+        elif val.kind == JFloat:
+          widthString.add($(val.getFloat()))
+
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" AND {column} IN ({widthString})")
+      else:
+        this.sqlString.add(&" WHERE {column} IN ({widthString})")
+  return this
+
+
 proc limitSql*(this: RDB): RDB =
   if this.query.hasKey("limit"):
     var num = this.query["limit"].getInt()

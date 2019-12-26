@@ -120,3 +120,13 @@ suite "select":
             .whereNotBetween("id", [1, 4])
             .get()
     check t[0]["name"].getStr() == "user5"
+
+  test "whereIn()":
+    var t = RDB()
+            .table("users")
+            .select("id", "name")
+            .whereBetween("id", [4, 10])
+            .whereIn("id", @[5, 6, 7])
+            .get()
+    echo t
+    check t[0]["name"].getStr() == "user5"
