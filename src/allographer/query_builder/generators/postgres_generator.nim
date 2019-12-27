@@ -319,5 +319,17 @@ proc selectCountSql*(this: RDB): RDB =
   return this
 
 proc selectMaxSql*(this:RDB, column:string): RDB =
-  this.sqlString = "SELECT max(?) as aggregate"
+  this.sqlString = &"SELECT max({column}) as aggregate"
+  return this
+
+proc selectMinSql*(this:RDB, column:string): RDB =
+  this.sqlString = &"SELECT min({column}) as aggregate"
+  return this
+
+proc selectAvgSql*(this:RDB, column:string): RDB =
+  this.sqlString = &"SELECT avg({column}) as aggregate"
+  return this
+
+proc selectSumSql*(this:RDB, column:string): RDB =
+  this.sqlString = &"SELECT sum({column}) as aggregate"
   return this
