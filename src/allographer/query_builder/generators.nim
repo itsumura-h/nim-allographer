@@ -257,9 +257,30 @@ proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
   let driver = util.getDriver()
   case driver:
   of "sqlite":
-    # result = sqlite_generator.deleteByIdSql(this, id, key)
     result = sqlite_generator.deleteByIdSql(this, key)
   of "mysql":
-    result = mysql_generator.deleteByIdSql(this, id, key)
+    result = mysql_generator.deleteByIdSql(this, key)
   of "postgres":
-    result = postgres_generator.deleteByIdSql(this, id, key)
+    result = postgres_generator.deleteByIdSql(this, key)
+
+# ==================== Aggregates ====================
+
+proc selectCountSql*(this: RDB): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.selectCountSql(this)
+  of "mysql":
+    result = mysql_generator.selectCountSql(this)
+  of "postgres":
+    result = postgres_generator.selectCountSql(this)
+
+proc selectMaxSql*(this:RDB, column:string): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.selectMaxSql(this, column)
+  of "mysql":
+    result = mysql_generator.selectMaxSql(this, column)
+  of "postgres":
+    result = postgres_generator.selectMaxSql(this, column)

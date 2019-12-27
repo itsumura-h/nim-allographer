@@ -66,3 +66,40 @@ proc deleteByIdBuilder*(this: RDB, id: int, key: string): RDB =
   return this.deleteSql()
         .fromSql()
         .deleteByIdSql(id, key)
+
+
+# ==================== Aggregates ====================
+
+proc countBuilder*(this:RDB): RDB =
+  return this.selectCountSql()
+    .fromSql()
+    .joinSql()
+    .whereSql()
+    .orWhereSql()
+    .whereBetweenSql()
+    .whereNotBetweenSql()
+    .whereInSql()
+    .whereNotInSql()
+    .whereNullSql()
+    .groupBySql()
+    .havingSql()
+    .orderBySql()
+    .limitSql()
+    .offsetSql()
+
+proc maxBuilder*(this:RDB, column:string): RDB =
+  return this.selectMaxSql(column)
+    .fromSql()
+    .joinSql()
+    .whereSql()
+    .orWhereSql()
+    .whereBetweenSql()
+    .whereNotBetweenSql()
+    .whereInSql()
+    .whereNotInSql()
+    .whereNullSql()
+    .groupBySql()
+    .havingSql()
+    .orderBySql()
+    .limitSql()
+    .offsetSql()
