@@ -121,9 +121,3 @@ settings will be applied
 ## Examples
 [Query Builder](./documents/query_builder.md)  
 [Schema Builder](./documents/schema_builder.md)  
-
-
-## Todo
-- [x] Database migration
-- [x] Mapping with column and data then return JsonNode
-- [ ] Aggregate methods (count, max, min, avg, and sum)
