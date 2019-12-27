@@ -311,6 +311,65 @@ proc exec*(this: RDB) =
       db.exec(sql sqlString, this.placeHolder)
     defer: db.close()
 
+
+# ==================== Aggregates ====================
+
+proc count*(this:RDB): int =
+  this.sqlStringSeq = @[this.countBuilder().sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  case DRIVER
+  of "sqlite":
+    return response["aggregate"].getStr().parseInt()
+  of "mysql":
+    return response["aggregate"].getInt()
+  of "postgres":
+    return response["aggregate"].getInt()
+
+proc max*(this:RDB, column:string): string =
+  this.sqlStringSeq = @[this.maxBuilder(column).sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  case response["aggregate"].kind
+  of JInt:
+    return $(response["aggregate"].getInt())
+  of JFloat:
+    return $(response["aggregate"].getFloat())
+  else:
+    return response["aggregate"].getStr()
+
+proc min*(this:RDB, column:string): string =
+  this.sqlStringSeq = @[this.minBuilder(column).sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  case response["aggregate"].kind
+  of JInt:
+    return $(response["aggregate"].getInt())
+  of JFloat:
+    return $(response["aggregate"].getFloat())
+  else:
+    return response["aggregate"].getStr()
+
+proc avg*(this:RDB, column:string): float =
+  this.sqlStringSeq = @[this.avgBuilder(column).sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  case DRIVER
+  of "sqlite":
+    return response["aggregate"].getStr().parseFloat()
+  else:
+    return response["aggregate"].getFloat()
+
+proc sum*(this:RDB, column:string): float =
+  this.sqlStringSeq = @[this.sumBuilder(column).sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  case DRIVER
+  of "sqlite":
+    return response["aggregate"].getStr().parseFloat()
+  else:
+    return response["aggregate"].getFloat()
+
 # ==================== Transaction ====================
 
 template transaction(body: untyped) =

@@ -8,7 +8,7 @@ Example: Query Builder
 - [UPDATE](#UPDATE)
 - [DELETE](#DELETE)
 - [RAW_SQL](#RAW_SQL)
-- [TARANSACTION](#TARANSACTION)
+- [Aggregates](#Aggregates)
 
 ### SELECT
 [to index](#index)
@@ -325,7 +325,6 @@ RDB()
 >> DELETE FROM users WHERE address = "London"
 ```
 
-
 ### Raw_SQL
 [to index](#INDEX)
 
@@ -344,4 +343,32 @@ echo RDB().raw(sql).getRaw()
 ```nim
 let sql = "UPDATE users SET name='John' where id = 1"
 RDB().raw(sql).exec()
+```
+
+### Aggregates
+[to index](#index)
+
+```nim
+import allographer/query_builder
+
+echo RDB().table("users").count()
+>> 10       # int
+
+echo RDB().table("users").max("name")
+>> "user9"  # string
+
+echo RDB().table("users").max("id")
+>> "10"     # string
+
+echo RDB().table("users").min("name")
+>> "user1"  # string
+
+echo RDB().table("users").min("id")
+>> "1"      # string
+
+echo RDB().table("users").avg("id")
+>> 5.5      # float
+
+echo RDB().table("users").sum("id")
+>> 55.0     # float
 ```
