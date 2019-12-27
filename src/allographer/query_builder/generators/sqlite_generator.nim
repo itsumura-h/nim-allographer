@@ -307,8 +307,17 @@ proc deleteSql*(this: RDB): RDB =
   this.sqlString.add("DELETE")
   return this
 
-# proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
 proc deleteByIdSql*(this: RDB, key: string): RDB =
-  # this.sqlString.add(&" WHERE {key} = {id}")
   this.sqlString.add(&" WHERE {key} = ?")
+  return this
+
+
+# ==================== Aggregates ====================
+
+proc selectCountSql*(this: RDB): RDB =
+  this.sqlString = "SELECT count(*) as aggregate"
+  return this
+
+proc selectMaxSql*(this:RDB, column:string): RDB =
+  this.sqlString = &"SELECT max({column}) as aggregate"
   return this

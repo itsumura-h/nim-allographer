@@ -1,5 +1,5 @@
 import db_sqlite, db_mysql, db_postgres
-import json, strutils
+import json, strutils, strformat
 
 import base, builders
 import ../util
@@ -310,6 +310,23 @@ proc exec*(this: RDB) =
       logger(sqlString, this.placeHolder)
       db.exec(sql sqlString, this.placeHolder)
     defer: db.close()
+
+
+# ==================== Aggregates ====================
+
+proc count*(this:RDB): int =
+  this.sqlStringSeq = @[this.countBuilder().sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  return response["aggregate"].getStr().parseInt()
+
+
+proc max*(this:RDB, column:string): string =
+  this.sqlStringSeq = @[this.maxBuilder(column).sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  echo response
+  return response["aggregate"].getStr()
 
 # ==================== Transaction ====================
 

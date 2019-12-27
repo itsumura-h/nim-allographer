@@ -1,0 +1,20 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: allographer
+  username: user
+  password: Password!
+
+test:
+  adapter: postgresql
+  encoding: unicode
+  database: allographer
+  username: user
+  password: Password!
+ 
+production:
+  adapter: postgresql
+  encoding: unicode
+  database: allographer
+  username: user
+  password: Password!
