@@ -14,11 +14,11 @@ Schema().create(
 )
 
 var users: seq[JsonNode]
-for i in 1..5:
+for i in 1..10:
   users.add(
     %*{
       "name": &"user{i}",
-      "birth_date": &"1990-01-0{i}"
+      "birth_date": &"1990-01-{i:02}"
     }
   )
 
@@ -28,9 +28,30 @@ suite "aggregates":
   test "count()":
     var t = RDB().table("users").count()
     echo t
-    check t == 5
+    check t == 10
 
   test "max()":
     var t = RDB().table("users").max("name")
     echo t
-    check t == "user5"
+    check t == "user9"
+    var t2 = RDB().table("users").max("id")
+    echo t2
+    check t2 == "10"
+
+  test "min()":
+    var t = RDB().table("users").min("name")
+    echo t
+    check t == "user1"
+    var t2 = RDB().table("users").min("id")
+    echo t2
+    check t2 == "1"
+
+  test "avg()":
+    var t = RDB().table("users").avg("id")
+    echo t
+    check t == 5.5
+
+  test "sum()":
+    var t = RDB().table("users").sum("id")
+    echo t
+    check t == 55.0

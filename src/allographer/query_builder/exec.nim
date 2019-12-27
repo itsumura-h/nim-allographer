@@ -1,5 +1,5 @@
 import db_sqlite, db_mysql, db_postgres
-import json, strutils, strformat
+import json, strutils
 
 import base, builders
 import ../util
@@ -318,15 +318,57 @@ proc count*(this:RDB): int =
   this.sqlStringSeq = @[this.countBuilder().sqlString]
   logger(this.sqlStringSeq[0], this.placeHolder)
   var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
-  return response["aggregate"].getStr().parseInt()
-
+  case DRIVER
+  of "sqlite":
+    return response["aggregate"].getStr().parseInt()
+  of "mysql":
+    return response["aggregate"].getInt()
+  of "postgres":
+    return response["aggregate"].getInt()
 
 proc max*(this:RDB, column:string): string =
   this.sqlStringSeq = @[this.maxBuilder(column).sqlString]
   logger(this.sqlStringSeq[0], this.placeHolder)
   var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
-  echo response
-  return response["aggregate"].getStr()
+  case response["aggregate"].kind
+  of JInt:
+    return $(response["aggregate"].getInt())
+  of JFloat:
+    return $(response["aggregate"].getFloat())
+  else:
+    return response["aggregate"].getStr()
+
+proc min*(this:RDB, column:string): string =
+  this.sqlStringSeq = @[this.minBuilder(column).sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  case response["aggregate"].kind
+  of JInt:
+    return $(response["aggregate"].getInt())
+  of JFloat:
+    return $(response["aggregate"].getFloat())
+  else:
+    return response["aggregate"].getStr()
+
+proc avg*(this:RDB, column:string): float =
+  this.sqlStringSeq = @[this.avgBuilder(column).sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  case DRIVER
+  of "sqlite":
+    return response["aggregate"].getStr().parseFloat()
+  else:
+    return response["aggregate"].getFloat()
+
+proc sum*(this:RDB, column:string): float =
+  this.sqlStringSeq = @[this.sumBuilder(column).sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  case DRIVER
+  of "sqlite":
+    return response["aggregate"].getStr().parseFloat()
+  else:
+    return response["aggregate"].getFloat()
 
 # ==================== Transaction ====================
 

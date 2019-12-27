@@ -284,3 +284,33 @@ proc selectMaxSql*(this:RDB, column:string): RDB =
     result = mysql_generator.selectMaxSql(this, column)
   of "postgres":
     result = postgres_generator.selectMaxSql(this, column)
+
+proc selectMinSql*(this:RDB, column:string): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.selectMinSql(this, column)
+  of "mysql":
+    result = mysql_generator.selectMinSql(this, column)
+  of "postgres":
+    result = postgres_generator.selectMinSql(this, column)
+
+proc selectAvgSql*(this:RDB, column:string): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.selectAvgSql(this, column)
+  of "mysql":
+    result = mysql_generator.selectAvgSql(this, column)
+  of "postgres":
+    result = postgres_generator.selectAvgSql(this, column)
+
+proc selectSumSql*(this:RDB, column:string): RDB =
+  let driver = util.getDriver()
+  case driver:
+  of "sqlite":
+    result = sqlite_generator.selectSumSql(this, column)
+  of "mysql":
+    result = mysql_generator.selectSumSql(this, column)
+  of "postgres":
+    result = postgres_generator.selectSumSql(this, column)
