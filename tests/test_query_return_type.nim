@@ -2,6 +2,7 @@ import unittest, strformat, json, strutils
 
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
+from ../src/allographer/connection import DRIVER
 
 
 Schema().create(
