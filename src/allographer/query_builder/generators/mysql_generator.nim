@@ -83,14 +83,13 @@ proc whereBetweenSql*(this:RDB): RDB =
   if this.query.hasKey("where_between"):
     for row in this.query["where_between"]:
       var column = row["column"].getStr()
-      var start = row["width"][0].getInt()
-      var stop = row["width"][1].getInt()
+      var start = row["width"][0].getFloat()
+      var stop = row["width"][1].getFloat()
 
       if this.sqlString.contains("WHERE"):
         this.sqlString.add(&" AND {column} BETWEEN {start} AND {stop}")
       else:
         this.sqlString.add(&" WHERE {column} BETWEEN {start} AND {stop}")
-
   return this
 
 
@@ -227,18 +226,18 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
   var values = ""
 
   var i = 0
-  for item in items.pairs:
+  for key, val in items.pairs:
     if i > 0:
       columns.add(", ")
       values.add(", ")
     i += 1
-    columns.add(&"{item.key}")
-    if item.val.kind == JInt:
-      this.placeHolder.add($(item.val.getInt()))
-    elif item.val.kind == JFloat:
-      this.placeHolder.add($(item.val.getFloat()))
+    columns.add(key)
+    if val.kind == JInt:
+      this.placeHolder.add($(val.getInt()))
+    elif val.kind == JFloat:
+      this.placeHolder.add($(val.getFloat()))
     else:
-      this.placeHolder.add(item.val.getStr())
+      this.placeHolder.add(val.getStr())
     values.add("?")
 
   this.sqlString.add(&" ({columns}) VALUES ({values})")
@@ -252,7 +251,7 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
   for key, value in rows[0]:
     if rowsCount > 0: columns.add(", ")
     rowsCount += 1
-    columns.add(&"{key}")
+    columns.add(key)
 
   var values = ""
   var valuesCount = 0
