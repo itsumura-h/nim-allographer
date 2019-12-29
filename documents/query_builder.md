@@ -4,13 +4,26 @@ Example: Query Builder
 
 ## index
 - [SELECT](#SELECT)
+  - [join](#join)
+  - [where](#where)
+  - [orWhere](#orWhere)
+  - [whereBetween](#whereBetween)
+  - [whereNotBetween](#whereNotBetween)
+  - [whereIn](#whereIn)
+  - [whereNotIn](#whereNotIn)
+  - [whereNull](#whereNull)
+  - [groupBy](#groupBy)
+  - [having](#having)
+  - [orderBy](#orderBy)
+  - [limit-offset](#limit_offset)
+
 - [INSERT](#INSERT)
 - [UPDATE](#UPDATE)
 - [DELETE](#DELETE)
 - [RAW_SQL](#RAW_SQL)
 - [Aggregates](#Aggregates)
 
-### SELECT
+## SELECT
 [to index](#index)
 
 When it returns following table
@@ -19,7 +32,7 @@ When it returns following table
 |---|---|---|---|---|---|
 |1|3.14|char|2019-01-01 12:00:00.1234||1|
 
-#### return JsonNode
+### return JsonNode
 ```nim
 import allographer/query_builder
 
@@ -41,7 +54,7 @@ echo RDB().table("test")
 ]
 ```
 
-#### return Object
+### return Object
 If object is defined and set arg of get/getRaw/first/find, response will be object as ORM
 
 ```nim
@@ -80,7 +93,7 @@ echo rows[0].is_admin
 >> true                         # bool
 ```
 
-#### Examples
+### Examples
 
 ```nim
 import allographer/query_builder
@@ -142,7 +155,7 @@ import allographer/query_builder
 let resultRow = RDB().table("users").find(3)
 echo resultRow
 
->> SELECT * FROM users WHERE id = 3
+>> SELECT * FROM users WHERE id = 3 LIMIT 1
 >> {
     "id":3,
     "name":"user3",
@@ -163,7 +176,7 @@ import allographer/query_builder
 let resultRow = RDB().table("users").find(3, key="user_id")
 echo resultRow
 
->> SELECT * FROM users WHERE user_id = 3
+>> SELECT * FROM users WHERE user_id = 3 LIMIT 1
 >> {
     "user_id":3,
     "name":"user3",
@@ -218,7 +231,7 @@ echo result
 ]
 ```
 
-### INSERT
+## INSERT
 [to index](#index)
 
 ```nim
@@ -275,7 +288,7 @@ RDB().table("users").inserts(
 >> INSERT INTO users (name, birth_date, address) VALUES ("George", "1960-1-1", "London")
 ```
 
-### UPDATE
+## UPDATE
 [to index](#index)
 
 ```nim
@@ -289,7 +302,7 @@ RDB()
 >> UPDATE users SET name = "Mick", address = "NY" WHERE id = 100
 ```
 
-### DELETE
+## DELETE
 [to index](#index)
 
 ```nim
@@ -325,7 +338,7 @@ RDB()
 >> DELETE FROM users WHERE address = "London"
 ```
 
-### Raw_SQL
+## Raw_SQL
 [to index](#INDEX)
 
 ```nim
@@ -345,7 +358,7 @@ let sql = "UPDATE users SET name='John' where id = 1"
 RDB().raw(sql).exec()
 ```
 
-### Aggregates
+## Aggregates
 [to index](#index)
 
 ```nim

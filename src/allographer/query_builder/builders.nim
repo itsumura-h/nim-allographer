@@ -22,6 +22,23 @@ proc selectBuilder*(this: RDB): RDB =
         .limitSql()
         .offsetSql()
 
+proc selectFirstBuilder*(this: RDB): RDB =
+  return this.selectSql()
+        .fromSql()
+        .joinSql()
+        .whereSql()
+        .orWhereSql()
+        .whereBetweenSql()
+        .whereNotBetweenSql()
+        .whereInSql()
+        .whereNotInSql()
+        .whereNullSql()
+        .groupBySql()
+        .havingSql()
+        .orderBySql()
+        .selectFirstSql()
+        .offsetSql()
+
 proc selectFindBuilder*(this: RDB, id: int, key: string): RDB =
   return this.selectSql()
         .fromSql()

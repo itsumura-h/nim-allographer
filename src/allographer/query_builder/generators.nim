@@ -1,12 +1,3 @@
-# import json
-
-# import ../util
-# import base
-# import
-#   generators/sqlite_generator,
-#   generators/mysql_generator,
-#   generators/postgres_generator
-
 import json
 from strformat import `&`
 from strutils import contains
@@ -16,14 +7,6 @@ import base
 # ==================== SELECT ====================
 
 proc selectSql*(this: RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.selectSql(this)
-  # of "mysql":
-  #   result = mysql_generator.selectSql(this)
-  # of "postgres":
-  #   result = postgres_generator.selectSql(this)
   var queryString = ""
 
   if this.query.hasKey("distinct"):
@@ -43,41 +26,20 @@ proc selectSql*(this: RDB): RDB =
 
 
 proc fromSql*(this: RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.fromSql(this)
-  # of "mysql":
-  #   result = mysql_generator.fromSql(this)
-  # of "postgres":
-  #   result = postgres_generator.fromSql(this)
   let table = this.query["table"].getStr()
   this.sqlString.add(&" FROM {table}")
   return this
 
+proc selectFirstSql*(this:RDB): RDB =
+  this.sqlString.add(" LIMIT 1")
+  return this
 
 proc selectByIdSql*(this:RDB, id:int, key:string): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.selectByIdSql(this, key)
-  # of "mysql":
-  #   result = mysql_generator.selectByIdSql(this, key)
-  # of "postgres":
-  #   result = postgres_generator.selectByIdSql(this, key)
   this.sqlString.add(&" WHERE {key} = ? LIMIT 1")
   return this
 
 
 proc joinSql*(this: RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.joinSql(this)
-  # of "mysql":
-  #   result = mysql_generator.joinSql(this)
-  # of "postgres":
-  #   result = postgres_generator.joinSql(this)
   if this.query.hasKey("join"):
     for row in this.query["join"]:
       var table = row["table"].getStr()
@@ -91,14 +53,6 @@ proc joinSql*(this: RDB): RDB =
 
 
 proc whereSql*(this: RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.whereSql(this)
-  # of "mysql":
-  #   result = mysql_generator.whereSql(this)
-  # of "postgres":
-  #   result = postgres_generator.whereSql(this)
   if this.query.hasKey("where"):
     for i, row in this.query["where"].getElems():
       var column = row["column"].getStr()
@@ -114,14 +68,6 @@ proc whereSql*(this: RDB): RDB =
 
 
 proc orWhereSql*(this: RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.orWhereSql(this)
-  # of "mysql":
-  #   result = mysql_generator.orWhereSql(this)
-  # of "postgres":
-  #   result = postgres_generator.orWhereSql(this)
   if this.query.hasKey("or_where"):
     for row in this.query["or_where"]:
       var column = row["column"].getStr()
@@ -137,14 +83,6 @@ proc orWhereSql*(this: RDB): RDB =
 
 
 proc whereBetweenSql*(this:RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.whereBetweenSql(this)
-  # of "mysql":
-  #   result = mysql_generator.whereBetweenSql(this)
-  # of "postgres":
-  #   result = postgres_generator.whereBetweenSql(this)
   if this.query.hasKey("where_between"):
     for row in this.query["where_between"]:
       var column = row["column"].getStr()
@@ -160,14 +98,6 @@ proc whereBetweenSql*(this:RDB): RDB =
 
 
 proc whereNotBetweenSql*(this:RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.whereNotBetweenSql(this)
-  # of "mysql":
-  #   result = mysql_generator.whereNotBetweenSql(this)
-  # of "postgres":
-  #   result = postgres_generator.whereNotBetweenSql(this)
   if this.query.hasKey("where_not_between"):
     for row in this.query["where_not_between"]:
       var column = row["column"].getStr()
@@ -182,14 +112,6 @@ proc whereNotBetweenSql*(this:RDB): RDB =
 
 
 proc whereInSql*(this:RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.whereInSql(this)
-  # of "mysql":
-  #   result = mysql_generator.whereInSql(this)
-  # of "postgres":
-  #   result = postgres_generator.whereInSql(this)
   if this.query.hasKey("where_in"):
     var widthString = ""
     for row in this.query["where_in"]:
@@ -209,14 +131,6 @@ proc whereInSql*(this:RDB): RDB =
 
 
 proc whereNotInSql*(this:RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.whereNotInSql(this)
-  # of "mysql":
-  #   result = mysql_generator.whereNotInSql(this)
-  # of "postgres":
-  #   result = postgres_generator.whereNotInSql(this)
   if this.query.hasKey("where_not_in"):
     var widthString = ""
     for row in this.query["where_not_in"]:
@@ -236,14 +150,6 @@ proc whereNotInSql*(this:RDB): RDB =
 
 
 proc whereNullSql*(this:RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.whereNullSql(this)
-  # of "mysql":
-  #   result = mysql_generator.whereNullSql(this)
-  # of "postgres":
-  #   result = postgres_generator.whereNullSql(this)
   if this.query.hasKey("where_null"):
     for row in this.query["where_null"]:
       var column = row["column"].getStr()
@@ -256,14 +162,6 @@ proc whereNullSql*(this:RDB): RDB =
 
 
 proc groupBySql*(this:RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.groupBySql(this)
-  # of "mysql":
-  #   result = mysql_generator.groupBySql(this)
-  # of "postgres":
-  #   result = postgres_generator.groupBySql(this)
   if this.query.hasKey("group_by"):
     for row in this.query["group_by"]:
       var column = row["column"].getStr()
@@ -276,14 +174,6 @@ proc groupBySql*(this:RDB): RDB =
 
 
 proc havingSql*(this:RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.havingSql(this)
-  # of "mysql":
-  #   result = mysql_generator.havingSql(this)
-  # of "postgres":
-  #   result = postgres_generator.havingSql(this)
   if this.query.hasKey("having"):
     for i, row in this.query["having"].getElems():
       var column = row["column"].getStr()
@@ -299,14 +189,6 @@ proc havingSql*(this:RDB): RDB =
 
 
 proc orderBySql*(this:RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.orderBySql(this)
-  # of "mysql":
-  #   result = mysql_generator.orderBySql(this)
-  # of "postgres":
-  #   result = postgres_generator.orderBySql(this)
   if this.query.hasKey("order_by"):
     for row in this.query["order_by"]:
       var column = row["column"].getStr()
@@ -320,14 +202,6 @@ proc orderBySql*(this:RDB): RDB =
 
 
 proc limitSql*(this: RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.limitSql(this)
-  # of "mysql":
-  #   result = mysql_generator.limitSql(this)
-  # of "postgres":
-  #   result = postgres_generator.limitSql(this)
   if this.query.hasKey("limit"):
     var num = this.query["limit"].getInt()
     this.sqlString.add(&" LIMIT {num}")
@@ -336,14 +210,6 @@ proc limitSql*(this: RDB): RDB =
 
 
 proc offsetSql*(this: RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.offsetSql(this)
-  # of "mysql":
-  #   result = mysql_generator.offsetSql(this)
-  # of "postgres":
-  #   result = postgres_generator.offsetSql(this)
   if this.query.hasKey("offset"):
     var num = this.query["offset"].getInt()
     this.sqlString.add(&" OFFSET {num}")
@@ -354,28 +220,12 @@ proc offsetSql*(this: RDB): RDB =
 # ==================== INSERT ====================
 
 proc insertSql*(this: RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.insertSql(this)
-  # of "mysql":
-  #   result = mysql_generator.insertSql(this)
-  # of "postgres":
-  #   result = postgres_generator.insertSql(this)
   let table = this.query["table"].getStr()
   this.sqlString = &"INSERT INTO {table}"
   return this
 
 
 proc insertValueSql*(this: RDB, items: JsonNode): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.insertValueSql(this, items)
-  # of "mysql":
-  #   result = mysql_generator.insertValueSql(this, items)
-  # of "postgres":
-  #   result = postgres_generator.insertValueSql(this, items)
   var columns = ""
   var values = ""
 
@@ -399,14 +249,6 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
 
 
 proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.insertValuesSql(this, rows)
-  # of "mysql":
-  #   result = mysql_generator.insertValuesSql(this, rows)
-  # of "postgres":
-  #   result = postgres_generator.insertValuesSql(this, rows)
   var columns = ""
   var rowsCount = 0
 
@@ -442,14 +284,6 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
 # ==================== UPDATE ====================
 
 proc updateSql*(this: RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.updateSql(this)
-  # of "mysql":
-  #   result = mysql_generator.updateSql(this)
-  # of "postgres":
-  #   result = postgres_generator.updateSql(this)
   this.sqlString.add("UPDATE")
 
   let table = this.query["table"].getStr()
@@ -458,14 +292,6 @@ proc updateSql*(this: RDB): RDB =
 
 
 proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.updateValuesSql(this, items)
-  # of "mysql":
-  #   result = mysql_generator.updateValuesSql(this, items)
-  # of "postgres":
-  #   result = postgres_generator.updateValuesSql(this, items)
   var value = ""
 
   var i = 0
@@ -481,92 +307,36 @@ proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
 # ==================== DELETE ====================
 
 proc deleteSql*(this: RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.deleteSql(this)
-  # of "mysql":
-  #   result = mysql_generator.deleteSql(this)
-  # of "postgres":
-  #   result = postgres_generator.deleteSql(this)
   this.sqlString.add("DELETE")
   return this
 
 
 proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.deleteByIdSql(this, key)
-  # of "mysql":
-  #   result = mysql_generator.deleteByIdSql(this, key)
-  # of "postgres":
-  #   result = postgres_generator.deleteByIdSql(this, key)
   this.sqlString.add(&" WHERE {key} = ?")
   return this
 
 # ==================== Aggregates ====================
 
 proc selectCountSql*(this: RDB): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.selectCountSql(this)
-  # of "mysql":
-  #   result = mysql_generator.selectCountSql(this)
-  # of "postgres":
-  #   result = postgres_generator.selectCountSql(this)
   this.sqlString = "SELECT count(*) as aggregate"
   return this
 
 
 proc selectMaxSql*(this:RDB, column:string): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.selectMaxSql(this, column)
-  # of "mysql":
-  #   result = mysql_generator.selectMaxSql(this, column)
-  # of "postgres":
-  #   result = postgres_generator.selectMaxSql(this, column)
   this.sqlString = &"SELECT max({column}) as aggregate"
   return this
 
 
 proc selectMinSql*(this:RDB, column:string): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.selectMinSql(this, column)
-  # of "mysql":
-  #   result = mysql_generator.selectMinSql(this, column)
-  # of "postgres":
-  #   result = postgres_generator.selectMinSql(this, column)
   this.sqlString = &"SELECT min({column}) as aggregate"
   return this
 
 
 proc selectAvgSql*(this:RDB, column:string): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.selectAvgSql(this, column)
-  # of "mysql":
-  #   result = mysql_generator.selectAvgSql(this, column)
-  # of "postgres":
-  #   result = postgres_generator.selectAvgSql(this, column)
   this.sqlString = &"SELECT avg({column}) as aggregate"
   return this
 
 
 proc selectSumSql*(this:RDB, column:string): RDB =
-  # let driver = util.getDriver()
-  # case driver:
-  # of "sqlite":
-  #   result = sqlite_generator.selectSumSql(this, column)
-  # of "mysql":
-  #   result = mysql_generator.selectSumSql(this, column)
-  # of "postgres":
-  #   result = postgres_generator.selectSumSql(this, column)
   this.sqlString = &"SELECT sum({column}) as aggregate"
   return this

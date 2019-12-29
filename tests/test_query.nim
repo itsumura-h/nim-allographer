@@ -50,6 +50,10 @@ suite "select":
     var t = RDB().table("users").where("name", "=", "user1").first()
     check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
 
+  test "find()":
+    var t = RDB().table("users").find(1)
+    check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
+
   test "select()":
     var t = RDB().table("users").select("name", "email").get()
     check t[0] == %*{"name": "user1", "email": "user1@gmail.com"}
