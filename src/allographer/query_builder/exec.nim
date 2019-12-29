@@ -347,6 +347,7 @@ proc count*(this:RDB): int =
   this.sqlStringSeq = @[this.countBuilder().sqlString]
   logger(this.sqlStringSeq[0], this.placeHolder)
   var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  let DRIVER = getDriver()
   case DRIVER
   of "sqlite":
     return response["aggregate"].getStr().parseInt()
@@ -383,6 +384,7 @@ proc avg*(this:RDB, column:string): float =
   this.sqlStringSeq = @[this.avgBuilder(column).sqlString]
   logger(this.sqlStringSeq[0], this.placeHolder)
   var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  let DRIVER = getDriver()
   case DRIVER
   of "sqlite":
     return response["aggregate"].getStr().parseFloat()
@@ -393,6 +395,7 @@ proc sum*(this:RDB, column:string): float =
   this.sqlStringSeq = @[this.sumBuilder(column).sqlString]
   logger(this.sqlStringSeq[0], this.placeHolder)
   var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  let DRIVER = getDriver()
   case DRIVER
   of "sqlite":
     return response["aggregate"].getStr().parseFloat()

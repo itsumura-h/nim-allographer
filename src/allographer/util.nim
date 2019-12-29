@@ -1,5 +1,6 @@
 import os, parsecfg, terminal, logging
-import connection
+# include connection
+from connection import getDriver
 
 # file logging setting
 let logConfigFile = getCurrentDir() & "/config/logging.ini"
@@ -12,13 +13,6 @@ try:
     newRollingFileLogger(logPath, mode=fmAppend, fmtStr=verboseFmtStr).addHandler()
 except:
   discard
-
-
-proc getDriver*():string =
-  return connection.DRIVER
-  # let logConfigFile = getCurrentDir() & "/config/database.ini"
-  # let conf = loadConfig(logConfigFile)
-  # return conf.getSectionValue("RDB", "driver")
 
 
 proc driverTypeError*() =
