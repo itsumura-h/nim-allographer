@@ -15,11 +15,11 @@ proc getColumns(db_columns:DbColumns):seq[JsonNode] =
   for i, row in db_columns:
     case DRIVER:
     of "sqlite":
-      columns[i] = %*{"name": row.name, "typ": row.typ.name}
+      columns[i] = %*{"name": row.name, "typ": row.typ.name, "size": row.typ.size}
     of "mysql":
-      columns[i] = %*{"name": row.name, "typ": row.typ.kind}
+      columns[i] = %*{"name": row.name, "typ": row.typ.kind, "size": row.typ.size}
     of "postgres":
-      columns[i] = %*{"name": row.name, "typ": row.typ.kind}
+      columns[i] = %*{"name": row.name, "typ": row.typ.kind, "size": row.typ.size}
   return columns
 
 proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[JsonNode] =
@@ -28,9 +28,12 @@ proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[Jso
   for index, rows in results.pairs:
     var response_row = %*{}
     for i, row in rows:
-      var key = columns[i]["name"].getStr
-      var typ = columns[i]["typ"].getStr
-      if DRIVER == "sqlite":
+      let key = columns[i]["name"].getStr
+      let typ = columns[i]["typ"].getStr
+      let size = columns[i]["size"].getInt
+
+      case DRIVER:
+      of "sqlite":
         if row == "":
           response_row[key] = newJNull()
         elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
@@ -41,7 +44,21 @@ proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[Jso
           response_row[key] = newJBool(row.parseBool)
         else:
           response_row[key] = newJString(row)
-      else:
+      of "mysql":
+        if row == "":
+          response_row[key] = newJNull()
+        elif [$dbInt, $dbUInt].contains(typ) and size == 1:
+          if row == "0":
+            response_row[key] = newJBool(false)
+          elif row == "1":
+            response_row[key] = newJBool(true)
+        elif [$dbInt, $dbUInt].contains(typ):
+          response_row[key] = newJInt(row.parseInt)
+        elif [$dbDecimal, $dbFloat].contains(typ):
+          response_row[key] = newJFloat(row.parseFloat)
+        else:
+          response_row[key] = newJString(row)
+      of "postgres":
         if row == "":
           response_row[key] = newJNull()
         elif [$dbInt, $dbUInt].contains(typ):
@@ -49,7 +66,10 @@ proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[Jso
         elif [$dbDecimal, $dbFloat].contains(typ):
           response_row[key] = newJFloat(row.parseFloat)
         elif [$dbBool].contains(typ):
-          response_row[key] = newJBool(row.parseBool)
+          if row == "f":
+            response_row[key] = newJBool(false)
+          elif row == "t":
+            response_row[key] = newJBool(true)
         else:
           response_row[key] = newJString(row)
 
@@ -60,8 +80,10 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
   var response_row = %*{}
   const DRIVER = getDriver()
   for i, row in results:
-    var key = columns[i]["name"].getStr
-    var typ = columns[i]["typ"].getStr
+    let key = columns[i]["name"].getStr
+    let typ = columns[i]["typ"].getStr
+    let size = columns[i]["size"].getInt
+
     case DRIVER:
     of "sqlite":
       if row == "":
@@ -77,12 +99,15 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
     of "mysql":
       if row == "":
         response_row[key] = newJNull()
+      elif [$dbInt, $dbUInt].contains(typ) and size == 1:
+        if row == "0":
+          response_row[key] = newJBool(false)
+        elif row == "1":
+          response_row[key] = newJBool(true)
       elif [$dbInt, $dbUInt].contains(typ):
         response_row[key] = newJInt(row.parseInt)
       elif [$dbDecimal, $dbFloat].contains(typ):
         response_row[key] = newJFloat(row.parseFloat)
-      elif [$dbBool].contains(typ):
-        response_row[key] = newJBool(row.parseBool)
       else:
         response_row[key] = newJString(row)
     of "postgres":
@@ -93,7 +118,10 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
       elif [$dbDecimal, $dbFloat].contains(typ):
         response_row[key] = newJFloat(row.parseFloat)
       elif [$dbBool].contains(typ):
-        response_row[key] = newJBool(row.parseBool)
+        if row == "f":
+          response_row[key] = newJBool(false)
+        elif row == "t":
+          response_row[key] = newJBool(true)
       else:
         response_row[key] = newJString(row)
     # var key = columns[i]["name"].getStr
@@ -110,6 +138,7 @@ proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
     for row in db.instantRows(db_columns, sql sqlString, args):
       discard
     defer: db.close()
+    
 
   let columns = getColumns(db_columns)
   return toJson(results, columns) # seq[JsonNode]
