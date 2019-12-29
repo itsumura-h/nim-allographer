@@ -2,7 +2,7 @@ import unittest, json, strformat
 
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
-from ../src/allographer/connection import DRIVER
+from ../src/allographer/connection import getDriver
 
 proc setup() =
   Schema().create([
@@ -164,11 +164,12 @@ suite "select":
             .groupBy("auth_id")
             .get()
     echo t
-    when connection.DRIVER is "sqlite":
+    let DRIVER = connection.getDriver()
+    when DRIVER is "sqlite":
       check t[0]["max(id)"].getStr() == "9"
-    when connection.DRIVER is "mysql":
+    when DRIVER is "mysql":
       check t[0]["max(id)"].getInt() == 9
-    when connection.DRIVER is "postgres":
+    when DRIVER is "postgres":
       check t[0]["max"].getInt() == 9
     
   test "having()":

@@ -1,6 +1,5 @@
 import json
 
-
 type
   RDB* = ref object of RootObj
     query*: JsonNode
