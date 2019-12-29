@@ -196,12 +196,12 @@ proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
 
 
 proc first*(this: RDB): JsonNode =
-  this.sqlStringSeq = @[this.selectBuilder().sqlString]
+  this.sqlStringSeq = @[this.selectFirstBuilder().sqlString]
   logger(this.sqlStringSeq[0], this.placeHolder)
   return getRow(this.sqlStringSeq[0], this.placeHolder)
 
 proc first*(this: RDB, typ: typedesc): typ.type =
-  this.sqlStringSeq = @[this.selectBuilder().sqlString]
+  this.sqlStringSeq = @[this.selectFirstBuilder().sqlString]
   logger(this.sqlStringSeq[0], this.placeHolder)
   return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
 
