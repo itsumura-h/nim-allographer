@@ -5,7 +5,7 @@ import ../column
 # int
 # =============================================================================
 proc serialGenerator*(name:string):string =
-  result = &"`{name}` INT NOT NULL PRIMARY KEY AUTO_INCREMENT"
+  result = &"`{name}` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT"
 
 proc intGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
                     isUnsigned:bool):string =
@@ -207,7 +207,8 @@ proc blobGenerator*(name:string, nullable:bool):string =
 
 proc boolGenerator*(name:string, nullable:bool, isDefault:bool, 
                     default:bool):string =
-  result = &"`{name}` TINYINT"
+  # result = &"`{name}` TINYINT(1)"
+  result = &"`{name}` BOOLEAN"
 
   if isDefault:
     let defaultInt = if default: 1 else: 0
