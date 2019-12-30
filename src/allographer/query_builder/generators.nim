@@ -52,6 +52,19 @@ proc joinSql*(this: RDB): RDB =
   return this
 
 
+proc leftJoinSql*(this: RDB): RDB =
+  if this.query.hasKey("left_join"):
+    for row in this.query["left_join"]:
+      var table = row["table"].getStr()
+      var column1 = row["column1"].getStr()
+      var symbol = row["symbol"].getStr()
+      var column2 = row["column2"].getStr()
+
+      this.sqlString.add(&" LEFT JOIN {table} ON {column1} {symbol} {column2}")
+
+  return this
+
+
 proc whereSql*(this: RDB): RDB =
   if this.query.hasKey("where"):
     for i, row in this.query["where"].getElems():

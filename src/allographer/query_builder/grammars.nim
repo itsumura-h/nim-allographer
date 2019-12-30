@@ -63,8 +63,27 @@ proc join*(this: RDB, table: string, column1: string, symbol: string,
   return this
 
 
-const whereSymbols = ["is", "is not", "=", "<", "<=", ">=", ">", "<>", "LIKE","%LIKE","LIKE%","%LIKE%"]
-const whereSymbolsError = """Arg position 3 is only allowed of ["is", "is not", "=", "<", "<=", ">=", ">", "<>", "LIKE","%LIKE","LIKE%","%LIKE%"]"""
+proc leftJoin*(this: RDB, table: string, column1: string, symbol: string,
+              column2: string): RDB =
+  if this.query.hasKey("left_join") == false:
+    this.query["left_join"] = %*[{
+      "table": table,
+      "column1": column1,
+      "symbol": symbol,
+      "column2": column2
+    }]
+  else:
+    this.query["left_join"].add(%*{
+      "table": table,
+      "column1": column1,
+      "symbol": symbol,
+      "column2": column2
+    })
+  return this
+
+
+const whereSymbols = ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"]
+const whereSymbolsError = """Arg position 3 is only allowed of ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"]"""
 
 proc where*(this: RDB, column: string, symbol: string,
             value: string|int|float|bool): RDB =
