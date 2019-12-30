@@ -9,6 +9,7 @@ proc selectBuilder*(this: RDB): RDB =
   return this.selectSql()
         .fromSql()
         .joinSql()
+        .leftJoinSql()
         .whereSql()
         .orWhereSql()
         .whereBetweenSql()
