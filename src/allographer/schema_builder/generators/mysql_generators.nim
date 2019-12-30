@@ -249,7 +249,7 @@ proc jsonGenerator*(name:string, nullable:bool):string =
     result.add(" NOT NULL")
 
 proc foreignColumnGenerator*(name:string):string =
-  result = &"`{name}` INT"
+  result = &"`{name}` BIGINT"
 
 proc foreignGenerator*(name:string, table:string, column:string,
                         foreignOnDelete:ForeignOnDelete):string =
