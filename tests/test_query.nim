@@ -190,3 +190,25 @@ suite "select":
             .get()
     echo t
     check t[0]["id"].getInt() == 9
+
+  test "join()":
+    var t = RDB().table("users")
+            .select("users.id", "users.name")
+            .join("auth", "auth.id", "=", "users.auth_id")
+            .where("auth.id", "=", "2")
+            .get()
+    echo t
+    check t[0]["name"].getStr() == "user2"
+
+  test "leftJoin()":
+    RDB().table("users").insert(%*{
+      "name": "user11"
+    })
+    var t = RDB().table("users")
+            .select("users.id", "users.name", "users.auth_id")
+            .leftJoin("auth", "auth.id", "=", "users.auth_id")
+            .orderBy("users.id", Desc)
+            .get()
+    echo t
+    check t[0]["name"].getStr() == "user11"
+    check t[0]["auth_id"] == newJNull()
