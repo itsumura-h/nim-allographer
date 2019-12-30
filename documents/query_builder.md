@@ -4,6 +4,9 @@ Example: Query Builder
 
 ## index
 - [SELECT](#SELECT)
+  - [get](#get)
+  - [first](#first)
+  - [find](#find)
   - [join](#join)
   - [where](#where)
   - [orWhere](#orWhere)
@@ -95,140 +98,126 @@ echo rows[0].is_admin
 
 ### Examples
 
+#### get
+Retrieving all row from a table
 ```nim
-import allographer/query_builder
+let users = RDB().table("users").get()
+for user in users:
+  echo user["name"]
+```
 
-var result = RDB()
+#### first
+Retrieving a single row from a table
+```nim
+let user = RDB()
             .table("users")
-            .select("id", "email", "name")
-            .limit(5)
+            .where("name", "=", "John")
+            .first()
+echo user["name"]
+```
+
+#### find
+Retrieve a single row by its primary key
+```nim
+let user = RDB().table("users").find(1)
+echo user["name"]
+```
+
+If the column name of a promary key is not "id", specify this in 2nd arg of `find`
+```nim
+let user = RDB().table("users").find(1, "user_id")
+echo user["name"]
+```
+
+#### join
+```nim
+let users = RDB()
+.   .table("users")
+    .select("users.id", "contacts.phone", "orders.price")
+    .join("contacts", "users.id", "=", "contacts.user_id")
+    .join("orders", "users.id", "=", "orders.user_id")
+    .get()
+```
+
+#### where
+```nim
+let users = RDB().table("users").where("age", ">", 25).get()
+```
+#### orWhere
+```nim
+let users = RDB()
+            .table("users")
+            .where("age", ">", 25)
+            .orWhere("name", "=", "John")
+            .get()
+```
+
+#### whereBetween
+```nim
+let users = RDB()
+            .table("users")
+            .whereBetween("age", [25, 35])
+            .get()
+```
+
+#### whereNotBetween
+```nim
+let users = RDB()
+            .table("users")
+            .whereNotBetween("age", [25, 35])
+            .get()
+```
+
+#### whereIn
+```nim
+let users = RDB()
+            .table("users")
+            .whereIn("id", @[1, 2, 3])
+            .get()
+```
+
+#### whereNotIn
+```nim
+let users = RDB()
+            .table("users")
+            .whereNotIn("id", @[1, 2, 3])
+            .get()
+```
+
+#### whereNull
+```nim
+let users = RDB()
+            .table("users")
+            .whereNull("updated_at")
+            .get()
+```
+
+#### groupBy_having
+```nim
+let users = RDB()
+            .table("users")
+            .group_by("count")
+            .having("count", ">", 100)
+            .get()
+```
+
+#### orderBy
+```nim
+let users = RDB()
+            .table("users")
+            .orderBy("name", Desc)
+            .get()
+```
+2nd arg of `orderBy` is Enum. `Desc` or `Asc`
+
+
+#### limit_offset
+```nim
+let users = RDB()
+            .table("users")
             .offset(10)
+            .limit(5)
             .get()
-echo result
-
->> SELECT id, email, name FROM users LIMIT 5 OFFSET 10
->> @[
-  {"id":11,"email":"user11@gmail.com","name":"user11"},
-  {"id":12,"email":"user12@gmail.com","name":"user12"},
-  {"id":13,"email":"user13@gmail.com","name":"user13"},
-  {"id":14,"email":"user14@gmail.com","name":"user14"},
-  {"id":15,"email":"user15@gmail.com","name":"user15"}
-]
-```
-```nim
-import allographer/query_builder
-
-let resultRow = RDB()
-                .table("users")
-                .select()
-                .where("id", "=", 3)
-                .get()
-echo resultRow
-
->> SELECT * FROM users WHERE id = 3
->> @[
-  {
-    "id":3,
-    "name":"user3",
-    "email":"user3@gmail.com",
-    "address":"246 Ferguson Village Apt. 582\nNew Joshua, IL 24200",
-    "password":"$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny",
-    "birth_date":"2012-11-24",
-    "auth":2,
-    "created_at":"2019-09-26 19:11:28.159367",
-    "updated_at":"2019-09-26 19:11:28.159369"
-  }
-]
-```
-```nim
-import allographer/query_builder
-
-let resultRow = RDB().table("users").select("id", "name", "email").where("id", ">", 5).first()
-echo resultRow
-
->> SELECT id, name, email FROM users WHERE id > 5
->> {"id":6, "name":"user6", "email":"user6@gmail.com"}
-```
-```nim
-import allographer/query_builder
-
-let resultRow = RDB().table("users").find(3)
-echo resultRow
-
->> SELECT * FROM users WHERE id = 3 LIMIT 1
->> {
-    "id":3,
-    "name":"user3",
-    "email":"user3@gmail.com",
-    "address":"246 Ferguson Village Apt. 582\nNew Joshua, IL 24200",
-    "password":"$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny",
-    "birth_date":"2012-11-24",
-    "auth":2,
-    "created_at":"2019-09-26 19:11:28.159367",
-    "updated_at":"2019-09-26 19:11:28.159369"
-  }
-```
-
-If column name of primary key is not exactory "id", you can specify it's name.
-```nim
-import allographer/query_builder
-
-let resultRow = RDB().table("users").find(3, key="user_id")
-echo resultRow
-
->> SELECT * FROM users WHERE user_id = 3 LIMIT 1
->> {
-    "user_id":3,
-    "name":"user3",
-    "email":"user3@gmail.com",
-    "address":"246 Ferguson Village Apt. 582\nNew Joshua, IL 24200",
-    "password":"$2a$10$gmKpgtO535lkw0eAcGiRyefdEg6TXr9S.z6vhsn4X.mBYtP0Thfny",
-    "birth_date":"2012-11-24",
-    "auth":2,
-    "created_at":"2019-09-26 19:11:28.159367",
-    "updated_at":"2019-09-26 19:11:28.159369"
-  }
-```
-
-
-```nim
-import allographer/query_builder
-
-let result = RDB()
-            .table("users")
-            .select("id", "email", "name")
-            .where("id", ">", 4)
-            .where("id", "<=", 10)
-            .get()
-echo result
-
->> SELECT id, email, name FROM users WHERE id > 4 AND id <= 10
->> @[
-    {"id":5, "email":"user5@gmail.com", "name":"user5"},
-    {"id":6, "email":"user6@gmail.com", "name":"user6"},
-    {"id":7, "email":"user7@gmail.com", "name":"user7"},
-    {"id":8, "email":"user8@gmail.com", "name":"user8"},
-    {"id":9, "email":"user9@gmail.com", "name":"user9"},
-    {"id":10, "email":"user10@gmail.com", "name":"user10"}
-]
-```
-```nim
-import allographer/query_builder
-
-let result = RDB()
-            .table("users")
-            .select("users.name", "users.auth_id")
-            .join("auth", "auth.id", "=", "users.auth_id")
-            .where("users.auth_id", "=", 1)
-            .where("users.id", "<", 5)
-            .get()
-echo result
-
->> SELECT users.name, users.auth_id FROM users JOIN auth ON auth.id = users.auth_id WHERE users.auth_id = 1 AND users.id < 5
->> @[
-  {"name":"user2","auth_id":1},
-  {"name":"user4","auth_id":1}
-]
 ```
 
 ## INSERT
@@ -245,19 +234,6 @@ RDB()
 })
 
 >> INSERT INTO users (name, email) VALUES ("John", "John@gmail.com")
-```
-```nim
-import allographer/query_builder
-
-echo RDB()
-.table("users")
-.insert(%*{
-  "name": "John",
-  "email": "John@gmail.com"
-})
-
->> INSERT INTO users (name, email) VALUES ("John", "John@gmail.com")
->> 1 # ID of new row is return
 ```
 ```nim
 import allographer/query_builder
@@ -287,6 +263,52 @@ RDB().table("users").inserts(
 >> INSERT INTO users (name, email, address) VALUES ("Paul", "Paul@gmail.com", "London")
 >> INSERT INTO users (name, birth_date, address) VALUES ("George", "1960-1-1", "London")
 ```
+
+### Return ID Insert
+```nim
+import allographer/query_builder
+
+echo RDB()
+.table("users")
+.insertID(%*{
+  "name": "John",
+  "email": "John@gmail.com"
+})
+
+>> INSERT INTO users (name, email) VALUES ("John", "John@gmail.com")
+>> 1 # ID of new row is return
+```
+```nim
+import allographer/query_builder
+
+echo RDB().table("users").insertID(
+  [
+    %*{"name": "John", "email": "John@gmail.com", "address": "London"},
+    %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
+    %*{"name": "George", "email": "George@gmail.com", "address": "London"},
+  ]
+)
+
+>> INSERT INTO users (name, email, address) VALUES ("John", "John@gmail.com", "London"), ("Paul", "Paul@gmail.com", "London"), ("George", "George@gmail.com", "London")
+>> @[1, 2] # Seq of ID of new row is return
+```
+```nim
+import allographer/query_builder
+
+echo RDB().table("users").insertsID(
+  [
+    %*{"name": "John", "email": "John@gmail.com", "address": "London"},
+    %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
+    %*{"name": "George", "birth_date": "1943-02-25", "address": "London"},
+  ]
+)
+
+>> INSERT INTO users (name, email, address) VALUES ("John", "John@gmail.com", "London")
+>> INSERT INTO users (name, email, address) VALUES ("Paul", "Paul@gmail.com", "London")
+>> INSERT INTO users (name, birth_date, address) VALUES ("George", "1960-1-1", "London")
+>> @[1, 2, 3] # Seq of ID of new row is return
+```
+
 
 ## UPDATE
 [to index](#index)
