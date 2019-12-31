@@ -121,3 +121,8 @@ settings will be applied
 ## Examples
 [Query Builder](./documents/query_builder.md)  
 [Schema Builder](./documents/schema_builder.md)  
+
+## Documents
+
+* [query_builder](https://itsumura-h.github.io/nim-allographer/query_builder.html)
+* [schema_builder](https://itsumura-h.github.io/nim-allographer/schema_builder.html)
