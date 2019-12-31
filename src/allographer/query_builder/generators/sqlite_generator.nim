@@ -239,7 +239,6 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
     else:
       this.placeHolder.add(item.val.getStr())
     values.add("?")
-    # values.add(&"{item.val}")
 
   this.sqlString.add(&" ({columns}) VALUES ({values})")
   return this
@@ -262,7 +261,6 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
     for item in items.pairs:
       if valueCount > 0: value.add(", ")
       valueCount += 1
-      # value.add(&"{item.val}")
       if item.val.kind == JInt:
         this.placeHolder.add($(item.val.getInt()))
       elif item.val.kind == JFloat:
