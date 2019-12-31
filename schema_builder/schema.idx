@@ -1,0 +1,9 @@
+db	schema_builder/schema.html#db	schema: db(): DbConn	
+getDriver	schema_builder/schema.html#getDriver	schema: getDriver(): string	
+Schema	schema_builder/schema.html#Schema	schema: Schema	
+ADD	schema_builder/schema.html#ADD	AlterType.ADD	
+CHANGE	schema_builder/schema.html#CHANGE	AlterType.CHANGE	
+DROP	schema_builder/schema.html#DROP	AlterType.DROP	
+AlterType	schema_builder/schema.html#AlterType	schema: AlterType	
+check	schema_builder/schema.html#check,Schema,varargs[Table]	schema: check(this: Schema; tablesArg: varargs[Table])	
+create	schema_builder/schema.html#create,Schema,varargs[Table]	schema: create(this: Schema; tables: varargs[Table])	

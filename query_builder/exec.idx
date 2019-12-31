@@ -1,0 +1,24 @@
+checkSql	query_builder/exec.html#checkSql,RDB	exec: checkSql(this: RDB): string	
+get	query_builder/exec.html#get,RDB	exec: get(this: RDB): seq[JsonNode]	
+get	query_builder/exec.html#get,RDB,typedesc	exec: get(this: RDB; typ: typedesc): seq[typ.type]	
+getRaw	query_builder/exec.html#getRaw,RDB	exec: getRaw(this: RDB): seq[JsonNode]	
+getRaw	query_builder/exec.html#getRaw,RDB,typedesc	exec: getRaw(this: RDB; typ: typedesc): seq[typ.type]	
+first	query_builder/exec.html#first,RDB	exec: first(this: RDB): JsonNode	
+first	query_builder/exec.html#first,RDB,typedesc	exec: first(this: RDB; typ: typedesc): typ.type	
+find	query_builder/exec.html#find,RDB,int,string	exec: find(this: RDB; id: int; key = &quot;id&quot;): JsonNode	
+find	query_builder/exec.html#find,RDB,int,typedesc,string	exec: find(this: RDB; id: int; typ: typedesc; key = &quot;id&quot;): typ.type	
+insert	query_builder/exec.html#insert,RDB,JsonNode	exec: insert(this: RDB; items: JsonNode)	
+insert	query_builder/exec.html#insert,RDB,openArray[JsonNode]	exec: insert(this: RDB; rows: openArray[JsonNode])	
+inserts	query_builder/exec.html#inserts,RDB,openArray[JsonNode]	exec: inserts(this: RDB; rows: openArray[JsonNode])	
+insertID	query_builder/exec.html#insertID,RDB,JsonNode	exec: insertID(this: RDB; items: JsonNode): int	
+insertID	query_builder/exec.html#insertID,RDB,openArray[JsonNode]	exec: insertID(this: RDB; rows: openArray[JsonNode]): seq[int]	
+insertsID	query_builder/exec.html#insertsID,RDB,openArray[JsonNode]	exec: insertsID(this: RDB; rows: openArray[JsonNode]): seq[int]	
+update	query_builder/exec.html#update,RDB,JsonNode	exec: update(this: RDB; items: JsonNode)	
+delete	query_builder/exec.html#delete,RDB	exec: delete(this: RDB)	
+delete	query_builder/exec.html#delete,RDB,int,string	exec: delete(this: RDB; id: int; key = &quot;id&quot;)	
+exec	query_builder/exec.html#exec,RDB	exec: exec(this: RDB)	
+count	query_builder/exec.html#count,RDB	exec: count(this: RDB): int	
+max	query_builder/exec.html#max,RDB,string	exec: max(this: RDB; column: string): string	
+min	query_builder/exec.html#min,RDB,string	exec: min(this: RDB; column: string): string	
+avg	query_builder/exec.html#avg,RDB,string	exec: avg(this: RDB; column: string): float	
+sum	query_builder/exec.html#sum,RDB,string	exec: sum(this: RDB; column: string): float	

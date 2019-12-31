@@ -1,0 +1,1 @@
+migrate	schema_builder/migrates/mysql_migrate.html#migrate,Table	mysql_migrate: migrate(this: Table): string	

@@ -1,0 +1,19 @@
+serialGenerator	schema_builder/generators/sqlite_generators.html#serialGenerator,string	sqlite_generators: serialGenerator(name: string): string	
+intGenerator	schema_builder/generators/sqlite_generators.html#intGenerator,string,bool,bool,int,bool	sqlite_generators: intGenerator(name: string; nullable: bool; isDefault: bool; default: int;\n             isUnsigned: bool): string	
+decimalGenerator	schema_builder/generators/sqlite_generators.html#decimalGenerator,string,int,int,bool,bool,float,bool	sqlite_generators: decimalGenerator(name: string; maximum: int; digit: int; nullable: bool;\n                 isDefault: bool; default: float; isUnsigned: bool): string	
+floatGenerator	schema_builder/generators/sqlite_generators.html#floatGenerator,string,bool,bool,float,bool	sqlite_generators: floatGenerator(name: string; nullable: bool; isDefault: bool; default: float;\n               isUnsigned: bool): string	
+charGenerator	schema_builder/generators/sqlite_generators.html#charGenerator,string,int,bool,bool,string	sqlite_generators: charGenerator(name: string; maxLength: int; nullable: bool; isDefault: bool;\n              default: string): string	
+varcharGenerator	schema_builder/generators/sqlite_generators.html#varcharGenerator,string,int,bool,bool,string	sqlite_generators: varcharGenerator(name: string; maxLength: int; nullable: bool; isDefault: bool;\n                 default: string): string	
+textGenerator	schema_builder/generators/sqlite_generators.html#textGenerator,string,bool,bool,string	sqlite_generators: textGenerator(name: string; nullable: bool; isDefault: bool; default: string): string	
+dateGenerator	schema_builder/generators/sqlite_generators.html#dateGenerator,string,bool,bool	sqlite_generators: dateGenerator(name: string; nullable: bool; isDefault: bool): string	
+datetimeGenerator	schema_builder/generators/sqlite_generators.html#datetimeGenerator,string,bool,bool	sqlite_generators: datetimeGenerator(name: string; nullable: bool; isDefault: bool): string	
+timeGenerator	schema_builder/generators/sqlite_generators.html#timeGenerator,string,bool,bool	sqlite_generators: timeGenerator(name: string; nullable: bool; isDefault: bool): string	
+timestampGenerator	schema_builder/generators/sqlite_generators.html#timestampGenerator,string,bool,bool	sqlite_generators: timestampGenerator(name: string; nullable: bool; isDefault: bool): string	
+timestampsGenerator	schema_builder/generators/sqlite_generators.html#timestampsGenerator	sqlite_generators: timestampsGenerator(): string	
+softDeleteGenerator	schema_builder/generators/sqlite_generators.html#softDeleteGenerator	sqlite_generators: softDeleteGenerator(): string	
+blobGenerator	schema_builder/generators/sqlite_generators.html#blobGenerator,string,bool	sqlite_generators: blobGenerator(name: string; nullable: bool): string	
+boolGenerator	schema_builder/generators/sqlite_generators.html#boolGenerator,string,bool,bool,bool	sqlite_generators: boolGenerator(name: string; nullable: bool; isDefault: bool; default: bool): string	
+enumGenerator	schema_builder/generators/sqlite_generators.html#enumGenerator,string,openArray[JsonNode],bool,bool,string	sqlite_generators: enumGenerator(name: string; options: openArray[JsonNode]; nullable: bool;\n              isDefault: bool; default: string): string	
+jsonGenerator	schema_builder/generators/sqlite_generators.html#jsonGenerator,string,bool	sqlite_generators: jsonGenerator(name: string; nullable: bool): string	
+foreignColumnGenerator	schema_builder/generators/sqlite_generators.html#foreignColumnGenerator,string	sqlite_generators: foreignColumnGenerator(name: string): string	
+foreignGenerator	schema_builder/generators/sqlite_generators.html#foreignGenerator,string,string,string,ForeignOnDelete	sqlite_generators: foreignGenerator(name: string; table: string; column: string;\n                 foreignOnDelete: ForeignOnDelete): string	

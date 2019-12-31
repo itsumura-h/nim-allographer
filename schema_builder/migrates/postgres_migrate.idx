@@ -1,0 +1,1 @@
+migrate	schema_builder/migrates/postgres_migrate.html#migrate,Table	postgres_migrate: migrate(this: Table): string	
