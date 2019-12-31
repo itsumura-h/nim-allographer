@@ -83,20 +83,23 @@ proc create*(this:Schema, tables:varargs[Table]) =
   driverTypeError()
 
   block:
-    let db = db()
-    for i, table in tables:
+    var deleteList: seq[string]
+    for table in tables:
       if table.reset:
-        try:
-          let sqlString = &"drop table {table.name}"
-          logger(sqlString)
-          db.exec(sql sqlString)
-        except Exception:
-          getCurrentExceptionMsg().echoErrorMsg()
+        deleteList.add(table.name)
+    # delete table in reverse loop
+    let db = db()
+    for i, v in deleteList:
+      var index = i+1
+      try:
+        db.exec(sql &"drop table {deleteList[^index]}")
+      except Exception:
+        getCurrentExceptionMsg().echoErrorMsg()
     defer: db.close()
 
   for table in tables:
     var query = ""
-    let driver = util.getDriver()
+    let driver = getDriver()
     case driver:
     of "sqlite":
       query = sqlite_migrate.migrate(table)

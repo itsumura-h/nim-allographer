@@ -9,7 +9,10 @@ import ../base
 proc selectSql*(this: RDB): RDB =
   var queryString = ""
 
-  queryString.add("SELECT")
+  if this.query.hasKey("distinct"):
+    queryString.add("SELECT DISTINCT")
+  else:
+    queryString.add("SELECT")
 
   if this.query.hasKey("select"):
     for i, item in this.query["select"].getElems():
@@ -28,8 +31,8 @@ proc fromSql*(this: RDB): RDB =
   return this
 
 
-proc selectByIdSql*(this: RDB, id: int, key: string): RDB =
-  this.sqlString.add(&" WHERE {key} = {$id} LIMIT 1")
+proc selectByIdSql*(this: RDB, key: string): RDB =
+  this.sqlString.add(&" WHERE {key} = ? LIMIT 1")
   return this
 
 
@@ -49,80 +52,149 @@ proc joinSql*(this: RDB): RDB =
 proc whereSql*(this: RDB): RDB =
   if this.query.hasKey("where"):
     for i, row in this.query["where"].getElems():
-      case row["value"].kind:
-      of JInt:
-        var column = row["column"].getStr()
-        var symbol = row["symbol"].getStr()
-        var value = row["value"].getInt()
-        if i == 0:
-          this.sqlString.add(&" WHERE {column} {symbol} {value}")
-        else:
-          this.sqlString.add(&" AND {column} {symbol} {value}")
-      of JFloat:
-        var column = row["column"].getStr()
-        var symbol = row["symbol"].getStr()
-        var value = row["value"].getInt()
-        if i == 0:
-          this.sqlString.add(&" WHERE {column} {symbol} {value}")
-        else:
-          this.sqlString.add(&" AND {column} {symbol} {value}")
-      of JBool:
-        var column = row["column"].getStr()
-        var symbol = row["symbol"].getStr()
-        var value = row["value"].getBool()
-        if i == 0:
-          this.sqlString.add(&" WHERE {column} {symbol} {value}")
-        else:
-          this.sqlString.add(&" AND {column} {symbol} {value}")
+      var column = row["column"].getStr()
+      var symbol = row["symbol"].getStr()
+      var value = row["value"].getStr()
+      
+      if i == 0:
+        this.sqlString.add(&" WHERE {column} {symbol} {value}")
       else:
-        var column = row["column"].getStr()
-        var symbol = row["symbol"].getStr()
-        var value = row["value"].getStr()
-        if i == 0:
-          this.sqlString.add(&" WHERE {column} {symbol} '{value}'")
-        else:
-          this.sqlString.add(&" AND {column} {symbol} '{value}'")
+        this.sqlString.add(&" AND {column} {symbol} {value}")
 
   return this
 
 
 proc orWhereSql*(this: RDB): RDB =
   if this.query.hasKey("or_where"):
-    for i, row in this.query["or_where"].getElems():
-      case row["value"].kind:
-      of JInt:
-        var column = row["column"].getStr()
-        var symbol = row["symbol"].getStr()
-        var value = row["value"].getInt()
-        if this.sqlString.contains("WHERE"):
-          this.sqlString.add(&" OR {column} {symbol} {value}")
-        else:
-          this.sqlString.add(&" WHERE {column} {symbol} {value}")
-      of JFloat:
-        var column = row["column"].getStr()
-        var symbol = row["symbol"].getStr()
-        var value = row["value"].getInt()
-        if this.sqlString.contains("WHERE"):
-          this.sqlString.add(&" OR {column} {symbol} {value}")
-        else:
-          this.sqlString.add(&" WHERE {column} {symbol} {value}")
-      of JBool:
-        var column = row["column"].getStr()
-        var symbol = row["symbol"].getStr()
-        var value = row["value"].getBool()
-        if this.sqlString.contains("WHERE"):
-          this.sqlString.add(&" OR {column} {symbol} {value}")
-        else:
-          this.sqlString.add(&" WHERE {column} {symbol} {value}")
+    for row in this.query["or_where"]:
+      var column = row["column"].getStr()
+      var symbol = row["symbol"].getStr()
+      var value = row["value"].getStr()
+      
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" OR {column} {symbol} {value}")
       else:
-        var column = row["column"].getStr()
-        var symbol = row["symbol"].getStr()
-        var value = row["value"].getStr()
-        if this.sqlString.contains("WHERE"):
-          this.sqlString.add(&" OR {column} {symbol} '{value}'")
-        else:
-          this.sqlString.add(&" WHERE {column} {symbol} '{value}'")
+        this.sqlString.add(&" WHERE {column} {symbol} {value}")
 
+  return this
+
+
+proc whereBetweenSql*(this:RDB): RDB =
+  if this.query.hasKey("where_between"):
+    for row in this.query["where_between"]:
+      var column = row["column"].getStr()
+      var start = row["width"][0].getFloat()
+      var stop = row["width"][1].getFloat()
+
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" AND {column} BETWEEN {start} AND {stop}")
+      else:
+        this.sqlString.add(&" WHERE {column} BETWEEN {start} AND {stop}")
+
+  return this
+
+
+proc whereNotBetweenSql*(this:RDB): RDB =
+  if this.query.hasKey("where_not_between"):
+    for row in this.query["where_not_between"]:
+      var column = row["column"].getStr()
+      var start = row["width"][0].getFloat()
+      var stop = row["width"][1].getFloat()
+
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" AND {column} NOT BETWEEN {start} AND {stop}")
+      else:
+        this.sqlString.add(&" WHERE {column} NOT BETWEEN {start} AND {stop}")
+  return this
+
+
+proc whereInSql*(this:RDB): RDB =
+  if this.query.hasKey("where_in"):
+    var widthString = ""
+    for row in this.query["where_in"]:
+      var column = row["column"].getStr()
+      for i, val in row["width"].getElems():
+        if i > 0: widthString.add(", ")
+        if val.kind == JInt:
+          widthString.add($(val.getInt()))
+        elif val.kind == JFloat:
+          widthString.add($(val.getFloat()))
+
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" AND {column} IN ({widthString})")
+      else:
+        this.sqlString.add(&" WHERE {column} IN ({widthString})")
+  return this
+
+
+proc whereNotInSql*(this:RDB): RDB =
+  if this.query.hasKey("where_not_in"):
+    var widthString = ""
+    for row in this.query["where_not_in"]:
+      var column = row["column"].getStr()
+      for i, val in row["width"].getElems():
+        if i > 0: widthString.add(", ")
+        if val.kind == JInt:
+          widthString.add($(val.getInt()))
+        elif val.kind == JFloat:
+          widthString.add($(val.getFloat()))
+
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" AND {column} NOT IN ({widthString})")
+      else:
+        this.sqlString.add(&" WHERE {column} NOT IN ({widthString})")
+  return this
+
+
+proc whereNullSql*(this:RDB): RDB =
+  if this.query.hasKey("where_null"):
+    for row in this.query["where_null"]:
+      var column = row["column"].getStr()
+
+      if this.sqlString.contains("WHERE"):
+        this.sqlString.add(&" AND {column} is null")
+      else:
+        this.sqlString.add(&" WHERE {column} is null")
+  return this
+
+
+proc groupBySql*(this:RDB): RDB =
+  if this.query.hasKey("group_by"):
+    for row in this.query["group_by"]:
+      var column = row["column"].getStr()
+
+      if this.sqlString.contains("GROUP BY"):
+        this.sqlString.add(&", {column}")
+      else:
+        this.sqlString.add(&" GROUP BY {column}")
+  return this
+
+
+proc havingSql*(this:RDB): RDB =
+  if this.query.hasKey("having"):
+    for i, row in this.query["having"].getElems():
+      var column = row["column"].getStr()
+      var symbol = row["symbol"].getStr()
+      var value = row["value"].getStr()
+      
+      if i == 0:
+        this.sqlString.add(&" HAVING {column} {symbol} {value}")
+      else:
+        this.sqlString.add(&" AND {column} {symbol} {value}")
+
+  return this
+
+
+proc orderBySql*(this:RDB): RDB =
+  if this.query.hasKey("order_by"):
+    for row in this.query["order_by"]:
+      var column = row["column"].getStr()
+      var order = row["order"].getStr()
+
+      if this.sqlString.contains("ORDER BY"):
+        this.sqlString.add(&", {column} {order}")
+      else:
+        this.sqlString.add(&" ORDER BY {column} {order}")
   return this
 
 
@@ -155,21 +227,19 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
   var values = ""
 
   var i = 0
-  for item in items.pairs:
+  for key, val in items.pairs:
     if i > 0:
       columns.add(", ")
       values.add(", ")
     i += 1
-    columns.add(item.key)
-    case item.val.kind:
-    of JInt:
-      values.add(&"{item.val.getInt}")
-    of JFloat:
-      values.add(&"{item.val.getFloat}")
-    of JBool:
-      values.add(&"{item.val.getBool}")
+    columns.add(key)
+    if val.kind == JInt:
+      this.placeHolder.add($(val.getInt()))
+    elif val.kind == JFloat:
+      this.placeHolder.add($(val.getFloat()))
     else:
-      values.add(&"'{item.val.getStr}'")
+      this.placeHolder.add(val.getStr())
+    values.add("?")
 
   this.sqlString.add(&" ({columns}) VALUES ({values})")
   return this
@@ -182,7 +252,7 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
   for key, value in rows[0]:
     if rowsCount > 0: columns.add(", ")
     rowsCount += 1
-    columns.add(&"{key}")
+    columns.add(key)
 
   var values = ""
   var valuesCount = 0
@@ -192,15 +262,13 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
     for key, val in items.pairs:
       if valueCount > 0: value.add(", ")
       valueCount += 1
-      case val.kind:
-      of JInt:
-        value.add(&"{val.getInt}")
-      of JFloat:
-        value.add(&"{val.getFloat}")
-      of JBool:
-        value.add(&"{val.getBool}")
+      if val.kind == JInt:
+        this.placeHolder.add($(val.getInt()))
+      elif val.kind == JFloat:
+        this.placeHolder.add($(val.getFloat()))
       else:
-        value.add(&"'{val.getStr}'")
+        this.placeHolder.add(val.getStr())
+      value.add("?")
 
     if valuesCount > 0: values.add(", ")
     valuesCount += 1
@@ -224,18 +292,10 @@ proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
   var value = ""
 
   var i = 0
-  for item in items.pairs:
+  for key, val in items.pairs:
     if i > 0: value.add(", ")
     i += 1
-    case item.val.kind:
-    of JInt:
-      value.add(&"{item.key} = {item.val.getInt}")
-    of JFloat:
-      value.add(&"{item.key} = {item.val.getFloat}")
-    of JBool:
-      value.add(&"{item.key} = {item.val.getBool}")
-    else:
-      value.add(&"{item.key} = '{item.val.getStr}'")
+    value.add(&"{key} = ?")
 
   this.sqlString.add(value)
   return this
@@ -247,6 +307,29 @@ proc deleteSql*(this: RDB): RDB =
   this.sqlString.add("DELETE")
   return this
 
-proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
-  this.sqlString.add(&" WHERE {key} = {id}")
+proc deleteByIdSql*(this: RDB, key: string): RDB =
+  this.sqlString.add(&" WHERE {key} = ?")
+  return this
+
+
+# ==================== Aggregates ====================
+
+proc selectCountSql*(this: RDB): RDB =
+  this.sqlString = "SELECT count(*) as aggregate"
+  return this
+
+proc selectMaxSql*(this:RDB, column:string): RDB =
+  this.sqlString = &"SELECT max({column}) as aggregate"
+  return this
+
+proc selectMinSql*(this:RDB, column:string): RDB =
+  this.sqlString = &"SELECT min({column}) as aggregate"
+  return this
+
+proc selectAvgSql*(this:RDB, column:string): RDB =
+  this.sqlString = &"SELECT avg({column}) as aggregate"
+  return this
+
+proc selectSumSql*(this:RDB, column:string): RDB =
+  this.sqlString = &"SELECT sum({column}) as aggregate"
   return this
