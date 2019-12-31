@@ -124,8 +124,6 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
           response_row[key] = newJBool(true)
       else:
         response_row[key] = newJString(row)
-    # var key = columns[i]["name"].getStr
-    # response_row[key] = newJString(row)
   return response_row
 
 
@@ -146,7 +144,7 @@ proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
 
 proc getRow(sqlString:string, args:varargs[string]): JsonNode =
   let db = db()
-  # # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
+  # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
   # let results = db.getRow(sql sqlString, args)
   let r = db.getAllRows(sql sqlString, args)
   var results = @[""]
@@ -162,7 +160,6 @@ proc getRow(sqlString:string, args:varargs[string]): JsonNode =
   let columns = getColumns(db_columns)
   return toJson(results, columns)
 
-# proc orm[T](rows:openArray[JsonNode], typ:T):seq[T] =
 proc orm(rows:openArray[JsonNode], typ:typedesc):seq[typ.type] =
   var response = newSeq[typ.type](rows.len)
   for i, row in rows:
