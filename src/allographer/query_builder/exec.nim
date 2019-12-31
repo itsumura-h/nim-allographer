@@ -15,11 +15,11 @@ proc getColumns(db_columns:DbColumns):seq[JsonNode] =
   for i, row in db_columns:
     case DRIVER:
     of "sqlite":
-      columns[i] = %*{"name": row.name, "typ": row.typ.name}
+      columns[i] = %*{"name": row.name, "typ": row.typ.name, "size": row.typ.size}
     of "mysql":
-      columns[i] = %*{"name": row.name, "typ": row.typ.kind}
+      columns[i] = %*{"name": row.name, "typ": row.typ.kind, "size": row.typ.size}
     of "postgres":
-      columns[i] = %*{"name": row.name, "typ": row.typ.kind}
+      columns[i] = %*{"name": row.name, "typ": row.typ.kind, "size": row.typ.size}
   return columns
 
 proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[JsonNode] =
@@ -28,9 +28,12 @@ proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[Jso
   for index, rows in results.pairs:
     var response_row = %*{}
     for i, row in rows:
-      var key = columns[i]["name"].getStr
-      var typ = columns[i]["typ"].getStr
-      if DRIVER == "sqlite":
+      let key = columns[i]["name"].getStr
+      let typ = columns[i]["typ"].getStr
+      let size = columns[i]["size"].getInt
+
+      case DRIVER:
+      of "sqlite":
         if row == "":
           response_row[key] = newJNull()
         elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
@@ -41,7 +44,21 @@ proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[Jso
           response_row[key] = newJBool(row.parseBool)
         else:
           response_row[key] = newJString(row)
-      else:
+      of "mysql":
+        if row == "":
+          response_row[key] = newJNull()
+        elif [$dbInt, $dbUInt].contains(typ) and size == 1:
+          if row == "0":
+            response_row[key] = newJBool(false)
+          elif row == "1":
+            response_row[key] = newJBool(true)
+        elif [$dbInt, $dbUInt].contains(typ):
+          response_row[key] = newJInt(row.parseInt)
+        elif [$dbDecimal, $dbFloat].contains(typ):
+          response_row[key] = newJFloat(row.parseFloat)
+        else:
+          response_row[key] = newJString(row)
+      of "postgres":
         if row == "":
           response_row[key] = newJNull()
         elif [$dbInt, $dbUInt].contains(typ):
@@ -49,7 +66,10 @@ proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[Jso
         elif [$dbDecimal, $dbFloat].contains(typ):
           response_row[key] = newJFloat(row.parseFloat)
         elif [$dbBool].contains(typ):
-          response_row[key] = newJBool(row.parseBool)
+          if row == "f":
+            response_row[key] = newJBool(false)
+          elif row == "t":
+            response_row[key] = newJBool(true)
         else:
           response_row[key] = newJString(row)
 
@@ -60,8 +80,10 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
   var response_row = %*{}
   const DRIVER = getDriver()
   for i, row in results:
-    var key = columns[i]["name"].getStr
-    var typ = columns[i]["typ"].getStr
+    let key = columns[i]["name"].getStr
+    let typ = columns[i]["typ"].getStr
+    let size = columns[i]["size"].getInt
+
     case DRIVER:
     of "sqlite":
       if row == "":
@@ -77,12 +99,15 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
     of "mysql":
       if row == "":
         response_row[key] = newJNull()
+      elif [$dbInt, $dbUInt].contains(typ) and size == 1:
+        if row == "0":
+          response_row[key] = newJBool(false)
+        elif row == "1":
+          response_row[key] = newJBool(true)
       elif [$dbInt, $dbUInt].contains(typ):
         response_row[key] = newJInt(row.parseInt)
       elif [$dbDecimal, $dbFloat].contains(typ):
         response_row[key] = newJFloat(row.parseFloat)
-      elif [$dbBool].contains(typ):
-        response_row[key] = newJBool(row.parseBool)
       else:
         response_row[key] = newJString(row)
     of "postgres":
@@ -93,159 +118,286 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
       elif [$dbDecimal, $dbFloat].contains(typ):
         response_row[key] = newJFloat(row.parseFloat)
       elif [$dbBool].contains(typ):
-        response_row[key] = newJBool(row.parseBool)
+        if row == "f":
+          response_row[key] = newJBool(false)
+        elif row == "t":
+          response_row[key] = newJBool(true)
       else:
         response_row[key] = newJString(row)
-    # var key = columns[i]["name"].getStr
-    # response_row[key] = newJString(row)
   return response_row
 
 
-proc getAllRows(sqlString:string): seq[JsonNode] =
+proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
   let db = db()
-  let results = db.getAllRows(sql sqlString) # seq[seq[string]]
+  let results = db.getAllRows(sql sqlString, args) # seq[seq[string]]
 
   var db_columns: DbColumns
   block:
-    for row in db.instantRows(db_columns, sql sqlString):
+    for row in db.instantRows(db_columns, sql sqlString, args):
       discard
     defer: db.close()
+    
 
   let columns = getColumns(db_columns)
   return toJson(results, columns) # seq[JsonNode]
 
 
-proc getRow(sqlString:string): JsonNode =
+proc getRow(sqlString:string, args:varargs[string]): JsonNode =
   let db = db()
-  # # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
-  # let results = db.getRow(sql sqlString)
-  let results = db.getAllRows(sql sqlString)[0]
+  # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
+  # let results = db.getRow(sql sqlString, args)
+  let r = db.getAllRows(sql sqlString, args)
+  var results = @[""]
+  if r.len > 0:
+    results = r[0]
   
   var db_columns: DbColumns
   block:
-    for row in db.instantRows(db_columns, sql sqlString):
+    for row in db.instantRows(db_columns, sql sqlString, args):
       discard
     defer: db.close()
 
   let columns = getColumns(db_columns)
   return toJson(results, columns)
 
-proc orm[T](rows:openArray[JsonNode], typ:T):seq[T] =
-  var response = newSeq[T](rows.len)
+proc orm(rows:openArray[JsonNode], typ:typedesc):seq[typ.type] =
+  var response = newSeq[typ.type](rows.len)
   for i, row in rows:
-    response[i] = row.to(T)
+    response[i] = row.to(typ.type)
   return response
 
-proc orm[T](row:JsonNode, typ:T):T =
-  return row.to(T)
+proc orm(row:JsonNode, typ:typedesc):typ.type =
+  return row.to(typ)
 
 # =============================================================================
 
+
 proc get*(this: RDB): seq[JsonNode] =
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
-  logger(this.sqlStringSeq[0])
-  return getAllRows(this.sqlStringSeq[0])
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  return getAllRows(this.sqlStringSeq[0], this.placeHolder)
 
-proc get*[T](this: RDB, typ: T): seq[T] =
+proc get*(this: RDB, typ: typedesc): seq[typ.type] =
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
   logger(this.sqlStringSeq[0])
   return getAllRows(this.sqlStringSeq[0]).orm(typ)
 
 
 proc getRaw*(this: RDB): seq[JsonNode] =
-  logger(this.sqlStringSeq[0])
-  return getAllRows(this.sqlStringSeq[0])
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  return getAllRows(this.sqlStringSeq[0], this.placeHolder)
 
-proc getRaw*[T](this: RDB, typ: T): seq[T] =
-  logger(this.sqlStringSeq[0])
-  return getAllRows(this.sqlStringSeq[0]).orm(typ)
+proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  return getAllRows(this.sqlStringSeq[0], this.placeHolder).orm(typ)
 
 
 proc first*(this: RDB): JsonNode =
-  this.sqlStringSeq = @[this.selectBuilder().sqlString]
-  logger(this.sqlStringSeq[0])
-  return getRow(this.sqlStringSeq[0])
+  this.sqlStringSeq = @[this.selectFirstBuilder().sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  return getRow(this.sqlStringSeq[0], this.placeHolder)
 
-proc first*[T](this: RDB, typ: T): T =
-  this.sqlStringSeq = @[this.selectBuilder().sqlString]
-  logger(this.sqlStringSeq[0])
-  return getRow(this.sqlStringSeq[0]).orm(typ)
+proc first*(this: RDB, typ: typedesc): typ.type =
+  this.sqlStringSeq = @[this.selectFirstBuilder().sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
 
 
 proc find*(this: RDB, id: int, key="id"): JsonNode =
+  this.placeHolder.add($id)
   this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
-  logger(this.sqlStringSeq[0])
-  return getRow(this.sqlStringSeq[0])
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  return getRow(this.sqlStringSeq[0], this.placeHolder)
 
-proc find*[T](this: RDB, id: int, typ:T, key="id"): T =
+proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
+  this.placeHolder.add($id)
   this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
-  logger(this.sqlStringSeq[0])
-  return getRow(this.sqlStringSeq[0]).orm(typ)
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
 
 
 # ==================== INSERT ====================
 
-proc insert*(this: RDB, items: JsonNode): RDB =
+proc insert*(this: RDB, items: JsonNode) =
   this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
-  return this
+  block:
+    let db = db()
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
+    defer: db.close()
 
-proc insert*(this: RDB, rows: openArray[JsonNode]): RDB =
+proc insert*(this: RDB, rows: openArray[JsonNode]) =
   this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
-  return this
+  block:
+    let db = db()
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
+    defer: db.close()
 
-proc inserts*(this: RDB, rows: openArray[JsonNode]): RDB =
+proc inserts*(this: RDB, rows: openArray[JsonNode]) =
   this.sqlStringSeq = newSeq[string](rows.len)
-  for i, items in rows:
-    this.sqlStringSeq[i] = this.insertValueBuilder(items).sqlString
-  return this
+  block:
+    let db = db()
+    for i, items in rows:
+      var sqlString = this.insertValueBuilder(items).sqlString
+      logger(sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
+    defer: db.close()
+
+
+proc insertID*(this: RDB, items: JsonNode):int =
+  this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
+  block:
+    let db = db()
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      result = db.tryInsertID(sql sqlString, this.placeHolder).int()
+    defer: db.close()
+
+proc insertID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
+  this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
+  var response = newSeq[int](rows.len)
+  block:
+    let db = db()
+    for i, sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
+    defer: db.close()
+  return response
+
+proc insertsID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
+  this.sqlStringSeq = newSeq[string](rows.len)
+  var response = newSeq[int](rows.len)
+  block:
+    let db = db()
+    for i, items in rows:
+      let sqlString = this.insertValueBuilder(items).sqlString
+      logger(sqlString, this.placeHolder)
+      response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
+      this.placeHolder = @[]
+    defer: db.close()
+  return response
 
 
 # ==================== UPDATE ====================
 
-proc update*(this: RDB, items: JsonNode): RDB =
+proc update*(this: RDB, items: JsonNode) =
+  var updatePlaceHolder: seq[string]
+  for item in items.pairs:
+    if item.val.kind == JInt:
+      updatePlaceHolder.add($(item.val.getInt()))
+    elif item.val.kind == JFloat:
+      updatePlaceHolder.add($(item.val.getFloat()))
+    else:
+      updatePlaceHolder.add(item.val.getStr())
+
+  this.placeHolder = updatePlaceHolder & this.placeHolder
   this.sqlStringSeq = @[this.updateBuilder(items).sqlString]
-  return this
+
+  block:
+    let db = db()
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
+    defer: db.close()
 
 
 # ==================== DELETE ====================
 
-proc delete*(this: RDB): RDB =
+proc delete*(this: RDB) =
   this.sqlStringSeq = @[this.deleteBuilder().sqlString]
-  return this
+  block:
+    let db = db()
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
+    defer: db.close()
 
-proc delete*(this: RDB, id: int, key="id"): RDB =
+proc delete*(this: RDB, id: int, key="id") =
+  this.placeHolder.add($id)
   this.sqlStringSeq = @[this.deleteByIdBuilder(id, key).sqlString]
-  return this
+  block:
+    let db = db()
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
+    defer: db.close()
 
 
 # ==================== EXEC ====================
 
 proc exec*(this: RDB) =
+  ## It is only used with raw()
   block:
     let db = db()
     for sqlString in this.sqlStringSeq:
-      logger(sqlString)
-      db.exec(sql sqlString)
-    defer: db.close()
-  
-
-proc execID*(this: RDB): int64 =
-  block:
-    let db = db()
-    # insert Multi
-    if this.sqlStringSeq.len == 1 and this.sqlString.contains("INSERT"):
-      logger(this.sqlString)
-      result = db.tryInsertID(
-        sql this.sqlStringSeq[0]
-      )
-    else:
-      for sqlString in this.sqlStringSeq:
-        logger(sqlString)
-        db.exec(sql sqlString)
-      result = 0
-    
+      logger(sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
     defer: db.close()
 
+
+# ==================== Aggregates ====================
+
+proc count*(this:RDB): int =
+  this.sqlStringSeq = @[this.countBuilder().sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  let DRIVER = getDriver()
+  case DRIVER
+  of "sqlite":
+    return response["aggregate"].getStr().parseInt()
+  of "mysql":
+    return response["aggregate"].getInt()
+  of "postgres":
+    return response["aggregate"].getInt()
+
+proc max*(this:RDB, column:string): string =
+  this.sqlStringSeq = @[this.maxBuilder(column).sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  case response["aggregate"].kind
+  of JInt:
+    return $(response["aggregate"].getInt())
+  of JFloat:
+    return $(response["aggregate"].getFloat())
+  else:
+    return response["aggregate"].getStr()
+
+proc min*(this:RDB, column:string): string =
+  this.sqlStringSeq = @[this.minBuilder(column).sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  case response["aggregate"].kind
+  of JInt:
+    return $(response["aggregate"].getInt())
+  of JFloat:
+    return $(response["aggregate"].getFloat())
+  else:
+    return response["aggregate"].getStr()
+
+proc avg*(this:RDB, column:string): float =
+  this.sqlStringSeq = @[this.avgBuilder(column).sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  let DRIVER = getDriver()
+  case DRIVER
+  of "sqlite":
+    return response["aggregate"].getStr().parseFloat()
+  else:
+    return response["aggregate"].getFloat()
+
+proc sum*(this:RDB, column:string): float =
+  this.sqlStringSeq = @[this.sumBuilder(column).sqlString]
+  logger(this.sqlStringSeq[0], this.placeHolder)
+  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  let DRIVER = getDriver()
+  case DRIVER
+  of "sqlite":
+    return response["aggregate"].getStr().parseFloat()
+  else:
+    return response["aggregate"].getFloat()
 
 # ==================== Transaction ====================
 

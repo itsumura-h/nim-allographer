@@ -165,7 +165,7 @@ proc migrate*(this:Table):string =
         columnString.add(
           softDeleteGenetator()
         )
-      # # others ================================================================
+      # others ================================================================
       of rdbBinary:
         columnString.add(
           blobGenerator(column.name, column.isNullable)

@@ -3,7 +3,7 @@ include ../src/allographer/schema_builder/generators/mysql_generators
 
 suite "mysql generators int":
   test "serialGenerator":
-    check serialGenerator("id") == "`id` INT NOT NULL PRIMARY KEY AUTO_INCREMENT"
+    check serialGenerator("id") == "`id` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT"
 
   test "intGenerator":
     check intGenerator("int", true, false, 0, false) == "`int` INT"

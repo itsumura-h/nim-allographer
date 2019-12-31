@@ -92,16 +92,18 @@ RDB().table("users").inserts(
 .exec()
 
 
-RDB().table("users").where("id", "=", 2).update(%*{"name": "David"}).exec()
-echo RDB().table("users").where("id", "=", 2).update(%*{"name": "David"}).execID()
+RDB().table("users").update(%*{"name": "David"}).where("id", "=", 2).exec()
+echo RDB().table("users").update(%*{"name": "David"}).where("id", "=", 2).execID()
 echo RDB().table("users").select().where("name", "=", "David").get()
 echo RDB().table("users").find(2)
 
 RDB().table("users").where("name", "=", "David").delete().exec()
 RDB().table("users").delete(3).exec()
+echo RDB().table("users").find(3)
 echo RDB().table("users").limit(5).get()
+echo RDB().table("users").select("name").where("address", "is", nil).get()
 
-# sql check
+# # sql check
 let r = RDB()
     .table("users")
     .select("users.id", "users.email")
