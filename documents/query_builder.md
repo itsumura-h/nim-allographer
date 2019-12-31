@@ -132,11 +132,11 @@ echo user["name"]
 #### join
 ```nim
 let users = RDB()
-.   .table("users")
-    .select("users.id", "contacts.phone", "orders.price")
-    .join("contacts", "users.id", "=", "contacts.user_id")
-    .join("orders", "users.id", "=", "orders.user_id")
-    .get()
+            .table("users")
+            .select("users.id", "contacts.phone", "orders.price")
+            .join("contacts", "users.id", "=", "contacts.user_id")
+            .join("orders", "users.id", "=", "orders.user_id")
+            .get()
 ```
 
 #### where
