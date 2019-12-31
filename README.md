@@ -122,7 +122,7 @@ settings will be applied
 [Query Builder](./documents/query_builder.md)  
 [Schema Builder](./documents/schema_builder.md)  
 
-## API
+## API Documents
 ### Query Builder
 [base](https://itsumura-h.github.io/nim-allographer/query_builder/base.html)  
 [grammars](https://itsumura-h.github.io/nim-allographer/query_builder/grammars.html)  

@@ -22,3 +22,5 @@ migration.json
 /deploy/
 
 *.log
+
+gh-pages*
