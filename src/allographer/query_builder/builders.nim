@@ -46,6 +46,12 @@ proc selectFindBuilder*(this: RDB, id: int, key: string): RDB =
         .selectByIdSql(id, key)
 
 
+# ==================== Paginate ====================
+
+proc paginateBuilder*(this:RDB): RDB =
+  discard
+
+
 # ==================== INSERT ====================
 
 proc insertValueBuilder*(this: RDB, items: JsonNode): RDB =

@@ -399,6 +399,17 @@ proc sum*(this:RDB, column:string): float =
   else:
     return response["aggregate"].getFloat()
 
+
+# ==================== Paginate ====================
+
+from grammars import limit, offset
+
+proc paginate*(this:RDB, display:int, page:int=1): seq[JsonNode] =
+  if not page > 0: raise newException(Exception, "arg2 should be larger than 0")
+  let offset = (page - 1) * display
+  return this.limit(display).offset(offset).get()
+
+
 # ==================== Transaction ====================
 
 template transaction(body: untyped) =
