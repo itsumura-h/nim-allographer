@@ -19,6 +19,7 @@ Example: Query Builder
   - [having](#having)
   - [orderBy](#orderBy)
   - [limit-offset](#limit_offset)
+  - [Paginate](#paginate)
 
 - [INSERT](#INSERT)
 - [UPDATE](#UPDATE)
@@ -219,6 +220,13 @@ let users = RDB()
             .limit(5)
             .get()
 ```
+
+#### paginate
+```nim
+let all_users = User.table("users").paginate(15, 2)
+```
+arg1... Numer of items per page  
+arg2... Numer of page(option)(1 is set by default)
 
 ## INSERT
 [to index](#index)

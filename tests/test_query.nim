@@ -216,3 +216,14 @@ suite "select":
     echo t
     check t[0]["name"].getStr() == "user11"
     check t[0]["auth_id"] == newJNull()
+
+  test "paginate()":
+    RDB().table("users").delete(2)
+    var t = RDB().table("users").select("id", "name").paginate(3, 1)
+    check t[0]["id"].getInt() == 1
+    
+    t = RDB().table("users").select("id", "name").paginate(3, 2)
+    check t[0]["id"].getInt() == 5
+    
+    t = RDB().table("users").select("id", "name").paginate(3, 3)
+    check t[0]["id"].getInt() == 8
