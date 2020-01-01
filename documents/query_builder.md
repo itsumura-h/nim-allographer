@@ -232,7 +232,7 @@ let users = User
 arg1... Numer of items per page  
 arg2... Numer of page(option)(1 is set by default)
 
-```
+```nim
 echo users
 >> {
   "count":3,
