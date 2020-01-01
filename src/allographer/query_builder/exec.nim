@@ -404,10 +404,27 @@ proc sum*(this:RDB, column:string): float =
 
 from grammars import limit, offset
 
-proc paginate*(this:RDB, display:int, page:int=1): seq[JsonNode] =
+proc paginate*(this:RDB, display:int, page:int=1): JsonNode =
   if not page > 0: raise newException(Exception, "arg2 should be larger than 0")
+  let total = this.count()
   let offset = (page - 1) * display
-  return this.limit(display).offset(offset).get()
+  let currentPage = this.limit(display).offset(offset).get()
+  let count = currentPage.len()
+  let hasMorePages = if page * display < total: true else: false
+  let lastPage = int(total / display)
+  let nextPage = if page + 1 <= lastPage: page + 1 else: lastPage
+  let perPage = display
+  let previousPage = if page - 1 > 0: page - 1 else: 1
+  return %*{
+    "count": count,
+    "currentPage": currentPage,
+    "hasMorePages": hasMorePages,
+    "lastPage": lastPage,
+    "nextPage": nextPage,
+    "perPage": perPage,
+    "previousPage": previousPage,
+    "total": total
+  }
 
 
 # ==================== Transaction ====================

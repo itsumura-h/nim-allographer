@@ -223,10 +223,44 @@ let users = RDB()
 
 #### paginate
 ```nim
-let all_users = User.table("users").paginate(15, 2)
+RDB().table("users").delete(2)
+let users = User
+            .select("id", "name")
+            .table("users")
+            .paginate(3, 1)
 ```
 arg1... Numer of items per page  
 arg2... Numer of page(option)(1 is set by default)
+
+```
+echo users
+>> {
+  "count":3,
+  "currentPage":[
+    {"id":1,"name":"user1"},
+    {"id":3,"name":"user3"},
+    {"id":4,"name":"user4"}
+  ],
+  "hasMorePages":true,
+  "lastPage":3,
+  "nextPage":2,
+  "perPage":3,
+  "previousPage":1,
+  "total":9
+}
+```
+
+|ATTRIBUTE|DESCRIPTION|
+|---|---|
+|count|number of results on the current page|
+|currentPage|results of current page|
+|hasMorePages|Returns `True` if there is more pages else `False`|
+|lastPage|The number of the last page|
+|nextPage|The number of the next page if it exists else equel to lastPage|
+|perPage|The number of results per page|
+|previousPage|The number of the previous page if it exists else 1|
+|total|The total number of results|
+
 
 ## INSERT
 [to index](#index)
