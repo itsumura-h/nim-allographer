@@ -26,7 +26,7 @@ RDB().table("auth").insert([
 ])
 
 var insertData: seq[JsonNode]
-for i in 1..10:
+for i in 1..20:
   let authId = if i mod 2 == 0: 2 else: 1
   insertData.add(
     %*{
@@ -38,6 +38,7 @@ for i in 1..10:
 
 RDB().table("users").insert(insertData)
 RDB().table("users").delete(2)
+RDB().table("users").delete(6)
 
 suite "query pagination":
   test "count":
@@ -52,16 +53,14 @@ suite "query pagination":
   test "hasMorePages":
     var t = RDB().table("users").select("id", "name").paginate(3, 2)
     check t["hasMorePages"].getBool() == true
-    t = RDB().table("users").select("id", "name").paginate(3, 3)
-    check t["hasMorePages"].getBool() == false
 
   test "lastPage":
     var t = RDB().table("users").select("id", "name").paginate(3, 2)
-    check t["lastPage"].getInt() == 3
+    check t["lastPage"].getInt() == 6
 
   test "nextPage":
     var t = RDB().table("users").select("id", "name").paginate(3, 3)
-    check t["nextPage"].getInt() == 3
+    check t["nextPage"].getInt() == 4
 
   test "perPage":
     var t = RDB().table("users").select("id", "name").paginate(3, 2)
@@ -73,4 +72,17 @@ suite "query pagination":
 
   test "total":
     var t = RDB().table("users").select("id", "name").paginate(3, 2)
-    check t["total"].getInt() == 9
+    check t["total"].getInt() == 18
+  
+  test "fastPaginate":
+    var t = RDB().table("users").select("id", "name").fastPaginate(4)
+    echo t
+    t = RDB().table("users").select("id", "name").fastPaginateNext(4, t["nextPage"].getInt())
+    echo t
+    t = RDB().table("users").select("id", "name").fastPaginateNext(4, t["nextPage"].getInt())
+    echo t
+
+    t = RDB().table("users").select("id", "name").fastPaginateBack(4, t["previousPage"].getInt())
+    echo t
+    t = RDB().table("users").select("id", "name").fastPaginateBack(4, t["previousPage"].getInt())
+    echo t

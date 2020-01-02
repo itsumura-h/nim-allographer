@@ -1,5 +1,5 @@
 import db_sqlite, db_mysql, db_postgres
-import json, strutils
+import json, strutils, strformat, algorithm
 
 import base, builders
 import ../util
@@ -402,7 +402,7 @@ proc sum*(this:RDB, column:string): float =
 
 # ==================== Paginate ====================
 
-from grammars import limit, offset
+from grammars import where, limit, offset, orderBy, Order
 
 proc paginate*(this:RDB, display:int, page:int=1): JsonNode =
   if not page > 0: raise newException(Exception, "arg2 should be larger than 0")
@@ -426,6 +426,65 @@ proc paginate*(this:RDB, display:int, page:int=1): JsonNode =
     "total": total
   }
 
+
+proc fastPaginate*(this:RDB, display:int, key="id"): JsonNode =
+  this.sqlString = @[this.selectBuilder().sqlString][0]
+  this.sqlString = &"{this.sqlString} LIMIT {display + 1}"
+  logger(this.sqlString, this.placeHolder)
+  var currentPage  = getAllRows(this.sqlString, this.placeHolder)
+  let nextPage = currentPage.pop()[key].getInt()
+  return %*{
+    "previousPage": 0,
+    "currentPage": currentPage,
+    "nextPage": nextPage
+  }
+
+
+proc fastPaginateNext*(this:RDB, display:int, id:int=1, key="id"): JsonNode =
+  this.sqlString = @[this.selectBuilder().sqlString][0]
+  this.sqlString = &"""
+SELECT * FROM (
+  {this.sqlString} WHERE {key} < {id} ORDER BY {key} DESC LIMIT 1
+) x
+UNION ALL
+SELECT * FROM (
+  {this.sqlString} WHERE {key} >= {id} ORDER BY {key} ASC LIMIT {display}+1
+) x
+"""
+  logger(this.sqlString, this.placeHolder)
+  var currentPage  = getAllRows(this.sqlString, this.placeHolder)
+  let previousPage = currentPage[0][key].getInt()
+  currentPage.delete(0)
+  let nextPage = currentPage.pop()[key].getInt()
+  return %*{
+    "previousPage": previousPage,
+    "currentPage": currentPage,
+    "nextPage": nextPage
+  }
+
+
+proc fastPaginateBack*(this:RDB, display:int, id:int=1, key="id"): JsonNode =
+  this.sqlString = @[this.selectBuilder().sqlString][0]
+  this.sqlString = &"""
+SELECT * FROM (
+  {this.sqlString} WHERE {key} > {id} ORDER BY {key} ASC LIMIT 1
+) x
+UNION ALL
+SELECT * FROM (
+  {this.sqlString} WHERE {key} <= {id} ORDER BY {key} DESC LIMIT {display}+1
+) x
+"""
+  logger(this.sqlString, this.placeHolder)
+  var currentPage  = getAllRows(this.sqlString, this.placeHolder)
+  currentPage.reverse()
+  let previousPage = currentPage[0][key].getInt()
+  currentPage.delete(0)
+  let nextPage = currentPage.pop()[key].getInt()
+  return %*{
+    "previousPage": previousPage,
+    "currentPage": currentPage,
+    "nextPage": nextPage
+  }
 
 # ==================== Transaction ====================
 
