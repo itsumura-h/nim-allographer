@@ -74,15 +74,24 @@ suite "query pagination":
     var t = RDB().table("users").select("id", "name").paginate(3, 2)
     check t["total"].getInt() == 18
   
+suite "query fast paginate":
   test "fastPaginate":
-    var t = RDB().table("users").select("id", "name").fastPaginate(4)
+    var t = RDB().table("users").select("id", "name").fastPaginate(3)
     echo t
-    t = RDB().table("users").select("id", "name").fastPaginateNext(4, t["nextPage"].getInt())
-    echo t
-    t = RDB().table("users").select("id", "name").fastPaginateNext(4, t["nextPage"].getInt())
-    echo t
+    check t["nextPage"].getInt() == 5
+    check t["previousPage"].getInt() == 0
+    check t["currentPage"][0]["id"].getInt() == 1
 
-    t = RDB().table("users").select("id", "name").fastPaginateBack(4, t["previousPage"].getInt())
+  test "fastPaginateNext":
+    var t = RDB().table("users").select("id", "name").fastPaginateNext(3, 5)
     echo t
-    t = RDB().table("users").select("id", "name").fastPaginateBack(4, t["previousPage"].getInt())
+    check t["nextPage"].getInt() == 9
+    check t["previousPage"].getInt() == 4
+    check t["currentPage"][0]["id"].getInt() == 5
+
+  test "fastPaginateBack":
+    var t = RDB().table("users").select("id", "name").fastPaginateBack(3, 5)
     echo t
+    check t["nextPage"].getInt() == 7
+    check t["previousPage"].getInt() == 1
+    check t["currentPage"][0]["id"].getInt() == 3

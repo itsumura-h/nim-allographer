@@ -476,10 +476,17 @@ SELECT * FROM (
 """
   logger(this.sqlString, this.placeHolder)
   var currentPage  = getAllRows(this.sqlString, this.placeHolder)
-  currentPage.reverse()
-  let previousPage = currentPage[0][key].getInt()
+  # next
+  let nextPage = if currentPage[0][key].getInt() > id: currentPage[0][key].getInt() else: 0
   currentPage.delete(0)
-  let nextPage = currentPage.pop()[key].getInt()
+  # previous
+  var previousPage: int
+  if currentPage.len() > display:
+    previousPage = currentPage[display][key].getInt()
+    discard currentPage.pop()
+  else:
+    previousPage = 0
+  currentPage.reverse()
   return %*{
     "previousPage": previousPage,
     "currentPage": currentPage,
