@@ -38,7 +38,6 @@ for i in 1..20:
 
 RDB().table("users").insert(insertData)
 RDB().table("users").delete(2)
-RDB().table("users").delete(6)
 
 suite "query pagination":
   test "count":
@@ -72,7 +71,7 @@ suite "query pagination":
 
   test "total":
     var t = RDB().table("users").select("id", "name").paginate(3, 2)
-    check t["total"].getInt() == 18
+    check t["total"].getInt() == 19
   
 suite "query fast paginate":
   test "fastPaginate":
@@ -85,13 +84,13 @@ suite "query fast paginate":
   test "fastPaginateNext":
     var t = RDB().table("users").select("id", "name").fastPaginateNext(3, 5)
     echo t
-    check t["nextPage"].getInt() == 9
+    check t["nextPage"].getInt() == 8
     check t["previousPage"].getInt() == 4
     check t["currentPage"][0]["id"].getInt() == 5
 
   test "fastPaginateBack":
-    var t = RDB().table("users").select("id", "name").fastPaginateBack(3, 5)
+    var t = RDB().table("users").select("id", "name").fastPaginateBack(3, 4)
     echo t
-    check t["nextPage"].getInt() == 7
-    check t["previousPage"].getInt() == 1
-    check t["currentPage"][0]["id"].getInt() == 3
+    check t["nextPage"].getInt() == 5
+    check t["previousPage"].getInt() == 0
+    check t["currentPage"][0]["id"].getInt() == 1
