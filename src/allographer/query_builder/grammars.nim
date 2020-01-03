@@ -82,8 +82,8 @@ proc leftJoin*(this: RDB, table: string, column1: string, symbol: string,
   return this
 
 
-const whereSymbols = ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"]
-const whereSymbolsError = """Arg position 3 is only allowed of ["is", "is not", "=", "<", "=<", "=>", ">", "LIKE","%LIKE","LIKE%","%LIKE%"]"""
+const whereSymbols = ["is", "is not", "=", "<", "<=", ">=", ">", "LIKE","%LIKE","LIKE%","%LIKE%"]
+const whereSymbolsError = """Arg position 3 is only allowed of ["is", "is not", "=", "<", "<=", ">=", ">", "LIKE","%LIKE","LIKE%","%LIKE%"]"""
 
 proc where*(this: RDB, column: string, symbol: string,
             value: string|int|float|bool): RDB =
