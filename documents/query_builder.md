@@ -262,6 +262,62 @@ echo users
 |total|The total number of results|
 
 
+#### fastPaginate
+It run faster than `paginate()` because it doesn't use `offset`.
+
+- fastPaginate()  
+arg1... Numer of items per page  
+arg2... Name of a primary key column (option). default is `id`.  
+
+- fastPaginateNext() / fastPaginateBack()  
+arg1... Numer of items per page  
+arg2... Value of primary key  
+arg3... Name of a primary key column (option). default is `id`.
+
+```nim
+var users = RDB().table("users").select("id", "name").fastPaginate(3)
+
+>> {
+  "previousPage":0,
+  "currentPage":[
+    {"id":1,"name":"user1"},
+    {"id":3,"name":"user3"},
+    {"id":4,"name":"user4"}
+  ],
+  "nextPage":5
+}
+```
+```nim
+users = RDB().table("users")
+        .select("id", "name")
+        .fastPaginateNext(3, users["nextPage"].getInt)
+
+>> {
+  "previousPage":4,
+  "currentPage":[
+    {"id":5,"name":"user5"},
+    {"id":6,"name":"user6"},
+    {"id":7,"name":"user7"}
+  ],
+  "nextPage":8
+}
+```
+```nim
+users = RDB().table("users")
+        .select("id", "name")
+        .fastPaginateBack(3, users["previousPage"].getInt)
+
+>> {
+  "previousPage":0,
+  "currentPage":[
+    {"id":1,"name":"user1"},
+    {"id":3,"name":"user3"},
+    {"id":4,"name":"user4"}
+  ],
+  "nextPage":5
+}
+```
+
 ## INSERT
 [to index](#index)
 
