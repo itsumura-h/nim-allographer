@@ -442,7 +442,20 @@ proc fastPaginate*(this:RDB, display:int, key="id"): JsonNode =
 
 proc fastPaginateNext*(this:RDB, display:int, id:int=1, key="id"): JsonNode =
   this.sqlString = @[this.selectBuilder().sqlString][0]
-  this.sqlString = &"""
+  if this.query.hasKey("order_by"):
+    var sqlStringSeq = this.sqlString.split("ORDER")
+    echo sqlStringSeq
+    this.sqlString = &"""
+SELECT * FROM (
+  {sqlStringSeq[0]} WHERE {key} > {id} ORDER{sqlStringSeq[1]} LIMIT 1
+) x
+UNION ALL
+SELECT * FROM (
+  {sqlStringSeq[0]} WHERE {key} <= {id} ORDER{sqlStringSeq[1]} LIMIT {display}+1
+) x
+"""
+  else:
+    this.sqlString = &"""
 SELECT * FROM (
   {this.sqlString} WHERE {key} < {id} ORDER BY {key} DESC LIMIT 1
 ) x
@@ -450,9 +463,9 @@ UNION ALL
 SELECT * FROM (
   {this.sqlString} WHERE {key} >= {id} ORDER BY {key} ASC LIMIT {display}+1
 ) x
-"""
+""" 
   logger(this.sqlString, this.placeHolder)
-  var currentPage  = getAllRows(this.sqlString, this.placeHolder)
+  var currentPage = getAllRows(this.sqlString, this.placeHolder)
   let previousPage = currentPage[0][key].getInt()
   currentPage.delete(0)
   let nextPage = currentPage.pop()[key].getInt()
