@@ -402,6 +402,23 @@ proc sum*(this:RDB, column:string): float =
 
 # ==================== Paginate ====================
 
+proc getFirstItem(sqlStringArg:string, key:string):int =
+  var sqlString = sqlStringArg
+  sqlString = sqlStringArg.split("ORDER")[0]
+  sqlString = &"{sqlString} ORDER BY {key} ASC LIMIT 1"
+  echo sqlString
+  let row = getRow(sqlString)
+  return row[key].getInt
+
+proc getLastItem(sqlStringArg:string, key:string):int =
+  var sqlString = sqlStringArg
+  sqlString = sqlStringArg.split("ORDER")[0]
+  sqlString = &"{sqlString} ORDER BY {key} DESC LIMIT 1"
+  echo sqlString
+  let row = getRow(sqlString)
+  return row[key].getInt
+
+
 from grammars import where, limit, offset, orderBy, Order
 
 proc paginate*(this:RDB, display:int, page:int=1): JsonNode =
@@ -442,6 +459,8 @@ proc fastPaginate*(this:RDB, display:int, key="id"): JsonNode =
 
 proc fastPaginateNext*(this:RDB, display:int, id:int=1, key="id"): JsonNode =
   this.sqlString = @[this.selectBuilder().sqlString][0]
+  let firstItem = getFirstItem(this.sqlString, key)
+  let lastItem = getLastItem(this.sqlString, key)
   if this.query.hasKey("order_by"):
     var sqlStringSeq = this.sqlString.split("ORDER")
     echo sqlStringSeq
@@ -463,7 +482,7 @@ UNION ALL
 SELECT * FROM (
   {this.sqlString} WHERE {key} >= {id} ORDER BY {key} ASC LIMIT {display}+1
 ) x
-""" 
+"""
   logger(this.sqlString, this.placeHolder)
   var currentPage = getAllRows(this.sqlString, this.placeHolder)
   let previousPage = currentPage[0][key].getInt()
