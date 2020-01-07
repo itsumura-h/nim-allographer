@@ -490,7 +490,8 @@ SELECT * FROM (
   {this.sqlString} {where} {key} <= {id} ORDER BY {key} DESC LIMIT {display+1}
 ) x
 """
-  # logger(this.sqlString, this.placeHolder)
+  this.placeHolder &= this.placeHolder
+  logger(this.sqlString, this.placeHolder)
   var currentPage = getAllRows(this.sqlString, this.placeHolder)
   # previous
   var previousPage = currentPage[0][key].getInt()
@@ -542,7 +543,8 @@ SELECT * FROM (
   {this.sqlString} {where} {key} >= {id} ORDER BY {key} ASC LIMIT {display+1}
 ) x
 """
-  # logger(this.sqlString, this.placeHolder)
+  this.placeHolder &= this.placeHolder
+  logger(this.sqlString, this.placeHolder)
   var currentPage = getAllRows(this.sqlString, this.placeHolder)
   # previous
   let previousPage = currentPage[currentPage.len-1][key].getInt

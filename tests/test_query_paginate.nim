@@ -89,8 +89,7 @@ suite "query fast paginate":
     check t["currentPage"][0]["id"].getInt == 20
 
   test "fastPaginateNext":
-    var t = RDB().table("users").select("id", "name")
-            .where("auth_id", "=", 2).fastPaginateNext(3, 5)
+    var t = RDB().table("users").select("id", "name").fastPaginateNext(3, 5)
     echo t
     check t["nextPage"].getInt == 8
     check t["previousPage"].getInt == 4
