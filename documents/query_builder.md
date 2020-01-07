@@ -265,26 +265,36 @@ echo users
 #### fastPaginate
 It run faster than `paginate()` because it doesn't use `offset`.
 
-- fastPaginate()  
-arg1... Numer of items per page  
-arg2... Name of a primary key column (option). default is `id`.  
+```nim
+proc fastPaginate(this:RDB, display:int, key="id", order:Order=Asc): JsonNode
+```  
+- display...Numer of items per page  
+- key...Name of a primary key column (option). default is `id`.  
+- order...Asc or Desc
 
-- fastPaginateNext() / fastPaginateBack()  
-arg1... Numer of items per page  
-arg2... Value of primary key  
-arg3... Name of a primary key column (option). default is `id`.
+```nim
+proc fastPaginateNext(this:RDB, display:int, id:int=1, key="id", order:Order=Asc): JsonNode
+
+proc fastPaginateBack(this:RDB, display:int, id:int=1, key="id", order:Order=Asc): JsonNode
+```
+- display...Numer of items per page  
+- id...Value of primary key  
+- key...Name of a primary key column (option). default is `id`.
+- order...Asc or Desc
 
 ```nim
 var users = RDB().table("users").select("id", "name").fastPaginate(3)
 
 >> {
   "previousPage":0,
+  "hasPreviousPage": false,
   "currentPage":[
     {"id":1,"name":"user1"},
     {"id":3,"name":"user3"},
     {"id":4,"name":"user4"}
   ],
   "nextPage":5
+  "hasNextPage": true
 }
 ```
 ```nim
@@ -294,12 +304,14 @@ users = RDB().table("users")
 
 >> {
   "previousPage":4,
+  "hasPreviousPage": true,
   "currentPage":[
     {"id":5,"name":"user5"},
     {"id":6,"name":"user6"},
     {"id":7,"name":"user7"}
   ],
-  "nextPage":8
+  "nextPage":8,
+  "hasNextPage": true
 }
 ```
 ```nim
@@ -309,14 +321,53 @@ users = RDB().table("users")
 
 >> {
   "previousPage":0,
+  "hasPreviousPage": false,
   "currentPage":[
     {"id":1,"name":"user1"},
     {"id":3,"name":"user3"},
     {"id":4,"name":"user4"}
   ],
-  "nextPage":5
+  "nextPage":5,
+  "hasNextPage": true
 }
 ```
+```nim
+echo RDB().table("users").select("id", "name").fastPaginateNext(3, 5, order=Desc)
+
+>> {
+  "previousPage":6,
+  "hasPreviousPage":true,
+  "currentPage":[
+    {"id":5,"name":"user5"},
+    {"id":4,"name":"user4"},
+    {"id":3,"name":"user3"}
+  ],
+  "nextPage":1,
+  "hasNextPage":true
+}
+```
+
+paginate with `join` and `where`
+```nim
+echo RDB().table("users")
+      .select("users.id", "users.name")
+      .join("auth", "auth.id", "=", "users.auth_id")
+      .where("auth.id", "=", 2)
+      .fastPaginate(3, key="users.id")
+
+>> {
+  "previousPage":8,
+  "hasPreviousPage":true,
+  "currentPage":[
+    {"id":10,"name":"user10"},
+    {"id":12,"name":"user12"},
+    {"id":14,"name":"user14"}
+  ],
+  "nextPage":16,
+  "hasNextPage":true
+}
+```
+
 
 ## INSERT
 [to index](#index)
