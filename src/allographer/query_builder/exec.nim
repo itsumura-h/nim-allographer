@@ -404,22 +404,22 @@ proc sum*(this:RDB, column:string): float =
 
 from grammars import where, limit, offset, orderBy, Order
 
-proc getFirstItem(sqlStringArg:string, key:string, order:Order=Asc):int =
-  var sqlString = sqlStringArg
+proc getFirstItem(this:RDB, key:string, order:Order=Asc):int =
+  var sqlString = this.sqlString
   if order == Asc:
     sqlString = &"{sqlString} ORDER BY {key} ASC LIMIT 1"
   else:
     sqlString = &"{sqlString} ORDER BY {key} DESC LIMIT 1"
-  let row = getRow(sqlString)
+  let row = getRow(sqlString, this.placeHolder)
   return row[key].getInt
 
-proc getLastItem(sqlStringArg:string, key:string, order:Order=Asc):int =
-  var sqlString = sqlStringArg
+proc getLastItem(this:RDB, key:string, order:Order=Asc):int =
+  var sqlString = this.sqlString
   if order == Asc:
     sqlString = &"{sqlString} ORDER BY {key} DESC LIMIT 1"
   else:
     sqlString = &"{sqlString} ORDER BY {key} ASC LIMIT 1"
-  let row = getRow(sqlString)
+  let row = getRow(sqlString, this.placeHolder)
   return row[key].getInt
 
 proc paginate*(this:RDB, display:int, page:int=1): JsonNode =
@@ -451,7 +451,7 @@ proc fastPaginate*(this:RDB, display:int, key="id", order:Order=Asc): JsonNode =
     this.sqlString = &"{this.sqlString} ORDER BY {key} ASC LIMIT {display + 1}"
   else:
     this.sqlString = &"{this.sqlString} ORDER BY {key} DESC LIMIT {display + 1}"
-  logger(this.sqlString, this.placeHolder)
+  # logger(this.sqlString, this.placeHolder)
   var currentPage  = getAllRows(this.sqlString, this.placeHolder)
   let nextPage = currentPage.pop()[key].getInt()
   let hasNextPage = if nextPage > 0: true else: false
@@ -467,29 +467,30 @@ proc fastPaginate*(this:RDB, display:int, key="id", order:Order=Asc): JsonNode =
 proc fastPaginateNext*(this:RDB, display:int, id:int=1, key="id",
                         order:Order=Asc): JsonNode =
   this.sqlString = @[this.selectBuilder().sqlString][0]
-  let firstItem = getFirstItem(this.sqlString, key, order)
+  let firstItem = getFirstItem(this, key, order)
 
+  let where = if this.sqlString.contains("WHERE"): "AND" else: "WHERE"
   if order == Asc:
     this.sqlString = &"""
 SELECT * FROM (
-  {this.sqlString} WHERE {key} < {id} ORDER BY {key} DESC LIMIT 1
+  {this.sqlString} {where} {key} < {id} ORDER BY {key} DESC LIMIT 1
 ) x
 UNION ALL
 SELECT * FROM (
-  {this.sqlString} WHERE {key} >= {id} ORDER BY {key} ASC LIMIT {display+1}
+  {this.sqlString} {where} {key} >= {id} ORDER BY {key} ASC LIMIT {display+1}
 ) x
 """
   else:
     this.sqlString = &"""
 SELECT * FROM (
-  {this.sqlString} WHERE {key} > {id} ORDER BY {key} ASC LIMIT 1
+  {this.sqlString} {where} {key} > {id} ORDER BY {key} ASC LIMIT 1
 ) x
 UNION ALL
 SELECT * FROM (
-  {this.sqlString} WHERE {key} <= {id} ORDER BY {key} DESC LIMIT {display+1}
+  {this.sqlString} {where} {key} <= {id} ORDER BY {key} DESC LIMIT {display+1}
 ) x
 """
-  logger(this.sqlString, this.placeHolder)
+  # logger(this.sqlString, this.placeHolder)
   var currentPage = getAllRows(this.sqlString, this.placeHolder)
   # previous
   var previousPage = currentPage[0][key].getInt()
@@ -518,29 +519,30 @@ SELECT * FROM (
 proc fastPaginateBack*(this:RDB, display:int, id:int=1, key="id",
                         order:Order=Asc): JsonNode =
   this.sqlString = @[this.selectBuilder().sqlString][0]
-  let lastItem = getLastItem(this.sqlString, key, order)
+  let lastItem = getLastItem(this, key, order)
 
+  let where = if this.sqlString.contains("WHERE"): "AND" else: "WHERE"
   if order == Asc:
     this.sqlString = &"""
 SELECT * FROM (
-  {this.sqlString} WHERE {key} > {id} ORDER BY {key} ASC LIMIT 1
+  {this.sqlString} {where} {key} > {id} ORDER BY {key} ASC LIMIT 1
 ) x
 UNION ALL
 SELECT * FROM (
-  {this.sqlString} WHERE {key} <= {id} ORDER BY {key} DESC LIMIT {display+1}
+  {this.sqlString} {where} {key} <= {id} ORDER BY {key} DESC LIMIT {display+1}
 ) x
 """
   else:
     this.sqlString = &"""
 SELECT * FROM (
-  {this.sqlString} WHERE {key} < {id} ORDER BY {key} DESC LIMIT 1
+  {this.sqlString} {where} {key} < {id} ORDER BY {key} DESC LIMIT 1
 ) x
 UNION ALL
 SELECT * FROM (
-  {this.sqlString} WHERE {key} >= {id} ORDER BY {key} ASC LIMIT {display+1}
+  {this.sqlString} {where} {key} >= {id} ORDER BY {key} ASC LIMIT {display+1}
 ) x
 """
-  logger(this.sqlString, this.placeHolder)
+  # logger(this.sqlString, this.placeHolder)
   var currentPage = getAllRows(this.sqlString, this.placeHolder)
   # previous
   let previousPage = currentPage[currentPage.len-1][key].getInt
