@@ -402,24 +402,25 @@ proc sum*(this:RDB, column:string): float =
 
 # ==================== Paginate ====================
 
-proc getFirstItem(sqlStringArg:string, key:string):int =
-  var sqlString = sqlStringArg
-  sqlString = sqlStringArg.split("ORDER")[0]
-  sqlString = &"{sqlString} ORDER BY {key} ASC LIMIT 1"
-  echo sqlString
-  let row = getRow(sqlString)
-  return row[key].getInt
-
-proc getLastItem(sqlStringArg:string, key:string):int =
-  var sqlString = sqlStringArg
-  sqlString = sqlStringArg.split("ORDER")[0]
-  sqlString = &"{sqlString} ORDER BY {key} DESC LIMIT 1"
-  echo sqlString
-  let row = getRow(sqlString)
-  return row[key].getInt
-
-
 from grammars import where, limit, offset, orderBy, Order
+
+proc getFirstItem(sqlStringArg:string, key:string, order:Order=Asc):int =
+  var sqlString = sqlStringArg
+  if order == Asc:
+    sqlString = &"{sqlString} ORDER BY {key} ASC LIMIT 1"
+  else:
+    sqlString = &"{sqlString} ORDER BY {key} DESC LIMIT 1"
+  let row = getRow(sqlString)
+  return row[key].getInt
+
+proc getLastItem(sqlStringArg:string, key:string, order:Order=Asc):int =
+  var sqlString = sqlStringArg
+  if order == Asc:
+    sqlString = &"{sqlString} ORDER BY {key} DESC LIMIT 1"
+  else:
+    sqlString = &"{sqlString} ORDER BY {key} ASC LIMIT 1"
+  let row = getRow(sqlString)
+  return row[key].getInt
 
 proc paginate*(this:RDB, display:int, page:int=1): JsonNode =
   if not page > 0: raise newException(Exception, "arg2 should be larger than 0")
@@ -444,33 +445,89 @@ proc paginate*(this:RDB, display:int, page:int=1): JsonNode =
   }
 
 
-proc fastPaginate*(this:RDB, display:int, key="id"): JsonNode =
+proc fastPaginate*(this:RDB, display:int, key="id", order:Order=Asc): JsonNode =
   this.sqlString = @[this.selectBuilder().sqlString][0]
-  this.sqlString = &"{this.sqlString} LIMIT {display + 1}"
+  if order == Asc:
+    this.sqlString = &"{this.sqlString} ORDER BY {key} ASC LIMIT {display + 1}"
+  else:
+    this.sqlString = &"{this.sqlString} ORDER BY {key} DESC LIMIT {display + 1}"
   logger(this.sqlString, this.placeHolder)
   var currentPage  = getAllRows(this.sqlString, this.placeHolder)
   let nextPage = currentPage.pop()[key].getInt()
+  let hasNextPage = if nextPage > 0: true else: false
   return %*{
     "previousPage": 0,
+    "hasPreviousPage": false,
     "currentPage": currentPage,
-    "nextPage": nextPage
+    "nextPage": nextPage,
+    "hasNextPage": hasNextPage
   }
 
 
-proc fastPaginateNext*(this:RDB, display:int, id:int=1, key="id"): JsonNode =
+proc fastPaginateNext*(this:RDB, display:int, id:int=1, key="id",
+                        order:Order=Asc): JsonNode =
   this.sqlString = @[this.selectBuilder().sqlString][0]
-  let firstItem = getFirstItem(this.sqlString, key)
-  let lastItem = getLastItem(this.sqlString, key)
-  if this.query.hasKey("order_by"):
-    var sqlStringSeq = this.sqlString.split("ORDER")
-    echo sqlStringSeq
+  let firstItem = getFirstItem(this.sqlString, key, order)
+
+  if order == Asc:
     this.sqlString = &"""
 SELECT * FROM (
-  {sqlStringSeq[0]} WHERE {key} > {id} ORDER{sqlStringSeq[1]} LIMIT 1
+  {this.sqlString} WHERE {key} < {id} ORDER BY {key} DESC LIMIT 1
 ) x
 UNION ALL
 SELECT * FROM (
-  {sqlStringSeq[0]} WHERE {key} <= {id} ORDER{sqlStringSeq[1]} LIMIT {display}+1
+  {this.sqlString} WHERE {key} >= {id} ORDER BY {key} ASC LIMIT {display+1}
+) x
+"""
+  else:
+    this.sqlString = &"""
+SELECT * FROM (
+  {this.sqlString} WHERE {key} > {id} ORDER BY {key} ASC LIMIT 1
+) x
+UNION ALL
+SELECT * FROM (
+  {this.sqlString} WHERE {key} <= {id} ORDER BY {key} DESC LIMIT {display+1}
+) x
+"""
+  logger(this.sqlString, this.placeHolder)
+  var currentPage = getAllRows(this.sqlString, this.placeHolder)
+  # previous
+  var previousPage = currentPage[0][key].getInt()
+  var hasPreviousPage = true
+  if previousPage != firstItem:
+    currentPage.delete(0)
+  else:
+    hasPreviousPage = false
+  # next
+  var nextPage = currentPage[currentPage.len-1][key].getInt()
+  var hasNextPage = true
+  if currentPage.len > display:
+    discard currentPage.pop()
+  else:
+    hasNextPage = false
+
+  return %*{
+    "previousPage": previousPage,
+    "hasPreviousPage": hasPreviousPage,
+    "currentPage": currentPage,
+    "nextPage": nextPage,
+    "hasNextPage": hasNextPage
+  }
+
+
+proc fastPaginateBack*(this:RDB, display:int, id:int=1, key="id",
+                        order:Order=Asc): JsonNode =
+  this.sqlString = @[this.selectBuilder().sqlString][0]
+  let lastItem = getLastItem(this.sqlString, key, order)
+
+  if order == Asc:
+    this.sqlString = &"""
+SELECT * FROM (
+  {this.sqlString} WHERE {key} > {id} ORDER BY {key} ASC LIMIT 1
+) x
+UNION ALL
+SELECT * FROM (
+  {this.sqlString} WHERE {key} <= {id} ORDER BY {key} DESC LIMIT {display+1}
 ) x
 """
   else:
@@ -480,49 +537,34 @@ SELECT * FROM (
 ) x
 UNION ALL
 SELECT * FROM (
-  {this.sqlString} WHERE {key} >= {id} ORDER BY {key} ASC LIMIT {display}+1
+  {this.sqlString} WHERE {key} >= {id} ORDER BY {key} ASC LIMIT {display+1}
 ) x
 """
   logger(this.sqlString, this.placeHolder)
   var currentPage = getAllRows(this.sqlString, this.placeHolder)
-  let previousPage = currentPage[0][key].getInt()
-  currentPage.delete(0)
-  let nextPage = currentPage.pop()[key].getInt()
-  return %*{
-    "previousPage": previousPage,
-    "currentPage": currentPage,
-    "nextPage": nextPage
-  }
-
-
-proc fastPaginateBack*(this:RDB, display:int, id:int=1, key="id"): JsonNode =
-  this.sqlString = @[this.selectBuilder().sqlString][0]
-  this.sqlString = &"""
-SELECT * FROM (
-  {this.sqlString} WHERE {key} > {id} ORDER BY {key} ASC LIMIT 1
-) x
-UNION ALL
-SELECT * FROM (
-  {this.sqlString} WHERE {key} <= {id} ORDER BY {key} DESC LIMIT {display}+1
-) x
-"""
-  logger(this.sqlString, this.placeHolder)
-  var currentPage  = getAllRows(this.sqlString, this.placeHolder)
-  # next
-  let nextPage = if currentPage[0][key].getInt() > id: currentPage[0][key].getInt() else: 0
-  currentPage.delete(0)
   # previous
-  var previousPage: int
-  if currentPage.len() > display:
-    previousPage = currentPage[display][key].getInt()
+  let previousPage = currentPage[currentPage.len-1][key].getInt
+  var hasPreviousPage = true
+  if currentPage.len > display:
     discard currentPage.pop()
   else:
-    previousPage = 0
+    hasPreviousPage = false
+  # next
+  let nextPage = currentPage[0][key].getInt()
+  var hasNextPage = true
+  if nextPage != lastItem:
+    currentPage.delete(0)
+  else:
+    hasNextPage = false
+
   currentPage.reverse()
+
   return %*{
     "previousPage": previousPage,
+    "hasPreviousPage": hasPreviousPage,
     "currentPage": currentPage,
-    "nextPage": nextPage
+    "nextPage": nextPage,
+    "hasNextPage": hasNextPage
   }
 
 # ==================== Transaction ====================
