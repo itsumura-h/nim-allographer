@@ -404,28 +404,8 @@ proc sum*(this:RDB, column:string): float =
 
 from grammars import where, limit, offset, orderBy, Order
 
-proc getFirstItem(this:RDB, key:string, order:Order=Asc):int =
-  var sqlString = this.sqlString
-  if order == Asc:
-    sqlString = &"{sqlString} ORDER BY {key} ASC LIMIT 1"
-  else:
-    sqlString = &"{sqlString} ORDER BY {key} DESC LIMIT 1"
-  let row = getRow(sqlString, this.placeHolder)
-  let newKey = if key.contains("."): key.split(".")[1] else: key
-  return row[newKey].getInt
-
-proc getLastItem(this:RDB, key:string, order:Order=Asc):int =
-  var sqlString = this.sqlString
-  if order == Asc:
-    sqlString = &"{sqlString} ORDER BY {key} DESC LIMIT 1"
-  else:
-    sqlString = &"{sqlString} ORDER BY {key} ASC LIMIT 1"
-  let row = getRow(sqlString, this.placeHolder)
-  let newKey = if key.contains("."): key.split(".")[1] else: key
-  return row[newKey].getInt
-
 proc paginate*(this:RDB, display:int, page:int=1): JsonNode =
-  if not page > 0: raise newException(Exception, "arg2 should be larger than 0")
+  if not page > 0: raise newException(Exception, "Arg page should be larger than 0")
   let total = this.count()
   let offset = (page - 1) * display
   let currentPage = this.limit(display).offset(offset).get()
@@ -447,6 +427,28 @@ proc paginate*(this:RDB, display:int, page:int=1): JsonNode =
   }
 
 
+proc getFirstItem(this:RDB, keyArg:string, order:Order=Asc):int =
+  var sqlString = this.sqlString
+  if order == Asc:
+    sqlString = &"{sqlString} ORDER BY {keyArg} ASC LIMIT 1"
+  else:
+    sqlString = &"{sqlString} ORDER BY {keyArg} DESC LIMIT 1"
+  let row = getRow(sqlString, this.placeHolder)
+  let key = if keyArg.contains("."): keyArg.split(".")[1] else: keyArg
+  return row[key].getInt
+
+
+proc getLastItem(this:RDB, keyArg:string, order:Order=Asc):int =
+  var sqlString = this.sqlString
+  if order == Asc:
+    sqlString = &"{sqlString} ORDER BY {keyArg} DESC LIMIT 1"
+  else:
+    sqlString = &"{sqlString} ORDER BY {keyArg} ASC LIMIT 1"
+  let row = getRow(sqlString, this.placeHolder)
+  let key = if keyArg.contains("."): keyArg.split(".")[1] else: keyArg
+  return row[key].getInt
+
+
 proc fastPaginate*(this:RDB, display:int, key="id", order:Order=Asc): JsonNode =
   this.sqlString = @[this.selectBuilder().sqlString][0]
   if order == Asc:
@@ -455,25 +457,25 @@ proc fastPaginate*(this:RDB, display:int, key="id", order:Order=Asc): JsonNode =
     this.sqlString = &"{this.sqlString} ORDER BY {key} DESC LIMIT {display + 1}"
   logger(this.sqlString, this.placeHolder)
   var currentPage  = getAllRows(this.sqlString, this.placeHolder)
-  # echo currentPage
   let newKey = if key.contains("."): key.split(".")[1] else: key
-  let nextPage = currentPage[currentPage.len-1][newKey].getInt()
-  var hasNextPage = true
+  let nextId = currentPage[currentPage.len-1][newKey].getInt()
+  var hasNextId = true
   if currentPage.len > display:
     discard currentPage.pop()
   else:
-    hasNextPage = false
+    hasNextId = false
   return %*{
-    "previousPage": 0,
-    "hasPreviousPage": false,
+    "previousId": 0,
+    "hasPreviousId": false,
     "currentPage": currentPage,
-    "nextPage": nextPage,
-    "hasNextPage": hasNextPage
+    "nextId": nextId,
+    "hasNextId": hasNextId
   }
 
 
-proc fastPaginateNext*(this:RDB, display:int, id:int=1, key="id",
+proc fastPaginateNext*(this:RDB, display:int, id:int, key="id",
                         order:Order=Asc): JsonNode =
+  if not id > 0: raise newException(Exception, "Arg id should be larger than 0")
   this.sqlString = @[this.selectBuilder().sqlString][0]
   let firstItem = getFirstItem(this, key, order)
 
@@ -501,34 +503,34 @@ SELECT * FROM (
   this.placeHolder &= this.placeHolder
   logger(this.sqlString, this.placeHolder)
   var currentPage = getAllRows(this.sqlString, this.placeHolder)
-  echo currentPage
   let newKey = if key.contains("."): key.split(".")[1] else: key
   # previous
-  var previousPage = currentPage[0][newKey].getInt()
-  var hasPreviousPage = true
-  if previousPage != firstItem:
+  var previousId = currentPage[0][newKey].getInt()
+  var hasPreviousId = true
+  if previousId != firstItem:
     currentPage.delete(0)
   else:
-    hasPreviousPage = false
+    hasPreviousId = false
   # next
-  var nextPage = currentPage[currentPage.len-1][newKey].getInt()
-  var hasNextPage = true
+  var nextId = currentPage[currentPage.len-1][newKey].getInt()
+  var hasNextId = true
   if currentPage.len > display:
     discard currentPage.pop()
   else:
-    hasNextPage = false
+    hasNextId = false
 
   return %*{
-    "previousPage": previousPage,
-    "hasPreviousPage": hasPreviousPage,
+    "previousId": previousId,
+    "hasPreviousId": hasPreviousId,
     "currentPage": currentPage,
-    "nextPage": nextPage,
-    "hasNextPage": hasNextPage
+    "nextId": nextId,
+    "hasNextId": hasNextId
   }
 
 
-proc fastPaginateBack*(this:RDB, display:int, id:int=1, key="id",
+proc fastPaginateBack*(this:RDB, display:int, id:int, key="id",
                         order:Order=Asc): JsonNode =
+  if not id > 0: raise newException(Exception, "Arg id should be larger than 0")
   this.sqlString = @[this.selectBuilder().sqlString][0]
   let lastItem = getLastItem(this, key, order)
 
@@ -556,31 +558,30 @@ SELECT * FROM (
   this.placeHolder &= this.placeHolder
   logger(this.sqlString, this.placeHolder)
   var currentPage = getAllRows(this.sqlString, this.placeHolder)
-  echo currentPage
   let newKey = if key.contains("."): key.split(".")[1] else: key
   # next
-  let nextPage = currentPage[0][newKey].getInt()
-  var hasNextPage = true
-  if nextPage != lastItem:
+  let nextId = currentPage[0][newKey].getInt()
+  var hasNextId = true
+  if nextId != lastItem:
     currentPage.delete(0)
   else:
-    hasNextPage = false
+    hasNextId = false
   # previous
-  let previousPage = currentPage[currentPage.len-1][newKey].getInt
-  var hasPreviousPage = true
+  let previousId = currentPage[currentPage.len-1][newKey].getInt
+  var hasPreviousId = true
   if currentPage.len > display:
     discard currentPage.pop()
   else:
-    hasPreviousPage = false
+    hasPreviousId = false
 
   currentPage.reverse()
 
   return %*{
-    "previousPage": previousPage,
-    "hasPreviousPage": hasPreviousPage,
+    "previousId": previousId,
+    "hasPreviousId": hasPreviousId,
     "currentPage": currentPage,
-    "nextPage": nextPage,
-    "hasNextPage": hasNextPage
+    "nextId": nextId,
+    "hasNextId": hasNextId
   }
 
 # ==================== Transaction ====================
