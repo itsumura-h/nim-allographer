@@ -118,7 +118,7 @@ suite "query fast paginate":
 
   test "fastPaninate with WHERE":
     var t = RDB().table("users")
-            .select("users.id", "users.name")
+            .select("users.id", "users.name", "users.auth_id")
             .join("auth", "auth.id", "=", "users.auth_id")
             .where("auth.id", "=", 2)
             .fastPaginate(3, key="users.id")
