@@ -360,7 +360,7 @@ echo RDB().table("users")
 paginate with `join` and `where`
 ```nim
 echo RDB().table("users")
-      .select("users.id", "users.name")
+      .select("users.id", "users.name", "users.auth_id")
       .join("auth", "auth.id", "=", "users.auth_id")
       .where("auth.id", "=", 2)
       .fastPaginate(3, key="users.id")
@@ -369,9 +369,9 @@ echo RDB().table("users")
   "previousId":0,
   "hasPreviousId":false,
   "currentPage":[
-    {"id":2,"name":"user2"},
-    {"id":4,"name":"user4"},
-    {"id":6,"name":"user6"}
+    {"id":4,"name":"user4","auth_id":2},
+    {"id":6,"name":"user6","auth_id":2},
+    {"id":8,"name":"user8","auth_id":2}
   ],
   "nextId":8,
   "hasNextId":true
