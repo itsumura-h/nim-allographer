@@ -20,6 +20,7 @@ Example: Query Builder
   - [orderBy](#orderBy)
   - [limit-offset](#limit_offset)
   - [Paginate](#paginate)
+  - [fastPaginate](#fastPaginate)
 
 - [INSERT](#INSERT)
 - [UPDATE](#UPDATE)
@@ -97,9 +98,7 @@ echo rows[0].is_admin
 >> true                         # bool
 ```
 
-### Examples
-
-#### get
+### get
 Retrieving all row from a table
 ```nim
 let users = RDB().table("users").get()
@@ -107,7 +106,7 @@ for user in users:
   echo user["name"]
 ```
 
-#### first
+### first
 Retrieving a single row from a table
 ```nim
 let user = RDB()
@@ -117,7 +116,7 @@ let user = RDB()
 echo user["name"]
 ```
 
-#### find
+### find
 Retrieve a single row by its primary key
 ```nim
 let user = RDB().table("users").find(1)
@@ -130,7 +129,7 @@ let user = RDB().table("users").find(1, "user_id")
 echo user["name"]
 ```
 
-#### join
+### join
 ```nim
 let users = RDB()
             .table("users")
@@ -140,11 +139,12 @@ let users = RDB()
             .get()
 ```
 
-#### where
+### where
 ```nim
 let users = RDB().table("users").where("age", ">", 25).get()
 ```
-#### orWhere
+
+### orWhere
 ```nim
 let users = RDB()
             .table("users")
@@ -153,7 +153,7 @@ let users = RDB()
             .get()
 ```
 
-#### whereBetween
+### whereBetween
 ```nim
 let users = RDB()
             .table("users")
@@ -161,7 +161,7 @@ let users = RDB()
             .get()
 ```
 
-#### whereNotBetween
+### whereNotBetween
 ```nim
 let users = RDB()
             .table("users")
@@ -169,7 +169,7 @@ let users = RDB()
             .get()
 ```
 
-#### whereIn
+### whereIn
 ```nim
 let users = RDB()
             .table("users")
@@ -177,7 +177,7 @@ let users = RDB()
             .get()
 ```
 
-#### whereNotIn
+### whereNotIn
 ```nim
 let users = RDB()
             .table("users")
@@ -185,7 +185,7 @@ let users = RDB()
             .get()
 ```
 
-#### whereNull
+### whereNull
 ```nim
 let users = RDB()
             .table("users")
@@ -193,7 +193,7 @@ let users = RDB()
             .get()
 ```
 
-#### groupBy_having
+### groupBy_having
 ```nim
 let users = RDB()
             .table("users")
@@ -202,7 +202,7 @@ let users = RDB()
             .get()
 ```
 
-#### orderBy
+### orderBy
 ```nim
 let users = RDB()
             .table("users")
@@ -212,7 +212,7 @@ let users = RDB()
 2nd arg of `orderBy` is Enum. `Desc` or `Asc`
 
 
-#### limit_offset
+### limit_offset
 ```nim
 let users = RDB()
             .table("users")
@@ -221,7 +221,7 @@ let users = RDB()
             .get()
 ```
 
-#### paginate
+### paginate
 ```nim
 RDB().table("users").delete(2)
 let users = User
@@ -262,39 +262,45 @@ echo users
 |total|The total number of results|
 
 
-#### fastPaginate
+### fastPaginate
 It run faster than `paginate()` because it doesn't use `offset`.
+
+|sample URL|usage|result items|
+|---|---|---|
+|/users?items=5|`fastPaginate(5)`|1,2,3,4,5|
+|/users?items=5&since=6|`fastPaginateNext(5, 6)`|6,7,8,9,10|
+|/users?items=5&until=5|`fastPaginateBack(5, 5)`|1,2,3,4,5|
 
 ```nim
 proc fastPaginate(this:RDB, display:int, key="id", order:Order=Asc): JsonNode
 ```  
-- display...Numer of items per page  
+- display...Numer of items per page.  
 - key...Name of a primary key column (option). default is `id`.  
-- order...Asc or Desc
+- order...Asc or Desc (option). default is `Asc`.
 
 ```nim
-proc fastPaginateNext(this:RDB, display:int, id:int=1, key="id", order:Order=Asc): JsonNode
+proc fastPaginateNext(this:RDB, display:int, id:int, key="id", order:Order=Asc): JsonNode
 
-proc fastPaginateBack(this:RDB, display:int, id:int=1, key="id", order:Order=Asc): JsonNode
+proc fastPaginateBack(this:RDB, display:int, id:int, key="id", order:Order=Asc): JsonNode
 ```
-- display...Numer of items per page  
-- id...Value of primary key  
+- display...Numer of items per page.  
+- id...Value of primary key. It should be larger than 0.  
 - key...Name of a primary key column (option). default is `id`.
-- order...Asc or Desc
+- order...Asc or Desc (option). default is `Asc`.
 
 ```nim
 var users = RDB().table("users").select("id", "name").fastPaginate(3)
 
 >> {
-  "previousPage":0,
-  "hasPreviousPage": false,
+  "previousId":0,
+  "hasPreviousId": false,
   "currentPage":[
     {"id":1,"name":"user1"},
+    {"id":2,"name":"user2"},
     {"id":3,"name":"user3"},
-    {"id":4,"name":"user4"}
   ],
-  "nextPage":5
-  "hasNextPage": true
+  "nextId":4,
+  "hasNextId": true
 }
 ```
 ```nim
@@ -303,47 +309,51 @@ users = RDB().table("users")
         .fastPaginateNext(3, users["nextPage"].getInt)
 
 >> {
-  "previousPage":4,
-  "hasPreviousPage": true,
+  "previousId":4,
+  "hasPreviousId": true,
   "currentPage":[
     {"id":5,"name":"user5"},
     {"id":6,"name":"user6"},
     {"id":7,"name":"user7"}
   ],
-  "nextPage":8,
-  "hasNextPage": true
+  "nextId":8,
+  "hasNextId": true
 }
 ```
 ```nim
 users = RDB().table("users")
         .select("id", "name")
-        .fastPaginateBack(3, users["previousPage"].getInt)
+        .fastPaginateBack(3, users["previousId"].getInt)
 
 >> {
-  "previousPage":0,
-  "hasPreviousPage": false,
+  "previousId":0,
+  "hasPreviousId": false,
   "currentPage":[
     {"id":1,"name":"user1"},
+    {"id":2,"name":"user2"},
     {"id":3,"name":"user3"},
-    {"id":4,"name":"user4"}
   ],
-  "nextPage":5,
-  "hasNextPage": true
+  "nextId":4,
+  "hasNextId": true
 }
 ```
+
+order Desc
 ```nim
-echo RDB().table("users").select("id", "name").fastPaginateNext(3, 5, order=Desc)
+echo RDB().table("users")
+      .select("id", "name")
+      .fastPaginateNext(3, 5, order=Desc)
 
 >> {
-  "previousPage":6,
-  "hasPreviousPage":true,
+  "previousId":6,
+  "hasPreviousId":true,
   "currentPage":[
     {"id":5,"name":"user5"},
     {"id":4,"name":"user4"},
     {"id":3,"name":"user3"}
   ],
-  "nextPage":1,
-  "hasNextPage":true
+  "nextId":2,
+  "hasNextId":true
 }
 ```
 
@@ -356,15 +366,15 @@ echo RDB().table("users")
       .fastPaginate(3, key="users.id")
 
 >> {
-  "previousPage":8,
-  "hasPreviousPage":true,
+  "previousId":0,
+  "hasPreviousId":false,
   "currentPage":[
-    {"id":10,"name":"user10"},
-    {"id":12,"name":"user12"},
-    {"id":14,"name":"user14"}
+    {"id":2,"name":"user2"},
+    {"id":4,"name":"user4"},
+    {"id":6,"name":"user6"}
   ],
-  "nextPage":16,
-  "hasNextPage":true
+  "nextId":8,
+  "hasNextId":true
 }
 ```
 
