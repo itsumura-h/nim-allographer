@@ -4,16 +4,16 @@ from connection import getDriver
 
 # file logging setting
 let logConfigFile = getCurrentDir() & "/config/logging.ini"
-try:
-  {.gcsafe.}:
-    let conf = loadConfig(logConfigFile)
-  let isFileOutString = conf.getSectionValue("Log", "file")
-  if isFileOutString == "true":
-    let logPath = conf.getSectionValue("Log", "logDir") & "/log.log"
-    createDir(parentDir(logPath))
-    newRollingFileLogger(logPath, mode=fmAppend, fmtStr=verboseFmtStr).addHandler()
-except:
-  discard
+# try:
+#   {.gcsafe.}:
+#     let conf = loadConfig(logConfigFile)
+#   let isFileOutString = conf.getSectionValue("Log", "file")
+#   if isFileOutString == "true":
+#     let logPath = conf.getSectionValue("Log", "logDir") & "/log.log"
+#     createDir(parentDir(logPath))
+#     newRollingFileLogger(logPath, mode=fmAppend, fmtStr=verboseFmtStr).addHandler()
+# except:
+#   discard
 
 
 proc driverTypeError*() =
@@ -34,7 +34,11 @@ proc logger*(output: any, args:varargs[string]) =
   # file log
   let isFileOutString = conf.getSectionValue("Log", "file")
   if isFileOutString == "true":
-    info $output & $args
+    # info $output & $args
+    let logPath = conf.getSectionValue("Log", "logDir") & "/log.log"
+    createDir(parentDir(logPath))
+    let logger = newRollingFileLogger(logPath, mode=fmAppend, fmtStr=verboseFmtStr)
+    logger.log(lvlInfo, $output & $args)
 
 
 proc echoErrorMsg*(msg:string) =
