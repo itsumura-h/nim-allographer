@@ -43,6 +43,14 @@ proc selectFirstBuilder*(this: RDB): RDB =
 proc selectFindBuilder*(this: RDB, id: int, key: string): RDB =
   return this.selectSql()
         .fromSql()
+        .joinSql()
+        .whereSql()
+        .orWhereSql()
+        .whereBetweenSql()
+        .whereNotBetweenSql()
+        .whereInSql()
+        .whereNotInSql()
+        .whereNullSql()
         .selectByIdSql(id, key)
 
 
