@@ -4,15 +4,16 @@ from connection import getDriver
 
 # file logging setting
 let logConfigFile = getCurrentDir() & "/config/logging.ini"
-try:
-  let conf = loadConfig(logConfigFile)
-  let isFileOutString = conf.getSectionValue("Log", "file")
-  if isFileOutString == "true":
-    let logPath = conf.getSectionValue("Log", "logDir") & "/log.log"
-    createDir(parentDir(logPath))
-    newRollingFileLogger(logPath, mode=fmAppend, fmtStr=verboseFmtStr).addHandler()
-except:
-  discard
+# try:
+#   {.gcsafe.}:
+#     let conf = loadConfig(logConfigFile)
+#   let isFileOutString = conf.getSectionValue("Log", "file")
+#   if isFileOutString == "true":
+#     let logPath = conf.getSectionValue("Log", "logDir") & "/log.log"
+#     createDir(parentDir(logPath))
+#     newRollingFileLogger(logPath, mode=fmAppend, fmtStr=verboseFmtStr).addHandler()
+# except:
+#   discard
 
 
 proc driverTypeError*() =
@@ -23,7 +24,8 @@ proc driverTypeError*() =
 
 proc logger*(output: any, args:varargs[string]) =
   # get Config file
-  let conf = loadConfig(logConfigFile)
+  {.gcsafe.}:
+    let conf = loadConfig(logConfigFile)
   # console log
   let isDisplayString = conf.getSectionValue("Log", "display")
   if isDisplayString == "true":
@@ -32,16 +34,24 @@ proc logger*(output: any, args:varargs[string]) =
   # file log
   let isFileOutString = conf.getSectionValue("Log", "file")
   if isFileOutString == "true":
-    info $output & $args
+    # info $output & $args
+    let path = conf.getSectionValue("Log", "logDir") & "/log.log"
+    createDir(parentDir(path))
+    let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
+    logger.log(lvlInfo, $output & $args)
+    flushFile(logger.file)
 
 
 proc echoErrorMsg*(msg:string) =
   # console log
   styledWriteLine(stdout, fgRed, bgDefault, msg, resetStyle)
   # file log
-  let conf = loadConfig(logConfigFile)
+  {.gcsafe.}:
+    let conf = loadConfig(logConfigFile)
   let isFileOutString = conf.getSectionValue("Log", "file")
   if isFileOutString == "true":
     let path = conf.getSectionValue("Log", "logDir") & "/error.log"
+    createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
     logger.log(lvlError, msg)
+    flushFile(logger.file)
