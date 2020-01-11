@@ -1,0 +1,10 @@
+const
+  # DRIVER* = "sqlite"
+  # CONN* = "/home/www/tests/db.sqlite3"
+  # DRIVER* = "mysql"
+  # CONN* = "mysql:3306"
+  DRIVER* = "postgres"
+  CONN* = "postgres:5432"
+  USER* = "user"
+  PASSWORD* = "Password!"
+  DATABASE* = "allographer"

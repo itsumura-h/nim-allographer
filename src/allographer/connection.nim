@@ -1,9 +1,20 @@
-import db_sqlite
+import macros, strformat
+
+macro importDatabaseConf() =
+  let projectPath = getProjectpath()
+  parseStmt(fmt"""
+import {projectPath}/conf/database
+""")
+importDatabaseConf
+
+macro importDbModule() =
+  parseStmt(fmt"""
+import db_{DRIVER}
+""")
+importDbModule
 
 proc db*(): DbConn =
-  open("/home/www/db.sqlite3", "user", "Password!", "allographer")
-
-const DRIVER = "sqlite"
+  open(CONN, USER, PASSWORD, DATABASE)
 
 proc getDriver*():string =
   return DRIVER
