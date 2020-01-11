@@ -35,9 +35,9 @@ proc logger*(output: any, args:varargs[string]) =
   let isFileOutString = conf.getSectionValue("Log", "file")
   if isFileOutString == "true":
     # info $output & $args
-    let logPath = conf.getSectionValue("Log", "logDir") & "/log.log"
-    createDir(parentDir(logPath))
-    let logger = newRollingFileLogger(logPath, mode=fmAppend, fmtStr=verboseFmtStr)
+    let path = conf.getSectionValue("Log", "logDir") & "/log.log"
+    createDir(parentDir(path))
+    let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
     logger.log(lvlInfo, $output & $args)
     flushFile(logger.file)
 
@@ -51,6 +51,7 @@ proc echoErrorMsg*(msg:string) =
   let isFileOutString = conf.getSectionValue("Log", "file")
   if isFileOutString == "true":
     let path = conf.getSectionValue("Log", "logDir") & "/error.log"
+    createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
     logger.log(lvlError, msg)
     flushFile(logger.file)
