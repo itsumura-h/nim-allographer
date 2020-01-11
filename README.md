@@ -81,22 +81,19 @@ After install allographer, "dbtool" command is going to be available.
 cd /your/project/dir
 dbtool makeConf
 ```
-`/your/project/dir/config/database.ini` will be generated
+`/your/project/dir/config/database.ini`, `/your/project/dir/config/log.ini` will be generated.
 
 ### Edit confing file
-By default, config file is set to use sqlite
+By default, config file is set to use sqlite.
 
+database.ini
 ```ini
-[Connection]
+[RDB]
 driver: "sqlite"
 conn: "/your/project/dir/db.sqlite3"
 user: ""
 password: ""
 database: ""
-
-[Log]
-display: "true"
-file: "true"
 ```
 
 - driver: `sqlite` or `mysql` or `postgres`
@@ -108,6 +105,13 @@ file: "true"
 From "conn" to "database", these are correspond to args of open proc of Nim std db package
 ```nim
 let db = open(conn, user, password, database)
+```
+
+log.ini
+```ini
+[Log]
+display: "true"
+file: "true"
 ```
 
 If you set "true" in "display" of "Log", SQL query will be display in terminal, otherwise nothing will be display.
