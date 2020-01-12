@@ -1,14 +1,17 @@
-import os, parsecfg, terminal, logging, macros, strformat
+import os, parsecfg, terminal, logging, macros, strformat, strutils
 from connection import getDriver
 
 # file logging setting
-macro importLogConf() =
-  let projectPath = getProjectpath()
-  parseStmt(fmt"""
-import {projectPath}/conf/log
-""")
-importLogConf
-
+# macro importLogConf() =
+#   let projectPath = getProjectpath()
+#   parseStmt(fmt"""
+# import {projectPath}/conf/log
+# """)
+# importLogConf
+const
+  IS_DISPLAY = getEnv("log.isDisplay").parseBool
+  IS_FILE = getEnv("log.isFile").parseBool
+  LOG_DIR = getEnv("log.dir")
 
 proc driverTypeError*() =
   let driver = getDriver()
@@ -18,11 +21,11 @@ proc driverTypeError*() =
 
 proc logger*(output: any, args:varargs[string]) =
   # console log
-  if DISPLAY:
+  if IS_DISPLAY:
     let logger = newConsoleLogger()
     logger.log(lvlInfo, $output & $args)
   # file log
-  if log.FILE:
+  if IS_FILE:
     # info $output & $args
     let path = LOG_DIR & "/log.log"
     createDir(parentDir(path))
@@ -33,10 +36,10 @@ proc logger*(output: any, args:varargs[string]) =
 
 proc echoErrorMsg*(msg:string) =
   # console log
-  if DISPLAY:
+  if IS_DISPLAY:
     styledWriteLine(stdout, fgRed, bgDefault, msg, resetStyle)
   # file log
-  if log.FILE:
+  if IS_FILE:
     let path = LOG_DIR & "/error.log"
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
