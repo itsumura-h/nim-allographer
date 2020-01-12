@@ -47,7 +47,7 @@ proc joinSql*(this: RDB): RDB =
       var symbol = row["symbol"].getStr()
       var column2 = row["column2"].getStr()
 
-      this.sqlString.add(&" JOIN {table} ON {column1} {symbol} {column2}")
+      this.sqlString.add(&" INNER JOIN {table} ON {column1} {symbol} {column2}")
 
   return this
 
