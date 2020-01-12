@@ -26,7 +26,6 @@ RDB().table("auth").insert([
   %*{"auth": "admin"},
   %*{"auth": "user"}
 ])
-.exec()
 
 # プログレスバー
 let total = 20
@@ -50,7 +49,7 @@ for i in 1..total:
   pb.increment()
 pb.finish()
 
-RDB().table("users").insert(insertData).exec()
+RDB().table("users").insert(insertData)
 
 discard RDB().table("users").get()
 
@@ -72,8 +71,8 @@ echo RDB().table("users").select("id", "email").limit(5).find(3)
 
 echo ""
 
-RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).exec()
-echo RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"}).execID()
+RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"})
+echo RDB().table("users").insertID(%*{"name": "John", "email": "John@gmail.com"})
 
 
 RDB().table("users").insert(
@@ -82,23 +81,22 @@ RDB().table("users").insert(
       %*{"name": "Paul", "email": "Paul@gmail.com"}
   ]
 )
-.exec()
+
 RDB().table("users").inserts(
   [
       %*{"name": "Mick", "email": "Mick@gmail.com"},
       %*{"name": "Keith", "password": "KeithPass"}
   ]
 )
-.exec()
 
 
-RDB().table("users").update(%*{"name": "David"}).where("id", "=", 2).exec()
-echo RDB().table("users").update(%*{"name": "David"}).where("id", "=", 2).execID()
+RDB().table("users").where("id", "=", 2).update(%*{"name": "David"})
+RDB().table("users").where("id", "=", 2).update(%*{"name": "David"})
 echo RDB().table("users").select().where("name", "=", "David").get()
 echo RDB().table("users").find(2)
 
-RDB().table("users").where("name", "=", "David").delete().exec()
-RDB().table("users").delete(3).exec()
+RDB().table("users").where("name", "=", "David").delete()
+RDB().table("users").delete(3)
 echo RDB().table("users").find(3)
 echo RDB().table("users").limit(5).get()
 echo RDB().table("users").select("name").where("address", "is", nil).get()
@@ -129,7 +127,7 @@ type User = ref object
   address:string
   birth_date:string
   auth_id:int
-let users = RDB().table("users").limit(5).get(User())
+let users = RDB().table("users").limit(5).get(User)
 for user in users:
   echo user.name
 
