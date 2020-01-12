@@ -173,47 +173,102 @@ proc orm(row:JsonNode, typ:typedesc):typ.type =
 
 
 proc get*(this: RDB): seq[JsonNode] =
+  defer:
+    this.sqlString = "";
+    this.placeHolder = newSeq[string](0);
+    this.query = %*{"table": this.query["table"].getStr}
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 proc get*(this: RDB, typ: typedesc): seq[typ.type] =
+  defer:
+    this.sqlString = "";
+    this.placeHolder = newSeq[string](0);
+    this.query = %*{"table": this.query["table"].getStr}
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
-  logger(this.sqlStringSeq[0])
-  return getAllRows(this.sqlStringSeq[0]).orm(typ)
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getAllRows(this.sqlStringSeq[0]).orm(typ)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 
 proc getRaw*(this: RDB): seq[JsonNode] =
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  return getAllRows(this.sqlStringSeq[0], this.placeHolder).orm(typ)
-
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getAllRows(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 proc first*(this: RDB): JsonNode =
+  defer:
+    this.sqlString = "";
+    this.placeHolder = newSeq[string](0);
+    this.query = %*{"table": this.query["table"].getStr}
   this.sqlStringSeq = @[this.selectFirstBuilder().sqlString]
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  return getRow(this.sqlStringSeq[0], this.placeHolder)
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getRow(this.sqlStringSeq[0], this.placeHolder)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 proc first*(this: RDB, typ: typedesc): typ.type =
+  defer:
+    this.sqlString = "";
+    this.placeHolder = newSeq[string](0);
+    this.query = %*{"table": this.query["table"].getStr}
   this.sqlStringSeq = @[this.selectFirstBuilder().sqlString]
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 
 proc find*(this: RDB, id: int, key="id"): JsonNode =
+  defer:
+    this.sqlString = "";
+    this.placeHolder = newSeq[string](0);
+    this.query = %*{"table": this.query["table"].getStr}
   this.placeHolder.add($id)
   this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  return getRow(this.sqlStringSeq[0], this.placeHolder)
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getRow(this.sqlStringSeq[0], this.placeHolder)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
+  defer:
+    this.sqlString = "";
+    this.placeHolder = newSeq[string](0);
+    this.query = %*{"table": this.query["table"].getStr}
   this.placeHolder.add($id)
   this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 
 # ==================== INSERT ====================
@@ -302,6 +357,7 @@ proc update*(this: RDB, items: JsonNode) =
       logger(sqlString, this.placeHolder)
       db.exec(sql sqlString, this.placeHolder)
     defer: db.close()
+    this.sqlString = ""
 
 
 # ==================== DELETE ====================
