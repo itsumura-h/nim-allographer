@@ -13,5 +13,5 @@ putEnv("db.database", "allographer")
 
 # Logging
 putEnv("log.isDisplay", "true")
-putEnv("log.isFile", "false")
+putEnv("log.isFile", "true")
 putEnv("log.dir", "/home/www/logs")
