@@ -144,7 +144,7 @@ proc orWhere*(this: RDB, column: string, symbol: string,
       whereSymbolsError
     )
 
-  this.placeHolder.add(value)
+  this.placeHolder.add($value)
 
   if this.query.hasKey("or_where") == false:
     this.query["or_where"] = %*[{
