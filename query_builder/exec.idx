@@ -22,3 +22,7 @@ max	query_builder/exec.html#max,RDB,string	exec: max(this: RDB; column: string):
 min	query_builder/exec.html#min,RDB,string	exec: min(this: RDB; column: string): string	
 avg	query_builder/exec.html#avg,RDB,string	exec: avg(this: RDB; column: string): float	
 sum	query_builder/exec.html#sum,RDB,string	exec: sum(this: RDB; column: string): float	
+paginate	query_builder/exec.html#paginate,RDB,int,int	exec: paginate(this: RDB; display: int; page: int = 1): JsonNode	
+fastPaginate	query_builder/exec.html#fastPaginate,RDB,int,string,Order	exec: fastPaginate(this: RDB; display: int; key = &quot;id&quot;; order: Order = Asc): JsonNode	
+fastPaginateNext	query_builder/exec.html#fastPaginateNext,RDB,int,int,string,Order	exec: fastPaginateNext(this: RDB; display: int; id: int; key = &quot;id&quot;; order: Order = Asc): JsonNode	
+fastPaginateBack	query_builder/exec.html#fastPaginateBack,RDB,int,int,string,Order	exec: fastPaginateBack(this: RDB; display: int; id: int; key = &quot;id&quot;; order: Order = Asc): JsonNode	
