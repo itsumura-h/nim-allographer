@@ -130,6 +130,8 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
 proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
   let db = db()
   let results = db.getAllRows(sql sqlString, args) # seq[seq[string]]
+  if results.len == 0:
+    return newSeq[JsonNode](0)
 
   var db_columns: DbColumns
   block:
@@ -147,9 +149,11 @@ proc getRow(sqlString:string, args:varargs[string]): JsonNode =
   # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
   # let results = db.getRow(sql sqlString, args)
   let r = db.getAllRows(sql sqlString, args)
-  var results = @[""]
+  var results: seq[string]
   if r.len > 0:
     results = r[0]
+  else:
+    return newJNull()
   
   var db_columns: DbColumns
   block:

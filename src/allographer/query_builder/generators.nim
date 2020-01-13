@@ -35,7 +35,10 @@ proc selectFirstSql*(this:RDB): RDB =
   return this
 
 proc selectByIdSql*(this:RDB, id:int, key:string): RDB =
-  this.sqlString.add(&" WHERE {key} = ? LIMIT 1")
+  if this.sqlString.contains("WHERE"):
+    this.sqlString.add(&" AND {key} = ? LIMIT 1")
+  else:
+    this.sqlString.add(&" WHERE {key} = ? LIMIT 1")
   return this
 
 

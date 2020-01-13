@@ -25,10 +25,10 @@ proc setup() =
     %*{"auth": "user"}
   ])
 
-  var insertData: seq[JsonNode]
+  var users: seq[JsonNode]
   for i in 1..10:
     let authId = if i mod 2 == 0: 2 else: 1
-    insertData.add(
+    users.add(
       %*{
         "name": &"user{i}",
         "email": &"user{i}@gmail.com",
@@ -36,7 +36,7 @@ proc setup() =
       }
     )
 
-  RDB().table("users").insert(insertData)
+  RDB().table("users").insert(users)
 
 
 suite "select":
@@ -216,3 +216,7 @@ suite "select":
     echo t
     check t[0]["name"].getStr() == "user11"
     check t[0]["auth_id"] == newJNull()
+
+  test "result is null":
+    check newJNull() == RDB().table("users").find(50)
+    check newSeq[JsonNode](0) == RDB().table("users").where("id", "=", 50).get()
