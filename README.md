@@ -120,7 +120,7 @@ let db = open(connection, user, password, database)
 
 
 ## Examples
-[Query Builder](./documents/query_builder.md)  
+[Query Builder](./documents/query_builder.rst)  
 [Schema Builder](./documents/schema_builder.md)  
 
 ## API Documents
