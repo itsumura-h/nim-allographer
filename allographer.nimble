@@ -1,12 +1,12 @@
 # Package
 
-version       = "0.6.0"
+version       = "0.7.0"
 author        = "Hidenobu Itsumura @dumblepytech1 as 'medy'"
 description   = "A Nim query builder library inspired by Laravel/PHP and Orator/Python"
 license       = "MIT"
 srcDir        = "src"
 backend       = "c"
-bin           = @["allographer/cli/dbtool"] # ここはパッケージの名前によって変わる
+bin           = @["allographer/cli/dbtool"]
 binDir        = "src/bin"
 installExt    = @["nim"]
 skipDirs      = @["allographer/cli"]

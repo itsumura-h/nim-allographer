@@ -81,42 +81,43 @@ After install allographer, "dbtool" command is going to be available.
 cd /your/project/dir
 dbtool makeConf
 ```
-`/your/project/dir/config/database.ini` will be generated
+`/your/project/dir/config.nims` will be generated.
 
 ### Edit confing file
-By default, config file is set to use sqlite
+By default, config file is set to use sqlite.
 
-```ini
-[Connection]
-driver: "sqlite"
-conn: "/your/project/dir/db.sqlite3"
-user: ""
-password: ""
-database: ""
-
-[Log]
-display: "true"
-file: "true"
-```
-
-- driver: `sqlite` or `mysql` or `postgres`
-- conn: `sqlite/file/path` or `host:port`
-- user: login user name
-- password: login password
-- database: specify the database
-
-From "conn" to "database", these are correspond to args of open proc of Nim std db package
+config.nims
 ```nim
-let db = open(conn, user, password, database)
+import os
+
+# DB Connection
+putEnv("db.driver", "sqlite")
+putEnv("db.connection", "/your/project/dir/db.sqlite3")
+putEnv("db.user", "")
+putEnv("db.password", "")
+putEnv("db.database", "")
+
+# Logging
+putEnv("log.isDisplay", "true")
+putEnv("log.isFile", "false")
+putEnv("log.dir", "/your/project/dir/logs")
 ```
 
-If you set "true" in "display" of "Log", SQL query will be display in terminal, otherwise nothing will be display.
+- db.driver: `sqlite` or `mysql` or `postgres`
+- db.connection: `sqlite/file/path` or `host:port`
+- db.user: login user name
+- db.password: login password
+- db.database: specify the database name
 
-### Load config file
-```bash
-dbtool loadConf
+From "connection" to "database", these are correspond to args of open proc of Nim std db package
+```nim
+let db = open(connection, user, password, database)
 ```
-settings will be applied
+
+- log.isDisplay: Whether display logging in terminal console or not.
+- log.isFile: Whether output logging in log file or not.
+- log.dir: Define logging dir path.
+
 
 ## Examples
 [Query Builder](./documents/query_builder.md)  

@@ -1,5 +1,5 @@
 import db_sqlite, db_mysql, db_postgres
-import json, strutils
+import json, strutils, strformat, algorithm
 
 import base, builders
 import ../util
@@ -173,47 +173,102 @@ proc orm(row:JsonNode, typ:typedesc):typ.type =
 
 
 proc get*(this: RDB): seq[JsonNode] =
+  defer:
+    this.sqlString = "";
+    this.placeHolder = newSeq[string](0);
+    this.query = %*{"table": this.query["table"].getStr}
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 proc get*(this: RDB, typ: typedesc): seq[typ.type] =
+  defer:
+    this.sqlString = "";
+    this.placeHolder = newSeq[string](0);
+    this.query = %*{"table": this.query["table"].getStr}
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
-  logger(this.sqlStringSeq[0])
-  return getAllRows(this.sqlStringSeq[0]).orm(typ)
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getAllRows(this.sqlStringSeq[0]).orm(typ)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 
 proc getRaw*(this: RDB): seq[JsonNode] =
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  return getAllRows(this.sqlStringSeq[0], this.placeHolder).orm(typ)
-
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getAllRows(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 proc first*(this: RDB): JsonNode =
+  defer:
+    this.sqlString = "";
+    this.placeHolder = newSeq[string](0);
+    this.query = %*{"table": this.query["table"].getStr}
   this.sqlStringSeq = @[this.selectFirstBuilder().sqlString]
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  return getRow(this.sqlStringSeq[0], this.placeHolder)
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getRow(this.sqlStringSeq[0], this.placeHolder)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 proc first*(this: RDB, typ: typedesc): typ.type =
+  defer:
+    this.sqlString = "";
+    this.placeHolder = newSeq[string](0);
+    this.query = %*{"table": this.query["table"].getStr}
   this.sqlStringSeq = @[this.selectFirstBuilder().sqlString]
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 
 proc find*(this: RDB, id: int, key="id"): JsonNode =
+  defer:
+    this.sqlString = "";
+    this.placeHolder = newSeq[string](0);
+    this.query = %*{"table": this.query["table"].getStr}
   this.placeHolder.add($id)
   this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  return getRow(this.sqlStringSeq[0], this.placeHolder)
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getRow(this.sqlStringSeq[0], this.placeHolder)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
+  defer:
+    this.sqlString = "";
+    this.placeHolder = newSeq[string](0);
+    this.query = %*{"table": this.query["table"].getStr}
   this.placeHolder.add($id)
   this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
 
 
 # ==================== INSERT ====================
@@ -302,6 +357,7 @@ proc update*(this: RDB, items: JsonNode) =
       logger(sqlString, this.placeHolder)
       db.exec(sql sqlString, this.placeHolder)
     defer: db.close()
+    this.sqlString = ""
 
 
 # ==================== DELETE ====================
@@ -398,6 +454,191 @@ proc sum*(this:RDB, column:string): float =
     return response["aggregate"].getStr().parseFloat()
   else:
     return response["aggregate"].getFloat()
+
+
+# ==================== Paginate ====================
+
+from grammars import where, limit, offset, orderBy, Order
+
+proc paginate*(this:RDB, display:int, page:int=1): JsonNode =
+  if not page > 0: raise newException(Exception, "Arg page should be larger than 0")
+  let total = this.count()
+  let offset = (page - 1) * display
+  let currentPage = this.limit(display).offset(offset).get()
+  let count = currentPage.len()
+  let hasMorePages = if page * display < total: true else: false
+  let lastPage = int(total / display)
+  let nextPage = if page + 1 <= lastPage: page + 1 else: lastPage
+  let perPage = display
+  let previousPage = if page - 1 > 0: page - 1 else: 1
+  return %*{
+    "count": count,
+    "currentPage": currentPage,
+    "hasMorePages": hasMorePages,
+    "lastPage": lastPage,
+    "nextPage": nextPage,
+    "perPage": perPage,
+    "previousPage": previousPage,
+    "total": total
+  }
+
+
+proc getFirstItem(this:RDB, keyArg:string, order:Order=Asc):int =
+  var sqlString = this.sqlString
+  if order == Asc:
+    sqlString = &"{sqlString} ORDER BY {keyArg} ASC LIMIT 1"
+  else:
+    sqlString = &"{sqlString} ORDER BY {keyArg} DESC LIMIT 1"
+  let row = getRow(sqlString, this.placeHolder)
+  let key = if keyArg.contains("."): keyArg.split(".")[1] else: keyArg
+  return row[key].getInt
+
+
+proc getLastItem(this:RDB, keyArg:string, order:Order=Asc):int =
+  var sqlString = this.sqlString
+  if order == Asc:
+    sqlString = &"{sqlString} ORDER BY {keyArg} DESC LIMIT 1"
+  else:
+    sqlString = &"{sqlString} ORDER BY {keyArg} ASC LIMIT 1"
+  let row = getRow(sqlString, this.placeHolder)
+  let key = if keyArg.contains("."): keyArg.split(".")[1] else: keyArg
+  return row[key].getInt
+
+
+proc fastPaginate*(this:RDB, display:int, key="id", order:Order=Asc): JsonNode =
+  this.sqlString = @[this.selectBuilder().sqlString][0]
+  if order == Asc:
+    this.sqlString = &"{this.sqlString} ORDER BY {key} ASC LIMIT {display + 1}"
+  else:
+    this.sqlString = &"{this.sqlString} ORDER BY {key} DESC LIMIT {display + 1}"
+  logger(this.sqlString, this.placeHolder)
+  var currentPage  = getAllRows(this.sqlString, this.placeHolder)
+  let newKey = if key.contains("."): key.split(".")[1] else: key
+  let nextId = currentPage[currentPage.len-1][newKey].getInt()
+  var hasNextId = true
+  if currentPage.len > display:
+    discard currentPage.pop()
+  else:
+    hasNextId = false
+  return %*{
+    "previousId": 0,
+    "hasPreviousId": false,
+    "currentPage": currentPage,
+    "nextId": nextId,
+    "hasNextId": hasNextId
+  }
+
+
+proc fastPaginateNext*(this:RDB, display:int, id:int, key="id",
+                        order:Order=Asc): JsonNode =
+  if not id > 0: raise newException(Exception, "Arg id should be larger than 0")
+  this.sqlString = @[this.selectBuilder().sqlString][0]
+  let firstItem = getFirstItem(this, key, order)
+
+  let where = if this.sqlString.contains("WHERE"): "AND" else: "WHERE"
+  if order == Asc:
+    this.sqlString = &"""
+SELECT * FROM (
+  {this.sqlString} {where} {key} < {id} ORDER BY {key} DESC LIMIT 1
+) x
+UNION ALL
+SELECT * FROM (
+  {this.sqlString} {where} {key} >= {id} ORDER BY {key} ASC LIMIT {display+1}
+) x
+"""
+  else:
+    this.sqlString = &"""
+SELECT * FROM (
+  {this.sqlString} {where} {key} > {id} ORDER BY {key} ASC LIMIT 1
+) x
+UNION ALL
+SELECT * FROM (
+  {this.sqlString} {where} {key} <= {id} ORDER BY {key} DESC LIMIT {display+1}
+) x
+"""
+  this.placeHolder &= this.placeHolder
+  logger(this.sqlString, this.placeHolder)
+  var currentPage = getAllRows(this.sqlString, this.placeHolder)
+  let newKey = if key.contains("."): key.split(".")[1] else: key
+  # previous
+  var previousId = currentPage[0][newKey].getInt()
+  var hasPreviousId = true
+  if previousId != firstItem:
+    currentPage.delete(0)
+  else:
+    hasPreviousId = false
+  # next
+  var nextId = currentPage[currentPage.len-1][newKey].getInt()
+  var hasNextId = true
+  if currentPage.len > display:
+    discard currentPage.pop()
+  else:
+    hasNextId = false
+
+  return %*{
+    "previousId": previousId,
+    "hasPreviousId": hasPreviousId,
+    "currentPage": currentPage,
+    "nextId": nextId,
+    "hasNextId": hasNextId
+  }
+
+
+proc fastPaginateBack*(this:RDB, display:int, id:int, key="id",
+                        order:Order=Asc): JsonNode =
+  if not id > 0: raise newException(Exception, "Arg id should be larger than 0")
+  this.sqlString = @[this.selectBuilder().sqlString][0]
+  let lastItem = getLastItem(this, key, order)
+
+  let where = if this.sqlString.contains("WHERE"): "AND" else: "WHERE"
+  if order == Asc:
+    this.sqlString = &"""
+SELECT * FROM (
+  {this.sqlString} {where} {key} > {id} ORDER BY {key} ASC LIMIT 1
+) x
+UNION ALL
+SELECT * FROM (
+  {this.sqlString} {where} {key} <= {id} ORDER BY {key} DESC LIMIT {display+1}
+) x
+"""
+  else:
+    this.sqlString = &"""
+SELECT * FROM (
+  {this.sqlString} {where} {key} < {id} ORDER BY {key} DESC LIMIT 1
+) x
+UNION ALL
+SELECT * FROM (
+  {this.sqlString} {where} {key} >= {id} ORDER BY {key} ASC LIMIT {display+1}
+) x
+"""
+  this.placeHolder &= this.placeHolder
+  logger(this.sqlString, this.placeHolder)
+  var currentPage = getAllRows(this.sqlString, this.placeHolder)
+  let newKey = if key.contains("."): key.split(".")[1] else: key
+  # next
+  let nextId = currentPage[0][newKey].getInt()
+  var hasNextId = true
+  if nextId != lastItem:
+    currentPage.delete(0)
+  else:
+    hasNextId = false
+  # previous
+  let previousId = currentPage[currentPage.len-1][newKey].getInt
+  var hasPreviousId = true
+  if currentPage.len > display:
+    discard currentPage.pop()
+  else:
+    hasPreviousId = false
+
+  currentPage.reverse()
+
+  return %*{
+    "previousId": previousId,
+    "hasPreviousId": hasPreviousId,
+    "currentPage": currentPage,
+    "nextId": nextId,
+    "hasNextId": hasNextId
+  }
 
 # ==================== Transaction ====================
 
