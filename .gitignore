@@ -18,9 +18,8 @@ lcov.info
 
 *.sqlite3
 migration.json
-
 /deploy/
-
+*logs/*
 *.log
 
 gh-pages*
