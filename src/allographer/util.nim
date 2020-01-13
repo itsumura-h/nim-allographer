@@ -1,13 +1,6 @@
 import os, parsecfg, terminal, logging, macros, strformat, strutils
 from connection import getDriver
 
-# file logging setting
-# macro importLogConf() =
-#   let projectPath = getProjectpath()
-#   parseStmt(fmt"""
-# import {projectPath}/conf/log
-# """)
-# importLogConf
 const
   IS_DISPLAY = getEnv("log.isDisplay").parseBool
   IS_FILE = getEnv("log.isFile").parseBool
