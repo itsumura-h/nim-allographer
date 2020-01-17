@@ -131,6 +131,7 @@ proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
   let db = db()
   let results = db.getAllRows(sql sqlString, args) # seq[seq[string]]
   if results.len == 0:
+    echoErrorMsg(sqlString & $args)
     return newSeq[JsonNode](0)
 
   var db_columns: DbColumns
@@ -153,6 +154,7 @@ proc getRow(sqlString:string, args:varargs[string]): JsonNode =
   if r.len > 0:
     results = r[0]
   else:
+    echoErrorMsg(sqlString & $args)
     return newJNull()
   
   var db_columns: DbColumns
