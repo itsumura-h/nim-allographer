@@ -1,17 +1,11 @@
 import macros, strformat, os
 
-# macro importDatabaseConf() =
-#   let projectPath = getProjectpath()
-#   parseStmt(fmt"""
-# import {projectPath}/conf/database
-# """)
-# importDatabaseConf
 const
-  DRIVER = getEnv("db.driver","sqlite")
-  CONN = getEnv("db.connection")
-  USER = getEnv("db.user")
-  PASSWORD = getEnv("db.password")
-  DATABASE = getEnv("db.database")
+  DRIVER = getEnv("db.driver","sqlite").string
+  CONN = getEnv("db.connection").string
+  USER = getEnv("db.user").string
+  PASSWORD = getEnv("db.password").string
+  DATABASE = getEnv("db.database").string
 
 macro importDbModule() =
   parseStmt(fmt"""

@@ -1,10 +1,12 @@
 import os, parsecfg, terminal, logging, macros, strformat, strutils
+# self
 from connection import getDriver
 
 const
-  IS_DISPLAY = getEnv("log.isDisplay").parseBool
-  IS_FILE = getEnv("log.isFile").parseBool
-  LOG_DIR = getEnv("log.dir")
+  IS_DISPLAY = getEnv("log.isDisplay").string.parseBool
+  IS_FILE = getEnv("log.isFile").string.parseBool
+  LOG_DIR = getEnv("log.dir").string
+
 
 proc driverTypeError*() =
   let driver = getDriver()
