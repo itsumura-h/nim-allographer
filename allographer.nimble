@@ -16,6 +16,7 @@ skipDirs      = @["allographer/cli"]
 requires "nim >= 1.0.0"
 requires "cligen >= 0.9.38"
 requires "progress >= 1.1.1"
+requires "dotenv >= 1.1.1"
 
 import strformat
 from os import `/`
