@@ -306,7 +306,7 @@ var users = RDB().table("users").select("id", "name").fastPaginate(3)
 ```nim
 users = RDB().table("users")
         .select("id", "name")
-        .fastPaginateNext(3, users["nextPage"].getInt)
+        .fastPaginateNext(3, users["nextId"].getInt)
 
 >> {
   "previousId":4,
