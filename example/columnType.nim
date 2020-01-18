@@ -13,8 +13,8 @@ echo RDB().table("users")
     .select("id", "name", "address")
     .find(3)
 
-# Schema().create([
-#   Table().create("sample", [
+# schema([
+#   table("sample", [
 #     Column().increments("id"),
 #     Column().float("float"),
 #     Column().string("string"),

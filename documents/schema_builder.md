@@ -6,13 +6,13 @@ Example: Schema Builder
 ```nim
 import allographer/schema_builder
 
-Schema().create([
-  Table().create("auth", [
+schema([
+  table("auth", [
     Column().increments("id"),
     Column().string("name"),
     Column().timestamps()
   ]),
-  Table().create("users", [
+  table("users", [
     Column().increments("id"),
     Column().string("name"),
     Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)

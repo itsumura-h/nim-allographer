@@ -1,8 +1,8 @@
 import ../src/allographer/schema_builder
 # import allographer/schema_builder
 
-Schema().create([
-  Table().create("table_name", [
+schema([
+  table("table_name", [
     # int
     Column().increments("id"),
     Column().integer("integer"),
@@ -94,13 +94,13 @@ Schema().create([
     Column().json("json_null").nullable(),
   ], reset=true),
 
-#   Table().create("auth", [
+#   table("auth", [
 #     Column().increments("id"),
 #     Column().string("name"),
 #     Column().timestamps()
 #   ], reset=true),
 
-#   Table().create("users", [
+#   table("users", [
 #     Column().increments("id"),
 #     Column().string("name"),
 #     Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)

@@ -7,12 +7,12 @@ import ../src/allographer/schema_builder
 
 
 # マイグレーション
-Schema().create([
-  Table().create("auth",[
+schema([
+  table("auth",[
     Column().increments("id"),
     Column().string("auth")
   ], reset=true),
-  Table().create("users",[
+  table("users",[
     Column().increments("id"),
     Column().string("name").nullable(),
     Column().string("email").nullable(),
