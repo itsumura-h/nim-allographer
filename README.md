@@ -66,7 +66,7 @@ Schema().create([
 
 ## Install
 ```bach
-nimble install https://github.com/itsumura-h/nim-allographer
+nimble install allographer
 ```
 
 ## Set up
