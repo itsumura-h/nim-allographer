@@ -32,8 +32,8 @@ echo result
 ```nim
 import allographer/schema_builder
 
-Schema().create([
-  Table().create("auth", [
+schema([
+  table("auth", [
     Column().increments("id"),
     Column().string("name").nullable(),
     Column().timestamp("created_at").default()
@@ -46,8 +46,8 @@ Schema().create([
     created_at DATETIME DEFAULT (NOW())
 )
 
-Schema().create([
-  Table().create("users", [
+schema([
+  table("users", [
     Column().increments("id"),
     Column().string("name"),
     Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
