@@ -79,7 +79,7 @@ proc check*(this:Schema, tablesArg:varargs[Table]) =
 
 # =============================================================================
 
-proc create*(this:Schema, tables:varargs[Table]) =
+proc schema*(tables:varargs[Table]) =
   driverTypeError()
 
   block:

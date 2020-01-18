@@ -1,11 +1,11 @@
 import macros, strformat, os
 
 const
-  DRIVER = getEnv("db.driver","sqlite").string
-  CONN = getEnv("db.connection").string
-  USER = getEnv("db.user").string
-  PASSWORD = getEnv("db.password").string
-  DATABASE = getEnv("db.database").string
+  DRIVER = getEnv("DB_DRIVER","sqlite").string
+  CONN = getEnv("DB_CONNECTION").string
+  USER = getEnv("DB_USER").string
+  PASSWORD = getEnv("DB_PASSWORD").string
+  DATABASE = getEnv("DB_DATABASE").string
 
 macro importDbModule() =
   parseStmt(fmt"""

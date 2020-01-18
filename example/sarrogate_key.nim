@@ -5,12 +5,12 @@ import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
 
 
-Schema().create([
-  Table().create("auth",[
+schema([
+  table("auth",[
     Column().increments("id"),
     Column().string("name")
   ], reset=true),
-  Table().create("users",[
+  table("users",[
     Column().increments("user_id"),
     Column().string("name").nullable(),
     Column().string("email").nullable(),

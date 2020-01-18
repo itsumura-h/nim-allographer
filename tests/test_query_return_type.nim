@@ -4,8 +4,8 @@ import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
 
 
-Schema().create(
-  Table().create("users", [
+schema(
+  table("users", [
     Column().increments("id"),
     COlumn().string("name").nullable(),
     Column().date("birth_date").nullable(),
