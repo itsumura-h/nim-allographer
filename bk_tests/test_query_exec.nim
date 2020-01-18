@@ -5,8 +5,8 @@ import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
 
 proc resetDB() =
-  Schema().create([
-    Table().create("testDB", [
+  schema([
+    table("testDB", [
       Column().increments("id"),
       Column().string("name"),
       Column().string("null").nullable()

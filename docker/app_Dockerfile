@@ -5,6 +5,7 @@ RUN apk update && \
     apk upgrade --no-cache && \
     apk add --no-cache \
         bsd-compat-headers \
+        openssh-client \
         ca-certificates \
         lcov \
         libpq \
