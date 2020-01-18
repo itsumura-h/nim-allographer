@@ -224,9 +224,9 @@ let users = RDB()
 ### paginate
 ```nim
 RDB().table("users").delete(2)
-let users = User
-            .select("id", "name")
+let users = RDB()
             .table("users")
+            .select("id", "name")
             .paginate(3, 1)
 ```
 arg1... Numer of items per page  
