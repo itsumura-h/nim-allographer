@@ -6,4 +6,4 @@ CHANGE	schema_builder/schema.html#CHANGE	AlterType.CHANGE
 DROP	schema_builder/schema.html#DROP	AlterType.DROP	
 AlterType	schema_builder/schema.html#AlterType	schema: AlterType	
 check	schema_builder/schema.html#check,Schema,varargs[Table]	schema: check(this: Schema; tablesArg: varargs[Table])	
-create	schema_builder/schema.html#create,Schema,varargs[Table]	schema: create(this: Schema; tables: varargs[Table])	
+schema	schema_builder/schema.html#schema,varargs[Table]	schema: schema(tables: varargs[Table])	

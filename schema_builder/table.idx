@@ -1,2 +1,2 @@
 Table	schema_builder/table.html#Table	table: Table	
-create	schema_builder/table.html#create,Table,string,openArray[Column]	table: create(this: Table; name: string; columns: openArray[Column]; reset = false): Table	
+table	schema_builder/table.html#table,string,openArray[Column]	table: table(name: string; columns: openArray[Column]; reset = false): Table	

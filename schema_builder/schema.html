@@ -850,8 +850,8 @@ function main() {
     title="getDriver(): string"><wbr />get<wbr />Driver<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#check%2CSchema%2Cvarargs%5BTable%5D"
     title="check(this: Schema; tablesArg: varargs[Table])"><wbr />check<span class="attachedType">Schema</span></a></li>
-  <li><a class="reference" href="#create%2CSchema%2Cvarargs%5BTable%5D"
-    title="create(this: Schema; tables: varargs[Table])"><wbr />create<span class="attachedType">Schema</span></a></li>
+  <li><a class="reference" href="#schema%2Cvarargs%5BTable%5D"
+    title="schema(tables: varargs[Table])"><wbr />schema<span class="attachedType"></span></a></li>
 
   </ul>
 </li>
@@ -916,9 +916,9 @@ function main() {
 
 
 </dd>
-<a id="create,Schema,varargs[Table]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#create%2CSchema%2Cvarargs%5BTable%5D"><span class="Identifier">create</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="schema.html#Schema"><span class="Identifier">Schema</span></a><span class="Other">;</span> <span class="Identifier">tables</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><a href="table.html#Table"><span class="Identifier">Table</span></a><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span>
-    <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+<a id="schema,varargs[Table]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#schema%2Cvarargs%5BTable%5D"><span class="Identifier">schema</span></a><span class="Other">(</span><span class="Identifier">tables</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><a href="table.html#Table"><span class="Identifier">Table</span></a><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span>
+    <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
     <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
     <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -936,7 +936,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small>Made with Nim. Generated: 2020-01-18 06:36:30 UTC</small>
+        <small>Made with Nim. Generated: 2020-01-18 09:07:35 UTC</small>
       </div>
     </div>
   </div>
