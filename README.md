@@ -91,32 +91,32 @@ config.nims
 import os
 
 # DB Connection
-putEnv("db.driver", "sqlite")
-putEnv("db.connection", "/your/project/dir/db.sqlite3")
-putEnv("db.user", "")
-putEnv("db.password", "")
-putEnv("db.database", "")
+putEnv("DB_DRIVER", "sqlite")
+putEnv("DB_CONNECTION", "/your/project/dir/db.sqlite3")
+putEnv("DB_USER", "")
+putEnv("DB_PASSWORD", "")
+putEnv("DB_DATABASE", "")
 
 # Logging
-putEnv("log.isDisplay", "true")
-putEnv("log.isFile", "false")
-putEnv("log.dir", "/your/project/dir/logs")
+putEnv("LOG_IS_DISPLAY", "true")
+putEnv("LOG_IS_FILE", "false")
+putEnv("LOG_DIR", "/your/project/dir/logs")
 ```
 
-- db.driver: `sqlite` or `mysql` or `postgres`
-- db.connection: `sqlite/file/path` or `host:port`
-- db.user: login user name
-- db.password: login password
-- db.database: specify the database name
+- DB_DRIVER: `sqlite` or `mysql` or `postgres`
+- DB_CONNECTION: `sqlite/file/path` or `host:port`
+- DB_USER: login user name
+- DB_PASSWORD: login password
+- DB_DATABASE: specify the database name
 
 From "connection" to "database", these are correspond to args of open proc of Nim std db package
 ```nim
 let db = open(connection, user, password, database)
 ```
 
-- log.isDisplay: Whether display logging in terminal console or not.
-- log.isFile: Whether output logging in log file or not.
-- log.dir: Define logging dir path.
+- LOG_IS_DISPLAY: Whether display logging in terminal console or not.
+- LOG_IS_FILE: Whether output logging in log file or not.
+- LOG_DIR: Define logging dir path.
 
 
 ## Examples

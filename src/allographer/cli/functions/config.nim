@@ -10,16 +10,16 @@ proc makeConf*(args: seq[string]): int =
 import os
 
 # DB Connection
-putEnv("db.driver", "sqlite")
-putEnv("db.connection", "{getCurrentDir()}/db.sqlite3")
-putEnv("db.user", "")
-putEnv("db.password", "")
-putEnv("db.database", "")
+putEnv("DB_DRIVER", "sqlite")
+putEnv("DB_CONNECTION", "{getCurrentDir()}/db.sqlite3")
+putEnv("DB_USER", "")
+putEnv("DB_PASSWORD", "")
+putEnv("DB_DATABASE", "")
 
 # Logging
-putEnv("log.isDisplay", "true")
-putEnv("log.isFile", "true")
-putEnv("log.dir", "{getCurrentDir()}/logs")
+putEnv("LOG_IS_DISPLAY", "true")
+putEnv("LOG_IS_FILE", "true")
+putEnv("LOG_DIR", "{getCurrentDir()}/logs")
 """
 
   try:
