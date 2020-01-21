@@ -138,3 +138,16 @@ let db = open(connection, user, password, database)
 [schema](https://itsumura-h.github.io/nim-allographer/schema_builder/schema.html)  
 [column](https://itsumura-h.github.io/nim-allographer/schema_builder/column.html)  
 [table](https://itsumura-h.github.io/nim-allographer/schema_builder/table.html)  
+
+## Development
+### Branch naming rule
+Please create this branch name when you will create a new pull request.
+
+| Branch | Description |
+| ------ | ----------- |
+| feature/*** | New feature branch |
+| hotfix/*** | Bug fix branch |
+| chore/*** | Chore work or maintenance |
+
+This naming rule automatically labels the pull request.
+
