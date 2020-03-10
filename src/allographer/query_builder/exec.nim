@@ -647,20 +647,30 @@ SELECT * FROM (
   }
 
 # ==================== Transaction ====================
+import macros
 
-template transaction(body: untyped) =
-  # TODO fix
-  # echo treeRepr NimNode(body)
-  block :
-    let db = db()
-    db.exec(sql"BEGIN")
-    try:
-      for s in body:
-        for query in s.sqlStringSeq:
-          db.exec(sql query)
-      db.exec(sql"COMMIT")
-      db.exec(sql"ROLLBACK")
-    except:
-      db.exec(sql"ROLLBACK")
-      getCurrentExceptionMsg().echoErrorMsg()
-    defer: db.close()
+macro transaction*(body:untyped):untyped =
+  # echo body.treeRepr
+  for a in body:
+    for b in a:
+      echo "=================="
+      echo b.repr
+  body
+
+
+# template transaction(headers, body: untyped) =
+#   # TODO fix
+#   # echo body.treeRepr
+#   block :
+#     let db = db()
+#     db.exec(sql"BEGIN")
+#     try:
+#       for s in body:
+#         for query in s.sqlStringSeq:
+#           db.exec(sql query)
+#       db.exec(sql"COMMIT")
+#       db.exec(sql"ROLLBACK")
+#     except:
+#       db.exec(sql"ROLLBACK")
+#       getCurrentExceptionMsg().echoErrorMsg()
+#     defer: db.close()
