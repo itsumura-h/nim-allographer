@@ -649,13 +649,17 @@ SELECT * FROM (
 # ==================== Transaction ====================
 import macros
 
-macro transaction*(body:untyped):untyped =
-  # echo body.treeRepr
+proc execToSql(body:NimNode): NimNode =
   for a in body:
-    for b in a:
-      echo "=================="
-      echo b.repr
-  body
+    echo "======================"
+    echo a.treeRepr
+    if a.len > 1:
+      return execToSql(a)
+  return body
+
+macro transaction*(body:untyped): untyped =
+  let sql = execToSql(body)
+  sql
 
 
 # template transaction(headers, body: untyped) =
