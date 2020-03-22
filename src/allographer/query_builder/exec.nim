@@ -1,10 +1,11 @@
 import db_sqlite, db_mysql, db_postgres
-import json, strutils, strformat, algorithm
+import json, strutils, strformat, algorithm, re
 
 import base, builders
 import ../util
 import ../connection
 
+var is_in_transaction* = false
 
 proc checkSql*(this: RDB): string =
   return this.selectBuilder().sqlString
@@ -144,8 +145,12 @@ proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
   let columns = getColumns(db_columns)
   return toJson(results, columns) # seq[JsonNode]
 
+proc getInTransaction(sqlString:string, args:varargs[string]) =
+  echo "getAllRowsInTransaction"
+
 
 proc getRow(sqlString:string, args:varargs[string]): JsonNode =
+  echo is_in_transaction
   let db = db()
   # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
   # let results = db.getRow(sql sqlString, args)
@@ -177,6 +182,13 @@ proc orm(row:JsonNode, typ:typedesc):typ.type =
 
 # =============================================================================
 
+proc toSql*(this: RDB): string =
+  defer:
+    this.sqlString = "";
+    this.placeHolder = newSeq[string](0);
+    this.query = %*{"table": this.query["table"].getStr}
+  this.sqlStringSeq = @[this.selectBuilder().sqlString]
+  return this.sqlStringSeq[0]
 
 proc get*(this: RDB): seq[JsonNode] =
   defer:
@@ -647,42 +659,14 @@ SELECT * FROM (
   }
 
 # ==================== Transaction ====================
+proc transactionImpl(body: string):string =
+  return body.replace(re"get()", "getInTransaction()")
+
 import macros
-
-proc execToSql(body: NimNode): NimNode =
-  for a in body:
-    echo "======================"
-    echo a.len
-    echo a.repr
-    echo a.treeRepr
-    echo a.lineInfo
-    echo a.kind
-    if a.len == 0 and a.kind == nnkIdent:
-      echo $a
-
-    if a.len > 0:
-      discard execToSql(a)
-  return body
-
-macro transaction*(body: untyped): untyped =
-  let sql = execToSql(body)
-  echo sql.repr
-  sql
-
-
-# template transaction(headers, body: untyped) =
-#   # TODO fix
-#   # echo body.treeRepr
-#   block :
-#     let db = db()
-#     db.exec(sql"BEGIN")
-#     try:
-#       for s in body:
-#         for query in s.sqlStringSeq:
-#           db.exec(sql query)
-#       db.exec(sql"COMMIT")
-#       db.exec(sql"ROLLBACK")
-#     except:
-#       db.exec(sql"ROLLBACK")
-#       getCurrentExceptionMsg().echoErrorMsg()
-#     defer: db.close()
+macro transaction*(body: untyped) =
+  # TODO fix
+  # echo body.repr
+  block:
+    var body = transactionImpl(body.repr)
+    echo body.repr
+    body.parseStmt()
