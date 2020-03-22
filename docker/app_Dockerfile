@@ -26,4 +26,4 @@ RUN nimble install -y \
            ;
 
 ENV PATH $PATH:/root/.nimble/bin
-WORKDIR /home/www
+WORKDIR /root/project

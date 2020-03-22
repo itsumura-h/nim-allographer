@@ -2,7 +2,7 @@ import os
 
 # DB Connection
 # putEnv("DB_DRIVER", "sqlite")
-# putEnv("DB_CONNECTION", "/home/www/example/db.sqlite3")
+# putEnv("DB_CONNECTION", "/root/project/example/db.sqlite3")
 # putEnv("DB_DRIVER", "mysql")
 # putEnv("DB_CONNECTION", "mysql:3306")
 putEnv("DB_DRIVER", "postgres")
@@ -14,4 +14,4 @@ putEnv("DB_DATABASE", "allographer")
 # Logging
 putEnv("LOG_IS_DISPLAY", "false")
 putEnv("LOG_IS_FILE", "false")
-putEnv("LOG_DIR", "/home/www/logs")
+putEnv("LOG_DIR", "/root/project/logs")
