@@ -10,6 +10,7 @@ const
 macro importDbModule() =
   parseStmt(fmt"""
 import db_{DRIVER}
+export db_{DRIVER}
 """)
 importDbModule
 

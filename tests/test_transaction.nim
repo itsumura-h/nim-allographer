@@ -37,8 +37,10 @@ RDB().table("users").insert(users)
 
 suite "transaction":
   test "toSql get":
-    transaction:
-      var user = RDB().table("users").get()
+    try:
+      var db = query_builder.db()
+      defer: db.close()
+      var user = RDB().table("users").get(db)
       echo user
-
-      
+    except:
+      discard
