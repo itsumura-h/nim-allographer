@@ -1,4 +1,4 @@
-import db_sqlite, db_mysql, db_postgres
+# import db_sqlite, db_mysql, db_postgres
 import json, strutils, strformat, algorithm, re
 
 import base, builders
@@ -145,8 +145,20 @@ proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
   let columns = getColumns(db_columns)
   return toJson(results, columns) # seq[JsonNode]
 
-proc getInTransaction(sqlString:string, args:varargs[string]) =
-  echo "getAllRowsInTransaction"
+proc getAllRows(db:DbConn, sqlString:string, args:varargs[string]): seq[JsonNode] =
+  let results = db.getAllRows(sql sqlString, args) # seq[seq[string]]
+  if results.len == 0:
+    echoErrorMsg(sqlString & $args)
+    return newSeq[JsonNode](0)
+
+  var db_columns: DbColumns
+  block:
+    for row in db.instantRows(db_columns, sql sqlString, args):
+      discard
+    # defer: db.close()
+
+  let columns = getColumns(db_columns)
+  return toJson(results, columns) # seq[JsonNode]
 
 
 proc getRow(sqlString:string, args:varargs[string]): JsonNode =
@@ -199,6 +211,19 @@ proc get*(this: RDB): seq[JsonNode] =
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
     return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+  except Exception:
+    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
+
+proc get*(this: RDB, db:DbConn): seq[JsonNode] =
+  defer:
+    this.sqlString = "";
+    this.placeHolder = newSeq[string](0);
+    this.query = %*{"table": this.query["table"].getStr}
+  this.sqlStringSeq = @[this.selectBuilder().sqlString]
+  try:
+    logger(this.sqlStringSeq[0], this.placeHolder)
+    return getAllRows(db, this.sqlStringSeq[0], this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -659,14 +684,3 @@ SELECT * FROM (
   }
 
 # ==================== Transaction ====================
-proc transactionImpl(body: string):string =
-  return body.replace(re"get()", "getInTransaction()")
-
-import macros
-macro transaction*(body: untyped) =
-  # TODO fix
-  # echo body.repr
-  block:
-    var body = transactionImpl(body.repr)
-    echo body.repr
-    body.parseStmt()
