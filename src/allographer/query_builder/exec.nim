@@ -140,7 +140,6 @@ proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
     for row in db.instantRows(db_columns, sql sqlString, args):
       discard
     defer: db.close()
-    
 
   let columns = getColumns(db_columns)
   return toJson(results, columns) # seq[JsonNode]
@@ -333,87 +332,97 @@ proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
     getCurrentExceptionMsg().echoErrorMsg()
 
 
+# ==================== EXEC ====================
+
+proc execDb*(sqlStringSeq:seq[string], args:varargs[string]) =
+  let db = db()
+  defer: db.close()
+  for sqlString in sqlStringSeq:
+    logger(sqlString, args)
+    db.exec(sql sqlString, args)
+
+proc execDb*(db:DbConn, sqlStringSeq:seq[string], args:varargs[string]) =
+  # used in trasaction
+  for sqlString in sqlStringSeq:
+    logger(sqlString, args)
+    db.exec(sql sqlString, args)
+
+
 # ==================== INSERT ====================
+
 proc insert*(this: RDB, items: JsonNode) =
   this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
-  var db:DbConn
-  if this.db.isNil:
-    db = db()
-    defer: db.close()
+  if this.db.isNil():
+    execDb(this.sqlStringSeq, this.placeHolder)
   else:
-    db = this.db
-  for sqlString in this.sqlStringSeq:
-    logger(sqlString, this.placeHolder)
-    db.exec(sql sqlString, this.placeHolder)
+    execDb(this.db, this.sqlStringSeq, this.placeHolder)
+  # block:
+  #   let db = db()
+  #   for sqlString in this.sqlStringSeq:
+  #     logger(sqlString, this.placeHolder)
+  #     db.exec(sql sqlString, this.placeHolder)
+  #   defer: db.close()
 
 
 proc insert*(this: RDB, rows: openArray[JsonNode]) =
   this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
-  var db:DbConn
-  echo this.db.isNil
-  if this.db.isNil:
-    db = db()
-    defer: db.close()
+  if this.db.isNil():
+    execDb(this.sqlStringSeq, this.placeHolder)
   else:
-    db = this.db
-  for sqlString in this.sqlStringSeq:
-    logger(sqlString, this.placeHolder)
-    db.exec(sql sqlString, this.placeHolder)
+    execDb(this.db, this.sqlStringSeq, this.placeHolder)
+  # block:
+  #   let db = db()
+  #   for sqlString in this.sqlStringSeq:
+  #     logger(sqlString, this.placeHolder)
+  #     db.exec(sql sqlString, this.placeHolder)
+  #   defer: db.close()
 
 proc inserts*(this: RDB, rows: openArray[JsonNode]) =
   this.sqlStringSeq = newSeq[string](rows.len)
-  var db:DbConn
-  if this.db.isNil:
-    db = db()
-    defer: db.close()
+  if this.db.isNil():
+    execDb(this.sqlStringSeq, this.placeHolder)
   else:
-    db = this.db
-  for i, items in rows:
-    var sqlString = this.insertValueBuilder(items).sqlString
-    logger(sqlString, this.placeHolder)
-    db.exec(sql sqlString, this.placeHolder)
+    execDb(this.db, this.sqlStringSeq, this.placeHolder)
+  # block:
+  #   let db = db()
+  #   for i, items in rows:
+  #     var sqlString = this.insertValueBuilder(items).sqlString
+  #     logger(sqlString, this.placeHolder)
+  #     db.exec(sql sqlString, this.placeHolder)
+  #   defer: db.close()
 
 
 proc insertID*(this: RDB, items: JsonNode):int =
   this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
-  var db:DbConn
-  if this.db.isNil:
-    db = db()
+  block:
+    let db = db()
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      result = db.tryInsertID(sql sqlString, this.placeHolder).int()
     defer: db.close()
-  else:
-    db = this.db
-  for sqlString in this.sqlStringSeq:
-    logger(sqlString, this.placeHolder)
-    result = db.tryInsertID(sql sqlString, this.placeHolder).int()
 
 proc insertID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
   this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
   var response = newSeq[int](rows.len)
-  var db:DbConn
-  if this.db.isNil:
-    db = db()
+  block:
+    let db = db()
+    for i, sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
     defer: db.close()
-  else:
-    db = this.db
-  for i, sqlString in this.sqlStringSeq:
-    logger(sqlString, this.placeHolder)
-    response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
   return response
 
 proc insertsID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
   this.sqlStringSeq = newSeq[string](rows.len)
   var response = newSeq[int](rows.len)
-  var db:DbConn
-  if this.db.isNil:
-    db = db()
+  block:
+    let db = db()
+    for i, items in rows:
+      let sqlString = this.insertValueBuilder(items).sqlString
+      logger(sqlString, this.placeHolder)
+      response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
+      this.placeHolder = @[]
     defer: db.close()
-  else:
-    db = this.db
-  for i, items in rows:
-    let sqlString = this.insertValueBuilder(items).sqlString
-    logger(sqlString, this.placeHolder)
-    response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
-    this.placeHolder = @[]
   return response
 
 
