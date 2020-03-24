@@ -47,7 +47,7 @@ suite "transaction":
 
   test "transaction macro":
     transaction:
-      var user= RDB().table("users").select("id").where("name", "=", "user3").get()
+      var user= RDB().table("users").select("id").where("name", "=", "user3").first()
       var id = user["id"].getInt()
       echo id
       user = RDB().table("users").select("name", "email").find(id)
