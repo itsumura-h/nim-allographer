@@ -36,11 +36,19 @@ for i in 1..10:
 RDB().table("users").insert(users)
 
 suite "transaction":
-  test "toSql get":
+  test "pass db":
+    var db = query_builder.db()
+    defer: db.close()
     try:
-      var db = query_builder.db()
-      defer: db.close()
-      var user = RDB().table("users").get(db)
+      var user = RDB(db:db).table("users").get()
       echo user
     except:
       discard
+
+  test "transaction macro":
+    transaction:
+      var user= RDB().table("users").select("id").where("name", "=", "user3").get()
+      var id = user["id"].getInt()
+      echo id
+      user = RDB().table("users").select("name", "email").find(id)
+      echo user

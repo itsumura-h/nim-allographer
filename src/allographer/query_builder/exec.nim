@@ -146,6 +146,7 @@ proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
   return toJson(results, columns) # seq[JsonNode]
 
 proc getAllRows(db:DbConn, sqlString:string, args:varargs[string]): seq[JsonNode] =
+  ## used in transaction
   let results = db.getAllRows(sql sqlString, args) # seq[seq[string]]
   if results.len == 0:
     echoErrorMsg(sqlString & $args)
@@ -210,20 +211,11 @@ proc get*(this: RDB): seq[JsonNode] =
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
-    return getAllRows(this.sqlStringSeq[0], this.placeHolder)
-  except Exception:
-    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
-    getCurrentExceptionMsg().echoErrorMsg()
-
-proc get*(this: RDB, db:DbConn): seq[JsonNode] =
-  defer:
-    this.sqlString = "";
-    this.placeHolder = newSeq[string](0);
-    this.query = %*{"table": this.query["table"].getStr}
-  this.sqlStringSeq = @[this.selectBuilder().sqlString]
-  try:
-    logger(this.sqlStringSeq[0], this.placeHolder)
-    return getAllRows(db, this.sqlStringSeq[0], this.placeHolder)
+    if this.db.isNil():
+      return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+    else:
+      # in transaction
+      return getAllRows(this.db, this.sqlStringSeq[0], this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -682,5 +674,3 @@ SELECT * FROM (
     "nextId": nextId,
     "hasNextId": hasNextId
   }
-
-# ==================== Transaction ====================
