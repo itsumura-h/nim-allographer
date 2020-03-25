@@ -53,10 +53,27 @@ suite "transaction":
       user = RDB().table("users").select("name", "email").find(id)
       echo user
 
+  test "rollback success":
+    block:
+      let db = query_builder.db()
+      defer: db.close()
+      try:
+        db.exec(sql"BEGIN")
+        RDB(db:db).table("users").insert(%*{"id": 9, "name": "user9", "email": "user9@example.com"})
+        db.exec(sql"COMMIT")
+      except:
+        echo "=== rollback"
+        echo getCurrentExceptionMsg()
+        db.exec(sql"ROLLBACK")
+    echo RDB().table("users").find(11)
+    echo db.type
+
   test "rollback":
     transaction:
+      echo "=== in transaction"
       RDB().table("users").insert(%*{"id": 9, "name": "user9", "email": "user9@example.com"})
-    echo "=== スコープ終わり"
+      echo "=== end of transaction"
+    echo "=== out of transaction"
     echo RDB().table("users").find(11)
 
   # test "insertID":

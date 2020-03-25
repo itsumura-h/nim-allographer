@@ -160,7 +160,6 @@ proc getAllRows(db:DbConn, sqlString:string, args:varargs[string]): seq[JsonNode
 
 
 proc getRow(sqlString:string, args:varargs[string]): JsonNode =
-  echo "=== getRow"
   let db = db()
   defer: db.close()
   # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
@@ -233,6 +232,7 @@ proc get*(this: RDB): seq[JsonNode] =
     else:
       # in transaction
       return getAllRows(this.db, this.sqlStringSeq[0], this.placeHolder)
+    # return getAllRows(this.sqlStringSeq[0], this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -258,6 +258,7 @@ proc getRaw*(this: RDB): seq[JsonNode] =
       return getAllRows(this.sqlStringSeq[0], this.placeHolder)
     else:
       return getAllRows(this.db, this.sqlStringSeq[0], this.placeHolder)
+    # return getAllRows(this.sqlStringSeq[0], this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -335,29 +336,34 @@ proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
 # ==================== INSERT ====================
 
 proc insert*(this: RDB, items: JsonNode) =
+  echo "=== insert"
   this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
-  if this.db.isNil():
+  echo this.db.unsafeAddr().isNil()
+  if this.db.unsafeAddr().isNil():
+    echo "=== db is nil"
     let db = db()
-    defer: db.close()
+    defer:
+      echo "=== close connection"
+      db.close()
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       db.exec(sql sqlString, this.placeHolder)
   else:
-     # in Transaction
+    echo "=== db is exist"
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       this.db.exec(sql sqlString, this.placeHolder)
 
 proc insert*(this: RDB, rows: openArray[JsonNode]) =
   this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
-  if this.db.isNil():
+  echo this.db.unsafeAddr().isNil()
+  if this.db.unsafeAddr().isNil():
     let db = db()
     defer: db.close()
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       db.exec(sql sqlString, this.placeHolder)
   else:
-     # in Transaction
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       this.db.exec(sql sqlString, this.placeHolder)
