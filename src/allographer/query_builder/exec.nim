@@ -130,16 +130,15 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
 
 proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
   let db = db()
+  defer: db.close()
   let results = db.getAllRows(sql sqlString, args) # seq[seq[string]]
   if results.len == 0:
     echoErrorMsg(sqlString & $args)
     return newSeq[JsonNode](0)
 
   var db_columns: DbColumns
-  block:
-    for row in db.instantRows(db_columns, sql sqlString, args):
-      discard
-    defer: db.close()
+  for row in db.instantRows(db_columns, sql sqlString, args):
+    discard
 
   let columns = getColumns(db_columns)
   return toJson(results, columns) # seq[JsonNode]
@@ -155,17 +154,19 @@ proc getAllRows(db:DbConn, sqlString:string, args:varargs[string]): seq[JsonNode
   block:
     for row in db.instantRows(db_columns, sql sqlString, args):
       discard
-    # defer: db.close()
 
   let columns = getColumns(db_columns)
   return toJson(results, columns) # seq[JsonNode]
 
 
 proc getRow(sqlString:string, args:varargs[string]): JsonNode =
+  echo "=== getRow"
   let db = db()
+  defer: db.close()
   # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
   # let results = db.getRow(sql sqlString, args)
   let r = db.getAllRows(sql sqlString, args)
+  echo r
   var results: seq[string]
   if r.len > 0:
     results = r[0]
@@ -174,10 +175,8 @@ proc getRow(sqlString:string, args:varargs[string]): JsonNode =
     return newJNull()
   
   var db_columns: DbColumns
-  block:
-    for row in db.instantRows(db_columns, sql sqlString, args):
-      discard
-    defer: db.close()
+  for row in db.instantRows(db_columns, sql sqlString, args):
+    discard
 
   let columns = getColumns(db_columns)
   return toJson(results, columns)
@@ -186,6 +185,7 @@ proc getRow(db:DbConn, sqlString:string, args:varargs[string]): JsonNode =
   # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
   # let results = db.getRow(sql sqlString, args)
   let r = db.getAllRows(sql sqlString, args)
+  echo r
   var results: seq[string]
   if r.len > 0:
     results = r[0]
@@ -332,99 +332,100 @@ proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
     getCurrentExceptionMsg().echoErrorMsg()
 
 
-# ==================== EXEC ====================
-
-proc execDb*(sqlStringSeq:seq[string], args:varargs[string]) =
-  let db = db()
-  defer: db.close()
-  for sqlString in sqlStringSeq:
-    logger(sqlString, args)
-    db.exec(sql sqlString, args)
-
-proc execDb*(db:DbConn, sqlStringSeq:seq[string], args:varargs[string]) =
-  # used in trasaction
-  for sqlString in sqlStringSeq:
-    logger(sqlString, args)
-    db.exec(sql sqlString, args)
-
-
 # ==================== INSERT ====================
 
 proc insert*(this: RDB, items: JsonNode) =
   this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
   if this.db.isNil():
-    execDb(this.sqlStringSeq, this.placeHolder)
+    let db = db()
+    defer: db.close()
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
   else:
-    execDb(this.db, this.sqlStringSeq, this.placeHolder)
-  # block:
-  #   let db = db()
-  #   for sqlString in this.sqlStringSeq:
-  #     logger(sqlString, this.placeHolder)
-  #     db.exec(sql sqlString, this.placeHolder)
-  #   defer: db.close()
-
+     # in Transaction
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      this.db.exec(sql sqlString, this.placeHolder)
 
 proc insert*(this: RDB, rows: openArray[JsonNode]) =
   this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
   if this.db.isNil():
-    execDb(this.sqlStringSeq, this.placeHolder)
+    let db = db()
+    defer: db.close()
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
   else:
-    execDb(this.db, this.sqlStringSeq, this.placeHolder)
-  # block:
-  #   let db = db()
-  #   for sqlString in this.sqlStringSeq:
-  #     logger(sqlString, this.placeHolder)
-  #     db.exec(sql sqlString, this.placeHolder)
-  #   defer: db.close()
+     # in Transaction
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      this.db.exec(sql sqlString, this.placeHolder)
 
 proc inserts*(this: RDB, rows: openArray[JsonNode]) =
   this.sqlStringSeq = newSeq[string](rows.len)
   if this.db.isNil():
-    execDb(this.sqlStringSeq, this.placeHolder)
+    let db = db()
+    defer: db.close()
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
   else:
-    execDb(this.db, this.sqlStringSeq, this.placeHolder)
-  # block:
-  #   let db = db()
-  #   for i, items in rows:
-  #     var sqlString = this.insertValueBuilder(items).sqlString
-  #     logger(sqlString, this.placeHolder)
-  #     db.exec(sql sqlString, this.placeHolder)
-  #   defer: db.close()
+     # in Transaction
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      this.db.exec(sql sqlString, this.placeHolder)
 
 
 proc insertID*(this: RDB, items: JsonNode):int =
   this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
-  block:
+  if this.db.isNil():
     let db = db()
-    for sqlString in this.sqlStringSeq:
-      logger(sqlString, this.placeHolder)
-      result = db.tryInsertID(sql sqlString, this.placeHolder).int()
     defer: db.close()
+    let sqlString = this.sqlStringSeq[0]
+    logger(sqlString, this.placeHolder)
+    result = db.tryInsertID(sql sqlString, this.placeHolder).int()
+  else:
+    # in Transaction
+    let sqlString = this.sqlStringSeq[0]
+    logger(sqlString, this.placeHolder)
+    result = this.db.tryInsertID(sql sqlString, this.placeHolder).int()
 
 proc insertID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
   this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
   var response = newSeq[int](rows.len)
-  block:
+  if this.db.isNil():
     let db = db()
+    defer: db.close()
     for i, sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
-    defer: db.close()
+  else:
+    # in Transaction
+    for i, sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      response[i] = this.db.tryInsertID(sql sqlString, this.placeHolder).int()
   return response
 
 proc insertsID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
   this.sqlStringSeq = newSeq[string](rows.len)
   var response = newSeq[int](rows.len)
-  block:
+  if this.db.isNil():
     let db = db()
+    defer: db.close()
     for i, items in rows:
       let sqlString = this.insertValueBuilder(items).sqlString
       logger(sqlString, this.placeHolder)
       response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
       this.placeHolder = @[]
-    defer: db.close()
+  else:
+    # in Transaction
+    for i, items in rows:
+      let sqlString = this.insertValueBuilder(items).sqlString
+      logger(sqlString, this.placeHolder)
+      response[i] = this.db.tryInsertID(sql sqlString, this.placeHolder).int()
+      this.placeHolder = @[]
   return response
-
 
 # ==================== UPDATE ====================
 
@@ -441,35 +442,59 @@ proc update*(this: RDB, items: JsonNode) =
   this.placeHolder = updatePlaceHolder & this.placeHolder
   this.sqlStringSeq = @[this.updateBuilder(items).sqlString]
 
-  block:
+  if this.db.isNil():
     let db = db()
+    defer: db.close()
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       db.exec(sql sqlString, this.placeHolder)
-    defer: db.close()
-    this.sqlString = ""
+  else:
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      this.db.exec(sql sqlString, this.placeHolder)
+  # block:
+  #   let db = db()
+  #   for sqlString in this.sqlStringSeq:
+  #     logger(sqlString, this.placeHolder)
+  #     db.exec(sql sqlString, this.placeHolder)
+  #   defer: db.close()
+  #   this.sqlString = ""
 
 
 # ==================== DELETE ====================
 
 proc delete*(this: RDB) =
   this.sqlStringSeq = @[this.deleteBuilder().sqlString]
-  block:
+  if this.db.isNil():
     let db = db()
+    defer: db.close()
+  else:
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
-      db.exec(sql sqlString, this.placeHolder)
-    defer: db.close()
+      this.db.exec(sql sqlString, this.placeHolder)
+  # block:
+  #   let db = db()
+  #   for sqlString in this.sqlStringSeq:
+  #     logger(sqlString, this.placeHolder)
+  #     db.exec(sql sqlString, this.placeHolder)
+  #   defer: db.close()
 
 proc delete*(this: RDB, id: int, key="id") =
   this.placeHolder.add($id)
   this.sqlStringSeq = @[this.deleteByIdBuilder(id, key).sqlString]
-  block:
+  if this.db.isNil():
     let db = db()
+    defer: db.close()
+  else:
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
-      db.exec(sql sqlString, this.placeHolder)
-    defer: db.close()
+      this.db.exec(sql sqlString, this.placeHolder)
+  # block:
+  #   let db = db()
+  #   for sqlString in this.sqlStringSeq:
+  #     logger(sqlString, this.placeHolder)
+  #     db.exec(sql sqlString, this.placeHolder)
+  #   defer: db.close()
 
 
 # ==================== EXEC ====================
