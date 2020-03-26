@@ -5,7 +5,8 @@ import
   migrates/mysql_migrate,
   migrates/postgres_migrate
 import ../util
-include ../connection
+# include ../connection
+import ../connection
 
 import table
 

@@ -8,9 +8,16 @@ const
   DATABASE = getEnv("DB_DATABASE").string
 
 macro importDbModule() =
+  var lib =
+    if DRIVER == "sqlite":
+      "sqlite3"
+    else:
+      &"{DRIVER}"
+
   parseStmt(fmt"""
-import db_{DRIVER}, {DRIVER}
-export db_{DRIVER}, {DRIVER}
+import db_{DRIVER}
+import {lib} except close
+export db_{DRIVER}
 """)
 importDbModule
 
@@ -19,3 +26,12 @@ proc db*(): DbConn =
 
 proc getDriver*():string =
   return DRIVER
+
+proc setupQuery(db: DbConn, query: SqlQuery,
+                args: varargs[string]): PStmt =
+  assert(not db.isNil, "Database not connected.")
+  if prepare_v2(db, "", 0.cint, result, nil) != SQLITE_OK: dbError(db)
+
+proc manualFinalize*(db:DbConn) =
+  var stmt = setupQuery(db, sql"")
+  echo stmt.finalize()
