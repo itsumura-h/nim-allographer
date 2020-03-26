@@ -3,7 +3,7 @@ import ../connection, base
 
 
 macro transaction*(bodyInput: untyped):untyped =
-  var bodyStr = bodyInput.repr.replace("RDB()", "RDB(db:db)")
+  var bodyStr = bodyInput.repr.replace("RDB()", "RDB(db:db, isInTransaction:true)")
   bodyStr.removePrefix
   bodyStr = bodyStr.indent(4)
   bodyStr = fmt"""
@@ -20,6 +20,8 @@ block:
     echo "=== before rollback"
     db.exec(sql"ROLLBACK")
     echo "=== after rollback"
+  db.manualFinalize()
+  echo "=== finish finalize"
 """
   echo bodyStr
   let body = bodyStr.parseStmt()

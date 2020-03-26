@@ -127,20 +127,6 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
         response_row[key] = newJString(row)
   return response_row
 
-proc isDbNil(db:DbConn): bool =
-  echo "=== isDbNil"
-  const DRIVER = getDriver()
-  # if DRIVER == "sqlite" or DRIVER == "postgres":
-  #   echo db.isNil()
-  #   return db.isNil()
-  # elif DRIVER == "mysql":
-  #   echo db.repr == "nil\n"
-  #   return db.repr == "nil\n"
-  echo db.repr
-  echo db.repr == "nil\n"
-  return db.repr == "nil\n"
-
-
 proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
   let db = db()
   defer: db.close()
@@ -240,7 +226,7 @@ proc get*(this: RDB): seq[JsonNode] =
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
-    if this.db.isDbNil():
+    if not this.isInTransaction:
       return getAllRows(this.sqlStringSeq[0], this.placeHolder)
     else:
       # in transaction
@@ -267,7 +253,7 @@ proc get*(this: RDB, typ: typedesc): seq[typ.type] =
 proc getRaw*(this: RDB): seq[JsonNode] =
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
-    if this.db.isDbNil():
+    if not this.isInTransaction:
       return getAllRows(this.sqlStringSeq[0], this.placeHolder)
     else:
       return getAllRows(this.db, this.sqlStringSeq[0], this.placeHolder)
@@ -292,7 +278,7 @@ proc first*(this: RDB): JsonNode =
   this.sqlStringSeq = @[this.selectFirstBuilder().sqlString]
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
-    if this.db.isDbNil():
+    if not this.isInTransaction:
       return getRow(this.sqlStringSeq[0], this.placeHolder)
     else:
       return getRow(this.db, this.sqlStringSeq[0], this.placeHolder)
@@ -323,7 +309,7 @@ proc find*(this: RDB, id: int, key="id"): JsonNode =
   this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
-    if this.db.isDbNil():
+    if not this.isInTransaction:
       return getRow(this.sqlStringSeq[0], this.placeHolder)
     else:
       return getRow(this.db, this.sqlStringSeq[0], this.placeHolder)
@@ -351,7 +337,7 @@ proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
 proc insert*(this: RDB, items: JsonNode) =
   echo "=== insert"
   this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
-  if this.db.isDbNil():
+  if not this.isInTransaction:
     echo "=== db is nil"
     let db = db()
     defer:
@@ -368,20 +354,23 @@ proc insert*(this: RDB, items: JsonNode) =
 
 proc insert*(this: RDB, rows: openArray[JsonNode]) =
   this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
-  if this.db.isDbNil():
+  if not this.isInTransaction:
+    echo "==== out of  transaction"
     let db = db()
-    defer: db.close()
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       db.exec(sql sqlString, this.placeHolder)
+    if getDriver() != "sqlite":
+      defer: db.close()
   else:
+    echo "=== in  transaction"
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       this.db.exec(sql sqlString, this.placeHolder)
 
 proc inserts*(this: RDB, rows: openArray[JsonNode]) =
   this.sqlStringSeq = newSeq[string](rows.len)
-  if this.db.isDbNil():
+  if not this.isInTransaction:
     let db = db()
     defer: db.close()
     for sqlString in this.sqlStringSeq:
@@ -396,7 +385,7 @@ proc inserts*(this: RDB, rows: openArray[JsonNode]) =
 
 proc insertID*(this: RDB, items: JsonNode):int =
   this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
-  if this.db.isDbNil():
+  if not this.isInTransaction:
     let db = db()
     defer: db.close()
     let sqlString = this.sqlStringSeq[0]
@@ -411,7 +400,7 @@ proc insertID*(this: RDB, items: JsonNode):int =
 proc insertID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
   this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
   var response = newSeq[int](rows.len)
-  if this.db.isDbNil():
+  if not this.isInTransaction:
     let db = db()
     defer: db.close()
     for i, sqlString in this.sqlStringSeq:
@@ -427,7 +416,7 @@ proc insertID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
 proc insertsID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
   this.sqlStringSeq = newSeq[string](rows.len)
   var response = newSeq[int](rows.len)
-  if this.db.isDbNil():
+  if not this.isInTransaction:
     let db = db()
     defer: db.close()
     for i, items in rows:
@@ -459,7 +448,7 @@ proc update*(this: RDB, items: JsonNode) =
   this.placeHolder = updatePlaceHolder & this.placeHolder
   this.sqlStringSeq = @[this.updateBuilder(items).sqlString]
 
-  if this.db.isDbNil():
+  if not this.isInTransaction:
     let db = db()
     defer: db.close()
     for sqlString in this.sqlStringSeq:
@@ -482,7 +471,7 @@ proc update*(this: RDB, items: JsonNode) =
 
 proc delete*(this: RDB) =
   this.sqlStringSeq = @[this.deleteBuilder().sqlString]
-  if this.db.isDbNil():
+  if not this.isInTransaction:
     let db = db()
     defer: db.close()
   else:
@@ -499,7 +488,7 @@ proc delete*(this: RDB) =
 proc delete*(this: RDB, id: int, key="id") =
   this.placeHolder.add($id)
   this.sqlStringSeq = @[this.deleteByIdBuilder(id, key).sqlString]
-  if this.db.isDbNil():
+  if not this.isInTransaction:
     let db = db()
     defer: db.close()
   else:
