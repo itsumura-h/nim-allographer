@@ -335,19 +335,15 @@ proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
 # ==================== INSERT ====================
 
 proc insert*(this: RDB, items: JsonNode) =
-  echo "=== insert"
   this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
   if not this.isInTransaction:
-    echo "=== db is nil"
     let db = db()
     defer:
-      echo "=== close connection"
       db.close()
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       db.exec(sql sqlString, this.placeHolder)
   else:
-    echo "=== db is exist"
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       this.db.exec(sql sqlString, this.placeHolder)
@@ -355,7 +351,6 @@ proc insert*(this: RDB, items: JsonNode) =
 proc insert*(this: RDB, rows: openArray[JsonNode]) =
   this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
   if not this.isInTransaction:
-    echo "==== out of  transaction"
     let db = db()
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
@@ -363,7 +358,6 @@ proc insert*(this: RDB, rows: openArray[JsonNode]) =
     if getDriver() != "sqlite":
       defer: db.close()
   else:
-    echo "=== in  transaction"
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       this.db.exec(sql sqlString, this.placeHolder)
