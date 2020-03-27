@@ -76,30 +76,30 @@ suite "transaction":
     echo "=== out of transaction"
     echo RDB().table("users").find(11)
 
-  # test "insertID":
-  #   transaction:
-  #     let id = RDB().table("users")
-  #               .insertID(%*{"name": "user11", "email": "user11@example.com"})
-  #     echo id
-  #   echo RDB().table("users").max("id")
+  test "insertID":
+    transaction:
+      let id = RDB().table("users")
+                .insertID(%*{"name": "user11", "email": "user11@example.com"})
+      echo id
+    echo RDB().table("users").max("id")
 
-  # test "insertID":
-  #   transaction:
-  #     let id = RDB().table("users")
-  #               .insertID([
-  #                 %*{"name": "user11", "email": "user11@example.com"},
-  #                 %*{"name": "user12", "email": "user12@example.com"}
-  #               ])
-  #     echo id
-  #   echo RDB().table("users").max("id")
+  test "insertID":
+    transaction:
+      let id = RDB().table("users")
+                .insertID([
+                  %*{"name": "user11", "email": "user11@example.com"},
+                  %*{"name": "user12", "email": "user12@example.com"}
+                ])
+      echo id
+    echo RDB().table("users").max("id")
 
-  # test "insertsID":
-  #   transaction:
-  #     discard RDB().table("users").insertsID(
-  #       [
-  #         %*{"name": "John", "email": "John@gmail.com", "address": "London"},
-  #         %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
-  #         %*{"name": "George", "birth_date": "1943-02-25", "address": "London"},
-  #       ]
-  #     )
-  #   echo RDB().table("users").where("id", ">", 10).get()
+  test "insertsID":
+    transaction:
+      discard RDB().table("users").insertsID(
+        [
+          %*{"name": "John", "email": "John@gmail.com", "address": "London"},
+          %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
+          %*{"name": "George", "birth_date": "1943-02-25", "address": "London"},
+        ]
+      )
+    echo RDB().table("users").where("id", ">", 10).get()

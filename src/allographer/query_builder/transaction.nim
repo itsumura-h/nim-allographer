@@ -15,13 +15,8 @@ block:
 {bodyStr}
     db.exec(sql"COMMIT")
   except:
-    echo "=== rollback"
     echo getCurrentExceptionMsg()
-    echo "=== before rollback"
     db.exec(sql"ROLLBACK")
-    echo "=== after rollback"
-  db.manualFinalize()
-  echo "=== finish finalize"
 """
   echo bodyStr
   let body = bodyStr.parseStmt()

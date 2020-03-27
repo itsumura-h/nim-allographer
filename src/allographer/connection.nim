@@ -26,12 +26,3 @@ proc db*(): DbConn =
 
 proc getDriver*():string =
   return DRIVER
-
-proc setupQuery(db: DbConn, query: SqlQuery,
-                args: varargs[string]): PStmt =
-  assert(not db.isNil, "Database not connected.")
-  if prepare_v2(db, "", 0.cint, result, nil) != SQLITE_OK: dbError(db)
-
-proc manualFinalize*(db:DbConn) =
-  var stmt = setupQuery(db, sql"")
-  echo stmt.finalize()
