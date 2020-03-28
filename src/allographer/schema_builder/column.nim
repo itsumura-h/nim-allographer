@@ -1,12 +1,13 @@
 import json
 
-type 
+type
   Column* = ref object
     name*: string
     typ*: RdbTypekind
     isNullable*: bool
     isUnsigned*: bool
     isDefault*: bool
+    isUnique*: bool
     defaultBool*: bool
     defaultInt*: int
     defaultFloat*: float
@@ -85,6 +86,10 @@ proc default*(cArg:Column):Column =
 proc nullable*(cArg: Column): Column =
   var c = cArg
   c.isNullable = true
+  return c
+
+proc unique*(c:Column): Column =
+  c.isUnique = true
   return c
 
 proc unsigned*(c: Column): Column =
