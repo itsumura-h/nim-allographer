@@ -34,6 +34,10 @@ suite "column options":
     var t = Column().unsigned()
     check t.isUnsigned == true
 
+  test "unique":
+    var t = Column().unique()
+    check t.isUnique == true
+
 suite "column type int":
   test "increment":
     var t = Column().increments("id")

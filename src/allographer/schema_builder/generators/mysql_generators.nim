@@ -68,9 +68,7 @@ proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
   result = &"`{name}` DECIMAL({maximum}, {digit})"
 
   if isDefault:
-    result.add(
-      &" DEFAULT {default}"
-    )
+    result.add(&" DEFAULT {default}")
 
   if not nullable:
     result.add(" NOT NULL")
@@ -152,9 +150,7 @@ proc dateGenerator*(name:string, nullable:bool, isDefault:bool):string =
     result.add(" NOT NULL")
 
   if isDefault:
-    result.add(
-      &" DEFAULT (NOW())"
-    )
+    result.add(&" DEFAULT (NOW())")
 
 proc datetimeGenerator*(name:string, nullable:bool, isDefault:bool):string =
   result = &"`{name}` DATETIME"
@@ -163,9 +159,7 @@ proc datetimeGenerator*(name:string, nullable:bool, isDefault:bool):string =
     result.add(" NOT NULL")
 
   if isDefault:
-    result.add(
-      &" DEFAULT (NOW())"
-    )
+    result.add(&" DEFAULT (NOW())")
 
 proc timeGenerator*(name:string, nullable:bool, isDefault:bool):string =
   result = &"`{name}` TIME"
@@ -174,9 +168,7 @@ proc timeGenerator*(name:string, nullable:bool, isDefault:bool):string =
     result.add(" NOT NULL")
 
   if isDefault:
-    result.add(
-      &" DEFAULT (NOW())"
-    )
+    result.add(&" DEFAULT (NOW())")
 
 proc timestampGenerator*(name:string, nullable:bool, isDefault:bool):string =
   result = &"`{name}` DATETIME"
@@ -185,9 +177,7 @@ proc timestampGenerator*(name:string, nullable:bool, isDefault:bool):string =
       result.add(" NOT NULL")
 
   if isDefault:
-    result.add(
-      &" DEFAULT (NOW())"
-    )
+    result.add(&" DEFAULT (NOW())")
 
 proc timestampsGenerator*():string =
   result = "`created_at` DATETIME, "
@@ -212,9 +202,7 @@ proc boolGenerator*(name:string, nullable:bool, isDefault:bool,
 
   if isDefault:
     let defaultInt = if default: 1 else: 0
-    result.add(
-      &" DEFAULT {defaultInt}"
-    )
+    result.add(&" DEFAULT {defaultInt}")
 
   if not nullable:
     result.add(" NOT NULL")
@@ -235,9 +223,7 @@ proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
   result = &"`{name}` ENUM({optionsString})"
 
   if isDefault:
-    result.add(
-      &" DEFAULT '{default}'"
-    )
+    result.add(&" DEFAULT '{default}'")
 
   if not nullable:
     result.add(" NOT NULL")
