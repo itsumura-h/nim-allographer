@@ -12,6 +12,7 @@ type
     defaultInt*: int
     defaultFloat*: float
     defaultString*: string
+    defaultJson*: JsonNode
     foreignOnDelete*: ForeignOnDelete
     info*: JsonNode
 
@@ -76,6 +77,12 @@ proc default*(cArg: Column, value:string): Column =
   var c = cArg
   c.isDefault = true
   c.defaultString = value
+  return c
+
+proc default*(cArg: Column, value:JsonNode): Column =
+  var c = cArg
+  c.isDefault = true
+  c.defaultJson = value
   return c
 
 proc default*(cArg:Column):Column =
