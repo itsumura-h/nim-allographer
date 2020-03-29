@@ -1,10 +1,6 @@
 import json, strformat
-import ../column
-from db_common import DbError
+import ../column, utils
 
-
-proc notAllowed(option:string, typ:string) =
-  raise newException(DbError, &"{option} is not allowed in {typ} column")
 # =============================================================================
 # int
 # =============================================================================
@@ -350,7 +346,7 @@ proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
     result.add(&" DEFAULT '{default}'")
 
 proc jsonGenerator*(name:string, nullable:bool, isUnique:bool,
-                    isUnsigned:bool, isDefault:bool):string =
+                    isUnsigned:bool, isDefault:bool, default:JsonNode):string =
   result = &"`{name}` JSON"
 
   if isUnsigned:

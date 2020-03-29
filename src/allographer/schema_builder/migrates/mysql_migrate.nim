@@ -249,6 +249,7 @@ proc migrate*(this:Table):string =
             column.isUnique,
             column.isUnsigned,
             column.isDefault,
+            column.defaultJson
           )
         )
       of rdbForeign:

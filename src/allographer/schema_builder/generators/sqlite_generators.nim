@@ -183,11 +183,11 @@ proc timestampGenerator*(name:string, nullable:bool, isUnique:bool,
     result.add(&" CHECK ({name} > 0)")
 
 proc timestampsGenerator*():string =
-  result = "created_at DATETIME DEFAULT CURRENT_TIMESTAMP, "
-  result.add("updated_at DATETIME DEFAULT CURRENT_TIMESTAMP")
+  result = "'created_at' DATETIME DEFAULT CURRENT_TIMESTAMP, "
+  result.add("'updated_at' DATETIME DEFAULT CURRENT_TIMESTAMP")
 
 proc softDeleteGenerator*():string =
-  result = "deleted_at DATETIME"
+  result = "'deleted_at' DATETIME"
 
 # =============================================================================
 # others
@@ -255,7 +255,7 @@ proc enumGenerator*(name:string, options:openArray[JsonNode],
     raise newException(DbError, "unsigned is not allowed for enum in sqlite")
 
 proc jsonGenerator*(name:string, nullable:bool, isUnique:bool, isUnsigned:bool,
-                    isDefault:bool, default:string):string =
+                    isDefault:bool, default:JsonNode):string =
   result = &"'{name}' TEXT"
 
   if isUnique:
@@ -265,7 +265,7 @@ proc jsonGenerator*(name:string, nullable:bool, isUnique:bool, isUnsigned:bool,
     result.add(" NOT NULL")
 
   if isDefault:
-    result.add(&" DEFAULT '{default}'")
+    result.add(&" DEFAULT '{default.pretty}'")
 
   if isUnsigned:
     result.add(&" CHECK ({name} > 0)")

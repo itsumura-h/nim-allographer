@@ -304,10 +304,10 @@ suite "sqlite generators date":
 
   test "timestampsGenerator":
     check timestampsGenerator() ==
-      "created_at DATETIME DEFAULT CURRENT_TIMESTAMP, updated_at DATETIME DEFAULT CURRENT_TIMESTAMP"
+      "'created_at' DATETIME DEFAULT CURRENT_TIMESTAMP, 'updated_at' DATETIME DEFAULT CURRENT_TIMESTAMP"
 
   test "softDeleteGenerator":
-    check softDeleteGenerator() == "deleted_at DATETIME"
+    check softDeleteGenerator() == "'deleted_at' DATETIME"
 
 suite "sqlite generators others":
   test "blobGenerator":
@@ -409,30 +409,32 @@ suite "sqlite generators others":
   test "jsonGenerator":
     let nullable = true
     let isUnique, isDefault, isUnsigned = false
-    check jsonGenerator("json", nullable, isUnique, isUnsigned, isDefault, "") ==
+    check jsonGenerator("json", nullable, isUnique, isUnsigned, isDefault, newJNull()) ==
       "'json' TEXT"
 
   test "jsonGenerator not null":
     let nullable, isUnique, isDefault, isUnsigned = false
-    check jsonGenerator("json", nullable, isUnique, isUnsigned, isDefault, "") ==
+    check jsonGenerator("json", nullable, isUnique, isUnsigned, isDefault, newJNull()) ==
       "'json' TEXT NOT NULL"
 
   test "jsonGenerator unique":
     let nullable, isUnique = true
     let isDefault, isUnsigned = false
-    check jsonGenerator("json", nullable, isUnique, isUnsigned, isDefault, "") ==
+    check jsonGenerator("json", nullable, isUnique, isUnsigned, isDefault, newJNull()) ==
       "'json' TEXT UNIQUE"
 
   test "jsonGenerator default":
     let nullable, isDefault = true
     let isUnique, isUnsigned = false
-    check jsonGenerator("json", nullable, isUnique, isUnsigned, isDefault, "") ==
-      "'json' TEXT DEFAULT ''"
+    check jsonGenerator("json", nullable, isUnique, isUnsigned, isDefault, %*{"key":"value"}) ==
+      """'json' TEXT DEFAULT '{
+  "key": "value"
+}'"""
 
   test "jsonGenerator unsigned":
     var nullable, isUnsigned = true
     var isUnique, isDefault= false
-    check jsonGenerator("json", nullable, isUnique, isUnsigned, isDefault, "") ==
+    check jsonGenerator("json", nullable, isUnique, isUnsigned, isDefault, newJNull()) ==
       "'json' TEXT CHECK (json > 0)"
 
   test "foreign":
