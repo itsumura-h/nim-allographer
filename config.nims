@@ -2,7 +2,7 @@ import os
 
 # DB Connection
 putEnv("DB_DRIVER", "sqlite")
-putEnv("DB_CONNECTION", "/home/www/db.sqlite3")
+putEnv("DB_CONNECTION", "/root/project/db.sqlite3")
 # putEnv("DB_DRIVER", "mysql")
 # putEnv("DB_CONNECTION", "mysql:3306")
 # putEnv("DB_DRIVER", "postgres")
