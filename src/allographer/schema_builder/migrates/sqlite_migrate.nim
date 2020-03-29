@@ -22,9 +22,10 @@ proc migrate*(this:Table):string =
           intGenerator(
             column.name,
             column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultInt,
-            column.isUnsigned
           )
         )
       of rdbSmallInteger:
@@ -32,9 +33,10 @@ proc migrate*(this:Table):string =
           intGenerator(
             column.name,
             column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultInt,
-            column.isUnsigned
           )
         )
       of rdbMediumInteger:
@@ -42,9 +44,10 @@ proc migrate*(this:Table):string =
           intGenerator(
             column.name,
             column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultInt,
-            column.isUnsigned
           )
         )
       of rdbBigInteger:
@@ -52,9 +55,10 @@ proc migrate*(this:Table):string =
           intGenerator(
             column.name,
             column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultInt,
-            column.isUnsigned
           )
         )
       # float =================================================================
@@ -65,9 +69,10 @@ proc migrate*(this:Table):string =
             parseInt($column.info["maximum"]),
             parseInt($column.info["digit"]),
             column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultFloat,
-            column.isUnsigned
           )
         )
       of rdbDouble:
@@ -77,9 +82,10 @@ proc migrate*(this:Table):string =
             parseInt($column.info["maximum"]),
             parseInt($column.info["digit"]),
             column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultFloat,
-            column.isUnsigned
           )
         )
       of rdbFloat:
@@ -87,9 +93,10 @@ proc migrate*(this:Table):string =
           floatGenerator(
             column.name,
             column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultFloat,
-            column.isUnsigned
           )
         )
       # char ==================================================================
@@ -99,8 +106,10 @@ proc migrate*(this:Table):string =
             column.name,
             parseInt($column.info["maxLength"]),
             column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
             column.isDefault,
-            column.defaultString
+            column.defaultString,
           )
         )
       of rdbString:
@@ -109,8 +118,10 @@ proc migrate*(this:Table):string =
             column.name,
             parseInt($column.info["maxLength"]),
             column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
             column.isDefault,
-            column.defaultString
+            column.defaultString,
           )
         )
       # text ==================================================================
@@ -119,8 +130,10 @@ proc migrate*(this:Table):string =
           textGenerator(
             column.name,
             column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
             column.isDefault,
-            column.defaultString
+            column.defaultString,
           )
         )
       of rdbMediumText:
@@ -128,8 +141,10 @@ proc migrate*(this:Table):string =
           textGenerator(
             column.name,
             column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
             column.isDefault,
-            column.defaultString
+            column.defaultString,
           )
         )
       of rdbLongText:
@@ -137,25 +152,41 @@ proc migrate*(this:Table):string =
           textGenerator(
             column.name,
             column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
             column.isDefault,
-            column.defaultString
+            column.defaultString,
           )
         )
       # date ==================================================================
       of rdbDate:
         columnString.add(
-          dateGenerator(column.name, column.isNullable, column.isDefault)
+          dateGenerator(
+            column.name,
+            column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
+            column.isDefault,
+          )
         )
       of rdbDatetime:
         columnString.add(
-          datetimeGenerator(column.name, column.isNullable, column.isDefault)
+          datetimeGenerator(
+            column.name,
+            column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
+            column.isDefault,
+          )
         )
       of rdbTime:
         columnString.add(
           timeGenerator(
             column.name,
             column.isNullable,
-            column.isDefault
+            column.isUnique,
+            column.isUnsigned,
+            column.isDefault,
           )
         )
       of rdbTimestamp:
@@ -163,7 +194,9 @@ proc migrate*(this:Table):string =
           timestampGenerator(
             column.name,
             column.isNullable,
-            column.isDefault
+            column.isUnique,
+            column.isUnsigned,
+            column.isDefault,
           )
         )
       of rdbTimestamps:
@@ -177,15 +210,24 @@ proc migrate*(this:Table):string =
       # others ================================================================
       of rdbBinary:
         columnString.add(
-          blobGenerator(column.name, column.isNullable)
+          blobGenerator(
+            column.name,
+            column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
+            column.isDefault,
+            column.defaultString,
+          )
         )
       of rdbBoolean:
         columnString.add(
           boolGenerator(
             column.name,
             column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
             column.isDefault,
-            column.defaultBool
+            column.defaultBool,
           )
         )
       of rdbEnumField:
@@ -194,15 +236,21 @@ proc migrate*(this:Table):string =
             column.name,
             column.info["options"].getElems,
             column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
             column.isDefault,
-            column.defaultString
+            column.defaultString,
           )
         )
       of rdbJson:
         columnString.add(
           jsonGenerator(
             column.name,
-            column.isNullable
+            column.isNullable,
+            column.isUnique,
+            column.isUnsigned,
+            column.isDefault,
+            column.defaultJson,
           )
         )
       of rdbForeign:

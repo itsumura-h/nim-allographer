@@ -113,9 +113,5 @@ proc schema*(tables:varargs[Table]) =
 
     block:
       let db = db()
-      try:
-        db.exec(sql query)
-      except Exception:
-        getCurrentExceptionMsg().echoErrorMsg()
-
       defer: db.close()
+      db.exec(sql query)

@@ -1,16 +1,18 @@
 import json
 
-type 
+type
   Column* = ref object
     name*: string
     typ*: RdbTypekind
     isNullable*: bool
     isUnsigned*: bool
     isDefault*: bool
+    isUnique*: bool
     defaultBool*: bool
     defaultInt*: int
     defaultFloat*: float
     defaultString*: string
+    defaultJson*: JsonNode
     foreignOnDelete*: ForeignOnDelete
     info*: JsonNode
 
@@ -77,6 +79,12 @@ proc default*(cArg: Column, value:string): Column =
   c.defaultString = value
   return c
 
+proc default*(cArg: Column, value:JsonNode): Column =
+  var c = cArg
+  c.isDefault = true
+  c.defaultJson = value
+  return c
+
 proc default*(cArg:Column):Column =
   var c = cArg
   c.isDefault = true
@@ -85,6 +93,10 @@ proc default*(cArg:Column):Column =
 proc nullable*(cArg: Column): Column =
   var c = cArg
   c.isNullable = true
+  return c
+
+proc unique*(c:Column): Column =
+  c.isUnique = true
   return c
 
 proc unsigned*(c: Column): Column =
