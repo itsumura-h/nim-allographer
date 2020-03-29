@@ -1,5 +1,6 @@
 import json, strformat
 import ../column
+import utils
 
 # =============================================================================
 # int
@@ -7,228 +8,282 @@ import ../column
 proc serialGenerator*(name:string):string =
   result = &"\"{name}\" SERIAL NOT NULL PRIMARY KEY"
 
-proc intGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
-                    isUnsigned:bool):string =
+proc intGenerator*(name:string, nullable:bool, isUnique:bool,
+                  isUnsigned:bool, isDefault:bool, default:int):string =
   result = &"\"{name}\" INTEGER"
 
-  if isDefault:
-    result.add(&" DEFAULT {default}")
-  
+  if isUnique:
+    result.add(" UNIQUE")
+
   if not nullable:
     result.add(" NOT NULL")
 
-  if nullable and isUnsigned:
-    result.add(&" CHECK (\"{name}\" = null OR \"{name}\" > 0)")
-  elif isUnsigned:
+  if isDefault:
+    result.add(&" DEFAULT {default}")
+
+  if isUnsigned:
     result.add(&" CHECK (\"{name}\" > 0)")
 
-proc smallIntGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
-                        isUnsigned:bool):string =
+proc smallIntGenerator*(name:string, nullable:bool, isUnique:bool,
+                        isUnsigned:bool, isDefault:bool, default:int):string =
   result = &"\"{name}\" SMALLINT"
 
-  if isDefault:
-    result.add(&" DEFAULT {default}")
-  
+  if isUnique:
+    result.add(" UNIQUE")
+
   if not nullable:
     result.add(" NOT NULL")
 
-  if nullable and isUnsigned:
-    result.add(&" CHECK (\"{name}\" = null OR \"{name}\" > 0)")
-  elif isUnsigned:
+  if isDefault:
+    result.add(&" DEFAULT {default}")
+
+  if isUnsigned:
     result.add(&" CHECK (\"{name}\" > 0)")
 
-proc mediumIntGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
-                          isUnsigned:bool):string =
+proc mediumIntGenerator*(name:string, nullable:bool, isUnique:bool,
+                        isUnsigned:bool, isDefault:bool, default:int):string =
   result = &"\"{name}\" INTEGER"
 
-  if isDefault:
-    result.add(&" DEFAULT {default}")
-  
+  if isUnique:
+    result.add(" UNIQUE")
+
   if not nullable:
     result.add(" NOT NULL")
 
-  if nullable and isUnsigned:
-    result.add(&" CHECK (\"{name}\" = null OR \"{name}\" > 0)")
-  elif isUnsigned:
+  if isDefault:
+    result.add(&" DEFAULT {default}")
+
+  if isUnsigned:
     result.add(&" CHECK (\"{name}\" > 0)")
 
-proc bigIntGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
-                      isUnsigned:bool):string =
+proc bigIntGenerator*(name:string, nullable:bool, isUnique:bool,
+                      isUnsigned:bool, isDefault:bool, default:int):string =
   result = &"\"{name}\" BIGINT"
 
-  if isDefault:
-    result.add(&" DEFAULT {default}")
-  
+  if isUnique:
+    result.add(" UNIQUE")
+
   if not nullable:
     result.add(" NOT NULL")
 
-  if nullable and isUnsigned:
-    result.add(&" CHECK (\"{name}\" = null OR \"{name}\" > 0)")
-  elif isUnsigned:
+  if isDefault:
+    result.add(&" DEFAULT {default}")
+
+  if isUnsigned:
     result.add(&" CHECK (\"{name}\" > 0)")
 
 # =============================================================================
 # float
 # =============================================================================
 proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
-                      isDefault:bool, default:float, isUnsigned:bool):string =
+                      isUnique:bool, isUnsigned:bool,
+                      isDefault:bool, default:float):string =
   result = &"\"{name}\" NUMERIC({maximum}, {digit})"
 
-  if isDefault:
-    result.add(
-      &" DEFAULT {default}"
-    )
+  if isUnique:
+    result.add(" UNIQUE")
 
   if not nullable:
     result.add(" NOT NULL")
 
-  if nullable and isUnsigned:
-    result.add(&" CHECK (\"{name}\" = null OR \"{name}\" > 0)")
-  elif isUnsigned:
+  if isDefault:
+    result.add(&" DEFAULT {default}")
+
+  if isUnsigned:
     result.add(&" CHECK (\"{name}\" > 0)")
 
 proc doubleGenerator*(name:string, maximum:int, digit:int, nullable:bool,
-                      isDefault:bool, default:float, isUnsigned:bool):string =
+                      isUnique:bool, isUnsigned:bool,
+                      isDefault:bool, default:float):string =
   result = &"\"{name}\" NUMERIC({maximum}, {digit})"
 
-  if isDefault:
-    result.add(&" DEFAULT {default}")
+  if isUnique:
+    result.add(" UNIQUE")
 
   if not nullable:
     result.add(" NOT NULL")
 
-  if nullable and isUnsigned:
-    result.add(&" CHECK (\"{name}\" = null OR \"{name}\" > 0)")
-  elif isUnsigned:
+  if isDefault:
+    result.add(&" DEFAULT {default}")
+
+  if isUnsigned:
     result.add(&" CHECK (\"{name}\" > 0)")
 
-proc floatGenerator*(name:string, nullable:bool, isDefault:bool, default:float,
-                      isUnsigned:bool):string =
+proc floatGenerator*(name:string, nullable:bool, isUnique:bool,
+                    isUnsigned:bool, isDefault:bool, default:float):string =
   result = &"\"{name}\" NUMERIC"
 
-  if isDefault:
-    result.add(&" DEFAULT {default}")
+  if isUnique:
+    result.add(" UNIQUE")
 
   if not nullable:
     result.add(" NOT NULL")
 
-  if nullable and isUnsigned:
-    result.add(&" CHECK (\"{name}\" = null OR \"{name}\" > 0)")
-  elif isUnsigned:
+  if isDefault:
+    result.add(&" DEFAULT {default}")
+
+  if isUnsigned:
     result.add(&" CHECK (\"{name}\" > 0)")
+
 # =============================================================================
 # char
 # =============================================================================
-proc charGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
-                    default:string):string =
+proc charGenerator*(name:string, maxLength:int, nullable:bool, isUnique:bool,
+                    isUnsigned:bool, isDefault:bool, default:string):string =
   result = &"\"{name}\" CHAR({maxLength})"
 
-  if isDefault:
-    result.add(
-      &" DEFAULT '{default}'"
-    )
+  if isUnique:
+    result.add(" UNIQUE")
 
   if not nullable:
     result.add(" NOT NULL")
 
-proc stringGenerator*(name:string, maxLength:int, nullable:bool, isDefault:bool,
-                    default:string):string =
+  if isDefault:
+    result.add(&" DEFAULT '{default}'")
+
+  if isUnsigned:
+    notAllowed("unsigned", "char")
+
+proc stringGenerator*(name:string, maxLength:int, nullable:bool, isUnique:bool,
+                      isUnsigned:bool, isDefault:bool, default:string):string =
   result = &"\"{name}\" VARCHAR({maxLength})"
 
-  if isDefault:
-    result.add(
-      &" DEFAULT '{default}'"
-    )
+  if isUnique:
+    result.add(" UNIQUE")
 
   if not nullable:
     result.add(" NOT NULL")
 
-proc textGenerator*(name:string, nullable:bool, isDefault:bool,
-                    default:string):string =
+  if isDefault:
+    result.add(&" DEFAULT '{default}'")
+
+  if isUnsigned:
+    notAllowed("unsigned", "string")
+
+proc textGenerator*(name:string, nullable:bool, isUnique:bool,
+                      isUnsigned:bool, isDefault:bool, default:string):string =
   result = &"\"{name}\" TEXT"
 
-  if isDefault:
-    result.add(
-      &" DEFAULT '{default}'"
-    )
+  if isUnique:
+    result.add(" UNIQUE")
 
   if not nullable:
     result.add(" NOT NULL")
+
+  if isDefault:
+    result.add(&" DEFAULT '{default}'")
+
+  if isUnsigned:
+    notAllowed("unsigned", "text")
 
 # =============================================================================
 # date
 # =============================================================================
-proc dateGenerator*(name:string, nullable:bool, isDefault:bool):string =
+proc dateGenerator*(name:string, nullable:bool, isUnique:bool,
+                    isUnsigned:bool, isDefault:bool,):string =
   result = &"\"{name}\" DATE"
 
+  if isUnique:
+    result.add(" UNIQUE")
+
   if not nullable:
     result.add(" NOT NULL")
 
   if isDefault:
-    result.add(
-      &" DEFAULT (NOW())"
-    )
+    result.add(&" DEFAULT (NOW())")
 
-proc datetimeGenerator*(name:string, nullable:bool, isDefault:bool):string =
+  if isUnsigned:
+    notAllowed("unsigned", "date")
+
+proc datetimeGenerator*(name:string, nullable:bool, isUnique:bool,
+                      isUnsigned:bool, isDefault:bool,):string =
   result = &"\"{name}\" TIMESTAMP"
 
+  if isUnique:
+    result.add(" UNIQUE")
+
   if not nullable:
     result.add(" NOT NULL")
 
   if isDefault:
-    result.add(
-      &" DEFAULT (NOW())"
-    )
+    result.add(&" DEFAULT (NOW())")
 
-proc timeGenerator*(name:string, nullable:bool, isDefault:bool):string =
+  if isUnsigned:
+    notAllowed("unsigned", "date")
+
+proc timeGenerator*(name:string, nullable:bool, isUnique:bool,
+                      isUnsigned:bool, isDefault:bool,):string =
   result = &"\"{name}\" TIME"
 
+  if isUnique:
+    result.add(" UNIQUE")
+
   if not nullable:
     result.add(" NOT NULL")
 
   if isDefault:
-    result.add(
-      &" DEFAULT (NOW())"
-    )
+    result.add(&" DEFAULT (NOW())")
 
-proc timestampGenerator*(name:string, nullable:bool, isDefault:bool):string =
+  if isUnsigned:
+    notAllowed("unsigned", "date")
+
+proc timestampGenerator*(name:string, nullable:bool, isUnique:bool,
+                      isUnsigned:bool, isDefault:bool,):string =
   result = &"\"{name}\" TIMESTAMP"
 
+  if isUnique:
+    result.add(" UNIQUE")
+
   if not nullable:
     result.add(" NOT NULL")
 
   if isDefault:
-    result.add(
-      &" DEFAULT (NOW())"
-    )
+    result.add(&" DEFAULT (NOW())")
+
+  if isUnsigned:
+    notAllowed("unsigned", "date")
 
 proc timestampsGenerator*():string =
-  result = "created_at TIMESTAMP, "
-  result.add("updated_at TIMESTAMP DEFAULT (NOW())")
+  result = "\"created_at\" TIMESTAMP, "
+  result.add("\"updated_at\" TIMESTAMP DEFAULT (NOW())")
 
 proc softDeleteGenetator*():string =
-  result = "deleted_at TIMESTAMP"
+  result = "\"deleted_at\" TIMESTAMP"
 
 # =============================================================================
 # others
 # =============================================================================
-proc blobGenerator*(name:string, nullable:bool):string =
+proc blobGenerator*(name:string, nullable:bool, isUnique:bool,
+                      isUnsigned:bool, isDefault:bool, default:string):string =
   result = &"\"{name}\" BYTEA"
 
+  if isUnique:
+    result.add(" UNIQUE")
+
   if not nullable:
     result.add(" NOT NULL")
-
-proc boolGenerator*(name:string, nullable:bool, isDefault:bool, 
-                    default:bool):string =
-  result = &"\"{name}\" BOOLEAN"
 
   if isDefault:
-    result.add(
-      &" DEFAULT {default}"
-    )
+    result.add(&" DEFAULT '{default}'")
+
+  if isUnsigned:
+    notAllowed("unsigned", "blob")
+
+proc boolGenerator*(name:string, nullable:bool, isUnique:bool,
+                    isUnsigned:bool, isDefault:bool, default:bool):string =
+  result = &"\"{name}\" BOOLEAN"
+
+  if isUnique:
+    result.add(" UNIQUE")
 
   if not nullable:
     result.add(" NOT NULL")
+
+  if isDefault:
+    result.add(&" DEFAULT {default}")
+
+  if isUnsigned:
+    notAllowed("unsigned", "bool")
 
 proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
   var optionsString = ""
@@ -241,28 +296,40 @@ proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
   return optionsString
 
 proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
-                    isDefault:bool, default:string):string =
+                      isUnique:bool, isUnsigned:bool,
+                      isDefault:bool, default:string):string =
   result = &"\"{name}\" CHARACTER"
 
-  if isDefault:
-    result.add(
-      &" DEFAULT '{default}'"
-    )
+  if isUnique:
+    result.add(" UNIQUE")
 
   if not nullable:
     result.add(" NOT NULL")
+
+  if isDefault:
+    result.add(&" DEFAULT '{default}'")
+
+  if isUnsigned:
+    notAllowed("unsigned", "text")
 
   let optionsString = enumOptionsGenerator(name, options)
-  if nullable:
-    result.add(&" CHECK (\"{name}\" = null OR {optionsString})")
-  else:
-    result.add(&" CHECK ({optionsString})")
+  result.add(&" CHECK ({optionsString})")
 
-proc jsonGenerator*(name:string, nullable:bool):string =
+proc jsonGenerator*(name:string, nullable:bool, isUnique:bool,
+                      isUnsigned:bool, isDefault:bool, default:JsonNode):string =
   result = &"\"{name}\" JSON"
+
+  if isUnique:
+    notAllowed("unique", "json")
 
   if not nullable:
     result.add(" NOT NULL")
+
+  if isDefault:
+    result.add(&" DEFAULT '{default.pretty}'")
+
+  if isUnsigned:
+    notAllowed("unsigned", "json")
 
 proc foreignColumnGenerator*(name:string):string =
   result = &"\"{name}\" INT"

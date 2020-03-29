@@ -23,7 +23,7 @@ schema([
 If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TABLE` will be run.
 
 ## integer
-|COMMAND|DESCRIPTION|
+|Command|Description|
 |---|---|
 |`increments("id")`|Auto-incrementing UNSIGNED INTEGER (primary key) equivalent column.|
 |`integer("votes")`|INTEGER equivalent column.|
@@ -32,14 +32,14 @@ If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TA
 |`bigInteger("votes")`|UNSIGNED BIGINT equivalent column.|
 
 ## float
-|COMMAND|DESCRIPTION|
+|Command|Description|
 |---|---|
 |`decimal("amount", 8, 2)`|DECIMAL equivalent column with a precision (total digits) and scale (decimal digits).|
 |`double("amount", 8, 2)`|DOUBLE equivalent column with a precision (total digits) and scale (decimal digits).|
 |`float("float")`|FLOAT equivalent column with a implicit precision (total digits) and scale (decimal digits).|
 
 ## char
-|COMMAND|DESCRIPTION|
+|Command|Description|
 |---|---|
 |`char("name", 100)`|CHAR equivalent column with an optional length.|
 |`string("name")`|VARCHAR equivalent column.|
@@ -49,7 +49,7 @@ If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TA
 |`longText("description")`|LONGTEXT equivalent column.|
 
 ## date
-|COMMAND|DESCRIPTION|
+|Command|Description|
 |---|---|
 |`date("created_at")`|DATE equivalent column.|
 |`datetime("created_at")`|DATETIME equivalent column.|
@@ -59,7 +59,7 @@ If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TA
 |`softDelete()`|Adds a nullable `deleted_at` TIMESTAMP equivalent column for soft deletes.|
 
 ## others
-|COMMAND|DESCRIPTION|
+|Command|Description|
 |---|---|
 |`binary("data")`|BLOB equivalent column.|
 |`boolean("confirmed")`|BOOLEAN equivalent column.|
@@ -67,11 +67,12 @@ If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TA
 |`json("options")`|JSON equivalent column.|
 
 ## options
-|COMMAND|DESCRIPTION|
+|Command|Description|
 |---|---|
 |`.nullable()`|Designate that the column allows NULL values|
 |`.default(value)`|Declare a default value for a column|
 |`.unsigned()`|Set INTEGER to UNSIGNED|
+|`.unique()`|Adding a unique index|
 
 ## Foreign Key Constraints
 For example, let's define a `user_id` column on the table that references the `id` column on a `users` table:

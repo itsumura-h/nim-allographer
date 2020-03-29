@@ -71,4 +71,3 @@ jobs:
       - uses: release-drafter/release-drafter@v5.3.1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
