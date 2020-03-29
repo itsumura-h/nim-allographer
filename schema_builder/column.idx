@@ -33,8 +33,10 @@ default	schema_builder/column.html#default,Column,bool	column: default(cArg: Col
 default	schema_builder/column.html#default,Column,int	column: default(cArg: Column; value: int): Column	
 default	schema_builder/column.html#default,Column,float	column: default(cArg: Column; value: float): Column	
 default	schema_builder/column.html#default,Column,string	column: default(cArg: Column; value: string): Column	
+default	schema_builder/column.html#default,Column,JsonNode	column: default(cArg: Column; value: JsonNode): Column	
 default	schema_builder/column.html#default,Column	column: default(cArg: Column): Column	
 nullable	schema_builder/column.html#nullable,Column	column: nullable(cArg: Column): Column	
+unique	schema_builder/column.html#unique,Column	column: unique(c: Column): Column	
 unsigned	schema_builder/column.html#unsigned,Column	column: unsigned(c: Column): Column	
 increments	schema_builder/column.html#increments,Column,string	column: increments(this: Column; name: string): Column	
 integer	schema_builder/column.html#integer,Column,string	column: integer(this: Column; name: string): Column	
