@@ -7,60 +7,72 @@ import ../column
 proc serialGenerator*(name:string):string =
   result = &"\"{name}\" SERIAL NOT NULL PRIMARY KEY"
 
-proc intGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
-                    isUnsigned:bool):string =
+proc intGenerator*(name:string, nullable:bool, isUnique:bool,
+                    isDefault:bool, default:int, isUnsigned:bool):string =
   result = &"\"{name}\" INTEGER"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
-  
+
   if not nullable:
     result.add(" NOT NULL")
+
+  if isUnique:
+    result.add(" UNIQUE")
 
   if nullable and isUnsigned:
     result.add(&" CHECK (\"{name}\" = null OR \"{name}\" > 0)")
   elif isUnsigned:
     result.add(&" CHECK (\"{name}\" > 0)")
 
-proc smallIntGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
-                        isUnsigned:bool):string =
+proc smallIntGenerator*(name:string, nullable:bool, isUnique:bool,
+                        isDefault:bool, default:int, isUnsigned:bool):string =
   result = &"\"{name}\" SMALLINT"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
-  
+
   if not nullable:
     result.add(" NOT NULL")
+
+  if isUnique:
+    result.add(" UNIQUE")
 
   if nullable and isUnsigned:
     result.add(&" CHECK (\"{name}\" = null OR \"{name}\" > 0)")
   elif isUnsigned:
     result.add(&" CHECK (\"{name}\" > 0)")
 
-proc mediumIntGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
-                          isUnsigned:bool):string =
+proc mediumIntGenerator*(name:string, nullable:bool, isUnique:bool,
+                          isDefault:bool, default:int, isUnsigned:bool):string =
   result = &"\"{name}\" INTEGER"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
-  
+
   if not nullable:
     result.add(" NOT NULL")
+
+  if isUnique:
+    result.add(" UNIQUE")
 
   if nullable and isUnsigned:
     result.add(&" CHECK (\"{name}\" = null OR \"{name}\" > 0)")
   elif isUnsigned:
     result.add(&" CHECK (\"{name}\" > 0)")
 
-proc bigIntGenerator*(name:string, nullable:bool, isDefault:bool, default:int,
-                      isUnsigned:bool):string =
+proc bigIntGenerator*(name:string, nullable:bool, isUnique:bool,
+                      isDefault:bool, default:int, isUnsigned:bool):string =
   result = &"\"{name}\" BIGINT"
 
   if isDefault:
     result.add(&" DEFAULT {default}")
-  
+
   if not nullable:
     result.add(" NOT NULL")
+
+  if isUnique:
+    result.add(" UNIQUE")
 
   if nullable and isUnsigned:
     result.add(&" CHECK (\"{name}\" = null OR \"{name}\" > 0)")

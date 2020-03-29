@@ -22,6 +22,7 @@ proc migrate*(this:Table):string =
           intGenerator(
             column.name,
             column.isNullable,
+            column.isUnique,
             column.isDefault,
             column.defaultInt,
             column.isUnsigned
@@ -32,6 +33,7 @@ proc migrate*(this:Table):string =
           smallIntGenerator(
             column.name,
             column.isNullable,
+            column.isUnique,
             column.isDefault,
             column.defaultInt,
             column.isUnsigned
@@ -42,6 +44,7 @@ proc migrate*(this:Table):string =
           mediumIntGenerator(
             column.name,
             column.isNullable,
+            column.isUnique,
             column.isDefault,
             column.defaultInt,
             column.isUnsigned
@@ -52,6 +55,7 @@ proc migrate*(this:Table):string =
           bigIntGenerator(
             column.name,
             column.isNullable,
+            column.isUnique,
             column.isDefault,
             column.defaultInt,
             column.isUnsigned
