@@ -70,9 +70,9 @@ proc migrate*(this:Table):string =
             parseInt($column.info["digit"]),
             column.isNullable,
             column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultFloat,
-            column.isUnsigned
           )
         )
       of rdbDouble:
@@ -83,9 +83,9 @@ proc migrate*(this:Table):string =
             parseInt($column.info["digit"]),
             column.isNullable,
             column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultFloat,
-            column.isUnsigned
           )
         )
       of rdbFloat:
@@ -94,9 +94,9 @@ proc migrate*(this:Table):string =
             column.name,
             column.isNullable,
             column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultFloat,
-            column.isUnsigned
           )
         )
       # char ==================================================================
@@ -107,9 +107,9 @@ proc migrate*(this:Table):string =
             parseInt($column.info["maxLength"]),
             column.isNullable,
             column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultString,
-            column.isUnsigned
           )
         )
       of rdbString:
@@ -119,9 +119,9 @@ proc migrate*(this:Table):string =
             parseInt($column.info["maxLength"]),
             column.isNullable,
             column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultString,
-            column.isUnsigned
           )
         )
       # text ==================================================================
@@ -131,9 +131,9 @@ proc migrate*(this:Table):string =
             column.name,
             column.isNullable,
             column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultString,
-            column.isUnsigned
           )
         )
       of rdbMediumText:
@@ -142,9 +142,9 @@ proc migrate*(this:Table):string =
             column.name,
             column.isNullable,
             column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultString,
-            column.isUnsigned
           )
         )
       of rdbLongText:
@@ -153,9 +153,9 @@ proc migrate*(this:Table):string =
             column.name,
             column.isNullable,
             column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultString,
-            column.isUnsigned
           )
         )
       # date ==================================================================
@@ -165,8 +165,8 @@ proc migrate*(this:Table):string =
             column.name,
             column.isNullable,
             column.isUnique,
+            column.isUnsigned,
             column.isDefault,
-            column.isUnsigned
           )
         )
       of rdbDatetime:
@@ -175,8 +175,8 @@ proc migrate*(this:Table):string =
             column.name,
             column.isNullable,
             column.isUnique,
+            column.isUnsigned,
             column.isDefault,
-            column.isUnsigned
           )
         )
       of rdbTime:
@@ -185,8 +185,8 @@ proc migrate*(this:Table):string =
             column.name,
             column.isNullable,
             column.isUnique,
+            column.isUnsigned,
             column.isDefault,
-            column.isUnsigned
           )
         )
       of rdbTimestamp:
@@ -195,8 +195,8 @@ proc migrate*(this:Table):string =
             column.name,
             column.isNullable,
             column.isUnique,
+            column.isUnsigned,
             column.isDefault,
-            column.isUnsigned
           )
         )
       of rdbTimestamps:
@@ -214,7 +214,9 @@ proc migrate*(this:Table):string =
             column.name,
             column.isNullable,
             column.isUnique,
-            column.isUnsigned
+            column.isUnsigned,
+            column.isDefault,
+            column.defaultString,
           )
         )
       of rdbBoolean:
@@ -223,9 +225,9 @@ proc migrate*(this:Table):string =
             column.name,
             column.isNullable,
             column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultBool,
-            column.isUnsigned
           )
         )
       of rdbEnumField:
@@ -235,9 +237,9 @@ proc migrate*(this:Table):string =
             column.info["options"].getElems,
             column.isNullable,
             column.isUnique,
+            column.isUnsigned,
             column.isDefault,
             column.defaultString,
-            column.isUnsigned
           )
         )
       of rdbJson:
@@ -246,7 +248,9 @@ proc migrate*(this:Table):string =
             column.name,
             column.isNullable,
             column.isUnique,
-            column.isUnsigned
+            column.isUnsigned,
+            column.isDefault,
+            column.defaultString,
           )
         )
       of rdbForeign:
