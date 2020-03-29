@@ -23,7 +23,7 @@ schema([
 If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TABLE` will be run.
 
 ## integer
-|COMMAND|DESCRIPTION|
+|Command|Description|
 |---|---|
 |`increments("id")`|Auto-incrementing UNSIGNED INTEGER (primary key) equivalent column.|
 |`integer("votes")`|INTEGER equivalent column.|
@@ -32,14 +32,14 @@ If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TA
 |`bigInteger("votes")`|UNSIGNED BIGINT equivalent column.|
 
 ## float
-|COMMAND|DESCRIPTION|
+|Command|Description|
 |---|---|
 |`decimal("amount", 8, 2)`|DECIMAL equivalent column with a precision (total digits) and scale (decimal digits).|
 |`double("amount", 8, 2)`|DOUBLE equivalent column with a precision (total digits) and scale (decimal digits).|
 |`float("float")`|FLOAT equivalent column with a implicit precision (total digits) and scale (decimal digits).|
 
 ## char
-|COMMAND|DESCRIPTION|
+|Command|Description|
 |---|---|
 |`char("name", 100)`|CHAR equivalent column with an optional length.|
 |`string("name")`|VARCHAR equivalent column.|
@@ -49,7 +49,7 @@ If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TA
 |`longText("description")`|LONGTEXT equivalent column.|
 
 ## date
-|COMMAND|DESCRIPTION|
+|Command|Description|
 |---|---|
 |`date("created_at")`|DATE equivalent column.|
 |`datetime("created_at")`|DATETIME equivalent column.|
@@ -59,19 +59,12 @@ If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TA
 |`softDelete()`|Adds a nullable `deleted_at` TIMESTAMP equivalent column for soft deletes.|
 
 ## others
-|COMMAND|DESCRIPTION|
+|Command|Description|
 |---|---|
 |`binary("data")`|BLOB equivalent column.|
 |`boolean("confirmed")`|BOOLEAN equivalent column.|
 |`enumField("level", ["easy", "hard"])`|ENUM equivalent column.|
 |`json("options")`|JSON equivalent column.|
-
-## options
-|COMMAND|DESCRIPTION|
-|---|---|
-|`.nullable()`|Designate that the column allows NULL values|
-|`.default(value)`|Declare a default value for a column|
-|`.unsigned()`|Set INTEGER to UNSIGNED|
 
 ## Foreign Key Constraints
 For example, let's define a `user_id` column on the table that references the `id` column on a `users` table:
@@ -87,3 +80,225 @@ arg of `onDelete` is enum
 - CASCADE
 - SET_NULL
 - NO_ACTION
+
+## options
+|Command|Description|
+|---|---|
+|`.nullable()`|Designate that the column allows NULL values|
+|`.default(value)`|Declare a default value for a column|
+|`.unsigned()`|Set INTEGER to UNSIGNED|
+
+### Available options for each column
+<table>
+  <tr>
+    <th>Command</th><th>options</th>
+  </tr>
+  <tr>
+    <td>increments</td>
+    <td>
+      <input type="checkbox" onclick='return false' >nullable
+      <input type="checkbox" onclick='return false' >default
+      <input type="checkbox" onclick='return false' >unsigned
+      <input type="checkbox" onclick='return false' >unique
+    </td>
+  </tr>
+  <tr>
+    <td>integer</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>smallInteger</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>mediumInteger</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>bigInteger</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>decimal</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>double</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>float</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>char</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>string</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>text</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false'>default
+      <input type="checkbox" onclick='return false'>unsigned
+      <input type="checkbox" onclick='return false'>unique
+    </td>
+  </tr>
+  <tr>
+    <td>mediumText</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false'>default
+      <input type="checkbox" onclick='return false'>unsigned
+      <input type="checkbox" onclick='return false'>unique
+    </td>
+  </tr>
+  <tr>
+    <td>longText</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false'>default
+      <input type="checkbox" onclick='return false'>unsigned
+      <input type="checkbox" onclick='return false'>unique
+    </td>
+  </tr>
+  <tr>
+    <td>date</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>datetime</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>time</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>timestamp</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>timestamps</td>
+    <td>
+      <input type="checkbox" onclick='return false'>nullable
+      <input type="checkbox" onclick='return false'>default
+      <input type="checkbox" onclick='return false'>unsigned
+      <input type="checkbox" onclick='return false'>unique
+    </td>
+  </tr>
+  <tr>
+    <td>softDelete</td>
+    <td>
+      <input type="checkbox" onclick='return false'>nullable
+      <input type="checkbox" onclick='return false'>default
+      <input type="checkbox" onclick='return false'>unsigned
+      <input type="checkbox" onclick='return false'>unique
+    </td>
+  </tr>
+  <tr>
+    <td>binary</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>boolean</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>enumField</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+  <tr>
+    <td>json</td>
+    <td>
+      <input type="checkbox" onclick='return false' checked>nullable
+      <input type="checkbox" onclick='return false' checked>default
+      <input type="checkbox" onclick='return false' checked>unsigned
+      <input type="checkbox" onclick='return false' checked>unique
+    </td>
+  </tr>
+</table>
+
