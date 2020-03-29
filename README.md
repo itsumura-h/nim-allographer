@@ -127,17 +127,16 @@ let db = open(connection, user, password, database)
 
 ## API Documents
 ### Query Builder
-[query_builder](https://itsumura-h.github.io/nim-allographer/query_builder.html)  
 [base](https://itsumura-h.github.io/nim-allographer/query_builder/base.html)  
 [grammars](https://itsumura-h.github.io/nim-allographer/query_builder/grammars.html)  
 [exec](https://itsumura-h.github.io/nim-allographer/query_builder/exec.html)  
 [connection](https://itsumura-h.github.io/nim-allographer/connection.html)  
 
 ### Schema Builder
-[schema_builder](https://itsumura-h.github.io/nim-allographer/schema_builder.html)  
 [schema](https://itsumura-h.github.io/nim-allographer/schema_builder/schema.html)  
-[column](https://itsumura-h.github.io/nim-allographer/schema_builder/column.html)  
 [table](https://itsumura-h.github.io/nim-allographer/schema_builder/table.html)  
+[column](https://itsumura-h.github.io/nim-allographer/schema_builder/column.html)  
+
 
 ## Development
 ### Branch naming rule
