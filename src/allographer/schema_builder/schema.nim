@@ -1,4 +1,4 @@
-import os, strformat, json
+import os, json, strutils
 from strformat import `&`
 import
   migrates/sqlite_migrate,
@@ -57,8 +57,6 @@ proc checkDiff(path:string, newTables:JsonNode) =
         %*{"name": newTable["name"].getStr}
       )
 
-  echo diffs
-
 
 proc generateMigrationFile(path:string, tablesArg:JsonNode) =
   block:
@@ -75,7 +73,6 @@ proc check*(this:Schema, tablesArg:varargs[Table]) =
     # generateMigrationFile(path, tablesJson)
   else:
     generateMigrationFile(path, tablesJson)
-  
 
 # =============================================================================
 
@@ -113,4 +110,10 @@ proc schema*(tables:varargs[Table]) =
     block:
       let db = db()
       defer: db.close()
-      db.exec(sql query)
+      try:
+        db.exec(sql query)
+      except:
+        let err = getCurrentExceptionMsg()
+        if err.contains("already exists"):
+          echoErrorMsg(err)
+          echoWarningMsg(&"Safety skip create table '{table.name}'")
