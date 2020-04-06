@@ -40,3 +40,15 @@ proc echoErrorMsg*(msg:string) =
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
     logger.log(lvlError, msg)
     flushFile(logger.file)
+
+proc echoWarningMsg*(msg:string) =
+  # console log
+  if IS_DISPLAY:
+    styledWriteLine(stdout, fgYellow, bgDefault, msg, resetStyle)
+  # file log
+  if IS_FILE:
+    let path = LOG_DIR & "/error.log"
+    createDir(parentDir(path))
+    let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
+    logger.log(lvlError, msg)
+    flushFile(logger.file)
