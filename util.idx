@@ -1,3 +1,4 @@
 driverTypeError	util.html#driverTypeError	util: driverTypeError()	
 logger	util.html#logger,any,varargs[string]	util: logger(output: any; args: varargs[string])	
 echoErrorMsg	util.html#echoErrorMsg,string	util: echoErrorMsg(msg: string)	
+echoWarningMsg	util.html#echoWarningMsg,string	util: echoWarningMsg(msg: string)	
