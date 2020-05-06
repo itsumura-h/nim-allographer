@@ -1,9 +1,11 @@
 import json
 
+
 type
   Column* = ref object
     name*: string
     typ*: RdbTypekind
+    alterTyp*:AlterTyp
     isNullable*: bool
     isUnsigned*: bool
     isDefault*: bool
@@ -15,6 +17,11 @@ type
     defaultJson*: JsonNode
     foreignOnDelete*: ForeignOnDelete
     info*: JsonNode
+
+  AlterTyp* = enum
+    Add
+    Change
+    Drop
 
   RdbTypekind* = enum
     # int
