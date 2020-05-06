@@ -29,7 +29,6 @@ RDB().table("auth").insert([
   %*{"auth": "admin"},
   %*{"auth": "user"}
 ])
-.exec()
 
 # プログレスバー
 let total = 50
@@ -53,4 +52,4 @@ for i in 1..total:
   pb.increment()
 
 pb.finish()
-RDB().table("users").insert(insertData).exec()
+RDB().table("users").insert(insertData)
