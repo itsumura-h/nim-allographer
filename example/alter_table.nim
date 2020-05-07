@@ -20,10 +20,10 @@ schema(
 
 alter([
   table("test1", [
-    add().string("email"),
-    change("name").string("user_name"),
-    drop("id"),
+    add().string("email").default(""),
+    # change("name").string("user_name").default(""),
+    # drop("id"),
   ]),
 
-  rename("test2", "test3")
+  # rename("test2", "test3")
 ])
