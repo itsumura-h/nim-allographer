@@ -36,10 +36,10 @@ proc add*():Column =
   return Column(alterTyp:Add)
 
 proc change*(name:string):Column =
-  return Column(alterTyp:Change, name:name)
+  return Column(alterTyp:Change, previousName:name)
 
 proc drop*(name:string):Column =
-  return Column(alterTyp:Drop, name:name)
+  return Column(alterTyp:Drop, previousName:name)
 
 proc rename*(alterFrom, alterTo:string):Table =
   return Table(

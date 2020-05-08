@@ -14,10 +14,10 @@ type
   Schema* = ref object
     tables*: seq[Table]
 
-  AlterType* = enum
-    ADD = "add"
-    CHANGE = "change"
-    DROP = "drop"
+  # AlterType* = enum
+  #   ADD = "add"
+  #   CHANGE = "change"
+  #   DROP = "drop"
 
 proc generateJsonSchema(tablesArg:varargs[Table]):JsonNode =
   var tables = %*[]

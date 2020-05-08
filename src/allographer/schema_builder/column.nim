@@ -5,7 +5,6 @@ type
   Column* = ref object
     name*: string
     typ*: RdbTypekind
-    alterTyp*:AlterTyp
     isNullable*: bool
     isUnsigned*: bool
     isDefault*: bool
@@ -17,6 +16,9 @@ type
     defaultJson*: JsonNode
     foreignOnDelete*: ForeignOnDelete
     info*: JsonNode
+    # alter table
+    alterTyp*:AlterTyp
+    previousName*:string
 
   AlterTyp* = enum
     Add
@@ -186,13 +188,17 @@ proc char*(this:Column, name:string, maxLength:int): Column =
   )
 
 proc string*(this:Column, name:string, length=255):Column =
-  Column(
-    name: name,
-    typ: rdbString,
-    info: %*{
-      "maxLength": length
-    }
-  )
+  # Column(
+  #   name: name,
+  #   typ: rdbString,
+  #   info: %*{
+  #     "maxLength": length
+  #   }
+  # )
+  this.name = name
+  this.typ = rdbString
+  this.info = %*{"maxLength": length}
+  return this
 
 proc text*(this:Column, name:string):Column =
   Column(
