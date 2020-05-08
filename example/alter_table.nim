@@ -4,23 +4,16 @@ import ../src/allographer/schema_builder
 schema(
   table("test1", [
     Column().increments("id"),
-    Column().string("change").nullable(),
-    Column().string("drop").nullable(),
+    Column().string("changed_column").nullable(),
+    Column().string("delete_column").nullable(),
   ], reset=true)
 )
 
-# alter([
-#   table("test1", [
-#     change("name").string("user_name").default(""),
-#   ])
-# ])
-
-
 alter([
   table("test1", [
-    add().string("add").default(""),
-    change("change").string("after_change").default(""),
-    drop("drop"),
+    add().string("add_column").default(""),
+    change("changed_column").string("changed_column_success").default(""),
+    delete("delete_column"),
   ]),
 
 #   # rename("test2", "test3")

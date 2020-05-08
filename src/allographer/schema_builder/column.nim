@@ -23,7 +23,7 @@ type
   AlterTyp* = enum
     Add
     Change
-    Drop
+    Delete
 
   RdbTypekind* = enum
     # int
