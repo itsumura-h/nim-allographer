@@ -19,18 +19,6 @@ proc alter*(tables:varargs[Table]) =
     of "postgres":
       postgres_alter.exec(table)
 
-    # logger(query)
-
-  # block:
-  #   let db = db()
-  #   defer: db.close()
-  #   try:
-  #     for query in queries:
-  #       db.exec(sql query)
-  #   except:
-  #     let err = getCurrentExceptionMsg()
-  #     echoErrorMsg(err)
-  #     echoWarningMsg(&"Safety skip alter table '{table.name}'")
 
 proc add*():Column =
   return Column(alterTyp:Add)
@@ -38,8 +26,8 @@ proc add*():Column =
 proc change*(name:string):Column =
   return Column(alterTyp:Change, previousName:name)
 
-proc drop*(name:string):Column =
-  return Column(alterTyp:Drop, previousName:name)
+proc delete*(name:string):Column =
+  return Column(alterTyp:Delete, previousName:name)
 
 proc rename*(alterFrom, alterTo:string):Table =
   return Table(
