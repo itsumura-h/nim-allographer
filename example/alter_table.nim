@@ -4,26 +4,24 @@ import ../src/allographer/schema_builder
 schema(
   table("test1", [
     Column().increments("id"),
-    Column().string("name").nullable()
-  ], reset=true),
-  table("test2", [
-    Column().increments("id"),
-    Column().string("name").nullable()
-  ], reset=true),
+    Column().string("change").nullable(),
+    Column().string("drop").nullable(),
+  ], reset=true)
 )
 
-# var sql = "ALTER TABLE users ADD COLUMN 'email' VARCHAR(255)"
-# RDB().raw(sql).exec()
+# alter([
+#   table("test1", [
+#     change("name").string("user_name").default(""),
+#   ])
+# ])
 
-# sql = "ALTER TABLE users RENAME TO user_data"
-# RDB().raw(sql).exec()
 
 alter([
   table("test1", [
-    add().string("email").default(""),
-    # change("name").string("user_name").default(""),
-    # drop("id"),
+    add().string("add").default(""),
+    change("change").string("after_change").default(""),
+    drop("drop"),
   ]),
 
-  # rename("test2", "test3")
+#   # rename("test2", "test3")
 ])
