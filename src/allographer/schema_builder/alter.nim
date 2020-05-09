@@ -30,4 +30,7 @@ proc delete*(name:string):Column =
   return Column(alterTyp:Delete, previousName:name)
 
 proc rename*(alterFrom, alterTo:string):Table =
-  return Table(name:alterFrom, alterTo:alterTo)
+  return Table(name:alterFrom, alterTo:alterTo, typ:Rename)
+
+proc drop*(name:string):Table =
+  return Table(name:name, typ:Drop)

@@ -106,10 +106,15 @@ proc rename(tableFrom, tableTo:string) =
   logger(query)
   db.exec(sql query)
 
+proc drop(table:string) =
+  let db = db()
+  defer: db.close()
+  let query = &"DROP TABLE {table}"
+  logger(query)
+  db.exec(sql query)
+
 proc exec*(table:Table) =
-  if table.alterTo.len > 0:
-    rename(table.name, table.alterTo)
-  else:
+  if table.typ == Nomal:
     for column in table.columns:
       case column.alterTyp
       of Add:
@@ -118,3 +123,7 @@ proc exec*(table:Table) =
         change(column, table.name)
       of Delete:
         delete(column, table.name)
+  elif table.typ == Rename:
+    rename(table.name, table.alterTo)
+  elif table.typ == Drop:
+    drop(table.name)
