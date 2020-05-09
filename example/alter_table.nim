@@ -9,11 +9,13 @@ schema(
   ], reset=true),
   table("table_rename", [
     Column().increments("id"),
-  ]),
+  ], reset=true),
   table("table_drop", [
     Column().increments("id"),
-  ])
+  ], reset=true)
 )
+alter(drop("table_rename_success"))
+
 
 alter([
   table("table_alter", [
