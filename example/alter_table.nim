@@ -6,7 +6,10 @@ schema(
     Column().increments("id"),
     Column().string("changed_column").nullable(),
     Column().string("delete_column").nullable(),
-  ], reset=true)
+  ], reset=true),
+  table("test2", [
+    Column().increments("id"),
+  ])
 )
 
 alter([
@@ -15,6 +18,5 @@ alter([
     change("changed_column").string("changed_column_success").default(""),
     delete("delete_column"),
   ]),
-
-#   # rename("test2", "test3")
+  rename("test2", "test3")
 ])
