@@ -57,7 +57,7 @@ suite "select":
   test "select()":
     var t = RDB().table("users").select("name", "email").get()
     check t[0] == %*{"name": "user1", "email": "user1@gmail.com"}
-  
+
   test "select(as)":
     var t = RDB().table("users").select("name as user_name", "email").get()
     check t[0] == %*{"user_name": "user1", "email": "user1@gmail.com"}
@@ -175,7 +175,7 @@ suite "select":
       check t[0]["max(id)"].getInt() == 9
     when DRIVER is "postgres":
       check t[0]["max"].getInt() == 9
-    
+
   test "having()":
     var t = RDB()
             .table("users")

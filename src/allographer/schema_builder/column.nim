@@ -64,43 +64,36 @@ type
     NO_ACTION = "NO_ACTION"
 
 
-proc default*(cArg: Column, value:bool): Column =
-  var c = cArg
+proc default*(c: Column, value:bool): Column =
   c.isDefault = true
   c.defaultBool = value
   return c
 
-proc default*(cArg: Column, value:int): Column =
-  var c = cArg
+proc default*(c: Column, value:int): Column =
   c.isDefault = true
   c.defaultInt = value
   return c
 
-proc default*(cArg: Column, value:float): Column =
-  var c = cArg
+proc default*(c: Column, value:float): Column =
   c.isDefault = true
   c.defaultFloat = value
   return c
 
-proc default*(cArg: Column, value:string): Column =
-  var c = cArg
+proc default*(c: Column, value:string): Column =
   c.isDefault = true
   c.defaultString = value
   return c
 
-proc default*(cArg: Column, value:JsonNode): Column =
-  var c = cArg
+proc default*(c: Column, value:JsonNode): Column =
   c.isDefault = true
   c.defaultJson = value
   return c
 
-proc default*(cArg:Column):Column =
-  var c = cArg
+proc default*(c:Column):Column =
   c.isDefault = true
   return c
 
-proc nullable*(cArg: Column): Column =
-  var c = cArg
+proc nullable*(c: Column): Column =
   c.isNullable = true
   return c
 
@@ -117,197 +110,164 @@ proc unsigned*(c: Column): Column =
 # int
 # =============================================================================
 proc increments*(this:Column, name:string): Column =
-  Column(
-    name: name,
-    typ: rdbIncrements
-  )
+  this.name = name
+  this.typ = rdbIncrements
+  return this
 
 proc integer*(this:Column, name:string):Column =
-  Column(
-    name: name,
-    typ: rdbInteger
-  )
+  this.name = name
+  this.typ = rdbInteger
+  return this
 
 proc smallInteger*(this:Column, name:string):Column =
-  Column(
-    name: name,
-    typ: rdbSmallInteger,
-  )
+  this.name = name
+  this.typ = rdbSmallInteger
+  return this
 
 proc mediumInteger*(this:Column, name:string):Column =
-  Column(
-    name: name,
-    typ: rdbMediumInteger
-  )
+  this.name = name
+  this.typ = rdbMediumInteger
+  return this
 
 proc bigInteger*(this:Column, name:string):Column =
-  Column(
-    name: name,
-    typ: rdbBigInteger
-  )
+  this.name = name
+  this.typ = rdbBigInteger
+  return this
 
 # =============================================================================
 # float
 # =============================================================================
 proc decimal*(this:Column, name:string, maximum:int, digit:int): Column =
-  Column(
-    name: name,
-    typ: rdbDecimal,
-    info: %*{
-      "maximum": maximum,
-      "digit": digit
-    }
-  )
+  this.name = name
+  this.typ = rdbDecimal
+  this.info = %*{
+    "maximum": maximum,
+    "digit": digit
+  }
+  return this
 
 proc double*(this:Column, name:string, maximum:int, digit:int):Column =
-  Column(
-    name: name,
-    typ: rdbDouble,
-    info: %*{
-      "maximum": maximum,
-      "digit": digit
-    }
-  )
+  this.name = name
+  this.typ = rdbDouble
+  this.info = %*{
+    "maximum": maximum,
+    "digit": digit
+  }
+  return this
 
 proc float*(this:Column, name:string):Column =
-  Column(
-    name: name,
-    typ: rdbFloat
-  )
+  this.name = name
+  this.typ = rdbFloat
+  return this
 
 # =============================================================================
 # char
 # =============================================================================
 proc char*(this:Column, name:string, maxLength:int): Column =
-  Column(
-    name: name,
-    typ: rdbChar,
-    info: %*{
-      "maxLength": maxLength
-    }
-  )
+  this.name = name
+  this.typ = rdbChar
+  this.info = %*{
+    "maxLength": maxLength
+  }
+  return this
 
 proc string*(this:Column, name:string, length=255):Column =
-  # Column(
-  #   name: name,
-  #   typ: rdbString,
-  #   info: %*{
-  #     "maxLength": length
-  #   }
-  # )
   this.name = name
   this.typ = rdbString
   this.info = %*{"maxLength": length}
   return this
 
 proc text*(this:Column, name:string):Column =
-  Column(
-    name: name,
-    typ: rdbText
-  )
+  this.name = name
+  this.typ = rdbText
+  return this
 
 proc mediumText*(this:Column, name:string):Column =
-  Column(
-    name: name,
-    typ: rdbMediumText
-  )
+  this.name = name
+  this.typ = rdbMediumText
+  return this
 
 proc longText*(this:Column, name:string):Column =
-  Column(
-    name: name,
-    typ: rdbLongText
-  )
+  this.name = name
+  this.typ = rdbLongText
+  return this
 
 # =============================================================================
 # date
 # =============================================================================
 proc date*(this:Column, name:string):Column =
-  Column(
-    name: name,
-    typ: rdbDate
-  )
+  this.name = name
+  this.typ = rdbDate
+  return this
 
 proc datetime*(this:Column, name:string):Column =
-  Column(
-    name: name,
-    typ: rdbDatetime
-  )
+  this.name = name
+  this.typ = rdbDatetime
+  return this
 
 proc time*(this:Column, name:string):Column =
-  Column(
-    name: name,
-    typ: rdbTime
-  )
+  this.name = name
+  this.typ = rdbTime
+  return this
 
 proc timestamp*(this:Column, name:string):Column =
-  Column(
-    name: name,
-    typ: rdbTimestamp
-  )
+  this.name = name
+  this.typ = rdbTimestamp
+  return this
 
 proc timestamps*(this:Column):Column =
-  Column(
-    typ: rdbTimestamps
-  )
+  this.typ = rdbTimestamps
+  return this
 
 proc softDelete*(this:Column):Column =
-  Column(
-    typ: rdbSoftDelete
-  )
+  this.typ = rdbSoftDelete
+  return this
 
 # =============================================================================
 # others
 # =============================================================================
 proc binary*(this:Column, name:string): Column =
-  Column(
-    name: name,
-    typ: rdbBinary
-  )
+  this.name = name
+  this.typ = rdbBinary
+  return this
 
 # =============================================================================
 proc boolean*(this:Column, name:string): Column =
-  Column(
-    name: name,
-    typ: rdbBoolean
-  )
+  this.name = name
+  this.typ = rdbBoolean
+  return this
 
 proc enumField*(this:Column, name:string, options:openArray[string]):Column =
-  Column(
-    name: name,
-    typ: rdbEnumField,
-    info: %*{
-      "options": options
-    }
-  )
+  this.name = name
+  this.typ = rdbEnumField
+  this.info = %*{
+    "options": options
+  }
+  return this
 
 proc json*(this:Column, name:string):Column =
-  Column(
-    name: name,
-    typ: rdbJson
-  )
+  this.name = name
+  this.typ = rdbJson
+  return this
 
 # =============================================================================
 # Foreign
 # =============================================================================
 proc foreign*(this:Column, name:string):Column =
-  Column(
-    name: name,
-    typ: rdbForeign
-  )
+  this.name = name
+  this.typ = rdbForeign
+  return this
 
 proc reference*(this:Column, column:string):Column =
-  var c = this
-  c.info = %*{
+  this.info = %*{
     "column": column
   }
-  return c
+  return this
 
 proc on*(this:Column, table:string):Column =
-  var c = this
-  c.info["table"] = %*table
-  return c
+  this.info["table"] = %*table
+  return this
 
 proc onDelete*(this:Column, kind:ForeignOnDelete):Column =
-  var c = this
-  c.foreignOnDelete = kind
-  return c
+  this.foreignOnDelete = kind
+  return this
