@@ -7,7 +7,7 @@ type Table* = ref object
   alterTo*:string
 
 
-proc table*(name:string, columns:openArray[Column], reset=false): Table =
+proc table*(name:string, columns:openArray[Column], reset=false):Table =
   var table = Table(
     name: name,
     columns: @columns,

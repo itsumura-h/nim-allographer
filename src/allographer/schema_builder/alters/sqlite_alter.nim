@@ -99,12 +99,22 @@ proc delete(column:Column, table:string) =
   logger(query)
   db.exec(sql query)
 
+proc rename(tableFrom, tableTo:string) =
+  let db = db()
+  defer: db.close()
+  let query = &"ALTER TABLE {tableFrom} RENAME TO {tableTo}"
+  logger(query)
+  db.exec(sql query)
+
 proc exec*(table:Table) =
-  for column in table.columns:
-    case column.alterTyp
-    of Add:
-      add(column, table.name)
-    of Change:
-      change(column, table.name)
-    of Delete:
-      delete(column, table.name)
+  if table.alterTo.len > 0:
+    rename(table.name, table.alterTo)
+  else:
+    for column in table.columns:
+      case column.alterTyp
+      of Add:
+        add(column, table.name)
+      of Change:
+        change(column, table.name)
+      of Delete:
+        delete(column, table.name)
