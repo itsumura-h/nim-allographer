@@ -1,5 +1,6 @@
+import json, strformat
 import ../src/allographer/schema_builder
-# import ../src/allographer/query_builder
+import ../src/allographer/query_builder
 
 schema(
   table("table_alter", [
@@ -14,7 +15,28 @@ schema(
     Column().increments("id"),
   ], reset=true)
 )
-alter(drop("table_rename_success"))
+
+try:
+  alter(drop("table_rename_success"))
+except:
+  discard
+
+var table_alter_data, table_rename_data, table_drop_data = newSeq[JsonNode](0)
+for i in 1..10:
+  table_alter_data.add(%*{
+    "id": i,
+    "changed_column": &"abc{i}",
+    "delete_column": &"def{i}"
+  })
+  table_rename_data.add(%*{
+    "id": i
+  })
+  table_drop_data.add(%*{
+    "id": i
+  })
+RDB().table("table_alter").insert(table_alter_data)
+RDB().table("table_rename").insert(table_rename_data)
+RDB().table("table_drop").insert(table_drop_data)
 
 
 alter([

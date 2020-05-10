@@ -139,7 +139,6 @@ proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
     for row in db.instantRows(db_columns, sql sqlString, args):
       discard
     defer: db.close()
-    
 
   let columns = getColumns(db_columns)
   return toJson(results, columns) # seq[JsonNode]
@@ -156,7 +155,7 @@ proc getRow(sqlString:string, args:varargs[string]): JsonNode =
   else:
     echoErrorMsg(sqlString & $args)
     return newJNull()
-  
+
   var db_columns: DbColumns
   block:
     for row in db.instantRows(db_columns, sql sqlString, args):
@@ -190,6 +189,7 @@ proc get*(this: RDB): seq[JsonNode] =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[JsonNode](0)
 
 proc get*(this: RDB, typ: typedesc): seq[typ.type] =
   defer:
@@ -203,6 +203,7 @@ proc get*(this: RDB, typ: typedesc): seq[typ.type] =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[JsonNode](0)
 
 
 proc getRaw*(this: RDB): seq[JsonNode] =
@@ -212,6 +213,7 @@ proc getRaw*(this: RDB): seq[JsonNode] =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[JsonNode](0)
 
 proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
   try:
@@ -220,6 +222,7 @@ proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[typ.type](0)
 
 proc first*(this: RDB): JsonNode =
   defer:
@@ -233,6 +236,7 @@ proc first*(this: RDB): JsonNode =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newJNull()
 
 proc first*(this: RDB, typ: typedesc): typ.type =
   defer:
@@ -246,6 +250,7 @@ proc first*(this: RDB, typ: typedesc): typ.type =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newJNull()
 
 
 proc find*(this: RDB, id: int, key="id"): JsonNode =
@@ -261,6 +266,7 @@ proc find*(this: RDB, id: int, key="id"): JsonNode =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newJNull()
 
 proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
   defer:
@@ -275,6 +281,7 @@ proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newJNull()
 
 
 # ==================== INSERT ====================
