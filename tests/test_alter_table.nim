@@ -57,24 +57,24 @@ suite "alter table":
       .first()["add_column"]
       .getStr == "test"
 
-  # test "changed_column":
-  #   check RDB()
-  #     .table("table_alter")
-  #     .select("changed_column")
-  #     .first()["changed_column"]
-  #     .getStr == "change1"
+  test "changed_column":
+    check RDB()
+      .table("table_alter")
+      .select("changed_column")
+      .first()["changed_column"]
+      .getStr == "change1"
 
-  #   alter(
-  #     table("table_alter", [
-  #       change("changed_column").string("changed_column_success").default("")
-  #     ])
-  #   )
+    alter(
+      table("table_alter", [
+        change("changed_column").string("changed_column_success").default("")
+      ])
+    )
 
-  #   check RDB()
-  #     .table("table_alter")
-  #     .select("changed_column_success")
-  #     .first()["changed_column_success"]
-  #     .getStr == "change1"
+    check RDB()
+      .table("table_alter")
+      .select("changed_column_success")
+      .first()["changed_column_success"]
+      .getStr == "change1"
 
   # test "delete_column":
   #   check RDB()

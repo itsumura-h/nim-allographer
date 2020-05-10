@@ -19,51 +19,35 @@ proc add(column:Column, table:string) =
       echoErrorMsg(err)
       echoWarningMsg(&"Safety skip alter table '{table}'")
 
-proc change(column:Column, table:string) =
-  ## create tmp table with new column difinition
-  ##
-  ## copy data from existing table to tmp table
-  ##
-  ## delete existing table
-  ##
-  ## rename tmp table to existing table
-  let db = db()
-  defer: db.close()
-  # create tmp table with new column difinition
-  #   get existing table schema
-  let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '{table}';"
-  var schema = db.getValue(sql tableDifinitionSql)
-  schema = replace(schema, re"\)$", ",)")
-  let columnRegex = &"'{column.previousName}'.*?,"
-  let columnString = generateColumnString(column) & ","
-  var query = replace(schema, re(columnRegex), columnString)
-  query = replace(query, re",\)", ")")
-  query = replace(query, re("CREATE TABLE \".+\""), "CREATE TABLE \"alter_table_tmp\"")
-  logger(query)
-  db.exec(sql query)
-  # copy data from existing table to tmp table
-  query = &"INSERT INTO alter_table_tmp SELECT * FROM {table}"
-  logger(query)
-  db.exec(sql query)
-  # delete existing table
-  query = &"DROP TABLE {table}"
-  logger(query)
-  db.exec(sql query)
-  # rename tmp table to existing table
-  query = &"ALTER TABLE alter_table_tmp RENAME TO {table}"
-  logger(query)
-  db.exec(sql query)
-
 proc getColumns(table:string, previousName:string):string =
   let db = db()
   defer: db.close()
-  var query = &"pragma table_info({table})"
+  var query = &"SHOW COLUMNS FROM {table}"
   var columns:string
   for i, row in db.getAllRows(sql query):
-    if row[1] != previousName:
+    if row[0] != previousName:
       if i > 0: columns.add(", ")
       columns.add(row[1])
   return columns
+
+proc change(column:Column, table:string) =
+  let db = db()
+  defer: db.close()
+  let newColumnDifinition = generateColumnString(column)
+  var query = &"ALTER TABLE {table} CHANGE `{column.previousName}` {newColumnDifinition}"
+  logger(query)
+  db.exec(sql query)
+
+# proc getColumns(table:string, previousName:string):string =
+#   let db = db()
+#   defer: db.close()
+#   var query = &"pragma table_info({table})"
+#   var columns:string
+#   for i, row in db.getAllRows(sql query):
+#     if row[1] != previousName:
+#       if i > 0: columns.add(", ")
+#       columns.add(row[1])
+#   return columns
 
 proc delete(column:Column, table:string) =
   ## rename existing table as tmp
