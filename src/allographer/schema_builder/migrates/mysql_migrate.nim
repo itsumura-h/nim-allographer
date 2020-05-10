@@ -4,6 +4,7 @@ import
   ../column
 import ../generators/mysql_generators
 
+
 proc generateColumnString*(column:Column):string =
   var columnString = ""
   case column.typ:

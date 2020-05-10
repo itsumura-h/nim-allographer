@@ -51,9 +51,11 @@ suite "alter table":
     )
 
     RDB().table("table_alter").where("id", "=", 1).update(%*{"add_column": "test"})
+
     check RDB()
       .table("table_alter")
       .select("add_column")
+      .orderBy("id", Asc)
       .first()["add_column"]
       .getStr == "test"
 
@@ -61,59 +63,61 @@ suite "alter table":
     check RDB()
       .table("table_alter")
       .select("changed_column")
+      .orderBy("id", Asc)
       .first()["changed_column"]
       .getStr == "change1"
 
     alter(
       table("table_alter", [
-        change("changed_column").string("changed_column_success").default("")
+        change("changed_column").string("changed_column_success").default("").unique()
       ])
     )
 
     check RDB()
       .table("table_alter")
       .select("changed_column_success")
+      .orderBy("id", Asc)
       .first()["changed_column_success"]
       .getStr == "change1"
 
-  test "delete_column":
-    check RDB()
-      .table("table_alter")
-      .select("delete_column")
-      .first()["delete_column"].getStr == "delete1"
+  # test "delete_column":
+  #   check RDB()
+  #     .table("table_alter")
+  #     .select("delete_column")
+  #     .first()["delete_column"].getStr == "delete1"
 
-    alter(
-      table("table_alter", [
-        delete("delete_column")
-      ])
-    )
+  #   alter(
+  #     table("table_alter", [
+  #       delete("delete_column")
+  #     ])
+  #   )
 
-    check RDB()
-      .table("table_alter")
-      .select("delete_column")
-      .first() == newJNull()
+  #   check RDB()
+  #     .table("table_alter")
+  #     .select("delete_column")
+  #     .first() == newJNull()
 
-  test "rename":
-    check RDB()
-      .table("table_rename")
-      .first()["id"]
-      .getInt == 1
+  # test "rename":
+  #   check RDB()
+  #     .table("table_rename")
+  #     .first()["id"]
+  #     .getInt == 1
 
-    alter(rename("table_rename", "table_rename_success"))
+  #   alter(rename("table_rename", "table_rename_success"))
 
-    check RDB()
-      .table("table_rename_success")
-      .first()["id"]
-      .getInt == 1
+  #   check RDB()
+  #     .table("table_rename_success")
+  #     .first()["id"]
+  #     .getInt == 1
 
-  test "drop table":
-    check RDB()
-      .table("table_drop")
-      .first()["id"]
-      .getInt == 1
+  # test "drop table":
+  #   check RDB()
+  #     .table("table_drop")
+  #     .first()["id"]
+  #     .getInt == 1
 
-    alter(drop("table_drop"))
+  #   alter(drop("table_drop"))
 
-    check RDB()
-      .table("table_drop")
-      .first() == newJNull()
+  #   check RDB()
+  #     .table("table_drop")
+  #     .first() == newJNull()

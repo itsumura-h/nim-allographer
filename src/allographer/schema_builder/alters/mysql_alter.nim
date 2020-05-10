@@ -41,7 +41,7 @@ proc change(column:Column, table:string) =
 proc delete(column:Column, table:string) =
   let db = db()
   defer: db.close()
-  let query = &"ALTER TABLE {table} DROP {column.previousName}"
+  let query = &"ALTER TABLE {table} DROP `{column.previousName}`"
   logger(query)
   db.exec(sql query)
 
