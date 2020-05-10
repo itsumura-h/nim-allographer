@@ -34,52 +34,14 @@ proc change(column:Column, table:string) =
   let db = db()
   defer: db.close()
   let newColumnDifinition = generateColumnString(column)
-  var query = &"ALTER TABLE {table} CHANGE `{column.previousName}` {newColumnDifinition}"
+  let query = &"ALTER TABLE {table} CHANGE `{column.previousName}` {newColumnDifinition}"
   logger(query)
   db.exec(sql query)
-
-# proc getColumns(table:string, previousName:string):string =
-#   let db = db()
-#   defer: db.close()
-#   var query = &"pragma table_info({table})"
-#   var columns:string
-#   for i, row in db.getAllRows(sql query):
-#     if row[1] != previousName:
-#       if i > 0: columns.add(", ")
-#       columns.add(row[1])
-#   return columns
 
 proc delete(column:Column, table:string) =
-  ## rename existing table as tmp
-  ##
-  ## create new table with existing table name
-  ##
-  ## copy data from tmp table to new table
-  ##
-  ## delete tmp table
   let db = db()
   defer: db.close()
-  # rename existing table as tmp
-  var query = &"ALTER TABLE {table} RENAME TO alter_table_tmp"
-  logger(query)
-  db.exec(sql query)
-  # create new table with existing table name
-  let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'alter_table_tmp';"
-  var schema = db.getValue(sql tableDifinitionSql)
-  schema = replace(schema, re"\)$", ",)")
-  let columnRegex = &"'{column.previousName}'.*?,"
-  query = replace(schema, re(columnRegex))
-  query = replace(query, re",\)", ")")
-  query = replace(query, re"alter_table_tmp", table)
-  logger(query)
-  db.exec(sql query)
-  # copy data from tmp table to new table
-  var columns = getColumns(table, column.previousName)
-  query = &"INSERT INTO {table}({columns}) SELECT {columns} FROM alter_table_tmp"
-  logger(query)
-  db.exec(sql query)
-  # delete tmp table
-  query = &"DROP TABLE alter_table_tmp"
+  let query = &"ALTER TABLE {table} DROP {column.previousName}"
   logger(query)
   db.exec(sql query)
 
