@@ -252,14 +252,6 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       foreignColumnGenerator(column.name)
     )
-    # foreignString.add(
-    #   foreignGenerator(
-    #     column.name,
-    #     column.info["table"].getStr(),
-    #     column.info["column"].getStr(),
-    #     column.foreignOnDelete
-    #   )
-    # )
   return columnString
 
 proc generateForeignString(column:Column):string =
@@ -283,5 +275,4 @@ proc migrate*(this:Table):string =
       generateForeignString(column)
     )
 
-  var query = &"CREATE TABLE \"{this.name}\" ({columnString}{foreignString})"
-  return query
+  return &"CREATE TABLE \"{this.name}\" ({columnString}{foreignString})"
