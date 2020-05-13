@@ -1,5 +1,5 @@
 import db_sqlite, db_mysql, db_postgres
-import json, strutils, strformat, algorithm
+import json, strutils, strformat, algorithm, options
 
 import base, builders
 import ../util
@@ -203,7 +203,7 @@ proc get*(this: RDB, typ: typedesc): seq[typ.type] =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
-    return newSeq[JsonNode](0)
+    return newSeq[typ.type](0)
 
 
 proc getRaw*(this: RDB): seq[JsonNode] =
@@ -238,7 +238,7 @@ proc first*(this: RDB): JsonNode =
     getCurrentExceptionMsg().echoErrorMsg()
     return newJNull()
 
-proc first*(this: RDB, typ: typedesc): typ.type =
+proc first*(this: RDB, typ: typedesc): Option[typ.type] =
   defer:
     this.sqlString = "";
     this.placeHolder = newSeq[string](0);
@@ -246,11 +246,11 @@ proc first*(this: RDB, typ: typedesc): typ.type =
   this.sqlStringSeq = @[this.selectFirstBuilder().sqlString]
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
-    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ).some()
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
-    return newJNull()
+    return typ.none()
 
 
 proc find*(this: RDB, id: int, key="id"): JsonNode =
@@ -268,7 +268,7 @@ proc find*(this: RDB, id: int, key="id"): JsonNode =
     getCurrentExceptionMsg().echoErrorMsg()
     return newJNull()
 
-proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
+proc find*(this: RDB, id: int, typ:typedesc, key="id"): Option[typ.type] =
   defer:
     this.sqlString = "";
     this.placeHolder = newSeq[string](0);
@@ -277,11 +277,11 @@ proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
   this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
-    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ).some()
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
-    return newJNull()
+    return typ.none()
 
 
 # ==================== INSERT ====================

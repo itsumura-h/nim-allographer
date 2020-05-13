@@ -98,6 +98,23 @@ echo rows[0].is_admin
 >> true                         # bool
 ```
 
+If you use `first` or `find` to execute ORM response. it returns `Option` type
+
+```nim
+var row = RDB().table("test")
+          .select("id", "float", "char", "datetime", "null", "is_admin")
+          .first(Typ) # or find(1, Typ)
+```
+```nim
+if row.isSome():
+  echo row.get().id
+  >> 1
+else:
+  assert row.isNone()
+  >> true
+```
+
+
 ### get
 Retrieving all row from a table
 ```nim
