@@ -1,0 +1,6 @@
+alter	schema_builder/alter.html#alter,varargs[Table]	alter: alter(tables: varargs[Table])	
+add	schema_builder/alter.html#add	alter: add(): Column	
+change	schema_builder/alter.html#change,string	alter: change(name: string): Column	
+delete	schema_builder/alter.html#delete,string	alter: delete(name: string): Column	
+rename	schema_builder/alter.html#rename,string,string	alter: rename(alterFrom, alterTo: string): Table	
+drop	schema_builder/alter.html#drop,string	alter: drop(name: string): Table	

@@ -108,64 +108,67 @@ function main() {
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#serialGenerator%2Cstring"
     title="serialGenerator(name: string): string"><wbr />serial<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#intGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"
-    title="intGenerator(name: string; nullable: bool; isUnique: bool; isUnsigned: bool;
-             isDefault: bool; default: int): string"><wbr />int<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#smallIntGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"
-    title="smallIntGenerator(name: string; nullable: bool; isUnique: bool; isUnsigned: bool;
-                  isDefault: bool; default: int): string"><wbr />small<wbr />Int<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#mediumIntGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"
-    title="mediumIntGenerator(name: string; nullable: bool; isUnique: bool; isUnsigned: bool;
-                   isDefault: bool; default: int): string"><wbr />medium<wbr />Int<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#bigIntGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"
-    title="bigIntGenerator(name: string; nullable: bool; isUnique: bool; isUnsigned: bool;
-                isDefault: bool; default: int): string"><wbr />big<wbr />Int<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#decimalGenerator%2Cstring%2Cint%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cfloat"
-    title="decimalGenerator(name: string; maximum: int; digit: int; nullable: bool; isUnique: bool;
-                 isUnsigned: bool; isDefault: bool; default: float): string"><wbr />decimal<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#doubleGenerator%2Cstring%2Cint%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cfloat"
-    title="doubleGenerator(name: string; maximum: int; digit: int; nullable: bool; isUnique: bool;
-                isUnsigned: bool; isDefault: bool; default: float): string"><wbr />double<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#floatGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cfloat"
-    title="floatGenerator(name: string; nullable: bool; isUnique: bool; isUnsigned: bool;
-               isDefault: bool; default: float): string"><wbr />float<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#charGenerator%2Cstring%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"
-    title="charGenerator(name: string; maxLength: int; nullable: bool; isUnique: bool;
-              isUnsigned: bool; isDefault: bool; default: string): string"><wbr />char<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#stringGenerator%2Cstring%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"
-    title="stringGenerator(name: string; maxLength: int; nullable: bool; isUnique: bool;
-                isUnsigned: bool; isDefault: bool; default: string): string"><wbr />string<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#textGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"
-    title="textGenerator(name: string; nullable: bool; isUnique: bool; isUnsigned: bool;
-              isDefault: bool; default: string): string"><wbr />text<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#dateGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"
-    title="dateGenerator(name: string; nullable: bool; isUnique: bool; isUnsigned: bool;
-              isDefault: bool): string"><wbr />date<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#datetimeGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"
-    title="datetimeGenerator(name: string; nullable: bool; isUnique: bool; isUnsigned: bool;
-                  isDefault: bool): string"><wbr />datetime<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#timeGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"
-    title="timeGenerator(name: string; nullable: bool; isUnique: bool; isUnsigned: bool;
-              isDefault: bool): string"><wbr />time<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#timestampGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"
-    title="timestampGenerator(name: string; nullable: bool; isUnique: bool; isUnsigned: bool;
-                   isDefault: bool): string"><wbr />timestamp<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#intGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"
+    title="intGenerator(name: string; tableName: string; nullable: bool; isUnique: bool;
+             isUnsigned: bool; isDefault: bool; default: int): string"><wbr />int<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#smallIntGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"
+    title="smallIntGenerator(name: string; tableName: string; nullable: bool; isUnique: bool;
+                  isUnsigned: bool; isDefault: bool; default: int): string"><wbr />small<wbr />Int<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#mediumIntGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"
+    title="mediumIntGenerator(name: string; tableName: string; nullable: bool; isUnique: bool;
+                   isUnsigned: bool; isDefault: bool; default: int): string"><wbr />medium<wbr />Int<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#bigIntGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"
+    title="bigIntGenerator(name: string; tableName: string; nullable: bool; isUnique: bool;
+                isUnsigned: bool; isDefault: bool; default: int): string"><wbr />big<wbr />Int<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#decimalGenerator%2Cstring%2Cstring%2Cint%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cfloat"
+    title="decimalGenerator(name: string; tableName: string; maximum: int; digit: int;
+                 nullable: bool; isUnique: bool; isUnsigned: bool; isDefault: bool;
+                 default: float): string"><wbr />decimal<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#doubleGenerator%2Cstring%2Cstring%2Cint%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cfloat"
+    title="doubleGenerator(name: string; tableName: string; maximum: int; digit: int;
+                nullable: bool; isUnique: bool; isUnsigned: bool; isDefault: bool;
+                default: float): string"><wbr />double<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#floatGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cfloat"
+    title="floatGenerator(name: string; tableName: string; nullable: bool; isUnique: bool;
+               isUnsigned: bool; isDefault: bool; default: float): string"><wbr />float<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#charGenerator%2Cstring%2Cstring%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"
+    title="charGenerator(name: string; tableName: string; maxLength: int; nullable: bool;
+              isUnique: bool; isUnsigned: bool; isDefault: bool; default: string): string"><wbr />char<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#stringGenerator%2Cstring%2Cstring%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"
+    title="stringGenerator(name: string; tableName: string; maxLength: int; nullable: bool;
+                isUnique: bool; isUnsigned: bool; isDefault: bool; default: string): string"><wbr />string<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#textGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"
+    title="textGenerator(name: string; tableName: string; nullable: bool; isUnique: bool;
+              isUnsigned: bool; isDefault: bool; default: string): string"><wbr />text<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#dateGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"
+    title="dateGenerator(name: string; tableName: string; nullable: bool; isUnique: bool;
+              isUnsigned: bool; isDefault: bool): string"><wbr />date<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#datetimeGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"
+    title="datetimeGenerator(name: string; tableName: string; nullable: bool; isUnique: bool;
+                  isUnsigned: bool; isDefault: bool): string"><wbr />datetime<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#timeGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"
+    title="timeGenerator(name: string; tableName: string; nullable: bool; isUnique: bool;
+              isUnsigned: bool; isDefault: bool): string"><wbr />time<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#timestampGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"
+    title="timestampGenerator(name: string; tableName: string; nullable: bool; isUnique: bool;
+                   isUnsigned: bool; isDefault: bool): string"><wbr />timestamp<wbr />Generator<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#timestampsGenerator"
     title="timestampsGenerator(): string"><wbr />timestamps<wbr />Generator<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#softDeleteGenetator"
     title="softDeleteGenetator(): string"><wbr />soft<wbr />Delete<wbr />Genetator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#blobGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"
-    title="blobGenerator(name: string; nullable: bool; isUnique: bool; isUnsigned: bool;
-              isDefault: bool; default: string): string"><wbr />blob<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#boolGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cbool"
-    title="boolGenerator(name: string; nullable: bool; isUnique: bool; isUnsigned: bool;
-              isDefault: bool; default: bool): string"><wbr />bool<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#enumGenerator%2Cstring%2Cvarargs%5BJsonNode%5D%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"
-    title="enumGenerator(name: string; options: varargs[JsonNode]; nullable: bool;
-              isUnique: bool; isUnsigned: bool; isDefault: bool; default: string): string"><wbr />enum<wbr />Generator<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#jsonGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2CJsonNode"
-    title="jsonGenerator(name: string; nullable: bool; isUnique: bool; isUnsigned: bool;
-              isDefault: bool; default: JsonNode): string"><wbr />json<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#blobGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"
+    title="blobGenerator(name: string; tableName: string; nullable: bool; isUnique: bool;
+              isUnsigned: bool; isDefault: bool; default: string): string"><wbr />blob<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#boolGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cbool"
+    title="boolGenerator(name: string; tableName: string; nullable: bool; isUnique: bool;
+              isUnsigned: bool; isDefault: bool; default: bool): string"><wbr />bool<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#enumGenerator%2Cstring%2Cstring%2Cvarargs%5BJsonNode%5D%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"
+    title="enumGenerator(name: string; tableName: string; options: varargs[JsonNode];
+              nullable: bool; isUnique: bool; isUnsigned: bool; isDefault: bool;
+              default: string): string"><wbr />enum<wbr />Generator<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#jsonGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2CJsonNode"
+    title="jsonGenerator(name: string; tableName: string; nullable: bool; isUnique: bool;
+              isUnsigned: bool; isDefault: bool; default: JsonNode): string"><wbr />json<wbr />Generator<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#foreignColumnGenerator%2Cstring"
     title="foreignColumnGenerator(name: string): string"><wbr />foreign<wbr />Column<wbr />Generator<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#foreignGenerator%2Cstring%2Cstring%2Cstring%2CForeignOnDelete"
@@ -197,71 +200,90 @@ function main() {
 
 
 </dd>
-<a id="intGenerator,string,bool,bool,bool,bool,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#intGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"><span class="Identifier">intGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                 <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="smallIntGenerator,string,bool,bool,bool,bool,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#smallIntGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"><span class="Identifier">smallIntGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                      <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="mediumIntGenerator,string,bool,bool,bool,bool,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#mediumIntGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"><span class="Identifier">mediumIntGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                       <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="bigIntGenerator,string,bool,bool,bool,bool,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#bigIntGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"><span class="Identifier">bigIntGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                    <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="decimalGenerator,string,int,int,bool,bool,bool,bool,float"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#decimalGenerator%2Cstring%2Cint%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cfloat"><span class="Identifier">decimalGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maximum</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">digit</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                     <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<a id="intGenerator,string,string,bool,bool,bool,bool,int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#intGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"><span class="Identifier">intGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                 <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="doubleGenerator,string,int,int,bool,bool,bool,bool,float"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#doubleGenerator%2Cstring%2Cint%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cfloat"><span class="Identifier">doubleGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maximum</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">digit</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                    <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<a id="smallIntGenerator,string,string,bool,bool,bool,bool,int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#smallIntGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"><span class="Identifier">smallIntGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                      <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="floatGenerator,string,bool,bool,bool,bool,float"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#floatGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cfloat"><span class="Identifier">floatGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                   <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+<a id="mediumIntGenerator,string,string,bool,bool,bool,bool,int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#mediumIntGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"><span class="Identifier">mediumIntGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                       <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="bigIntGenerator,string,string,bool,bool,bool,bool,int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#bigIntGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint"><span class="Identifier">bigIntGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                    <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="decimalGenerator,string,string,int,int,bool,bool,bool,bool,float"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#decimalGenerator%2Cstring%2Cstring%2Cint%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cfloat"><span class="Identifier">decimalGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maximum</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">digit</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span>
+                     <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                     <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="charGenerator,string,int,bool,bool,bool,bool,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#charGenerator%2Cstring%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"><span class="Identifier">charGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maxLength</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+<a id="doubleGenerator,string,string,int,int,bool,bool,bool,bool,float"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#doubleGenerator%2Cstring%2Cstring%2Cint%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cfloat"><span class="Identifier">doubleGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maximum</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">digit</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span>
+                    <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                    <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="floatGenerator,string,string,bool,bool,bool,bool,float"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#floatGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cfloat"><span class="Identifier">floatGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                   <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="charGenerator,string,string,int,bool,bool,bool,bool,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#charGenerator%2Cstring%2Cstring%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"><span class="Identifier">charGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maxLength</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                  <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="stringGenerator,string,string,int,bool,bool,bool,bool,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#stringGenerator%2Cstring%2Cstring%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"><span class="Identifier">stringGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maxLength</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                    <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="textGenerator,string,string,bool,bool,bool,bool,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#textGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"><span class="Identifier">textGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
                   <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -269,53 +291,37 @@ function main() {
 
 
 </dd>
-<a id="stringGenerator,string,int,bool,bool,bool,bool,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#stringGenerator%2Cstring%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"><span class="Identifier">stringGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maxLength</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                    <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<a id="dateGenerator,string,string,bool,bool,bool,bool"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#dateGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"><span class="Identifier">dateGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                  <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="textGenerator,string,bool,bool,bool,bool,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#textGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"><span class="Identifier">textGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                  <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<a id="datetimeGenerator,string,string,bool,bool,bool,bool"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#datetimeGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"><span class="Identifier">datetimeGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                      <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="dateGenerator,string,bool,bool,bool,bool"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#dateGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"><span class="Identifier">dateGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                  <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="timeGenerator,string,string,bool,bool,bool,bool"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#timeGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"><span class="Identifier">timeGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                  <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="datetimeGenerator,string,bool,bool,bool,bool"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#datetimeGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"><span class="Identifier">datetimeGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                      <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="timeGenerator,string,bool,bool,bool,bool"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#timeGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"><span class="Identifier">timeGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                  <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="timestampGenerator,string,bool,bool,bool,bool"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#timestampGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"><span class="Identifier">timestampGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                       <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="timestampGenerator,string,string,bool,bool,bool,bool"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#timestampGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"><span class="Identifier">timestampGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                       <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -335,36 +341,36 @@ function main() {
 
 
 </dd>
-<a id="blobGenerator,string,bool,bool,bool,bool,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#blobGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"><span class="Identifier">blobGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                  <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<a id="blobGenerator,string,string,bool,bool,bool,bool,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#blobGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"><span class="Identifier">blobGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                  <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="boolGenerator,string,bool,bool,bool,bool,bool"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#boolGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cbool"><span class="Identifier">boolGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                  <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<a id="boolGenerator,string,string,bool,bool,bool,bool,bool"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#boolGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cbool"><span class="Identifier">boolGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                  <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="enumGenerator,string,varargs[JsonNode],bool,bool,bool,bool,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#enumGenerator%2Cstring%2Cvarargs%5BJsonNode%5D%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"><span class="Identifier">enumGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">options</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                  <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="enumGenerator,string,string,varargs[JsonNode],bool,bool,bool,bool,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#enumGenerator%2Cstring%2Cstring%2Cvarargs%5BJsonNode%5D%2Cbool%2Cbool%2Cbool%2Cbool%2Cstring"><span class="Identifier">enumGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">options</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">;</span>
+                  <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                  <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="jsonGenerator,string,bool,bool,bool,bool,JsonNode"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#jsonGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2CJsonNode"><span class="Identifier">jsonGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
-                  <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<a id="jsonGenerator,string,string,bool,bool,bool,bool,JsonNode"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#jsonGenerator%2Cstring%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2CJsonNode"><span class="Identifier">jsonGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">nullable</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isUnique</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span>
+                  <span class="Identifier">isUnsigned</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -397,7 +403,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-05-13 17:08:18 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-05-13 17:08:33 UTC</small>
       </div>
     </div>
   </div>

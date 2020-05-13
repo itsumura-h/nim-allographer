@@ -4,9 +4,9 @@ get	query_builder/exec.html#get,RDB,typedesc	exec: get(this: RDB; typ: typedesc)
 getRaw	query_builder/exec.html#getRaw,RDB	exec: getRaw(this: RDB): seq[JsonNode]	
 getRaw	query_builder/exec.html#getRaw,RDB,typedesc	exec: getRaw(this: RDB; typ: typedesc): seq[typ.type]	
 first	query_builder/exec.html#first,RDB	exec: first(this: RDB): JsonNode	
-first	query_builder/exec.html#first,RDB,typedesc	exec: first(this: RDB; typ: typedesc): typ.type	
+first	query_builder/exec.html#first,RDB,typedesc	exec: first(this: RDB; typ: typedesc): Option[typ.type]	
 find	query_builder/exec.html#find,RDB,int,string	exec: find(this: RDB; id: int; key = &quot;id&quot;): JsonNode	
-find	query_builder/exec.html#find,RDB,int,typedesc,string	exec: find(this: RDB; id: int; typ: typedesc; key = &quot;id&quot;): typ.type	
+find	query_builder/exec.html#find,RDB,int,typedesc,string	exec: find(this: RDB; id: int; typ: typedesc; key = &quot;id&quot;): Option[typ.type]	
 insert	query_builder/exec.html#insert,RDB,JsonNode	exec: insert(this: RDB; items: JsonNode)	
 insert	query_builder/exec.html#insert,RDB,openArray[JsonNode]	exec: insert(this: RDB; rows: openArray[JsonNode])	
 inserts	query_builder/exec.html#inserts,RDB,openArray[JsonNode]	exec: inserts(this: RDB; rows: openArray[JsonNode])	

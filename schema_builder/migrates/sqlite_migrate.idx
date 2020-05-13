@@ -1,1 +1,2 @@
+generateColumnString	schema_builder/migrates/sqlite_migrate.html#generateColumnString,Column	sqlite_migrate: generateColumnString(column: Column): string	
 migrate	schema_builder/migrates/sqlite_migrate.html#migrate,Table	sqlite_migrate: migrate(this: Table): string	

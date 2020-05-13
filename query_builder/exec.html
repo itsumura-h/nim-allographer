@@ -119,11 +119,11 @@ function main() {
   <li><a class="reference" href="#first%2CRDB"
     title="first(this: RDB): JsonNode"><wbr />first<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#first%2CRDB%2Ctypedesc"
-    title="first(this: RDB; typ: typedesc): typ.type"><wbr />first<span class="attachedType"></span></a></li>
+    title="first(this: RDB; typ: typedesc): Option[typ.type]"><wbr />first<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#find%2CRDB%2Cint%2Cstring"
     title="find(this: RDB; id: int; key = &quot;id&quot;): JsonNode"><wbr />find<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#find%2CRDB%2Cint%2Ctypedesc%2Cstring"
-    title="find(this: RDB; id: int; typ: typedesc; key = &quot;id&quot;): typ.type"><wbr />find<span class="attachedType"></span></a></li>
+    title="find(this: RDB; id: int; typ: typedesc; key = &quot;id&quot;): Option[typ.type]"><wbr />find<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#insert%2CRDB%2CJsonNode"
     title="insert(this: RDB; items: JsonNode)"><wbr />insert<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#insert%2CRDB%2CopenArray%5BJsonNode%5D"
@@ -231,7 +231,7 @@ function main() {
 
 </dd>
 <a id="first,RDB,typedesc"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#first%2CRDB%2Ctypedesc"><span class="Identifier">first</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">typ</span><span class="Other">.</span><span class="Keyword">type</span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#first%2CRDB%2Ctypedesc"><span class="Identifier">first</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">typ</span><span class="Other">.</span><span class="Keyword">type</span><span class="Other">]</span></pre></dt>
 <dd>
 
 
@@ -248,7 +248,7 @@ function main() {
 
 </dd>
 <a id="find,RDB,int,typedesc,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#find%2CRDB%2Cint%2Ctypedesc%2Cstring"><span class="Identifier">find</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">typ</span><span class="Other">.</span><span class="Keyword">type</span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#find%2CRDB%2Cint%2Ctypedesc%2Cstring"><span class="Identifier">find</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">typ</span><span class="Other">.</span><span class="Keyword">type</span><span class="Other">]</span></pre></dt>
 <dd>
 
 
@@ -451,7 +451,7 @@ It is only used with raw()
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-05-13 17:08:17 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-05-13 17:08:32 UTC</small>
       </div>
     </div>
   </div>

@@ -1,4 +1,8 @@
 Column	schema_builder/column.html#Column	column: Column	
+Add	schema_builder/column.html#Add	AlterTyp.Add	
+Change	schema_builder/column.html#Change	AlterTyp.Change	
+Delete	schema_builder/column.html#Delete	AlterTyp.Delete	
+AlterTyp	schema_builder/column.html#AlterTyp	column: AlterTyp	
 rdbIncrements	schema_builder/column.html#rdbIncrements	RdbTypekind.rdbIncrements	
 rdbInteger	schema_builder/column.html#rdbInteger	RdbTypekind.rdbInteger	
 rdbSmallInteger	schema_builder/column.html#rdbSmallInteger	RdbTypekind.rdbSmallInteger	
@@ -29,13 +33,13 @@ CASCADE	schema_builder/column.html#CASCADE	ForeignOnDelete.CASCADE
 SET_NULL	schema_builder/column.html#SET_NULL	ForeignOnDelete.SET_NULL	
 NO_ACTION	schema_builder/column.html#NO_ACTION	ForeignOnDelete.NO_ACTION	
 ForeignOnDelete	schema_builder/column.html#ForeignOnDelete	column: ForeignOnDelete	
-default	schema_builder/column.html#default,Column,bool	column: default(cArg: Column; value: bool): Column	
-default	schema_builder/column.html#default,Column,int	column: default(cArg: Column; value: int): Column	
-default	schema_builder/column.html#default,Column,float	column: default(cArg: Column; value: float): Column	
-default	schema_builder/column.html#default,Column,string	column: default(cArg: Column; value: string): Column	
-default	schema_builder/column.html#default,Column,JsonNode	column: default(cArg: Column; value: JsonNode): Column	
-default	schema_builder/column.html#default,Column	column: default(cArg: Column): Column	
-nullable	schema_builder/column.html#nullable,Column	column: nullable(cArg: Column): Column	
+default	schema_builder/column.html#default,Column,bool	column: default(c: Column; value: bool): Column	
+default	schema_builder/column.html#default,Column,int	column: default(c: Column; value: int): Column	
+default	schema_builder/column.html#default,Column,float	column: default(c: Column; value: float): Column	
+default	schema_builder/column.html#default,Column,string	column: default(c: Column; value: string): Column	
+default	schema_builder/column.html#default,Column,JsonNode	column: default(c: Column; value: JsonNode): Column	
+default	schema_builder/column.html#default,Column	column: default(c: Column): Column	
+nullable	schema_builder/column.html#nullable,Column	column: nullable(c: Column): Column	
 unique	schema_builder/column.html#unique,Column	column: unique(c: Column): Column	
 unsigned	schema_builder/column.html#unsigned,Column	column: unsigned(c: Column): Column	
 increments	schema_builder/column.html#increments,Column,string	column: increments(this: Column; name: string): Column	
