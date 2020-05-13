@@ -6,7 +6,8 @@ import ../src/allographer/query_builder
 schema(
   table("table_alter", [
     Column().increments("id"),
-    Column().string("changed_column").nullable(),
+    Column().string("changed_column").unique().default(""),
+    Column().integer("changed_int").unique().default(0).unsigned(),
     Column().string("delete_column").nullable(),
   ], reset=true),
   table("table_rename", [
@@ -27,6 +28,7 @@ for i in 1..10:
   table_alter_data[i-1] = %*{
     "id": i,
     "changed_column": &"change{i}",
+    "changed_int": i,
     "delete_column": &"delete{i}"
   }
   table_rename_data[i-1] = %*{
@@ -69,7 +71,8 @@ suite "alter table":
 
     alter(
       table("table_alter", [
-        change("changed_column").string("changed_column_success").default("").unique()
+        change("changed_column").string("changed_column_success", 100).unique().default(""),
+        change("changed_int").mediumInteger("changed_int_success").unique().default(0).unsigned(),
       ])
     )
 
@@ -79,6 +82,13 @@ suite "alter table":
       .orderBy("id", Asc)
       .first()["changed_column_success"]
       .getStr == "change1"
+
+    check RDB()
+      .table("table_alter")
+      .select("changed_int_success")
+      .orderBy("id", Asc)
+      .first()["changed_int_success"]
+      .getInt == 1
 
   # test "delete_column":
   #   check RDB()
