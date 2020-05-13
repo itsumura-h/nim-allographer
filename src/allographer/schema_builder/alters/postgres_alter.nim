@@ -64,9 +64,6 @@ proc change(column:Column, table:string) =
     logger(query)
     db.exec(sql query)
 
-
-
-
 proc delete(column:Column, table:string) =
   let db = db()
   defer: db.close()
