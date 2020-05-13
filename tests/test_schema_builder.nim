@@ -93,5 +93,5 @@ suite "Schema builder":
       #   Column().boolean("boolean").unique().default(),
       #   Column().enumField("enumField", ["a", "b"]).unique().default(),
       #   Column().json("json").default(%*{"key": "value"}),
-      # ])
+      # ], reset=true)
     ])

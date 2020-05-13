@@ -19,23 +19,15 @@ proc add(column:Column, table:string) =
       echoErrorMsg(err)
       echoWarningMsg(&"Safety skip alter table '{table}'")
 
-proc getColumns(table:string, previousName:string):string =
-  let db = db()
-  defer: db.close()
-  var query = &"SELECT column_name FROM information_schema.columns WHERE table_name = {table} ORDER BY ordinal_position"
-  echo db.getAllRows(sql query)
-  # var columns:string
-  # for i, row in db.getAllRows(sql query):
-  #   if row[0] != previousName:
-  #     if i > 0: columns.add(", ")
-  #     columns.add(row[1])
-  # return columns
+# proc getColumns(table:string, previousName:string):string =
+#   let db = db()
+#   defer: db.close()
+#   var query = &"SELECT column_name FROM information_schema.columns WHERE table_name = {table} ORDER BY ordinal_position"
 
 proc change(column:Column, table:string) =
   let db = db()
   defer: db.close()
   var columnString = generateColumnString(column)
-  echo columnString
   let columnTyp = columnString.split(" ")[1]
   # change column difinition
   var query = &"ALTER TABLE {table} ALTER COLUMN {column.previousName} TYPE {columnTyp}"
@@ -52,21 +44,23 @@ proc change(column:Column, table:string) =
   query = &"ALTER TABLE {table} ALTER {column.name} DROP NOT NULL"
   logger(query)
   db.exec(sql query)
+  query = &"ALTER TABLE {table} DROP CONSTRAINT {table}_{column.previousName}"
+  logger(query)
+  db.exec(sql query)
   # set options
   if columnString.contains("DEFAULT"):
-    let regex = "DEFAULT(\\s{1}\\d\\s{1}|\\s{1}'\\w'+\\s{1})"
+    let regex = """DEFAULT\s('.*'|\d)"""
     let defautSetting = findAll(columnString, re(regex))[0]
     query = &"ALTER TABLE {table} ALTER {column.name} SET {defautSetting}"
     logger(query)
     db.exec(sql query)
   if columnString.contains("NOT NULL"):
     query = &"ALTER TABLE {table} ALTER {column.name} SET NOT NULL"
-    logger(query)
     db.exec(sql query)
   if columnString.contains("CHECK"):
     let regex = "CHECK \\(.+?\\)"
     let checkSetting = findAll(columnString, re(regex))[0]
-    query = &"ALTER TABLE {table} ALTER {column.name} SET {checkSetting}"
+    query = &"ALTER TABLE {table} ADD CONSTRAINT {table}_{column.name} {checkSetting}"
     logger(query)
     db.exec(sql query)
 
