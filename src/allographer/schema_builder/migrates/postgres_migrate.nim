@@ -5,7 +5,7 @@ import
 import ../generators/postgres_generators
 
 
-proc generateColumnString*(column:Column):string =
+proc generateColumnString*(column:Column, tableName=""):string =
   var columnString = ""
   case column.typ:
   # int ===================================================================
@@ -17,6 +17,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       intGenerator(
         column.name,
+        tableName,
         column.isNullable,
         column.isUnique,
         column.isUnsigned,
@@ -28,6 +29,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       smallIntGenerator(
         column.name,
+        tableName,
         column.isNullable,
         column.isUnique,
         column.isUnsigned,
@@ -39,6 +41,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       mediumIntGenerator(
         column.name,
+        tableName,
         column.isNullable,
         column.isUnique,
         column.isUnsigned,
@@ -50,6 +53,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       bigIntGenerator(
         column.name,
+        tableName,
         column.isNullable,
         column.isUnique,
         column.isUnsigned,
@@ -62,6 +66,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       decimalGenerator(
         column.name,
+        tableName,
         parseInt($column.info["maximum"]),
         parseInt($column.info["digit"]),
         column.isNullable,
@@ -75,6 +80,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       doubleGenerator(
         column.name,
+        tableName,
         parseInt($column.info["maximum"]),
         parseInt($column.info["digit"]),
         column.isNullable,
@@ -88,6 +94,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       floatGenerator(
         column.name,
+        tableName,
         column.isNullable,
         column.isUnique,
         column.isUnsigned,
@@ -100,6 +107,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       charGenerator(
         column.name,
+        tableName,
         parseInt($column.info["maxLength"]),
         column.isNullable,
         column.isUnique,
@@ -112,6 +120,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       stringGenerator(
         column.name,
+        tableName,
         parseInt($column.info["maxLength"]),
         column.isNullable,
         column.isUnique,
@@ -124,6 +133,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       textGenerator(
         column.name,
+        tableName,
         column.isNullable,
         column.isUnique,
         column.isUnsigned,
@@ -135,6 +145,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       textGenerator(
         column.name,
+        tableName,
         column.isNullable,
         column.isUnique,
         column.isUnsigned,
@@ -146,6 +157,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       textGenerator(
         column.name,
+        tableName,
         column.isNullable,
         column.isUnique,
         column.isUnsigned,
@@ -158,6 +170,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       dateGenerator(
         column.name,
+        tableName,
         column.isNullable,
         column.isUnique,
         column.isUnsigned,
@@ -168,6 +181,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       datetimeGenerator(
         column.name,
+        tableName,
         column.isNullable,
         column.isUnique,
         column.isUnsigned,
@@ -178,6 +192,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       timeGenerator(
         column.name,
+        tableName,
         column.isNullable,
         column.isUnique,
         column.isUnsigned,
@@ -188,6 +203,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       timestampGenerator(
         column.name,
+        tableName,
         column.isNullable,
         column.isUnique,
         column.isUnsigned,
@@ -207,6 +223,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       blobGenerator(
         column.name,
+        tableName,
         column.isNullable,
         column.isUnique,
         column.isUnsigned,
@@ -218,6 +235,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       boolGenerator(
         column.name,
+        tableName,
         column.isNullable,
         column.isUnique,
         column.isUnsigned,
@@ -229,6 +247,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       enumGenerator(
         column.name,
+        tableName,
         column.info["options"].getElems,
         column.isNullable,
         column.isUnique,
@@ -241,6 +260,7 @@ proc generateColumnString*(column:Column):string =
     columnString.add(
       jsonGenerator(
         column.name,
+        tableName,
         column.isNullable,
         column.isUnique,
         column.isUnsigned,
@@ -269,7 +289,7 @@ proc migrate*(this:Table):string =
   for i, column in this.columns:
     if i > 0: columnString.add(", ")
     columnString.add(
-      generateColumnString(column)
+      generateColumnString(column, this.name)
     )
     foreignString.add(
       generateForeignString(column)
