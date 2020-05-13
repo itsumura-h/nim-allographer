@@ -5,19 +5,19 @@ import
   migrates/mysql_migrate,
   migrates/postgres_migrate
 import ../util
-include ../connection
+import ../connection
 
 import table
 
 
-type 
+type
   Schema* = ref object
     tables*: seq[Table]
 
-  AlterType* = enum
-    ADD = "add"
-    CHANGE = "change"
-    DROP = "drop"
+  # AlterType* = enum
+  #   ADD = "add"
+  #   CHANGE = "change"
+  #   DROP = "drop"
 
 proc generateJsonSchema(tablesArg:varargs[Table]):JsonNode =
   var tables = %*[]
@@ -42,7 +42,7 @@ proc generateJsonSchema(tablesArg:varargs[Table]):JsonNode =
     tables.add(
       %*{"name": table.name, "columns": columns}
     )
-  
+
   return tables
 
 

@@ -33,7 +33,7 @@ suite "Schema builder":
         Column().boolean("boolean").unique().default(),
         Column().enumField("enumField", ["a", "b"]).unique().default(),
         Column().json("json").unique().default(%*{"key": "value"}).unsigned(),
-      ]),
+      ], reset=true),
 
       # table("mysql", [
       #   Column().increments("increments"),
@@ -93,5 +93,5 @@ suite "Schema builder":
       #   Column().boolean("boolean").unique().default(),
       #   Column().enumField("enumField", ["a", "b"]).unique().default(),
       #   Column().json("json").default(%*{"key": "value"}),
-      # ])
+      # ], reset=true)
     ])

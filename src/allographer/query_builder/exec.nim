@@ -1,5 +1,5 @@
 import db_sqlite, db_mysql, db_postgres
-import json, strutils, strformat, algorithm
+import json, strutils, strformat, algorithm, options
 
 import base, builders
 import ../util
@@ -139,7 +139,6 @@ proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
     for row in db.instantRows(db_columns, sql sqlString, args):
       discard
     defer: db.close()
-    
 
   let columns = getColumns(db_columns)
   return toJson(results, columns) # seq[JsonNode]
@@ -156,7 +155,7 @@ proc getRow(sqlString:string, args:varargs[string]): JsonNode =
   else:
     echoErrorMsg(sqlString & $args)
     return newJNull()
-  
+
   var db_columns: DbColumns
   block:
     for row in db.instantRows(db_columns, sql sqlString, args):
@@ -190,6 +189,7 @@ proc get*(this: RDB): seq[JsonNode] =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[JsonNode](0)
 
 proc get*(this: RDB, typ: typedesc): seq[typ.type] =
   defer:
@@ -203,6 +203,7 @@ proc get*(this: RDB, typ: typedesc): seq[typ.type] =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[typ.type](0)
 
 
 proc getRaw*(this: RDB): seq[JsonNode] =
@@ -212,6 +213,7 @@ proc getRaw*(this: RDB): seq[JsonNode] =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[JsonNode](0)
 
 proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
   try:
@@ -220,6 +222,7 @@ proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[typ.type](0)
 
 proc first*(this: RDB): JsonNode =
   defer:
@@ -233,8 +236,9 @@ proc first*(this: RDB): JsonNode =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newJNull()
 
-proc first*(this: RDB, typ: typedesc): typ.type =
+proc first*(this: RDB, typ: typedesc): Option[typ.type] =
   defer:
     this.sqlString = "";
     this.placeHolder = newSeq[string](0);
@@ -242,10 +246,11 @@ proc first*(this: RDB, typ: typedesc): typ.type =
   this.sqlStringSeq = @[this.selectFirstBuilder().sqlString]
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
-    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ).some()
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return typ.none()
 
 
 proc find*(this: RDB, id: int, key="id"): JsonNode =
@@ -261,8 +266,9 @@ proc find*(this: RDB, id: int, key="id"): JsonNode =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newJNull()
 
-proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
+proc find*(this: RDB, id: int, typ:typedesc, key="id"): Option[typ.type] =
   defer:
     this.sqlString = "";
     this.placeHolder = newSeq[string](0);
@@ -271,10 +277,11 @@ proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
   this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
-    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ).some()
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return typ.none()
 
 
 # ==================== INSERT ====================
