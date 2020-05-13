@@ -2,7 +2,7 @@ Example: Schema Builder
 ===
 [back](../README.md)
 
-## Bacic useage
+## Create table
 ```nim
 import allographer/schema_builder
 
@@ -19,8 +19,59 @@ schema([
   ], reset=true)
 ])
 ```
-
 If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TABLE` will be run.
+
+## ALter Table
+### add column
+```nim
+alter(
+  table("users",
+    add().string("email").unique().default("")
+  )
+)
+```
+`>> ALTER TABLE "users" ADD COLUMN 'email' UNIQUE DEFAULT '' CHECK (length('email') <= 255)`
+
+
+### change column
+```nim
+alter(
+  table("users",
+    change("name").char("new_name", 20).unique().default("")
+  )
+)
+```
+- Create new table with new column definition
+- Rename table which you want to change column
+- Copy table data from old table to new table
+- Drop old table
+
+
+### delete column
+```nim
+alter(
+  table("users",
+    delete("name")
+  )
+)
+```
+
+### rename table
+```nim
+alter(
+  rename("users", "new_users")
+)
+```
+`>> ALTER TABLE users RENAME TO new_users`
+
+### drop table
+```nim
+alter(
+  drop("users")
+)
+```
+`>> DROP TABLE users`
+
 
 ## integer
 |Command|Description|
