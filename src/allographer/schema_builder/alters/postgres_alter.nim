@@ -36,9 +36,9 @@ proc change(column:Column, table:string) =
   defer: db.close()
   var columnString = generateColumnString(column)
   echo columnString
-  columnString = columnString.split(" ")[1]
+  let columnTyp = columnString.split(" ")[1]
   # change column difinition
-  var query = &"ALTER TABLE {table} ALTER COLUMN {column.previousName} TYPE {columnString}"
+  var query = &"ALTER TABLE {table} ALTER COLUMN {column.previousName} TYPE {columnTyp}"
   logger(query)
   db.exec(sql query)
   # change column name
@@ -46,9 +46,31 @@ proc change(column:Column, table:string) =
   logger(query)
   db.exec(sql query)
   # delete option
-  query = &"ALTER TABLE {table} DROP CONSTRAINT unique"
+  query = &"ALTER TABLE {table} ALTER {column.name} DROP DEFAULT"
   logger(query)
   db.exec(sql query)
+  query = &"ALTER TABLE {table} ALTER {column.name} DROP NOT NULL"
+  logger(query)
+  db.exec(sql query)
+  # set options
+  if columnString.contains("DEFAULT"):
+    let regex = "DEFAULT(\\s{1}\\d\\s{1}|\\s{1}'\\w'+\\s{1})"
+    let defautSetting = findAll(columnString, re(regex))[0]
+    query = &"ALTER TABLE {table} ALTER {column.name} SET {defautSetting}"
+    logger(query)
+    db.exec(sql query)
+  if columnString.contains("NOT NULL"):
+    query = &"ALTER TABLE {table} ALTER {column.name} SET NOT NULL"
+    logger(query)
+    db.exec(sql query)
+  if columnString.contains("CHECK"):
+    let regex = "CHECK \\(.+?\\)"
+    let checkSetting = findAll(columnString, re(regex))[0]
+    query = &"ALTER TABLE {table} ALTER {column.name} SET {checkSetting}"
+    logger(query)
+    db.exec(sql query)
+
+
 
 
 proc delete(column:Column, table:string) =
