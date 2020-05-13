@@ -109,27 +109,31 @@ suite "alter table":
       .orderBy("id", Asc)
       .first() == newJNull()
 
-  # test "rename":
-  #   check RDB()
-  #     .table("table_rename")
-  #     .first()["id"]
-  #     .getInt == 1
+  test "rename":
+    check RDB()
+      .table("table_rename")
+      .orderBy("id", Asc)
+      .first()["id"]
+      .getInt == 1
 
-  #   alter(rename("table_rename", "table_rename_success"))
+    alter(rename("table_rename", "table_rename_success"))
 
-  #   check RDB()
-  #     .table("table_rename_success")
-  #     .first()["id"]
-  #     .getInt == 1
+    check RDB()
+      .table("table_rename_success")
+      .orderBy("id", Asc)
+      .first()["id"]
+      .getInt == 1
 
-  # test "drop table":
-  #   check RDB()
-  #     .table("table_drop")
-  #     .first()["id"]
-  #     .getInt == 1
+  test "drop table":
+    check RDB()
+      .table("table_drop")
+      .orderBy("id", Asc)
+      .first()["id"]
+      .getInt == 1
 
-  #   alter(drop("table_drop"))
+    alter(drop("table_drop"))
 
-  #   check RDB()
-  #     .table("table_drop")
-  #     .first() == newJNull()
+    check RDB()
+      .table("table_drop")
+      .orderBy("id", Asc)
+      .first() == newJNull()
