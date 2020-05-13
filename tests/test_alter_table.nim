@@ -90,22 +90,24 @@ suite "alter table":
       .first()["changed_int_success"]
       .getInt == 1
 
-  # test "delete_column":
-  #   check RDB()
-  #     .table("table_alter")
-  #     .select("delete_column")
-  #     .first()["delete_column"].getStr == "delete1"
+  test "delete_column":
+    check RDB()
+      .table("table_alter")
+      .select("delete_column")
+      .orderBy("id", Asc)
+      .first()["delete_column"].getStr == "delete1"
 
-  #   alter(
-  #     table("table_alter", [
-  #       delete("delete_column")
-  #     ])
-  #   )
+    alter(
+      table("table_alter", [
+        delete("delete_column")
+      ])
+    )
 
-  #   check RDB()
-  #     .table("table_alter")
-  #     .select("delete_column")
-  #     .first() == newJNull()
+    check RDB()
+      .table("table_alter")
+      .select("delete_column")
+      .orderBy("id", Asc)
+      .first() == newJNull()
 
   # test "rename":
   #   check RDB()
