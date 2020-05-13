@@ -74,7 +74,7 @@ proc whereSql*(this: RDB): RDB =
       var column = row["column"].getStr()
       var symbol = row["symbol"].getStr()
       var value = row["value"].getStr()
-      
+
       if i == 0:
         this.sqlString.add(&" WHERE {column} {symbol} {value}")
       else:
@@ -89,7 +89,7 @@ proc orWhereSql*(this: RDB): RDB =
       var column = row["column"].getStr()
       var symbol = row["symbol"].getStr()
       var value = row["value"].getStr()
-      
+
       if this.sqlString.contains("WHERE"):
         this.sqlString.add(&" OR {column} {symbol} {value}")
       else:
