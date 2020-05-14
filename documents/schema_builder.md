@@ -21,7 +21,7 @@ schema([
 ```
 If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TABLE` will be run.
 
-## ALter Table
+## Alter Table
 ### add column
 ```nim
 alter(
