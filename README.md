@@ -66,8 +66,8 @@ alter(
   ])
 )
 
->> ALTER TABLE "users" ADD COLUMN 'email' UNIQUE DEFAULT '' CHECK (length('email') <= 255)
->> ALTER TABLE {table} DROP `name`
+>> ALTER TABLE "users" ADD COLUMN `email` UNIQUE DEFAULT "" CHECK (length(`email`) <= 255)
+>> ALTER TABLE "users" DROP `name`
 ```
 
 ---
