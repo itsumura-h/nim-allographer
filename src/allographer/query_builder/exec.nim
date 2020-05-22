@@ -56,6 +56,8 @@ proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[Jso
           response_row[key] = newJInt(row.parseInt)
         elif [$dbDecimal, $dbFloat].contains(typ):
           response_row[key] = newJFloat(row.parseFloat)
+        elif [$dbJson].contains(typ):
+          response_row[key] = row.parseJson
         else:
           response_row[key] = newJString(row)
       of "postgres":
@@ -70,6 +72,8 @@ proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[Jso
             response_row[key] = newJBool(false)
           elif row == "t":
             response_row[key] = newJBool(true)
+        elif [$dbJson].contains(typ):
+          response_row[key] = row.parseJson
         else:
           response_row[key] = newJString(row)
 
@@ -108,6 +112,8 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
         response_row[key] = newJInt(row.parseInt)
       elif [$dbDecimal, $dbFloat].contains(typ):
         response_row[key] = newJFloat(row.parseFloat)
+      elif [$dbJson].contains(typ):
+          response_row[key] = row.parseJson
       else:
         response_row[key] = newJString(row)
     of "postgres":
@@ -122,6 +128,8 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
           response_row[key] = newJBool(false)
         elif row == "t":
           response_row[key] = newJBool(true)
+      elif [$dbJson].contains(typ):
+          response_row[key] = row.parseJson
       else:
         response_row[key] = newJString(row)
   return response_row
