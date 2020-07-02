@@ -1,5 +1,4 @@
-# import db_sqlite, db_mysql, db_postgres
-import json, strutils, strformat, algorithm, re
+import json, strutils, strformat, algorithm, options
 
 import base, builders
 import ../util
@@ -57,6 +56,8 @@ proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[Jso
           response_row[key] = newJInt(row.parseInt)
         elif [$dbDecimal, $dbFloat].contains(typ):
           response_row[key] = newJFloat(row.parseFloat)
+        elif [$dbJson].contains(typ):
+          response_row[key] = row.parseJson
         else:
           response_row[key] = newJString(row)
       of "postgres":
@@ -71,6 +72,8 @@ proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[Jso
             response_row[key] = newJBool(false)
           elif row == "t":
             response_row[key] = newJBool(true)
+        elif [$dbJson].contains(typ):
+          response_row[key] = row.parseJson
         else:
           response_row[key] = newJString(row)
 
@@ -109,6 +112,8 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
         response_row[key] = newJInt(row.parseInt)
       elif [$dbDecimal, $dbFloat].contains(typ):
         response_row[key] = newJFloat(row.parseFloat)
+      elif [$dbJson].contains(typ):
+          response_row[key] = row.parseJson
       else:
         response_row[key] = newJString(row)
     of "postgres":
@@ -123,6 +128,8 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
           response_row[key] = newJBool(false)
         elif row == "t":
           response_row[key] = newJBool(true)
+      elif [$dbJson].contains(typ):
+          response_row[key] = row.parseJson
       else:
         response_row[key] = newJString(row)
   return response_row
@@ -190,7 +197,7 @@ proc getRow(db:DbConn, sqlString:string, args:varargs[string]): JsonNode =
   else:
     echoErrorMsg(sqlString & $args)
     return newJNull()
-  
+
   var db_columns: DbColumns
   block:
     for row in db.instantRows(db_columns, sql sqlString, args):
@@ -235,6 +242,7 @@ proc get*(this: RDB): seq[JsonNode] =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[JsonNode](0)
 
 proc get*(this: RDB, typ: typedesc): seq[typ.type] =
   defer:
@@ -248,6 +256,7 @@ proc get*(this: RDB, typ: typedesc): seq[typ.type] =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[typ.type](0)
 
 
 proc getRaw*(this: RDB): seq[JsonNode] =
@@ -261,6 +270,7 @@ proc getRaw*(this: RDB): seq[JsonNode] =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[JsonNode](0)
 
 proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
   try:
@@ -269,6 +279,7 @@ proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[typ.type](0)
 
 proc first*(this: RDB): JsonNode =
   defer:
@@ -285,8 +296,9 @@ proc first*(this: RDB): JsonNode =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newJNull()
 
-proc first*(this: RDB, typ: typedesc): typ.type =
+proc first*(this: RDB, typ: typedesc): Option[typ.type] =
   defer:
     this.sqlString = "";
     this.placeHolder = newSeq[string](0);
@@ -294,10 +306,11 @@ proc first*(this: RDB, typ: typedesc): typ.type =
   this.sqlStringSeq = @[this.selectFirstBuilder().sqlString]
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
-    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ).some()
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return typ.none()
 
 
 proc find*(this: RDB, id: int, key="id"): JsonNode =
@@ -316,8 +329,9 @@ proc find*(this: RDB, id: int, key="id"): JsonNode =
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return newJNull()
 
-proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
+proc find*(this: RDB, id: int, typ:typedesc, key="id"): Option[typ.type] =
   defer:
     this.sqlString = "";
     this.placeHolder = newSeq[string](0);
@@ -326,10 +340,11 @@ proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
   this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
-    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ).some()
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
+    return typ.none()
 
 
 # ==================== INSERT ====================
@@ -436,6 +451,8 @@ proc update*(this: RDB, items: JsonNode) =
       updatePlaceHolder.add($(item.val.getInt()))
     elif item.val.kind == JFloat:
       updatePlaceHolder.add($(item.val.getFloat()))
+    elif [JObject, JArray].contains(item.val.kind):
+      updatePlaceHolder.add($(item.val))
     else:
       updatePlaceHolder.add(item.val.getStr())
 

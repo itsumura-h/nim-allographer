@@ -39,6 +39,11 @@ schema([
     Column().increments("id"),
     Column().string("name").nullable(),
     Column().timestamp("created_at").default()
+  ]),
+  table("users", [
+    Column().increments("id"),
+    Column().string("name"),
+    Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
   ])
 ])
 
@@ -47,21 +52,22 @@ schema([
     name VARCHAR,
     created_at DATETIME DEFAULT (NOW())
 )
-
-schema([
-  table("users", [
-    Column().increments("id"),
-    Column().string("name"),
-    Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-  ])
-])
-
 >> CREATE TABLE users (
     id INT NOT NULL PRIMARY KEY,
     name VARCHAR NOT NULL,
     auth_id INT,
     FOREIGN KEY(auth_id) REFERENCES auth(id) ON DELETE SET NULL
-) 
+)
+
+alter(
+  table("users", [
+    add().string("email").unique().default(""),
+    delete("name")
+  ])
+)
+
+>> ALTER TABLE "users" ADD COLUMN `email` UNIQUE DEFAULT "" CHECK (length(`email`) <= 255)
+>> ALTER TABLE "users" DROP `name`
 ```
 
 ---
@@ -121,11 +127,11 @@ let db = open(connection, user, password, database)
 - LOG_DIR: Define logging dir path.
 
 
-## Examples
+## Documents
 [Query Builder](./documents/query_builder.md)  
 [Schema Builder](./documents/schema_builder.md)  
 
-## API Documents
+## Nim API Documents
 ### Query Builder
 [base](https://itsumura-h.github.io/nim-allographer/query_builder/base.html)  
 [grammars](https://itsumura-h.github.io/nim-allographer/query_builder/grammars.html)  
@@ -136,6 +142,7 @@ let db = open(connection, user, password, database)
 [schema](https://itsumura-h.github.io/nim-allographer/schema_builder/schema.html)  
 [table](https://itsumura-h.github.io/nim-allographer/schema_builder/table.html)  
 [column](https://itsumura-h.github.io/nim-allographer/schema_builder/column.html)  
+[alter](https://itsumura-h.github.io/nim-allographer/schema_builder/alter.html)  
 
 
 ## Development

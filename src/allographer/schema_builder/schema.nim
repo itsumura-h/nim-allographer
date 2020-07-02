@@ -1,4 +1,4 @@
-import os, strformat, json
+import os, json, strutils
 from strformat import `&`
 import
   migrates/sqlite_migrate,
@@ -11,14 +11,14 @@ import ../connection
 import table
 
 
-type 
+type
   Schema* = ref object
     tables*: seq[Table]
 
-  AlterType* = enum
-    ADD = "add"
-    CHANGE = "change"
-    DROP = "drop"
+  # AlterType* = enum
+  #   ADD = "add"
+  #   CHANGE = "change"
+  #   DROP = "drop"
 
 proc generateJsonSchema(tablesArg:varargs[Table]):JsonNode =
   var tables = %*[]
@@ -43,7 +43,7 @@ proc generateJsonSchema(tablesArg:varargs[Table]):JsonNode =
     tables.add(
       %*{"name": table.name, "columns": columns}
     )
-  
+
   return tables
 
 
@@ -57,8 +57,6 @@ proc checkDiff(path:string, newTables:JsonNode) =
       diffs.add(
         %*{"name": newTable["name"].getStr}
       )
-
-  echo diffs
 
 
 proc generateMigrationFile(path:string, tablesArg:JsonNode) =
@@ -76,7 +74,6 @@ proc check*(this:Schema, tablesArg:varargs[Table]) =
     # generateMigrationFile(path, tablesJson)
   else:
     generateMigrationFile(path, tablesJson)
-  
 
 # =============================================================================
 
@@ -114,4 +111,10 @@ proc schema*(tables:varargs[Table]) =
     block:
       let db = db()
       defer: db.close()
-      db.exec(sql query)
+      try:
+        db.exec(sql query)
+      except:
+        let err = getCurrentExceptionMsg()
+        if err.contains("already exists"):
+          echoErrorMsg(err)
+          echoWarningMsg(&"Safety skip create table '{table.name}'")
