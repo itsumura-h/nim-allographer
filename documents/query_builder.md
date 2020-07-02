@@ -594,6 +594,3 @@ transaction:
   echo user
 ```
 If all code in transaction block success, `COMMIT` is run otherwise `ROLLBACK`
-
-⚠`transaction` doesn't work until next update of Nim itself⚠  
-https://github.com/nim-lang/Nim/pull/13779
