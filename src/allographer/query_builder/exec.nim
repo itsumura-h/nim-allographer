@@ -4,7 +4,6 @@ import base, builders
 import ../util
 import ../connection
 
-var is_in_transaction* = false
 
 proc checkSql*(this: RDB): string =
   return this.selectBuilder().sqlString
@@ -178,7 +177,7 @@ proc getRow(sqlString:string, args:varargs[string]): JsonNode =
   else:
     echoErrorMsg(sqlString & $args)
     return newJNull()
-  
+
   var db_columns: DbColumns
   for row in db.instantRows(db_columns, sql sqlString, args):
     discard
@@ -236,7 +235,7 @@ proc get*(this: RDB): seq[JsonNode] =
     if not this.isInTransaction:
       return getAllRows(this.sqlStringSeq[0], this.placeHolder)
     else:
-      # in transaction
+      # in Transaction
       return getAllRows(this.db, this.sqlStringSeq[0], this.placeHolder)
     # return getAllRows(this.sqlStringSeq[0], this.placeHolder)
   except Exception:
@@ -265,6 +264,7 @@ proc getRaw*(this: RDB): seq[JsonNode] =
     if not this.isInTransaction:
       return getAllRows(this.sqlStringSeq[0], this.placeHolder)
     else:
+      # in Transaction
       return getAllRows(this.db, this.sqlStringSeq[0], this.placeHolder)
     # return getAllRows(this.sqlStringSeq[0], this.placeHolder)
   except Exception:
@@ -292,6 +292,7 @@ proc first*(this: RDB): JsonNode =
     if not this.isInTransaction:
       return getRow(this.sqlStringSeq[0], this.placeHolder)
     else:
+      # in Transaction
       return getRow(this.db, this.sqlStringSeq[0], this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
@@ -325,6 +326,7 @@ proc find*(this: RDB, id: int, key="id"): JsonNode =
     if not this.isInTransaction:
       return getRow(this.sqlStringSeq[0], this.placeHolder)
     else:
+      # in Transaction
       return getRow(this.db, this.sqlStringSeq[0], this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
@@ -359,6 +361,7 @@ proc insert*(this: RDB, items: JsonNode) =
       logger(sqlString, this.placeHolder)
       db.exec(sql sqlString, this.placeHolder)
   else:
+    # in Transaction
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       this.db.exec(sql sqlString, this.placeHolder)
@@ -373,6 +376,7 @@ proc insert*(this: RDB, rows: openArray[JsonNode]) =
     if getDriver() != "sqlite":
       defer: db.close()
   else:
+    # in Transaction
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       this.db.exec(sql sqlString, this.placeHolder)
@@ -466,16 +470,10 @@ proc update*(this: RDB, items: JsonNode) =
       logger(sqlString, this.placeHolder)
       db.exec(sql sqlString, this.placeHolder)
   else:
+    # in Transaction
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       this.db.exec(sql sqlString, this.placeHolder)
-  # block:
-  #   let db = db()
-  #   for sqlString in this.sqlStringSeq:
-  #     logger(sqlString, this.placeHolder)
-  #     db.exec(sql sqlString, this.placeHolder)
-  #   defer: db.close()
-  #   this.sqlString = ""
 
 
 # ==================== DELETE ====================
@@ -486,15 +484,10 @@ proc delete*(this: RDB) =
     let db = db()
     defer: db.close()
   else:
+    # in Transaction
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       this.db.exec(sql sqlString, this.placeHolder)
-  # block:
-  #   let db = db()
-  #   for sqlString in this.sqlStringSeq:
-  #     logger(sqlString, this.placeHolder)
-  #     db.exec(sql sqlString, this.placeHolder)
-  #   defer: db.close()
 
 proc delete*(this: RDB, id: int, key="id") =
   this.placeHolder.add($id)
@@ -503,15 +496,10 @@ proc delete*(this: RDB, id: int, key="id") =
     let db = db()
     defer: db.close()
   else:
+    # in Transaction
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       this.db.exec(sql sqlString, this.placeHolder)
-  # block:
-  #   let db = db()
-  #   for sqlString in this.sqlStringSeq:
-  #     logger(sqlString, this.placeHolder)
-  #     db.exec(sql sqlString, this.placeHolder)
-  #   defer: db.close()
 
 
 # ==================== EXEC ====================
