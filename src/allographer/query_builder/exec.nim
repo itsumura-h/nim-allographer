@@ -366,6 +366,8 @@ proc update*(this: RDB, items: JsonNode) =
       updatePlaceHolder.add($(item.val.getInt()))
     elif item.val.kind == JFloat:
       updatePlaceHolder.add($(item.val.getFloat()))
+    elif [JObject, JArray].contains(item.val.kind):
+      updatePlaceHolder.add($(item.val))
     else:
       updatePlaceHolder.add(item.val.getStr())
 
