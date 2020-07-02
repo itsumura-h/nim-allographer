@@ -8,10 +8,13 @@ import utils
 proc serialGenerator*(name:string):string =
   result = &"\"{name}\" SERIAL NOT NULL PRIMARY KEY"
 
-proc intGenerator*(name:string, nullable:bool, isUnique:bool,
+proc intGenerator*(name:string, tableName:string, nullable:bool, isUnique:bool,
                   isUnsigned:bool, isDefault:bool, default:int):string =
   result = &"\"{name}\" INTEGER"
 
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
+
   if isUnique:
     result.add(" UNIQUE")
 
@@ -24,10 +27,13 @@ proc intGenerator*(name:string, nullable:bool, isUnique:bool,
   if isUnsigned:
     result.add(&" CHECK (\"{name}\" > 0)")
 
-proc smallIntGenerator*(name:string, nullable:bool, isUnique:bool,
+proc smallIntGenerator*(name:string, tableName:string, nullable:bool, isUnique:bool,
                         isUnsigned:bool, isDefault:bool, default:int):string =
   result = &"\"{name}\" SMALLINT"
 
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
+
   if isUnique:
     result.add(" UNIQUE")
 
@@ -40,10 +46,13 @@ proc smallIntGenerator*(name:string, nullable:bool, isUnique:bool,
   if isUnsigned:
     result.add(&" CHECK (\"{name}\" > 0)")
 
-proc mediumIntGenerator*(name:string, nullable:bool, isUnique:bool,
+proc mediumIntGenerator*(name:string, tableName:string, nullable:bool, isUnique:bool,
                         isUnsigned:bool, isDefault:bool, default:int):string =
   result = &"\"{name}\" INTEGER"
 
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
+
   if isUnique:
     result.add(" UNIQUE")
 
@@ -56,9 +65,12 @@ proc mediumIntGenerator*(name:string, nullable:bool, isUnique:bool,
   if isUnsigned:
     result.add(&" CHECK (\"{name}\" > 0)")
 
-proc bigIntGenerator*(name:string, nullable:bool, isUnique:bool,
+proc bigIntGenerator*(name:string, tableName:string, nullable:bool, isUnique:bool,
                       isUnsigned:bool, isDefault:bool, default:int):string =
   result = &"\"{name}\" BIGINT"
+
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
 
   if isUnique:
     result.add(" UNIQUE")
@@ -75,10 +87,13 @@ proc bigIntGenerator*(name:string, nullable:bool, isUnique:bool,
 # =============================================================================
 # float
 # =============================================================================
-proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
+proc decimalGenerator*(name:string, tableName:string, maximum:int, digit:int, nullable:bool,
                       isUnique:bool, isUnsigned:bool,
                       isDefault:bool, default:float):string =
   result = &"\"{name}\" NUMERIC({maximum}, {digit})"
+
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
 
   if isUnique:
     result.add(" UNIQUE")
@@ -92,10 +107,13 @@ proc decimalGenerator*(name:string, maximum:int, digit:int, nullable:bool,
   if isUnsigned:
     result.add(&" CHECK (\"{name}\" > 0)")
 
-proc doubleGenerator*(name:string, maximum:int, digit:int, nullable:bool,
+proc doubleGenerator*(name:string,tableName:string,  maximum:int, digit:int, nullable:bool,
                       isUnique:bool, isUnsigned:bool,
                       isDefault:bool, default:float):string =
   result = &"\"{name}\" NUMERIC({maximum}, {digit})"
+
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
 
   if isUnique:
     result.add(" UNIQUE")
@@ -109,9 +127,12 @@ proc doubleGenerator*(name:string, maximum:int, digit:int, nullable:bool,
   if isUnsigned:
     result.add(&" CHECK (\"{name}\" > 0)")
 
-proc floatGenerator*(name:string, nullable:bool, isUnique:bool,
+proc floatGenerator*(name:string, tableName:string, nullable:bool, isUnique:bool,
                     isUnsigned:bool, isDefault:bool, default:float):string =
   result = &"\"{name}\" NUMERIC"
+
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
 
   if isUnique:
     result.add(" UNIQUE")
@@ -128,9 +149,12 @@ proc floatGenerator*(name:string, nullable:bool, isUnique:bool,
 # =============================================================================
 # char
 # =============================================================================
-proc charGenerator*(name:string, maxLength:int, nullable:bool, isUnique:bool,
+proc charGenerator*(name:string, tableName:string, maxLength:int, nullable:bool, isUnique:bool,
                     isUnsigned:bool, isDefault:bool, default:string):string =
   result = &"\"{name}\" CHAR({maxLength})"
+
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
 
   if isUnique:
     result.add(" UNIQUE")
@@ -144,9 +168,12 @@ proc charGenerator*(name:string, maxLength:int, nullable:bool, isUnique:bool,
   if isUnsigned:
     notAllowed("unsigned", "char")
 
-proc stringGenerator*(name:string, maxLength:int, nullable:bool, isUnique:bool,
+proc stringGenerator*(name:string, tableName:string, maxLength:int, nullable:bool, isUnique:bool,
                       isUnsigned:bool, isDefault:bool, default:string):string =
   result = &"\"{name}\" VARCHAR({maxLength})"
+
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
 
   if isUnique:
     result.add(" UNIQUE")
@@ -160,9 +187,12 @@ proc stringGenerator*(name:string, maxLength:int, nullable:bool, isUnique:bool,
   if isUnsigned:
     notAllowed("unsigned", "string")
 
-proc textGenerator*(name:string, nullable:bool, isUnique:bool,
+proc textGenerator*(name:string, tableName:string, nullable:bool, isUnique:bool,
                       isUnsigned:bool, isDefault:bool, default:string):string =
   result = &"\"{name}\" TEXT"
+
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
 
   if isUnique:
     result.add(" UNIQUE")
@@ -179,10 +209,13 @@ proc textGenerator*(name:string, nullable:bool, isUnique:bool,
 # =============================================================================
 # date
 # =============================================================================
-proc dateGenerator*(name:string, nullable:bool, isUnique:bool,
+proc dateGenerator*(name:string, tableName:string, nullable:bool, isUnique:bool,
                     isUnsigned:bool, isDefault:bool,):string =
   result = &"\"{name}\" DATE"
 
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
+
   if isUnique:
     result.add(" UNIQUE")
 
@@ -195,10 +228,13 @@ proc dateGenerator*(name:string, nullable:bool, isUnique:bool,
   if isUnsigned:
     notAllowed("unsigned", "date")
 
-proc datetimeGenerator*(name:string, nullable:bool, isUnique:bool,
+proc datetimeGenerator*(name:string, tableName:string, nullable:bool, isUnique:bool,
                       isUnsigned:bool, isDefault:bool,):string =
   result = &"\"{name}\" TIMESTAMP"
 
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
+
   if isUnique:
     result.add(" UNIQUE")
 
@@ -211,10 +247,13 @@ proc datetimeGenerator*(name:string, nullable:bool, isUnique:bool,
   if isUnsigned:
     notAllowed("unsigned", "date")
 
-proc timeGenerator*(name:string, nullable:bool, isUnique:bool,
+proc timeGenerator*(name:string, tableName:string, nullable:bool, isUnique:bool,
                       isUnsigned:bool, isDefault:bool,):string =
   result = &"\"{name}\" TIME"
 
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
+
   if isUnique:
     result.add(" UNIQUE")
 
@@ -227,9 +266,12 @@ proc timeGenerator*(name:string, nullable:bool, isUnique:bool,
   if isUnsigned:
     notAllowed("unsigned", "date")
 
-proc timestampGenerator*(name:string, nullable:bool, isUnique:bool,
+proc timestampGenerator*(name:string, tableName:string, nullable:bool, isUnique:bool,
                       isUnsigned:bool, isDefault:bool,):string =
   result = &"\"{name}\" TIMESTAMP"
+
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
 
   if isUnique:
     result.add(" UNIQUE")
@@ -253,9 +295,12 @@ proc softDeleteGenetator*():string =
 # =============================================================================
 # others
 # =============================================================================
-proc blobGenerator*(name:string, nullable:bool, isUnique:bool,
+proc blobGenerator*(name:string, tableName:string, nullable:bool, isUnique:bool,
                       isUnsigned:bool, isDefault:bool, default:string):string =
   result = &"\"{name}\" BYTEA"
+
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
 
   if isUnique:
     result.add(" UNIQUE")
@@ -269,9 +314,12 @@ proc blobGenerator*(name:string, nullable:bool, isUnique:bool,
   if isUnsigned:
     notAllowed("unsigned", "blob")
 
-proc boolGenerator*(name:string, nullable:bool, isUnique:bool,
+proc boolGenerator*(name:string, tableName:string, nullable:bool, isUnique:bool,
                     isUnsigned:bool, isDefault:bool, default:bool):string =
   result = &"\"{name}\" BOOLEAN"
+
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
 
   if isUnique:
     result.add(" UNIQUE")
@@ -295,10 +343,13 @@ proc enumOptionsGenerator(name:string, options:varargs[JsonNode]):string =
 
   return optionsString
 
-proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
+proc enumGenerator*(name:string, tableName:string, options:varargs[JsonNode], nullable:bool,
                       isUnique:bool, isUnsigned:bool,
                       isDefault:bool, default:string):string =
   result = &"\"{name}\" CHARACTER"
+
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
 
   if isUnique:
     result.add(" UNIQUE")
@@ -315,9 +366,12 @@ proc enumGenerator*(name:string, options:varargs[JsonNode], nullable:bool,
   let optionsString = enumOptionsGenerator(name, options)
   result.add(&" CHECK ({optionsString})")
 
-proc jsonGenerator*(name:string, nullable:bool, isUnique:bool,
+proc jsonGenerator*(name:string, tableName:string, nullable:bool, isUnique:bool,
                       isUnsigned:bool, isDefault:bool, default:JsonNode):string =
   result = &"\"{name}\" JSON"
+
+  if isUnique or not nullable or isDefault or isUnique:
+    result.add(&" CONSTRAINT {tablename}_{name}")
 
   if isUnique:
     notAllowed("unique", "json")
@@ -343,7 +397,6 @@ proc foreignGenerator*(name:string, table:string, column:string,
     onDeleteString = "SET NULL"
   elif foreignOnDelete == NO_ACTION:
     onDeleteString = "NO ACTION"
-
 
   result = &", FOREIGN KEY(\"{name}\") REFERENCES {table}({column})"
   result.add(&" ON DELETE {onDeleteString}")

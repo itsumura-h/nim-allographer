@@ -3,9 +3,9 @@ import os, parsecfg, terminal, logging, macros, strformat, strutils
 from connection import getDriver
 
 const
-  IS_DISPLAY = getEnv("LOG_IS_DISPLAY").string.parseBool
-  IS_FILE = getEnv("LOG_IS_FILE").string.parseBool
-  LOG_DIR = getEnv("LOG_DIR").string
+  IS_DISPLAY = when existsEnv("LOG_IS_DISPLAY"): getEnv("LOG_IS_DISPLAY").string.parseBool else: false
+  IS_FILE = when existsEnv("LOG_IS_FILE"): getEnv("LOG_IS_FILE").string.parseBool else: false
+  LOG_DIR = when existsEnv("LOG_DIR"): getEnv("LOG_DIR").string else: ""
 
 
 proc driverTypeError*() =
@@ -33,6 +33,18 @@ proc echoErrorMsg*(msg:string) =
   # console log
   if IS_DISPLAY:
     styledWriteLine(stdout, fgRed, bgDefault, msg, resetStyle)
+  # file log
+  if IS_FILE:
+    let path = LOG_DIR & "/error.log"
+    createDir(parentDir(path))
+    let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
+    logger.log(lvlError, msg)
+    flushFile(logger.file)
+
+proc echoWarningMsg*(msg:string) =
+  # console log
+  if IS_DISPLAY:
+    styledWriteLine(stdout, fgYellow, bgDefault, msg, resetStyle)
   # file log
   if IS_FILE:
     let path = LOG_DIR & "/error.log"

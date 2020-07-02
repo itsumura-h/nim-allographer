@@ -27,7 +27,6 @@ RDB().table("auth").insert([
   %*{"name": "admin"},
   %*{"name": "user"}
 ])
-.exec()
 
 # プログレスバー
 let total = 20
@@ -51,13 +50,13 @@ for i in 1..total:
   pb.increment()
 
 pb.finish()
-RDB().table("users").insert(insertData).exec()
+RDB().table("users").insert(insertData)
 echo RDB().table("users").get()
 
 echo RDB().table("users").find(2, key="user_id")
 echo RDB().table("auth").find(1)
 
-RDB().table("users").delete(2, key="user_id").exec()
-RDB().table("auth").delete(2).exec()
+RDB().table("users").delete(2, key="user_id")
+RDB().table("auth").delete(2)
 echo RDB().table("users").limit(3).get()
 echo RDB().table("auth").limit(3).get()
