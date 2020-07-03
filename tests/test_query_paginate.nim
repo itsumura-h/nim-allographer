@@ -47,7 +47,7 @@ suite "query pagination":
     
   test "currentPage":
     var t = RDB().table("users").select("id", "name").paginate(3, 2)
-    check t["currentPage"][0]["id"].getInt() == 5
+    check t["currentPage"][0]["id"].getInt() == 4
 
   test "hasMorePages":
     var t = RDB().table("users").select("id", "name").paginate(3, 2)
@@ -71,7 +71,7 @@ suite "query pagination":
 
   test "total":
     var t = RDB().table("users").select("id", "name").paginate(3, 2)
-    check t["total"].getInt() == 19
+    check t["total"].getInt() == 20
   
 suite "query fast paginate":
   test "fastPaginate":
@@ -79,7 +79,7 @@ suite "query fast paginate":
     echo t
     check t["previousId"].getInt == 0
     check t["currentPage"][0]["id"].getInt == 1
-    check t["nextId"].getInt == 5
+    check t["nextId"].getInt == 4
 
   test "fastPaginate Desc":
     var t = RDB().table("users").select("id", "name").fastPaginate(3, order=Desc)
@@ -100,12 +100,12 @@ suite "query fast paginate":
     echo t
     check t["previousId"].getInt == 6
     check t["currentPage"][0]["id"].getInt == 5
-    check t["nextId"].getInt == 1
+    check t["nextId"].getInt == 2
 
   test "fastPaginateBack":
     var t = RDB().table("users").select("id", "name").fastPaginateBack(3, 5)
     echo t
-    check t["previousId"].getInt == 1
+    check t["previousId"].getInt == 2
     check t["currentPage"][0]["id"].getInt == 3
     check t["nextId"].getInt == 6
 
@@ -124,8 +124,8 @@ suite "query fast paginate":
             .fastPaginate(3, key="users.id")
     echo t
     check t["hasPreviousId"].getBool == false
-    check t["currentPage"][0]["id"].getInt == 4
-    check t["nextId"].getInt == 10
+    check t["currentPage"][0]["id"].getInt == 2
+    check t["nextId"].getInt == 8
 
   test "fastPaninateNext with WHERE":
     var t = RDB().table("users")
@@ -140,9 +140,9 @@ suite "query fast paginate":
             .where("auth.id", "=", 2)
             .fastPaginateNext(3, t["nextId"].getInt, key="users.id")
     echo t
-    check t["previousId"].getInt == 8
-    check t["currentPage"][0]["id"].getInt == 10
-    check t["nextId"].getInt == 16
+    check t["previousId"].getInt == 6
+    check t["currentPage"][0]["id"].getInt == 8
+    check t["nextId"].getInt == 14
 
   test "fastPaninateBack with WHERE":
     var t = RDB().table("users")
@@ -157,7 +157,7 @@ suite "query fast paginate":
             .where("auth.id", "=", 2)
             .fastPaginateBack(3, t["previousId"].getInt, key="users.id")
     echo t
-    check t["hasPreviousId"].getBool == false
+    check t["hasPreviousId"].getBool == true
     check t["currentPage"][0]["id"].getInt == 4
     check t["nextId"].getInt == 10
 
@@ -178,7 +178,7 @@ suite "fastPaginate result items":
             .fastPaginate(2, key="users.id")
     echo t
     check t["currentPage"].len == 2
-    check t["hasNextId"].getBool == false
+    check t["hasNextId"].getBool == true
 
   test "fastPaginate result 3":
     var t = RDB().table("users")
@@ -206,7 +206,7 @@ suite "fastPaginate result items":
             .fastPaginateNext(2, 1, key="users.id")
     echo t
     check t["currentPage"].len == 2
-    check t["hasNextId"].getBool == false
+    check t["hasNextId"].getBool == true
 
   test "fastPaginateNext result 3":
     var t = RDB().table("users")

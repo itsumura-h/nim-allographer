@@ -8,8 +8,15 @@ const
   DATABASE = getEnv("DB_DATABASE").string
 
 macro importDbModule() =
+  var lib =
+    if DRIVER == "sqlite":
+      "sqlite3"
+    else:
+      &"{DRIVER}"
+
   parseStmt(fmt"""
 import db_{DRIVER}
+import {lib} except close
 export db_{DRIVER}
 """)
 importDbModule
