@@ -1,4 +1,3 @@
-import db_sqlite, db_mysql, db_postgres
 import json, strutils, strformat, algorithm, options
 
 import base, builders
@@ -134,9 +133,23 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
         response_row[key] = newJString(row)
   return response_row
 
-
 proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
   let db = db()
+  defer: db.close()
+  let results = db.getAllRows(sql sqlString, args) # seq[seq[string]]
+  if results.len == 0:
+    echoErrorMsg(sqlString & $args)
+    return newSeq[JsonNode](0)
+
+  var db_columns: DbColumns
+  for row in db.instantRows(db_columns, sql sqlString, args):
+    discard
+
+  let columns = getColumns(db_columns)
+  return toJson(results, columns) # seq[JsonNode]
+
+proc getAllRows(db:DbConn, sqlString:string, args:varargs[string]): seq[JsonNode] =
+  ## used in transaction
   let results = db.getAllRows(sql sqlString, args) # seq[seq[string]]
   if results.len == 0:
     echoErrorMsg(sqlString & $args)
@@ -146,7 +159,6 @@ proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
   block:
     for row in db.instantRows(db_columns, sql sqlString, args):
       discard
-    defer: db.close()
 
   let columns = getColumns(db_columns)
   return toJson(results, columns) # seq[JsonNode]
@@ -154,9 +166,30 @@ proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
 
 proc getRow(sqlString:string, args:varargs[string]): JsonNode =
   let db = db()
+  defer: db.close()
   # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
   # let results = db.getRow(sql sqlString, args)
   let r = db.getAllRows(sql sqlString, args)
+  echo r
+  var results: seq[string]
+  if r.len > 0:
+    results = r[0]
+  else:
+    echoErrorMsg(sqlString & $args)
+    return newJNull()
+
+  var db_columns: DbColumns
+  for row in db.instantRows(db_columns, sql sqlString, args):
+    discard
+
+  let columns = getColumns(db_columns)
+  return toJson(results, columns)
+
+proc getRow(db:DbConn, sqlString:string, args:varargs[string]): JsonNode =
+  # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
+  # let results = db.getRow(sql sqlString, args)
+  let r = db.getAllRows(sql sqlString, args)
+  echo r
   var results: seq[string]
   if r.len > 0:
     results = r[0]
@@ -168,7 +201,6 @@ proc getRow(sqlString:string, args:varargs[string]): JsonNode =
   block:
     for row in db.instantRows(db_columns, sql sqlString, args):
       discard
-    defer: db.close()
 
   let columns = getColumns(db_columns)
   return toJson(results, columns)
@@ -184,6 +216,13 @@ proc orm(row:JsonNode, typ:typedesc):typ.type =
 
 # =============================================================================
 
+proc toSql*(this: RDB): string =
+  defer:
+    this.sqlString = "";
+    this.placeHolder = newSeq[string](0);
+    this.query = %*{"table": this.query["table"].getStr}
+  this.sqlStringSeq = @[this.selectBuilder().sqlString]
+  return this.sqlStringSeq[0]
 
 proc get*(this: RDB): seq[JsonNode] =
   defer:
@@ -193,7 +232,12 @@ proc get*(this: RDB): seq[JsonNode] =
   this.sqlStringSeq = @[this.selectBuilder().sqlString]
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
-    return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+    if not this.isInTransaction:
+      return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+    else:
+      # in Transaction
+      return getAllRows(this.db, this.sqlStringSeq[0], this.placeHolder)
+    # return getAllRows(this.sqlStringSeq[0], this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -217,7 +261,12 @@ proc get*(this: RDB, typ: typedesc): seq[typ.type] =
 proc getRaw*(this: RDB): seq[JsonNode] =
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
-    return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+    if not this.isInTransaction:
+      return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+    else:
+      # in Transaction
+      return getAllRows(this.db, this.sqlStringSeq[0], this.placeHolder)
+    # return getAllRows(this.sqlStringSeq[0], this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -240,7 +289,11 @@ proc first*(this: RDB): JsonNode =
   this.sqlStringSeq = @[this.selectFirstBuilder().sqlString]
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
-    return getRow(this.sqlStringSeq[0], this.placeHolder)
+    if not this.isInTransaction:
+      return getRow(this.sqlStringSeq[0], this.placeHolder)
+    else:
+      # in Transaction
+      return getRow(this.db, this.sqlStringSeq[0], this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -270,7 +323,11 @@ proc find*(this: RDB, id: int, key="id"): JsonNode =
   this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
   try:
     logger(this.sqlStringSeq[0], this.placeHolder)
-    return getRow(this.sqlStringSeq[0], this.placeHolder)
+    if not this.isInTransaction:
+      return getRow(this.sqlStringSeq[0], this.placeHolder)
+    else:
+      # in Transaction
+      return getRow(this.db, this.sqlStringSeq[0], this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -296,66 +353,98 @@ proc find*(this: RDB, id: int, typ:typedesc, key="id"): Option[typ.type] =
 
 proc insert*(this: RDB, items: JsonNode) =
   this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
-  block:
+  if not this.isInTransaction:
     let db = db()
+    defer:
+      db.close()
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       db.exec(sql sqlString, this.placeHolder)
-    defer: db.close()
+  else:
+    # in Transaction
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      this.db.exec(sql sqlString, this.placeHolder)
 
 proc insert*(this: RDB, rows: openArray[JsonNode]) =
   this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
-  block:
+  if not this.isInTransaction:
     let db = db()
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       db.exec(sql sqlString, this.placeHolder)
-    defer: db.close()
+    if getDriver() != "sqlite":
+      defer: db.close()
+  else:
+    # in Transaction
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      this.db.exec(sql sqlString, this.placeHolder)
 
 proc inserts*(this: RDB, rows: openArray[JsonNode]) =
   this.sqlStringSeq = newSeq[string](rows.len)
-  block:
+  if not this.isInTransaction:
     let db = db()
-    for i, items in rows:
-      var sqlString = this.insertValueBuilder(items).sqlString
+    defer: db.close()
+    for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       db.exec(sql sqlString, this.placeHolder)
-    defer: db.close()
+  else:
+     # in Transaction
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      this.db.exec(sql sqlString, this.placeHolder)
 
 
 proc insertID*(this: RDB, items: JsonNode):int =
   this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
-  block:
+  if not this.isInTransaction:
     let db = db()
-    for sqlString in this.sqlStringSeq:
-      logger(sqlString, this.placeHolder)
-      result = db.tryInsertID(sql sqlString, this.placeHolder).int()
     defer: db.close()
+    let sqlString = this.sqlStringSeq[0]
+    logger(sqlString, this.placeHolder)
+    result = db.tryInsertID(sql sqlString, this.placeHolder).int()
+  else:
+    # in Transaction
+    let sqlString = this.sqlStringSeq[0]
+    logger(sqlString, this.placeHolder)
+    result = this.db.tryInsertID(sql sqlString, this.placeHolder).int()
 
 proc insertID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
   this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
   var response = newSeq[int](rows.len)
-  block:
+  if not this.isInTransaction:
     let db = db()
+    defer: db.close()
     for i, sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
-    defer: db.close()
+  else:
+    # in Transaction
+    for i, sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      response[i] = this.db.tryInsertID(sql sqlString, this.placeHolder).int()
   return response
 
 proc insertsID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
   this.sqlStringSeq = newSeq[string](rows.len)
   var response = newSeq[int](rows.len)
-  block:
+  if not this.isInTransaction:
     let db = db()
+    defer: db.close()
     for i, items in rows:
       let sqlString = this.insertValueBuilder(items).sqlString
       logger(sqlString, this.placeHolder)
       response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
       this.placeHolder = @[]
-    defer: db.close()
+  else:
+    # in Transaction
+    for i, items in rows:
+      let sqlString = this.insertValueBuilder(items).sqlString
+      logger(sqlString, this.placeHolder)
+      response[i] = this.db.tryInsertID(sql sqlString, this.placeHolder).int()
+      this.placeHolder = @[]
   return response
-
 
 # ==================== UPDATE ====================
 
@@ -374,35 +463,43 @@ proc update*(this: RDB, items: JsonNode) =
   this.placeHolder = updatePlaceHolder & this.placeHolder
   this.sqlStringSeq = @[this.updateBuilder(items).sqlString]
 
-  block:
+  if not this.isInTransaction:
     let db = db()
+    defer: db.close()
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
       db.exec(sql sqlString, this.placeHolder)
-    defer: db.close()
-    this.sqlString = ""
+  else:
+    # in Transaction
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      this.db.exec(sql sqlString, this.placeHolder)
 
 
 # ==================== DELETE ====================
 
 proc delete*(this: RDB) =
   this.sqlStringSeq = @[this.deleteBuilder().sqlString]
-  block:
+  if not this.isInTransaction:
     let db = db()
+    defer: db.close()
+  else:
+    # in Transaction
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
-      db.exec(sql sqlString, this.placeHolder)
-    defer: db.close()
+      this.db.exec(sql sqlString, this.placeHolder)
 
 proc delete*(this: RDB, id: int, key="id") =
   this.placeHolder.add($id)
   this.sqlStringSeq = @[this.deleteByIdBuilder(id, key).sqlString]
-  block:
+  if not this.isInTransaction:
     let db = db()
+    defer: db.close()
+  else:
+    # in Transaction
     for sqlString in this.sqlStringSeq:
       logger(sqlString, this.placeHolder)
-      db.exec(sql sqlString, this.placeHolder)
-    defer: db.close()
+      this.db.exec(sql sqlString, this.placeHolder)
 
 
 # ==================== EXEC ====================
@@ -662,22 +759,3 @@ SELECT * FROM (
     "nextId": nextId,
     "hasNextId": hasNextId
   }
-
-# ==================== Transaction ====================
-
-template transaction(body: untyped) =
-  # TODO fix
-  # echo treeRepr NimNode(body)
-  block :
-    let db = db()
-    db.exec(sql"BEGIN")
-    try:
-      for s in body:
-        for query in s.sqlStringSeq:
-          db.exec(sql query)
-      db.exec(sql"COMMIT")
-      db.exec(sql"ROLLBACK")
-    except:
-      db.exec(sql"ROLLBACK")
-      getCurrentExceptionMsg().echoErrorMsg()
-    defer: db.close()
