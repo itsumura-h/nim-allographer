@@ -1,4 +1,5 @@
 checkSql	query_builder/exec.html#checkSql,RDB	exec: checkSql(this: RDB): string	
+toSql	query_builder/exec.html#toSql,RDB	exec: toSql(this: RDB): string	
 get	query_builder/exec.html#get,RDB	exec: get(this: RDB): seq[JsonNode]	
 get	query_builder/exec.html#get,RDB,typedesc	exec: get(this: RDB; typ: typedesc): seq[typ.type]	
 getRaw	query_builder/exec.html#getRaw,RDB	exec: getRaw(this: RDB): seq[JsonNode]	
