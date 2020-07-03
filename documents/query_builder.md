@@ -27,6 +27,7 @@ Example: Query Builder
 - [DELETE](#DELETE)
 - [RAW_SQL](#RAW_SQL)
 - [Aggregates](#Aggregates)
+- [Transaction](#Transaction)
 
 ## SELECT
 [to index](#index)
@@ -585,6 +586,8 @@ echo RDB().table("users").sum("id")
 ```
 
 ## Transaction
+[to index](#index)
+
 ```nim
 transaction:
   var user= RDB().table("users").select("id").where("name", "=", "user3").first()
