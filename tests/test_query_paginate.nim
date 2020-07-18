@@ -37,14 +37,13 @@ for i in 1..20:
   )
 
 RDB().table("users").insert(insertData)
-RDB().table("users").delete(2)
 
 suite "query pagination":
   test "count":
     var t = RDB().table("users").select("id", "name").paginate(3, 2)
     echo t
     check t["count"].getInt() == 3
-    
+
   test "currentPage":
     var t = RDB().table("users").select("id", "name").paginate(3, 2)
     check t["currentPage"][0]["id"].getInt() == 4
