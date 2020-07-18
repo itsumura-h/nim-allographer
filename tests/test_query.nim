@@ -220,3 +220,12 @@ suite "select":
   test "result is null":
     check newJNull() == RDB().table("users").find(50)
     check newSeq[JsonNode](0) == RDB().table("users").where("id", "=", 50).get()
+
+  test "delete":
+    echo RDB().table("users").get()
+    RDB().table("users").delete(1)
+    check  RDB().table("users").find(1) == newJNull()
+
+  test "delete with where":
+    RDB().table("users").where("name", "=", "user2").delete()
+    check RDB().table("users").find(2) == newJNull()

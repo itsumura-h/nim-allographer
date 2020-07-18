@@ -483,6 +483,9 @@ proc delete*(this: RDB) =
   if not this.isInTransaction:
     let db = db()
     defer: db.close()
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
   else:
     # in Transaction
     for sqlString in this.sqlStringSeq:
@@ -495,6 +498,9 @@ proc delete*(this: RDB, id: int, key="id") =
   if not this.isInTransaction:
     let db = db()
     defer: db.close()
+    for sqlString in this.sqlStringSeq:
+      logger(sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
   else:
     # in Transaction
     for sqlString in this.sqlStringSeq:
