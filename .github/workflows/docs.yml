@@ -21,7 +21,7 @@ jobs:
     - uses: jiro4989/setup-nim-action@v1.0.1
     - name: Generate documents
       run: |
-        nimble install
+        nimble install -y
         nimble docs
     - name: Deploy
       uses: peaceiris/actions-gh-pages@v2.4.0
