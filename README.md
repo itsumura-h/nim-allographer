@@ -92,9 +92,29 @@ dbtool makeConf
 `/your/project/dir/config.nims` will be generated.
 
 ### Edit confing file
+:warning: Breaking Changes :warning:  
+:warning: After v0.13.0, env is set by `.env` :warning:
+
 By default, config file is set to use sqlite.
 
-config.nims
+- DB_DRIVER: `sqlite` or `mysql` or `postgres`
+- DB_CONNECTION: `sqlite/file/path` or `host:port`
+- DB_USER: login user name
+- DB_PASSWORD: login password
+- DB_DATABASE: specify the database name
+
+From "connection" to "database", these are correspond to args of open proc of Nim std db package
+```nim
+let db = open(connection, user, password, database)
+```
+
+---
+
+- LOG_IS_DISPLAY: Whether display logging in terminal console or not.
+- LOG_IS_FILE: Whether output logging in log file or not.
+- LOG_DIR: Define logging dir path.
+
+config.nims(version <= v0.12.2)
 ```nim
 import os
 
@@ -111,21 +131,34 @@ putEnv("LOG_IS_FILE", "false")
 putEnv("LOG_DIR", "/your/project/dir/logs")
 ```
 
-- DB_DRIVER: `sqlite` or `mysql` or `postgres`
-- DB_CONNECTION: `sqlite/file/path` or `host:port`
-- DB_USER: login user name
-- DB_PASSWORD: login password
-- DB_DATABASE: specify the database name
-
-From "connection" to "database", these are correspond to args of open proc of Nim std db package
+.env(version >= v0.13.0)
 ```nim
-let db = open(connection, user, password, database)
+# DB Connection
+DB_CONNECTION="/your/project/dir/db.sqlite3"
+DB_USER=""
+DB_PASSWORD=""
+DB_DATABASE=""
+
+# Logging
+LOG_IS_DISPLAY=true
+LOG_IS_FILE=true
+LOG_DIR="/your/project/dir/logs"
 ```
 
-- LOG_IS_DISPLAY: Whether display logging in terminal console or not.
-- LOG_IS_FILE: Whether output logging in log file or not.
-- LOG_DIR: Define logging dir path.
+`allographer` loads `.env` which is in current dir.
 
+## Run application
+:warning: Only after v0.13.0 :warning:
+
+To run app, you need to specify `DRIVER` in compire option.
+```
+nim c -r -d:mysql migration.nim
+```
+
+Or define it in `config.nims`
+```
+switch("define", "sqlite")
+```
 
 ## Documents
 [Query Builder](./documents/query_builder.md)  

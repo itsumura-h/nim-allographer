@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.12.2" # https://github.com/itsumura-h/nim-allographer/pull/85
+version       = "0.13.0" # https://github.com/itsumura-h/nim-allographer/pull/85
 author        = "Hidenobu Itsumura @dumblepytech1 as 'medy'"
 description   = "A Nim query builder library inspired by Laravel/PHP and Orator/Python"
 license       = "MIT"
@@ -16,6 +16,7 @@ skipDirs      = @["allographer/cli"]
 requires "nim >= 1.2.0"
 requires "cligen >= 0.9.38"
 requires "progress >= 1.1.1"
+requires "dotenv >= 1.1.1"
 
 import strformat
 from os import `/`

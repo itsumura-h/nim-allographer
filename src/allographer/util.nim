@@ -1,11 +1,12 @@
 import os, parsecfg, terminal, logging, macros, strformat, strutils
 # self
-from connection import getDriver
+import env
+from connection import envVer, getDriver
 
-const
-  IS_DISPLAY = when existsEnv("LOG_IS_DISPLAY"): getEnv("LOG_IS_DISPLAY").string.parseBool else: false
-  IS_FILE = when existsEnv("LOG_IS_FILE"): getEnv("LOG_IS_FILE").string.parseBool else: false
-  LOG_DIR = when existsEnv("LOG_DIR"): getEnv("LOG_DIR").string else: ""
+let
+  IS_DISPLAY = envVer.getBool("LOG_IS_DISPLAY")
+  IS_FILE = envVer.getBool("LOG_IS_FILE")
+  LOG_DIR = envVer.getStr("LOG_DIR", getCurrentDir() & "/log")
 
 
 proc driverTypeError*() =
