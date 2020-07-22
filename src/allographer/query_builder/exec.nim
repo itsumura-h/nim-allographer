@@ -10,7 +10,7 @@ proc checkSql*(this: RDB): string =
 
 proc getColumns(db_columns:DbColumns):seq[JsonNode] =
   var columns = newSeq[JsonNode](db_columns.len)
-  const DRIVER = getDriver()
+  let DRIVER = getDriver()
   for i, row in db_columns:
     case DRIVER:
     of "sqlite":
@@ -23,7 +23,7 @@ proc getColumns(db_columns:DbColumns):seq[JsonNode] =
 
 proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[JsonNode] =
   var response_table = newSeq[JsonNode](results.len)
-  const DRIVER = getDriver()
+  let DRIVER = getDriver()
   for index, rows in results.pairs:
     var response_row = %*{}
     for i, row in rows:
@@ -81,7 +81,7 @@ proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[Jso
 
 proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
   var response_row = %*{}
-  const DRIVER = getDriver()
+  let DRIVER = getDriver()
   for i, row in results:
     let key = columns[i]["name"].getStr
     let typ = columns[i]["typ"].getStr
@@ -170,7 +170,6 @@ proc getRow(sqlString:string, args:varargs[string]): JsonNode =
   # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
   # let results = db.getRow(sql sqlString, args)
   let r = db.getAllRows(sql sqlString, args)
-  echo r
   var results: seq[string]
   if r.len > 0:
     results = r[0]
@@ -189,7 +188,6 @@ proc getRow(db:DbConn, sqlString:string, args:varargs[string]): JsonNode =
   # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
   # let results = db.getRow(sql sqlString, args)
   let r = db.getAllRows(sql sqlString, args)
-  echo r
   var results: seq[string]
   if r.len > 0:
     results = r[0]
@@ -382,7 +380,8 @@ proc insert*(this: RDB, rows: openArray[JsonNode]) =
       this.db.exec(sql sqlString, this.placeHolder)
 
 proc inserts*(this: RDB, rows: openArray[JsonNode]) =
-  this.sqlStringSeq = newSeq[string](rows.len)
+  # this.sqlStringSeq = newSeq[string](rows.len)
+  this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
   if not this.isInTransaction:
     let db = db()
     defer: db.close()

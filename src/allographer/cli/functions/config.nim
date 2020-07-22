@@ -1,25 +1,22 @@
 import os, terminal, strformat
 
 proc makeConf*(args: seq[string]): int =
-  ## Generate config.nims to define DB connection and logging
+  ## Generate .env to define DB connection and logging
 
   var message = ""
   # define path
-  var confPath = getCurrentDir() & "/config.nims"
+  var confPath = getCurrentDir() & "/.env"
   var content = &"""
-import os
-
 # DB Connection
-putEnv("DB_DRIVER", "sqlite")
-putEnv("DB_CONNECTION", "{getCurrentDir()}/db.sqlite3")
-putEnv("DB_USER", "")
-putEnv("DB_PASSWORD", "")
-putEnv("DB_DATABASE", "")
+DB_CONNECTION="{getCurrentDir()}/db.sqlite3"
+DB_USER=""
+DB_PASSWORD=""
+DB_DATABASE=""
 
 # Logging
-putEnv("LOG_IS_DISPLAY", "true")
-putEnv("LOG_IS_FILE", "true")
-putEnv("LOG_DIR", "{getCurrentDir()}/logs")
+LOG_IS_DISPLAY=true
+LOG_IS_FILE=true
+LOG_DIR="{getCurrentDir()}/logs"
 """
 
   try:
