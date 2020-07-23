@@ -1,5 +1,4 @@
-import macros, strformat, os
-import env
+# import macros, strformat, os, sequtils, terminal
 
 # const
 #   DRIVER = getEnv("DB_DRIVER","sqlite").string
@@ -31,6 +30,8 @@ import env
 #   return DRIVER
 
 # ======================================================================
+import sequtils, terminal
+import env
 
 let
   envVer* = newEnv()
@@ -39,7 +40,8 @@ let
   PASSWORD = envVer.getStr("DB_PASSWORD")
   DATABASE = envVer.getStr("DB_DATABASE")
 
-when defined mysql:
+
+when defined(mysql):
   import db_mysql
   import mysql
   export db_mysql
@@ -48,7 +50,7 @@ when defined mysql:
   proc db*(): DbConn =
     open(CONN, USER, PASSWORD, DATABASE)
 
-when defined postgres:
+elif defined(postgres):
   import db_postgres
   import postgres
   export db_postgres
@@ -57,7 +59,7 @@ when defined postgres:
   proc db*(): DbConn =
     open(CONN, USER, PASSWORD, DATABASE)
 
-else:
+elif defined(sqlite) or (not defined(mysql) and not defined(postgres)):
   import db_sqlite
   import sqlite3
   export db_sqlite
@@ -68,3 +70,8 @@ else:
 
 proc getDriver*():string =
   return DRIVER
+
+when [defined(sqlite), defined(mysql), defined(postgres)].filterIt(it).len > 1:
+  let message = "Multile db driver is definded."
+  styledWriteLine(stdout, fgRed, bgDefault, message, resetStyle)
+  raise newException(DbError, "")
