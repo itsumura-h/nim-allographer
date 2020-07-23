@@ -131,5 +131,7 @@ let users = RDB().table("users").limit(5).get(User)
 for user in users:
   echo user.name
 
-RDB().raw("DROP TABLE users").exec()
-RDB().raw("DROP TABLE auth").exec()
+alter(
+  drop("users"),
+  drop("auth")
+)
