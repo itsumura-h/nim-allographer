@@ -40,8 +40,16 @@ let
   PASSWORD = envVer.getStr("DB_PASSWORD")
   DATABASE = envVer.getStr("DB_DATABASE")
 
+when defined(sqlite):
+  import db_sqlite
+  import sqlite3
+  export db_sqlite
+  let DRIVER = "sqlite"
 
-when defined(mysql):
+  proc db*(): DbConn =
+    open(CONN, USER, PASSWORD, DATABASE)
+
+elif defined(mysql):
   import db_mysql
   import mysql
   export db_mysql
@@ -55,15 +63,6 @@ elif defined(postgres):
   import postgres
   export db_postgres
   let DRIVER = "postgres"
-
-  proc db*(): DbConn =
-    open(CONN, USER, PASSWORD, DATABASE)
-
-elif defined(sqlite) or (not defined(mysql) and not defined(postgres)):
-  import db_sqlite
-  import sqlite3
-  export db_sqlite
-  let DRIVER = "sqlite"
 
   proc db*(): DbConn =
     open(CONN, USER, PASSWORD, DATABASE)
