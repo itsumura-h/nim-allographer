@@ -12,7 +12,7 @@ insert	query_builder/exec.html#insert,RDB,JsonNode	exec: insert(this: RDB; items
 insert	query_builder/exec.html#insert,RDB,openArray[JsonNode]	exec: insert(this: RDB; rows: openArray[JsonNode])	
 inserts	query_builder/exec.html#inserts,RDB,openArray[JsonNode]	exec: inserts(this: RDB; rows: openArray[JsonNode])	
 insertID	query_builder/exec.html#insertID,RDB,JsonNode	exec: insertID(this: RDB; items: JsonNode): int	
-insertID	query_builder/exec.html#insertID,RDB,openArray[JsonNode]	exec: insertID(this: RDB; rows: openArray[JsonNode]): seq[int]	
+insertID	query_builder/exec.html#insertID,RDB,openArray[JsonNode]	exec: insertID(this: RDB; rows: openArray[JsonNode]): int	
 insertsID	query_builder/exec.html#insertsID,RDB,openArray[JsonNode]	exec: insertsID(this: RDB; rows: openArray[JsonNode]): seq[int]	
 update	query_builder/exec.html#update,RDB,JsonNode	exec: update(this: RDB; items: JsonNode)	
 delete	query_builder/exec.html#delete,RDB	exec: delete(this: RDB)	
