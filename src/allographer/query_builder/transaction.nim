@@ -18,6 +18,5 @@ block:
     echo getCurrentExceptionMsg()
     db.exec(sql"ROLLBACK")
 """
-  echo bodyStr
   let body = bodyStr.parseStmt()
   return body
