@@ -142,7 +142,7 @@ proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
     return newSeq[JsonNode](0)
 
   var db_columns: DbColumns
-  for row in db.instantRows(db_columns, sql sqlString, args):
+  for _ in db.instantRows(db_columns, sql sqlString, args):
     discard
 
   let columns = getColumns(db_columns)
@@ -156,9 +156,8 @@ proc getAllRows(db:DbConn, sqlString:string, args:varargs[string]): seq[JsonNode
     return newSeq[JsonNode](0)
 
   var db_columns: DbColumns
-  block:
-    for row in db.instantRows(db_columns, sql sqlString, args):
-      discard
+  for _ in db.instantRows(db_columns, sql sqlString, args):
+    discard
 
   let columns = getColumns(db_columns)
   return toJson(results, columns) # seq[JsonNode]
@@ -178,7 +177,7 @@ proc getRow(sqlString:string, args:varargs[string]): JsonNode =
     return newJNull()
 
   var db_columns: DbColumns
-  for row in db.instantRows(db_columns, sql sqlString, args):
+  for _ in db.instantRows(db_columns, sql sqlString, args):
     discard
 
   let columns = getColumns(db_columns)
@@ -196,9 +195,8 @@ proc getRow(db:DbConn, sqlString:string, args:varargs[string]): JsonNode =
     return newJNull()
 
   var db_columns: DbColumns
-  block:
-    for row in db.instantRows(db_columns, sql sqlString, args):
-      discard
+  for _ in db.instantRows(db_columns, sql sqlString, args):
+    discard
 
   let columns = getColumns(db_columns)
   return toJson(results, columns)
