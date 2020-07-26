@@ -170,7 +170,6 @@ proc getRow(sqlString:string, args:varargs[string]): JsonNode =
   # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
   # let results = db.getRow(sql sqlString, args)
   let r = db.getAllRows(sql sqlString, args)
-  echo r
   var results: seq[string]
   if r.len > 0:
     results = r[0]
@@ -189,7 +188,6 @@ proc getRow(db:DbConn, sqlString:string, args:varargs[string]): JsonNode =
   # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
   # let results = db.getRow(sql sqlString, args)
   let r = db.getAllRows(sql sqlString, args)
-  echo r
   var results: seq[string]
   if r.len > 0:
     results = r[0]
