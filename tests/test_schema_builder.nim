@@ -63,7 +63,7 @@ suite "Schema builder":
       #   Column().boolean("boolean").unique().default(),
       #   Column().enumField("enumField", ["a", "b"]).unique().default("a"),
       #   Column().json("json"),
-      # ]),
+      # ], reset=true),
 
       # table("postgres", [
       #   Column().increments("increments"),
