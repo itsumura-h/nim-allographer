@@ -18,14 +18,14 @@ proc logger*(output: any, args:varargs[string]) =
   # console log
   if IS_DISPLAY:
     let logger = newConsoleLogger()
-    logger.log(lvlInfo, $output & $args)
+    logger.log(lvlDebug, $output & $args)
   # file log
   if IS_FILE:
     # info $output & $args
     let path = LOG_DIR & "/log.log"
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
-    logger.log(lvlInfo, $output & $args)
+    logger.log(lvlDebug, $output & $args)
     flushFile(logger.file)
 
 
