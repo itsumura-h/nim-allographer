@@ -23,7 +23,6 @@ proc table*(this: RDB, tableArg: string): RDB =
 
 proc raw*(this:RDB, sql:string, arges:varargs[string]): RDB =
   this.sqlString = sql
-  this.sqlStringseq = @[sql]
   this.placeHolder = @arges
   return this
 
