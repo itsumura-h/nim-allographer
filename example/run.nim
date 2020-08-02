@@ -14,7 +14,6 @@ schema([
     Column().string("name").nullable(),
     Column().string("email").nullable(),
     Column().string("password").nullable(),
-    Column().string("salt").nullable(),
     Column().string("address").nullable(),
     Column().date("birth_date").nullable(),
     Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
@@ -42,7 +41,6 @@ for i in 1..total:
       "name": &"user{i}",
       "email": &"user{i}@gmail.com",
       "password": password,
-      "salt": salt,
       "auth_id": authId
     }
   )
@@ -51,7 +49,7 @@ pb.finish()
 
 RDB().table("users").insert(insertData)
 
-discard RDB().table("users").get()
+echo  RDB().table("users").get()
 
 echo RDB()
     .table("users")
@@ -123,7 +121,6 @@ type User = ref object
   name:string
   email:string
   password:string
-  salt:string
   address:string
   birth_date:string
   auth_id:int
