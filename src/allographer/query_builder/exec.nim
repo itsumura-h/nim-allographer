@@ -136,70 +136,75 @@ proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
 proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
   let db = db()
   defer: db.close()
-  let results = db.getAllRows(sql sqlString, args) # seq[seq[string]]
-  if results.len == 0:
+
+  var db_columns: DbColumns
+  var rows = newSeq[seq[string]]()
+  for row in db.instantRows(db_columns, sql sqlString, args):
+    var columns = newSeq[string](row.len)
+    for i in 0..row.len()-1:
+      columns[i] = row[i]
+    rows.add(columns)
+
+  if rows.len == 0:
     echoErrorMsg(sqlString & $args)
     return newSeq[JsonNode](0)
 
-  var db_columns: DbColumns
-  for _ in db.instantRows(db_columns, sql sqlString, args):
-    discard
-
   let columns = getColumns(db_columns)
-  return toJson(results, columns) # seq[JsonNode]
+  return toJson(rows, columns) # seq[JsonNode]
 
 proc getAllRows(db:DbConn, sqlString:string, args:varargs[string]): seq[JsonNode] =
   ## used in transaction
-  let results = db.getAllRows(sql sqlString, args) # seq[seq[string]]
-  if results.len == 0:
+  var db_columns: DbColumns
+  var rows = newSeq[seq[string]]()
+  for row in db.instantRows(db_columns, sql sqlString, args):
+    var columns = newSeq[string](row.len)
+    for i in 0..row.len()-1:
+      columns[i] = row[i]
+    rows.add(columns)
+
+  if rows.len == 0:
     echoErrorMsg(sqlString & $args)
     return newSeq[JsonNode](0)
 
-  var db_columns: DbColumns
-  for _ in db.instantRows(db_columns, sql sqlString, args):
-    discard
-
   let columns = getColumns(db_columns)
-  return toJson(results, columns) # seq[JsonNode]
+  return toJson(rows, columns) # seq[JsonNode]
 
 
 proc getRow(sqlString:string, args:varargs[string]): JsonNode =
   let db = db()
   defer: db.close()
-  # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
-  # let results = db.getRow(sql sqlString, args)
-  let r = db.getAllRows(sql sqlString, args)
-  var results: seq[string]
-  if r.len > 0:
-    results = r[0]
-  else:
+
+  var db_columns: DbColumns
+  var rows = newSeq[seq[string]]()
+  for row in db.instantRows(db_columns, sql sqlString, args):
+    var columns = newSeq[string](row.len)
+    for i in 0..row.len()-1:
+      columns[i] = row[i]
+    rows.add(columns)
+
+  if rows.len == 0:
     echoErrorMsg(sqlString & $args)
     return newJNull()
 
-  var db_columns: DbColumns
-  for _ in db.instantRows(db_columns, sql sqlString, args):
-    discard
-
   let columns = getColumns(db_columns)
-  return toJson(results, columns)
+  return toJson(rows, columns)[0]
 
 proc getRow(db:DbConn, sqlString:string, args:varargs[string]): JsonNode =
-  # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
-  # let results = db.getRow(sql sqlString, args)
-  let r = db.getAllRows(sql sqlString, args)
-  var results: seq[string]
-  if r.len > 0:
-    results = r[0]
-  else:
+  ## used in transaction
+  var db_columns: DbColumns
+  var rows = newSeq[seq[string]]()
+  for row in db.instantRows(db_columns, sql sqlString, args):
+    var columns = newSeq[string](row.len)
+    for i in 0..row.len()-1:
+      columns[i] = row[i]
+    rows.add(columns)
+
+  if rows.len == 0:
     echoErrorMsg(sqlString & $args)
     return newJNull()
 
-  var db_columns: DbColumns
-  for _ in db.instantRows(db_columns, sql sqlString, args):
-    discard
-
   let columns = getColumns(db_columns)
-  return toJson(results, columns)
+  return toJson(rows, columns)[0]
 
 proc orm(rows:openArray[JsonNode], typ:typedesc):seq[typ.type] =
   var response = newSeq[typ.type](rows.len)
