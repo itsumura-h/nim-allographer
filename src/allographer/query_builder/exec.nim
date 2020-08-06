@@ -8,28 +8,28 @@ import ../connection
 proc checkSql*(this: RDB): string =
   return this.selectBuilder().sqlString
 
-proc getColumns(db_columns:DbColumns):seq[JsonNode] =
-  var columns = newSeq[JsonNode](db_columns.len)
+proc getColumns(db_columns:DbColumns):seq[array[3, string]] =
+  var columns = newSeq[array[3, string]](db_columns.len)
   const DRIVER = getDriver()
   for i, row in db_columns:
     case DRIVER:
     of "sqlite":
-      columns[i] = %*{"name": row.name, "typ": row.typ.name, "size": row.typ.size}
+      columns[i] = [row.name, row.typ.name, $row.typ.size]
     of "mysql":
-      columns[i] = %*{"name": row.name, "typ": row.typ.kind, "size": row.typ.size}
+      columns[i] = [row.name, $row.typ.kind, $row.typ.size]
     of "postgres":
-      columns[i] = %*{"name": row.name, "typ": row.typ.kind, "size": row.typ.size}
+      columns[i] = [row.name, $row.typ.kind, $row.typ.size]
   return columns
 
-proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[JsonNode] =
+proc toJson(results:openArray[seq[string]], columns:openArray[array[3, string]]):seq[JsonNode] =
   var response_table = newSeq[JsonNode](results.len)
   const DRIVER = getDriver()
   for index, rows in results.pairs:
-    var response_row = %*{}
+    var response_row = newJObject()
     for i, row in rows:
-      let key = columns[i]["name"].getStr
-      let typ = columns[i]["typ"].getStr
-      let size = columns[i]["size"].getInt
+      let key = columns[i][0]
+      let typ = columns[i][1]
+      let size = columns[i][2]
 
       case DRIVER:
       of "sqlite":
@@ -46,7 +46,7 @@ proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[Jso
       of "mysql":
         if row == "":
           response_row[key] = newJNull()
-        elif [$dbInt, $dbUInt].contains(typ) and size == 1:
+        elif [$dbInt, $dbUInt].contains(typ) and size == "1":
           if row == "0":
             response_row[key] = newJBool(false)
           elif row == "1":
@@ -79,59 +79,59 @@ proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[Jso
     response_table[index] = response_row
   return response_table
 
-proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
-  var response_row = %*{}
-  const DRIVER = getDriver()
-  for i, row in results:
-    let key = columns[i]["name"].getStr
-    let typ = columns[i]["typ"].getStr
-    let size = columns[i]["size"].getInt
+# proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
+#   var response_row = %*{}
+#   const DRIVER = getDriver()
+#   for i, row in results:
+#     let key = columns[i]["name"].getStr
+#     let typ = columns[i]["typ"].getStr
+#     let size = columns[i]["size"].getInt
 
-    case DRIVER:
-    of "sqlite":
-      if row == "":
-        response_row[key] = newJNull()
-      elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
-        response_row[key] = newJInt(row.parseInt)
-      elif ["NUMERIC", "DECIMAL", "DOUBLE"].contains(typ):
-        response_row[key] = newJFloat(row.parseFloat)
-      elif ["TINYINT", "BOOLEAN"].contains(typ):
-        response_row[key] = newJBool(row.parseBool)
-      else:
-        response_row[key] = newJString(row)
-    of "mysql":
-      if row == "":
-        response_row[key] = newJNull()
-      elif [$dbInt, $dbUInt].contains(typ) and size == 1:
-        if row == "0":
-          response_row[key] = newJBool(false)
-        elif row == "1":
-          response_row[key] = newJBool(true)
-      elif [$dbInt, $dbUInt].contains(typ):
-        response_row[key] = newJInt(row.parseInt)
-      elif [$dbDecimal, $dbFloat].contains(typ):
-        response_row[key] = newJFloat(row.parseFloat)
-      elif [$dbJson].contains(typ):
-          response_row[key] = row.parseJson
-      else:
-        response_row[key] = newJString(row)
-    of "postgres":
-      if row == "":
-        response_row[key] = newJNull()
-      elif [$dbInt, $dbUInt].contains(typ):
-        response_row[key] = newJInt(row.parseInt)
-      elif [$dbDecimal, $dbFloat].contains(typ):
-        response_row[key] = newJFloat(row.parseFloat)
-      elif [$dbBool].contains(typ):
-        if row == "f":
-          response_row[key] = newJBool(false)
-        elif row == "t":
-          response_row[key] = newJBool(true)
-      elif [$dbJson].contains(typ):
-          response_row[key] = row.parseJson
-      else:
-        response_row[key] = newJString(row)
-  return response_row
+#     case DRIVER:
+#     of "sqlite":
+#       if row == "":
+#         response_row[key] = newJNull()
+#       elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
+#         response_row[key] = newJInt(row.parseInt)
+#       elif ["NUMERIC", "DECIMAL", "DOUBLE"].contains(typ):
+#         response_row[key] = newJFloat(row.parseFloat)
+#       elif ["TINYINT", "BOOLEAN"].contains(typ):
+#         response_row[key] = newJBool(row.parseBool)
+#       else:
+#         response_row[key] = newJString(row)
+#     of "mysql":
+#       if row == "":
+#         response_row[key] = newJNull()
+#       elif [$dbInt, $dbUInt].contains(typ) and size == 1:
+#         if row == "0":
+#           response_row[key] = newJBool(false)
+#         elif row == "1":
+#           response_row[key] = newJBool(true)
+#       elif [$dbInt, $dbUInt].contains(typ):
+#         response_row[key] = newJInt(row.parseInt)
+#       elif [$dbDecimal, $dbFloat].contains(typ):
+#         response_row[key] = newJFloat(row.parseFloat)
+#       elif [$dbJson].contains(typ):
+#           response_row[key] = row.parseJson
+#       else:
+#         response_row[key] = newJString(row)
+#     of "postgres":
+#       if row == "":
+#         response_row[key] = newJNull()
+#       elif [$dbInt, $dbUInt].contains(typ):
+#         response_row[key] = newJInt(row.parseInt)
+#       elif [$dbDecimal, $dbFloat].contains(typ):
+#         response_row[key] = newJFloat(row.parseFloat)
+#       elif [$dbBool].contains(typ):
+#         if row == "f":
+#           response_row[key] = newJBool(false)
+#         elif row == "t":
+#           response_row[key] = newJBool(true)
+#       elif [$dbJson].contains(typ):
+#           response_row[key] = row.parseJson
+#       else:
+#         response_row[key] = newJString(row)
+#   return response_row
 
 proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
   let db = db()
@@ -181,6 +181,7 @@ proc getRow(sqlString:string, args:varargs[string]): JsonNode =
     for i in 0..row.len()-1:
       columns[i] = row[i]
     rows.add(columns)
+    break
 
   if rows.len == 0:
     echoErrorMsg(sqlString & $args)
@@ -198,6 +199,7 @@ proc getRow(db:DbConn, sqlString:string, args:varargs[string]): JsonNode =
     for i in 0..row.len()-1:
       columns[i] = row[i]
     rows.add(columns)
+    break
 
   if rows.len == 0:
     echoErrorMsg(sqlString & $args)
@@ -226,10 +228,10 @@ proc toSql*(this: RDB): string =
   return this.sqlString
 
 proc get*(this: RDB): seq[JsonNode] =
-  defer:
-    this.sqlString = "";
-    this.placeHolder = newSeq[string](0);
-    this.query = %*{"table": this.query["table"].getStr}
+  # defer:
+  #   this.sqlString = "";
+  #   this.placeHolder = newSeq[string](0);
+  #   this.query = %*{"table": this.query["table"].getStr}
   this.sqlString = this.selectBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
@@ -244,10 +246,10 @@ proc get*(this: RDB): seq[JsonNode] =
     return newSeq[JsonNode](0)
 
 proc get*(this: RDB, typ: typedesc): seq[typ.type] =
-  defer:
-    this.sqlString = "";
-    this.placeHolder = newSeq[string](0);
-    this.query = %*{"table": this.query["table"].getStr}
+  # defer:
+  #   this.sqlString = "";
+  #   this.placeHolder = newSeq[string](0);
+  #   this.query = %*{"table": this.query["table"].getStr}
   this.sqlString = this.selectBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
@@ -281,10 +283,10 @@ proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
     return newSeq[typ.type](0)
 
 proc first*(this: RDB): JsonNode =
-  defer:
-    this.sqlString = "";
-    this.placeHolder = newSeq[string](0);
-    this.query = %*{"table": this.query["table"].getStr}
+  # defer:
+  #   this.sqlString = "";
+  #   this.placeHolder = newSeq[string](0);
+  #   this.query = %*{"table": this.query["table"].getStr}
   this.sqlString = this.selectFirstBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
@@ -299,10 +301,10 @@ proc first*(this: RDB): JsonNode =
     return newJNull()
 
 proc first*(this: RDB, typ: typedesc): Option[typ.type] =
-  defer:
-    this.sqlString = "";
-    this.placeHolder = newSeq[string](0);
-    this.query = %*{"table": this.query["table"].getStr}
+  # defer:
+  #   this.sqlString = "";
+  #   this.placeHolder = newSeq[string](0);
+  #   this.query = %*{"table": this.query["table"].getStr}
   this.sqlString = this.selectFirstBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
@@ -314,10 +316,10 @@ proc first*(this: RDB, typ: typedesc): Option[typ.type] =
 
 
 proc find*(this: RDB, id: int, key="id"): JsonNode =
-  defer:
-    this.sqlString = "";
-    this.placeHolder = newSeq[string](0);
-    this.query = %*{"table": this.query["table"].getStr}
+  # defer:
+  #   this.sqlString = "";
+  #   this.placeHolder = newSeq[string](0);
+  #   this.query = %*{"table": this.query["table"].getStr}
   this.placeHolder.add($id)
   this.sqlString = this.selectFindBuilder(id, key).sqlString
   try:
@@ -333,10 +335,10 @@ proc find*(this: RDB, id: int, key="id"): JsonNode =
     return newJNull()
 
 proc find*(this: RDB, id: int, typ:typedesc, key="id"): Option[typ.type] =
-  defer:
-    this.sqlString = "";
-    this.placeHolder = newSeq[string](0);
-    this.query = %*{"table": this.query["table"].getStr}
+  # defer:
+  #   this.sqlString = "";
+  #   this.placeHolder = newSeq[string](0);
+  #   this.query = %*{"table": this.query["table"].getStr}
   this.placeHolder.add($id)
   this.sqlString = this.selectFindBuilder(id, key).sqlString
   try:
