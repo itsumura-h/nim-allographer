@@ -70,6 +70,27 @@ alter(
 >> ALTER TABLE "users" DROP `name`
 ```
 
+## Index
+<!--ts-->
+   * [allographer](#allographer)
+      * [Easy to access RDB](#easy-to-access-rdb)
+         * [Query Builder](#query-builder)
+         * [Schema Builder](#schema-builder)
+      * [Index](#index)
+      * [Install](#install)
+      * [Set up](#set-up)
+         * [Create config file](#create-config-file)
+         * [Edit confing file](#edit-confing-file)
+      * [Documents](#documents)
+      * [Nim API Documents](#nim-api-documents)
+         * [Query Builder](#query-builder-1)
+         * [Schema Builder](#schema-builder-1)
+      * [Development](#development)
+         * [Branch naming rule](#branch-naming-rule)
+
+<!-- Added by: root, at: Fri Aug  7 11:33:24 UTC 2020 -->
+
+<!--te-->
 ---
 
 ## Install
