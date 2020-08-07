@@ -535,6 +535,43 @@ RDB()
 >> DELETE FROM users WHERE address = "London"
 ```
 
+## Plain Response
+[to index](#INDEX)
+
+`Plain` response doesn't have it's column name but it run faster than `JsonNode` response
+
+```nim
+echo RDB().table("users").get()
+>> @[
+  %*{"id": 1, "name": "user1", "email": "user1@gmail.com"},
+  %*{"id": 2, "name": "user2", "email": "user2@gmail.com"},
+  %*{"id": 3, "name": "user3", "email": "user3@gmail.com"}
+]
+
+echo RDB().table("users").getPlain()
+>> @[
+  @["1", "user1", "user1@gmail.com"],
+  @["2", "user2", "user2@gmail.com"],
+  @["3", "user3", "user3@gmail.com"],
+]
+```
+
+```nim
+echo RDB().table("users").find(1)
+>> %*{"id": 1, "name": "user1", "email": "user1@gmail.com"}
+
+echo RDB().table("users").findPlain(1)
+>> @["1", "user1", "user1@gmail.com"]
+```
+
+```nim
+echo RDB().table("users").first()
+>> %*{"id": 1, "name": "user1", "email": "user1@gmail.com"}
+
+echo RDB().table("users").firstPlain()
+>> @["1", "user1", "user1@gmail.com"]
+```
+
 ## Raw_SQL
 [to index](#INDEX)
 
