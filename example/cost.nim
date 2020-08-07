@@ -1,6 +1,10 @@
-import times, json, strformat
+import times, json, strformat, sequtils
 import ../src/allographer/query_builder
+import ../src/allographer/query_builder/builders
 import ../src/allographer/schema_builder
+
+const
+  LENGTH = 100
 
 schema([
   table("auth",[
@@ -43,19 +47,65 @@ template bench(msg, body) =
     echo cpuTime() - start
 
 bench("get"):
-  for _ in 0..40:
+  for _ in 0..LENGTH:
     discard RDB().table("users").get()
 
-bench("getPlain"):
-  for _ in 0..40:
-    discard RDB().table("users").getPlain()
+# bench("getPlain"):
+#   for _ in 0..LENGTH:
+#     discard RDB().table("users").getPlain()
 
 bench("get transaction"):
   transaction:
-    for _ in 0..40:
+    for _ in 0..LENGTH:
       discard RDB().table("users").get()
 
-bench("getPlain transaction"):
+# bench("getPlain transaction"):
+#   transaction:
+#     for _ in 0..LENGTH:
+#       discard RDB().table("users").getPlain()
+
+# bench("getRaw"):
+#   for _ in 0..LENGTH:
+#     discard RDB().raw("SELECT * from users").getRaw()
+
+# bench("getRaw transaction"):
+#   transaction:
+#     for _ in 0..LENGTH:
+#       discard RDB().raw("SELECT * from users").getRaw()
+
+# bench("embedded"):
+#   for _ in 0..LENGTH:
+#     let db = db()
+#     defer: db.close()
+#     discard db.getAllRows(sql "SELECT * from users")
+
+bench("embedded transaction"):
+  let db = db()
+  defer: db.close()
+  db.exec(sql"BEGIN")
+  for _ in 0..LENGTH:
+    discard db.getAllRows(sql "SELECT * from users")
+  db.exec(sql"COMMIT")
+
+# bench("getAllRows"):
+#   let sqlString = RDB().table("users").selectBuilder().sqlString
+#   let args = newSeq[system.string]()
+#   let db = db()
+#   defer: db.close()
+#   for _ in 0..LENGTH:
+#     discard getAllRows(db, sql sqlString, args)
+
+# bench("getPlain builder"):
+#   transaction:
+#     let rdb = RDB().table("users")
+#     for _ in 0..LENGTH:
+#       discard RDB().table("users")
+
+bench("getPlain exec"):
   transaction:
-    for _ in 0..40:
+    for _ in 0..LENGTH:
       discard RDB().table("users").getPlain()
+
+bench("make sql"):
+  for _ in 0..LENGTH:
+    discard RDB().table("users").where("id", "=", 1).limit(1).toSql()

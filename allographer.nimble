@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.13.0" # https://github.com/itsumura-h/nim-allographer/pull/97
+version       = "0.13.1" # https://github.com/itsumura-h/nim-allographer/pull/97
 author        = "Hidenobu Itsumura @dumblepytech1 as 'medy'"
 description   = "A Nim query builder library inspired by Laravel/PHP and Orator/Python"
 license       = "MIT"
@@ -51,4 +51,3 @@ proc generateToc(dir: string) =
 task toc, "Generate TOC":
   generateToc(".")
   generateToc("./documents")
-
