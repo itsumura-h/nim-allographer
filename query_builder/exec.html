@@ -108,12 +108,18 @@ function main() {
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#checkSql%2CRDB"
     title="checkSql(this: RDB): string"><wbr />check<wbr />Sql<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#getAllRowsPlain%2Cstring%2Cvarargs%5Bstring%5D"
+    title="getAllRowsPlain(sqlString: string; args: varargs[string]): seq[seq[string]]"><wbr />get<wbr />All<wbr />Rows<wbr />Plain<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#getAllRowsPlain%2CDbConn%2Cstring%2Cvarargs%5Bstring%5D"
+    title="getAllRowsPlain(db: DbConn; sqlString: string; args: varargs[string]): seq[seq[string]]"><wbr />get<wbr />All<wbr />Rows<wbr />Plain<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#toSql%2CRDB"
     title="toSql(this: RDB): string"><wbr />to<wbr />Sql<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#get%2CRDB"
     title="get(this: RDB): seq[JsonNode]"><wbr />get<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#get%2CRDB%2Ctypedesc"
     title="get(this: RDB; typ: typedesc): seq[typ.type]"><wbr />get<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#getPlain%2CRDB"
+    title="getPlain(this: RDB): seq[seq[string]]"><wbr />get<wbr />Plain<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#getRaw%2CRDB"
     title="getRaw(this: RDB): seq[JsonNode]"><wbr />get<wbr />Raw<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#getRaw%2CRDB%2Ctypedesc"
@@ -121,11 +127,15 @@ function main() {
   <li><a class="reference" href="#first%2CRDB"
     title="first(this: RDB): JsonNode"><wbr />first<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#first%2CRDB%2Ctypedesc"
-    title="first(this: RDB; typ: typedesc): Option[typ.type]"><wbr />first<span class="attachedType"></span></a></li>
+    title="first(this: RDB; typ: typedesc): typ.type"><wbr />first<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#firstPlain%2CRDB"
+    title="firstPlain(this: RDB): seq[string]"><wbr />first<wbr />Plain<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#find%2CRDB%2Cint%2Cstring"
     title="find(this: RDB; id: int; key = &quot;id&quot;): JsonNode"><wbr />find<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#find%2CRDB%2Cint%2Ctypedesc%2Cstring"
-    title="find(this: RDB; id: int; typ: typedesc; key = &quot;id&quot;): Option[typ.type]"><wbr />find<span class="attachedType"></span></a></li>
+    title="find(this: RDB; id: int; typ: typedesc; key = &quot;id&quot;): typ.type"><wbr />find<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#findPlain%2CRDB%2Cint%2Cstring"
+    title="findPlain(this: RDB; id: int; key = &quot;id&quot;): seq[string]"><wbr />find<wbr />Plain<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#insert%2CRDB%2CJsonNode"
     title="insert(this: RDB; items: JsonNode)"><wbr />insert<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#insert%2CRDB%2CopenArray%5BJsonNode%5D"
@@ -190,6 +200,22 @@ function main() {
 
 
 </dd>
+<a id="getAllRowsPlain,string,varargs[string]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#getAllRowsPlain%2Cstring%2Cvarargs%5Bstring%5D"><span class="Identifier">getAllRowsPlain</span></a><span class="Other">(</span><span class="Identifier">sqlString</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="getAllRowsPlain,DbConn,string,varargs[string]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#getAllRowsPlain%2CDbConn%2Cstring%2Cvarargs%5Bstring%5D"><span class="Identifier">getAllRowsPlain</span></a><span class="Other">(</span><span class="Identifier">db</span><span class="Other">:</span> <span class="Identifier">DbConn</span><span class="Other">;</span> <span class="Identifier">sqlString</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span>
+    <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
 <a id="toSql,RDB"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#toSql%2CRDB"><span class="Identifier">toSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -208,6 +234,16 @@ function main() {
 </dd>
 <a id="get,RDB,typedesc"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#get%2CRDB%2Ctypedesc"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">typ</span><span class="Other">.</span><span class="Keyword">type</span><span class="Other">]</span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="getPlain,RDB"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#getPlain%2CRDB"><span class="Identifier">getPlain</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
+    <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -240,7 +276,17 @@ function main() {
 
 </dd>
 <a id="first,RDB,typedesc"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#first%2CRDB%2Ctypedesc"><span class="Identifier">first</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">typ</span><span class="Other">.</span><span class="Keyword">type</span><span class="Other">]</span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#first%2CRDB%2Ctypedesc"><span class="Identifier">first</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">typ</span><span class="Other">.</span><span class="Keyword">type</span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="firstPlain,RDB"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#firstPlain%2CRDB"><span class="Identifier">firstPlain</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span>
+    <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span>
+                                        <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
+                                        <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -257,7 +303,17 @@ function main() {
 
 </dd>
 <a id="find,RDB,int,typedesc,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#find%2CRDB%2Cint%2Ctypedesc%2Cstring"><span class="Identifier">find</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">typ</span><span class="Other">.</span><span class="Keyword">type</span><span class="Other">]</span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#find%2CRDB%2Cint%2Ctypedesc%2Cstring"><span class="Identifier">find</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">typ</span><span class="Other">.</span><span class="Keyword">type</span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="findPlain,RDB,int,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#findPlain%2CRDB%2Cint%2Cstring"><span class="Identifier">findPlain</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
+    <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -461,7 +517,7 @@ It is only used with raw()
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-08-06 17:01:12 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-08-07 07:23:59 UTC</small>
       </div>
     </div>
   </div>
