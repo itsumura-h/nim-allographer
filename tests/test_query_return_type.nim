@@ -33,68 +33,68 @@ type Typ = ref object
   null:string
   bool:bool
 
+proc checkTest(t:Typ, r:Typ) =
+  check t.id == r.id
+  check t.name == r.name
+  check t.birth_date == r.birth_date
+  check t.null == r.null
+  check t.bool == r.bool
+
+proc checkTestOptions(t:Typ, r:Option[Typ]) =
+  check t.id == r.get().id
+  check t.name == r.get().name
+  check t.birth_date == r.get().birth_date
+  check t.null == r.get().null
+  check t.bool == r.get().bool
+
 suite "return with type":
   test "get":
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
     var r = RDB().table("users").get(Typ)[0]
-    check t.id == r.id
-    check t.name == r.name
-    check t.birth_date == r.birth_date
-    check t.null == r.null
-    check t.bool == r.bool
+    checkTest(t, r)
   test "getRaw":
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
     var r = RDB().raw("select * from users").getRaw(Typ)[0]
-    check t.id == r.id
-    check t.name == r.name
-    check t.birth_date == r.birth_date
-    check t.null == r.null
-    check t.bool == r.bool
+    checkTest(t, r)
   test "first":
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
     var r = RDB().table("users").first(Typ)
-    check t.id == r.id
-    check t.name == r.name
-    check t.birth_date == r.birth_date
-    check t.null == r.null
-    check t.bool == r.bool
+    checkTestOptions(t, r)
   test "find":
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
     var r = RDB().table("users").find(1, Typ)
-    check t.id == r.id
-    check t.name == r.name
-    check t.birth_date == r.birth_date
-    check t.null == r.null
-    check t.bool == r.bool
+    checkTestOptions(t, r)
   test "transaction":
     transaction:
       var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
       var rArr = @[
         RDB().table("users").get(Typ)[0],
         RDB().raw("select * from users").getRaw(Typ)[0],
+      ]
+      for r in rArr:
+        checkTest(t, r)
+      var rArr2 = @[
         RDB().table("users").first(Typ),
         RDB().table("users").find(1, Typ)
       ]
-      for r in rArr:
-        check t.id == r.id
-        check t.name == r.name
-        check t.birth_date == r.birth_date
-        check t.null == r.null
-        check t.bool == r.bool
+      for r in rArr2:
+        checkTestOptions(t, r)
 
 suite "return with type fail":
   test "get":
     var r = RDB().table("users").where("id", ">", 10).get(Typ)
+    check r.len == 0
     check r == newSeq[Typ](0)
   test "getRaw":
     var r = RDB().raw("select * from users where id > 10").getRaw(Typ)
+    check r.len == 0
     check r == newSeq[Typ](0)
   test "first":
     var r = RDB().table("users").where("id", ">", 10).first(Typ)
-    check r.isNil()
+    check r.isSome() == false
   test "find":
     var r = RDB().table("users").find(10, Typ)
-    check r.isNil()
+    check r.isSome() == false
 
 alter(
   drop("users")
