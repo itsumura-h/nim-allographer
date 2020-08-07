@@ -51,3 +51,4 @@ proc generateToc(dir: string) =
 task toc, "Generate TOC":
   generateToc(".")
   generateToc("./documents")
+
