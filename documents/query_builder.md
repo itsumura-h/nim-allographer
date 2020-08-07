@@ -99,22 +99,20 @@ echo rows[0].is_admin
 >> true                         # bool
 ```
 
-If you use `first` or `find` to execute ORM response. it returns `Option` type
-
+If DB response is empty, `get` and `getRaw` return empty seq, `find` and `first` return optional object.
 ```nim
-var row = RDB().table("test")
-          .select("id", "float", "char", "datetime", "null", "is_admin")
-          .first(Typ) # or find(1, Typ)
-```
-```nim
-if row.isSome():
-  echo row.get().id
-  >> 1
-else:
-  assert row.isNone()
-  >> true
-```
+let response = RDB().table("test").get(Typ)
+assert response.len == 0
 
+let response = RDB().raw("select * from users").getRaw(Typ)
+assert response.len == 0
+
+let response = RDB().table("test").find(1, Typ)
+assert response.type == Option[Typ]
+
+let response = RDB().table("test").first(Typ)
+assert response.type == Option[Typ]
+```
 
 ### get
 Retrieving all row from a table

@@ -34,3 +34,20 @@ task docs, "Generate API documents":
   for f in srcFiles:
     let srcFile = pkgDir / f & ".nim"
     exec &"nim doc --hints:off --project --out:{deployDir} --index:on {srcFile}"
+
+let toolImage = "basolato:tool"
+
+task setupTool, "Setup tool docker image":
+  exec &"docker build -t {toolImage} -f tool_Dockerfile ."
+
+proc generateToc(dir: string) =
+  let cwd = getCurrentDir()
+  for f in listFiles(dir):
+    if 3 < f.len:
+      let ext = f[^3..^1]
+      if ext == ".md":
+        exec &"docker run --rm -v {cwd}:/work -it {toolImage} --insert --no-backup {f}"
+
+task toc, "Generate TOC":
+  generateToc(".")
+  generateToc("./documents")

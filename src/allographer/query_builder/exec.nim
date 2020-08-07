@@ -1,4 +1,4 @@
-import json, strutils, strformat, algorithm
+import json, strutils, strformat, algorithm, options
 
 import base, builders
 import ../util
@@ -290,18 +290,18 @@ proc first*(this: RDB): JsonNode =
     getCurrentExceptionMsg().echoErrorMsg()
     return newJNull()
 
-proc first*(this: RDB, typ: typedesc): typ.type =
+proc first*(this: RDB, typ: typedesc):Option[typ.type] =
   this.sqlString = this.selectFirstBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
     if not this.isInTransaction:
-      return getRow(this.sqlString, this.placeHolder).orm(typ)
+      return getRow(this.sqlString, this.placeHolder).orm(typ).some()
     else:
-      return getRow(this.db, this.sqlString, this.placeHolder).orm(typ)
+      return getRow(this.db, this.sqlString, this.placeHolder).orm(typ).some()
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
-    return typ()
+    return none(typ.type)
 
 proc firstPlain*(this: RDB): seq[string] =
   this.sqlString = this.selectFirstBuilder().sqlString
@@ -332,19 +332,19 @@ proc find*(this: RDB, id: int, key="id"): JsonNode =
     getCurrentExceptionMsg().echoErrorMsg()
     return newJNull()
 
-proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
+proc find*(this: RDB, id: int, typ:typedesc, key="id"):Option[typ.type] =
   this.placeHolder.add($id)
   this.sqlString = this.selectFindBuilder(id, key).sqlString
   try:
     logger(this.sqlString, this.placeHolder)
     if not this.isInTransaction:
-      return getRow(this.sqlString, this.placeHolder).orm(typ)
+      return getRow(this.sqlString, this.placeHolder).orm(typ).some()
     else:
-      return getRow(this.db, this.sqlString, this.placeHolder).orm(typ)
+      return getRow(this.db, this.sqlString, this.placeHolder).orm(typ).some()
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
-    return typ()
+    return none(typ.type)
 
 proc findPlain*(this:RDB, id:int, key="id"):seq[string] =
   this.placeHolder.add($id)
