@@ -3,31 +3,41 @@ Example: Query Builder
 [back](../README.md)
 
 ## index
-- [SELECT](#SELECT)
-  - [get](#get)
-  - [first](#first)
-  - [find](#find)
-  - [join](#join)
-  - [where](#where)
-  - [orWhere](#orWhere)
-  - [whereBetween](#whereBetween)
-  - [whereNotBetween](#whereNotBetween)
-  - [whereIn](#whereIn)
-  - [whereNotIn](#whereNotIn)
-  - [whereNull](#whereNull)
-  - [groupBy](#groupBy)
-  - [having](#having)
-  - [orderBy](#orderBy)
-  - [limit-offset](#limit_offset)
-  - [Paginate](#paginate)
-  - [fastPaginate](#fastPaginate)
+<!--ts-->
+   * [Example: Query Builder](#example-query-builder)
+      * [index](#index)
+      * [SELECT](#select)
+         * [return JsonNode](#return-jsonnode)
+         * [return Object](#return-object)
+         * [get](#get)
+         * [first](#first)
+         * [find](#find)
+         * [join](#join)
+         * [where](#where)
+         * [orWhere](#orwhere)
+         * [whereBetween](#wherebetween)
+         * [whereNotBetween](#wherenotbetween)
+         * [whereIn](#wherein)
+         * [whereNotIn](#wherenotin)
+         * [whereNull](#wherenull)
+         * [groupBy_having](#groupby_having)
+         * [orderBy](#orderby)
+         * [limit_offset](#limit_offset)
+         * [paginate](#paginate)
+         * [fastPaginate](#fastpaginate)
+      * [INSERT](#insert)
+         * [Return ID Insert](#return-id-insert)
+      * [UPDATE](#update)
+      * [DELETE](#delete)
+      * [Plain Response](#plain-response)
+      * [Raw_SQL](#raw_sql)
+      * [Aggregates](#aggregates)
+      * [Transaction](#transaction)
 
-- [INSERT](#INSERT)
-- [UPDATE](#UPDATE)
-- [DELETE](#DELETE)
-- [RAW_SQL](#RAW_SQL)
-- [Aggregates](#Aggregates)
-- [Transaction](#Transaction)
+<!-- Added by: root, at: Fri Aug  7 11:33:27 UTC 2020 -->
+
+<!--te-->
+---
 
 ## SELECT
 [to index](#index)
@@ -99,22 +109,20 @@ echo rows[0].is_admin
 >> true                         # bool
 ```
 
-If you use `first` or `find` to execute ORM response. it returns `Option` type
-
+If DB response is empty, `get` and `getRaw` return empty seq, `find` and `first` return optional object.
 ```nim
-var row = RDB().table("test")
-          .select("id", "float", "char", "datetime", "null", "is_admin")
-          .first(Typ) # or find(1, Typ)
-```
-```nim
-if row.isSome():
-  echo row.get().id
-  >> 1
-else:
-  assert row.isNone()
-  >> true
-```
+let response = RDB().table("test").get(Typ)
+assert response.len == 0
 
+let response = RDB().raw("select * from users").getRaw(Typ)
+assert response.len == 0
+
+let response = RDB().table("test").find(1, Typ)
+assert response.type == Option[Typ]
+
+let response = RDB().table("test").first(Typ)
+assert response.type == Option[Typ]
+```
 
 ### get
 Retrieving all row from a table
@@ -535,6 +543,43 @@ RDB()
 .delete()
 
 >> DELETE FROM users WHERE address = "London"
+```
+
+## Plain Response
+[to index](#INDEX)
+
+`Plain` response doesn't have it's column name but it run faster than `JsonNode` response
+
+```nim
+echo RDB().table("users").get()
+>> @[
+  %*{"id": 1, "name": "user1", "email": "user1@gmail.com"},
+  %*{"id": 2, "name": "user2", "email": "user2@gmail.com"},
+  %*{"id": 3, "name": "user3", "email": "user3@gmail.com"}
+]
+
+echo RDB().table("users").getPlain()
+>> @[
+  @["1", "user1", "user1@gmail.com"],
+  @["2", "user2", "user2@gmail.com"],
+  @["3", "user3", "user3@gmail.com"],
+]
+```
+
+```nim
+echo RDB().table("users").find(1)
+>> %*{"id": 1, "name": "user1", "email": "user1@gmail.com"}
+
+echo RDB().table("users").findPlain(1)
+>> @["1", "user1", "user1@gmail.com"]
+```
+
+```nim
+echo RDB().table("users").first()
+>> %*{"id": 1, "name": "user1", "email": "user1@gmail.com"}
+
+echo RDB().table("users").firstPlain()
+>> @["1", "user1", "user1@gmail.com"]
 ```
 
 ## Raw_SQL

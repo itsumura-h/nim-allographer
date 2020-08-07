@@ -1,3 +1,16 @@
+
+## index
+<!--ts-->
+      * [index](#index)
+      * [JInt](#jint)
+      * [JFloat](#jfloat)
+      * [JBool](#jbool)
+
+<!-- Added by: root, at: Fri Aug  7 11:33:25 UTC 2020 -->
+
+<!--te-->
+---
+
 |allographer|sqlite|mysql|postgres|return type|
 |---|---|---|---|---|
 |increments|INTEGER|INT|INTEGER|JInt
