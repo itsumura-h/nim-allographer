@@ -1,5 +1,4 @@
 import json, strutils, strformat, algorithm, options
-
 import base, builders
 import ../util
 import ../connection
