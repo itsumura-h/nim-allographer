@@ -1,4 +1,4 @@
-import json, strutils, strformat, algorithm, options
+import json, strutils, strformat, algorithm
 
 import base, builders
 import ../util
@@ -169,8 +169,27 @@ proc getAllRows(db:DbConn, sqlString:string, args:varargs[string]): seq[JsonNode
   let columns = getColumns(db_columns)
   return toJson(rows, columns) # seq[JsonNode]
 
+proc getAllRowsPlain*(sqlString:string, args:varargs[string]):seq[seq[string]] =
+  let db = db()
+  defer: db.close()
+  var rows = newSeq[seq[string]]()
+  for row in db.instantRows(sql sqlString, args):
+    var columns = newSeq[string](row.len)
+    for i in 0..row.len()-1:
+      columns[i] = row[i]
+    rows.add(columns)
+  return rows
 
-proc getRow(sqlString:string, args:varargs[string]): JsonNode =
+proc getAllRowsPlain*(db:DbConn, sqlString:string, args:varargs[string]):seq[seq[string]] =
+  var rows = newSeq[seq[string]]()
+  for row in db.instantRows(sql sqlString, args):
+    var columns = newSeq[string](row.len)
+    for i in 0..row.len()-1:
+      columns[i] = row[i]
+    rows.add(columns)
+  return rows
+
+proc getRow(sqlString:string, args:varargs[string]):JsonNode =
   let db = db()
   defer: db.close()
 
@@ -207,6 +226,28 @@ proc getRow(db:DbConn, sqlString:string, args:varargs[string]): JsonNode =
 
   let columns = getColumns(db_columns)
   return toJson(rows, columns)[0]
+
+proc getRowPlain(sqlString:string, args:varargs[string]):seq[string] =
+  let db = db()
+  defer: db.close()
+
+  var db_columns: DbColumns
+  # var rows = newSeq[seq[string]]()
+  var columns = newSeq[string]()
+  for row in db.instantRows(db_columns, sql sqlString, args):
+    for i in 0..row.len()-1:
+      columns.add(row[i])
+    break
+  return columns
+
+proc getRowPlain(db:DbConn, sqlString:string, args:varargs[string]):seq[string] =
+  ## used in transaction
+  var columns = newSeq[string]()
+  for row in db.instantRows(sql sqlString, args):
+    for i in 0..row.len()-1:
+      columns.add(row[i])
+    break
+  return columns
 
 proc orm(rows:openArray[JsonNode], typ:typedesc):seq[typ.type] =
   var response = newSeq[typ.type](rows.len)
@@ -253,11 +294,27 @@ proc get*(this: RDB, typ: typedesc): seq[typ.type] =
   this.sqlString = this.selectBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
-    return getAllRows(this.sqlString).orm(typ)
+    if not this.isInTransaction:
+      return getAllRows(this.sqlString, this.placeHolder).orm(typ)
+    else:
+      return getAllRows(this.db, this.sqlString, this.placeHolder).orm(typ)
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
     return newSeq[typ.type](0)
+
+proc getPlain*(this:RDB):seq[seq[string]] =
+  this.sqlString = this.selectBuilder().sqlString
+  try:
+    logger(this.sqlString, this.placeHolder)
+    if not this.isInTransaction:
+      return getAllRowsPlain(this.sqlString, this.placeHolder)
+    else:
+      return getAllRowsPlain(this.db, this.sqlString, this.placeHolder)
+  except Exception:
+    echoErrorMsg(this.sqlString & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[seq[string]](0)
 
 
 proc getRaw*(this: RDB): seq[JsonNode] =
@@ -276,7 +333,10 @@ proc getRaw*(this: RDB): seq[JsonNode] =
 proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
   try:
     logger(this.sqlString, this.placeHolder)
-    return getAllRows(this.sqlString, this.placeHolder).orm(typ)
+    if not this.isInTransaction:
+      return getAllRows(this.sqlString, this.placeHolder).orm(typ)
+    else:
+      return getAllRows(this.db, this.sqlString, this.placeHolder).orm(typ)
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -300,7 +360,7 @@ proc first*(this: RDB): JsonNode =
     getCurrentExceptionMsg().echoErrorMsg()
     return newJNull()
 
-proc first*(this: RDB, typ: typedesc): Option[typ.type] =
+proc first*(this: RDB, typ: typedesc): typ.type =
   # defer:
   #   this.sqlString = "";
   #   this.placeHolder = newSeq[string](0);
@@ -308,12 +368,28 @@ proc first*(this: RDB, typ: typedesc): Option[typ.type] =
   this.sqlString = this.selectFirstBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
-    return getRow(this.sqlString, this.placeHolder).orm(typ).some()
+    if not this.isInTransaction:
+      return getRow(this.sqlString, this.placeHolder).orm(typ)
+    else:
+      return getRow(this.db, this.sqlString, this.placeHolder).orm(typ)
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
-    return typ.none()
+    return typ()
 
+proc firstPlain*(this: RDB): seq[string] =
+  this.sqlString = this.selectFirstBuilder().sqlString
+  try:
+    logger(this.sqlString, this.placeHolder)
+    if not this.isInTransaction:
+      return getRowPlain(this.sqlString, this.placeHolder)
+    else:
+      # in Transaction
+      return getRowPlain(this.db, this.sqlString, this.placeHolder)
+  except Exception:
+    echoErrorMsg(this.sqlString & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[string](0)
 
 proc find*(this: RDB, id: int, key="id"): JsonNode =
   # defer:
@@ -334,7 +410,7 @@ proc find*(this: RDB, id: int, key="id"): JsonNode =
     getCurrentExceptionMsg().echoErrorMsg()
     return newJNull()
 
-proc find*(this: RDB, id: int, typ:typedesc, key="id"): Option[typ.type] =
+proc find*(this: RDB, id: int, typ:typedesc, key="id"): typ.type =
   # defer:
   #   this.sqlString = "";
   #   this.placeHolder = newSeq[string](0);
@@ -343,11 +419,29 @@ proc find*(this: RDB, id: int, typ:typedesc, key="id"): Option[typ.type] =
   this.sqlString = this.selectFindBuilder(id, key).sqlString
   try:
     logger(this.sqlString, this.placeHolder)
-    return getRow(this.sqlString, this.placeHolder).orm(typ).some()
+    if not this.isInTransaction:
+      return getRow(this.sqlString, this.placeHolder).orm(typ)
+    else:
+      return getRow(this.db, this.sqlString, this.placeHolder).orm(typ)
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
-    return typ.none()
+    return typ()
+
+proc findPlain*(this:RDB, id:int, key="id"):seq[string] =
+  this.placeHolder.add($id)
+  this.sqlString = this.selectFindBuilder(id, key).sqlString
+  try:
+    logger(this.sqlString, this.placeHolder)
+    if not this.isInTransaction:
+      return getRowPlain(this.sqlString, this.placeHolder)
+    else:
+      # in Transaction
+      return getRowPlain(this.db, this.sqlString, this.placeHolder)
+  except Exception:
+    echoErrorMsg(this.sqlString & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[string](0)
 
 
 # ==================== INSERT ====================

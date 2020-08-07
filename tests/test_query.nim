@@ -46,13 +46,25 @@ suite "select":
     var t = RDB().table("users").get()
     check t[0] == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
 
+  test "getPlain()":
+    var t = RDB().table("users").getPlain()
+    check t[0] == @["1", "user1", "user1@gmail.com", "", "1"]
+
   test "first()":
     var t = RDB().table("users").where("name", "=", "user1").first()
     check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
 
+  test "firstPlain()":
+    var t = RDB().table("users").firstPlain()
+    check t == @["1", "user1", "user1@gmail.com", "", "1"]
+
   test "find()":
     var t = RDB().table("users").find(1)
     check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
+
+  test "findPlain()":
+    var t = RDB().table("users").findPlain(1)
+    check t == @["1", "user1", "user1@gmail.com", "", "1"]
 
   test "select()":
     var t = RDB().table("users").select("name", "email").get()
