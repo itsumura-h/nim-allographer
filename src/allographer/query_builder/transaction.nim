@@ -3,12 +3,12 @@ import ../connection, base
 
 
 macro transaction*(bodyInput: untyped):untyped =
-  var bodyStr = bodyInput.repr.replace("RDB()", "RDB(db:db, isInTransaction:true)")
+  var bodyStr = bodyInput.repr.replace("RDB()", "RDB(db:db)")
   bodyStr.removePrefix
   bodyStr = bodyStr.indent(4)
   bodyStr = fmt"""
 block:
-  var db = query_builder.db()
+  let db = db()
   defer: db.close()
   try:
     db.exec(sql"BEGIN")

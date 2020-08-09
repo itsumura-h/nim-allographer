@@ -213,10 +213,10 @@ proc get*(this: RDB): seq[JsonNode] =
   this.sqlString = this.selectBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
-    if this.isInTransaction:
-      return getAllRows(this.db, this.sqlString, this.placeHolder)
-    else:
+    if this.db.isNil:
       return getAllRows(this.sqlString, this.placeHolder)
+    else:
+      return getAllRows(this.db, this.sqlString, this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -226,7 +226,7 @@ proc get*(this: RDB, typ: typedesc): seq[typ.type] =
   this.sqlString = this.selectBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
-    if not this.isInTransaction:
+    if this.db.isNil:
       return getAllRows(this.sqlString, this.placeHolder).orm(typ)
     else:
       return getAllRows(this.db, this.sqlString, this.placeHolder).orm(typ)
@@ -239,10 +239,10 @@ proc getPlain*(this:RDB):seq[seq[string]] =
   this.sqlString = this.selectBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
-    if this.isInTransaction:
-      return getAllRowsPlain(this.db, this.sqlString, this.placeHolder)
-    else:
+    if this.db.isNil:
       return getAllRowsPlain(this.sqlString, this.placeHolder)
+    else:
+      return getAllRowsPlain(this.db, this.sqlString, this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -252,10 +252,10 @@ proc getPlain*(this:RDB):seq[seq[string]] =
 proc getRaw*(this: RDB): seq[JsonNode] =
   try:
     logger(this.sqlString, this.placeHolder)
-    if this.isInTransaction:
-      return getAllRows(this.db, this.sqlString, this.placeHolder)
-    else:
+    if this.db.isNil:
       return getAllRows(this.sqlString, this.placeHolder)
+    else:
+      return getAllRows(this.db, this.sqlString, this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -264,10 +264,10 @@ proc getRaw*(this: RDB): seq[JsonNode] =
 proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
   try:
     logger(this.sqlString, this.placeHolder)
-    if this.isInTransaction:
-      return getAllRows(this.db, this.sqlString, this.placeHolder).orm(typ)
-    else:
+    if this.db.isNil:
       return getAllRows(this.sqlString, this.placeHolder).orm(typ)
+    else:
+      return getAllRows(this.db, this.sqlString, this.placeHolder).orm(typ)
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -277,10 +277,10 @@ proc first*(this: RDB): JsonNode =
   this.sqlString = this.selectFirstBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
-    if this.isInTransaction:
-      return getRow(this.db, this.sqlString, this.placeHolder)
-    else:
+    if this.db.isNil:
       return getRow(this.sqlString, this.placeHolder)
+    else:
+      return getRow(this.db, this.sqlString, this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -290,10 +290,10 @@ proc first*(this: RDB, typ: typedesc):Option[typ.type] =
   this.sqlString = this.selectFirstBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
-    if this.isInTransaction:
-      return getRow(this.db, this.sqlString, this.placeHolder).orm(typ).some()
-    else:
+    if this.db.isNil:
       return getRow(this.sqlString, this.placeHolder).orm(typ).some()
+    else:
+      return getRow(this.db, this.sqlString, this.placeHolder).orm(typ).some()
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -303,10 +303,10 @@ proc firstPlain*(this: RDB): seq[string] =
   this.sqlString = this.selectFirstBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
-    if this.isInTransaction:
-      return getRowPlain(this.db, this.sqlString, this.placeHolder)
-    else:
+    if this.db.isNil:
       return getRowPlain(this.sqlString, this.placeHolder)
+    else:
+      return getRowPlain(this.db, this.sqlString, this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -317,10 +317,10 @@ proc find*(this: RDB, id: int, key="id"): JsonNode =
   this.sqlString = this.selectFindBuilder(id, key).sqlString
   try:
     logger(this.sqlString, this.placeHolder)
-    if this.isInTransaction:
-      return getRow(this.db, this.sqlString, this.placeHolder)
-    else:
+    if this.db.isNil:
       return getRow(this.sqlString, this.placeHolder)
+    else:
+      return getRow(this.db, this.sqlString, this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -331,10 +331,10 @@ proc find*(this: RDB, id: int, typ:typedesc, key="id"):Option[typ.type] =
   this.sqlString = this.selectFindBuilder(id, key).sqlString
   try:
     logger(this.sqlString, this.placeHolder)
-    if this.isInTransaction:
-      return getRow(this.db, this.sqlString, this.placeHolder).orm(typ).some()
-    else:
+    if this.db.isNil:
       return getRow(this.sqlString, this.placeHolder).orm(typ).some()
+    else:
+      return getRow(this.db, this.sqlString, this.placeHolder).orm(typ).some()
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -345,10 +345,10 @@ proc findPlain*(this:RDB, id:int, key="id"):seq[string] =
   this.sqlString = this.selectFindBuilder(id, key).sqlString
   try:
     logger(this.sqlString, this.placeHolder)
-    if this.isInTransaction:
-      return getRowPlain(this.db, this.sqlString, this.placeHolder)
-    else:
+    if this.db.isNil:
       return getRowPlain(this.sqlString, this.placeHolder)
+    else:
+      return getRowPlain(this.db, this.sqlString, this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -359,85 +359,85 @@ proc findPlain*(this:RDB, id:int, key="id"):seq[string] =
 
 proc insert*(this: RDB, items: JsonNode) =
   this.sqlString = this.insertValueBuilder(items).sqlString
-  if this.isInTransaction:
-    logger(this.sqlString, this.placeHolder)
-    this.db.exec(sql this.sqlString, this.placeHolder)
-  else:
+  if this.db.isNil:
     logger(this.sqlString, this.placeHolder)
     let db = db()
     defer: db.close()
     db.exec(sql this.sqlString, this.placeHolder)
+  else:
+    logger(this.sqlString, this.placeHolder)
+    this.db.exec(sql this.sqlString, this.placeHolder)
 
 proc insert*(this: RDB, rows: openArray[JsonNode]) =
   this.sqlString = this.insertValuesBuilder(rows).sqlString
-  if this.isInTransaction:
-    logger(this.sqlString, this.placeHolder)
-    this.db.exec(sql this.sqlString, this.placeHolder)
-  else:
+  if this.db.isNil:
     logger(this.sqlString, this.placeHolder)
     let db = db()
     defer: db.close()
     db.exec(sql this.sqlString, this.placeHolder)
+  else:
+    logger(this.sqlString, this.placeHolder)
+    this.db.exec(sql this.sqlString, this.placeHolder)
 
 proc inserts*(this: RDB, rows: openArray[JsonNode]) =
-  if this.isInTransaction:
+  if this.db.isNil:
+    let db = db()
+    defer: db.close()
     for row in rows:
       let sqlString = this.insertValueBuilder(row).sqlString
       logger(sqlString, this.placeHolder)
-      this.db.exec(sql sqlString, this.placeHolder)
+      db.exec(sql sqlString, this.placeHolder)
       this.placeHolder = @[]
   else:
      # in Transaction
     for row in rows:
       let sqlString = this.insertValueBuilder(row).sqlString
       logger(sqlString, this.placeHolder)
-      let db = db()
-      defer: db.close()
-      db.exec(sql sqlString, this.placeHolder)
+      this.db.exec(sql sqlString, this.placeHolder)
       this.placeHolder = @[]
 
 proc insertID*(this: RDB, items: JsonNode):int =
   this.sqlString = this.insertValueBuilder(items).sqlString
-  if this.isInTransaction:
+  if this.db.isNil:
+    let db = db()
+    defer: db.close()
     logger(this.sqlString, this.placeHolder)
-    result = this.db.tryInsertID(sql this.sqlString, this.placeHolder).int()
+    result = db.tryInsertID(sql this.sqlString, this.placeHolder).int()
   else:
     # in Transaction
     logger(this.sqlString, this.placeHolder)
-    let db = db()
-    defer: db.close()
-    result = db.tryInsertID(sql this.sqlString, this.placeHolder).int()
+    result = this.db.tryInsertID(sql this.sqlString, this.placeHolder).int()
 
 proc insertID*(this: RDB, rows: openArray[JsonNode]):int =
   this.sqlString = this.insertValuesBuilder(rows).sqlString
   var response: int
-  if this.isInTransaction:
-    logger(this.sqlString, this.placeHolder)
-    response = this.db.tryInsertID(sql this.sqlString, this.placeHolder).int()
-    this.placeHolder = @[]
-  else:
+  if this.db.isNil:
     logger(this.sqlString, this.placeHolder)
     let db = db()
     defer: db.close()
     response = db.tryInsertID(sql this.sqlString, this.placeHolder).int()
     this.placeHolder = @[]
+  else:
+    logger(this.sqlString, this.placeHolder)
+    response = this.db.tryInsertID(sql this.sqlString, this.placeHolder).int()
+    this.placeHolder = @[]
   return response
 
 proc insertsID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
   var response = newSeq[int](rows.len)
-  if this.isInTransaction:
+  if this.db.isNil:
+    let db = db()
+    defer: db.close()
     for i, row in rows:
       let sqlString = this.insertValueBuilder(row).sqlString
       logger(sqlString, this.placeHolder)
-      response[i] = this.db.tryInsertID(sql sqlString, this.placeHolder).int()
+      response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
       this.placeHolder = @[]
   else:
     for i, row in rows:
       let sqlString = this.insertValueBuilder(row).sqlString
       logger(sqlString, this.placeHolder)
-      let db = db()
-      defer: db.close()
-      response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
+      response[i] = this.db.tryInsertID(sql sqlString, this.placeHolder).int()
       this.placeHolder = @[]
   return response
 
@@ -458,51 +458,55 @@ proc update*(this: RDB, items: JsonNode) =
   this.placeHolder = updatePlaceHolder & this.placeHolder
   this.sqlString = this.updateBuilder(items).sqlString
 
-  if this.isInTransaction:
-    logger(this.sqlString, this.placeHolder)
-    this.db.exec(sql this.sqlString, this.placeHolder)
-  else:
+  if this.db.isNil:
     logger(this.sqlString, this.placeHolder)
     let db = db()
     defer: db.close()
     db.exec(sql this.sqlString, this.placeHolder)
+  else:
+    logger(this.sqlString, this.placeHolder)
+    this.db.exec(sql this.sqlString, this.placeHolder)
 
 
 # ==================== DELETE ====================
 
 proc delete*(this: RDB) =
   this.sqlString = this.deleteBuilder().sqlString
-  if this.isInTransaction:
-    logger(this.sqlString, this.placeHolder)
-    this.db.exec(sql this.sqlString, this.placeHolder)
-  else:
+  if this.db.isNil:
     logger(this.sqlString, this.placeHolder)
     let db = db()
     defer: db.close()
     db.exec(sql this.sqlString, this.placeHolder)
+  else:
+    logger(this.sqlString, this.placeHolder)
+    this.db.exec(sql this.sqlString, this.placeHolder)
 
 proc delete*(this: RDB, id: int, key="id") =
   this.placeHolder.add($id)
   this.sqlString = this.deleteByIdBuilder(id, key).sqlString
-  if this.isInTransaction:
-    logger(this.sqlString, this.placeHolder)
-    this.db.exec(sql this.sqlString, this.placeHolder)
-  else:
-    # in Transaction
+  if this.db.isNil:
     logger(this.sqlString, this.placeHolder)
     let db = db()
     defer: db.close()
     db.exec(sql this.sqlString, this.placeHolder)
+  else:
+    # in Transaction
+    logger(this.sqlString, this.placeHolder)
+    this.db.exec(sql this.sqlString, this.placeHolder)
 
 
 # ==================== EXEC ====================
 
 proc exec*(this: RDB) =
   ## It is only used with raw()
-  let db = db()
-  defer: db.close()
-  logger(this.sqlString, this.placeHolder)
-  db.exec(sql this.sqlString, this.placeHolder)
+  if this.db.isNil:
+    let db = db()
+    defer: db.close()
+    logger(this.sqlString, this.placeHolder)
+    db.exec(sql this.sqlString, this.placeHolder)
+  else:
+    logger(this.sqlString, this.placeHolder)
+    this.db.exec(sql this.sqlString, this.placeHolder)
 
 
 # ==================== Aggregates ====================
