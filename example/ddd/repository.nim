@@ -9,3 +9,6 @@ proc newRepository*(db:DbConn):Repository =
 
 proc getUsers*(this:Repository):seq[JsonNode] =
   return this.rdb.table("users").get()
+
+proc getUser*(this:Repository, id:int):JsonNode =
+  return this.rdb.table("users").find(id)

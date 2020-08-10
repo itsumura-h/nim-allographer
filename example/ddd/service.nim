@@ -12,3 +12,6 @@ proc newService*(db:DbConn):Service =
 
 proc getUsers*(this:Service):seq[JsonNode] =
   return this.repository.getUsers()
+
+proc getUser*(this:Service, id:int):JsonNode =
+  return this.repository.getUser(id)
