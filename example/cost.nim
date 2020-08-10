@@ -29,8 +29,9 @@ bench("DDD"):
   let db = db()
   defer: db.close()
   let service = newService(db)
-  for _ in 0..LENGTH:
+  for i in 1..LENGTH+1:
     discard service.getUsers()
+    discard service.getUser(i)
 
 bench("get transaction"):
   transaction:
