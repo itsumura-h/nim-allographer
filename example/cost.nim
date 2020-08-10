@@ -3,7 +3,7 @@ import ../src/allographer/query_builder
 import ddd/service
 import setup
 
-const LENGTH = 100
+const LENGTH = 1000
 
 setup()
 

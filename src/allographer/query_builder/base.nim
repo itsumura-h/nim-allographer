@@ -7,3 +7,8 @@ type
     query*: JsonNode
     sqlString*: string
     placeHolder*: seq[string]
+
+proc cleanUp*(this:RDB) =
+  this.query = newJNull()
+  this.sqlString = ""
+  this.placeHolder = newSeq[string]()
