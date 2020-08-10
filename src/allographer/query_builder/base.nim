@@ -12,3 +12,5 @@ proc cleanUp*(this:RDB) =
   this.query = newJNull()
   this.sqlString = ""
   this.placeHolder = newSeq[string]()
+
+proc isNil*[DbConn](x: DbConn): bool {.noSideEffect, magic: "IsNil".}
