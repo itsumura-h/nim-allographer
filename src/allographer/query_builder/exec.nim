@@ -210,6 +210,7 @@ proc toSql*(this: RDB): string =
   return this.sqlString
 
 proc get*(this: RDB): seq[JsonNode] =
+  defer: this.cleanUp()
   this.sqlString = this.selectBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
@@ -223,6 +224,7 @@ proc get*(this: RDB): seq[JsonNode] =
     return newSeq[JsonNode](0)
 
 proc get*(this: RDB, typ: typedesc): seq[typ.type] =
+  defer: this.cleanUp()
   this.sqlString = this.selectBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
@@ -236,6 +238,7 @@ proc get*(this: RDB, typ: typedesc): seq[typ.type] =
     return newSeq[typ.type](0)
 
 proc getPlain*(this:RDB):seq[seq[string]] =
+  defer: this.cleanUp()
   this.sqlString = this.selectBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
@@ -250,6 +253,7 @@ proc getPlain*(this:RDB):seq[seq[string]] =
 
 
 proc getRaw*(this: RDB): seq[JsonNode] =
+  defer: this.cleanUp()
   try:
     logger(this.sqlString, this.placeHolder)
     if this.db.isNil:
@@ -262,6 +266,7 @@ proc getRaw*(this: RDB): seq[JsonNode] =
     return newSeq[JsonNode](0)
 
 proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
+  defer: this.cleanUp()
   try:
     logger(this.sqlString, this.placeHolder)
     if this.db.isNil:
@@ -274,6 +279,7 @@ proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
     return newSeq[typ.type](0)
 
 proc first*(this: RDB): JsonNode =
+  defer: this.cleanUp()
   this.sqlString = this.selectFirstBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
@@ -287,6 +293,7 @@ proc first*(this: RDB): JsonNode =
     return newJNull()
 
 proc first*(this: RDB, typ: typedesc):Option[typ.type] =
+  defer: this.cleanUp()
   this.sqlString = this.selectFirstBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
@@ -300,6 +307,7 @@ proc first*(this: RDB, typ: typedesc):Option[typ.type] =
     return none(typ.type)
 
 proc firstPlain*(this: RDB): seq[string] =
+  defer: this.cleanUp()
   this.sqlString = this.selectFirstBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
@@ -313,6 +321,7 @@ proc firstPlain*(this: RDB): seq[string] =
     return newSeq[string](0)
 
 proc find*(this: RDB, id: int, key="id"): JsonNode =
+  defer: this.cleanUp()
   this.placeHolder.add($id)
   this.sqlString = this.selectFindBuilder(id, key).sqlString
   try:
@@ -327,6 +336,7 @@ proc find*(this: RDB, id: int, key="id"): JsonNode =
     return newJNull()
 
 proc find*(this: RDB, id: int, typ:typedesc, key="id"):Option[typ.type] =
+  defer: this.cleanUp()
   this.placeHolder.add($id)
   this.sqlString = this.selectFindBuilder(id, key).sqlString
   try:
@@ -341,6 +351,7 @@ proc find*(this: RDB, id: int, typ:typedesc, key="id"):Option[typ.type] =
     return none(typ.type)
 
 proc findPlain*(this:RDB, id:int, key="id"):seq[string] =
+  defer: this.cleanUp()
   this.placeHolder.add($id)
   this.sqlString = this.selectFindBuilder(id, key).sqlString
   try:
@@ -358,6 +369,7 @@ proc findPlain*(this:RDB, id:int, key="id"):seq[string] =
 # ==================== INSERT ====================
 
 proc insert*(this: RDB, items: JsonNode) =
+  defer: this.cleanUp()
   this.sqlString = this.insertValueBuilder(items).sqlString
   if this.db.isNil:
     logger(this.sqlString, this.placeHolder)
@@ -369,6 +381,7 @@ proc insert*(this: RDB, items: JsonNode) =
     this.db.exec(sql this.sqlString, this.placeHolder)
 
 proc insert*(this: RDB, rows: openArray[JsonNode]) =
+  defer: this.cleanUp()
   this.sqlString = this.insertValuesBuilder(rows).sqlString
   if this.db.isNil:
     logger(this.sqlString, this.placeHolder)
@@ -380,6 +393,7 @@ proc insert*(this: RDB, rows: openArray[JsonNode]) =
     this.db.exec(sql this.sqlString, this.placeHolder)
 
 proc inserts*(this: RDB, rows: openArray[JsonNode]) =
+  defer: this.cleanUp()
   if this.db.isNil:
     let db = db()
     defer: db.close()
@@ -397,6 +411,7 @@ proc inserts*(this: RDB, rows: openArray[JsonNode]) =
       this.placeHolder = @[]
 
 proc insertID*(this: RDB, items: JsonNode):int =
+  defer: this.cleanUp()
   this.sqlString = this.insertValueBuilder(items).sqlString
   if this.db.isNil:
     let db = db()
@@ -409,6 +424,7 @@ proc insertID*(this: RDB, items: JsonNode):int =
     result = this.db.tryInsertID(sql this.sqlString, this.placeHolder).int()
 
 proc insertID*(this: RDB, rows: openArray[JsonNode]):int =
+  defer: this.cleanUp()
   this.sqlString = this.insertValuesBuilder(rows).sqlString
   var response: int
   if this.db.isNil:
@@ -424,6 +440,7 @@ proc insertID*(this: RDB, rows: openArray[JsonNode]):int =
   return response
 
 proc insertsID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
+  defer: this.cleanUp()
   var response = newSeq[int](rows.len)
   if this.db.isNil:
     let db = db()
@@ -444,6 +461,7 @@ proc insertsID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
 # ==================== UPDATE ====================
 
 proc update*(this: RDB, items: JsonNode) =
+  defer: this.cleanUp()
   var updatePlaceHolder: seq[string]
   for item in items.pairs:
     if item.val.kind == JInt:
@@ -471,6 +489,7 @@ proc update*(this: RDB, items: JsonNode) =
 # ==================== DELETE ====================
 
 proc delete*(this: RDB) =
+  defer: this.cleanUp()
   this.sqlString = this.deleteBuilder().sqlString
   if this.db.isNil:
     logger(this.sqlString, this.placeHolder)
@@ -482,6 +501,7 @@ proc delete*(this: RDB) =
     this.db.exec(sql this.sqlString, this.placeHolder)
 
 proc delete*(this: RDB, id: int, key="id") =
+  defer: this.cleanUp()
   this.placeHolder.add($id)
   this.sqlString = this.deleteByIdBuilder(id, key).sqlString
   if this.db.isNil:
@@ -499,6 +519,7 @@ proc delete*(this: RDB, id: int, key="id") =
 
 proc exec*(this: RDB) =
   ## It is only used with raw()
+  defer: this.cleanUp()
   if this.db.isNil:
     let db = db()
     defer: db.close()
