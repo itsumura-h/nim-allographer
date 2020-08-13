@@ -23,7 +23,7 @@ for i in 1..5:
     }
   )
 
-RDB().table("users").insert(users)
+rdb().table("users").insert(users)
 
 
 type Typ = ref object
@@ -50,50 +50,50 @@ proc checkTestOptions(t:Typ, r:Option[Typ]) =
 suite "return with type":
   test "get":
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = RDB().table("users").get(Typ)[0]
+    var r = rdb().table("users").get(Typ)[0]
     checkTest(t, r)
   test "getRaw":
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = RDB().raw("select * from users").getRaw(Typ)[0]
+    var r = rdb().raw("select * from users").getRaw(Typ)[0]
     checkTest(t, r)
   test "first":
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = RDB().table("users").first(Typ)
+    var r = rdb().table("users").first(Typ)
     checkTestOptions(t, r)
   test "find":
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = RDB().table("users").find(1, Typ)
+    var r = rdb().table("users").find(1, Typ)
     checkTestOptions(t, r)
   test "transaction":
     transaction:
       var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
       var rArr = @[
-        RDB().table("users").get(Typ)[0],
-        RDB().raw("select * from users").getRaw(Typ)[0],
+        rdb().table("users").get(Typ)[0],
+        rdb().raw("select * from users").getRaw(Typ)[0],
       ]
       for r in rArr:
         checkTest(t, r)
       var rArr2 = @[
-        RDB().table("users").first(Typ),
-        RDB().table("users").find(1, Typ)
+        rdb().table("users").first(Typ),
+        rdb().table("users").find(1, Typ)
       ]
       for r in rArr2:
         checkTestOptions(t, r)
 
 suite "return with type fail":
   test "get":
-    var r = RDB().table("users").where("id", ">", 10).get(Typ)
+    var r = rdb().table("users").where("id", ">", 10).get(Typ)
     check r.len == 0
     check r == newSeq[Typ](0)
   test "getRaw":
-    var r = RDB().raw("select * from users where id > 10").getRaw(Typ)
+    var r = rdb().raw("select * from users where id > 10").getRaw(Typ)
     check r.len == 0
     check r == newSeq[Typ](0)
   test "first":
-    var r = RDB().table("users").where("id", ">", 10).first(Typ)
+    var r = rdb().table("users").where("id", ">", 10).first(Typ)
     check r.isSome() == false
   test "find":
-    var r = RDB().table("users").find(10, Typ)
+    var r = rdb().table("users").find(10, Typ)
     check r.isSome() == false
 
 alter(

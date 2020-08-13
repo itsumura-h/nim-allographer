@@ -25,7 +25,7 @@ schema([
 ])
 
 # シーダー
-RDB().table("auth").insert([
+rdb().table("auth").insert([
   %*{"auth": "admin"},
   %*{"auth": "user"}
 ])
@@ -52,4 +52,4 @@ for i in 1..total:
   pb.increment()
 
 pb.finish()
-RDB().table("users").insert(insertData)
+rdb().table("users").insert(insertData)

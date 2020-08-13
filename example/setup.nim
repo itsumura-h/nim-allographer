@@ -25,7 +25,7 @@ proc setup*() =
   ])
 
   # seeder
-  RDB().table("auth").insert([
+  rdb().table("auth").insert([
     %*{"auth": "admin"},
     %*{"auth": "user"}
   ])
@@ -41,4 +41,4 @@ proc setup*() =
       }
     )
 
-  RDB().table("users").insert(users)
+  rdb().table("users").insert(users)

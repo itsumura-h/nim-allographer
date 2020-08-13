@@ -17,7 +17,7 @@ schema([
 ])
 
 # seeder
-RDB().table("auth").insert([
+rdb().table("auth").insert([
   %*{"auth": "admin"},
   %*{"auth": "user"}
 ])
@@ -33,7 +33,7 @@ for i in 1..10:
     }
   )
 
-RDB().table("users").insert(users)
+rdb().table("users").insert(users)
 
 suite "transaction":
   test "not in transaction":
@@ -47,10 +47,10 @@ suite "transaction":
 
   test "in transaction":
     transaction:
-      var user= RDB().table("users").select("id").where("name", "=", "user3").first()
+      var user= rdb().table("users").select("id").where("name", "=", "user3").first()
       var id = user["id"].getInt()
       echo id
-      user = RDB().table("users").select("name", "email").find(id)
+      user = rdb().table("users").select("name", "email").find(id)
       echo user
 
   test "rollback success":
@@ -65,41 +65,41 @@ suite "transaction":
         echo "=== rollback"
         echo getCurrentExceptionMsg()
         db.exec(sql"ROLLBACK")
-    echo RDB().table("users").find(11)
+    echo rdb().table("users").find(11)
     echo db.type
 
   test "rollback":
     transaction:
       echo "=== in transaction"
-      RDB().table("users").insert(%*{"id": 9, "name": "user9", "email": "user9@example.com"})
+      rdb().table("users").insert(%*{"id": 9, "name": "user9", "email": "user9@example.com"})
       echo "=== end of transaction"
     echo "=== out of transaction"
-    echo RDB().table("users").find(11)
+    echo rdb().table("users").find(11)
 
   test "insertID":
     transaction:
-      let id = RDB().table("users")
+      let id = rdb().table("users")
                 .insertID(%*{"name": "user11", "email": "user11@example.com"})
       echo id
-    echo RDB().table("users").max("id")
+    echo rdb().table("users").max("id")
 
   test "insertID":
     transaction:
-      let id = RDB().table("users")
+      let id = rdb().table("users")
                 .insertID([
                   %*{"name": "user11", "email": "user11@example.com"},
                   %*{"name": "user12", "email": "user12@example.com"}
                 ])
       echo id
-    echo RDB().table("users").max("id")
+    echo rdb().table("users").max("id")
 
   test "insertsID":
     transaction:
-      discard RDB().table("users").insertsID(
+      discard rdb().table("users").insertsID(
         [
           %*{"name": "John", "email": "John@gmail.com", "address": "London"},
           %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
           %*{"name": "George", "birth_date": "1943-02-25", "address": "London"},
         ]
       )
-    echo RDB().table("users").where("id", ">", 10).get()
+    echo rdb().table("users").where("id", ">", 10).get()

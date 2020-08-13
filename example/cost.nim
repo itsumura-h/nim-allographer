@@ -23,12 +23,14 @@ bench("embedded transaction"):
 
 bench("get"):
   for _ in 0..LENGTH:
+    discard rdb().table("users").get()
+
+bench("get2"):
+  for _ in 0..LENGTH:
     discard RDB().table("users").get()
 
 bench("DDD"):
-  let db = db()
-  defer: db.close()
-  let service = newService(db)
+  let service = newService()
   for i in 1..LENGTH+1:
     discard service.getUsers()
     discard service.getUser(i)
@@ -36,13 +38,13 @@ bench("DDD"):
 bench("get transaction"):
   transaction:
     for _ in 0..LENGTH:
-      discard RDB().table("users").get()
+      discard rdb().table("users").get()
 
 bench("getPlain transaction"):
   transaction:
     for _ in 0..LENGTH:
-      discard RDB().table("users").getPlain()
+      discard rdb().table("users").getPlain()
 
 bench("make sql"):
   for _ in 0..LENGTH:
-    discard RDB().table("users").where("id", "=", 1).limit(1).toSql()
+    discard rdb().table("users").where("id", "=", 1).limit(1).toSql()

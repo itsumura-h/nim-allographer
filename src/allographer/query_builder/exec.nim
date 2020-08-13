@@ -118,22 +118,24 @@ proc getAllRowsPlain*(sqlString:string, args:varargs[string]):seq[seq[string]] =
   let db = db()
   defer: db.close()
 
-  var rows = newSeq[seq[string]]()
-  for row in db.instantRows(sql sqlString, args):
-    var columns = newSeq[string](row.len)
-    for i in 0..row.len()-1:
-      columns[i] = row[i]
-    rows.add(columns)
-  return rows
+  # var rows = newSeq[seq[string]]()
+  # for row in db.instantRows(sql sqlString, args):
+  #   var columns = newSeq[string](row.len)
+  #   for i in 0..row.len()-1:
+  #     columns[i] = row[i]
+  #   rows.add(columns)
+  # return rows
+  return db.getAllRows(sql sqlString, args)
 
 proc getAllRowsPlain*(db:DbConn, sqlString:string, args:varargs[string]):seq[seq[string]] =
-  var rows = newSeq[seq[string]]()
-  for row in db.instantRows(sql sqlString, args):
-    var columns = newSeq[string](row.len)
-    for i in 0..row.len()-1:
-      columns[i] = row[i]
-    rows.add(columns)
-  return rows
+  # var rows = newSeq[seq[string]]()
+  # for row in db.instantRows(sql sqlString, args):
+  #   var columns = newSeq[string](row.len)
+  #   for i in 0..row.len()-1:
+  #     columns[i] = row[i]
+  #   rows.add(columns)
+  # return rows
+  return db.getAllRows(sql sqlString, args)
 
 proc getRow(sqlString:string, args:varargs[string]):JsonNode =
   let db = db()
@@ -177,22 +179,24 @@ proc getRowPlain(sqlString:string, args:varargs[string]):seq[string] =
   let db = db()
   defer: db.close()
 
-  var db_columns: DbColumns
-  var columns = newSeq[string]()
-  for row in db.instantRows(db_columns, sql sqlString, args):
-    for i in 0..row.len()-1:
-      columns.add(row[i])
-    break
-  return columns
+  # var db_columns: DbColumns
+  # var columns = newSeq[string]()
+  # for row in db.instantRows(db_columns, sql sqlString, args):
+  #   for i in 0..row.len()-1:
+  #     columns.add(row[i])
+  #   break
+  # return columns
+  return db.getRow(sql sqlString, args)
 
 proc getRowPlain(db:DbConn, sqlString:string, args:varargs[string]):seq[string] =
   ## used in transaction
-  var columns = newSeq[string]()
-  for row in db.instantRows(sql sqlString, args):
-    for i in 0..row.len()-1:
-      columns.add(row[i])
-    break
-  return columns
+  # var columns = newSeq[string]()
+  # for row in db.instantRows(sql sqlString, args):
+  #   for i in 0..row.len()-1:
+  #     columns.add(row[i])
+  #   break
+  # return columns
+  return db.getRow(sql sqlString, args)
 
 proc orm(rows:openArray[JsonNode], typ:typedesc):seq[typ.type] =
   var response = newSeq[typ.type](rows.len)

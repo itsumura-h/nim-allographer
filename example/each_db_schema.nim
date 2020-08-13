@@ -14,7 +14,7 @@ schema([
   ], reset=true)
 ])
 
-let users = RDB()
+let users = rdb()
           .table("users")
           .select("id", "name")
           .paginate(3, 1)

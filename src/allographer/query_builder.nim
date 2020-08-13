@@ -11,3 +11,8 @@ export
   exec,
   transaction,
   connection
+
+let db = db()
+
+proc rdb*():RDB =
+  return RDB(db:db)

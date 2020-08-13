@@ -23,7 +23,7 @@ schema([
 ])
 
 # シーダー
-RDB().table("auth").insert([
+rdb().table("auth").insert([
   %*{"name": "admin"},
   %*{"name": "user"}
 ])
@@ -50,13 +50,13 @@ for i in 1..total:
   pb.increment()
 
 pb.finish()
-RDB().table("users").insert(insertData)
-echo RDB().table("users").get()
+rdb().table("users").insert(insertData)
+echo rdb().table("users").get()
 
-echo RDB().table("users").find(2, key="user_id")
-echo RDB().table("auth").find(1)
+echo rdb().table("users").find(2, key="user_id")
+echo rdb().table("auth").find(1)
 
-RDB().table("users").delete(2, key="user_id")
-RDB().table("auth").delete(2)
-echo RDB().table("users").limit(3).get()
-echo RDB().table("auth").limit(3).get()
+rdb().table("users").delete(2, key="user_id")
+rdb().table("auth").delete(2)
+echo rdb().table("users").limit(3).get()
+echo rdb().table("auth").limit(3).get()
