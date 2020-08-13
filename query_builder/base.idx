@@ -1,3 +1,3 @@
 RDB	query_builder/base.html#RDB	base: RDB	
-cleanUp	query_builder/base.html#cleanUp,RDB	base: cleanUp(this: RDB)	
 isNil	query_builder/base.html#isNil,DbConn	base: isNil[DbConn](x: DbConn): bool	
+cleanUp	query_builder/base.html#cleanUp,RDB	base: cleanUp(this: RDB)	
