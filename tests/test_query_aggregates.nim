@@ -22,36 +22,36 @@ for i in 1..10:
     }
   )
 
-RDB().table("users").insert(users)
+rdb().table("users").insert(users)
 
 suite "aggregates":
   test "count()":
-    var t = RDB().table("users").count()
+    var t = rdb().table("users").count()
     echo t
     check t == 10
 
   test "max()":
-    var t = RDB().table("users").max("name")
+    var t = rdb().table("users").max("name")
     echo t
     check t == "user9"
-    var t2 = RDB().table("users").max("id")
+    var t2 = rdb().table("users").max("id")
     echo t2
     check t2 == "10"
 
   test "min()":
-    var t = RDB().table("users").min("name")
+    var t = rdb().table("users").min("name")
     echo t
     check t == "user1"
-    var t2 = RDB().table("users").min("id")
+    var t2 = rdb().table("users").min("id")
     echo t2
     check t2 == "1"
 
   test "avg()":
-    var t = RDB().table("users").avg("id")
+    var t = rdb().table("users").avg("id")
     echo t
     check t == 5.5
 
   test "sum()":
-    var t = RDB().table("users").sum("id")
+    var t = rdb().table("users").sum("id")
     echo t
     check t == 55.0

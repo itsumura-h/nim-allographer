@@ -25,7 +25,7 @@ suite "sql injection":
     ])
 
     # シーダー
-    RDB().table("auth").insert([
+    rdb().table("auth").insert([
       %*{"auth": "admin"},
       %*{"auth": "user"}
     ])
@@ -48,42 +48,42 @@ suite "sql injection":
       pb.increment()
     pb.finish()
 
-    RDB().table("users").insert(insertData)
+    rdb().table("users").insert(insertData)
   test "1":
-    var x = RDB().table("users").where("name", "=", "user1").get()
-    var y = RDB().table("users").where("name", "=", "user1' AND 'A' = 'A").get()
+    var x = rdb().table("users").where("name", "=", "user1").get()
+    var y = rdb().table("users").where("name", "=", "user1' AND 'A' = 'A").get()
     echo x
     echo y
     check x != y
   test "2":
-    var x = RDB().table("users").where("name", "=", "user1").get()
-    var y = RDB().table("users").where("name", "=", "user1' AND 'A' = 'B").get()
+    var x = rdb().table("users").where("name", "=", "user1").get()
+    var y = rdb().table("users").where("name", "=", "user1' AND 'A' = 'B").get()
     echo x
     echo y
     check x != y
   test "3":
-    var x = RDB().table("users").where("name", "=", "user1").get()
-    var y = RDB().table("users").where("name", "=", "user1' OR 'A' = 'B").get()
+    var x = rdb().table("users").where("name", "=", "user1").get()
+    var y = rdb().table("users").where("name", "=", "user1' OR 'A' = 'B").get()
     echo x
     echo y
     check x != y
   test "4":
-    var x = RDB().table("users").where("id", "=", 1).get()
+    var x = rdb().table("users").where("id", "=", 1).get()
     var y: seq[JsonNode]
     try:
-      y = RDB().table("users").where("id", "=", "2-1").get()
+      y = rdb().table("users").where("id", "=", "2-1").get()
     except Exception:
       y = @[]
     echo x
     echo y
     check x != y
   test "5":
-    var x = RDB().table("users").select("name", "email")
+    var x = rdb().table("users").select("name", "email")
             .join("auth", "auth.id", "=", "users.auth_id")
             .where("auth.id", "=", 1).get()
     var y: seq[JsonNode]
     try:
-      y = RDB().table("users").select("name", "email")
+      y = rdb().table("users").select("name", "email")
               .join("auth", "auth.id", "=", "users.auth_id")
               .where("auth.id", "=", "2-1").get()
     except Exception:

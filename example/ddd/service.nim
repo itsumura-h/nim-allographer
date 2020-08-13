@@ -5,9 +5,9 @@ import repository
 type Service = ref object
   repository:Repository
 
-proc newService*(db:DbConn):Service =
+proc newService*():Service =
   return Service(
-    repository: newRepository(db)
+    repository: newRepository()
   )
 
 proc getUsers*(this:Service):seq[JsonNode] =

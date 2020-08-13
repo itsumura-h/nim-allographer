@@ -8,9 +8,9 @@ type
     sqlString*: string
     placeHolder*: seq[string]
 
+proc isNil*[DbConn](x: DbConn): bool {.noSideEffect, magic: "IsNil".}
+
 proc cleanUp*(this:RDB) =
   this.query = newJNull()
   this.sqlString = ""
   this.placeHolder = newSeq[string]()
-
-proc isNil*[DbConn](x: DbConn): bool {.noSideEffect, magic: "IsNil".}

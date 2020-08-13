@@ -8,15 +8,15 @@ macro transaction*(bodyInput: untyped):untyped =
   bodyStr = bodyStr.indent(4)
   bodyStr = fmt"""
 block:
-  let db = db()
-  defer: db.close()
+  # let db = db()
+  # defer: db.close()
   try:
-    db.exec(sql"BEGIN")
+    rdb().db.exec(sql"BEGIN")
 {bodyStr}
-    db.exec(sql"COMMIT")
+    rdb().db.exec(sql"COMMIT")
   except:
     echo getCurrentExceptionMsg()
-    db.exec(sql"ROLLBACK")
+    rdb().db.exec(sql"ROLLBACK")
 """
   let body = bodyStr.parseStmt()
   return body

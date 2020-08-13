@@ -21,7 +21,7 @@ schema([
 ])
 
 # シーダー
-RDB().table("auth").insert([
+rdb().table("auth").insert([
   %*{"auth": "admin"},
   %*{"auth": "user"}
 ])
@@ -47,11 +47,11 @@ for i in 1..total:
   pb.increment()
 pb.finish()
 
-RDB().table("users").insert(insertData)
+rdb().table("users").insert(insertData)
 
-echo  RDB().table("users").get()
+echo  rdb().table("users").get()
 
-echo RDB()
+echo rdb()
     .table("users")
     .select("users.id", "users.email")
     .where("name", "=", "user3")
@@ -62,25 +62,25 @@ echo RDB()
     .get()
 
 
-echo RDB().table("users").select("id", "email").limit(5).get()
-echo RDB().table("users").select("id", "email").limit(5).first()
-echo RDB().table("users").find(4)
-echo RDB().table("users").select("id", "email").limit(5).find(3)
+echo rdb().table("users").select("id", "email").limit(5).get()
+echo rdb().table("users").select("id", "email").limit(5).first()
+echo rdb().table("users").find(4)
+echo rdb().table("users").select("id", "email").limit(5).find(3)
 
 echo ""
 
-RDB().table("users").insert(%*{"name": "John", "email": "John@gmail.com"})
-echo RDB().table("users").insertID(%*{"name": "John", "email": "John@gmail.com"})
+rdb().table("users").insert(%*{"name": "John", "email": "John@gmail.com"})
+echo rdb().table("users").insertID(%*{"name": "John", "email": "John@gmail.com"})
 
 
-RDB().table("users").insert(
+rdb().table("users").insert(
   [
       %*{"name": "John", "email": "John@gmail.com"},
       %*{"name": "Paul", "email": "Paul@gmail.com"}
   ]
 )
 
-RDB().table("users").inserts(
+rdb().table("users").inserts(
   [
       %*{"name": "Mick", "email": "Mick@gmail.com"},
       %*{"name": "Keith", "password": "KeithPass"}
@@ -88,19 +88,19 @@ RDB().table("users").inserts(
 )
 
 
-RDB().table("users").where("id", "=", 2).update(%*{"name": "David"})
-RDB().table("users").where("id", "=", 2).update(%*{"name": "David"})
-echo RDB().table("users").select().where("name", "=", "David").get()
-echo RDB().table("users").find(2)
+rdb().table("users").where("id", "=", 2).update(%*{"name": "David"})
+rdb().table("users").where("id", "=", 2).update(%*{"name": "David"})
+echo rdb().table("users").select().where("name", "=", "David").get()
+echo rdb().table("users").find(2)
 
-RDB().table("users").where("name", "=", "David").delete()
-RDB().table("users").delete(3)
-echo RDB().table("users").find(3)
-echo RDB().table("users").limit(5).get()
-echo RDB().table("users").select("name").where("address", "is", nil).get()
+rdb().table("users").where("name", "=", "David").delete()
+rdb().table("users").delete(3)
+echo rdb().table("users").find(3)
+echo rdb().table("users").limit(5).get()
+echo rdb().table("users").select("name").where("address", "is", nil).get()
 
 # # sql check
-let r = RDB()
+let r = rdb()
     .table("users")
     .select("users.id", "users.email")
     .where("name", "=", "user3")
@@ -124,9 +124,9 @@ type User = ref object
   address:string
   birth_date:string
   auth_id:int
-let users = RDB().table("users").limit(5).get(User)
+let users = rdb().table("users").limit(5).get(User)
 for user in users:
   echo user.name
 
-RDB().raw("DROP TABLE users").exec()
-RDB().raw("DROP TABLE auth").exec()
+rdb().raw("DROP TABLE users").exec()
+rdb().raw("DROP TABLE auth").exec()
