@@ -1,21 +1,18 @@
-import times, json
+import times, json, asyncdispatch
 import ../src/allographer/query_builder
 import ddd/service
 import setup
 
 const LENGTH = 1000
 
+let db = db()
 setup()
 
 bench("embedded"):
   for _ in 0..LENGTH:
-    let db = db()
-    defer: db.close()
     discard db.getAllRows(sql "SELECT * from users")
 
 bench("embedded transaction"):
-  let db = db()
-  defer: db.close()
   db.exec(sql"BEGIN")
   for _ in 0..LENGTH:
     discard db.getAllRows(sql "SELECT * from users")
@@ -27,7 +24,7 @@ bench("get"):
 
 bench("get2"):
   for _ in 0..LENGTH:
-    discard RDB().table("users").get()
+    discard rdb().table("users").get()
 
 bench("DDD"):
   let service = newService()
@@ -48,3 +45,13 @@ bench("getPlain transaction"):
 bench("make sql"):
   for _ in 0..LENGTH:
     discard rdb().table("users").where("id", "=", 1).limit(1).toSql()
+
+proc access():Future[seq[JsonNode]] =
+  let re = newFuture[seq[JsonNode]]("")
+  let res = rdb().table("users").get()
+  re.complete(res)
+  return re
+
+bench("async"):
+  for _ in 0..LENGTH:
+    discard waitFor access()
