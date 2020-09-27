@@ -31,7 +31,7 @@ rdb().table("auth").insert([
 ])
 
 # プログレスバー
-let total = 50
+let total = 500
 var pb = newProgressBar(total=total) # totalは分母
 
 pb.start()

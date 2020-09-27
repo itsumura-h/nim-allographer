@@ -1,4 +1,4 @@
-import macros, strformat, os
+import os
 
 const
   DRIVER = getEnv("DB_DRIVER","sqlite").string
@@ -7,22 +7,29 @@ const
   PASSWORD = getEnv("DB_PASSWORD").string
   DATABASE = getEnv("DB_DATABASE").string
 
-macro importDbModule() =
-  var lib =
-    if DRIVER == "sqlite":
-      "sqlite3"
-    else:
-      &"{DRIVER}"
+when DRIVER == "sqlite":
+  import db_sqlite
+  export db_sqlite
+  import sqlite3 except close
 
-  parseStmt(fmt"""
-import db_{DRIVER}
-import {lib} except close
-export db_{DRIVER}
-""")
-importDbModule
+when DRIVER == "postgres":
+  import ./pkg/asyncpg/asyncpg
+  export asyncpg
+  import postgres except close
+
+when DRIVER == "mysql":
+  import db_mysql
+  export db_mysql
+  import mysql except close
+
 
 proc db*(): DbConn =
   open(CONN, USER, PASSWORD, DATABASE)
 
 proc getDriver*():string =
   return DRIVER
+
+# ==================== async ====================
+when DRIVER == "postgres":
+  proc pool*():AsyncPool =
+    newAsyncPool(CONN, USER, PASSWORD, DATABASE, 90)

@@ -62,6 +62,11 @@ suite "alter table":
       .getStr == "test"
 
   test "changed_column":
+    echo rdb()
+      .table("table_alter")
+      .select("changed_column")
+      .orderBy("id", Asc)
+      .get()
     check rdb()
       .table("table_alter")
       .select("changed_column")

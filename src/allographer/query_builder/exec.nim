@@ -1,4 +1,4 @@
-import json, strutils, strformat, algorithm, options
+import json, strutils, strformat, algorithm, options, asyncdispatch
 import base, builders
 import ../util
 import ../connection
@@ -78,7 +78,7 @@ proc toJson(results:openArray[seq[string]], columns:openArray[array[3, string]])
     response_table[index] = response_row
   return response_table
 
-proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
+proc getAllRows(sqlString:string, args:seq[string]):seq[JsonNode] =
   let db = db()
   defer: db.close()
 
@@ -97,7 +97,7 @@ proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
   let columns = getColumns(db_columns)
   return toJson(rows, columns) # seq[JsonNode]
 
-proc getAllRows(db:DbConn, sqlString:string, args:varargs[string]): seq[JsonNode] =
+proc getAllRows(db:DbConn, sqlString:string, args:seq[string]):seq[JsonNode] =
   ## used in transaction
   var db_columns: DbColumns
   var rows = newSeq[seq[string]]()
@@ -117,24 +117,9 @@ proc getAllRows(db:DbConn, sqlString:string, args:varargs[string]): seq[JsonNode
 proc getAllRowsPlain*(sqlString:string, args:varargs[string]):seq[seq[string]] =
   let db = db()
   defer: db.close()
-
-  # var rows = newSeq[seq[string]]()
-  # for row in db.instantRows(sql sqlString, args):
-  #   var columns = newSeq[string](row.len)
-  #   for i in 0..row.len()-1:
-  #     columns[i] = row[i]
-  #   rows.add(columns)
-  # return rows
   return db.getAllRows(sql sqlString, args)
 
 proc getAllRowsPlain*(db:DbConn, sqlString:string, args:varargs[string]):seq[seq[string]] =
-  # var rows = newSeq[seq[string]]()
-  # for row in db.instantRows(sql sqlString, args):
-  #   var columns = newSeq[string](row.len)
-  #   for i in 0..row.len()-1:
-  #     columns[i] = row[i]
-  #   rows.add(columns)
-  # return rows
   return db.getAllRows(sql sqlString, args)
 
 proc getRow(sqlString:string, args:varargs[string]):JsonNode =
@@ -189,13 +174,6 @@ proc getRowPlain(sqlString:string, args:varargs[string]):seq[string] =
   return db.getRow(sql sqlString, args)
 
 proc getRowPlain(db:DbConn, sqlString:string, args:varargs[string]):seq[string] =
-  ## used in transaction
-  # var columns = newSeq[string]()
-  # for row in db.instantRows(sql sqlString, args):
-  #   for i in 0..row.len()-1:
-  #     columns.add(row[i])
-  #   break
-  # return columns
   return db.getRow(sql sqlString, args)
 
 proc orm(rows:openArray[JsonNode], typ:typedesc):seq[typ.type] =
@@ -207,21 +185,61 @@ proc orm(rows:openArray[JsonNode], typ:typedesc):seq[typ.type] =
 proc orm(row:JsonNode, typ:typedesc):typ.type =
   return row.to(typ)
 
+# ==================== async pg ====================
+when getDriver() == "postgres":
+  proc asyncGetAllRows*(pool: AsyncPool,
+                        sqlString: string,
+                        args: seq[string]
+  ): Future[seq[JsonNode]] {.async.} =
+    let conIdx = await pool.getFreeConnIdx()
+    result = await asyncGetAllRows(pool.conns[conIdx], sql sqlString, args)
+    pool.returnConn(conIdx)
+
+  proc asyncGetAllRowsPlain*(pool:AsyncPool,
+                            sqlString:string,
+                            args:seq[string]
+  ):Future[seq[Row]] {.async.} =
+    let conIdx = await pool.getFreeConnIdx()
+    result = await asyncGetAllRowsPlain(pool.conns[conIdx], sql sqlString, args)
+    pool.returnConn(conIdx)
+
+  proc asyncGet*(this: RDB): Future[seq[JsonNode]] {.async.} =
+    defer: this.cleanUp()
+    this.sqlString = this.selectBuilder().sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      result = await asyncGetAllRows(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newSeq[JsonNode](0)
+
+  proc asyncGetPlain*(this:RDB):Future[seq[Row]] {.async.}=
+    defer: this.cleanUp()
+    this.sqlString = this.selectBuilder().sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      return await asyncGetAllRowsPlain(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newSeq[Row]()
+
 # =============================================================================
 
 proc toSql*(this: RDB): string =
   this.sqlString = this.selectBuilder().sqlString
   return this.sqlString
 
-proc get*(this: RDB): seq[JsonNode] =
+proc get*(this: RDB):seq[JsonNode] =
   defer: this.cleanUp()
   this.sqlString = this.selectBuilder().sqlString
   try:
     logger(this.sqlString, this.placeHolder)
     if this.db.isNil:
-      return getAllRows(this.sqlString, this.placeHolder)
+      result = getAllRows(this.sqlString, this.placeHolder)
     else:
-      return getAllRows(this.db, this.sqlString, this.placeHolder)
+      result = getAllRows(this.db, this.sqlString, this.placeHolder)
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -254,7 +272,6 @@ proc getPlain*(this:RDB):seq[seq[string]] =
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
     return newSeq[seq[string]](0)
-
 
 proc getRaw*(this: RDB): seq[JsonNode] =
   defer: this.cleanUp()
@@ -645,14 +662,14 @@ proc getLastItem(this:RDB, keyArg:string, order:Order=Asc):int =
   return row[key].getInt
 
 
-proc fastPaginate*(this:RDB, display:int, key="id", order:Order=Asc): JsonNode =
+proc fastPaginate*(this:RDB, display:int, key="id", order:Order=Asc):JsonNode =
   this.sqlString = @[this.selectBuilder().sqlString][0]
   if order == Asc:
     this.sqlString = &"{this.sqlString} ORDER BY {key} ASC LIMIT {display + 1}"
   else:
     this.sqlString = &"{this.sqlString} ORDER BY {key} DESC LIMIT {display + 1}"
   logger(this.sqlString, this.placeHolder)
-  var currentPage  = getAllRows(this.sqlString, this.placeHolder)
+  var currentPage = getAllRows(this.sqlString, this.placeHolder)
   let newKey = if key.contains("."): key.split(".")[1] else: key
   let nextId = currentPage[currentPage.len-1][newKey].getInt()
   var hasNextId = true
@@ -670,7 +687,7 @@ proc fastPaginate*(this:RDB, display:int, key="id", order:Order=Asc): JsonNode =
 
 
 proc fastPaginateNext*(this:RDB, display:int, id:int, key="id",
-                        order:Order=Asc): JsonNode =
+      order:Order=Asc):JsonNode =
   if not id > 0: raise newException(Exception, "Arg id should be larger than 0")
   this.sqlString = @[this.selectBuilder().sqlString][0]
   let firstItem = getFirstItem(this, key, order)
@@ -725,7 +742,7 @@ SELECT * FROM (
 
 
 proc fastPaginateBack*(this:RDB, display:int, id:int, key="id",
-                        order:Order=Asc): JsonNode =
+      order:Order=Asc):JsonNode =
   if not id > 0: raise newException(Exception, "Arg id should be larger than 0")
   this.sqlString = @[this.selectBuilder().sqlString][0]
   let lastItem = getLastItem(this, key, order)
