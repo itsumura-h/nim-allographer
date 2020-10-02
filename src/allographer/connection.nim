@@ -13,7 +13,7 @@ when DRIVER == "sqlite":
   import sqlite3 except close
 
 when DRIVER == "postgres":
-  import ./pkg/asyncpg/asyncpg
+  import ./async/asyncpg
   export asyncpg
   import postgres except close
 
