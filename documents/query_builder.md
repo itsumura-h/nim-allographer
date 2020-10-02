@@ -52,7 +52,7 @@ When it returns following table
 ```nim
 import allographer/query_builder
 
-echo RDB().table("test")
+echo rdb().table("test")
     .select("id", "float", "char", "datetime", "null", "is_admin")
     .get()
 ```
@@ -84,7 +84,7 @@ type Typ = ref object
   null: string
   is_admin: bool
 
-var rows = RDB().table("test")
+var rows = rdb().table("test")
           .select("id", "float", "char", "datetime", "null", "is_admin")
           .get(Typ)
 ```
@@ -111,23 +111,23 @@ echo rows[0].is_admin
 
 If DB response is empty, `get` and `getRaw` return empty seq, `find` and `first` return optional object.
 ```nim
-let response = RDB().table("test").get(Typ)
+let response = rdb().table("test").get(Typ)
 assert response.len == 0
 
-let response = RDB().raw("select * from users").getRaw(Typ)
+let response = rdb().raw("select * from users").getRaw(Typ)
 assert response.len == 0
 
-let response = RDB().table("test").find(1, Typ)
+let response = rdb().table("test").find(1, Typ)
 assert response.type == Option[Typ]
 
-let response = RDB().table("test").first(Typ)
+let response = rdb().table("test").first(Typ)
 assert response.type == Option[Typ]
 ```
 
 ### get
 Retrieving all row from a table
 ```nim
-let users = RDB().table("users").get()
+let users = rdb().table("users").get()
 for user in users:
   echo user["name"]
 ```
@@ -135,7 +135,7 @@ for user in users:
 ### first
 Retrieving a single row from a table
 ```nim
-let user = RDB()
+let user = rdb()
             .table("users")
             .where("name", "=", "John")
             .first()
@@ -145,19 +145,19 @@ echo user["name"]
 ### find
 Retrieve a single row by its primary key
 ```nim
-let user = RDB().table("users").find(1)
+let user = rdb().table("users").find(1)
 echo user["name"]
 ```
 
 If the column name of a promary key is not "id", specify this in 2nd arg of `find`
 ```nim
-let user = RDB().table("users").find(1, "user_id")
+let user = rdb().table("users").find(1, "user_id")
 echo user["name"]
 ```
 
 ### join
 ```nim
-let users = RDB()
+let users = rdb()
             .table("users")
             .select("users.id", "contacts.phone", "orders.price")
             .join("contacts", "users.id", "=", "contacts.user_id")
@@ -167,12 +167,12 @@ let users = RDB()
 
 ### where
 ```nim
-let users = RDB().table("users").where("age", ">", 25).get()
+let users = rdb().table("users").where("age", ">", 25).get()
 ```
 
 ### orWhere
 ```nim
-let users = RDB()
+let users = rdb()
             .table("users")
             .where("age", ">", 25)
             .orWhere("name", "=", "John")
@@ -181,7 +181,7 @@ let users = RDB()
 
 ### whereBetween
 ```nim
-let users = RDB()
+let users = rdb()
             .table("users")
             .whereBetween("age", [25, 35])
             .get()
@@ -189,7 +189,7 @@ let users = RDB()
 
 ### whereNotBetween
 ```nim
-let users = RDB()
+let users = rdb()
             .table("users")
             .whereNotBetween("age", [25, 35])
             .get()
@@ -197,7 +197,7 @@ let users = RDB()
 
 ### whereIn
 ```nim
-let users = RDB()
+let users = rdb()
             .table("users")
             .whereIn("id", @[1, 2, 3])
             .get()
@@ -205,7 +205,7 @@ let users = RDB()
 
 ### whereNotIn
 ```nim
-let users = RDB()
+let users = rdb()
             .table("users")
             .whereNotIn("id", @[1, 2, 3])
             .get()
@@ -213,7 +213,7 @@ let users = RDB()
 
 ### whereNull
 ```nim
-let users = RDB()
+let users = rdb()
             .table("users")
             .whereNull("updated_at")
             .get()
@@ -221,7 +221,7 @@ let users = RDB()
 
 ### groupBy_having
 ```nim
-let users = RDB()
+let users = rdb()
             .table("users")
             .group_by("count")
             .having("count", ">", 100)
@@ -230,7 +230,7 @@ let users = RDB()
 
 ### orderBy
 ```nim
-let users = RDB()
+let users = rdb()
             .table("users")
             .orderBy("name", Desc)
             .get()
@@ -240,7 +240,7 @@ let users = RDB()
 
 ### limit_offset
 ```nim
-let users = RDB()
+let users = rdb()
             .table("users")
             .offset(10)
             .limit(5)
@@ -249,8 +249,8 @@ let users = RDB()
 
 ### paginate
 ```nim
-RDB().table("users").delete(2)
-let users = RDB()
+rdb().table("users").delete(2)
+let users = rdb()
             .table("users")
             .select("id", "name")
             .paginate(3, 1)
@@ -315,7 +315,7 @@ proc fastPaginateBack(this:RDB, display:int, id:int, key="id", order:Order=Asc):
 - order...Asc or Desc (option). default is `Asc`.
 
 ```nim
-var users = RDB().table("users").select("id", "name").fastPaginate(3)
+var users = rdb().table("users").select("id", "name").fastPaginate(3)
 
 >> {
   "previousId":0,
@@ -330,7 +330,7 @@ var users = RDB().table("users").select("id", "name").fastPaginate(3)
 }
 ```
 ```nim
-users = RDB().table("users")
+users = rdb().table("users")
         .select("id", "name")
         .fastPaginateNext(3, users["nextId"].getInt)
 
@@ -347,7 +347,7 @@ users = RDB().table("users")
 }
 ```
 ```nim
-users = RDB().table("users")
+users = rdb().table("users")
         .select("id", "name")
         .fastPaginateBack(3, users["previousId"].getInt)
 
@@ -366,7 +366,7 @@ users = RDB().table("users")
 
 order Desc
 ```nim
-echo RDB().table("users")
+echo rdb().table("users")
       .select("id", "name")
       .fastPaginateNext(3, 5, order=Desc)
 
@@ -385,7 +385,7 @@ echo RDB().table("users")
 
 paginate with `join` and `where`
 ```nim
-echo RDB().table("users")
+echo rdb().table("users")
       .select("users.id", "users.name", "users.auth_id")
       .join("auth", "auth.id", "=", "users.auth_id")
       .where("auth.id", "=", 2)
@@ -411,7 +411,7 @@ echo RDB().table("users")
 ```nim
 import allographer/query_builder
 
-RDB()
+rdb()
 .table("users")
 .insert(%*{
   "name": "John",
@@ -423,7 +423,7 @@ RDB()
 ```nim
 import allographer/query_builder
 
-RDB().table("users").insert(
+rdb().table("users").insert(
   [
     %*{"name": "John", "email": "John@gmail.com", "address": "London"},
     %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
@@ -436,7 +436,7 @@ RDB().table("users").insert(
 ```nim
 import allographer/query_builder
 
-RDB().table("users").inserts(
+rdb().table("users").inserts(
   [
     %*{"name": "John", "email": "John@gmail.com", "address": "London"},
     %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
@@ -453,7 +453,7 @@ RDB().table("users").inserts(
 ```nim
 import allographer/query_builder
 
-echo RDB()
+echo rdb()
 .table("users")
 .insertID(%*{
   "name": "John",
@@ -466,7 +466,7 @@ echo RDB()
 ```nim
 import allographer/query_builder
 
-echo RDB().table("users").insertID(
+echo rdb().table("users").insertID(
   [
     %*{"name": "John", "email": "John@gmail.com", "address": "London"},
     %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
@@ -480,7 +480,7 @@ echo RDB().table("users").insertID(
 ```nim
 import allographer/query_builder
 
-echo RDB().table("users").insertsID(
+echo rdb().table("users").insertsID(
   [
     %*{"name": "John", "email": "John@gmail.com", "address": "London"},
     %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
@@ -501,7 +501,7 @@ echo RDB().table("users").insertsID(
 ```nim
 import allographer/query_builder
 
-RDB()
+rdb()
 .table("users")
 .where("id", "=", 100)
 .update(%*{"name": "Mick", "address": "NY"})
@@ -515,7 +515,7 @@ RDB()
 ```nim
 import allographer/query_builder
 
-RDB()
+rdb()
 .table("users")
 .delete(1)
 
@@ -527,7 +527,7 @@ If column name of primary key is not exactory "id", you can specify it's name.
 ```nim
 import allographer/query_builder
 
-RDB()
+rdb()
 .table("users")
 .delete(1, key="user_id")
 
@@ -537,7 +537,7 @@ RDB()
 ```nim
 import allographer/query_builder
 
-RDB()
+rdb()
 .table("users")
 .where("address", "=", "London")
 .delete()
@@ -551,14 +551,14 @@ RDB()
 `Plain` response doesn't have it's column name but it run faster than `JsonNode` response
 
 ```nim
-echo RDB().table("users").get()
+echo rdb().table("users").get()
 >> @[
   %*{"id": 1, "name": "user1", "email": "user1@gmail.com"},
   %*{"id": 2, "name": "user2", "email": "user2@gmail.com"},
   %*{"id": 3, "name": "user3", "email": "user3@gmail.com"}
 ]
 
-echo RDB().table("users").getPlain()
+echo rdb().table("users").getPlain()
 >> @[
   @["1", "user1", "user1@gmail.com"],
   @["2", "user2", "user2@gmail.com"],
@@ -567,18 +567,18 @@ echo RDB().table("users").getPlain()
 ```
 
 ```nim
-echo RDB().table("users").find(1)
+echo rdb().table("users").find(1)
 >> %*{"id": 1, "name": "user1", "email": "user1@gmail.com"}
 
-echo RDB().table("users").findPlain(1)
+echo rdb().table("users").findPlain(1)
 >> @["1", "user1", "user1@gmail.com"]
 ```
 
 ```nim
-echo RDB().table("users").first()
+echo rdb().table("users").first()
 >> %*{"id": 1, "name": "user1", "email": "user1@gmail.com"}
 
-echo RDB().table("users").firstPlain()
+echo rdb().table("users").firstPlain()
 >> @["1", "user1", "user1@gmail.com"]
 ```
 
@@ -595,11 +595,11 @@ SELECT ProductName
                 FROM OrderItem
                WHERE Quantity > 100)
 """
-echo RDB().raw(sql).getRaw()
+echo rdb().raw(sql).getRaw()
 ```
 ```nim
 let sql = "UPDATE users SET name='John' where id = 1"
-RDB().raw(sql).exec()
+rdb().raw(sql).exec()
 ```
 
 ## Aggregates
@@ -608,25 +608,25 @@ RDB().raw(sql).exec()
 ```nim
 import allographer/query_builder
 
-echo RDB().table("users").count()
+echo rdb().table("users").count()
 >> 10       # int
 
-echo RDB().table("users").max("name")
+echo rdb().table("users").max("name")
 >> "user9"  # string
 
-echo RDB().table("users").max("id")
+echo rdb().table("users").max("id")
 >> "10"     # string
 
-echo RDB().table("users").min("name")
+echo rdb().table("users").min("name")
 >> "user1"  # string
 
-echo RDB().table("users").min("id")
+echo rdb().table("users").min("id")
 >> "1"      # string
 
-echo RDB().table("users").avg("id")
+echo rdb().table("users").avg("id")
 >> 5.5      # float
 
-echo RDB().table("users").sum("id")
+echo rdb().table("users").sum("id")
 >> 55.0     # float
 ```
 
@@ -635,10 +635,10 @@ echo RDB().table("users").sum("id")
 
 ```nim
 transaction:
-  var user= RDB().table("users").select("id").where("name", "=", "user3").first()
+  var user= rdb().table("users").select("id").where("name", "=", "user3").first()
   var id = user["id"].getInt()
   echo id
-  user = RDB().table("users").select("name", "email").find(id)
+  user = rdb().table("users").select("name", "email").find(id)
   echo user
 ```
 If all code in transaction block success, `COMMIT` is run otherwise `ROLLBACK`

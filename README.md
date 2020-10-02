@@ -12,7 +12,7 @@ A query builder library inspired by [Laravel/PHP](https://readouble.com/laravel/
 ```nim
 import allographer/query_builder
 
-var result = RDB()
+var result = rdb()
             .table("users")
             .select("id", "email", "name")
             .limit(5)

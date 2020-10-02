@@ -38,16 +38,6 @@ proc setup() =
 
   rdb().table("users").insert(users)
 
-suite "connection":
-  test "1":
-    let rdb1 = rdb()
-    echo rdb1.repr
-    let rdb2 = rdb()
-    echo rdb2.repr
-    echo rdb1.db.repr
-    echo rdb2.db.repr
-    check rdb().db.repr == rdb().db.repr
-
 suite "select":
   setup:
     setup()
