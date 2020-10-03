@@ -15,9 +15,9 @@ schema([
   table("users",[
     Column().increments("id"),
     Column().string("name").nullable(),
+    Column().string("Name").nullable(),
     Column().string("email").nullable(),
     Column().string("password").nullable(),
-    Column().string("salt").nullable(),
     Column().string("address").nullable(),
     Column().date("birth_date").nullable(),
     Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
@@ -31,7 +31,7 @@ rdb().table("auth").insert([
 ])
 
 # プログレスバー
-let total = 500
+let total = 50
 var pb = newProgressBar(total=total) # totalは分母
 
 pb.start()
@@ -43,9 +43,9 @@ for i in 1..total:
   insertData.add(
     %*{
       "name": &"user{i}",
+      "Name": &"user{i}",
       "email": &"user{i}@gmail.com",
       "password": password,
-      "salt": salt,
       "auth_id": authId
     }
   )

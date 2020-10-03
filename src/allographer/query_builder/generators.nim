@@ -1,6 +1,6 @@
 import json
 from strformat import `&`
-from strutils import contains
+from strutils import contains, isUpperAscii
 
 import base
 
@@ -251,7 +251,17 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
       columns.add(", ")
       values.add(", ")
     i += 1
-    columns.add(key)
+    # If column name contains Upper letter, column name is covered by double quote
+    var isUpper = false
+    for letter in key:
+      if letter.isUpperAscii():
+        isUpper = true
+        break
+    if isUpper:
+      columns.add(&"\"{key}\"")
+    else:
+      columns.add(key)
+
     if val.kind == JInt:
       this.placeHolder.add($(val.getInt()))
     elif val.kind == JFloat:
@@ -268,12 +278,21 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
 
 proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
   var columns = ""
-  var rowsCount = 0
 
+  var i = 0
   for key, value in rows[0]:
-    if rowsCount > 0: columns.add(", ")
-    rowsCount += 1
-    columns.add(key)
+    if i > 0: columns.add(", ")
+    i += 1
+    # If column name contains Upper letter, column name is covered by double quote
+    var isUpper = false
+    for letter in key:
+      if letter.isUpperAscii():
+        isUpper = true
+        break
+    if isUpper:
+      columns.add(&"\"{key}\"")
+    else:
+      columns.add(key)
 
   var values = ""
   var valuesCount = 0
