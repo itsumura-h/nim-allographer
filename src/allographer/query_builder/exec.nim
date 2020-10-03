@@ -163,14 +163,6 @@ proc getRow(db:DbConn, sqlString:string, args:varargs[string]): JsonNode =
 proc getRowPlain(sqlString:string, args:varargs[string]):seq[string] =
   let db = db()
   defer: db.close()
-
-  # var db_columns: DbColumns
-  # var columns = newSeq[string]()
-  # for row in db.instantRows(db_columns, sql sqlString, args):
-  #   for i in 0..row.len()-1:
-  #     columns.add(row[i])
-  #   break
-  # return columns
   return db.getRow(sql sqlString, args)
 
 proc getRowPlain(db:DbConn, sqlString:string, args:varargs[string]):seq[string] =
@@ -187,22 +179,6 @@ proc orm(row:JsonNode, typ:typedesc):typ.type =
 
 # ==================== async pg ====================
 when getDriver() == "postgres":
-  proc asyncGetAllRows*(pool: AsyncPool,
-                        sqlString: string,
-                        args: seq[string]
-  ): Future[seq[JsonNode]] {.async.} =
-    let conIdx = await pool.getFreeConnIdx()
-    result = await asyncGetAllRows(pool.conns[conIdx], sql sqlString, args)
-    pool.returnConn(conIdx)
-
-  proc asyncGetAllRowsPlain*(pool:AsyncPool,
-                            sqlString:string,
-                            args:seq[string]
-  ):Future[seq[Row]] {.async.} =
-    let conIdx = await pool.getFreeConnIdx()
-    result = await asyncGetAllRowsPlain(pool.conns[conIdx], sql sqlString, args)
-    pool.returnConn(conIdx)
-
   proc asyncGet*(this: RDB): Future[seq[JsonNode]] {.async.} =
     defer: this.cleanUp()
     this.sqlString = this.selectBuilder().sqlString
@@ -224,6 +200,140 @@ when getDriver() == "postgres":
       echoErrorMsg(this.sqlString & $this.placeHolder)
       getCurrentExceptionMsg().echoErrorMsg()
       return newSeq[Row]()
+
+  proc asyncGetRow*(this:RDB):Future[JsonNode] {.async.}=
+    defer: this.cleanUp()
+    this.sqlString = this.selectBuilder().sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      return await asyncGetRow(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newJNull()
+
+  proc asyncGetRowPlain*(this:RDB):Future[Row] {.async.}=
+    defer: this.cleanUp()
+    this.sqlString = this.selectBuilder().sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      return await asyncGetRowPlain(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newSeq[string](0)
+
+  proc asyncFirst*(this: RDB): Future[JsonNode] {.async.} =
+    defer: this.cleanUp()
+    this.sqlString = this.selectFirstBuilder().sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      return await asyncGetRow(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newJNull()
+
+  proc asyncFirstPlain*(this: RDB): Future[Row] {.async.} =
+    defer: this.cleanUp()
+    this.sqlString = this.selectFirstBuilder().sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      return await asyncGetRowPlain(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newSeq[string](0)
+
+  proc asyncFind*(this: RDB, id: int, key="id"): Future[JsonNode] {.async.} =
+    defer: this.cleanUp()
+    this.placeHolder.add($id)
+    this.sqlString = this.selectFindBuilder(id, key).sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      return await asyncGetRow(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newJNull()
+
+  proc asyncFindPlain*(this: RDB, id: int, key="id"): Future[Row] {.async.} =
+    defer: this.cleanUp()
+    this.placeHolder.add($id)
+    this.sqlString = this.selectFindBuilder(id, key).sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      return await asyncGetRowPlain(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newSeq[string](0)
+
+  proc asyncInsert*(this: RDB, items: JsonNode) {.async.} =
+    defer: this.cleanUp()
+    this.sqlString = this.insertValueBuilder(items).sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      await asyncExec(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+
+  proc asyncInsert*(this: RDB, rows: openArray[JsonNode]) {.async.} =
+    defer: this.cleanUp()
+    this.sqlString = this.insertValuesBuilder(rows).sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      await asyncExec(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+
+  proc asyncInserts*(this: RDB, rows: openArray[JsonNode]) {.async.} =
+    defer: this.cleanUp()
+    for row in rows:
+      let sqlString = this.insertValueBuilder(row).sqlString
+      logger(sqlString, this.placeHolder)
+      try:
+        await asyncExec(this.pool, sqlString, this.placeHolder)
+        this.placeHolder = @[]
+      except Exception:
+        echoErrorMsg(sqlString & $this.placeHolder)
+        getCurrentExceptionMsg().echoErrorMsg()
+        break
+
+  proc asyncUpdate*(this: RDB, items: JsonNode) {.async.} =
+    defer: this.cleanUp()
+    var updatePlaceHolder: seq[string]
+    for item in items.pairs:
+      if item.val.kind == JInt:
+        updatePlaceHolder.add($(item.val.getInt()))
+      elif item.val.kind == JFloat:
+        updatePlaceHolder.add($(item.val.getFloat()))
+      elif [JObject, JArray].contains(item.val.kind):
+        updatePlaceHolder.add($(item.val))
+      else:
+        updatePlaceHolder.add(item.val.getStr())
+
+    this.placeHolder = updatePlaceHolder & this.placeHolder
+    this.sqlString = this.updateBuilder(items).sqlString
+
+    try:
+      logger(this.sqlString, this.placeHolder)
+      await asyncExec(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+
+  proc asyncDelete*(this: RDB) {.async.} =
+    defer: this.cleanUp()
+    this.sqlString = this.deleteBuilder().sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      await asyncExec(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
 
 # =============================================================================
 

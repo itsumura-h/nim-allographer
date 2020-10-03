@@ -32,7 +32,6 @@ proc getFreeConnIdx*(pool: AsyncPool): Future[int] {.async.} =
     for conIdx in 0..<pool.conns.len:
       if not pool.busy[conIdx]:
         pool.busy[conIdx] = true
-        echo conIdx
         return conIdx
     await sleepAsync(100)
 
@@ -80,30 +79,9 @@ proc checkError(db: DbConn) =
   if message.len > 0:
     raise newException(PGError, $message)
 
-proc asyncGetAllRowsPlain*(db: DbConn, query: SqlQuery, args: seq[string]):Future[seq[Row]] {.async.} =
-  assert db.status == CONNECTION_OK
-  let success = pqsendQuery(db, dbFormat(query, args))
-  if success != 1: dbError(db) # never seen to fail when async
-  while true:
-    let success = pqconsumeInput(db)
-    if success != 1: dbError(db) # never seen to fail when async
-    if pqisBusy(db) == 1:
-      await sleepAsync(1)
-      continue
-    var pqresult = pqgetResult(db)
-    if pqresult == nil:
-      # Check if its a real error or just end of results
-      db.checkError()
-      return
-    var cols = pqnfields(pqresult)
-    var row = newRow(cols)
-    for i in 0'i32..pqNtuples(pqresult)-1:
-      setRow(pqresult, row, i, cols)
-      result.add row
-    pqclear(pqresult)
 
-
-proc asyncGetAllRows*(db: DbConn, query: SqlQuery, args: seq[string]):Future[seq[JsonNode]] {.async.} =
+# ==================================================
+proc asyncGetAllRows(db: DbConn, query: SqlQuery, args: seq[string]):Future[seq[JsonNode]] {.async.} =
   assert db.status == CONNECTION_OK
   let success = pqsendQuery(db, dbFormat(query, args))
   if success != 1: dbError(db) # never seen to fail when async
@@ -129,3 +107,134 @@ proc asyncGetAllRows*(db: DbConn, query: SqlQuery, args: seq[string]):Future[seq
     pqclear(pqresult)
   let columns = getColumns(db_columns)
   return toJson(rows, columns)
+
+proc asyncGetAllRows*(pool: AsyncPool,
+                      sqlString: string,
+                      args: seq[string]
+  ): Future[seq[JsonNode]] {.async.} =
+    let conIdx = await pool.getFreeConnIdx()
+    result = await asyncGetAllRows(pool.conns[conIdx], sql sqlString, args)
+    pool.returnConn(conIdx)
+
+
+proc asyncGetRow(db: DbConn, query: SqlQuery, args: seq[string]):Future[JsonNode] {.async.} =
+  assert db.status == CONNECTION_OK
+  let success = pqsendQuery(db, dbFormat(query, args))
+  if success != 1: dbError(db) # never seen to fail when async
+  var db_columns: DbColumns
+  var rows = newSeq[Row]()
+  while true:
+    let success = pqconsumeInput(db)
+    if success != 1: dbError(db) # never seen to fail when async
+    if pqisBusy(db) == 1:
+      await sleepAsync(1)
+      continue
+    var pqresult = pqgetResult(db)
+    if pqresult == nil:
+      # Check if its a real error or just end of results
+      db.checkError()
+      break
+    setColumnInfo(db_columns, pqresult, pqnfields(pqresult))
+    var cols = pqnfields(pqresult)
+    var row = newRow(cols)
+    for i in 0'i32..pqNtuples(pqresult)-1:
+      setRow(pqresult, row, i, cols)
+      rows.add row
+    pqclear(pqresult)
+  let columns = getColumns(db_columns)
+  return toJson(rows, columns)[0]
+
+proc asyncGetRow*(pool:AsyncPool,
+                    sqlString:string,
+                    args:seq[string]
+  ):Future[JsonNode] {.async.} =
+    let conIdx = await pool.getFreeConnIdx()
+    result = await asyncGetRow(pool.conns[conIdx], sql sqlString, args)
+    pool.returnConn(conIdx)
+
+
+proc asyncGetAllRowsPlain(db: DbConn, query: SqlQuery, args: seq[string]):Future[seq[Row]] {.async.} =
+  assert db.status == CONNECTION_OK
+  let success = pqsendQuery(db, dbFormat(query, args))
+  if success != 1: dbError(db) # never seen to fail when async
+  while true:
+    let success = pqconsumeInput(db)
+    if success != 1: dbError(db) # never seen to fail when async
+    if pqisBusy(db) == 1:
+      await sleepAsync(1)
+      continue
+    var pqresult = pqgetResult(db)
+    if pqresult == nil:
+      # Check if its a real error or just end of results
+      db.checkError()
+      break
+    var cols = pqnfields(pqresult)
+    var row = newRow(cols)
+    for i in 0'i32..pqNtuples(pqresult)-1:
+      setRow(pqresult, row, i, cols)
+      result.add row
+    pqclear(pqresult)
+
+proc asyncGetAllRowsPlain*(pool:AsyncPool,
+                          sqlString:string,
+                          args:seq[string]
+  ):Future[seq[Row]] {.async.} =
+    let conIdx = await pool.getFreeConnIdx()
+    result = await asyncGetAllRowsPlain(pool.conns[conIdx], sql sqlString, args)
+    pool.returnConn(conIdx)
+
+
+proc asyncGetRowPlain(db: DbConn, query: SqlQuery, args: seq[string]):Future[Row] {.async.} =
+  assert db.status == CONNECTION_OK
+  let success = pqsendQuery(db, dbFormat(query, args))
+  if success != 1: dbError(db) # never seen to fail when async
+  while true:
+    let success = pqconsumeInput(db)
+    if success != 1: dbError(db) # never seen to fail when async
+    if pqisBusy(db) == 1:
+      await sleepAsync(1)
+      continue
+    var pqresult = pqgetResult(db)
+    if pqresult == nil:
+      # Check if its a real error or just end of results
+      db.checkError()
+      break
+    var cols = pqnfields(pqresult)
+    var row = newRow(cols)
+    setRow(pqresult, row, 0, cols)
+    result.add row
+    pqclear(pqresult)
+
+proc asyncGetRowPlain*(pool:AsyncPool,
+                        sqlString:string,
+                        args:seq[string]
+):Future[Row] {.async.} =
+  let conIdx = await pool.getFreeConnIdx()
+  result = await asyncGetRowPlain(pool.conns[conIdx], sql sqlString, args)
+  pool.returnConn(conIdx)
+
+
+proc asyncExec(db: DbConn, query: SqlQuery, args: seq[string]) {.async.} =
+  assert db.status == CONNECTION_OK
+  let success = pqsendQuery(db, dbFormat(query, args))
+  if success != 1: dbError(db)
+  while true:
+    let success = pqconsumeInput(db)
+    if success != 1: dbError(db) # never seen to fail when async
+    if pqisBusy(db) == 1:
+      await sleepAsync(1)
+      continue
+    var pqresult = pqgetResult(db)
+    if pqresult == nil:
+      # Check if its a real error or just end of results
+      db.checkError()
+      break
+    pqclear(pqresult)
+
+proc asyncExec*(pool:AsyncPool,
+                  sqlString:string,
+                  args:seq[string]
+) {.async.} =
+  let conIdx = await pool.getFreeConnIdx()
+  await asyncExec(pool.conns[conIdx], sql sqlString, args)
+  pool.returnConn(conIdx)
