@@ -106,5 +106,5 @@ proc main2(){.async.} =
   echo await rdb().table("users").orderBy("id", Desc).asyncFirst()
 
 
-# waitFor main()
+waitFor main()
 waitFor main2()

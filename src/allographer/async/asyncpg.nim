@@ -5,7 +5,7 @@ type
   ## db pool
   AsyncPool* = ref object
     conns*: seq[DbConn]
-    busy*: seq[bool]
+    busy*: array[90, bool]
 
   ## Excpetion to catch on errors
   PGError* = object of Exception
@@ -24,7 +24,6 @@ proc newAsyncPool*(
     let conn = open(connection, user, password, database)
     # assert conn.status == CONNECTION_OK
     result.conns.add conn
-    result.busy.add false
 
 proc getFreeConnIdx*(pool: AsyncPool): Future[int] {.async.} =
   ## Wait for a free connection and return it.

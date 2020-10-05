@@ -6,6 +6,7 @@ const
   USER = getEnv("DB_USER").string
   PASSWORD = getEnv("DB_PASSWORD").string
   DATABASE = getEnv("DB_DATABASE").string
+  MAX_CONNECTION = 90
 
 when DRIVER == "sqlite":
   import db_sqlite
@@ -31,5 +32,5 @@ proc getDriver*():string =
 
 # ==================== async ====================
 when DRIVER == "postgres":
-  proc pool*():AsyncPool =
-    newAsyncPool(CONN, USER, PASSWORD, DATABASE, 90)
+  proc pool*():AsyncPool {.gcsafe.} =
+    newAsyncPool(CONN, USER, PASSWORD, DATABASE, MAX_CONNECTION)
