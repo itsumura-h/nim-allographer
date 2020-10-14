@@ -4,8 +4,9 @@ import ../util
 import ../connection
 
 
-proc checkSql*(this: RDB): string =
-  return this.selectBuilder().sqlString
+proc selectSql*(this: RDB):string =
+  result = this.selectBuilder().sqlString & $this.placeHolder
+  echo result
 
 proc getColumns(db_columns:DbColumns):seq[array[3, string]] =
   var columns = newSeq[array[3, string]](db_columns.len)
@@ -499,6 +500,10 @@ proc findPlain*(this:RDB, id:int, key="id"):seq[string] =
 
 # ==================== INSERT ====================
 
+proc insertSql*(this: RDB, items: JsonNode):string =
+  result = this.insertValueBuilder(items).sqlString & $this.placeHolder
+  echo result
+
 proc insert*(this: RDB, items: JsonNode) =
   defer: this.cleanUp()
   this.sqlString = this.insertValueBuilder(items).sqlString
@@ -591,6 +596,25 @@ proc insertsID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
 
 # ==================== UPDATE ====================
 
+proc updateSql*(this: RDB, items: JsonNode):string =
+  defer: this.cleanUp()
+  var updatePlaceHolder: seq[string]
+  for item in items.pairs:
+    if item.val.kind == JInt:
+      updatePlaceHolder.add($(item.val.getInt()))
+    elif item.val.kind == JFloat:
+      updatePlaceHolder.add($(item.val.getFloat()))
+    elif [JObject, JArray].contains(item.val.kind):
+      updatePlaceHolder.add($(item.val))
+    else:
+      updatePlaceHolder.add(item.val.getStr())
+
+  let placeHolder = updatePlaceHolder & this.placeHolder
+  let sqlString = this.updateBuilder(items).sqlString
+
+  result = sqlString & $placeHolder
+  echo result
+
 proc update*(this: RDB, items: JsonNode) =
   defer: this.cleanUp()
   var updatePlaceHolder: seq[string]
@@ -618,6 +642,10 @@ proc update*(this: RDB, items: JsonNode) =
 
 
 # ==================== DELETE ====================
+
+proc deleteSql*(this: Rdb):string =
+  result = this.deleteBuilder().sqlString & $this.placeHolder
+  echo result
 
 proc delete*(this: RDB) =
   defer: this.cleanUp()
