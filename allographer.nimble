@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.13.2" # https://github.com/itsumura-h/nim-allographer/pull/97
+version       = "0.13.3" # https://github.com/itsumura-h/nim-allographer/pull/97
 author        = "Hidenobu Itsumura @dumblepytech1 as 'medy'"
 description   = "A Nim query builder library inspired by Laravel/PHP and Orator/Python"
 license       = "MIT"

@@ -8,30 +8,29 @@ import ../src/allographer/schema_builder
 
 # マイグレーション
 schema([
-  table("auth",[
+  table("Auth",[
     Column().increments("id"),
     Column().string("auth")
   ], reset=true),
-  table("users",[
+  table("Users",[
     Column().increments("id"),
-    Column().string("name").nullable(),
     Column().string("Name").nullable(),
     Column().string("email").nullable(),
     Column().string("password").nullable(),
     Column().string("address").nullable(),
     Column().date("birth_date").nullable(),
-    Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+    Column().foreign("auth_id").reference("id").on("Auth").onDelete(SET_NULL)
   ], reset=true)
 ])
 
 # シーダー
-rdb().table("auth").insert([
+rdb().table("Auth").insert([
   %*{"auth": "admin"},
   %*{"auth": "user"}
 ])
 
 # プログレスバー
-let total = 50
+let total = 10
 var pb = newProgressBar(total=total) # totalは分母
 
 pb.start()
@@ -42,7 +41,6 @@ for i in 1..total:
   let authId = if i mod 2 == 0: 1 else: 2
   insertData.add(
     %*{
-      "name": &"user{i}",
       "Name": &"user{i}",
       "email": &"user{i}@gmail.com",
       "password": password,
@@ -52,4 +50,4 @@ for i in 1..total:
   pb.increment()
 
 pb.finish()
-rdb().table("users").insert(insertData)
+rdb().table("Users").insert(insertData)

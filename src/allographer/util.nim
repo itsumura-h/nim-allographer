@@ -55,3 +55,41 @@ proc echoWarningMsg*(msg:string) =
     defer: logger.file.close()
     logger.log(lvlError, msg)
     flushFile(logger.file)
+  
+
+proc liteWrapUpper(input:var string) =
+  var isUpper = false
+  for c in input:
+    if c.isUpperAscii():
+      isUpper = true
+      break
+  if isUpper:
+    input = &"\"{input}\""
+
+proc myWrapUpper(input:var string) =
+  var isUpper = false
+  for c in input:
+    if c.isUpperAscii():
+      isUpper = true
+      break
+  if isUpper:
+    input = &"`{input}`"
+
+proc pgWrapUpper(input:var string) =
+  var isUpper = false
+  for c in input:
+    if c.isUpperAscii():
+      isUpper = true
+      break
+  if isUpper:
+    input = &"\"{input}\""
+
+proc wrapUpper*(input:var string) =
+  let driver = getDriver()
+  case driver:
+  of "sqlite":
+    liteWrapUpper(input)
+  of "mysql":
+    myWrapUpper(input)
+  of "postgres":
+    pgWrapUpper(input)

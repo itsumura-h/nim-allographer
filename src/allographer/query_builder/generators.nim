@@ -3,6 +3,8 @@ from strformat import `&`
 from strutils import contains, isUpperAscii
 
 import base
+from ../util import wrapUpper
+
 
 # ==================== SELECT ====================
 
@@ -26,7 +28,8 @@ proc selectSql*(this: RDB): RDB =
 
 
 proc fromSql*(this: RDB): RDB =
-  let table = this.query["table"].getStr()
+  var table = this.query["table"].getStr()
+  wrapUpper(table)
   this.sqlString.add(&" FROM {table}")
   return this
 
@@ -35,6 +38,8 @@ proc selectFirstSql*(this:RDB): RDB =
   return this
 
 proc selectByIdSql*(this:RDB, id:int, key:string): RDB =
+  var key = key
+  wrapUpper(key)
   if this.sqlString.contains("WHERE"):
     this.sqlString.add(&" AND {key} = ? LIMIT 1")
   else:
@@ -46,9 +51,12 @@ proc joinSql*(this: RDB): RDB =
   if this.query.hasKey("join"):
     for row in this.query["join"]:
       var table = row["table"].getStr()
+      wrapUpper(table)
       var column1 = row["column1"].getStr()
+      wrapUpper(column1)
       var symbol = row["symbol"].getStr()
       var column2 = row["column2"].getStr()
+      wrapUpper(column2)
 
       this.sqlString.add(&" INNER JOIN {table} ON {column1} {symbol} {column2}")
 
@@ -59,9 +67,12 @@ proc leftJoinSql*(this: RDB): RDB =
   if this.query.hasKey("left_join"):
     for row in this.query["left_join"]:
       var table = row["table"].getStr()
+      wrapUpper(table)
       var column1 = row["column1"].getStr()
+      wrapUpper(column1)
       var symbol = row["symbol"].getStr()
       var column2 = row["column2"].getStr()
+      wrapUpper(column2)
 
       this.sqlString.add(&" LEFT JOIN {table} ON {column1} {symbol} {column2}")
 
@@ -72,6 +83,7 @@ proc whereSql*(this: RDB): RDB =
   if this.query.hasKey("where"):
     for i, row in this.query["where"].getElems():
       var column = row["column"].getStr()
+      wrapUpper(column)
       var symbol = row["symbol"].getStr()
       var value = row["value"].getStr()
 
@@ -87,6 +99,7 @@ proc orWhereSql*(this: RDB): RDB =
   if this.query.hasKey("or_where"):
     for row in this.query["or_where"]:
       var column = row["column"].getStr()
+      wrapUpper(column)
       var symbol = row["symbol"].getStr()
       var value = row["value"].getStr()
 
@@ -102,6 +115,7 @@ proc whereBetweenSql*(this:RDB): RDB =
   if this.query.hasKey("where_between"):
     for row in this.query["where_between"]:
       var column = row["column"].getStr()
+      wrapUpper(column)
       var start = row["width"][0].getFloat()
       var stop = row["width"][1].getFloat()
 
@@ -117,6 +131,7 @@ proc whereNotBetweenSql*(this:RDB): RDB =
   if this.query.hasKey("where_not_between"):
     for row in this.query["where_not_between"]:
       var column = row["column"].getStr()
+      wrapUpper(column)
       var start = row["width"][0].getFloat()
       var stop = row["width"][1].getFloat()
 
@@ -132,6 +147,7 @@ proc whereInSql*(this:RDB): RDB =
     var widthString = ""
     for row in this.query["where_in"]:
       var column = row["column"].getStr()
+      wrapUpper(column)
       for i, val in row["width"].getElems():
         if i > 0: widthString.add(", ")
         if val.kind == JInt:
@@ -151,6 +167,7 @@ proc whereNotInSql*(this:RDB): RDB =
     var widthString = ""
     for row in this.query["where_not_in"]:
       var column = row["column"].getStr()
+      wrapUpper(column)
       for i, val in row["width"].getElems():
         if i > 0: widthString.add(", ")
         if val.kind == JInt:
@@ -169,7 +186,7 @@ proc whereNullSql*(this:RDB): RDB =
   if this.query.hasKey("where_null"):
     for row in this.query["where_null"]:
       var column = row["column"].getStr()
-
+      wrapUpper(column)
       if this.sqlString.contains("WHERE"):
         this.sqlString.add(&" AND {column} is null")
       else:
@@ -181,7 +198,7 @@ proc groupBySql*(this:RDB): RDB =
   if this.query.hasKey("group_by"):
     for row in this.query["group_by"]:
       var column = row["column"].getStr()
-
+      wrapUpper(column)
       if this.sqlString.contains("GROUP BY"):
         this.sqlString.add(&", {column}")
       else:
@@ -193,9 +210,10 @@ proc havingSql*(this:RDB): RDB =
   if this.query.hasKey("having"):
     for i, row in this.query["having"].getElems():
       var column = row["column"].getStr()
+      wrapUpper(column)
       var symbol = row["symbol"].getStr()
       var value = row["value"].getStr()
-      
+
       if i == 0:
         this.sqlString.add(&" HAVING {column} {symbol} {value}")
       else:
@@ -208,6 +226,7 @@ proc orderBySql*(this:RDB): RDB =
   if this.query.hasKey("order_by"):
     for row in this.query["order_by"]:
       var column = row["column"].getStr()
+      wrapUpper(column)
       var order = row["order"].getStr()
 
       if this.sqlString.contains("ORDER BY"):
@@ -236,7 +255,8 @@ proc offsetSql*(this: RDB): RDB =
 # ==================== INSERT ====================
 
 proc insertSql*(this: RDB): RDB =
-  let table = this.query["table"].getStr()
+  var table = this.query["table"].getStr()
+  wrapUpper(table)
   this.sqlString = &"INSERT INTO {table}"
   return this
 
@@ -252,15 +272,9 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
       values.add(", ")
     i += 1
     # If column name contains Upper letter, column name is covered by double quote
-    var isUpper = false
-    for letter in key:
-      if letter.isUpperAscii():
-        isUpper = true
-        break
-    if isUpper:
-      columns.add(&"\"{key}\"")
-    else:
-      columns.add(key)
+    var key = key
+    wrapUpper(key)
+    columns.add(key)
 
     if val.kind == JInt:
       this.placeHolder.add($(val.getInt()))
@@ -284,15 +298,9 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
     if i > 0: columns.add(", ")
     i += 1
     # If column name contains Upper letter, column name is covered by double quote
-    var isUpper = false
-    for letter in key:
-      if letter.isUpperAscii():
-        isUpper = true
-        break
-    if isUpper:
-      columns.add(&"\"{key}\"")
-    else:
-      columns.add(key)
+    var key = key
+    wrapUpper(key)
+    columns.add(key)
 
   var values = ""
   var valuesCount = 0
@@ -325,7 +333,8 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
 proc updateSql*(this: RDB): RDB =
   this.sqlString.add("UPDATE")
 
-  let table = this.query["table"].getStr()
+  var table = this.query["table"].getStr()
+  wrapUpper(table)
   this.sqlString.add(&" {table} SET ")
   return this
 
@@ -337,6 +346,8 @@ proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
   for key, val in items.pairs:
     if i > 0: value.add(", ")
     i += 1
+    var key = key
+    wrapUpper(key)
     value.add(&"{key} = ?")
 
   this.sqlString.add(value)
@@ -351,6 +362,8 @@ proc deleteSql*(this: RDB): RDB =
 
 
 proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
+  var key = key
+  wrapUpper(key)
   this.sqlString.add(&" WHERE {key} = ?")
   return this
 
@@ -362,20 +375,28 @@ proc selectCountSql*(this: RDB): RDB =
 
 
 proc selectMaxSql*(this:RDB, column:string): RDB =
+  var column = column
+  wrapUpper(column)
   this.sqlString = &"SELECT max({column}) as aggregate"
   return this
 
 
 proc selectMinSql*(this:RDB, column:string): RDB =
+  var column = column
+  wrapUpper(column)
   this.sqlString = &"SELECT min({column}) as aggregate"
   return this
 
 
 proc selectAvgSql*(this:RDB, column:string): RDB =
+  var column = column
+  wrapUpper(column)
   this.sqlString = &"SELECT avg({column}) as aggregate"
   return this
 
 
 proc selectSumSql*(this:RDB, column:string): RDB =
+  var column = column
+  wrapUpper(column)
   this.sqlString = &"SELECT sum({column}) as aggregate"
   return this
