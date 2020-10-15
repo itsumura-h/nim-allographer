@@ -19,7 +19,9 @@ proc selectSql*(this: RDB): RDB =
   if this.query.hasKey("select"):
     for i, item in this.query["select"].getElems():
       if i > 0: queryString.add(",")
-      queryString.add(&" {item.getStr()}")
+      var column = item.getStr()
+      wrapUpper(column)
+      queryString.add(&" {column}")
   else:
     queryString.add(" *")
 
