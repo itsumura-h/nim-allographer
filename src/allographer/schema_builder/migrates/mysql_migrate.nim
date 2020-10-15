@@ -3,6 +3,7 @@ import
   ../table,
   ../column
 import ../generators/mysql_generators
+import ../../util
 
 
 proc generateColumnString*(column:Column):string =
@@ -275,4 +276,6 @@ proc migrate*(this:Table):string =
       generateForeignString(column)
     )
 
-  return &"CREATE TABLE {this.name} ({columnString}{foreignString})"
+  var tableName = this.name
+  wrapUpper(tableName)
+  return &"CREATE TABLE {tableName} ({columnString}{foreignString})"

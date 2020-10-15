@@ -90,7 +90,11 @@ proc schema*(tables:varargs[Table]) =
     for i, v in deleteList:
       var index = i+1
       try:
-        db.exec(sql &"drop table {deleteList[^index]}")
+        var tableName = deleteList[^index]
+        wrapUpper(tableName)
+        let query = &"drop table {tableName}"
+        logger(query)
+        db.exec(sql query)
       except Exception:
         getCurrentExceptionMsg().echoErrorMsg()
     defer: db.close()
@@ -118,3 +122,5 @@ proc schema*(tables:varargs[Table]) =
         if err.contains("already exists"):
           echoErrorMsg(err)
           echoWarningMsg(&"Safety skip create table '{table.name}'")
+        else:
+          echoErrorMsg(err)
