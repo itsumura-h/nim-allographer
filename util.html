@@ -47,21 +47,12 @@ function main() {
 
   toggleSwitch.addEventListener('change', switchTheme, false);
 
+  const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+  if (currentTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
 
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.documentElement.setAttribute('data-theme', "dark");
-    toggleSwitch.checked = true;
-  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-    document.documentElement.setAttribute('data-theme', "light");
-    toggleSwitch.checked = false;
-  } else {
-    const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
-    if (currentTheme) {
-      document.documentElement.setAttribute('data-theme', currentTheme);
-
-      if (currentTheme === 'dark') {
-        toggleSwitch.checked = true;
-      }
+    if (currentTheme === 'dark') {
+      toggleSwitch.checked = true;
     }
   }
 }
@@ -83,6 +74,9 @@ function main() {
   </div>
   <div id="global-links">
     <ul class="simple">
+    <li>
+      <a href="theindex.html">Index</a>
+    </li>
     </ul>
   </div>
   <div id="searchInputDiv">
@@ -106,16 +100,31 @@ function main() {
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
+      <ul class="simple nested-toc-section">driverTypeError
       <li><a class="reference" href="#driverTypeError"
-    title="driverTypeError()"><wbr />driver<wbr />Type<wbr />Error<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#logger%2Cany%2Cvarargs%5Bstring%5D"
-    title="logger(output: any; args: varargs[string])"><wbr />logger<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#echoErrorMsg%2Cstring"
-    title="echoErrorMsg(msg: string)"><wbr />echo<wbr />Error<wbr />Msg<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#echoWarningMsg%2Cstring"
-    title="echoWarningMsg(msg: string)"><wbr />echo<wbr />Warning<wbr />Msg<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#wrapUpper%2Cstring"
-    title="wrapUpper(input: var string)"><wbr />wrap<wbr />Upper<span class="attachedType"></span></a></li>
+    title="driverTypeError()">driverTypeError<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">logger
+      <li><a class="reference" href="#logger%2Cany%2Cvarargs%5Bstring%5D"
+    title="logger(output: any; args: varargs[string])">logger,any,varargs[string]<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">echoErrorMsg
+      <li><a class="reference" href="#echoErrorMsg%2Cstring"
+    title="echoErrorMsg(msg: string)">echoErrorMsg,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">echoWarningMsg
+      <li><a class="reference" href="#echoWarningMsg%2Cstring"
+    title="echoWarningMsg(msg: string)">echoWarningMsg,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">wrapUpper
+      <li><a class="reference" href="#wrapUpper%2Cstring"
+    title="wrapUpper(input: var string)">wrapUpper,string<span class="attachedType"></span></a></li>
+
+  </ul>
 
   </ul>
 </li>
@@ -150,16 +159,18 @@ function main() {
 
 </dd>
 <a id="echoErrorMsg,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#echoErrorMsg%2Cstring"><span class="Identifier">echoErrorMsg</span></a><span class="Other">(</span><span class="Identifier">msg</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#echoErrorMsg%2Cstring"><span class="Identifier">echoErrorMsg</span></a><span class="Other">(</span><span class="Identifier">msg</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span>
+    <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span>
+                       <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="echoWarningMsg,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#echoWarningMsg%2Cstring"><span class="Identifier">echoWarningMsg</span></a><span class="Other">(</span><span class="Identifier">msg</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#echoWarningMsg%2Cstring"><span class="Identifier">echoWarningMsg</span></a><span class="Other">(</span><span class="Identifier">msg</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span>
+    <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span>
+                       <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -182,7 +193,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-10-15 14:23:47 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-10-16 11:17:51 UTC</small>
       </div>
     </div>
   </div>

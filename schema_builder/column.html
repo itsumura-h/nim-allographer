@@ -20,7 +20,7 @@
 <title>schema_builder/column</title>
 <link rel="stylesheet" type="text/css" href="../nimdoc.out.css">
 
-<script type="text/javascript" src="dochack.js"></script>
+<script type="text/javascript" src="../dochack.js"></script>
 
 <script type="text/javascript">
 function main() {
@@ -47,21 +47,12 @@ function main() {
 
   toggleSwitch.addEventListener('change', switchTheme, false);
 
+  const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+  if (currentTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
 
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.documentElement.setAttribute('data-theme', "dark");
-    toggleSwitch.checked = true;
-  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-    document.documentElement.setAttribute('data-theme', "light");
-    toggleSwitch.checked = false;
-  } else {
-    const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
-    if (currentTheme) {
-      document.documentElement.setAttribute('data-theme', currentTheme);
-
-      if (currentTheme === 'dark') {
-        toggleSwitch.checked = true;
-      }
+    if (currentTheme === 'dark') {
+      toggleSwitch.checked = true;
     }
   }
 }
@@ -83,6 +74,9 @@ function main() {
   </div>
   <div id="global-links">
     <ul class="simple">
+    <li>
+      <a href="../theindex.html">Index</a>
+    </li>
     </ul>
   </div>
   <div id="searchInputDiv">
@@ -124,12 +118,13 @@ function main() {
     title="RdbTypekind = enum
   rdbIncrements = &quot;rdbIncrements&quot;, rdbInteger = &quot;rdbInteger&quot;,
   rdbSmallInteger = &quot;rdbSmallInteger&quot;, rdbMediumInteger = &quot;rdbMediumInteger&quot;,
-  rdbBigInteger = &quot;rdbBigInteger&quot;, rdbDecimal = &quot;rdbDecimal&quot;, rdbDouble = &quot;rdbDouble&quot;,
-  rdbFloat = &quot;rdbFloat&quot;, rdbChar = &quot;rdbChar&quot;, rdbString = &quot;rdbString&quot;,
-  rdbText = &quot;rdbText&quot;, rdbMediumText = &quot;rdbMediumText&quot;, rdbLongText = &quot;rdbLongText&quot;,
-  rdbDate = &quot;rdbDate&quot;, rdbDatetime = &quot;rdbDatetime&quot;, rdbTime = &quot;rdbTime&quot;,
-  rdbTimestamp = &quot;rdbTimestamp&quot;, rdbTimestamps = &quot;rdbTimestamps&quot;,
-  rdbSoftDelete = &quot;rdbSoftDelete&quot;, rdbBinary = &quot;rdbBinary&quot;, rdbBoolean = &quot;rdbBoolean&quot;,
+  rdbBigInteger = &quot;rdbBigInteger&quot;, rdbDecimal = &quot;rdbDecimal&quot;,
+  rdbDouble = &quot;rdbDouble&quot;, rdbFloat = &quot;rdbFloat&quot;, rdbChar = &quot;rdbChar&quot;,
+  rdbString = &quot;rdbString&quot;, rdbText = &quot;rdbText&quot;, rdbMediumText = &quot;rdbMediumText&quot;,
+  rdbLongText = &quot;rdbLongText&quot;, rdbDate = &quot;rdbDate&quot;, rdbDatetime = &quot;rdbDatetime&quot;,
+  rdbTime = &quot;rdbTime&quot;, rdbTimestamp = &quot;rdbTimestamp&quot;,
+  rdbTimestamps = &quot;rdbTimestamps&quot;, rdbSoftDelete = &quot;rdbSoftDelete&quot;,
+  rdbBinary = &quot;rdbBinary&quot;, rdbBoolean = &quot;rdbBoolean&quot;,
   rdbEnumField = &quot;rdbEnumField&quot;, rdbJson = &quot;rdbJson&quot;, rdbForeign = &quot;rdbForeign&quot;"><wbr />Rdb<wbr />Typekind<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#ForeignOnDelete"
     title="ForeignOnDelete = enum
@@ -141,78 +136,171 @@ function main() {
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
+      <ul class="simple nested-toc-section">bigInteger
+      <li><a class="reference" href="#bigInteger%2CColumn%2Cstring"
+    title="bigInteger(this: Column; name: string): Column">bigInteger,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">nullable
+      <li><a class="reference" href="#nullable%2CColumn"
+    title="nullable(c: Column): Column">nullable,Column<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">timestamp
+      <li><a class="reference" href="#timestamp%2CColumn%2Cstring"
+    title="timestamp(this: Column; name: string): Column">timestamp,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">enumField
+      <li><a class="reference" href="#enumField%2CColumn%2Cstring%2CopenArray%5Bstring%5D"
+    title="enumField(this: Column; name: string; options: openArray[string]): Column">enumField,Column,string,openArray[string]<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">on
+      <li><a class="reference" href="#on%2CColumn%2Cstring"
+    title="on(this: Column; table: string): Column">on,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">char
+      <li><a class="reference" href="#char%2CColumn%2Cstring%2Cint"
+    title="char(this: Column; name: string; maxLength: int): Column">char,Column,string,int<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">binary
+      <li><a class="reference" href="#binary%2CColumn%2Cstring"
+    title="binary(this: Column; name: string): Column">binary,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">longText
+      <li><a class="reference" href="#longText%2CColumn%2Cstring"
+    title="longText(this: Column; name: string): Column">longText,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">mediumInteger
+      <li><a class="reference" href="#mediumInteger%2CColumn%2Cstring"
+    title="mediumInteger(this: Column; name: string): Column">mediumInteger,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">unsigned
+      <li><a class="reference" href="#unsigned%2CColumn"
+    title="unsigned(c: Column): Column">unsigned,Column<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">reference
+      <li><a class="reference" href="#reference%2CColumn%2Cstring"
+    title="reference(this: Column; column: string): Column">reference,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">softDelete
+      <li><a class="reference" href="#softDelete%2CColumn"
+    title="softDelete(this: Column): Column">softDelete,Column<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">date
+      <li><a class="reference" href="#date%2CColumn%2Cstring"
+    title="date(this: Column; name: string): Column">date,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">default
       <li><a class="reference" href="#default%2CColumn%2Cbool"
-    title="default(c: Column; value: bool): Column"><wbr />default<span class="attachedType">Column</span></a></li>
+    title="default(c: Column; value: bool): Column">default,Column,bool<span class="attachedType">Column</span></a></li>
   <li><a class="reference" href="#default%2CColumn%2Cint"
-    title="default(c: Column; value: int): Column"><wbr />default<span class="attachedType">Column</span></a></li>
+    title="default(c: Column; value: int): Column">default,Column,int<span class="attachedType">Column</span></a></li>
   <li><a class="reference" href="#default%2CColumn%2Cfloat"
-    title="default(c: Column; value: float): Column"><wbr />default<span class="attachedType">Column</span></a></li>
+    title="default(c: Column; value: float): Column">default,Column,float<span class="attachedType">Column</span></a></li>
   <li><a class="reference" href="#default%2CColumn%2Cstring"
-    title="default(c: Column; value: string): Column"><wbr />default<span class="attachedType">Column</span></a></li>
+    title="default(c: Column; value: string): Column">default,Column,string<span class="attachedType">Column</span></a></li>
   <li><a class="reference" href="#default%2CColumn%2CJsonNode"
-    title="default(c: Column; value: JsonNode): Column"><wbr />default<span class="attachedType">Column</span></a></li>
+    title="default(c: Column; value: JsonNode): Column">default,Column,JsonNode<span class="attachedType">Column</span></a></li>
   <li><a class="reference" href="#default%2CColumn"
-    title="default(c: Column): Column"><wbr />default<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#nullable%2CColumn"
-    title="nullable(c: Column): Column"><wbr />nullable<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#unique%2CColumn"
-    title="unique(c: Column): Column"><wbr />unique<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#unsigned%2CColumn"
-    title="unsigned(c: Column): Column"><wbr />unsigned<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#increments%2CColumn%2Cstring"
-    title="increments(this: Column; name: string): Column"><wbr />increments<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#integer%2CColumn%2Cstring"
-    title="integer(this: Column; name: string): Column"><wbr />integer<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#smallInteger%2CColumn%2Cstring"
-    title="smallInteger(this: Column; name: string): Column"><wbr />small<wbr />Integer<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#mediumInteger%2CColumn%2Cstring"
-    title="mediumInteger(this: Column; name: string): Column"><wbr />medium<wbr />Integer<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#bigInteger%2CColumn%2Cstring"
-    title="bigInteger(this: Column; name: string): Column"><wbr />big<wbr />Integer<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#decimal%2CColumn%2Cstring%2Cint%2Cint"
-    title="decimal(this: Column; name: string; maximum: int; digit: int): Column"><wbr />decimal<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#double%2CColumn%2Cstring%2Cint%2Cint"
-    title="double(this: Column; name: string; maximum: int; digit: int): Column"><wbr />double<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#float%2CColumn%2Cstring"
-    title="float(this: Column; name: string): Column"><wbr />float<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#char%2CColumn%2Cstring%2Cint"
-    title="char(this: Column; name: string; maxLength: int): Column"><wbr />char<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#string%2CColumn%2Cstring%2Cint"
-    title="string(this: Column; name: string; length = 255): Column"><wbr />string<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#text%2CColumn%2Cstring"
-    title="text(this: Column; name: string): Column"><wbr />text<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#mediumText%2CColumn%2Cstring"
-    title="mediumText(this: Column; name: string): Column"><wbr />medium<wbr />Text<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#longText%2CColumn%2Cstring"
-    title="longText(this: Column; name: string): Column"><wbr />long<wbr />Text<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#date%2CColumn%2Cstring"
-    title="date(this: Column; name: string): Column"><wbr />date<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#datetime%2CColumn%2Cstring"
-    title="datetime(this: Column; name: string): Column"><wbr />datetime<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#time%2CColumn%2Cstring"
-    title="time(this: Column; name: string): Column"><wbr />time<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#timestamp%2CColumn%2Cstring"
-    title="timestamp(this: Column; name: string): Column"><wbr />timestamp<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#timestamps%2CColumn"
-    title="timestamps(this: Column): Column"><wbr />timestamps<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#softDelete%2CColumn"
-    title="softDelete(this: Column): Column"><wbr />soft<wbr />Delete<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#binary%2CColumn%2Cstring"
-    title="binary(this: Column; name: string): Column"><wbr />binary<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#boolean%2CColumn%2Cstring"
-    title="boolean(this: Column; name: string): Column"><wbr />boolean<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#enumField%2CColumn%2Cstring%2CopenArray%5Bstring%5D"
-    title="enumField(this: Column; name: string; options: openArray[string]): Column"><wbr />enum<wbr />Field<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#json%2CColumn%2Cstring"
-    title="json(this: Column; name: string): Column"><wbr />json<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#foreign%2CColumn%2Cstring"
-    title="foreign(this: Column; name: string): Column"><wbr />foreign<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#reference%2CColumn%2Cstring"
-    title="reference(this: Column; column: string): Column"><wbr />reference<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#on%2CColumn%2Cstring"
-    title="on(this: Column; table: string): Column"><wbr />on<span class="attachedType">Column</span></a></li>
-  <li><a class="reference" href="#onDelete%2CColumn%2CForeignOnDelete"
-    title="onDelete(this: Column; kind: ForeignOnDelete): Column"><wbr />on<wbr />Delete<span class="attachedType">Column</span></a></li>
+    title="default(c: Column): Column">default,Column<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">onDelete
+      <li><a class="reference" href="#onDelete%2CColumn%2CForeignOnDelete"
+    title="onDelete(this: Column; kind: ForeignOnDelete): Column">onDelete,Column,ForeignOnDelete<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">unique
+      <li><a class="reference" href="#unique%2CColumn"
+    title="unique(c: Column): Column">unique,Column<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">text
+      <li><a class="reference" href="#text%2CColumn%2Cstring"
+    title="text(this: Column; name: string): Column">text,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">mediumText
+      <li><a class="reference" href="#mediumText%2CColumn%2Cstring"
+    title="mediumText(this: Column; name: string): Column">mediumText,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">decimal
+      <li><a class="reference" href="#decimal%2CColumn%2Cstring%2Cint%2Cint"
+    title="decimal(this: Column; name: string; maximum: int; digit: int): Column">decimal,Column,string,int,int<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">integer
+      <li><a class="reference" href="#integer%2CColumn%2Cstring"
+    title="integer(this: Column; name: string): Column">integer,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">float
+      <li><a class="reference" href="#float%2CColumn%2Cstring"
+    title="float(this: Column; name: string): Column">float,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">string
+      <li><a class="reference" href="#string%2CColumn%2Cstring%2Cint"
+    title="string(this: Column; name: string; length = 255): Column">string,Column,string,int<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">increments
+      <li><a class="reference" href="#increments%2CColumn%2Cstring"
+    title="increments(this: Column; name: string): Column">increments,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">time
+      <li><a class="reference" href="#time%2CColumn%2Cstring"
+    title="time(this: Column; name: string): Column">time,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">datetime
+      <li><a class="reference" href="#datetime%2CColumn%2Cstring"
+    title="datetime(this: Column; name: string): Column">datetime,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">smallInteger
+      <li><a class="reference" href="#smallInteger%2CColumn%2Cstring"
+    title="smallInteger(this: Column; name: string): Column">smallInteger,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">timestamps
+      <li><a class="reference" href="#timestamps%2CColumn"
+    title="timestamps(this: Column): Column">timestamps,Column<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">boolean
+      <li><a class="reference" href="#boolean%2CColumn%2Cstring"
+    title="boolean(this: Column; name: string): Column">boolean,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">foreign
+      <li><a class="reference" href="#foreign%2CColumn%2Cstring"
+    title="foreign(this: Column; name: string): Column">foreign,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">json
+      <li><a class="reference" href="#json%2CColumn%2Cstring"
+    title="json(this: Column; name: string): Column">json,Column,string<span class="attachedType">Column</span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">double
+      <li><a class="reference" href="#double%2CColumn%2Cstring%2Cint%2Cint"
+    title="double(this: Column; name: string; maximum: int; digit: int): Column">double,Column,string,int,int<span class="attachedType">Column</span></a></li>
+
+  </ul>
 
   </ul>
 </li>
@@ -262,12 +350,13 @@ function main() {
 <dt><pre><a href="column.html#RdbTypekind"><span class="Identifier">RdbTypekind</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
   <span class="Identifier">rdbIncrements</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbIncrements&quot;</span><span class="Other">,</span> <span class="Identifier">rdbInteger</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbInteger&quot;</span><span class="Other">,</span>
   <span class="Identifier">rdbSmallInteger</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbSmallInteger&quot;</span><span class="Other">,</span> <span class="Identifier">rdbMediumInteger</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbMediumInteger&quot;</span><span class="Other">,</span>
-  <span class="Identifier">rdbBigInteger</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbBigInteger&quot;</span><span class="Other">,</span> <span class="Identifier">rdbDecimal</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbDecimal&quot;</span><span class="Other">,</span> <span class="Identifier">rdbDouble</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbDouble&quot;</span><span class="Other">,</span>
-  <span class="Identifier">rdbFloat</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbFloat&quot;</span><span class="Other">,</span> <span class="Identifier">rdbChar</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbChar&quot;</span><span class="Other">,</span> <span class="Identifier">rdbString</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbString&quot;</span><span class="Other">,</span>
-  <span class="Identifier">rdbText</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbText&quot;</span><span class="Other">,</span> <span class="Identifier">rdbMediumText</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbMediumText&quot;</span><span class="Other">,</span> <span class="Identifier">rdbLongText</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbLongText&quot;</span><span class="Other">,</span>
-  <span class="Identifier">rdbDate</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbDate&quot;</span><span class="Other">,</span> <span class="Identifier">rdbDatetime</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbDatetime&quot;</span><span class="Other">,</span> <span class="Identifier">rdbTime</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbTime&quot;</span><span class="Other">,</span>
-  <span class="Identifier">rdbTimestamp</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbTimestamp&quot;</span><span class="Other">,</span> <span class="Identifier">rdbTimestamps</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbTimestamps&quot;</span><span class="Other">,</span>
-  <span class="Identifier">rdbSoftDelete</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbSoftDelete&quot;</span><span class="Other">,</span> <span class="Identifier">rdbBinary</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbBinary&quot;</span><span class="Other">,</span> <span class="Identifier">rdbBoolean</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbBoolean&quot;</span><span class="Other">,</span>
+  <span class="Identifier">rdbBigInteger</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbBigInteger&quot;</span><span class="Other">,</span> <span class="Identifier">rdbDecimal</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbDecimal&quot;</span><span class="Other">,</span>
+  <span class="Identifier">rdbDouble</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbDouble&quot;</span><span class="Other">,</span> <span class="Identifier">rdbFloat</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbFloat&quot;</span><span class="Other">,</span> <span class="Identifier">rdbChar</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbChar&quot;</span><span class="Other">,</span>
+  <span class="Identifier">rdbString</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbString&quot;</span><span class="Other">,</span> <span class="Identifier">rdbText</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbText&quot;</span><span class="Other">,</span> <span class="Identifier">rdbMediumText</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbMediumText&quot;</span><span class="Other">,</span>
+  <span class="Identifier">rdbLongText</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbLongText&quot;</span><span class="Other">,</span> <span class="Identifier">rdbDate</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbDate&quot;</span><span class="Other">,</span> <span class="Identifier">rdbDatetime</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbDatetime&quot;</span><span class="Other">,</span>
+  <span class="Identifier">rdbTime</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbTime&quot;</span><span class="Other">,</span> <span class="Identifier">rdbTimestamp</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbTimestamp&quot;</span><span class="Other">,</span>
+  <span class="Identifier">rdbTimestamps</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbTimestamps&quot;</span><span class="Other">,</span> <span class="Identifier">rdbSoftDelete</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbSoftDelete&quot;</span><span class="Other">,</span>
+  <span class="Identifier">rdbBinary</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbBinary&quot;</span><span class="Other">,</span> <span class="Identifier">rdbBoolean</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbBoolean&quot;</span><span class="Other">,</span>
   <span class="Identifier">rdbEnumField</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbEnumField&quot;</span><span class="Other">,</span> <span class="Identifier">rdbJson</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbJson&quot;</span><span class="Other">,</span> <span class="Identifier">rdbForeign</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbForeign&quot;</span></pre></dt>
 <dd>
 
@@ -387,16 +476,16 @@ function main() {
 
 </dd>
 <a id="decimal,Column,string,int,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#decimal%2CColumn%2Cstring%2Cint%2Cint"><span class="Identifier">decimal</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maximum</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">digit</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#decimal%2CColumn%2Cstring%2Cint%2Cint"><span class="Identifier">decimal</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maximum</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">digit</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="double,Column,string,int,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#double%2CColumn%2Cstring%2Cint%2Cint"><span class="Identifier">double</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maximum</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">digit</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#double%2CColumn%2Cstring%2Cint%2Cint"><span class="Identifier">double</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maximum</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">digit</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -410,14 +499,16 @@ function main() {
 
 </dd>
 <a id="char,Column,string,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#char%2CColumn%2Cstring%2Cint"><span class="Identifier">char</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maxLength</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#char%2CColumn%2Cstring%2Cint"><span class="Identifier">char</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maxLength</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="string,Column,string,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#string%2CColumn%2Cstring%2Cint"><span class="Identifier">string</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">length</span> <span class="Other">=</span> <span class="DecNumber">255</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#string%2CColumn%2Cstring%2Cint"><span class="Identifier">string</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">length</span> <span class="Other">=</span> <span class="DecNumber">255</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -537,7 +628,8 @@ function main() {
 
 </dd>
 <a id="onDelete,Column,ForeignOnDelete"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#onDelete%2CColumn%2CForeignOnDelete"><span class="Identifier">onDelete</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">kind</span><span class="Other">:</span> <a href="column.html#ForeignOnDelete"><span class="Identifier">ForeignOnDelete</span></a><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#onDelete%2CColumn%2CForeignOnDelete"><span class="Identifier">onDelete</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">kind</span><span class="Other">:</span> <a href="column.html#ForeignOnDelete"><span class="Identifier">ForeignOnDelete</span></a><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -553,7 +645,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-10-15 14:23:47 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-10-16 11:17:51 UTC</small>
       </div>
     </div>
   </div>

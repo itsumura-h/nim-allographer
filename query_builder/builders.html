@@ -20,7 +20,7 @@
 <title>query_builder/builders</title>
 <link rel="stylesheet" type="text/css" href="../nimdoc.out.css">
 
-<script type="text/javascript" src="dochack.js"></script>
+<script type="text/javascript" src="../dochack.js"></script>
 
 <script type="text/javascript">
 function main() {
@@ -47,21 +47,12 @@ function main() {
 
   toggleSwitch.addEventListener('change', switchTheme, false);
 
+  const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+  if (currentTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
 
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.documentElement.setAttribute('data-theme', "dark");
-    toggleSwitch.checked = true;
-  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-    document.documentElement.setAttribute('data-theme', "light");
-    toggleSwitch.checked = false;
-  } else {
-    const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
-    if (currentTheme) {
-      document.documentElement.setAttribute('data-theme', currentTheme);
-
-      if (currentTheme === 'dark') {
-        toggleSwitch.checked = true;
-      }
+    if (currentTheme === 'dark') {
+      toggleSwitch.checked = true;
     }
   }
 }
@@ -83,6 +74,9 @@ function main() {
   </div>
   <div id="global-links">
     <ul class="simple">
+    <li>
+      <a href="../theindex.html">Index</a>
+    </li>
     </ul>
   </div>
   <div id="searchInputDiv">
@@ -106,32 +100,71 @@ function main() {
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
+      <ul class="simple nested-toc-section">insertValuesBuilder
+      <li><a class="reference" href="#insertValuesBuilder%2CRDB%2CopenArray%5BJsonNode%5D"
+    title="insertValuesBuilder(this: RDB; rows: openArray[JsonNode]): RDB">insertValuesBuilder,RDB,openArray[JsonNode]<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">selectFindBuilder
+      <li><a class="reference" href="#selectFindBuilder%2CRDB%2Cint%2Cstring"
+    title="selectFindBuilder(this: RDB; id: int; key: string): RDB">selectFindBuilder,RDB,int,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">updateBuilder
+      <li><a class="reference" href="#updateBuilder%2CRDB%2CJsonNode"
+    title="updateBuilder(this: RDB; items: JsonNode): RDB">updateBuilder,RDB,JsonNode<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">deleteBuilder
+      <li><a class="reference" href="#deleteBuilder%2CRDB"
+    title="deleteBuilder(this: RDB): RDB">deleteBuilder,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">maxBuilder
+      <li><a class="reference" href="#maxBuilder%2CRDB%2Cstring"
+    title="maxBuilder(this: RDB; column: string): RDB">maxBuilder,RDB,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">selectBuilder
       <li><a class="reference" href="#selectBuilder%2CRDB"
-    title="selectBuilder(this: RDB): RDB"><wbr />select<wbr />Builder<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#selectFirstBuilder%2CRDB"
-    title="selectFirstBuilder(this: RDB): RDB"><wbr />select<wbr />First<wbr />Builder<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#selectFindBuilder%2CRDB%2Cint%2Cstring"
-    title="selectFindBuilder(this: RDB; id: int; key: string): RDB"><wbr />select<wbr />Find<wbr />Builder<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#insertValueBuilder%2CRDB%2CJsonNode"
-    title="insertValueBuilder(this: RDB; items: JsonNode): RDB"><wbr />insert<wbr />Value<wbr />Builder<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#insertValuesBuilder%2CRDB%2CopenArray%5BJsonNode%5D"
-    title="insertValuesBuilder(this: RDB; rows: openArray[JsonNode]): RDB"><wbr />insert<wbr />Values<wbr />Builder<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#updateBuilder%2CRDB%2CJsonNode"
-    title="updateBuilder(this: RDB; items: JsonNode): RDB"><wbr />update<wbr />Builder<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#deleteBuilder%2CRDB"
-    title="deleteBuilder(this: RDB): RDB"><wbr />delete<wbr />Builder<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#deleteByIdBuilder%2CRDB%2Cint%2Cstring"
-    title="deleteByIdBuilder(this: RDB; id: int; key: string): RDB"><wbr />delete<wbr />By<wbr />Id<wbr />Builder<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#countBuilder%2CRDB"
-    title="countBuilder(this: RDB): RDB"><wbr />count<wbr />Builder<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#maxBuilder%2CRDB%2Cstring"
-    title="maxBuilder(this: RDB; column: string): RDB"><wbr />max<wbr />Builder<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#minBuilder%2CRDB%2Cstring"
-    title="minBuilder(this: RDB; column: string): RDB"><wbr />min<wbr />Builder<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#avgBuilder%2CRDB%2Cstring"
-    title="avgBuilder(this: RDB; column: string): RDB"><wbr />avg<wbr />Builder<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#sumBuilder%2CRDB%2Cstring"
-    title="sumBuilder(this: RDB; column: string): RDB"><wbr />sum<wbr />Builder<span class="attachedType"></span></a></li>
+    title="selectBuilder(this: RDB): RDB">selectBuilder,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">minBuilder
+      <li><a class="reference" href="#minBuilder%2CRDB%2Cstring"
+    title="minBuilder(this: RDB; column: string): RDB">minBuilder,RDB,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">deleteByIdBuilder
+      <li><a class="reference" href="#deleteByIdBuilder%2CRDB%2Cint%2Cstring"
+    title="deleteByIdBuilder(this: RDB; id: int; key: string): RDB">deleteByIdBuilder,RDB,int,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">insertValueBuilder
+      <li><a class="reference" href="#insertValueBuilder%2CRDB%2CJsonNode"
+    title="insertValueBuilder(this: RDB; items: JsonNode): RDB">insertValueBuilder,RDB,JsonNode<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">sumBuilder
+      <li><a class="reference" href="#sumBuilder%2CRDB%2Cstring"
+    title="sumBuilder(this: RDB; column: string): RDB">sumBuilder,RDB,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">selectFirstBuilder
+      <li><a class="reference" href="#selectFirstBuilder%2CRDB"
+    title="selectFirstBuilder(this: RDB): RDB">selectFirstBuilder,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">countBuilder
+      <li><a class="reference" href="#countBuilder%2CRDB"
+    title="countBuilder(this: RDB): RDB">countBuilder,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">avgBuilder
+      <li><a class="reference" href="#avgBuilder%2CRDB%2Cstring"
+    title="avgBuilder(this: RDB; column: string): RDB">avgBuilder,RDB,string<span class="attachedType"></span></a></li>
+
+  </ul>
 
   </ul>
 </li>
@@ -159,7 +192,8 @@ function main() {
 
 </dd>
 <a id="selectFirstBuilder,RDB"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#selectFirstBuilder%2CRDB"><span class="Identifier">selectFirstBuilder</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#selectFirstBuilder%2CRDB"><span class="Identifier">selectFirstBuilder</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -190,8 +224,8 @@ function main() {
 
 </dd>
 <a id="updateBuilder,RDB,JsonNode"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#updateBuilder%2CRDB%2CJsonNode"><span class="Identifier">updateBuilder</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#updateBuilder%2CRDB%2CJsonNode"><span class="Identifier">updateBuilder</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -220,32 +254,32 @@ function main() {
 
 </dd>
 <a id="maxBuilder,RDB,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#maxBuilder%2CRDB%2Cstring"><span class="Identifier">maxBuilder</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#maxBuilder%2CRDB%2Cstring"><span class="Identifier">maxBuilder</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="minBuilder,RDB,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#minBuilder%2CRDB%2Cstring"><span class="Identifier">minBuilder</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#minBuilder%2CRDB%2Cstring"><span class="Identifier">minBuilder</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="avgBuilder,RDB,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#avgBuilder%2CRDB%2Cstring"><span class="Identifier">avgBuilder</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#avgBuilder%2CRDB%2Cstring"><span class="Identifier">avgBuilder</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="sumBuilder,RDB,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#sumBuilder%2CRDB%2Cstring"><span class="Identifier">sumBuilder</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#sumBuilder%2CRDB%2Cstring"><span class="Identifier">sumBuilder</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -261,7 +295,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-10-15 14:23:46 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-10-16 11:17:50 UTC</small>
       </div>
     </div>
   </div>

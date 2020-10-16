@@ -3,10 +3,10 @@ raw	query_builder/grammars.html#raw,RDB,string,varargs[string]	grammars: raw(thi
 select	query_builder/grammars.html#select,RDB,varargs[string]	grammars: select(this: RDB; columnsArg: varargs[string]): RDB	
 `distinct`	query_builder/grammars.html#distinct,RDB	grammars: `distinct`(this: RDB): RDB	
 join	query_builder/grammars.html#join,RDB,string,string,string,string	grammars: join(this: RDB; table: string; column1: string; symbol: string; column2: string): RDB	
-leftJoin	query_builder/grammars.html#leftJoin,RDB,string,string,string,string	grammars: leftJoin(this: RDB; table: string; column1: string; symbol: string; column2: string): RDB	
-where	query_builder/grammars.html#where,RDB,string,string,	grammars: where(this: RDB; column: string; symbol: string; value: string | int | float | bool): RDB	
+leftJoin	query_builder/grammars.html#leftJoin,RDB,string,string,string,string	grammars: leftJoin(this: RDB; table: string; column1: string; symbol: string;\n         column2: string): RDB	
+where	query_builder/grammars.html#where,RDB,string,string,	grammars: where(this: RDB; column: string; symbol: string;\n      value: string | int | float | bool): RDB	
 where	query_builder/grammars.html#where,RDB,string,string,_2	grammars: where(this: RDB; column: string; symbol: string; value: nil.type): RDB	
-orWhere	query_builder/grammars.html#orWhere,RDB,string,string,	grammars: orWhere(this: RDB; column: string; symbol: string; value: string | int | float | bool): RDB	
+orWhere	query_builder/grammars.html#orWhere,RDB,string,string,	grammars: orWhere(this: RDB; column: string; symbol: string;\n        value: string | int | float | bool): RDB	
 orWhere	query_builder/grammars.html#orWhere,RDB,string,string,_2	grammars: orWhere(this: RDB; column: string; symbol: string; value: nil.type): RDB	
 whereBetween	query_builder/grammars.html#whereBetween,RDB,string,array[,]	grammars: whereBetween(this: RDB; column: string; width: array[2, int | float]): RDB	
 whereNotBetween	query_builder/grammars.html#whereNotBetween,RDB,string,array[,]	grammars: whereNotBetween(this: RDB; column: string; width: array[2, int | float]): RDB	
@@ -14,7 +14,7 @@ whereIn	query_builder/grammars.html#whereIn,RDB,string,seq[]	grammars: whereIn(t
 whereNotIn	query_builder/grammars.html#whereNotIn,RDB,string,seq[]	grammars: whereNotIn(this: RDB; column: string; width: seq[int | float]): RDB	
 whereNull	query_builder/grammars.html#whereNull,RDB,string	grammars: whereNull(this: RDB; column: string): RDB	
 groupBy	query_builder/grammars.html#groupBy,RDB,string	grammars: groupBy(this: RDB; column: string): RDB	
-having	query_builder/grammars.html#having,RDB,string,string,	grammars: having(this: RDB; column: string; symbol: string; value: string | int | float | bool): RDB	
+having	query_builder/grammars.html#having,RDB,string,string,	grammars: having(this: RDB; column: string; symbol: string;\n       value: string | int | float | bool): RDB	
 having	query_builder/grammars.html#having,RDB,string,string,_2	grammars: having(this: RDB; column: string; symbol: string; value: nil.type): RDB	
 Asc	query_builder/grammars.html#Asc	Order.Asc	
 Desc	query_builder/grammars.html#Desc	Order.Desc	

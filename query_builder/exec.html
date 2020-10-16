@@ -20,7 +20,7 @@
 <title>query_builder/exec</title>
 <link rel="stylesheet" type="text/css" href="../nimdoc.out.css">
 
-<script type="text/javascript" src="dochack.js"></script>
+<script type="text/javascript" src="../dochack.js"></script>
 
 <script type="text/javascript">
 function main() {
@@ -47,21 +47,12 @@ function main() {
 
   toggleSwitch.addEventListener('change', switchTheme, false);
 
+  const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+  if (currentTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
 
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.documentElement.setAttribute('data-theme', "dark");
-    toggleSwitch.checked = true;
-  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-    document.documentElement.setAttribute('data-theme', "light");
-    toggleSwitch.checked = false;
-  } else {
-    const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
-    if (currentTheme) {
-      document.documentElement.setAttribute('data-theme', currentTheme);
-
-      if (currentTheme === 'dark') {
-        toggleSwitch.checked = true;
-      }
+    if (currentTheme === 'dark') {
+      toggleSwitch.checked = true;
     }
   }
 }
@@ -83,6 +74,9 @@ function main() {
   </div>
   <div id="global-links">
     <ul class="simple">
+    <li>
+      <a href="../theindex.html">Index</a>
+    </li>
     </ul>
   </div>
   <div id="searchInputDiv">
@@ -106,80 +100,170 @@ function main() {
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#selectSql%2CRDB"
-    title="selectSql(this: RDB): string"><wbr />select<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#getAllRowsPlain%2Cstring%2Cvarargs%5Bstring%5D"
-    title="getAllRowsPlain(sqlString: string; args: varargs[string]): seq[seq[string]]"><wbr />get<wbr />All<wbr />Rows<wbr />Plain<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#getAllRowsPlain%2CDbConn%2Cstring%2Cvarargs%5Bstring%5D"
-    title="getAllRowsPlain(db: DbConn; sqlString: string; args: varargs[string]): seq[seq[string]]"><wbr />get<wbr />All<wbr />Rows<wbr />Plain<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#toSql%2CRDB"
-    title="toSql(this: RDB): string"><wbr />to<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#get%2CRDB"
-    title="get(this: RDB): seq[JsonNode]"><wbr />get<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#get%2CRDB%2Ctypedesc"
-    title="get(this: RDB; typ: typedesc): seq[typ.type]"><wbr />get<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#getPlain%2CRDB"
-    title="getPlain(this: RDB): seq[seq[string]]"><wbr />get<wbr />Plain<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#getRaw%2CRDB"
-    title="getRaw(this: RDB): seq[JsonNode]"><wbr />get<wbr />Raw<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#getRaw%2CRDB%2Ctypedesc"
-    title="getRaw(this: RDB; typ: typedesc): seq[typ.type]"><wbr />get<wbr />Raw<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#first%2CRDB"
-    title="first(this: RDB): JsonNode"><wbr />first<span class="attachedType"></span></a></li>
+      <ul class="simple nested-toc-section">updateSql
+      <li><a class="reference" href="#updateSql%2CRDB%2CJsonNode"
+    title="updateSql(this: RDB; items: JsonNode): string">updateSql,RDB,JsonNode<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">firstPlain
+      <li><a class="reference" href="#firstPlain%2CRDB"
+    title="firstPlain(this: RDB): seq[string]">firstPlain,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">findPlain
+      <li><a class="reference" href="#findPlain%2CRDB%2Cint%2Cstring"
+    title="findPlain(this: RDB; id: int; key = &quot;id&quot;): seq[string]">findPlain,RDB,int,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">fastPaginateBack
+      <li><a class="reference" href="#fastPaginateBack%2CRDB%2Cint%2Cint%2Cstring%2COrder"
+    title="fastPaginateBack(this: RDB; display: int; id: int; key = &quot;id&quot;;
+                 order: Order = Asc): JsonNode">fastPaginateBack,RDB,int,int,string,Order<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">deleteSql
+      <li><a class="reference" href="#deleteSql%2CRDB"
+    title="deleteSql(this: RDB): string">deleteSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">toSql
+      <li><a class="reference" href="#toSql%2CRDB"
+    title="toSql(this: RDB): string">toSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">fastPaginate
+      <li><a class="reference" href="#fastPaginate%2CRDB%2Cint%2Cstring%2COrder"
+    title="fastPaginate(this: RDB; display: int; key = &quot;id&quot;; order: Order = Asc): JsonNode">fastPaginate,RDB,int,string,Order<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">fastPaginateNext
+      <li><a class="reference" href="#fastPaginateNext%2CRDB%2Cint%2Cint%2Cstring%2COrder"
+    title="fastPaginateNext(this: RDB; display: int; id: int; key = &quot;id&quot;;
+                 order: Order = Asc): JsonNode">fastPaginateNext,RDB,int,int,string,Order<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">first
+      <li><a class="reference" href="#first%2CRDB"
+    title="first(this: RDB): JsonNode">first,RDB<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#first%2CRDB%2Ctypedesc"
-    title="first(this: RDB; typ: typedesc): Option[typ.type]"><wbr />first<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#firstPlain%2CRDB"
-    title="firstPlain(this: RDB): seq[string]"><wbr />first<wbr />Plain<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#find%2CRDB%2Cint%2Cstring"
-    title="find(this: RDB; id: int; key = &quot;id&quot;): JsonNode"><wbr />find<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#find%2CRDB%2Cint%2Ctypedesc%2Cstring"
-    title="find(this: RDB; id: int; typ: typedesc; key = &quot;id&quot;): Option[typ.type]"><wbr />find<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#findPlain%2CRDB%2Cint%2Cstring"
-    title="findPlain(this: RDB; id: int; key = &quot;id&quot;): seq[string]"><wbr />find<wbr />Plain<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#insertSql%2CRDB%2CJsonNode"
-    title="insertSql(this: RDB; items: JsonNode): string"><wbr />insert<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#insert%2CRDB%2CJsonNode"
-    title="insert(this: RDB; items: JsonNode)"><wbr />insert<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#insert%2CRDB%2CopenArray%5BJsonNode%5D"
-    title="insert(this: RDB; rows: openArray[JsonNode])"><wbr />insert<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#inserts%2CRDB%2CopenArray%5BJsonNode%5D"
-    title="inserts(this: RDB; rows: openArray[JsonNode])"><wbr />inserts<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#insertID%2CRDB%2CJsonNode"
-    title="insertID(this: RDB; items: JsonNode): int"><wbr />insert<wbr />ID<span class="attachedType"></span></a></li>
+    title="first(this: RDB; typ: typedesc): Option[typ.type]">first,RDB,typedesc<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">inserts
+      <li><a class="reference" href="#inserts%2CRDB%2CopenArray%5BJsonNode%5D"
+    title="inserts(this: RDB; rows: openArray[JsonNode])">inserts,RDB,openArray[JsonNode]<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">max
+      <li><a class="reference" href="#max%2CRDB%2Cstring"
+    title="max(this: RDB; column: string): string">max,RDB,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">selectSql
+      <li><a class="reference" href="#selectSql%2CRDB"
+    title="selectSql(this: RDB): string">selectSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">getAllRowsPlain
+      <li><a class="reference" href="#getAllRowsPlain%2Cstring%2Cvarargs%5Bstring%5D"
+    title="getAllRowsPlain(sqlString: string; args: varargs[string]): seq[seq[string]]">getAllRowsPlain,string,varargs[string]<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#getAllRowsPlain%2CDbConn%2Cstring%2Cvarargs%5Bstring%5D"
+    title="getAllRowsPlain(db: DbConn; sqlString: string; args: varargs[string]): seq[
+    seq[string]]">getAllRowsPlain,DbConn,string,varargs[string]<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">paginate
+      <li><a class="reference" href="#paginate%2CRDB%2Cint%2Cint"
+    title="paginate(this: RDB; display: int; page: int = 1): JsonNode">paginate,RDB,int,int<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">get
+      <li><a class="reference" href="#get%2CRDB"
+    title="get(this: RDB): seq[JsonNode]">get,RDB<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#get%2CRDB%2Ctypedesc"
+    title="get(this: RDB; typ: typedesc): seq[typ.type]">get,RDB,typedesc<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">insertID
+      <li><a class="reference" href="#insertID%2CRDB%2CJsonNode"
+    title="insertID(this: RDB; items: JsonNode): int">insertID,RDB,JsonNode<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#insertID%2CRDB%2CopenArray%5BJsonNode%5D"
-    title="insertID(this: RDB; rows: openArray[JsonNode]): int"><wbr />insert<wbr />ID<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#insertsID%2CRDB%2CopenArray%5BJsonNode%5D"
-    title="insertsID(this: RDB; rows: openArray[JsonNode]): seq[int]"><wbr />inserts<wbr />ID<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#updateSql%2CRDB%2CJsonNode"
-    title="updateSql(this: RDB; items: JsonNode): string"><wbr />update<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#update%2CRDB%2CJsonNode"
-    title="update(this: RDB; items: JsonNode)"><wbr />update<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#deleteSql%2CRDB"
-    title="deleteSql(this: RDB): string"><wbr />delete<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#delete%2CRDB"
-    title="delete(this: RDB)"><wbr />delete<span class="attachedType"></span></a></li>
+    title="insertID(this: RDB; rows: openArray[JsonNode]): int">insertID,RDB,openArray[JsonNode]<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">count
+      <li><a class="reference" href="#count%2CRDB"
+    title="count(this: RDB): int">count,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">insert
+      <li><a class="reference" href="#insert%2CRDB%2CJsonNode"
+    title="insert(this: RDB; items: JsonNode)">insert,RDB,JsonNode<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#insert%2CRDB%2CopenArray%5BJsonNode%5D"
+    title="insert(this: RDB; rows: openArray[JsonNode])">insert,RDB,openArray[JsonNode]<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">exec
+      <li><a class="reference" href="#exec%2CRDB"
+    title="exec(this: RDB)">exec,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">delete
+      <li><a class="reference" href="#delete%2CRDB"
+    title="delete(this: RDB)">delete,RDB<span class="attachedType"></span></a></li>
   <li><a class="reference" href="#delete%2CRDB%2Cint%2Cstring"
-    title="delete(this: RDB; id: int; key = &quot;id&quot;)"><wbr />delete<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#exec%2CRDB"
-    title="exec(this: RDB)"><wbr />exec<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#count%2CRDB"
-    title="count(this: RDB): int"><wbr />count<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#max%2CRDB%2Cstring"
-    title="max(this: RDB; column: string): string"><wbr />max<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#min%2CRDB%2Cstring"
-    title="min(this: RDB; column: string): string"><wbr />min<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#avg%2CRDB%2Cstring"
-    title="avg(this: RDB; column: string): float"><wbr />avg<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#sum%2CRDB%2Cstring"
-    title="sum(this: RDB; column: string): float"><wbr />sum<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#paginate%2CRDB%2Cint%2Cint"
-    title="paginate(this: RDB; display: int; page: int = 1): JsonNode"><wbr />paginate<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#fastPaginate%2CRDB%2Cint%2Cstring%2COrder"
-    title="fastPaginate(this: RDB; display: int; key = &quot;id&quot;; order: Order = Asc): JsonNode"><wbr />fast<wbr />Paginate<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#fastPaginateNext%2CRDB%2Cint%2Cint%2Cstring%2COrder"
-    title="fastPaginateNext(this: RDB; display: int; id: int; key = &quot;id&quot;; order: Order = Asc): JsonNode"><wbr />fast<wbr />Paginate<wbr />Next<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#fastPaginateBack%2CRDB%2Cint%2Cint%2Cstring%2COrder"
-    title="fastPaginateBack(this: RDB; display: int; id: int; key = &quot;id&quot;; order: Order = Asc): JsonNode"><wbr />fast<wbr />Paginate<wbr />Back<span class="attachedType"></span></a></li>
+    title="delete(this: RDB; id: int; key = &quot;id&quot;)">delete,RDB,int,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">getPlain
+      <li><a class="reference" href="#getPlain%2CRDB"
+    title="getPlain(this: RDB): seq[seq[string]]">getPlain,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">insertsID
+      <li><a class="reference" href="#insertsID%2CRDB%2CopenArray%5BJsonNode%5D"
+    title="insertsID(this: RDB; rows: openArray[JsonNode]): seq[int]">insertsID,RDB,openArray[JsonNode]<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">find
+      <li><a class="reference" href="#find%2CRDB%2Cint%2Cstring"
+    title="find(this: RDB; id: int; key = &quot;id&quot;): JsonNode">find,RDB,int,string<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#find%2CRDB%2Cint%2Ctypedesc%2Cstring"
+    title="find(this: RDB; id: int; typ: typedesc; key = &quot;id&quot;): Option[typ.type]">find,RDB,int,typedesc,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">avg
+      <li><a class="reference" href="#avg%2CRDB%2Cstring"
+    title="avg(this: RDB; column: string): float">avg,RDB,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">insertSql
+      <li><a class="reference" href="#insertSql%2CRDB%2CJsonNode"
+    title="insertSql(this: RDB; items: JsonNode): string">insertSql,RDB,JsonNode<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">getRaw
+      <li><a class="reference" href="#getRaw%2CRDB"
+    title="getRaw(this: RDB): seq[JsonNode]">getRaw,RDB<span class="attachedType"></span></a></li>
+  <li><a class="reference" href="#getRaw%2CRDB%2Ctypedesc"
+    title="getRaw(this: RDB; typ: typedesc): seq[typ.type]">getRaw,RDB,typedesc<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">update
+      <li><a class="reference" href="#update%2CRDB%2CJsonNode"
+    title="update(this: RDB; items: JsonNode)">update,RDB,JsonNode<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">min
+      <li><a class="reference" href="#min%2CRDB%2Cstring"
+    title="min(this: RDB; column: string): string">min,RDB,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">sum
+      <li><a class="reference" href="#sum%2CRDB%2Cstring"
+    title="sum(this: RDB; column: string): float">sum,RDB,string<span class="attachedType"></span></a></li>
+
+  </ul>
 
   </ul>
 </li>
@@ -230,9 +314,9 @@ function main() {
 
 </dd>
 <a id="get,RDB"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#get%2CRDB"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span>
-    <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span>
-                             <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#get%2CRDB"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span>
+    <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
+    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -248,17 +332,17 @@ function main() {
 <a id="getPlain,RDB"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#getPlain%2CRDB"><span class="Identifier">getPlain</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="getRaw,RDB"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#getRaw%2CRDB"><span class="Identifier">getRaw</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#getRaw%2CRDB"><span class="Identifier">getRaw</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span>
+    <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span>
+                       <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -272,10 +356,9 @@ function main() {
 
 </dd>
 <a id="first,RDB"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#first%2CRDB"><span class="Identifier">first</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">JsonNode</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span>
-                                      <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#first%2CRDB"><span class="Identifier">first</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">JsonNode</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span>
+    <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
+    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -289,10 +372,10 @@ function main() {
 
 </dd>
 <a id="firstPlain,RDB"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#firstPlain%2CRDB"><span class="Identifier">firstPlain</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span>
-    <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span>
-                                        <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
-                                        <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#firstPlain%2CRDB"><span class="Identifier">firstPlain</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -301,8 +384,8 @@ function main() {
 <a id="find,RDB,int,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#find%2CRDB%2Cint%2Cstring"><span class="Identifier">find</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">JsonNode</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -318,26 +401,26 @@ function main() {
 <a id="findPlain,RDB,int,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#findPlain%2CRDB%2Cint%2Cstring"><span class="Identifier">findPlain</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="insertSql,RDB,JsonNode"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#insertSql%2CRDB%2CJsonNode"><span class="Identifier">insertSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#insertSql%2CRDB%2CJsonNode"><span class="Identifier">insertSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="insert,RDB,JsonNode"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#insert%2CRDB%2CJsonNode"><span class="Identifier">insert</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span>
-    <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span>
-                                   <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
-                                   <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#insert%2CRDB%2CJsonNode"><span class="Identifier">insert</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -346,8 +429,8 @@ function main() {
 <a id="insert,RDB,openArray[JsonNode]"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#insert%2CRDB%2CopenArray%5BJsonNode%5D"><span class="Identifier">insert</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">rows</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -356,8 +439,8 @@ function main() {
 <a id="inserts,RDB,openArray[JsonNode]"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#inserts%2CRDB%2CopenArray%5BJsonNode%5D"><span class="Identifier">inserts</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">rows</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -366,8 +449,8 @@ function main() {
 <a id="insertID,RDB,JsonNode"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#insertID%2CRDB%2CJsonNode"><span class="Identifier">insertID</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -376,8 +459,8 @@ function main() {
 <a id="insertID,RDB,openArray[JsonNode]"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#insertID%2CRDB%2CopenArray%5BJsonNode%5D"><span class="Identifier">insertID</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">rows</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -386,26 +469,26 @@ function main() {
 <a id="insertsID,RDB,openArray[JsonNode]"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#insertsID%2CRDB%2CopenArray%5BJsonNode%5D"><span class="Identifier">insertsID</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">rows</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="updateSql,RDB,JsonNode"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#updateSql%2CRDB%2CJsonNode"><span class="Identifier">updateSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#updateSql%2CRDB%2CJsonNode"><span class="Identifier">updateSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="update,RDB,JsonNode"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#update%2CRDB%2CJsonNode"><span class="Identifier">update</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span>
-    <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span>
-                                   <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
-                                   <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#update%2CRDB%2CJsonNode"><span class="Identifier">update</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -419,46 +502,47 @@ function main() {
 
 </dd>
 <a id="delete,RDB"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#delete%2CRDB"><span class="Identifier">delete</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span>
-                              <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#delete%2CRDB"><span class="Identifier">delete</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span>
+                                  <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
+    <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
+    <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="delete,RDB,int,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#delete%2CRDB%2Cint%2Cstring"><span class="Identifier">delete</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span>
-    <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span>
-                                   <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
-                                   <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#delete%2CRDB%2Cint%2Cstring"><span class="Identifier">delete</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="exec,RDB"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#exec%2CRDB"><span class="Identifier">exec</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">DbEffect</span><span class="Other">,</span>
-    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#exec%2CRDB"><span class="Identifier">exec</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 It is only used with raw()
 
 </dd>
 <a id="count,RDB"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#count%2CRDB"><span class="Identifier">count</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span>
-                                 <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">Defect</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#count%2CRDB"><span class="Identifier">count</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">int</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span>
+                                      <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="max,RDB,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#max%2CRDB%2Cstring"><span class="Identifier">max</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span>
-    <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">Defect</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#max%2CRDB%2Cstring"><span class="Identifier">max</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span>
+    <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
     <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
     <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -467,8 +551,8 @@ It is only used with raw()
 
 </dd>
 <a id="min,RDB,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#min%2CRDB%2Cstring"><span class="Identifier">min</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span>
-    <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">Defect</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#min%2CRDB%2Cstring"><span class="Identifier">min</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span>
+    <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
     <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
     <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -477,8 +561,8 @@ It is only used with raw()
 
 </dd>
 <a id="avg,RDB,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#avg%2CRDB%2Cstring"><span class="Identifier">avg</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span>
-    <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">Defect</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#avg%2CRDB%2Cstring"><span class="Identifier">avg</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span>
+    <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
     <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
     <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -487,8 +571,8 @@ It is only used with raw()
 
 </dd>
 <a id="sum,RDB,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#sum%2CRDB%2Cstring"><span class="Identifier">sum</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span>
-    <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">Defect</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#sum%2CRDB%2Cstring"><span class="Identifier">sum</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">float</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span>
+    <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
     <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
     <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -497,10 +581,10 @@ It is only used with raw()
 
 </dd>
 <a id="paginate,RDB,int,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#paginate%2CRDB%2Cint%2Cint"><span class="Identifier">paginate</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">display</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">page</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">JsonNode</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span>
-    <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">Defect</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#paginate%2CRDB%2Cint%2Cint"><span class="Identifier">paginate</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">display</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">page</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">JsonNode</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -508,29 +592,31 @@ It is only used with raw()
 </dd>
 <a id="fastPaginate,RDB,int,string,Order"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#fastPaginate%2CRDB%2Cint%2Cstring%2COrder"><span class="Identifier">fastPaginate</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">display</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">;</span> <span class="Identifier">order</span><span class="Other">:</span> <a href="grammars.html#Order"><span class="Identifier">Order</span></a> <span class="Other">=</span> <span class="Identifier">Asc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">JsonNode</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">Defect</span><span class="Other">,</span>
-    <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span>
-                            <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+    <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="fastPaginateNext,RDB,int,int,string,Order"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#fastPaginateNext%2CRDB%2Cint%2Cint%2Cstring%2COrder"><span class="Identifier">fastPaginateNext</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">display</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">;</span> <span class="Identifier">order</span><span class="Other">:</span> <a href="grammars.html#Order"><span class="Identifier">Order</span></a> <span class="Other">=</span> <span class="Identifier">Asc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">JsonNode</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Defect</span><span class="Other">,</span>
-    <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-                            <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#fastPaginateNext%2CRDB%2Cint%2Cint%2Cstring%2COrder"><span class="Identifier">fastPaginateNext</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">display</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">;</span>
+                      <span class="Identifier">order</span><span class="Other">:</span> <a href="grammars.html#Order"><span class="Identifier">Order</span></a> <span class="Other">=</span> <span class="Identifier">Asc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">JsonNode</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span>
+    <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span>
+    <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="fastPaginateBack,RDB,int,int,string,Order"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#fastPaginateBack%2CRDB%2Cint%2Cint%2Cstring%2COrder"><span class="Identifier">fastPaginateBack</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">display</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">;</span> <span class="Identifier">order</span><span class="Other">:</span> <a href="grammars.html#Order"><span class="Identifier">Order</span></a> <span class="Other">=</span> <span class="Identifier">Asc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">JsonNode</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Defect</span><span class="Other">,</span>
-    <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-                            <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#fastPaginateBack%2CRDB%2Cint%2Cint%2Cstring%2COrder"><span class="Identifier">fastPaginateBack</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">display</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">;</span>
+                      <span class="Identifier">order</span><span class="Other">:</span> <a href="grammars.html#Order"><span class="Identifier">Order</span></a> <span class="Other">=</span> <span class="Identifier">Asc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">JsonNode</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span>
+    <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span>
+    <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -546,7 +632,7 @@ It is only used with raw()
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-10-15 14:23:46 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-10-16 11:17:50 UTC</small>
       </div>
     </div>
   </div>

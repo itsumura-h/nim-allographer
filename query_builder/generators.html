@@ -20,7 +20,7 @@
 <title>query_builder/generators</title>
 <link rel="stylesheet" type="text/css" href="../nimdoc.out.css">
 
-<script type="text/javascript" src="dochack.js"></script>
+<script type="text/javascript" src="../dochack.js"></script>
 
 <script type="text/javascript">
 function main() {
@@ -47,21 +47,12 @@ function main() {
 
   toggleSwitch.addEventListener('change', switchTheme, false);
 
+  const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+  if (currentTheme) {
+    document.documentElement.setAttribute('data-theme', currentTheme);
 
-  if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.documentElement.setAttribute('data-theme', "dark");
-    toggleSwitch.checked = true;
-  } else if (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) {
-    document.documentElement.setAttribute('data-theme', "light");
-    toggleSwitch.checked = false;
-  } else {
-    const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
-    if (currentTheme) {
-      document.documentElement.setAttribute('data-theme', currentTheme);
-
-      if (currentTheme === 'dark') {
-        toggleSwitch.checked = true;
-      }
+    if (currentTheme === 'dark') {
+      toggleSwitch.checked = true;
     }
   }
 }
@@ -83,6 +74,9 @@ function main() {
   </div>
   <div id="global-links">
     <ul class="simple">
+    <li>
+      <a href="../theindex.html">Index</a>
+    </li>
     </ul>
   </div>
   <div id="searchInputDiv">
@@ -106,66 +100,156 @@ function main() {
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
+      <ul class="simple nested-toc-section">updateSql
+      <li><a class="reference" href="#updateSql%2CRDB"
+    title="updateSql(this: RDB): RDB">updateSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">whereNullSql
+      <li><a class="reference" href="#whereNullSql%2CRDB"
+    title="whereNullSql(this: RDB): RDB">whereNullSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">limitSql
+      <li><a class="reference" href="#limitSql%2CRDB"
+    title="limitSql(this: RDB): RDB">limitSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">leftJoinSql
+      <li><a class="reference" href="#leftJoinSql%2CRDB"
+    title="leftJoinSql(this: RDB): RDB">leftJoinSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">groupBySql
+      <li><a class="reference" href="#groupBySql%2CRDB"
+    title="groupBySql(this: RDB): RDB">groupBySql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">selectMaxSql
+      <li><a class="reference" href="#selectMaxSql%2CRDB%2Cstring"
+    title="selectMaxSql(this: RDB; column: string): RDB">selectMaxSql,RDB,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">selectByIdSql
+      <li><a class="reference" href="#selectByIdSql%2CRDB%2Cint%2Cstring"
+    title="selectByIdSql(this: RDB; id: int; key: string): RDB">selectByIdSql,RDB,int,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">whereNotBetweenSql
+      <li><a class="reference" href="#whereNotBetweenSql%2CRDB"
+    title="whereNotBetweenSql(this: RDB): RDB">whereNotBetweenSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">whereBetweenSql
+      <li><a class="reference" href="#whereBetweenSql%2CRDB"
+    title="whereBetweenSql(this: RDB): RDB">whereBetweenSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">deleteSql
+      <li><a class="reference" href="#deleteSql%2CRDB"
+    title="deleteSql(this: RDB): RDB">deleteSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">orderBySql
+      <li><a class="reference" href="#orderBySql%2CRDB"
+    title="orderBySql(this: RDB): RDB">orderBySql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">joinSql
+      <li><a class="reference" href="#joinSql%2CRDB"
+    title="joinSql(this: RDB): RDB">joinSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">orWhereSql
+      <li><a class="reference" href="#orWhereSql%2CRDB"
+    title="orWhereSql(this: RDB): RDB">orWhereSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">insertValuesSql
+      <li><a class="reference" href="#insertValuesSql%2CRDB%2CopenArray%5BJsonNode%5D"
+    title="insertValuesSql(this: RDB; rows: openArray[JsonNode]): RDB">insertValuesSql,RDB,openArray[JsonNode]<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">insertValueSql
+      <li><a class="reference" href="#insertValueSql%2CRDB%2CJsonNode"
+    title="insertValueSql(this: RDB; items: JsonNode): RDB">insertValueSql,RDB,JsonNode<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">selectSql
       <li><a class="reference" href="#selectSql%2CRDB"
-    title="selectSql(this: RDB): RDB"><wbr />select<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#fromSql%2CRDB"
-    title="fromSql(this: RDB): RDB"><wbr />from<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#selectFirstSql%2CRDB"
-    title="selectFirstSql(this: RDB): RDB"><wbr />select<wbr />First<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#selectByIdSql%2CRDB%2Cint%2Cstring"
-    title="selectByIdSql(this: RDB; id: int; key: string): RDB"><wbr />select<wbr />By<wbr />Id<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#joinSql%2CRDB"
-    title="joinSql(this: RDB): RDB"><wbr />join<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#leftJoinSql%2CRDB"
-    title="leftJoinSql(this: RDB): RDB"><wbr />left<wbr />Join<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#whereSql%2CRDB"
-    title="whereSql(this: RDB): RDB"><wbr />where<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#orWhereSql%2CRDB"
-    title="orWhereSql(this: RDB): RDB"><wbr />or<wbr />Where<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#whereBetweenSql%2CRDB"
-    title="whereBetweenSql(this: RDB): RDB"><wbr />where<wbr />Between<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#whereNotBetweenSql%2CRDB"
-    title="whereNotBetweenSql(this: RDB): RDB"><wbr />where<wbr />Not<wbr />Between<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#whereInSql%2CRDB"
-    title="whereInSql(this: RDB): RDB"><wbr />where<wbr />In<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#whereNotInSql%2CRDB"
-    title="whereNotInSql(this: RDB): RDB"><wbr />where<wbr />Not<wbr />In<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#whereNullSql%2CRDB"
-    title="whereNullSql(this: RDB): RDB"><wbr />where<wbr />Null<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#groupBySql%2CRDB"
-    title="groupBySql(this: RDB): RDB"><wbr />group<wbr />By<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#havingSql%2CRDB"
-    title="havingSql(this: RDB): RDB"><wbr />having<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#orderBySql%2CRDB"
-    title="orderBySql(this: RDB): RDB"><wbr />order<wbr />By<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#limitSql%2CRDB"
-    title="limitSql(this: RDB): RDB"><wbr />limit<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#offsetSql%2CRDB"
-    title="offsetSql(this: RDB): RDB"><wbr />offset<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#insertSql%2CRDB"
-    title="insertSql(this: RDB): RDB"><wbr />insert<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#insertValueSql%2CRDB%2CJsonNode"
-    title="insertValueSql(this: RDB; items: JsonNode): RDB"><wbr />insert<wbr />Value<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#insertValuesSql%2CRDB%2CopenArray%5BJsonNode%5D"
-    title="insertValuesSql(this: RDB; rows: openArray[JsonNode]): RDB"><wbr />insert<wbr />Values<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#updateSql%2CRDB"
-    title="updateSql(this: RDB): RDB"><wbr />update<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#updateValuesSql%2CRDB%2CJsonNode"
-    title="updateValuesSql(this: RDB; items: JsonNode): RDB"><wbr />update<wbr />Values<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#deleteSql%2CRDB"
-    title="deleteSql(this: RDB): RDB"><wbr />delete<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#deleteByIdSql%2CRDB%2Cint%2Cstring"
-    title="deleteByIdSql(this: RDB; id: int; key: string): RDB"><wbr />delete<wbr />By<wbr />Id<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#selectCountSql%2CRDB"
-    title="selectCountSql(this: RDB): RDB"><wbr />select<wbr />Count<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#selectMaxSql%2CRDB%2Cstring"
-    title="selectMaxSql(this: RDB; column: string): RDB"><wbr />select<wbr />Max<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#selectMinSql%2CRDB%2Cstring"
-    title="selectMinSql(this: RDB; column: string): RDB"><wbr />select<wbr />Min<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#selectAvgSql%2CRDB%2Cstring"
-    title="selectAvgSql(this: RDB; column: string): RDB"><wbr />select<wbr />Avg<wbr />Sql<span class="attachedType"></span></a></li>
-  <li><a class="reference" href="#selectSumSql%2CRDB%2Cstring"
-    title="selectSumSql(this: RDB; column: string): RDB"><wbr />select<wbr />Sum<wbr />Sql<span class="attachedType"></span></a></li>
+    title="selectSql(this: RDB): RDB">selectSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">selectFirstSql
+      <li><a class="reference" href="#selectFirstSql%2CRDB"
+    title="selectFirstSql(this: RDB): RDB">selectFirstSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">selectAvgSql
+      <li><a class="reference" href="#selectAvgSql%2CRDB%2Cstring"
+    title="selectAvgSql(this: RDB; column: string): RDB">selectAvgSql,RDB,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">deleteByIdSql
+      <li><a class="reference" href="#deleteByIdSql%2CRDB%2Cint%2Cstring"
+    title="deleteByIdSql(this: RDB; id: int; key: string): RDB">deleteByIdSql,RDB,int,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">havingSql
+      <li><a class="reference" href="#havingSql%2CRDB"
+    title="havingSql(this: RDB): RDB">havingSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">selectCountSql
+      <li><a class="reference" href="#selectCountSql%2CRDB"
+    title="selectCountSql(this: RDB): RDB">selectCountSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">updateValuesSql
+      <li><a class="reference" href="#updateValuesSql%2CRDB%2CJsonNode"
+    title="updateValuesSql(this: RDB; items: JsonNode): RDB">updateValuesSql,RDB,JsonNode<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">offsetSql
+      <li><a class="reference" href="#offsetSql%2CRDB"
+    title="offsetSql(this: RDB): RDB">offsetSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">selectSumSql
+      <li><a class="reference" href="#selectSumSql%2CRDB%2Cstring"
+    title="selectSumSql(this: RDB; column: string): RDB">selectSumSql,RDB,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">fromSql
+      <li><a class="reference" href="#fromSql%2CRDB"
+    title="fromSql(this: RDB): RDB">fromSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">insertSql
+      <li><a class="reference" href="#insertSql%2CRDB"
+    title="insertSql(this: RDB): RDB">insertSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">whereSql
+      <li><a class="reference" href="#whereSql%2CRDB"
+    title="whereSql(this: RDB): RDB">whereSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">whereInSql
+      <li><a class="reference" href="#whereInSql%2CRDB"
+    title="whereInSql(this: RDB): RDB">whereInSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">selectMinSql
+      <li><a class="reference" href="#selectMinSql%2CRDB%2Cstring"
+    title="selectMinSql(this: RDB; column: string): RDB">selectMinSql,RDB,string<span class="attachedType"></span></a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">whereNotInSql
+      <li><a class="reference" href="#whereNotInSql%2CRDB"
+    title="whereNotInSql(this: RDB): RDB">whereNotInSql,RDB<span class="attachedType"></span></a></li>
+
+  </ul>
 
   </ul>
 </li>
@@ -207,7 +291,8 @@ function main() {
 
 </dd>
 <a id="selectByIdSql,RDB,int,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#selectByIdSql%2CRDB%2Cint%2Cstring"><span class="Identifier">selectByIdSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#selectByIdSql%2CRDB%2Cint%2Cstring"><span class="Identifier">selectByIdSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -249,7 +334,8 @@ function main() {
 
 </dd>
 <a id="whereNotBetweenSql,RDB"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#whereNotBetweenSql%2CRDB"><span class="Identifier">whereNotBetweenSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#whereNotBetweenSql%2CRDB"><span class="Identifier">whereNotBetweenSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -319,7 +405,8 @@ function main() {
 
 </dd>
 <a id="insertValueSql,RDB,JsonNode"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#insertValueSql%2CRDB%2CJsonNode"><span class="Identifier">insertValueSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#insertValueSql%2CRDB%2CJsonNode"><span class="Identifier">insertValueSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -341,7 +428,8 @@ function main() {
 
 </dd>
 <a id="updateValuesSql,RDB,JsonNode"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#updateValuesSql%2CRDB%2CJsonNode"><span class="Identifier">updateValuesSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#updateValuesSql%2CRDB%2CJsonNode"><span class="Identifier">updateValuesSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -355,7 +443,8 @@ function main() {
 
 </dd>
 <a id="deleteByIdSql,RDB,int,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#deleteByIdSql%2CRDB%2Cint%2Cstring"><span class="Identifier">deleteByIdSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#deleteByIdSql%2CRDB%2Cint%2Cstring"><span class="Identifier">deleteByIdSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -369,28 +458,32 @@ function main() {
 
 </dd>
 <a id="selectMaxSql,RDB,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#selectMaxSql%2CRDB%2Cstring"><span class="Identifier">selectMaxSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#selectMaxSql%2CRDB%2Cstring"><span class="Identifier">selectMaxSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="selectMinSql,RDB,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#selectMinSql%2CRDB%2Cstring"><span class="Identifier">selectMinSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#selectMinSql%2CRDB%2Cstring"><span class="Identifier">selectMinSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="selectAvgSql,RDB,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#selectAvgSql%2CRDB%2Cstring"><span class="Identifier">selectAvgSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#selectAvgSql%2CRDB%2Cstring"><span class="Identifier">selectAvgSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="selectSumSql,RDB,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#selectSumSql%2CRDB%2Cstring"><span class="Identifier">selectSumSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#selectSumSql%2CRDB%2Cstring"><span class="Identifier">selectSumSql</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -406,7 +499,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-10-15 14:23:46 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2020-10-16 11:17:50 UTC</small>
       </div>
     </div>
   </div>
