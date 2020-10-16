@@ -1,4 +1,4 @@
-import os
+import os, strutils
 
 const
   DRIVER = getEnv("DB_DRIVER","sqlite").string
@@ -6,7 +6,8 @@ const
   USER = getEnv("DB_USER").string
   PASSWORD = getEnv("DB_PASSWORD").string
   DATABASE = getEnv("DB_DATABASE").string
-  MAX_CONNECTION = 90
+  MAX_CONNECTION = getEnv("DB_MAX_CONNECTION").parseInt
+  TIMEOUT* = getEnv("DB_TIMEOUT").parseInt
 
 when DRIVER == "sqlite":
   import db_sqlite

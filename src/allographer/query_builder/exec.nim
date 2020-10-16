@@ -280,7 +280,7 @@ when getDriver() == "postgres":
       echoErrorMsg(this.sqlString & $this.placeHolder)
       getCurrentExceptionMsg().echoErrorMsg()
 
-  proc asyncInsert*(this: RDB, rows: openArray[JsonNode]) {.async.} =
+  proc asyncInsert*(this: RDB, rows: seq[JsonNode]) {.async.} =
     defer: this.cleanUp()
     this.sqlString = this.insertValuesBuilder(rows).sqlString
     try:
@@ -290,7 +290,7 @@ when getDriver() == "postgres":
       echoErrorMsg(this.sqlString & $this.placeHolder)
       getCurrentExceptionMsg().echoErrorMsg()
 
-  proc asyncInserts*(this: RDB, rows: openArray[JsonNode]) {.async.} =
+  proc asyncInserts*(this: RDB, rows: seq[JsonNode]) {.async.} =
     defer: this.cleanUp()
     for row in rows:
       let sqlString = this.insertValueBuilder(row).sqlString
