@@ -15,6 +15,8 @@ putEnv("DB_CONNECTION", "{getCurrentDir()}/db.sqlite3")
 putEnv("DB_USER", "")
 putEnv("DB_PASSWORD", "")
 putEnv("DB_DATABASE", "")
+putEnv("DB_MAX_CONNECTION", "95")
+putEnv("DB_TIMEOUT", "20000")
 
 # Logging
 putEnv("LOG_IS_DISPLAY", "true")
