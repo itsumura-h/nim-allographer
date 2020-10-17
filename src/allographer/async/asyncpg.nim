@@ -148,20 +148,20 @@ proc asyncGetRow*(pool:AsyncPool,
                     sqlString:string,
                     args:seq[string]
   ):Future[JsonNode] {.async.} =
-    # let conIdx = await pool.getFreeConnIdx()
-    # echo conIdx
-    # result = await asyncGetRow(pool.conns[conIdx], sql sqlString, args)
-    # pool.returnConn(conIdx)
+    let conIdx = await pool.getFreeConnIdx()
+    echo conIdx
+    result = await asyncGetRow(pool.conns[conIdx], sql sqlString, args)
+    pool.returnConn(conIdx)
 
-    let process = pool.getFreeConnIdx()
-    let hasCompleted = await withTimeout(process, TIMEOUT)
-    if hasCompleted:
-      let conIdx = await process
-      result = await asyncGetRow(pool.conns[conIdx], sql sqlString, args)
-      pool.returnConn(conIdx)
-    else:
-      echo "=== 失敗 " & $cpuTime()
-      return newJNull()
+    # let process = pool.getFreeConnIdx()
+    # let hasCompleted = await withTimeout(process, TIMEOUT)
+    # if hasCompleted:
+    #   let conIdx = await process
+    #   result = await asyncGetRow(pool.conns[conIdx], sql sqlString, args)
+    #   pool.returnConn(conIdx)
+    # else:
+    #   echo "=== 失敗 " & $cpuTime()
+    #   return newJNull()
 
 
 proc asyncGetAllRowsPlain(db: DbConn, query: SqlQuery, args: seq[string]):Future[seq[Row]] {.async.} =
@@ -246,15 +246,15 @@ proc asyncExec*(pool:AsyncPool,
                   sqlString:string,
                   args:seq[string]
 ) {.async.} =
-  # let conIdx = await pool.getFreeConnIdx()
-  # await asyncExec(pool.conns[conIdx], sql sqlString, args)
-  # pool.returnConn(conIdx)
+  let conIdx = await pool.getFreeConnIdx()
+  await asyncExec(pool.conns[conIdx], sql sqlString, args)
+  pool.returnConn(conIdx)
 
-  let process = pool.getFreeConnIdx()
-  let hasCompleted = await withTimeout(process, TIMEOUT)
-  if hasCompleted:
-    let conIdx = await process
-    await asyncExec(pool.conns[conIdx], sql sqlString, args)
-    pool.returnConn(conIdx)
-  else:
-      echo "=== 失敗 " & $cpuTime()
+  # let process = pool.getFreeConnIdx()
+  # let hasCompleted = await withTimeout(process, TIMEOUT)
+  # if hasCompleted:
+  #   let conIdx = await process
+  #   await asyncExec(pool.conns[conIdx], sql sqlString, args)
+  #   pool.returnConn(conIdx)
+  # else:
+  #     echo "=== 失敗 " & $cpuTime()
