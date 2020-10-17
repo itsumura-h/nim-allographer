@@ -64,6 +64,7 @@ proc main() {.async.} =
 # waitFor migrate()
 # waitFor main()
 let start = cpuTime()
-for i in 0..20:
+for i in 1..20:
   waitFor main()
+  echo i
 echo cpuTime() - start

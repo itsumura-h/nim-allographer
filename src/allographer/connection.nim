@@ -7,7 +7,6 @@ const
   PASSWORD = getEnv("DB_PASSWORD").string
   DATABASE = getEnv("DB_DATABASE").string
   MAX_CONNECTION = getEnv("DB_MAX_CONNECTION").parseInt
-  TIMEOUT* = getEnv("DB_TIMEOUT").parseInt
 
 when DRIVER == "sqlite":
   import db_sqlite
