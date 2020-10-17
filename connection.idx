@@ -1,3 +1,2 @@
-TIMEOUT	connection.html#TIMEOUT	connection: TIMEOUT	
 db	connection.html#db	connection: db(): DbConn	
 getDriver	connection.html#getDriver	connection: getDriver(): string	
