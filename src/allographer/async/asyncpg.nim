@@ -6,7 +6,7 @@ type
   ## db pool
   AsyncPool* = ref object
     conns*: seq[DbConn]
-    busy*: array[90, bool]
+    busy*: array[MAX_CONNECTION, bool]
 
   ## Excpetion to catch on errors
   PGError* = object of Exception
@@ -29,7 +29,7 @@ proc newAsyncPool*(
 proc getFreeConnIdx*(pool: AsyncPool): Future[int] {.async.} =
   ## Wait for a free connection and return it.
   while true:
-    for conIdx in 0..<pool.conns.len-1:
+    for conIdx in 0..<pool.conns.len:
       if not pool.busy[conIdx]:
         pool.busy[conIdx] = true
         return conIdx
