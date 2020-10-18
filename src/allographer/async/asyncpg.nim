@@ -29,7 +29,7 @@ proc newAsyncPool*(
 proc getFreeConnIdx*(pool: AsyncPool): Future[int] {.async.} =
   ## Wait for a free connection and return it.
   while true:
-    for conIdx in 0..<pool.conns.len:
+    for conIdx in 0..<pool.conns.len-1:
       if not pool.busy[conIdx]:
         pool.busy[conIdx] = true
         return conIdx
