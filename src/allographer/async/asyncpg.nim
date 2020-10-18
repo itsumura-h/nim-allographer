@@ -152,16 +152,6 @@ proc asyncGetRow*(pool:AsyncPool,
     result = await asyncGetRow(pool.conns[conIdx], sql sqlString, args)
     pool.returnConn(conIdx)
 
-    # let process = pool.getFreeConnIdx()
-    # let hasCompleted = await withTimeout(process, TIMEOUT)
-    # if hasCompleted:
-    #   let conIdx = await process
-    #   result = await asyncGetRow(pool.conns[conIdx], sql sqlString, args)
-    #   pool.returnConn(conIdx)
-    # else:
-    #   return newJNull()
-
-
 proc asyncGetAllRowsPlain(db: DbConn, query: SqlQuery, args: seq[string]):Future[seq[Row]] {.async.} =
   assert db.status == CONNECTION_OK
   let success = pqsendQuery(db, dbFormat(query, args))
@@ -247,10 +237,3 @@ proc asyncExec*(pool:AsyncPool,
   let conIdx = await pool.getFreeConnIdx()
   await asyncExec(pool.conns[conIdx], sql sqlString, args)
   pool.returnConn(conIdx)
-
-  # let process = pool.getFreeConnIdx()
-  # let hasCompleted = await withTimeout(process, TIMEOUT)
-  # if hasCompleted:
-  #   let conIdx = await process
-  #   await asyncExec(pool.conns[conIdx], sql sqlString, args)
-  #   pool.returnConn(conIdx)
