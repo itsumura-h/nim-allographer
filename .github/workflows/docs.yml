@@ -18,7 +18,7 @@ jobs:
       with:
         path: ~/.choosenim
         key: ${{ runner.os }}-choosenim-${{ env.NIM_VERSION }}
-    - uses: jiro4989/setup-nim-action@v1.0.1
+    - uses: jiro4989/setup-nim-action@v1
     - name: Generate documents
       run: nimble docs
     - name: Deploy
