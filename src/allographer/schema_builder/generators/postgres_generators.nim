@@ -1,7 +1,7 @@
 import json, strformat
 import ../column
-import utils
-import ../../util
+import generator_util
+import ../../utils
 
 # =============================================================================
 # int
@@ -403,3 +403,8 @@ proc foreignGenerator*(name:string, tableName:string, column:string,
   wrapUpper(tableName)
   result = &", FOREIGN KEY(\"{name}\") REFERENCES {tableName}({column})"
   result.add(&" ON DELETE {onDeleteString}")
+
+proc indexGenerate*(table, column:string):string =
+  var table = table
+  wrapUpper(table)
+  return &"CREATE INDEX {column}_index ON {table}({column})"

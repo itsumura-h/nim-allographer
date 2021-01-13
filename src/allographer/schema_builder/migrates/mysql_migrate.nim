@@ -3,7 +3,7 @@ import
   ../table,
   ../column
 import ../generators/mysql_generators
-import ../../util
+import ../../utils
 
 
 proc generateColumnString*(column:Column):string =
@@ -279,3 +279,6 @@ proc migrate*(this:Table):string =
   var tableName = this.name
   wrapUpper(tableName)
   return &"CREATE TABLE {tableName} ({columnString}{foreignString})"
+
+proc createIndex*(table, column:string):string =
+  return indexGenerate(table, column)

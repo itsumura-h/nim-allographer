@@ -2,7 +2,7 @@ import strformat, re, strutils
 import ../table
 import ../column
 import ../migrates/sqlite_migrate
-import ../../util
+import ../../utils
 import ../../connection
 
 proc add(column:Column, table:string) =

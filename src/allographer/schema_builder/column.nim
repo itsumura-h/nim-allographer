@@ -5,6 +5,7 @@ type
   Column* = ref object
     name*: string
     typ*: RdbTypekind
+    isIndex*: bool
     isNullable*: bool
     isUnsigned*: bool
     isDefault*: bool
@@ -91,6 +92,10 @@ proc default*(c: Column, value:JsonNode): Column =
 
 proc default*(c:Column):Column =
   c.isDefault = true
+  return c
+
+proc index*(c:Column):Column =
+  c.isIndex = true
   return c
 
 proc nullable*(c: Column): Column =

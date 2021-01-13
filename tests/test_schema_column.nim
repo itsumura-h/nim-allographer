@@ -38,6 +38,11 @@ suite "column options":
     var t = Column().unique()
     check t.isUnique == true
 
+  test "index":
+    var t = Column().string("oid").index()
+    check t.name == "oid"
+    check t.isIndex == true
+
 suite "column type int":
   test "increment":
     var t = Column().increments("id")
