@@ -98,6 +98,7 @@ function main() {
     title="Column = ref object
   name*: string
   typ*: RdbTypekind
+  isIndex*: bool
   isNullable*: bool
   isUnsigned*: bool
   isDefault*: bool
@@ -110,10 +111,10 @@ function main() {
   foreignOnDelete*: ForeignOnDelete
   info*: JsonNode
   alterTyp*: AlterTyp
-  previousName*: string"><wbr />Column<span class="attachedType"></span></a></li>
+  previousName*: string">Column</a></li>
   <li><a class="reference" href="#AlterTyp"
     title="AlterTyp = enum
-  Add, Change, Delete"><wbr />Alter<wbr />Typ<span class="attachedType"></span></a></li>
+  Add, Change, Delete">AlterTyp</a></li>
   <li><a class="reference" href="#RdbTypekind"
     title="RdbTypekind = enum
   rdbIncrements = &quot;rdbIncrements&quot;, rdbInteger = &quot;rdbInteger&quot;,
@@ -125,11 +126,11 @@ function main() {
   rdbTime = &quot;rdbTime&quot;, rdbTimestamp = &quot;rdbTimestamp&quot;,
   rdbTimestamps = &quot;rdbTimestamps&quot;, rdbSoftDelete = &quot;rdbSoftDelete&quot;,
   rdbBinary = &quot;rdbBinary&quot;, rdbBoolean = &quot;rdbBoolean&quot;,
-  rdbEnumField = &quot;rdbEnumField&quot;, rdbJson = &quot;rdbJson&quot;, rdbForeign = &quot;rdbForeign&quot;"><wbr />Rdb<wbr />Typekind<span class="attachedType"></span></a></li>
+  rdbEnumField = &quot;rdbEnumField&quot;, rdbJson = &quot;rdbJson&quot;, rdbForeign = &quot;rdbForeign&quot;">RdbTypekind</a></li>
   <li><a class="reference" href="#ForeignOnDelete"
     title="ForeignOnDelete = enum
   RESTRICT = &quot;RESTRICT&quot;, CASCADE = &quot;CASCADE&quot;, SET_NULL = &quot;SET_NULL&quot;,
-  NO_ACTION = &quot;NO_ACTION&quot;"><wbr />Foreign<wbr />On<wbr />Delete<span class="attachedType"></span></a></li>
+  NO_ACTION = &quot;NO_ACTION&quot;">ForeignOnDelete</a></li>
 
   </ul>
 </li>
@@ -138,167 +139,172 @@ function main() {
   <ul class="simple simple-toc-section">
       <ul class="simple nested-toc-section">bigInteger
       <li><a class="reference" href="#bigInteger%2CColumn%2Cstring"
-    title="bigInteger(this: Column; name: string): Column">bigInteger,Column,string<span class="attachedType">Column</span></a></li>
+    title="bigInteger(this: Column; name: string): Column">bigInteger,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">nullable
       <li><a class="reference" href="#nullable%2CColumn"
-    title="nullable(c: Column): Column">nullable,Column<span class="attachedType">Column</span></a></li>
+    title="nullable(c: Column): Column">nullable,<wbr>Column</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">timestamp
       <li><a class="reference" href="#timestamp%2CColumn%2Cstring"
-    title="timestamp(this: Column; name: string): Column">timestamp,Column,string<span class="attachedType">Column</span></a></li>
+    title="timestamp(this: Column; name: string): Column">timestamp,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">enumField
       <li><a class="reference" href="#enumField%2CColumn%2Cstring%2CopenArray%5Bstring%5D"
-    title="enumField(this: Column; name: string; options: openArray[string]): Column">enumField,Column,string,openArray[string]<span class="attachedType">Column</span></a></li>
+    title="enumField(this: Column; name: string; options: openArray[string]): Column">enumField,<wbr>Column,<wbr>string,<wbr>openArray[string]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">on
       <li><a class="reference" href="#on%2CColumn%2Cstring"
-    title="on(this: Column; table: string): Column">on,Column,string<span class="attachedType">Column</span></a></li>
+    title="on(this: Column; table: string): Column">on,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">char
       <li><a class="reference" href="#char%2CColumn%2Cstring%2Cint"
-    title="char(this: Column; name: string; maxLength: int): Column">char,Column,string,int<span class="attachedType">Column</span></a></li>
+    title="char(this: Column; name: string; maxLength: int): Column">char,<wbr>Column,<wbr>string,<wbr>int</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">binary
       <li><a class="reference" href="#binary%2CColumn%2Cstring"
-    title="binary(this: Column; name: string): Column">binary,Column,string<span class="attachedType">Column</span></a></li>
+    title="binary(this: Column; name: string): Column">binary,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">longText
       <li><a class="reference" href="#longText%2CColumn%2Cstring"
-    title="longText(this: Column; name: string): Column">longText,Column,string<span class="attachedType">Column</span></a></li>
+    title="longText(this: Column; name: string): Column">longText,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">mediumInteger
       <li><a class="reference" href="#mediumInteger%2CColumn%2Cstring"
-    title="mediumInteger(this: Column; name: string): Column">mediumInteger,Column,string<span class="attachedType">Column</span></a></li>
+    title="mediumInteger(this: Column; name: string): Column">mediumInteger,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">unsigned
       <li><a class="reference" href="#unsigned%2CColumn"
-    title="unsigned(c: Column): Column">unsigned,Column<span class="attachedType">Column</span></a></li>
+    title="unsigned(c: Column): Column">unsigned,<wbr>Column</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">reference
       <li><a class="reference" href="#reference%2CColumn%2Cstring"
-    title="reference(this: Column; column: string): Column">reference,Column,string<span class="attachedType">Column</span></a></li>
+    title="reference(this: Column; column: string): Column">reference,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">softDelete
       <li><a class="reference" href="#softDelete%2CColumn"
-    title="softDelete(this: Column): Column">softDelete,Column<span class="attachedType">Column</span></a></li>
+    title="softDelete(this: Column): Column">softDelete,<wbr>Column</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">date
       <li><a class="reference" href="#date%2CColumn%2Cstring"
-    title="date(this: Column; name: string): Column">date,Column,string<span class="attachedType">Column</span></a></li>
+    title="date(this: Column; name: string): Column">date,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">default
       <li><a class="reference" href="#default%2CColumn%2Cbool"
-    title="default(c: Column; value: bool): Column">default,Column,bool<span class="attachedType">Column</span></a></li>
+    title="default(c: Column; value: bool): Column">default,<wbr>Column,<wbr>bool</a></li>
   <li><a class="reference" href="#default%2CColumn%2Cint"
-    title="default(c: Column; value: int): Column">default,Column,int<span class="attachedType">Column</span></a></li>
+    title="default(c: Column; value: int): Column">default,<wbr>Column,<wbr>int</a></li>
   <li><a class="reference" href="#default%2CColumn%2Cfloat"
-    title="default(c: Column; value: float): Column">default,Column,float<span class="attachedType">Column</span></a></li>
+    title="default(c: Column; value: float): Column">default,<wbr>Column,<wbr>float</a></li>
   <li><a class="reference" href="#default%2CColumn%2Cstring"
-    title="default(c: Column; value: string): Column">default,Column,string<span class="attachedType">Column</span></a></li>
+    title="default(c: Column; value: string): Column">default,<wbr>Column,<wbr>string</a></li>
   <li><a class="reference" href="#default%2CColumn%2CJsonNode"
-    title="default(c: Column; value: JsonNode): Column">default,Column,JsonNode<span class="attachedType">Column</span></a></li>
+    title="default(c: Column; value: JsonNode): Column">default,<wbr>Column,<wbr>JsonNode</a></li>
   <li><a class="reference" href="#default%2CColumn"
-    title="default(c: Column): Column">default,Column<span class="attachedType">Column</span></a></li>
+    title="default(c: Column): Column">default,<wbr>Column</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">onDelete
       <li><a class="reference" href="#onDelete%2CColumn%2CForeignOnDelete"
-    title="onDelete(this: Column; kind: ForeignOnDelete): Column">onDelete,Column,ForeignOnDelete<span class="attachedType">Column</span></a></li>
+    title="onDelete(this: Column; kind: ForeignOnDelete): Column">onDelete,<wbr>Column,<wbr>ForeignOnDelete</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">unique
       <li><a class="reference" href="#unique%2CColumn"
-    title="unique(c: Column): Column">unique,Column<span class="attachedType">Column</span></a></li>
+    title="unique(c: Column): Column">unique,<wbr>Column</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">text
       <li><a class="reference" href="#text%2CColumn%2Cstring"
-    title="text(this: Column; name: string): Column">text,Column,string<span class="attachedType">Column</span></a></li>
+    title="text(this: Column; name: string): Column">text,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">mediumText
       <li><a class="reference" href="#mediumText%2CColumn%2Cstring"
-    title="mediumText(this: Column; name: string): Column">mediumText,Column,string<span class="attachedType">Column</span></a></li>
+    title="mediumText(this: Column; name: string): Column">mediumText,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">decimal
       <li><a class="reference" href="#decimal%2CColumn%2Cstring%2Cint%2Cint"
-    title="decimal(this: Column; name: string; maximum: int; digit: int): Column">decimal,Column,string,int,int<span class="attachedType">Column</span></a></li>
+    title="decimal(this: Column; name: string; maximum: int; digit: int): Column">decimal,<wbr>Column,<wbr>string,<wbr>int,<wbr>int</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">integer
       <li><a class="reference" href="#integer%2CColumn%2Cstring"
-    title="integer(this: Column; name: string): Column">integer,Column,string<span class="attachedType">Column</span></a></li>
+    title="integer(this: Column; name: string): Column">integer,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">float
       <li><a class="reference" href="#float%2CColumn%2Cstring"
-    title="float(this: Column; name: string): Column">float,Column,string<span class="attachedType">Column</span></a></li>
+    title="float(this: Column; name: string): Column">float,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">string
       <li><a class="reference" href="#string%2CColumn%2Cstring%2Cint"
-    title="string(this: Column; name: string; length = 255): Column">string,Column,string,int<span class="attachedType">Column</span></a></li>
+    title="string(this: Column; name: string; length = 255): Column">string,<wbr>Column,<wbr>string,<wbr>int</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">increments
       <li><a class="reference" href="#increments%2CColumn%2Cstring"
-    title="increments(this: Column; name: string): Column">increments,Column,string<span class="attachedType">Column</span></a></li>
+    title="increments(this: Column; name: string): Column">increments,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">time
       <li><a class="reference" href="#time%2CColumn%2Cstring"
-    title="time(this: Column; name: string): Column">time,Column,string<span class="attachedType">Column</span></a></li>
+    title="time(this: Column; name: string): Column">time,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">datetime
       <li><a class="reference" href="#datetime%2CColumn%2Cstring"
-    title="datetime(this: Column; name: string): Column">datetime,Column,string<span class="attachedType">Column</span></a></li>
+    title="datetime(this: Column; name: string): Column">datetime,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">smallInteger
       <li><a class="reference" href="#smallInteger%2CColumn%2Cstring"
-    title="smallInteger(this: Column; name: string): Column">smallInteger,Column,string<span class="attachedType">Column</span></a></li>
+    title="smallInteger(this: Column; name: string): Column">smallInteger,<wbr>Column,<wbr>string</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">index
+      <li><a class="reference" href="#index%2CColumn"
+    title="index(c: Column): Column">index,<wbr>Column</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">timestamps
       <li><a class="reference" href="#timestamps%2CColumn"
-    title="timestamps(this: Column): Column">timestamps,Column<span class="attachedType">Column</span></a></li>
+    title="timestamps(this: Column): Column">timestamps,<wbr>Column</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">boolean
       <li><a class="reference" href="#boolean%2CColumn%2Cstring"
-    title="boolean(this: Column; name: string): Column">boolean,Column,string<span class="attachedType">Column</span></a></li>
+    title="boolean(this: Column; name: string): Column">boolean,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">foreign
       <li><a class="reference" href="#foreign%2CColumn%2Cstring"
-    title="foreign(this: Column; name: string): Column">foreign,Column,string<span class="attachedType">Column</span></a></li>
+    title="foreign(this: Column; name: string): Column">foreign,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">json
       <li><a class="reference" href="#json%2CColumn%2Cstring"
-    title="json(this: Column; name: string): Column">json,Column,string<span class="attachedType">Column</span></a></li>
+    title="json(this: Column; name: string): Column">json,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">double
       <li><a class="reference" href="#double%2CColumn%2Cstring%2Cint%2Cint"
-    title="double(this: Column; name: string; maximum: int; digit: int): Column">double,Column,string,int,int<span class="attachedType">Column</span></a></li>
+    title="double(this: Column; name: string; maximum: int; digit: int): Column">double,<wbr>Column,<wbr>string,<wbr>int,<wbr>int</a></li>
 
   </ul>
 
@@ -319,6 +325,7 @@ function main() {
 <dt><pre><a href="column.html#Column"><span class="Identifier">Column</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
   <span class="Identifier">name</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
   <span class="Identifier">typ</span><span class="Operator">*</span><span class="Other">:</span> <a href="column.html#RdbTypekind"><span class="Identifier">RdbTypekind</span></a>
+  <span class="Identifier">isIndex</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">isNullable</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">isUnsigned</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
   <span class="Identifier">isDefault</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
@@ -414,6 +421,13 @@ function main() {
 </dd>
 <a id="default,Column"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#default%2CColumn"><span class="Identifier">default</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="index,Column"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#index%2CColumn"><span class="Identifier">index</span></a><span class="Other">(</span><span class="Identifier">c</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -645,7 +659,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-11-23 07:13:34 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-01-13 06:02:28 UTC</small>
       </div>
     </div>
   </div>

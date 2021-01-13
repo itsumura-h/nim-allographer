@@ -1,0 +1,5 @@
+driverTypeError	utils.html#driverTypeError	utils: driverTypeError()	
+logger	utils.html#logger,any,varargs[string]	utils: logger(output: any; args: varargs[string])	
+echoErrorMsg	utils.html#echoErrorMsg,string	utils: echoErrorMsg(msg: string)	
+echoWarningMsg	utils.html#echoWarningMsg,string	utils: echoWarningMsg(msg: string)	
+wrapUpper	utils.html#wrapUpper,string	utils: wrapUpper(input: var string)	

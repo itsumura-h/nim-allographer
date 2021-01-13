@@ -1,2 +1,3 @@
 generateColumnString	schema_builder/migrates/mysql_migrate.html#generateColumnString,Column	mysql_migrate: generateColumnString(column: Column): string	
 migrate	schema_builder/migrates/mysql_migrate.html#migrate,Table	mysql_migrate: migrate(this: Table): string	
+createIndex	schema_builder/migrates/mysql_migrate.html#createIndex,string,string	mysql_migrate: createIndex(table, column: string): string	

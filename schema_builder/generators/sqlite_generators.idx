@@ -17,3 +17,4 @@ enumGenerator	schema_builder/generators/sqlite_generators.html#enumGenerator,str
 jsonGenerator	schema_builder/generators/sqlite_generators.html#jsonGenerator,string,bool,bool,bool,bool,JsonNode	sqlite_generators: jsonGenerator(name: string; nullable: bool; isUnique: bool; isUnsigned: bool;\n              isDefault: bool; default: JsonNode): string	
 foreignColumnGenerator	schema_builder/generators/sqlite_generators.html#foreignColumnGenerator,string	sqlite_generators: foreignColumnGenerator(name: string): string	
 foreignGenerator	schema_builder/generators/sqlite_generators.html#foreignGenerator,string,string,string,ForeignOnDelete	sqlite_generators: foreignGenerator(name: string; table: string; column: string;\n                 foreignOnDelete: ForeignOnDelete): string	
+indexGenerate	schema_builder/generators/sqlite_generators.html#indexGenerate,string,string	sqlite_generators: indexGenerate(table, column: string): string	

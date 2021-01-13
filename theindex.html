@@ -63,7 +63,7 @@ function main() {
 <div class="document" id="documentId">
   <div class="container">
     <h1 class="title">Index</h1>
-    Modules: <a href="connection.html">connection</a>, <a href="query_builder.html">query_builder</a>, <a href="query_builder/base.html">query_builder/base</a>, <a href="query_builder/builders.html">query_builder/builders</a>, <a href="query_builder/exec.html">query_builder/exec</a>, <a href="query_builder/generators.html">query_builder/generators</a>, <a href="query_builder/grammars.html">query_builder/grammars</a>, <a href="query_builder/transaction.html">query_builder/transaction</a>, <a href="schema_builder/alter.html">schema_builder/alter</a>, <a href="schema_builder/alters/mysql_alter.html">schema_builder/alters/mysql_alter</a>, <a href="schema_builder/alters/postgres_alter.html">schema_builder/alters/postgres_alter</a>, <a href="schema_builder/alters/sqlite_alter.html">schema_builder/alters/sqlite_alter</a>, <a href="schema_builder/column.html">schema_builder/column</a>, <a href="schema_builder/generators/mysql_generators.html">schema_builder/generators/mysql_generators</a>, <a href="schema_builder/generators/postgres_generators.html">schema_builder/generators/postgres_generators</a>, <a href="schema_builder/generators/sqlite_generators.html">schema_builder/generators/sqlite_generators</a>, <a href="schema_builder/generators/utils.html">schema_builder/generators/utils</a>, <a href="schema_builder/migrates/mysql_migrate.html">schema_builder/migrates/mysql_migrate</a>, <a href="schema_builder/migrates/postgres_migrate.html">schema_builder/migrates/postgres_migrate</a>, <a href="schema_builder/migrates/sqlite_migrate.html">schema_builder/migrates/sqlite_migrate</a>, <a href="schema_builder/schema.html">schema_builder/schema</a>, <a href="schema_builder/table.html">schema_builder/table</a>, <a href="util.html">util</a>.<br/><p /><h2>API symbols</h2>
+    Modules: <a href="connection.html">connection</a>, <a href="query_builder.html">query_builder</a>, <a href="query_builder/base.html">query_builder/base</a>, <a href="query_builder/builders.html">query_builder/builders</a>, <a href="query_builder/exec.html">query_builder/exec</a>, <a href="query_builder/generators.html">query_builder/generators</a>, <a href="query_builder/grammars.html">query_builder/grammars</a>, <a href="query_builder/transaction.html">query_builder/transaction</a>, <a href="schema_builder/alter.html">schema_builder/alter</a>, <a href="schema_builder/alters/mysql_alter.html">schema_builder/alters/mysql_alter</a>, <a href="schema_builder/alters/postgres_alter.html">schema_builder/alters/postgres_alter</a>, <a href="schema_builder/alters/sqlite_alter.html">schema_builder/alters/sqlite_alter</a>, <a href="schema_builder/column.html">schema_builder/column</a>, <a href="schema_builder/generators/generator_util.html">schema_builder/generators/generator_util</a>, <a href="schema_builder/generators/mysql_generators.html">schema_builder/generators/mysql_generators</a>, <a href="schema_builder/generators/postgres_generators.html">schema_builder/generators/postgres_generators</a>, <a href="schema_builder/generators/sqlite_generators.html">schema_builder/generators/sqlite_generators</a>, <a href="schema_builder/migrates/mysql_migrate.html">schema_builder/migrates/mysql_migrate</a>, <a href="schema_builder/migrates/postgres_migrate.html">schema_builder/migrates/postgres_migrate</a>, <a href="schema_builder/migrates/sqlite_migrate.html">schema_builder/migrates/sqlite_migrate</a>, <a href="schema_builder/schema.html">schema_builder/schema</a>, <a href="schema_builder/table.html">schema_builder/table</a>, <a href="utils.html">utils</a>.<br/><p /><h2>API symbols</h2>
 <dl><dt><a name="%60distinct%60" href="#%60distinct%60"><span>`distinct`:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="grammars: `distinct`(this: RDB): RDB" href="query_builder/grammars.html#distinct%2CRDB">grammars: `distinct`(this: RDB): RDB</a></li>
@@ -195,6 +195,14 @@ function main() {
 <dt><a name="countBuilder" href="#countBuilder"><span>countBuilder:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="builders: countBuilder(this: RDB): RDB" href="query_builder/builders.html#countBuilder%2CRDB">builders: countBuilder(this: RDB): RDB</a></li>
+          </ul></dd>
+<dt><a name="createIndex" href="#createIndex"><span>createIndex:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mysql_migrate: createIndex(table, column: string): string" href="schema_builder/migrates/mysql_migrate.html#createIndex%2Cstring%2Cstring">mysql_migrate: createIndex(table, column: string): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="postgres_migrate: createIndex(table, column: string): string" href="schema_builder/migrates/postgres_migrate.html#createIndex%2Cstring%2Cstring">postgres_migrate: createIndex(table, column: string): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="sqlite_migrate: createIndex(table, column: string): string" href="schema_builder/migrates/sqlite_migrate.html#createIndex%2Cstring%2Cstring">sqlite_migrate: createIndex(table, column: string): string</a></li>
           </ul></dd>
 <dt><a name="date" href="#date"><span>date:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -328,7 +336,7 @@ function main() {
           </ul></dd>
 <dt><a name="driverTypeError" href="#driverTypeError"><span>driverTypeError:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="util: driverTypeError()" href="util.html#driverTypeError">util: driverTypeError()</a></li>
+          data-doc-search-tag="utils: driverTypeError()" href="utils.html#driverTypeError">utils: driverTypeError()</a></li>
           </ul></dd>
 <dt><a name="drop" href="#drop"><span>drop:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -340,11 +348,11 @@ function main() {
           </ul></dd>
 <dt><a name="echoErrorMsg" href="#echoErrorMsg"><span>echoErrorMsg:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="util: echoErrorMsg(msg: string)" href="util.html#echoErrorMsg%2Cstring">util: echoErrorMsg(msg: string)</a></li>
+          data-doc-search-tag="utils: echoErrorMsg(msg: string)" href="utils.html#echoErrorMsg%2Cstring">utils: echoErrorMsg(msg: string)</a></li>
           </ul></dd>
 <dt><a name="echoWarningMsg" href="#echoWarningMsg"><span>echoWarningMsg:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="util: echoWarningMsg(msg: string)" href="util.html#echoWarningMsg%2Cstring">util: echoWarningMsg(msg: string)</a></li>
+          data-doc-search-tag="utils: echoWarningMsg(msg: string)" href="utils.html#echoWarningMsg%2Cstring">utils: echoWarningMsg(msg: string)</a></li>
           </ul></dd>
 <dt><a name="enumField" href="#enumField"><span>enumField:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -524,6 +532,18 @@ function main() {
 <li><a class="reference external"
           data-doc-search-tag="column: increments(this: Column; name: string): Column" href="schema_builder/column.html#increments%2CColumn%2Cstring">column: increments(this: Column; name: string): Column</a></li>
           </ul></dd>
+<dt><a name="index" href="#index"><span>index:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="column: index(c: Column): Column" href="schema_builder/column.html#index%2CColumn">column: index(c: Column): Column</a></li>
+          </ul></dd>
+<dt><a name="indexGenerate" href="#indexGenerate"><span>indexGenerate:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mysql_generators: indexGenerate(table, column: string): string" href="schema_builder/generators/mysql_generators.html#indexGenerate%2Cstring%2Cstring">mysql_generators: indexGenerate(table, column: string): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="postgres_generators: indexGenerate(table, column: string): string" href="schema_builder/generators/postgres_generators.html#indexGenerate%2Cstring%2Cstring">postgres_generators: indexGenerate(table, column: string): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="sqlite_generators: indexGenerate(table, column: string): string" href="schema_builder/generators/sqlite_generators.html#indexGenerate%2Cstring%2Cstring">sqlite_generators: indexGenerate(table, column: string): string</a></li>
+          </ul></dd>
 <dt><a name="insert" href="#insert"><span>insert:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="exec: insert(this: RDB; items: JsonNode)" href="query_builder/exec.html#insert%2CRDB%2CJsonNode">exec: insert(this: RDB; items: JsonNode)</a></li>
@@ -634,7 +654,7 @@ function main() {
           </ul></dd>
 <dt><a name="logger" href="#logger"><span>logger:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="util: logger(output: any; args: varargs[string])" href="util.html#logger%2Cany%2Cvarargs%5Bstring%5D">util: logger(output: any; args: varargs[string])</a></li>
+          data-doc-search-tag="utils: logger(output: any; args: varargs[string])" href="utils.html#logger%2Cany%2Cvarargs%5Bstring%5D">utils: logger(output: any; args: varargs[string])</a></li>
           </ul></dd>
 <dt><a name="longText" href="#longText"><span>longText:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -710,7 +730,7 @@ function main() {
           </ul></dd>
 <dt><a name="notAllowed" href="#notAllowed"><span>notAllowed:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="utils: notAllowed(option: string; typ: string)" href="schema_builder/generators/utils.html#notAllowed%2Cstring%2Cstring">utils: notAllowed(option: string; typ: string)</a></li>
+          data-doc-search-tag="generator_util: notAllowed(option: string; typ: string)" href="schema_builder/generators/generator_util.html#notAllowed%2Cstring%2Cstring">generator_util: notAllowed(option: string; typ: string)</a></li>
           </ul></dd>
 <dt><a name="nullable" href="#nullable"><span>nullable:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -766,7 +786,7 @@ function main() {
           </ul></dd>
 <dt><a name="rdb" href="#rdb"><span>rdb:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="query_builder: rdb(): RDB" href="query_builder.html#rdb">query_builder: rdb(): RDB</a></li>
+          data-doc-search-tag="query_builder: rdb(): RDB" href="query_builder.html#rdb_2">query_builder: rdb(): RDB</a></li>
           </ul></dd>
 <dt><a name="RDB" href="#RDB"><span>RDB:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -1188,14 +1208,14 @@ function main() {
           </ul></dd>
 <dt><a name="wrapUpper" href="#wrapUpper"><span>wrapUpper:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="util: wrapUpper(input: var string)" href="util.html#wrapUpper%2Cstring">util: wrapUpper(input: var string)</a></li>
+          data-doc-search-tag="utils: wrapUpper(input: var string)" href="utils.html#wrapUpper%2Cstring">utils: wrapUpper(input: var string)</a></li>
           </ul></dd>
 </dl>
     <div class="row">
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2020-11-23 07:13:34 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-01-13 06:02:28 UTC</small>
       </div>
     </div>
   </div>
