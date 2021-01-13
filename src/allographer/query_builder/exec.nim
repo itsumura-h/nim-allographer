@@ -1,6 +1,6 @@
 import json, strutils, strformat, algorithm, options, asyncdispatch
 import base, builders
-import ../util
+import ../utils
 import ../connection
 
 

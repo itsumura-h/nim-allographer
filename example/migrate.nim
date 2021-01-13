@@ -1,9 +1,7 @@
-import strformat, json, progress
+import strformat, json, progress, oids
 import bcrypt
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
-# import allographer/query_builder
-# import allographer/schema_builder
 
 
 # マイグレーション
@@ -14,13 +12,15 @@ schema([
   ], reset=true),
   table("Users",[
     Column().increments("id"),
+    Column().string("oid").index().nullable(),
+    Column().string("oid2").index(),
     Column().string("Name").nullable(),
     Column().string("email").nullable(),
     Column().string("password").nullable(),
     Column().string("address").nullable(),
     Column().date("birth_date").nullable(),
     Column().foreign("auth_id").reference("id").on("Auth").onDelete(SET_NULL)
-  ], reset=true)
+  ], reset=true),
 ])
 
 # シーダー
@@ -41,6 +41,8 @@ for i in 1..total:
   let authId = if i mod 2 == 0: 1 else: 2
   insertData.add(
     %*{
+      "oid": $(genOid()),
+      "oid2": $(genOid()),
       "Name": &"user{i}",
       "email": &"user{i}@gmail.com",
       "password": password,

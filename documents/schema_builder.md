@@ -147,7 +147,8 @@ alter(
 |`.nullable()`|Designate that the column allows NULL values|
 |`.default(value)`|Declare a default value for a column|
 |`.unsigned()`|Set INTEGER to UNSIGNED|
-|`.unique()`|Adding a unique index|
+|`.unique()`|Adding an unique index|
+|`.index()`|Adding an index|
 
 ## Foreign Key Constraints
 For example, let's define a `user_id` column on the table that references the `id` column on a `users` table:

@@ -3,7 +3,7 @@ from strformat import `&`
 from strutils import contains, isUpperAscii
 
 import base
-from ../util import wrapUpper
+from ../utils import wrapUpper
 
 
 # ==================== SELECT ====================

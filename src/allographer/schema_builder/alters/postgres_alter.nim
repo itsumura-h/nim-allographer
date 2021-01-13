@@ -2,7 +2,7 @@ import strformat, re, strutils
 import ../table
 import ../column
 import ../migrates/postgres_migrate
-import ../../util
+import ../../utils
 import ../../connection
 
 proc add(column:Column, table:string) =

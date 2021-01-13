@@ -1,5 +1,6 @@
 import json, strformat
 import ../column
+import ../../utils
 from db_common import DbError
 
 # =============================================================================
@@ -285,3 +286,8 @@ proc foreignGenerator*(name:string, table:string, column:string,
 
   result = &", FOREIGN KEY('{name}') REFERENCES {table}({column})"
   result.add(&" ON DELETE {onDeleteString}")
+
+proc indexGenerate*(table, column:string):string =
+  var table = table
+  wrapUpper(table)
+  return &"CREATE INDEX {column}_index ON {table}({column})"
