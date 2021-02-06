@@ -41,11 +41,11 @@ proc checkTest(t:Typ, r:Typ) =
   check t.bool == r.bool
 
 proc checkTestOptions(t:Typ, r:Option[Typ]) =
-  check t.id == r.get().id
-  check t.name == r.get().name
-  check t.birth_date == r.get().birth_date
-  check t.null == r.get().null
-  check t.bool == r.get().bool
+  check t.id == r.get.id
+  check t.name == r.get.name
+  check t.birth_date == r.get.birth_date
+  check t.null == r.get.null
+  check t.bool == r.get.bool
 
 suite "return with type":
   test "get":

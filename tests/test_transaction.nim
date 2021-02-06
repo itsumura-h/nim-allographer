@@ -1,4 +1,4 @@
-import unittest, json, strformat
+import unittest, json, strformat, options
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
 
@@ -47,10 +47,10 @@ suite "transaction":
 
   test "in transaction":
     transaction:
-      var user= rdb().table("users").select("id").where("name", "=", "user3").first()
+      var user= rdb().table("users").select("id").where("name", "=", "user3").first.get
       var id = user["id"].getInt()
       echo id
-      user = rdb().table("users").select("name", "email").find(id)
+      user = rdb().table("users").select("name", "email").find(id).get
       echo user
 
   test "rollback success":

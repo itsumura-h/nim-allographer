@@ -1,10 +1,8 @@
-import json, strformat
 import ./table, ./column
 import
   ./alters/sqlite_alter,
   ./alters/mysql_alter,
   ./alters/postgres_alter
-import ../utils
 import ../connection
 
 

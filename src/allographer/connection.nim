@@ -11,7 +11,7 @@ const
 when DRIVER == "sqlite":
   import db_sqlite
   export db_sqlite
-  import sqlite3 except close
+  # import sqlite3 except close
 
 when DRIVER == "postgres":
   import ./async/asyncpg

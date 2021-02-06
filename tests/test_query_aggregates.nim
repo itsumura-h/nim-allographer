@@ -1,4 +1,4 @@
-import unittest, json, strformat
+import unittest, json, strformat, options
 
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
@@ -31,27 +31,27 @@ suite "aggregates":
     check t == 10
 
   test "max()":
-    var t = rdb().table("users").max("name")
+    var t = rdb().table("users").max("name").get
     echo t
     check t == "user9"
-    var t2 = rdb().table("users").max("id")
+    var t2 = rdb().table("users").max("id").get
     echo t2
     check t2 == "10"
 
   test "min()":
-    var t = rdb().table("users").min("name")
+    var t = rdb().table("users").min("name").get
     echo t
     check t == "user1"
-    var t2 = rdb().table("users").min("id")
+    var t2 = rdb().table("users").min("id").get
     echo t2
     check t2 == "1"
 
   test "avg()":
-    var t = rdb().table("users").avg("id")
+    var t = rdb().table("users").avg("id").get
     echo t
     check t == 5.5
 
   test "sum()":
-    var t = rdb().table("users").sum("id")
+    var t = rdb().table("users").sum("id").get
     echo t
     check t == 55.0

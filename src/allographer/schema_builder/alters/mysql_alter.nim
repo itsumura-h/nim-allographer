@@ -1,4 +1,4 @@
-import strformat, re, strutils
+import strformat
 import ../table
 import ../column
 import ../migrates/mysql_migrate

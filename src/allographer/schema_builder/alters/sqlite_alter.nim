@@ -1,4 +1,4 @@
-import strformat, re, strutils
+import strformat, re
 import ../table
 import ../column
 import ../migrates/sqlite_migrate

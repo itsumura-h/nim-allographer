@@ -1,5 +1,4 @@
 import macros, strutils, strformat
-import ../connection, base
 
 
 macro transaction*(bodyInput: untyped):untyped =
