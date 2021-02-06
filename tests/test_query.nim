@@ -1,4 +1,4 @@
-import unittest, json, strformat
+import unittest, json, strformat, options
 
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
@@ -50,7 +50,7 @@ suite "select":
     check t[0] == @["1", "user1", "user1@gmail.com", "", "1"]
 
   test "first()":
-    var t = rdb().table("users").where("name", "=", "user1").first()
+    var t = rdb().table("users").where("name", "=", "user1").first.get
     check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
 
   test "firstPlain()":
@@ -58,7 +58,7 @@ suite "select":
     check t == @["1", "user1", "user1@gmail.com", "", "1"]
 
   test "find()":
-    var t = rdb().table("users").find(1)
+    var t = rdb().table("users").find(1).get
     check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
 
   test "findPlain()":
@@ -96,12 +96,12 @@ suite "select":
 
   test "update()":
     rdb().table("users").where("id", "=", 2).update(%*{"name": "John"})
-    var t = rdb().table("users").find(2)
+    var t = rdb().table("users").find(2).get
     check t["name"].getStr() == "John"
 
   test "insertID()":
     var id = rdb().table("users").insertID(%*{"name": "John"})
-    var t = rdb().table("users").find(id)
+    var t = rdb().table("users").find(id).get
     check t["name"].getStr() == "John"
 
   test "insertsID()":
@@ -109,9 +109,9 @@ suite "select":
       %*{"name": "John"},
       %*{"email": "Paul@gmail.com"},
     ])
-    var t = rdb().table("users").find(ids[0])
+    var t = rdb().table("users").find(ids[0]).get
     check t["name"].getStr() == "John"
-    t = rdb().table("users").find(ids[1])
+    t = rdb().table("users").find(ids[1]).get
     check t["email"].getStr() == "Paul@gmail.com"
 
   test "distinct":
@@ -229,14 +229,14 @@ suite "select":
     check t[0]["auth_id"] == newJNull()
 
   test "result is null":
-    check newJNull() == rdb().table("users").find(50)
+    check rdb().table("users").find(50).isSome == false
     check newSeq[JsonNode](0) == rdb().table("users").where("id", "=", 50).get()
 
   test "delete":
     echo rdb().table("users").get()
     rdb().table("users").delete(1)
-    check  rdb().table("users").find(1) == newJNull()
+    check  rdb().table("users").find(1).isSome == false
 
   test "delete with where":
     rdb().table("users").where("name", "=", "user2").delete()
-    check rdb().table("users").find(2) == newJNull()
+    check rdb().table("users").find(2).isSome == false

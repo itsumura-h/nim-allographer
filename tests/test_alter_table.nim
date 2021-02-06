@@ -1,5 +1,5 @@
 import unittest
-import json, strformat
+import json, strformat, options
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
 
@@ -44,7 +44,7 @@ rdb().table("table_drop").insert(table_drop_data)
 
 suite "alter table":
   test "add_column":
-    check rdb().table("table_alter").select("add_column").first() == newJNull()
+    check rdb().table("table_alter").select("add_column").first.isSome == false
 
     alter(
       table("table_alter", [
@@ -58,7 +58,7 @@ suite "alter table":
       .table("table_alter")
       .select("add_column")
       .orderBy("id", Asc)
-      .first()["add_column"]
+      .first.get["add_column"]
       .getStr == "test"
 
   test "changed_column":
@@ -71,7 +71,7 @@ suite "alter table":
       .table("table_alter")
       .select("changed_column")
       .orderBy("id", Asc)
-      .first()["changed_column"]
+      .first.get["changed_column"]
       .getStr == "change1"
 
     alter(
@@ -85,14 +85,14 @@ suite "alter table":
       .table("table_alter")
       .select("changed_column_success")
       .orderBy("id", Asc)
-      .first()["changed_column_success"]
+      .first.get["changed_column_success"]
       .getStr == "change1"
 
     check rdb()
       .table("table_alter")
       .select("changed_int_success")
       .orderBy("id", Asc)
-      .first()["changed_int_success"]
+      .first.get["changed_int_success"]
       .getInt == 1
 
   test "delete_column":
@@ -100,7 +100,7 @@ suite "alter table":
       .table("table_alter")
       .select("delete_column")
       .orderBy("id", Asc)
-      .first()["delete_column"].getStr == "delete1"
+      .first.get["delete_column"].getStr == "delete1"
 
     alter(
       table("table_alter", [
@@ -112,13 +112,13 @@ suite "alter table":
       .table("table_alter")
       .select("delete_column")
       .orderBy("id", Asc)
-      .first() == newJNull()
+      .first.isSome == false
 
   test "rename":
     check rdb()
       .table("table_rename")
       .orderBy("id", Asc)
-      .first()["id"]
+      .first.get["id"]
       .getInt == 1
 
     alter(rename("table_rename", "table_rename_success"))
@@ -126,14 +126,14 @@ suite "alter table":
     check rdb()
       .table("table_rename_success")
       .orderBy("id", Asc)
-      .first()["id"]
+      .first.get["id"]
       .getInt == 1
 
   test "drop table":
     check rdb()
       .table("table_drop")
       .orderBy("id", Asc)
-      .first()["id"]
+      .first.get["id"]
       .getInt == 1
 
     alter(drop("table_drop"))
@@ -141,4 +141,4 @@ suite "alter table":
     check rdb()
       .table("table_drop")
       .orderBy("id", Asc)
-      .first() == newJNull()
+      .first.isSome == false

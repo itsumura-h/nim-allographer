@@ -123,7 +123,7 @@ proc getAllRowsPlain*(sqlString:string, args:varargs[string]):seq[seq[string]] =
 proc getAllRowsPlain*(db:DbConn, sqlString:string, args:varargs[string]):seq[seq[string]] =
   return db.getAllRows(sql sqlString, args)
 
-proc getRow(sqlString:string, args:varargs[string]):JsonNode =
+proc getRow(sqlString:string, args:varargs[string]):Option[JsonNode] =
   let db = db()
   defer: db.close()
 
@@ -138,12 +138,12 @@ proc getRow(sqlString:string, args:varargs[string]):JsonNode =
 
   if rows.len == 0:
     echoErrorMsg(sqlString & $args)
-    return newJNull()
+    return none(JsonNode)
 
   let columns = getColumns(db_columns)
-  return toJson(rows, columns)[0]
+  return toJson(rows, columns)[0].some
 
-proc getRow(db:DbConn, sqlString:string, args:varargs[string]): JsonNode =
+proc getRow(db:DbConn, sqlString:string, args:varargs[string]):Option[JsonNode] =
   ## used in transaction
   var db_columns: DbColumns
   var rows = newSeq[seq[string]]()
@@ -156,10 +156,10 @@ proc getRow(db:DbConn, sqlString:string, args:varargs[string]): JsonNode =
 
   if rows.len == 0:
     echoErrorMsg(sqlString & $args)
-    return newJNull()
+    return none(JsonNode)
 
   let columns = getColumns(db_columns)
-  return toJson(rows, columns)[0]
+  return toJson(rows, columns)[0].some
 
 proc getRowPlain(sqlString:string, args:varargs[string]):seq[string] =
   let db = db()
@@ -410,7 +410,7 @@ proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
     getCurrentExceptionMsg().echoErrorMsg()
     return newSeq[typ.type](0)
 
-proc first*(this: RDB): JsonNode =
+proc first*(this: RDB):Option[JsonNode] =
   defer: this.cleanUp()
   this.sqlString = this.selectFirstBuilder().sqlString
   try:
@@ -422,7 +422,7 @@ proc first*(this: RDB): JsonNode =
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
-    return newJNull()
+    return none(JsonNode)
 
 proc first*(this: RDB, typ: typedesc):Option[typ.type] =
   defer: this.cleanUp()
@@ -430,9 +430,9 @@ proc first*(this: RDB, typ: typedesc):Option[typ.type] =
   try:
     logger(this.sqlString, this.placeHolder)
     if this.db.isNil:
-      return getRow(this.sqlString, this.placeHolder).orm(typ).some()
+      return getRow(this.sqlString, this.placeHolder).get.orm(typ).some
     else:
-      return getRow(this.db, this.sqlString, this.placeHolder).orm(typ).some()
+      return getRow(this.db, this.sqlString, this.placeHolder).get.orm(typ).some
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -452,7 +452,7 @@ proc firstPlain*(this: RDB): seq[string] =
     getCurrentExceptionMsg().echoErrorMsg()
     return newSeq[string](0)
 
-proc find*(this: RDB, id: int, key="id"): JsonNode =
+proc find*(this: RDB, id: int, key="id"):Option[JsonNode] =
   defer: this.cleanUp()
   this.placeHolder.add($id)
   this.sqlString = this.selectFindBuilder(id, key).sqlString
@@ -465,7 +465,7 @@ proc find*(this: RDB, id: int, key="id"): JsonNode =
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
-    return newJNull()
+    return none(JsonNode)
 
 proc find*(this: RDB, id: int, typ:typedesc, key="id"):Option[typ.type] =
   defer: this.cleanUp()
@@ -474,9 +474,9 @@ proc find*(this: RDB, id: int, typ:typedesc, key="id"):Option[typ.type] =
   try:
     logger(this.sqlString, this.placeHolder)
     if this.db.isNil:
-      return getRow(this.sqlString, this.placeHolder).orm(typ).some()
+      return getRow(this.sqlString, this.placeHolder).get.orm(typ).some
     else:
-      return getRow(this.db, this.sqlString, this.placeHolder).orm(typ).some()
+      return getRow(this.db, this.sqlString, this.placeHolder).get.orm(typ).some
   except Exception:
     echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
@@ -696,61 +696,76 @@ proc exec*(this: RDB) =
 proc count*(this:RDB): int =
   this.sqlString = this.countBuilder().sqlString
   logger(this.sqlString, this.placeHolder)
-  var response =  getRow(this.sqlString, this.placeHolder)
-  let DRIVER = getDriver()
-  case DRIVER
-  of "sqlite":
-    return response["aggregate"].getStr().parseInt()
-  of "mysql":
-    return response["aggregate"].getInt()
-  of "postgres":
-    return response["aggregate"].getInt()
+  let response =  getRow(this.sqlString, this.placeHolder)
+  if response.isSome:
+    let DRIVER = getDriver()
+    case DRIVER
+    of "sqlite":
+      return response.get["aggregate"].getStr().parseInt()
+    of "mysql":
+      return response.get["aggregate"].getInt()
+    of "postgres":
+      return response.get["aggregate"].getInt()
+  else:
+    return 0
 
-proc max*(this:RDB, column:string): string =
+proc max*(this:RDB, column:string):Option[string] =
   this.sqlString = this.maxBuilder(column).sqlString
   logger(this.sqlString, this.placeHolder)
-  var response =  getRow(this.sqlString, this.placeHolder)
-  case response["aggregate"].kind
-  of JInt:
-    return $(response["aggregate"].getInt())
-  of JFloat:
-    return $(response["aggregate"].getFloat())
+  let response =  getRow(this.sqlString, this.placeHolder)
+  if response.isSome:
+    case response.get["aggregate"].kind
+    of JInt:
+      return some($(response.get["aggregate"].getInt))
+    of JFloat:
+      return some($(response.get["aggregate"].getFloat))
+    else:
+      return some(response.get["aggregate"].getStr)
   else:
-    return response["aggregate"].getStr()
+    return none(string)
 
-proc min*(this:RDB, column:string): string =
+proc min*(this:RDB, column:string):Option[string] =
   this.sqlString = this.minBuilder(column).sqlString
   logger(this.sqlString, this.placeHolder)
-  var response =  getRow(this.sqlString, this.placeHolder)
-  case response["aggregate"].kind
-  of JInt:
-    return $(response["aggregate"].getInt())
-  of JFloat:
-    return $(response["aggregate"].getFloat())
+  let response =  getRow(this.sqlString, this.placeHolder)
+  if response.isSome:
+    case response.get["aggregate"].kind
+    of JInt:
+      return some($(response.get["aggregate"].getInt))
+    of JFloat:
+      return some($(response.get["aggregate"].getFloat))
+    else:
+      return some(response.get["aggregate"].getStr)
   else:
-    return response["aggregate"].getStr()
+    return none(string)
 
-proc avg*(this:RDB, column:string): float =
+proc avg*(this:RDB, column:string): Option[float] =
   this.sqlString = this.avgBuilder(column).sqlString
   logger(this.sqlString, this.placeHolder)
-  var response =  getRow(this.sqlString, this.placeHolder)
-  let DRIVER = getDriver()
-  case DRIVER
-  of "sqlite":
-    return response["aggregate"].getStr().parseFloat()
+  let response =  getRow(this.sqlString, this.placeHolder)
+  if response.isSome:
+    let DRIVER = getDriver()
+    case DRIVER
+    of "sqlite":
+      return response.get["aggregate"].getStr().parseFloat.some
+    else:
+      return response.get["aggregate"].getFloat.some
   else:
-    return response["aggregate"].getFloat()
+    return none(float)
 
-proc sum*(this:RDB, column:string): float =
+proc sum*(this:RDB, column:string): Option[float] =
   this.sqlString = this.sumBuilder(column).sqlString
   logger(this.sqlString, this.placeHolder)
-  var response =  getRow(this.sqlString, this.placeHolder)
-  let DRIVER = getDriver()
-  case DRIVER
-  of "sqlite":
-    return response["aggregate"].getStr().parseFloat()
+  let response =  getRow(this.sqlString, this.placeHolder)
+  if response.isSome:
+    let DRIVER = getDriver()
+    case DRIVER
+    of "sqlite":
+      return response.get["aggregate"].getStr.parseFloat.some
+    else:
+      return response.get["aggregate"].getFloat.some
   else:
-    return response["aggregate"].getFloat()
+    return none(float)
 
 
 # ==================== Paginate ====================
@@ -788,7 +803,10 @@ proc getFirstItem(this:RDB, keyArg:string, order:Order=Asc):int =
     sqlString = &"{sqlString} ORDER BY {keyArg} DESC LIMIT 1"
   let row = getRow(sqlString, this.placeHolder)
   let key = if keyArg.contains("."): keyArg.split(".")[1] else: keyArg
-  return row[key].getInt
+  if row.isSome:
+    return row.get[key].getInt
+  else:
+    return 0
 
 
 proc getLastItem(this:RDB, keyArg:string, order:Order=Asc):int =
@@ -799,7 +817,10 @@ proc getLastItem(this:RDB, keyArg:string, order:Order=Asc):int =
     sqlString = &"{sqlString} ORDER BY {keyArg} ASC LIMIT 1"
   let row = getRow(sqlString, this.placeHolder)
   let key = if keyArg.contains("."): keyArg.split(".")[1] else: keyArg
-  return row[key].getInt
+  if row.isSome:
+    return row.get[key].getInt
+  else:
+    return 0
 
 
 proc fastPaginate*(this:RDB, display:int, key="id", order:Order=Asc):JsonNode =
@@ -810,20 +831,29 @@ proc fastPaginate*(this:RDB, display:int, key="id", order:Order=Asc):JsonNode =
     this.sqlString = &"{this.sqlString} ORDER BY {key} DESC LIMIT {display + 1}"
   logger(this.sqlString, this.placeHolder)
   var currentPage = getAllRows(this.sqlString, this.placeHolder)
-  let newKey = if key.contains("."): key.split(".")[1] else: key
-  let nextId = currentPage[currentPage.len-1][newKey].getInt()
-  var hasNextId = true
-  if currentPage.len > display:
-    discard currentPage.pop()
+  if currentPage.len > 0:
+    let newKey = if key.contains("."): key.split(".")[1] else: key
+    let nextId = currentPage[currentPage.len-1][newKey].getInt()
+    var hasNextId = true
+    if currentPage.len > display:
+      discard currentPage.pop()
+    else:
+      hasNextId = false
+    return %*{
+      "previousId": 0,
+      "hasPreviousId": false,
+      "currentPage": currentPage,
+      "nextId": nextId,
+      "hasNextId": hasNextId
+    }
   else:
-    hasNextId = false
-  return %*{
-    "previousId": 0,
-    "hasPreviousId": false,
-    "currentPage": currentPage,
-    "nextId": nextId,
-    "hasNextId": hasNextId
-  }
+    %*{
+      "previousId": 0,
+      "hasPreviousId": false,
+      "currentPage": currentPage,
+      "nextId": 0,
+      "hasNextId": false
+    }
 
 
 proc fastPaginateNext*(this:RDB, display:int, id:int, key="id",
@@ -856,29 +886,38 @@ SELECT * FROM (
   this.placeHolder &= this.placeHolder
   logger(this.sqlString, this.placeHolder)
   var currentPage = getAllRows(this.sqlString, this.placeHolder)
-  let newKey = if key.contains("."): key.split(".")[1] else: key
-  # previous
-  var previousId = currentPage[0][newKey].getInt()
-  var hasPreviousId = true
-  if previousId != firstItem:
-    currentPage.delete(0)
-  else:
-    hasPreviousId = false
-  # next
-  var nextId = currentPage[currentPage.len-1][newKey].getInt()
-  var hasNextId = true
-  if currentPage.len > display:
-    discard currentPage.pop()
-  else:
-    hasNextId = false
+  if currentPage.len > 0:
+    let newKey = if key.contains("."): key.split(".")[1] else: key
+    # previous
+    var previousId = currentPage[0][newKey].getInt()
+    var hasPreviousId = true
+    if previousId != firstItem:
+      currentPage.delete(0)
+    else:
+      hasPreviousId = false
+    # next
+    var nextId = currentPage[currentPage.len-1][newKey].getInt()
+    var hasNextId = true
+    if currentPage.len > display:
+      discard currentPage.pop()
+    else:
+      hasNextId = false
 
-  return %*{
-    "previousId": previousId,
-    "hasPreviousId": hasPreviousId,
-    "currentPage": currentPage,
-    "nextId": nextId,
-    "hasNextId": hasNextId
-  }
+    return %*{
+      "previousId": previousId,
+      "hasPreviousId": hasPreviousId,
+      "currentPage": currentPage,
+      "nextId": nextId,
+      "hasNextId": hasNextId
+    }
+  else:
+    return %*{
+      "previousId": 0,
+      "hasPreviousId": false,
+      "currentPage": currentPage,
+      "nextId": 0,
+      "hasNextId": false
+    }
 
 
 proc fastPaginateBack*(this:RDB, display:int, id:int, key="id",
@@ -911,28 +950,37 @@ SELECT * FROM (
   this.placeHolder &= this.placeHolder
   logger(this.sqlString, this.placeHolder)
   var currentPage = getAllRows(this.sqlString, this.placeHolder)
-  let newKey = if key.contains("."): key.split(".")[1] else: key
-  # next
-  let nextId = currentPage[0][newKey].getInt()
-  var hasNextId = true
-  if nextId != lastItem:
-    currentPage.delete(0)
-  else:
-    hasNextId = false
-  # previous
-  let previousId = currentPage[currentPage.len-1][newKey].getInt
-  var hasPreviousId = true
-  if currentPage.len > display:
-    discard currentPage.pop()
-  else:
-    hasPreviousId = false
+  if currentPage.len > 0:
+    let newKey = if key.contains("."): key.split(".")[1] else: key
+    # next
+    let nextId = currentPage[0][newKey].getInt()
+    var hasNextId = true
+    if nextId != lastItem:
+      currentPage.delete(0)
+    else:
+      hasNextId = false
+    # previous
+    let previousId = currentPage[currentPage.len-1][newKey].getInt
+    var hasPreviousId = true
+    if currentPage.len > display:
+      discard currentPage.pop()
+    else:
+      hasPreviousId = false
 
-  currentPage.reverse()
+    currentPage.reverse()
 
-  return %*{
-    "previousId": previousId,
-    "hasPreviousId": hasPreviousId,
-    "currentPage": currentPage,
-    "nextId": nextId,
-    "hasNextId": hasNextId
-  }
+    return %*{
+      "previousId": previousId,
+      "hasPreviousId": hasPreviousId,
+      "currentPage": currentPage,
+      "nextId": nextId,
+      "hasNextId": hasNextId
+    }
+  else:
+    return %*{
+      "previousId": 0,
+      "hasPreviousId": false,
+      "currentPage": currentPage,
+      "nextId": 0,
+      "hasNextId": false
+    }
