@@ -11,3 +11,20 @@ export
   exec,
   transaction,
   connection
+
+let db = db()
+
+when getDriver() == "sqlite":
+  proc rdb*():RDB =
+    return RDB(db:db)
+when getDriver() == "postgres":
+  let pool = pool()
+
+  proc rdb*():RDB {.gcsafe.} =
+    return RDB(
+      db:db,
+      pool:pool
+    )
+when getDriver() == "mysql":
+  proc rdb*():RDB =
+    return RDB()

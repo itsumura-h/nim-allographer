@@ -4,7 +4,7 @@ import
   ./alters/sqlite_alter,
   ./alters/mysql_alter,
   ./alters/postgres_alter
-import ../util
+import ../utils
 import ../connection
 
 

@@ -276,3 +276,6 @@ proc migrate*(this:Table):string =
     )
 
   return &"CREATE TABLE \"{this.name}\" ({columnString}{foreignString})"
+
+proc createIndex*(table, column:string):string =
+  return indexGenerate(table, column)

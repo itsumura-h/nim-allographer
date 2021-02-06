@@ -10,8 +10,9 @@ putEnv("DB_CONNECTION", "/root/project/db.sqlite3")
 putEnv("DB_USER", "user")
 putEnv("DB_PASSWORD", "Password!")
 putEnv("DB_DATABASE", "allographer")
+putEnv("DB_MAX_CONNECTION", "95")
 
 # Logging
 putEnv("LOG_IS_DISPLAY", "true")
-putEnv("LOG_IS_FILE", "true")
+putEnv("LOG_IS_FILE", "false")
 putEnv("LOG_DIR", "/root/project/logs")

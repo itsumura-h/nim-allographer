@@ -1,35 +1,35 @@
-import json, strutils, strformat, algorithm, options
-
+import json, strutils, strformat, algorithm, options, asyncdispatch
 import base, builders
-import ../util
+import ../utils
 import ../connection
 
 
-proc checkSql*(this: RDB): string =
-  return this.selectBuilder().sqlString
+proc selectSql*(this: RDB):string =
+  result = this.selectBuilder().sqlString & $this.placeHolder
+  echo result
 
-proc getColumns(db_columns:DbColumns):seq[JsonNode] =
-  var columns = newSeq[JsonNode](db_columns.len)
+proc getColumns(db_columns:DbColumns):seq[array[3, string]] =
+  var columns = newSeq[array[3, string]](db_columns.len)
   const DRIVER = getDriver()
   for i, row in db_columns:
     case DRIVER:
     of "sqlite":
-      columns[i] = %*{"name": row.name, "typ": row.typ.name, "size": row.typ.size}
+      columns[i] = [row.name, row.typ.name, $row.typ.size]
     of "mysql":
-      columns[i] = %*{"name": row.name, "typ": row.typ.kind, "size": row.typ.size}
+      columns[i] = [row.name, $row.typ.kind, $row.typ.size]
     of "postgres":
-      columns[i] = %*{"name": row.name, "typ": row.typ.kind, "size": row.typ.size}
+      columns[i] = [row.name, $row.typ.kind, $row.typ.size]
   return columns
 
-proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[JsonNode] =
+proc toJson(results:openArray[seq[string]], columns:openArray[array[3, string]]):seq[JsonNode] =
   var response_table = newSeq[JsonNode](results.len)
   const DRIVER = getDriver()
   for index, rows in results.pairs:
-    var response_row = %*{}
+    var response_row = newJObject()
     for i, row in rows:
-      let key = columns[i]["name"].getStr
-      let typ = columns[i]["typ"].getStr
-      let size = columns[i]["size"].getInt
+      let key = columns[i][0]
+      let typ = columns[i][1]
+      let size = columns[i][2]
 
       case DRIVER:
       of "sqlite":
@@ -46,7 +46,7 @@ proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[Jso
       of "mysql":
         if row == "":
           response_row[key] = newJNull()
-        elif [$dbInt, $dbUInt].contains(typ) and size == 1:
+        elif [$dbInt, $dbUInt].contains(typ) and size == "1":
           if row == "0":
             response_row[key] = newJBool(false)
           elif row == "1":
@@ -79,131 +79,95 @@ proc toJson(results:openArray[seq[string]], columns:openArray[JsonNode]):seq[Jso
     response_table[index] = response_row
   return response_table
 
-proc toJson(results:openArray[string], columns:openArray[JsonNode]):JsonNode =
-  var response_row = %*{}
-  const DRIVER = getDriver()
-  for i, row in results:
-    let key = columns[i]["name"].getStr
-    let typ = columns[i]["typ"].getStr
-    let size = columns[i]["size"].getInt
-
-    case DRIVER:
-    of "sqlite":
-      if row == "":
-        response_row[key] = newJNull()
-      elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
-        response_row[key] = newJInt(row.parseInt)
-      elif ["NUMERIC", "DECIMAL", "DOUBLE"].contains(typ):
-        response_row[key] = newJFloat(row.parseFloat)
-      elif ["TINYINT", "BOOLEAN"].contains(typ):
-        response_row[key] = newJBool(row.parseBool)
-      else:
-        response_row[key] = newJString(row)
-    of "mysql":
-      if row == "":
-        response_row[key] = newJNull()
-      elif [$dbInt, $dbUInt].contains(typ) and size == 1:
-        if row == "0":
-          response_row[key] = newJBool(false)
-        elif row == "1":
-          response_row[key] = newJBool(true)
-      elif [$dbInt, $dbUInt].contains(typ):
-        response_row[key] = newJInt(row.parseInt)
-      elif [$dbDecimal, $dbFloat].contains(typ):
-        response_row[key] = newJFloat(row.parseFloat)
-      elif [$dbJson].contains(typ):
-          response_row[key] = row.parseJson
-      else:
-        response_row[key] = newJString(row)
-    of "postgres":
-      if row == "":
-        response_row[key] = newJNull()
-      elif [$dbInt, $dbUInt].contains(typ):
-        response_row[key] = newJInt(row.parseInt)
-      elif [$dbDecimal, $dbFloat].contains(typ):
-        response_row[key] = newJFloat(row.parseFloat)
-      elif [$dbBool].contains(typ):
-        if row == "f":
-          response_row[key] = newJBool(false)
-        elif row == "t":
-          response_row[key] = newJBool(true)
-      elif [$dbJson].contains(typ):
-          response_row[key] = row.parseJson
-      else:
-        response_row[key] = newJString(row)
-  return response_row
-
-proc getAllRows(sqlString:string, args:varargs[string]): seq[JsonNode] =
+proc getAllRows(sqlString:string, args:seq[string]):seq[JsonNode] =
   let db = db()
   defer: db.close()
-  let results = db.getAllRows(sql sqlString, args) # seq[seq[string]]
-  if results.len == 0:
-    echoErrorMsg(sqlString & $args)
-    return newSeq[JsonNode](0)
 
   var db_columns: DbColumns
+  var rows = newSeq[seq[string]]()
   for row in db.instantRows(db_columns, sql sqlString, args):
-    discard
+    var columns = newSeq[string](row.len)
+    for i in 0..row.len()-1:
+      columns[i] = row[i]
+    rows.add(columns)
 
-  let columns = getColumns(db_columns)
-  return toJson(results, columns) # seq[JsonNode]
-
-proc getAllRows(db:DbConn, sqlString:string, args:varargs[string]): seq[JsonNode] =
-  ## used in transaction
-  let results = db.getAllRows(sql sqlString, args) # seq[seq[string]]
-  if results.len == 0:
+  if rows.len == 0:
     echoErrorMsg(sqlString & $args)
     return newSeq[JsonNode](0)
 
+  let columns = getColumns(db_columns)
+  return toJson(rows, columns) # seq[JsonNode]
+
+proc getAllRows(db:DbConn, sqlString:string, args:seq[string]):seq[JsonNode] =
+  ## used in transaction
   var db_columns: DbColumns
-  block:
-    for row in db.instantRows(db_columns, sql sqlString, args):
-      discard
+  var rows = newSeq[seq[string]]()
+  for row in db.instantRows(db_columns, sql sqlString, args):
+    var columns = newSeq[string](row.len)
+    for i in 0..row.len()-1:
+      columns[i] = row[i]
+    rows.add(columns)
+
+  if rows.len == 0:
+    echoErrorMsg(sqlString & $args)
+    return newSeq[JsonNode](0)
 
   let columns = getColumns(db_columns)
-  return toJson(results, columns) # seq[JsonNode]
+  return toJson(rows, columns) # seq[JsonNode]
 
-
-proc getRow(sqlString:string, args:varargs[string]): JsonNode =
+proc getAllRowsPlain*(sqlString:string, args:varargs[string]):seq[seq[string]] =
   let db = db()
   defer: db.close()
-  # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
-  # let results = db.getRow(sql sqlString, args)
-  let r = db.getAllRows(sql sqlString, args)
-  echo r
-  var results: seq[string]
-  if r.len > 0:
-    results = r[0]
-  else:
+  return db.getAllRows(sql sqlString, args)
+
+proc getAllRowsPlain*(db:DbConn, sqlString:string, args:varargs[string]):seq[seq[string]] =
+  return db.getAllRows(sql sqlString, args)
+
+proc getRow(sqlString:string, args:varargs[string]):JsonNode =
+  let db = db()
+  defer: db.close()
+
+  var db_columns: DbColumns
+  var rows = newSeq[seq[string]]()
+  for row in db.instantRows(db_columns, sql sqlString, args):
+    var columns = newSeq[string](row.len)
+    for i in 0..row.len()-1:
+      columns[i] = row[i]
+    rows.add(columns)
+    break
+
+  if rows.len == 0:
     echoErrorMsg(sqlString & $args)
     return newJNull()
 
-  var db_columns: DbColumns
-  for row in db.instantRows(db_columns, sql sqlString, args):
-    discard
-
   let columns = getColumns(db_columns)
-  return toJson(results, columns)
+  return toJson(rows, columns)[0]
 
 proc getRow(db:DbConn, sqlString:string, args:varargs[string]): JsonNode =
-  # TODO fix when Nim is upgraded https://github.com/nim-lang/Nim/pull/12806
-  # let results = db.getRow(sql sqlString, args)
-  let r = db.getAllRows(sql sqlString, args)
-  echo r
-  var results: seq[string]
-  if r.len > 0:
-    results = r[0]
-  else:
+  ## used in transaction
+  var db_columns: DbColumns
+  var rows = newSeq[seq[string]]()
+  for row in db.instantRows(db_columns, sql sqlString, args):
+    var columns = newSeq[string](row.len)
+    for i in 0..row.len()-1:
+      columns[i] = row[i]
+    rows.add(columns)
+    break
+
+  if rows.len == 0:
     echoErrorMsg(sqlString & $args)
     return newJNull()
 
-  var db_columns: DbColumns
-  block:
-    for row in db.instantRows(db_columns, sql sqlString, args):
-      discard
-
   let columns = getColumns(db_columns)
-  return toJson(results, columns)
+  return toJson(rows, columns)[0]
+
+proc getRowPlain(sqlString:string, args:varargs[string]):seq[string] =
+  let db = db()
+  defer: db.close()
+  return db.getRow(sql sqlString, args)
+
+proc getRowPlain(db:DbConn, sqlString:string, args:varargs[string]):seq[string] =
+  return db.getRow(sql sqlString, args)
 
 proc orm(rows:openArray[JsonNode], typ:typedesc):seq[typ.type] =
   var response = newSeq[typ.type](rows.len)
@@ -214,233 +178,417 @@ proc orm(rows:openArray[JsonNode], typ:typedesc):seq[typ.type] =
 proc orm(row:JsonNode, typ:typedesc):typ.type =
   return row.to(typ)
 
+# ==================== async pg ====================
+when getDriver() == "postgres":
+  proc asyncGet*(this: RDB): Future[seq[JsonNode]] {.async.} =
+    defer: this.cleanUp()
+    this.sqlString = this.selectBuilder().sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      result = await asyncGetAllRows(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newSeq[JsonNode](0)
+
+  proc asyncGetPlain*(this:RDB):Future[seq[Row]] {.async.}=
+    defer: this.cleanUp()
+    this.sqlString = this.selectBuilder().sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      return await asyncGetAllRowsPlain(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newSeq[Row]()
+
+  proc asyncGetRow*(this:RDB):Future[JsonNode] {.async.}=
+    defer: this.cleanUp()
+    this.sqlString = this.selectBuilder().sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      return await asyncGetRow(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newJNull()
+
+  proc asyncGetRowPlain*(this:RDB):Future[Row] {.async.}=
+    defer: this.cleanUp()
+    this.sqlString = this.selectBuilder().sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      return await asyncGetRowPlain(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newSeq[string](0)
+
+  proc asyncFirst*(this: RDB): Future[JsonNode] {.async.} =
+    defer: this.cleanUp()
+    this.sqlString = this.selectFirstBuilder().sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      return await asyncGetRow(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newJNull()
+
+  proc asyncFirstPlain*(this: RDB): Future[Row] {.async.} =
+    defer: this.cleanUp()
+    this.sqlString = this.selectFirstBuilder().sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      return await asyncGetRowPlain(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newSeq[string](0)
+
+  proc asyncFind*(this: RDB, id: int, key="id"): Future[JsonNode] {.async.} =
+    defer: this.cleanUp()
+    this.placeHolder.add($id)
+    this.sqlString = this.selectFindBuilder(id, key).sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      return await asyncGetRow(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newJNull()
+
+  proc asyncFindPlain*(this: RDB, id: int, key="id"): Future[Row] {.async.} =
+    defer: this.cleanUp()
+    this.placeHolder.add($id)
+    this.sqlString = this.selectFindBuilder(id, key).sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      return await asyncGetRowPlain(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+      return newSeq[string](0)
+
+  proc asyncInsert*(this: RDB, items: JsonNode) {.async.} =
+    defer: this.cleanUp()
+    this.sqlString = this.insertValueBuilder(items).sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      await asyncExec(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+
+  proc asyncInsert*(this: RDB, rows: seq[JsonNode]) {.async.} =
+    defer: this.cleanUp()
+    this.sqlString = this.insertValuesBuilder(rows).sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      await asyncExec(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+
+  proc asyncInserts*(this: RDB, rows: seq[JsonNode]) {.async.} =
+    defer: this.cleanUp()
+    for row in rows:
+      let sqlString = this.insertValueBuilder(row).sqlString
+      logger(sqlString, this.placeHolder)
+      try:
+        await asyncExec(this.pool, sqlString, this.placeHolder)
+        this.placeHolder = @[]
+      except Exception:
+        echoErrorMsg(sqlString & $this.placeHolder)
+        getCurrentExceptionMsg().echoErrorMsg()
+        break
+
+  proc asyncUpdate*(this: RDB, items: JsonNode) {.async.} =
+    defer: this.cleanUp()
+    var updatePlaceHolder: seq[string]
+    for item in items.pairs:
+      if item.val.kind == JInt:
+        updatePlaceHolder.add($(item.val.getInt()))
+      elif item.val.kind == JFloat:
+        updatePlaceHolder.add($(item.val.getFloat()))
+      elif [JObject, JArray].contains(item.val.kind):
+        updatePlaceHolder.add($(item.val))
+      else:
+        updatePlaceHolder.add(item.val.getStr())
+
+    this.placeHolder = updatePlaceHolder & this.placeHolder
+    this.sqlString = this.updateBuilder(items).sqlString
+
+    try:
+      logger(this.sqlString, this.placeHolder)
+      await asyncExec(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+
+  proc asyncDelete*(this: RDB) {.async.} =
+    defer: this.cleanUp()
+    this.sqlString = this.deleteBuilder().sqlString
+    try:
+      logger(this.sqlString, this.placeHolder)
+      await asyncExec(this.pool, this.sqlString, this.placeHolder)
+    except Exception:
+      echoErrorMsg(this.sqlString & $this.placeHolder)
+      getCurrentExceptionMsg().echoErrorMsg()
+
 # =============================================================================
 
 proc toSql*(this: RDB): string =
-  defer:
-    this.sqlString = "";
-    this.placeHolder = newSeq[string](0);
-    this.query = %*{"table": this.query["table"].getStr}
-  this.sqlStringSeq = @[this.selectBuilder().sqlString]
-  return this.sqlStringSeq[0]
+  this.sqlString = this.selectBuilder().sqlString
+  return this.sqlString
 
-proc get*(this: RDB): seq[JsonNode] =
-  defer:
-    this.sqlString = "";
-    this.placeHolder = newSeq[string](0);
-    this.query = %*{"table": this.query["table"].getStr}
-  this.sqlStringSeq = @[this.selectBuilder().sqlString]
+proc get*(this: RDB):seq[JsonNode] =
+  defer: this.cleanUp()
+  this.sqlString = this.selectBuilder().sqlString
   try:
-    logger(this.sqlStringSeq[0], this.placeHolder)
-    if not this.isInTransaction:
-      return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+    logger(this.sqlString, this.placeHolder)
+    if this.db.isNil:
+      result = getAllRows(this.sqlString, this.placeHolder)
     else:
-      # in Transaction
-      return getAllRows(this.db, this.sqlStringSeq[0], this.placeHolder)
-    # return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+      result = getAllRows(this.db, this.sqlString, this.placeHolder)
   except Exception:
-    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
     return newSeq[JsonNode](0)
 
 proc get*(this: RDB, typ: typedesc): seq[typ.type] =
-  defer:
-    this.sqlString = "";
-    this.placeHolder = newSeq[string](0);
-    this.query = %*{"table": this.query["table"].getStr}
-  this.sqlStringSeq = @[this.selectBuilder().sqlString]
+  defer: this.cleanUp()
+  this.sqlString = this.selectBuilder().sqlString
   try:
-    logger(this.sqlStringSeq[0], this.placeHolder)
-    return getAllRows(this.sqlStringSeq[0]).orm(typ)
+    logger(this.sqlString, this.placeHolder)
+    if this.db.isNil:
+      return getAllRows(this.sqlString, this.placeHolder).orm(typ)
+    else:
+      return getAllRows(this.db, this.sqlString, this.placeHolder).orm(typ)
   except Exception:
-    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
     return newSeq[typ.type](0)
 
+proc getPlain*(this:RDB):seq[seq[string]] =
+  defer: this.cleanUp()
+  this.sqlString = this.selectBuilder().sqlString
+  try:
+    logger(this.sqlString, this.placeHolder)
+    if this.db.isNil:
+      return getAllRowsPlain(this.sqlString, this.placeHolder)
+    else:
+      return getAllRowsPlain(this.db, this.sqlString, this.placeHolder)
+  except Exception:
+    echoErrorMsg(this.sqlString & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[seq[string]](0)
 
 proc getRaw*(this: RDB): seq[JsonNode] =
+  defer: this.cleanUp()
   try:
-    logger(this.sqlStringSeq[0], this.placeHolder)
-    if not this.isInTransaction:
-      return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+    logger(this.sqlString, this.placeHolder)
+    if this.db.isNil:
+      return getAllRows(this.sqlString, this.placeHolder)
     else:
-      # in Transaction
-      return getAllRows(this.db, this.sqlStringSeq[0], this.placeHolder)
-    # return getAllRows(this.sqlStringSeq[0], this.placeHolder)
+      return getAllRows(this.db, this.sqlString, this.placeHolder)
   except Exception:
-    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
     return newSeq[JsonNode](0)
 
 proc getRaw*(this: RDB, typ: typedesc): seq[typ.type] =
+  defer: this.cleanUp()
   try:
-    logger(this.sqlStringSeq[0], this.placeHolder)
-    return getAllRows(this.sqlStringSeq[0], this.placeHolder).orm(typ)
+    logger(this.sqlString, this.placeHolder)
+    if this.db.isNil:
+      return getAllRows(this.sqlString, this.placeHolder).orm(typ)
+    else:
+      return getAllRows(this.db, this.sqlString, this.placeHolder).orm(typ)
   except Exception:
-    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
     return newSeq[typ.type](0)
 
 proc first*(this: RDB): JsonNode =
-  defer:
-    this.sqlString = "";
-    this.placeHolder = newSeq[string](0);
-    this.query = %*{"table": this.query["table"].getStr}
-  this.sqlStringSeq = @[this.selectFirstBuilder().sqlString]
+  defer: this.cleanUp()
+  this.sqlString = this.selectFirstBuilder().sqlString
   try:
-    logger(this.sqlStringSeq[0], this.placeHolder)
-    if not this.isInTransaction:
-      return getRow(this.sqlStringSeq[0], this.placeHolder)
+    logger(this.sqlString, this.placeHolder)
+    if this.db.isNil:
+      return getRow(this.sqlString, this.placeHolder)
     else:
-      # in Transaction
-      return getRow(this.db, this.sqlStringSeq[0], this.placeHolder)
+      return getRow(this.db, this.sqlString, this.placeHolder)
   except Exception:
-    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
     return newJNull()
 
-proc first*(this: RDB, typ: typedesc): Option[typ.type] =
-  defer:
-    this.sqlString = "";
-    this.placeHolder = newSeq[string](0);
-    this.query = %*{"table": this.query["table"].getStr}
-  this.sqlStringSeq = @[this.selectFirstBuilder().sqlString]
+proc first*(this: RDB, typ: typedesc):Option[typ.type] =
+  defer: this.cleanUp()
+  this.sqlString = this.selectFirstBuilder().sqlString
   try:
-    logger(this.sqlStringSeq[0], this.placeHolder)
-    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ).some()
+    logger(this.sqlString, this.placeHolder)
+    if this.db.isNil:
+      return getRow(this.sqlString, this.placeHolder).orm(typ).some()
+    else:
+      return getRow(this.db, this.sqlString, this.placeHolder).orm(typ).some()
   except Exception:
-    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
-    return typ.none()
+    return none(typ.type)
 
+proc firstPlain*(this: RDB): seq[string] =
+  defer: this.cleanUp()
+  this.sqlString = this.selectFirstBuilder().sqlString
+  try:
+    logger(this.sqlString, this.placeHolder)
+    if this.db.isNil:
+      return getRowPlain(this.sqlString, this.placeHolder)
+    else:
+      return getRowPlain(this.db, this.sqlString, this.placeHolder)
+  except Exception:
+    echoErrorMsg(this.sqlString & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[string](0)
 
 proc find*(this: RDB, id: int, key="id"): JsonNode =
-  defer:
-    this.sqlString = "";
-    this.placeHolder = newSeq[string](0);
-    this.query = %*{"table": this.query["table"].getStr}
+  defer: this.cleanUp()
   this.placeHolder.add($id)
-  this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
+  this.sqlString = this.selectFindBuilder(id, key).sqlString
   try:
-    logger(this.sqlStringSeq[0], this.placeHolder)
-    if not this.isInTransaction:
-      return getRow(this.sqlStringSeq[0], this.placeHolder)
+    logger(this.sqlString, this.placeHolder)
+    if this.db.isNil:
+      return getRow(this.sqlString, this.placeHolder)
     else:
-      # in Transaction
-      return getRow(this.db, this.sqlStringSeq[0], this.placeHolder)
+      return getRow(this.db, this.sqlString, this.placeHolder)
   except Exception:
-    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
     return newJNull()
 
-proc find*(this: RDB, id: int, typ:typedesc, key="id"): Option[typ.type] =
-  defer:
-    this.sqlString = "";
-    this.placeHolder = newSeq[string](0);
-    this.query = %*{"table": this.query["table"].getStr}
+proc find*(this: RDB, id: int, typ:typedesc, key="id"):Option[typ.type] =
+  defer: this.cleanUp()
   this.placeHolder.add($id)
-  this.sqlStringSeq = @[this.selectFindBuilder(id, key).sqlString]
+  this.sqlString = this.selectFindBuilder(id, key).sqlString
   try:
-    logger(this.sqlStringSeq[0], this.placeHolder)
-    return getRow(this.sqlStringSeq[0], this.placeHolder).orm(typ).some()
+    logger(this.sqlString, this.placeHolder)
+    if this.db.isNil:
+      return getRow(this.sqlString, this.placeHolder).orm(typ).some()
+    else:
+      return getRow(this.db, this.sqlString, this.placeHolder).orm(typ).some()
   except Exception:
-    echoErrorMsg(this.sqlStringSeq[0] & $this.placeHolder)
+    echoErrorMsg(this.sqlString & $this.placeHolder)
     getCurrentExceptionMsg().echoErrorMsg()
-    return typ.none()
+    return none(typ.type)
+
+proc findPlain*(this:RDB, id:int, key="id"):seq[string] =
+  defer: this.cleanUp()
+  this.placeHolder.add($id)
+  this.sqlString = this.selectFindBuilder(id, key).sqlString
+  try:
+    logger(this.sqlString, this.placeHolder)
+    if this.db.isNil:
+      return getRowPlain(this.sqlString, this.placeHolder)
+    else:
+      return getRowPlain(this.db, this.sqlString, this.placeHolder)
+  except Exception:
+    echoErrorMsg(this.sqlString & $this.placeHolder)
+    getCurrentExceptionMsg().echoErrorMsg()
+    return newSeq[string](0)
 
 
 # ==================== INSERT ====================
 
+proc insertSql*(this: RDB, items: JsonNode):string =
+  result = this.insertValueBuilder(items).sqlString & $this.placeHolder
+  echo result
+
 proc insert*(this: RDB, items: JsonNode) =
-  this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
-  if not this.isInTransaction:
+  defer: this.cleanUp()
+  this.sqlString = this.insertValueBuilder(items).sqlString
+  if this.db.isNil:
+    logger(this.sqlString, this.placeHolder)
     let db = db()
-    defer:
-      db.close()
-    for sqlString in this.sqlStringSeq:
-      logger(sqlString, this.placeHolder)
-      db.exec(sql sqlString, this.placeHolder)
+    defer: db.close()
+    db.exec(sql this.sqlString, this.placeHolder)
   else:
-    # in Transaction
-    for sqlString in this.sqlStringSeq:
-      logger(sqlString, this.placeHolder)
-      this.db.exec(sql sqlString, this.placeHolder)
+    logger(this.sqlString, this.placeHolder)
+    this.db.exec(sql this.sqlString, this.placeHolder)
 
 proc insert*(this: RDB, rows: openArray[JsonNode]) =
-  this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
-  if not this.isInTransaction:
+  defer: this.cleanUp()
+  this.sqlString = this.insertValuesBuilder(rows).sqlString
+  if this.db.isNil:
+    logger(this.sqlString, this.placeHolder)
     let db = db()
-    for sqlString in this.sqlStringSeq:
-      logger(sqlString, this.placeHolder)
-      db.exec(sql sqlString, this.placeHolder)
-    if getDriver() != "sqlite":
-      defer: db.close()
+    defer: db.close()
+    db.exec(sql this.sqlString, this.placeHolder)
   else:
-    # in Transaction
-    for sqlString in this.sqlStringSeq:
-      logger(sqlString, this.placeHolder)
-      this.db.exec(sql sqlString, this.placeHolder)
+    logger(this.sqlString, this.placeHolder)
+    this.db.exec(sql this.sqlString, this.placeHolder)
 
 proc inserts*(this: RDB, rows: openArray[JsonNode]) =
-  this.sqlStringSeq = newSeq[string](rows.len)
-  if not this.isInTransaction:
+  defer: this.cleanUp()
+  if this.db.isNil:
     let db = db()
     defer: db.close()
-    for sqlString in this.sqlStringSeq:
+    for row in rows:
+      let sqlString = this.insertValueBuilder(row).sqlString
       logger(sqlString, this.placeHolder)
       db.exec(sql sqlString, this.placeHolder)
+      this.placeHolder = @[]
   else:
      # in Transaction
-    for sqlString in this.sqlStringSeq:
+    for row in rows:
+      let sqlString = this.insertValueBuilder(row).sqlString
       logger(sqlString, this.placeHolder)
       this.db.exec(sql sqlString, this.placeHolder)
-
+      this.placeHolder = @[]
 
 proc insertID*(this: RDB, items: JsonNode):int =
-  this.sqlStringSeq = @[this.insertValueBuilder(items).sqlString]
-  if not this.isInTransaction:
+  defer: this.cleanUp()
+  this.sqlString = this.insertValueBuilder(items).sqlString
+  if this.db.isNil:
     let db = db()
     defer: db.close()
-    let sqlString = this.sqlStringSeq[0]
-    logger(sqlString, this.placeHolder)
-    result = db.tryInsertID(sql sqlString, this.placeHolder).int()
+    logger(this.sqlString, this.placeHolder)
+    result = db.tryInsertID(sql this.sqlString, this.placeHolder).int()
   else:
     # in Transaction
-    let sqlString = this.sqlStringSeq[0]
-    logger(sqlString, this.placeHolder)
-    result = this.db.tryInsertID(sql sqlString, this.placeHolder).int()
+    logger(this.sqlString, this.placeHolder)
+    result = this.db.tryInsertID(sql this.sqlString, this.placeHolder).int()
 
-proc insertID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
-  this.sqlStringSeq = @[this.insertValuesBuilder(rows).sqlString]
-  var response = newSeq[int](rows.len)
-  if not this.isInTransaction:
+proc insertID*(this: RDB, rows: openArray[JsonNode]):int =
+  defer: this.cleanUp()
+  this.sqlString = this.insertValuesBuilder(rows).sqlString
+  var response: int
+  if this.db.isNil:
+    logger(this.sqlString, this.placeHolder)
     let db = db()
     defer: db.close()
-    for i, sqlString in this.sqlStringSeq:
-      logger(sqlString, this.placeHolder)
-      response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
+    response = db.tryInsertID(sql this.sqlString, this.placeHolder).int()
+    this.placeHolder = @[]
   else:
-    # in Transaction
-    for i, sqlString in this.sqlStringSeq:
-      logger(sqlString, this.placeHolder)
-      response[i] = this.db.tryInsertID(sql sqlString, this.placeHolder).int()
+    logger(this.sqlString, this.placeHolder)
+    response = this.db.tryInsertID(sql this.sqlString, this.placeHolder).int()
+    this.placeHolder = @[]
   return response
 
 proc insertsID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
-  this.sqlStringSeq = newSeq[string](rows.len)
+  defer: this.cleanUp()
   var response = newSeq[int](rows.len)
-  if not this.isInTransaction:
+  if this.db.isNil:
     let db = db()
     defer: db.close()
-    for i, items in rows:
-      let sqlString = this.insertValueBuilder(items).sqlString
+    for i, row in rows:
+      let sqlString = this.insertValueBuilder(row).sqlString
       logger(sqlString, this.placeHolder)
       response[i] = db.tryInsertID(sql sqlString, this.placeHolder).int()
       this.placeHolder = @[]
   else:
-    # in Transaction
-    for i, items in rows:
-      let sqlString = this.insertValueBuilder(items).sqlString
+    for i, row in rows:
+      let sqlString = this.insertValueBuilder(row).sqlString
       logger(sqlString, this.placeHolder)
       response[i] = this.db.tryInsertID(sql sqlString, this.placeHolder).int()
       this.placeHolder = @[]
@@ -448,7 +596,8 @@ proc insertsID*(this: RDB, rows: openArray[JsonNode]):seq[int] =
 
 # ==================== UPDATE ====================
 
-proc update*(this: RDB, items: JsonNode) =
+proc updateSql*(this: RDB, items: JsonNode):string =
+  defer: this.cleanUp()
   var updatePlaceHolder: seq[string]
   for item in items.pairs:
     if item.val.kind == JInt:
@@ -460,72 +609,94 @@ proc update*(this: RDB, items: JsonNode) =
     else:
       updatePlaceHolder.add(item.val.getStr())
 
-  this.placeHolder = updatePlaceHolder & this.placeHolder
-  this.sqlStringSeq = @[this.updateBuilder(items).sqlString]
+  let placeHolder = updatePlaceHolder & this.placeHolder
+  let sqlString = this.updateBuilder(items).sqlString
 
-  if not this.isInTransaction:
+  result = sqlString & $placeHolder
+  echo result
+
+proc update*(this: RDB, items: JsonNode) =
+  defer: this.cleanUp()
+  var updatePlaceHolder: seq[string]
+  for item in items.pairs:
+    if item.val.kind == JInt:
+      updatePlaceHolder.add($(item.val.getInt()))
+    elif item.val.kind == JFloat:
+      updatePlaceHolder.add($(item.val.getFloat()))
+    elif item.val.kind == JBool:
+      updatePlaceHolder.add($(item.val.getBool()))
+    elif [JObject, JArray].contains(item.val.kind):
+      updatePlaceHolder.add($(item.val))
+    else:
+      updatePlaceHolder.add(item.val.getStr())
+
+  this.placeHolder = updatePlaceHolder & this.placeHolder
+  this.sqlString = this.updateBuilder(items).sqlString
+
+  if this.db.isNil:
+    logger(this.sqlString, this.placeHolder)
     let db = db()
     defer: db.close()
-    for sqlString in this.sqlStringSeq:
-      logger(sqlString, this.placeHolder)
-      db.exec(sql sqlString, this.placeHolder)
+    db.exec(sql this.sqlString, this.placeHolder)
   else:
-    # in Transaction
-    for sqlString in this.sqlStringSeq:
-      logger(sqlString, this.placeHolder)
-      this.db.exec(sql sqlString, this.placeHolder)
+    logger(this.sqlString, this.placeHolder)
+    this.db.exec(sql this.sqlString, this.placeHolder)
 
 
 # ==================== DELETE ====================
 
+proc deleteSql*(this: Rdb):string =
+  result = this.deleteBuilder().sqlString & $this.placeHolder
+  echo result
+
 proc delete*(this: RDB) =
-  this.sqlStringSeq = @[this.deleteBuilder().sqlString]
-  if not this.isInTransaction:
+  defer: this.cleanUp()
+  this.sqlString = this.deleteBuilder().sqlString
+  if this.db.isNil:
+    logger(this.sqlString, this.placeHolder)
     let db = db()
     defer: db.close()
-    for sqlString in this.sqlStringSeq:
-      logger(sqlString, this.placeHolder)
-      db.exec(sql sqlString, this.placeHolder)
+    db.exec(sql this.sqlString, this.placeHolder)
   else:
-    # in Transaction
-    for sqlString in this.sqlStringSeq:
-      logger(sqlString, this.placeHolder)
-      this.db.exec(sql sqlString, this.placeHolder)
+    logger(this.sqlString, this.placeHolder)
+    this.db.exec(sql this.sqlString, this.placeHolder)
 
 proc delete*(this: RDB, id: int, key="id") =
+  defer: this.cleanUp()
   this.placeHolder.add($id)
-  this.sqlStringSeq = @[this.deleteByIdBuilder(id, key).sqlString]
-  if not this.isInTransaction:
+  this.sqlString = this.deleteByIdBuilder(id, key).sqlString
+  if this.db.isNil:
+    logger(this.sqlString, this.placeHolder)
     let db = db()
     defer: db.close()
-    for sqlString in this.sqlStringSeq:
-      logger(sqlString, this.placeHolder)
-      db.exec(sql sqlString, this.placeHolder)
+    db.exec(sql this.sqlString, this.placeHolder)
   else:
     # in Transaction
-    for sqlString in this.sqlStringSeq:
-      logger(sqlString, this.placeHolder)
-      this.db.exec(sql sqlString, this.placeHolder)
+    logger(this.sqlString, this.placeHolder)
+    this.db.exec(sql this.sqlString, this.placeHolder)
 
 
 # ==================== EXEC ====================
 
 proc exec*(this: RDB) =
   ## It is only used with raw()
-  block:
+  defer: this.cleanUp()
+  if this.db.isNil:
     let db = db()
-    for sqlString in this.sqlStringSeq:
-      logger(sqlString, this.placeHolder)
-      db.exec(sql sqlString, this.placeHolder)
     defer: db.close()
+    logger(this.sqlString, this.placeHolder)
+    db.exec(sql this.sqlString, this.placeHolder)
+  else:
+    logger(this.sqlString, this.placeHolder)
+    this.db.exec(sql this.sqlString, this.placeHolder)
 
 
 # ==================== Aggregates ====================
 
 proc count*(this:RDB): int =
-  this.sqlStringSeq = @[this.countBuilder().sqlString]
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  this.sqlString = this.countBuilder().sqlString
+  logger(this.sqlString, this.placeHolder)
+  var response =  getRow(this.sqlString, this.placeHolder)
   let DRIVER = getDriver()
   case DRIVER
   of "sqlite":
@@ -536,9 +707,9 @@ proc count*(this:RDB): int =
     return response["aggregate"].getInt()
 
 proc max*(this:RDB, column:string): string =
-  this.sqlStringSeq = @[this.maxBuilder(column).sqlString]
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  this.sqlString = this.maxBuilder(column).sqlString
+  logger(this.sqlString, this.placeHolder)
+  var response =  getRow(this.sqlString, this.placeHolder)
   case response["aggregate"].kind
   of JInt:
     return $(response["aggregate"].getInt())
@@ -548,9 +719,9 @@ proc max*(this:RDB, column:string): string =
     return response["aggregate"].getStr()
 
 proc min*(this:RDB, column:string): string =
-  this.sqlStringSeq = @[this.minBuilder(column).sqlString]
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  this.sqlString = this.minBuilder(column).sqlString
+  logger(this.sqlString, this.placeHolder)
+  var response =  getRow(this.sqlString, this.placeHolder)
   case response["aggregate"].kind
   of JInt:
     return $(response["aggregate"].getInt())
@@ -560,9 +731,9 @@ proc min*(this:RDB, column:string): string =
     return response["aggregate"].getStr()
 
 proc avg*(this:RDB, column:string): float =
-  this.sqlStringSeq = @[this.avgBuilder(column).sqlString]
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  this.sqlString = this.avgBuilder(column).sqlString
+  logger(this.sqlString, this.placeHolder)
+  var response =  getRow(this.sqlString, this.placeHolder)
   let DRIVER = getDriver()
   case DRIVER
   of "sqlite":
@@ -571,9 +742,9 @@ proc avg*(this:RDB, column:string): float =
     return response["aggregate"].getFloat()
 
 proc sum*(this:RDB, column:string): float =
-  this.sqlStringSeq = @[this.sumBuilder(column).sqlString]
-  logger(this.sqlStringSeq[0], this.placeHolder)
-  var response =  getRow(this.sqlStringSeq[0], this.placeHolder)
+  this.sqlString = this.sumBuilder(column).sqlString
+  logger(this.sqlString, this.placeHolder)
+  var response =  getRow(this.sqlString, this.placeHolder)
   let DRIVER = getDriver()
   case DRIVER
   of "sqlite":
@@ -631,14 +802,14 @@ proc getLastItem(this:RDB, keyArg:string, order:Order=Asc):int =
   return row[key].getInt
 
 
-proc fastPaginate*(this:RDB, display:int, key="id", order:Order=Asc): JsonNode =
+proc fastPaginate*(this:RDB, display:int, key="id", order:Order=Asc):JsonNode =
   this.sqlString = @[this.selectBuilder().sqlString][0]
   if order == Asc:
     this.sqlString = &"{this.sqlString} ORDER BY {key} ASC LIMIT {display + 1}"
   else:
     this.sqlString = &"{this.sqlString} ORDER BY {key} DESC LIMIT {display + 1}"
   logger(this.sqlString, this.placeHolder)
-  var currentPage  = getAllRows(this.sqlString, this.placeHolder)
+  var currentPage = getAllRows(this.sqlString, this.placeHolder)
   let newKey = if key.contains("."): key.split(".")[1] else: key
   let nextId = currentPage[currentPage.len-1][newKey].getInt()
   var hasNextId = true
@@ -656,7 +827,7 @@ proc fastPaginate*(this:RDB, display:int, key="id", order:Order=Asc): JsonNode =
 
 
 proc fastPaginateNext*(this:RDB, display:int, id:int, key="id",
-                        order:Order=Asc): JsonNode =
+      order:Order=Asc):JsonNode =
   if not id > 0: raise newException(Exception, "Arg id should be larger than 0")
   this.sqlString = @[this.selectBuilder().sqlString][0]
   let firstItem = getFirstItem(this, key, order)
@@ -711,7 +882,7 @@ SELECT * FROM (
 
 
 proc fastPaginateBack*(this:RDB, display:int, id:int, key="id",
-                        order:Order=Asc): JsonNode =
+      order:Order=Asc):JsonNode =
   if not id > 0: raise newException(Exception, "Arg id should be larger than 0")
   this.sqlString = @[this.selectBuilder().sqlString][0]
   let lastItem = getLastItem(this, key, order)

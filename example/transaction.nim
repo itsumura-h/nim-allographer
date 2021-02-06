@@ -21,7 +21,7 @@ import ../src/allographer/query_builder
 # ])
 
 # # シーダー
-# RDB().table("auth").insert([
+# rdb().table("auth").insert([
 #   %*{"auth": "admin"},
 #   %*{"auth": "user"}
 # ])
@@ -42,8 +42,8 @@ import ../src/allographer/query_builder
 #     }
 #   )
 
-# RDB().table("users").insert(insertData)
+# rdb().table("users").insert(insertData)
 
 transaction:
-  echo RDB().table("users").select("name", "email").where("id", "=", 2).get()
-  # echo RDB().table("users").select("name", "email").where("id", "=", 3).get()
+  echo rdb().table("users").select("name", "email").where("id", "=", 2).get()
+  # echo rdb().table("users").select("name", "email").where("id", "=", 3).get()

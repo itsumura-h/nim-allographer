@@ -1,37 +1,36 @@
-import strformat, json, progress
+import strformat, json, progress, oids
 import bcrypt
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
-# import allographer/query_builder
-# import allographer/schema_builder
 
 
 # マイグレーション
 schema([
-  table("auth",[
+  table("Auth",[
     Column().increments("id"),
     Column().string("auth")
   ], reset=true),
-  table("users",[
+  table("Users",[
     Column().increments("id"),
-    Column().string("name").nullable(),
+    Column().string("oid").index().nullable(),
+    Column().string("oid2").index(),
+    Column().string("Name").nullable(),
     Column().string("email").nullable(),
     Column().string("password").nullable(),
-    Column().string("salt").nullable(),
     Column().string("address").nullable(),
     Column().date("birth_date").nullable(),
-    Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-  ], reset=true)
+    Column().foreign("auth_id").reference("id").on("Auth").onDelete(SET_NULL)
+  ], reset=true),
 ])
 
 # シーダー
-RDB().table("auth").insert([
+rdb().table("Auth").insert([
   %*{"auth": "admin"},
   %*{"auth": "user"}
 ])
 
 # プログレスバー
-let total = 50
+let total = 10
 var pb = newProgressBar(total=total) # totalは分母
 
 pb.start()
@@ -42,14 +41,15 @@ for i in 1..total:
   let authId = if i mod 2 == 0: 1 else: 2
   insertData.add(
     %*{
-      "name": &"user{i}",
+      "oid": $(genOid()),
+      "oid2": $(genOid()),
+      "Name": &"user{i}",
       "email": &"user{i}@gmail.com",
       "password": password,
-      "salt": salt,
       "auth_id": authId
     }
   )
   pb.increment()
 
 pb.finish()
-RDB().table("users").insert(insertData)
+rdb().table("Users").insert(insertData)

@@ -4,7 +4,7 @@ import
   migrates/sqlite_migrate,
   migrates/mysql_migrate,
   migrates/postgres_migrate
-import ../util
+import ../utils
 # include ../connection
 import ../connection
 
@@ -90,7 +90,11 @@ proc schema*(tables:varargs[Table]) =
     for i, v in deleteList:
       var index = i+1
       try:
-        db.exec(sql &"drop table {deleteList[^index]}")
+        var tableName = deleteList[^index]
+        wrapUpper(tableName)
+        let query = &"drop table {tableName}"
+        logger(query)
+        db.exec(sql query)
       except Exception:
         getCurrentExceptionMsg().echoErrorMsg()
     defer: db.close()
@@ -118,3 +122,35 @@ proc schema*(tables:varargs[Table]) =
         if err.contains("already exists"):
           echoErrorMsg(err)
           echoWarningMsg(&"Safety skip create table '{table.name}'")
+        else:
+          echoErrorMsg(err)
+
+  # index
+  for table in tables:
+    for column in table.columns:
+      if column.isIndex:
+        var query = ""
+        let driver = getDriver()
+        case driver:
+        of "sqlite":
+          query = sqlite_migrate.createIndex(table.name, column.name)
+        of "mysql":
+          query = mysql_migrate.createIndex(table.name, column.name)
+        of "postgres":
+          query = postgres_migrate.createIndex(table.name, column.name)
+
+        if query.len > 0:
+          logger(query)
+
+          block:
+            let db = db()
+            defer: db.close()
+            try:
+              db.exec(sql query)
+            except:
+              let err = getCurrentExceptionMsg()
+              if err.contains("already exists"):
+                echoErrorMsg(err)
+                echoWarningMsg(&"Safety skip create table '{table.name}'")
+              else:
+                echoErrorMsg(err)

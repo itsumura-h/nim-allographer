@@ -2,6 +2,30 @@ Example: Schema Builder
 ===
 [back](../README.md)
 
+## index
+<!--ts-->
+   * [Example: Schema Builder](#example-schema-builder)
+      * [index](#index)
+      * [Create table](#create-table)
+      * [Alter Table](#alter-table)
+         * [add column](#add-column)
+         * [change column](#change-column)
+         * [delete column](#delete-column)
+         * [rename table](#rename-table)
+         * [drop table](#drop-table)
+      * [integer](#integer)
+      * [float](#float)
+      * [char](#char)
+      * [date](#date)
+      * [others](#others)
+      * [options](#options)
+      * [Foreign Key Constraints](#foreign-key-constraints)
+
+<!-- Added by: root, at: Fri Aug  7 11:33:28 UTC 2020 -->
+
+<!--te-->
+---
+
 ## Create table
 ```nim
 import allographer/schema_builder
@@ -123,7 +147,8 @@ alter(
 |`.nullable()`|Designate that the column allows NULL values|
 |`.default(value)`|Declare a default value for a column|
 |`.unsigned()`|Set INTEGER to UNSIGNED|
-|`.unique()`|Adding a unique index|
+|`.unique()`|Adding an unique index|
+|`.index()`|Adding an index|
 
 ## Foreign Key Constraints
 For example, let's define a `user_id` column on the table that references the `id` column on a `users` table:

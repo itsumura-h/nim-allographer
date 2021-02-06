@@ -1,5 +1,6 @@
 import json, strformat
-import ../column, utils
+import ../column, generator_util
+import ../../utils
 
 # =============================================================================
 # int
@@ -374,6 +375,10 @@ proc foreignGenerator*(name:string, table:string, column:string,
   elif foreignOnDelete == NO_ACTION:
     onDeleteString = "NO ACTION"
 
-
   result = &", FOREIGN KEY(`{name}`) REFERENCES {table}({column})"
   result.add(&" ON DELETE {onDeleteString}")
+
+proc indexGenerate*(table, column:string):string =
+  var table = table
+  wrapUpper(table)
+  return &"CREATE INDEX {column}_index ON {table}({column})"

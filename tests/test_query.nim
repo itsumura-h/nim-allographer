@@ -20,7 +20,7 @@ proc setup() =
   ])
 
   # seeder
-  RDB().table("auth").insert([
+  rdb().table("auth").insert([
     %*{"auth": "admin"},
     %*{"auth": "user"}
   ])
@@ -36,34 +36,45 @@ proc setup() =
       }
     )
 
-  RDB().table("users").insert(users)
-
+  rdb().table("users").insert(users)
 
 suite "select":
   setup:
     setup()
   test "get()":
-    var t = RDB().table("users").get()
+    var t = rdb().table("users").get()
     check t[0] == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
 
+  test "getPlain()":
+    var t = rdb().table("users").getPlain()
+    check t[0] == @["1", "user1", "user1@gmail.com", "", "1"]
+
   test "first()":
-    var t = RDB().table("users").where("name", "=", "user1").first()
+    var t = rdb().table("users").where("name", "=", "user1").first()
     check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
+
+  test "firstPlain()":
+    var t = rdb().table("users").firstPlain()
+    check t == @["1", "user1", "user1@gmail.com", "", "1"]
 
   test "find()":
-    var t = RDB().table("users").find(1)
+    var t = rdb().table("users").find(1)
     check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
 
+  test "findPlain()":
+    var t = rdb().table("users").findPlain(1)
+    check t == @["1", "user1", "user1@gmail.com", "", "1"]
+
   test "select()":
-    var t = RDB().table("users").select("name", "email").get()
+    var t = rdb().table("users").select("name", "email").get()
     check t[0] == %*{"name": "user1", "email": "user1@gmail.com"}
 
   test "select(as)":
-    var t = RDB().table("users").select("name as user_name", "email").get()
+    var t = rdb().table("users").select("name as user_name", "email").get()
     check t[0] == %*{"user_name": "user1", "email": "user1@gmail.com"}
 
   test "where":
-    var t = RDB().table("users").where("auth_id", "=", "1").get()
+    var t = rdb().table("users").where("auth_id", "=", "1").get()
     check t == @[
       %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1},
       %*{"id": 3, "name": "user3", "email": "user3@gmail.com", "address":newJNull(), "auth_id": 1},
@@ -73,7 +84,7 @@ suite "select":
     ]
 
   test "orWhere":
-    var t = RDB().table("users").where("auth_id", "=", "1").orWhere("name", "=", "user2").get()
+    var t = rdb().table("users").where("auth_id", "=", "1").orWhere("name", "=", "user2").get()
     check t == @[
       %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1},
       %*{"id": 2, "name": "user2", "email": "user2@gmail.com", "address":newJNull(), "auth_id": 2},
@@ -84,31 +95,31 @@ suite "select":
     ]
 
   test "update()":
-    RDB().table("users").where("id", "=", 2).update(%*{"name": "John"})
-    var t = RDB().table("users").find(2)
+    rdb().table("users").where("id", "=", 2).update(%*{"name": "John"})
+    var t = rdb().table("users").find(2)
     check t["name"].getStr() == "John"
 
   test "insertID()":
-    var id = RDB().table("users").insertID(%*{"name": "John"})
-    var t = RDB().table("users").find(id)
+    var id = rdb().table("users").insertID(%*{"name": "John"})
+    var t = rdb().table("users").find(id)
     check t["name"].getStr() == "John"
 
   test "insertsID()":
-    var ids = RDB().table("users").insertsID([
+    var ids = rdb().table("users").insertsID([
       %*{"name": "John"},
       %*{"email": "Paul@gmail.com"},
     ])
-    var t = RDB().table("users").find(ids[0])
+    var t = rdb().table("users").find(ids[0])
     check t["name"].getStr() == "John"
-    t = RDB().table("users").find(ids[1])
+    t = rdb().table("users").find(ids[1])
     check t["email"].getStr() == "Paul@gmail.com"
 
   test "distinct":
-    var t = RDB().table("users").select("id", "name").distinct()
+    var t = rdb().table("users").select("id", "name").distinct()
     check t.query.hasKey("distinct") == true
 
   test "whereBetween()":
-    var t = RDB()
+    var t = rdb()
             .table("users")
             .select("id", "name")
             .where("auth_id", "=", 1)
@@ -118,7 +129,7 @@ suite "select":
     check t[0]["name"].getStr() == "user7"
 
   test "whereNotBetween()":
-    var t = RDB()
+    var t = rdb()
             .table("users")
             .select("id", "name")
             .where("auth_id", "=", 1)
@@ -127,7 +138,7 @@ suite "select":
     check t[0]["name"].getStr() == "user5"
 
   test "whereIn()":
-    var t = RDB()
+    var t = rdb()
             .table("users")
             .select("id", "name")
             .whereBetween("id", [4, 10])
@@ -137,7 +148,7 @@ suite "select":
     check t[0]["name"].getStr() == "user5"
 
   test "whereNotIn()":
-    var t = RDB()
+    var t = rdb()
             .table("users")
             .select("id", "name")
             .whereBetween("id", [4, 10])
@@ -152,8 +163,8 @@ suite "select":
     ]
 
   test "whereNull()":
-    RDB().table("users").insert(%*{"email": "user11@gmail.com"})
-    var t = RDB()
+    rdb().table("users").insert(%*{"email": "user11@gmail.com"})
+    var t = rdb()
             .table("users")
             .select("id", "name", "email")
             .whereNull("name")
@@ -162,7 +173,7 @@ suite "select":
     check t[0]["id"].getInt() == 11
 
   test "groupBy()":
-    var t = RDB()
+    var t = rdb()
             .table("users")
             .select("max(id)")
             .groupBy("auth_id")
@@ -177,7 +188,7 @@ suite "select":
       check t[0]["max"].getInt() == 9
 
   test "having()":
-    var t = RDB()
+    var t = rdb()
             .table("users")
             .select("id", "name")
             .groupBy("auth_id")
@@ -188,7 +199,7 @@ suite "select":
     check t[0]["id"].getInt() == 1
 
   test "orderBy()":
-    var t = RDB().table("users")
+    var t = rdb().table("users")
             .orderBy("auth_id", Asc)
             .orderBy("id", Desc)
             .get()
@@ -196,7 +207,7 @@ suite "select":
     check t[0]["id"].getInt() == 9
 
   test "join()":
-    var t = RDB().table("users")
+    var t = rdb().table("users")
             .select("users.id", "users.name")
             .join("auth", "auth.id", "=", "users.auth_id")
             .where("auth.id", "=", "2")
@@ -205,10 +216,10 @@ suite "select":
     check t[0]["name"].getStr() == "user2"
 
   test "leftJoin()":
-    RDB().table("users").insert(%*{
+    rdb().table("users").insert(%*{
       "name": "user11"
     })
-    var t = RDB().table("users")
+    var t = rdb().table("users")
             .select("users.id", "users.name", "users.auth_id")
             .leftJoin("auth", "auth.id", "=", "users.auth_id")
             .orderBy("users.id", Desc)
@@ -218,14 +229,14 @@ suite "select":
     check t[0]["auth_id"] == newJNull()
 
   test "result is null":
-    check newJNull() == RDB().table("users").find(50)
-    check newSeq[JsonNode](0) == RDB().table("users").where("id", "=", 50).get()
+    check newJNull() == rdb().table("users").find(50)
+    check newSeq[JsonNode](0) == rdb().table("users").where("id", "=", 50).get()
 
   test "delete":
-    echo RDB().table("users").get()
-    RDB().table("users").delete(1)
-    check  RDB().table("users").find(1) == newJNull()
+    echo rdb().table("users").get()
+    rdb().table("users").delete(1)
+    check  rdb().table("users").find(1) == newJNull()
 
   test "delete with where":
-    RDB().table("users").where("name", "=", "user2").delete()
-    check RDB().table("users").find(2) == newJNull()
+    rdb().table("users").where("name", "=", "user2").delete()
+    check rdb().table("users").find(2) == newJNull()

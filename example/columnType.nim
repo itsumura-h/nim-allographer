@@ -3,13 +3,13 @@ import json
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
 
-echo repr RDB().table("users").select("id", "name", "address")
+echo repr rdb().table("users").select("id", "name", "address")
     .limit(2)
     .get()
 
-echo RDB().table("users").select("id", "name", "address").first()
+echo rdb().table("users").select("id", "name", "address").first()
 
-echo RDB().table("users")
+echo rdb().table("users")
     .select("id", "name", "address")
     .find(3)
 
@@ -24,7 +24,7 @@ echo RDB().table("users")
 #   ], reset=true)
 # ])
 
-# RDB().table("sample").insert(%*{
+# rdb().table("sample").insert(%*{
 #   "id": 1,
 #   "float": 3.14,
 #   "string": "string",
@@ -32,17 +32,17 @@ echo RDB().table("users")
 #   "is_admin": true
 # }).exec()
 
-echo RDB().table("sample")
+echo rdb().table("sample")
   .select("id", "float", "string", "datetime", "null", "is_admin")
   .get()
 
-echo RDB().table("sample")
+echo rdb().table("sample")
   .select("id", "float", "string", "datetime", "null", "is_admin")
   .get()
 
 
 var sql = "update users set name='John' where id = 1"
-RDB().raw(sql).exec()
+rdb().raw(sql).exec()
 
 sql = "select * from users where id = 1"
-echo RDB().raw(sql).getRaw()
+echo rdb().raw(sql).getRaw()

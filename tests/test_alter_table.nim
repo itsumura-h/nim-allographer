@@ -37,14 +37,14 @@ for i in 1..10:
   table_drop_data[i-1] = %*{
     "id": i
   }
-RDB().table("table_alter").insert(table_alter_data)
-RDB().table("table_rename").insert(table_rename_data)
-RDB().table("table_drop").insert(table_drop_data)
+rdb().table("table_alter").insert(table_alter_data)
+rdb().table("table_rename").insert(table_rename_data)
+rdb().table("table_drop").insert(table_drop_data)
 
 
 suite "alter table":
   test "add_column":
-    check RDB().table("table_alter").select("add_column").first() == newJNull()
+    check rdb().table("table_alter").select("add_column").first() == newJNull()
 
     alter(
       table("table_alter", [
@@ -52,9 +52,9 @@ suite "alter table":
       ])
     )
 
-    RDB().table("table_alter").where("id", "=", 1).update(%*{"add_column": "test"})
+    rdb().table("table_alter").where("id", "=", 1).update(%*{"add_column": "test"})
 
-    check RDB()
+    check rdb()
       .table("table_alter")
       .select("add_column")
       .orderBy("id", Asc)
@@ -62,7 +62,12 @@ suite "alter table":
       .getStr == "test"
 
   test "changed_column":
-    check RDB()
+    echo rdb()
+      .table("table_alter")
+      .select("changed_column")
+      .orderBy("id", Asc)
+      .get()
+    check rdb()
       .table("table_alter")
       .select("changed_column")
       .orderBy("id", Asc)
@@ -76,14 +81,14 @@ suite "alter table":
       ])
     )
 
-    check RDB()
+    check rdb()
       .table("table_alter")
       .select("changed_column_success")
       .orderBy("id", Asc)
       .first()["changed_column_success"]
       .getStr == "change1"
 
-    check RDB()
+    check rdb()
       .table("table_alter")
       .select("changed_int_success")
       .orderBy("id", Asc)
@@ -91,7 +96,7 @@ suite "alter table":
       .getInt == 1
 
   test "delete_column":
-    check RDB()
+    check rdb()
       .table("table_alter")
       .select("delete_column")
       .orderBy("id", Asc)
@@ -103,14 +108,14 @@ suite "alter table":
       ])
     )
 
-    check RDB()
+    check rdb()
       .table("table_alter")
       .select("delete_column")
       .orderBy("id", Asc)
       .first() == newJNull()
 
   test "rename":
-    check RDB()
+    check rdb()
       .table("table_rename")
       .orderBy("id", Asc)
       .first()["id"]
@@ -118,14 +123,14 @@ suite "alter table":
 
     alter(rename("table_rename", "table_rename_success"))
 
-    check RDB()
+    check rdb()
       .table("table_rename_success")
       .orderBy("id", Asc)
       .first()["id"]
       .getInt == 1
 
   test "drop table":
-    check RDB()
+    check rdb()
       .table("table_drop")
       .orderBy("id", Asc)
       .first()["id"]
@@ -133,7 +138,7 @@ suite "alter table":
 
     alter(drop("table_drop"))
 
-    check RDB()
+    check rdb()
       .table("table_drop")
       .orderBy("id", Asc)
       .first() == newJNull()

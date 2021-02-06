@@ -18,14 +18,15 @@ proc logger*(output: any, args:varargs[string]) =
   # console log
   if IS_DISPLAY:
     let logger = newConsoleLogger()
-    logger.log(lvlInfo, $output & $args)
+    logger.log(lvlDebug, $output & $args)
   # file log
   if IS_FILE:
     # info $output & $args
     let path = LOG_DIR & "/log.log"
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
-    logger.log(lvlInfo, $output & $args)
+    defer: logger.file.close()
+    logger.log(lvlDebug, $output & $args)
     flushFile(logger.file)
 
 
@@ -38,6 +39,7 @@ proc echoErrorMsg*(msg:string) =
     let path = LOG_DIR & "/error.log"
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
+    defer: logger.file.close()
     logger.log(lvlError, msg)
     flushFile(logger.file)
 
@@ -50,5 +52,44 @@ proc echoWarningMsg*(msg:string) =
     let path = LOG_DIR & "/error.log"
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
+    defer: logger.file.close()
     logger.log(lvlError, msg)
     flushFile(logger.file)
+  
+
+proc liteWrapUpper(input:var string) =
+  var isUpper = false
+  for c in input:
+    if c.isUpperAscii():
+      isUpper = true
+      break
+  if isUpper:
+    input = &"\"{input}\""
+
+proc myWrapUpper(input:var string) =
+  var isUpper = false
+  for c in input:
+    if c.isUpperAscii():
+      isUpper = true
+      break
+  if isUpper:
+    input = &"`{input}`"
+
+proc pgWrapUpper(input:var string) =
+  var isUpper = false
+  for c in input:
+    if c.isUpperAscii():
+      isUpper = true
+      break
+  if isUpper:
+    input = &"\"{input}\""
+
+proc wrapUpper*(input:var string) =
+  let driver = getDriver()
+  case driver:
+  of "sqlite":
+    liteWrapUpper(input)
+  of "mysql":
+    myWrapUpper(input)
+  of "postgres":
+    pgWrapUpper(input)

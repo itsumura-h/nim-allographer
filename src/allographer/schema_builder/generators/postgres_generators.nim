@@ -1,6 +1,7 @@
 import json, strformat
 import ../column
-import utils
+import generator_util
+import ../../utils
 
 # =============================================================================
 # int
@@ -388,7 +389,7 @@ proc jsonGenerator*(name:string, tableName:string, nullable:bool, isUnique:bool,
 proc foreignColumnGenerator*(name:string):string =
   result = &"\"{name}\" INT"
 
-proc foreignGenerator*(name:string, table:string, column:string,
+proc foreignGenerator*(name:string, tableName:string, column:string,
                         foreignOnDelete:ForeignOnDelete):string =
   var onDeleteString = "RESTRICT"
   if foreignOnDelete == CASCADE:
@@ -398,5 +399,12 @@ proc foreignGenerator*(name:string, table:string, column:string,
   elif foreignOnDelete == NO_ACTION:
     onDeleteString = "NO ACTION"
 
-  result = &", FOREIGN KEY(\"{name}\") REFERENCES {table}({column})"
+  var tableName = tableName
+  wrapUpper(tableName)
+  result = &", FOREIGN KEY(\"{name}\") REFERENCES {tableName}({column})"
   result.add(&" ON DELETE {onDeleteString}")
+
+proc indexGenerate*(table, column:string):string =
+  var table = table
+  wrapUpper(table)
+  return &"CREATE INDEX {column}_index ON {table}({column})"
