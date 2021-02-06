@@ -133,26 +133,29 @@ for user in users:
 ```
 
 ### first
-Retrieving a single row from a table
+Retrieving a single row from a table. This returns `Option[JsoNode]`
 ```nim
 let user = rdb()
             .table("users")
             .where("name", "=", "John")
             .first()
-echo user["name"]
+if user.isSome:
+  echo user.get["name"]
 ```
 
 ### find
-Retrieve a single row by its primary key
+Retrieve a single row by its primary key. This returns `Option[JsoNode]`
 ```nim
 let user = rdb().table("users").find(1)
-echo user["name"]
+if user.isSome:
+  echo user.get["name"]
 ```
 
 If the column name of a promary key is not "id", specify this in 2nd arg of `find`
 ```nim
 let user = rdb().table("users").find(1, "user_id")
-echo user["name"]
+if user.isSome:
+  echo user.get["name"]
 ```
 
 ### join
@@ -605,28 +608,42 @@ rdb().raw(sql).exec()
 ## Aggregates
 [to index](#index)
 
+Except of `count`, these functions return `Option` type.
+
 ```nim
 import allographer/query_builder
 
 echo rdb().table("users").count()
 >> 10       # int
 
-echo rdb().table("users").max("name")
+let response = rdb().table("users").max("name")
+if response.isSome:
+  echo response.get
 >> "user9"  # string
 
-echo rdb().table("users").max("id")
+let response = rdb().table("users").max("id")
+if response.isSome:
+  echo response.get
 >> "10"     # string
 
-echo rdb().table("users").min("name")
+let response = rdb().table("users").min("name")
+if response.isSome:
+  echo response.get
 >> "user1"  # string
 
-echo rdb().table("users").min("id")
+let response = rdb().table("users").min("id")
+if response.isSome:
+  echo response.get
 >> "1"      # string
 
-echo rdb().table("users").avg("id")
+let response = rdb().table("users").avg("id")
+if response.isSome:
+  echo response.get
 >> 5.5      # float
 
-echo rdb().table("users").sum("id")
+let response = rdb().table("users").sum("id")
+if response.isSome:
+  echo response.get
 >> 55.0     # float
 ```
 
@@ -636,9 +653,11 @@ echo rdb().table("users").sum("id")
 ```nim
 transaction:
   var user= rdb().table("users").select("id").where("name", "=", "user3").first()
-  var id = user["id"].getInt()
-  echo id
+  if user.isSome:
+    var id = user.get["id"].getInt()
+    echo id
   user = rdb().table("users").select("name", "email").find(id)
-  echo user
+  if user.isSome:
+    echo user.get
 ```
 If all code in transaction block success, `COMMIT` is run otherwise `ROLLBACK`
