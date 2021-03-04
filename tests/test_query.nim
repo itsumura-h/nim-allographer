@@ -240,3 +240,10 @@ suite "select":
   test "delete with where":
     rdb().table("users").where("name", "=", "user2").delete()
     check rdb().table("users").find(2).isSome == false
+
+  test "raw query":
+    let sql = "SELECT * FROM users WHERE id = ?"
+    var res = rdb().raw(sql, "1").getRaw()
+    rdb().raw(sql, "1").exec()
+    echo res
+    check res[0]["name"].getStr == "user1"

@@ -86,7 +86,7 @@ suite "return with type fail":
     check r.len == 0
     check r == newSeq[Typ](0)
   test "getRaw":
-    var r = rdb().raw("select * from users where id > 10").getRaw(Typ)
+    var r = rdb().raw("select * from users where id > ?", "10").getRaw(Typ)
     check r.len == 0
     check r == newSeq[Typ](0)
   test "first":
