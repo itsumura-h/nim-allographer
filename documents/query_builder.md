@@ -601,8 +601,8 @@ SELECT ProductName
 echo rdb().raw(sql).getRaw()
 ```
 ```nim
-let sql = "UPDATE users SET name='John' where id = 1"
-rdb().raw(sql).exec()
+let sql = "UPDATE users SET name='John' where id = ?"
+rdb().raw(sql, "1").exec()
 ```
 
 ## Aggregates
