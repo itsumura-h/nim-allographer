@@ -202,7 +202,7 @@ when getDriver() == "postgres":
       getCurrentExceptionMsg().echoErrorMsg()
       return newSeq[Row]()
 
-  proc asyncGetRow*(this:RDB):Future[JsonNode] {.async.}=
+  proc asyncGetRow*(this:RDB):Future[Option[JsonNode]] {.async.}=
     defer: this.cleanUp()
     this.sqlString = this.selectBuilder().sqlString
     try:
@@ -211,7 +211,7 @@ when getDriver() == "postgres":
     except Exception:
       echoErrorMsg(this.sqlString & $this.placeHolder)
       getCurrentExceptionMsg().echoErrorMsg()
-      return newJNull()
+      return none(JsonNode)
 
   proc asyncGetRowPlain*(this:RDB):Future[Row] {.async.}=
     defer: this.cleanUp()
@@ -224,7 +224,7 @@ when getDriver() == "postgres":
       getCurrentExceptionMsg().echoErrorMsg()
       return newSeq[string](0)
 
-  proc asyncFirst*(this: RDB): Future[JsonNode] {.async.} =
+  proc asyncFirst*(this: RDB):Future[Option[JsonNode]] {.async.} =
     defer: this.cleanUp()
     this.sqlString = this.selectFirstBuilder().sqlString
     try:
@@ -233,9 +233,9 @@ when getDriver() == "postgres":
     except Exception:
       echoErrorMsg(this.sqlString & $this.placeHolder)
       getCurrentExceptionMsg().echoErrorMsg()
-      return newJNull()
+      return none(JsonNode)
 
-  proc asyncFirstPlain*(this: RDB): Future[Row] {.async.} =
+  proc asyncFirstPlain*(this: RDB):Future[Row] {.async.} =
     defer: this.cleanUp()
     this.sqlString = this.selectFirstBuilder().sqlString
     try:
@@ -246,7 +246,7 @@ when getDriver() == "postgres":
       getCurrentExceptionMsg().echoErrorMsg()
       return newSeq[string](0)
 
-  proc asyncFind*(this: RDB, id: int, key="id"): Future[JsonNode] {.async.} =
+  proc asyncFind*(this: RDB, id: int, key="id"): Future[Option[JsonNode]] {.async.} =
     defer: this.cleanUp()
     this.placeHolder.add($id)
     this.sqlString = this.selectFindBuilder(id, key).sqlString
@@ -256,7 +256,7 @@ when getDriver() == "postgres":
     except Exception:
       echoErrorMsg(this.sqlString & $this.placeHolder)
       getCurrentExceptionMsg().echoErrorMsg()
-      return newJNull()
+      return none(JsonNode)
 
   proc asyncFindPlain*(this: RDB, id: int, key="id"): Future[Row] {.async.} =
     defer: this.cleanUp()

@@ -1,4 +1,4 @@
-import asyncdispatch, json, times
+import asyncdispatch, json, times, options
 include db_postgres
 import ../connection
 
@@ -117,7 +117,7 @@ proc asyncGetAllRows*(pool: AsyncPool,
     pool.returnConn(conIdx)
 
 
-proc asyncGetRow(db: DbConn, query: SqlQuery, args: seq[string]):Future[JsonNode] {.async.} =
+proc asyncGetRow(db: DbConn, query: SqlQuery, args: seq[string]):Future[Option[JsonNode]] {.async.} =
   assert db.status == CONNECTION_OK
   let success = pqsendQuery(db, dbFormat(query, args))
   if success != 1: dbError(db) # never seen to fail when async
@@ -139,15 +139,19 @@ proc asyncGetRow(db: DbConn, query: SqlQuery, args: seq[string]):Future[JsonNode
     var row = newRow(cols)
     for i in 0'i32..pqNtuples(pqresult)-1:
       setRow(pqresult, row, i, cols)
-      rows.add row
+      rows.add(row)
     pqclear(pqresult)
+
+  if rows.len == 0:
+    return none(JsonNode)
+
   let columns = getColumns(db_columns)
-  return toJson(rows, columns)[0]
+  return toJson(rows, columns)[0].some
 
 proc asyncGetRow*(pool:AsyncPool,
                     sqlString:string,
                     args:seq[string]
-  ):Future[JsonNode] {.async.} =
+  ):Future[Option[JsonNode]] {.async.} =
     let conIdx = await pool.getFreeConnIdx()
     result = await asyncGetRow(pool.conns[conIdx], sql sqlString, args)
     pool.returnConn(conIdx)
@@ -201,8 +205,9 @@ proc asyncGetRowPlain(db: DbConn, query: SqlQuery, args: seq[string]):Future[Row
     var cols = pqnfields(pqresult)
     var row = newRow(cols)
     setRow(pqresult, row, 0, cols)
-    result.add row
+    result.add(row)
     pqclear(pqresult)
+
 
 proc asyncGetRowPlain*(pool:AsyncPool,
                         sqlString:string,
