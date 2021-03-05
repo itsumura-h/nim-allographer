@@ -1,4 +1,4 @@
-import json, asyncdispatch, times, strutils, strformat
+import json, asyncdispatch, times, strutils, strformat, options
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
 
@@ -76,10 +76,14 @@ proc main2(){.async.} =
   echo await rdb().table("users").asyncGetPlain()
   echo "=== asyncGetRow"
   echo await rdb().table("users").where("id", "=", 2).asyncGetRow()
+  echo await rdb().table("users").where("id", "=", 1000).asyncGetRow()
+  var res = await rdb().table("users").where("id", "=", 1000).asyncGetRow()
+  echo res.isSome()
   echo "=== asyncGetRowPlain"
   echo await rdb().table("users").where("id", "=", 2).asyncGetRowPlain()
   echo "=== asyncFind"
   echo await rdb().table("users").asyncFind(2)
+  echo await rdb().table("users").asyncFind(1000)
   echo "=== asyncFindPlain"
   echo await rdb().table("users").asyncFindPlain(2)
   echo "=== asyncFirst"
@@ -106,5 +110,5 @@ proc main2(){.async.} =
   echo await rdb().table("users").orderBy("id", Desc).asyncFirst()
 
 
-waitFor main()
+# waitFor main()
 waitFor main2()
