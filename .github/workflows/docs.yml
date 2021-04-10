@@ -21,6 +21,8 @@ jobs:
     - uses: jiro4989/setup-nim-action@v1
       with:
         nim-version: ${{ env.NIM_VERSION }}
+    - name: Build
+      run: nimble install -Y
     - name: Generate documents
       run: nimble docs
     - name: Deploy
