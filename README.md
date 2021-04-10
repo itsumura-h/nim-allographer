@@ -121,15 +121,19 @@ import os
 
 # DB Connection
 putEnv("DB_DRIVER", "sqlite")
-putEnv("DB_CONNECTION", "/your/project/dir/db.sqlite3")
-putEnv("DB_USER", "")
-putEnv("DB_PASSWORD", "")
-putEnv("DB_DATABASE", "")
+```
+
+.env
+```env
+DB_CONNECTION="/your/project/dir/db.sqlite3"
+DB_USER=""
+DB_PASSWORD=""
+DB_DATABASE=""
 
 # Logging
-putEnv("LOG_IS_DISPLAY", "true")
-putEnv("LOG_IS_FILE", "false")
-putEnv("LOG_DIR", "/your/project/dir/logs")
+LOG_IS_DISPLAY=true
+LOG_IS_FILE=false
+LOG_DIR="/your/project/dir/logs"
 ```
 
 - DB_DRIVER: `sqlite` or `mysql` or `postgres`
