@@ -1,7 +1,13 @@
 import os, strutils
+import dotenv
 
 const
   DRIVER = getEnv("DB_DRIVER","sqlite").string
+
+let env = initDotEnv( getCurrentDir() )
+env.load()
+
+let
   CONN = getEnv("DB_CONNECTION").string
   USER = getEnv("DB_USER").string
   PASSWORD = getEnv("DB_PASSWORD").string
@@ -32,5 +38,5 @@ proc getDriver*():string =
 
 # ==================== async ====================
 when DRIVER == "postgres":
-  proc pool*():AsyncPool {.gcsafe.} =
+  proc pool*():AsyncPool =
     newAsyncPool(CONN, USER, PASSWORD, DATABASE, MAX_CONNECTION)

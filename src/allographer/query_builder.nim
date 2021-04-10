@@ -20,7 +20,7 @@ when getDriver() == "sqlite":
 when getDriver() == "postgres":
   let pool = pool()
 
-  proc rdb*():RDB {.gcsafe.} =
+  proc rdb*():RDB =
     return RDB(
       db:db,
       pool:pool
