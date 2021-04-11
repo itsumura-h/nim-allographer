@@ -4,15 +4,16 @@ import dotenv
 const
   DRIVER = getEnv("DB_DRIVER","sqlite").string
 
-let env = initDotEnv( getCurrentDir() )
-env.load()
+if (getCurrentDir() / ".env").fileExists:
+  let env = initDotEnv( getCurrentDir() )
+  env.load()
 
 let
-  CONN = getEnv("DB_CONNECTION").string
-  USER = getEnv("DB_USER").string
-  PASSWORD = getEnv("DB_PASSWORD").string
-  DATABASE = getEnv("DB_DATABASE").string
-  MAX_CONNECTION* = getEnv("DB_MAX_CONNECTION").parseInt
+  CONN = getEnv("DB_CONNECTION", "sqlite").string
+  USER = getEnv("DB_USER", "").string
+  PASSWORD = getEnv("DB_PASSWORD", "").string
+  DATABASE = getEnv("DB_DATABASE", "").string
+  MAX_CONNECTION* = getEnv("DB_MAX_CONNECTION", "1").parseInt
 
 when DRIVER == "sqlite":
   import db_sqlite
