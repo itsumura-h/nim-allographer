@@ -9,7 +9,7 @@ if (getCurrentDir() / ".env").fileExists:
   env.load()
 
 let
-  CONN = getEnv("DB_CONNECTION", "sqlite").string
+  CONN = getEnv("DB_CONNECTION", getCurrentDir() / "db.sqlite3").string
   USER = getEnv("DB_USER", "").string
   PASSWORD = getEnv("DB_PASSWORD", "").string
   DATABASE = getEnv("DB_DATABASE", "").string
