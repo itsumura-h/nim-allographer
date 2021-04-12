@@ -4,12 +4,13 @@ import dotenv
 const
   DRIVER = getEnv("DB_DRIVER","sqlite").string
 
-if (getCurrentDir() / ".env").fileExists:
-  let env = initDotEnv( getCurrentDir() )
-  env.load()
+for f in walkDirRec(getCurrentDir(), {pcFile}):
+  if f.contains(".env"):
+    let env = initDotEnv(getCurrentDir(), f.split("/")[^1])
+    env.load()
 
 let
-  CONN = getEnv("DB_CONNECTION", "sqlite").string
+  CONN = getEnv("DB_CONNECTION", getCurrentDir() / "db.sqlite3").string
   USER = getEnv("DB_USER", "").string
   PASSWORD = getEnv("DB_PASSWORD", "").string
   DATABASE = getEnv("DB_DATABASE", "").string
