@@ -3,9 +3,10 @@ import dotenv
 
 const
   DRIVER = getEnv("DB_DRIVER","sqlite").string
+  DOTENV = getEnv("DOTENV", ".env").string
 
-if (getCurrentDir() / ".env").fileExists:
-  let env = initDotEnv( getCurrentDir() )
+if (getCurrentDir() / DOTENV).fileExists:
+  let env = initDotEnv( getCurrentDir(), DOTENV)
   env.load()
 
 let
