@@ -11,7 +11,7 @@ nimcache/
 # End of https://www.gitignore.io/api/nim
 
 !LICENSE
-!app_Dockerfile
+!Dockerfile
 
 coverage
 lcov.info
@@ -24,3 +24,5 @@ migration.json
 
 gh-pages*
 .DS_Store
+pkg
+.vscode
