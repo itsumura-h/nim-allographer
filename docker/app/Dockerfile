@@ -19,11 +19,9 @@ RUN apk update && \
         && \
     rm /usr/lib/mysqld* -fr && \
     rm /usr/bin/mysql* -fr
-RUN curl https://nim-lang.org/choosenim/init.sh -sSf | sh -s -- -y
 ENV PATH $PATH:/root/.nimble/bin
 RUN nimble install -y \
            bcrypt \
-           coco \
            progress
 
 WORKDIR /root/project
