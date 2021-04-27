@@ -30,7 +30,7 @@ putEnv("DB_DRIVER", "sqlite") # sqlite / mysql / postgres
 DB_CONNECTION="{getCurrentDir()}/db.sqlite3"
 DB_USER=""
 DB_PASSWORD=""
-DB_DATABASE"=""
+DB_DATABASE=""
 DB_MAX_CONNECTION=95
 
 # Logging
