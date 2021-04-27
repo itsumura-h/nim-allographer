@@ -3,7 +3,7 @@ services:
   allographer:
     build:
       context: .
-      dockerfile: ./docker/app_Dockerfile
+      dockerfile: ./docker/app/Dockerfile
     tty: true
     environment:
       TZ: Asia/Tokyo

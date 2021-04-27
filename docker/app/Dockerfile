@@ -4,26 +4,24 @@ RUN echo http://dl-cdn.alpinelinux.org/alpine/edge/testing >> /etc/apk/repositor
 RUN apk update && \
     apk upgrade --no-cache && \
     apk add --no-cache \
+        curl \
+        gcc \
+        musl-dev \
         bsd-compat-headers \
         openssh-client \
-        ca-certificates \
+        git \
         lcov \
+        sqlite \
         libpq \
         mariadb-dev \
         openssl \
         pcre \
-        sqlite \
         && \
     rm /usr/lib/mysqld* -fr && \
-    rm /usr/bin/mysql* -fr && \
-    update-ca-certificates
-RUN git config --global http.sslVerify false
-
+    rm /usr/bin/mysql* -fr
+ENV PATH $PATH:/root/.nimble/bin
 RUN nimble install -y \
            bcrypt \
-           coco \
-           progress \
-           ;
+           progress
 
-ENV PATH $PATH:/root/.nimble/bin
 WORKDIR /root/project
