@@ -63,7 +63,7 @@ function main() {
 <div class="document" id="documentId">
   <div class="container">
     <h1 class="title">Index</h1>
-    Modules: <a href="connection.html">connection</a>, <a href="query_builder.html">query_builder</a>, <a href="query_builder/base.html">query_builder/base</a>, <a href="query_builder/builders.html">query_builder/builders</a>, <a href="query_builder/exec.html">query_builder/exec</a>, <a href="query_builder/generators.html">query_builder/generators</a>, <a href="query_builder/grammars.html">query_builder/grammars</a>, <a href="query_builder/transaction.html">query_builder/transaction</a>, <a href="schema_builder/alter.html">schema_builder/alter</a>, <a href="schema_builder/alters/mysql_alter.html">schema_builder/alters/mysql_alter</a>, <a href="schema_builder/alters/postgres_alter.html">schema_builder/alters/postgres_alter</a>, <a href="schema_builder/alters/sqlite_alter.html">schema_builder/alters/sqlite_alter</a>, <a href="schema_builder/column.html">schema_builder/column</a>, <a href="schema_builder/generators/generator_util.html">schema_builder/generators/generator_util</a>, <a href="schema_builder/generators/mysql_generators.html">schema_builder/generators/mysql_generators</a>, <a href="schema_builder/generators/postgres_generators.html">schema_builder/generators/postgres_generators</a>, <a href="schema_builder/generators/sqlite_generators.html">schema_builder/generators/sqlite_generators</a>, <a href="schema_builder/migrates/mysql_migrate.html">schema_builder/migrates/mysql_migrate</a>, <a href="schema_builder/migrates/postgres_migrate.html">schema_builder/migrates/postgres_migrate</a>, <a href="schema_builder/migrates/sqlite_migrate.html">schema_builder/migrates/sqlite_migrate</a>, <a href="schema_builder/schema.html">schema_builder/schema</a>, <a href="schema_builder/table.html">schema_builder/table</a>, <a href="utils.html">utils</a>.<br/><p /><h2>API symbols</h2>
+    Modules: <a href="baseEnv.html">baseEnv</a>, <a href="connection.html">connection</a>, <a href="query_builder.html">query_builder</a>, <a href="query_builder/base.html">query_builder/base</a>, <a href="query_builder/builders.html">query_builder/builders</a>, <a href="query_builder/exec.html">query_builder/exec</a>, <a href="query_builder/generators.html">query_builder/generators</a>, <a href="query_builder/grammars.html">query_builder/grammars</a>, <a href="query_builder/transaction.html">query_builder/transaction</a>, <a href="schema_builder/alter.html">schema_builder/alter</a>, <a href="schema_builder/alters/mysql_alter.html">schema_builder/alters/mysql_alter</a>, <a href="schema_builder/alters/postgres_alter.html">schema_builder/alters/postgres_alter</a>, <a href="schema_builder/alters/sqlite_alter.html">schema_builder/alters/sqlite_alter</a>, <a href="schema_builder/column.html">schema_builder/column</a>, <a href="schema_builder/generators/generator_util.html">schema_builder/generators/generator_util</a>, <a href="schema_builder/generators/mysql_generators.html">schema_builder/generators/mysql_generators</a>, <a href="schema_builder/generators/postgres_generators.html">schema_builder/generators/postgres_generators</a>, <a href="schema_builder/generators/sqlite_generators.html">schema_builder/generators/sqlite_generators</a>, <a href="schema_builder/migrates/mysql_migrate.html">schema_builder/migrates/mysql_migrate</a>, <a href="schema_builder/migrates/postgres_migrate.html">schema_builder/migrates/postgres_migrate</a>, <a href="schema_builder/migrates/sqlite_migrate.html">schema_builder/migrates/sqlite_migrate</a>, <a href="schema_builder/schema.html">schema_builder/schema</a>, <a href="schema_builder/table.html">schema_builder/table</a>, <a href="utils.html">utils</a>.<br/><p /><h2>API symbols</h2>
 <dl><dt><a name="%60distinct%60" href="#%60distinct%60"><span>`distinct`:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="grammars: `distinct`(this: RDB): RDB" href="query_builder/grammars.html#distinct%2CRDB">grammars: `distinct`(this: RDB): RDB</a></li>
@@ -188,6 +188,10 @@ function main() {
 <li><a class="reference external"
           data-doc-search-tag="column: Column" href="schema_builder/column.html#Column">column: Column</a></li>
           </ul></dd>
+<dt><a name="CONN" href="#CONN"><span>CONN:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="baseEnv: CONN" href="baseEnv.html#CONN">baseEnv: CONN</a></li>
+          </ul></dd>
 <dt><a name="count" href="#count"><span>count:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="exec: count(this: RDB): int" href="query_builder/exec.html#count%2CRDB">exec: count(this: RDB): int</a></li>
@@ -203,6 +207,10 @@ function main() {
           data-doc-search-tag="postgres_migrate: createIndex(table, column: string): string" href="schema_builder/migrates/postgres_migrate.html#createIndex%2Cstring%2Cstring">postgres_migrate: createIndex(table, column: string): string</a></li>
           <li><a class="reference external"
           data-doc-search-tag="sqlite_migrate: createIndex(table, column: string): string" href="schema_builder/migrates/sqlite_migrate.html#createIndex%2Cstring%2Cstring">sqlite_migrate: createIndex(table, column: string): string</a></li>
+          </ul></dd>
+<dt><a name="DATABASE" href="#DATABASE"><span>DATABASE:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="baseEnv: DATABASE" href="baseEnv.html#DATABASE">baseEnv: DATABASE</a></li>
           </ul></dd>
 <dt><a name="date" href="#date"><span>date:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -333,6 +341,10 @@ function main() {
                 isDefault: bool; default: float): string" href="schema_builder/generators/postgres_generators.html#doubleGenerator%2Cstring%2Cstring%2Cint%2Cint%2Cbool%2Cbool%2Cbool%2Cbool%2Cfloat">postgres_generators: doubleGenerator(name: string; tableName: string; maximum: int; digit: int;
                 nullable: bool; isUnique: bool; isUnsigned: bool;
                 isDefault: bool; default: float): string</a></li>
+          </ul></dd>
+<dt><a name="DRIVER" href="#DRIVER"><span>DRIVER:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="baseEnv: DRIVER" href="baseEnv.html#DRIVER">baseEnv: DRIVER</a></li>
           </ul></dd>
 <dt><a name="driverTypeError" href="#driverTypeError"><span>driverTypeError:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -604,6 +616,14 @@ function main() {
              isDefault: bool; default: int): string" href="schema_builder/generators/sqlite_generators.html#intGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool%2Cint">sqlite_generators: intGenerator(name: string; nullable: bool; isUnique: bool; isUnsigned: bool;
              isDefault: bool; default: int): string</a></li>
           </ul></dd>
+<dt><a name="IS_DISPLAY" href="#IS_DISPLAY"><span>IS_DISPLAY:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="baseEnv: IS_DISPLAY" href="baseEnv.html#IS_DISPLAY">baseEnv: IS_DISPLAY</a></li>
+          </ul></dd>
+<dt><a name="IS_FILE" href="#IS_FILE"><span>IS_FILE:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="baseEnv: IS_FILE" href="baseEnv.html#IS_FILE">baseEnv: IS_FILE</a></li>
+          </ul></dd>
 <dt><a name="isNil" href="#isNil"><span>isNil:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="base: isNil[DbConn](x: DbConn): bool" href="query_builder/base.html#isNil%2CDbConn">base: isNil[DbConn](x: DbConn): bool</a></li>
@@ -652,6 +672,10 @@ function main() {
 <li><a class="reference external"
           data-doc-search-tag="generators: limitSql(this: RDB): RDB" href="query_builder/generators.html#limitSql%2CRDB">generators: limitSql(this: RDB): RDB</a></li>
           </ul></dd>
+<dt><a name="LOG_DIR" href="#LOG_DIR"><span>LOG_DIR:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="baseEnv: LOG_DIR" href="baseEnv.html#LOG_DIR">baseEnv: LOG_DIR</a></li>
+          </ul></dd>
 <dt><a name="logger" href="#logger"><span>logger:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="utils: logger(output: any; args: varargs[string])" href="utils.html#logger%2Cany%2Cvarargs%5Bstring%5D">utils: logger(output: any; args: varargs[string])</a></li>
@@ -676,7 +700,7 @@ function main() {
           </ul></dd>
 <dt><a name="MAX_CONNECTION" href="#MAX_CONNECTION"><span>MAX_CONNECTION:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="connection: MAX_CONNECTION" href="connection.html#MAX_CONNECTION">connection: MAX_CONNECTION</a></li>
+          data-doc-search-tag="baseEnv: MAX_CONNECTION" href="baseEnv.html#MAX_CONNECTION">baseEnv: MAX_CONNECTION</a></li>
           </ul></dd>
 <dt><a name="mediumInteger" href="#mediumInteger"><span>mediumInteger:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -779,6 +803,10 @@ function main() {
 <dt><a name="paginate" href="#paginate"><span>paginate:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="exec: paginate(this: RDB; display: int; page: int = 1): JsonNode" href="query_builder/exec.html#paginate%2CRDB%2Cint%2Cint">exec: paginate(this: RDB; display: int; page: int = 1): JsonNode</a></li>
+          </ul></dd>
+<dt><a name="PASSWORD" href="#PASSWORD"><span>PASSWORD:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="baseEnv: PASSWORD" href="baseEnv.html#PASSWORD">baseEnv: PASSWORD</a></li>
           </ul></dd>
 <dt><a name="raw" href="#raw"><span>raw:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -1148,6 +1176,10 @@ function main() {
 <li><a class="reference external"
           data-doc-search-tag="generators: updateValuesSql(this: RDB; items: JsonNode): RDB" href="query_builder/generators.html#updateValuesSql%2CRDB%2CJsonNode">generators: updateValuesSql(this: RDB; items: JsonNode): RDB</a></li>
           </ul></dd>
+<dt><a name="USER" href="#USER"><span>USER:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="baseEnv: USER" href="baseEnv.html#USER">baseEnv: USER</a></li>
+          </ul></dd>
 <dt><a name="varcharGenerator" href="#varcharGenerator"><span>varcharGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="sqlite_generators: varcharGenerator(name: string; maxLength: int; nullable: bool; isUnique: bool;
@@ -1215,7 +1247,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-04-27 11:40:54 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-05-03 17:04:14 UTC</small>
       </div>
     </div>
   </div>

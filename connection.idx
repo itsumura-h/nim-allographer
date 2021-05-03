@@ -1,3 +1,2 @@
-MAX_CONNECTION	connection.html#MAX_CONNECTION	connection: MAX_CONNECTION	
 db	connection.html#db	connection: db(): DbConn	
 getDriver	connection.html#getDriver	connection: getDriver(): string	
