@@ -283,7 +283,12 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
     elif val.kind == JFloat:
       this.placeHolder.add($(val.getFloat()))
     elif val.kind == JBool:
-      this.placeHolder.add($(val.getBool()))
+      let val =
+        if val.getBool():
+          1
+        else:
+          0
+      this.placeHolder.add($val)
     elif val.kind == JObject:
       this.placeHolder.add($val)
     else:
@@ -319,7 +324,12 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
       elif val.kind == JFloat:
         this.placeHolder.add($(val.getFloat()))
       elif val.kind == JBool:
-        this.placeHolder.add($(val.getBool()))
+        let val =
+          if val.getBool():
+            1
+          else:
+            0
+        this.placeHolder.add($val)
       elif val.kind == JObject:
         this.placeHolder.add($val)
       else:

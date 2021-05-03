@@ -1,12 +1,7 @@
 import os, parsecfg, terminal, logging, macros, strformat, strutils
 # self
+import baseEnv
 from connection import getDriver
-
-const
-  IS_DISPLAY = when existsEnv("LOG_IS_DISPLAY"): getEnv("LOG_IS_DISPLAY").string.parseBool else: false
-  IS_FILE = when existsEnv("LOG_IS_FILE"): getEnv("LOG_IS_FILE").string.parseBool else: false
-  LOG_DIR = when existsEnv("LOG_DIR"): getEnv("LOG_DIR").string else: ""
-
 
 proc driverTypeError*() =
   let driver = getDriver()
@@ -67,13 +62,7 @@ proc liteWrapUpper(input:var string) =
     input = &"\"{input}\""
 
 proc myWrapUpper(input:var string) =
-  var isUpper = false
-  for c in input:
-    if c.isUpperAscii():
-      isUpper = true
-      break
-  if isUpper:
-    input = &"`{input}`"
+  input = &"`{input}`"
 
 proc pgWrapUpper(input:var string) =
   var isUpper = false
