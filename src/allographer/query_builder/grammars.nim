@@ -14,9 +14,9 @@ ORDER BY
 TOP（LIMIT）
 ]#
 
-proc table*(this: RDB, tableArg: string): RDB =
-  this.query = %*{"table": tableArg}
-  return this
+proc table*(self: Rdb, tableArg: string): Rdb =
+  self.query = %*{"table": tableArg}
+  return self
 
 
 # ============================== Raw query ==============================

@@ -1,17 +1,26 @@
 import os, strutils
 import dotenv
+import database/database
 
 for f in walkDir(getCurrentDir()):
   if f.path.contains(".env"):
     let env = initDotEnv(getCurrentDir(), f.path.split("/")[^1])
     env.load()
-    echo("used config file '", f.path, "'")
 
 const
-  DRIVER* = getEnv("DB_DRIVER","sqlite").string
+  DriverStr* = getEnv("DB_DRIVER","sqlite").string
+  DRIVER* =
+    if DriverStr == "mysql":
+      MySQL
+    elif DriverStr == "postgres":
+      PostgreSQL
+    else:
+      SQLite3
 
 let
-  CONN* = getEnv("DB_CONNECTION", getCurrentDir() / "db.sqlite3").string
+  conn = getEnv("DB_CONNECTION", getCurrentDir() / "db.sqlite3").string
+  HOST* = conn.split(":")[0]
+  PORT* = conn.split(":")[1]
   USER* = getEnv("DB_USER", "").string
   PASSWORD* = getEnv("DB_PASSWORD", "").string
   DATABASE* = getEnv("DB_DATABASE", "").string

@@ -12,19 +12,22 @@ export
   transaction,
   connection
 
-let db = db()
+# let db = db()
 
-when getDriver() == "sqlite":
-  proc rdb*():RDB =
-    return RDB(db:db)
-when getDriver() == "postgres":
-  let pool = pool()
+# when getDriver() == "sqlite":
+#   proc rdb*():RDB =
+#     return RDB(db:db)
+# when getDriver() == "postgres":
+#   let pool = pool()
 
-  proc rdb*():RDB =
-    return RDB(
-      db:db,
-      pool:pool
-    )
-when getDriver() == "mysql":
-  proc rdb*():RDB =
-    return RDB()
+#   proc rdb*():RDB =
+#     return RDB(
+#       db:db,
+#       pool:pool
+#     )
+# when getDriver() == "mysql":
+#   proc rdb*():RDB =
+#     return RDB()
+
+proc rdb*():Rdb =
+  return Rdb(db:conn)

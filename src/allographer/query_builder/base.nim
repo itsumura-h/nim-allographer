@@ -1,25 +1,17 @@
 import json
+import database/database
 import ../connection
 
-when getDriver() == "postgres":
-  type
-    RDB* = ref object of RootObj
-      db*: DbConn
-      pool*: AsyncPool
-      query*: JsonNode
-      sqlString*: string
-      placeHolder*: seq[string]
-else:
-  type
-    RDB* = ref object of RootObj
-      db*: DbConn
-      query*: JsonNode
-      sqlString*: string
-      placeHolder*: seq[string]
+type
+  Rdb* = ref object of RootObj
+    db*: DBConnection
+    query*: JsonNode
+    sqlString*: string
+    placeHolder*: seq[string]
 
-proc isNil*[DbConn](x: DbConn): bool {.noSideEffect, magic: "IsNil".}
+# proc isNil*[DbConn](x: DbConn): bool {.noSideEffect, magic: "IsNil".}
 
-proc cleanUp*(this:RDB) =
-  this.query = newJNull()
-  this.sqlString = ""
-  this.placeHolder = newSeq[string]()
+proc cleanUp*(self:RDB) =
+  self.query = newJNull()
+  self.sqlString = ""
+  self.placeHolder = newSeq[string]()
