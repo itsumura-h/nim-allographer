@@ -1,6 +1,6 @@
 import os, strutils
 import dotenv
-import database/database
+import database
 
 for f in walkDir(getCurrentDir()):
   if f.path.contains(".env"):

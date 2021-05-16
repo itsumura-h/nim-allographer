@@ -1,5 +1,5 @@
 import json
-import database/database
+import database
 import ../connection
 
 type

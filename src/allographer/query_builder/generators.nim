@@ -2,22 +2,22 @@ import json
 from strformat import `&`
 from strutils import contains, isUpperAscii
 
-import base
+import base, ../connection
 from ../utils import wrapUpper
 
 
 # ==================== SELECT ====================
 
-proc selectSql*(this: RDB): RDB =
+proc selectSql*(self: RDB): RDB =
   var queryString = ""
 
-  if this.query.hasKey("distinct"):
+  if self.query.hasKey("distinct"):
     queryString.add("SELECT DISTINCT")
   else:
     queryString.add("SELECT")
 
-  if this.query.hasKey("select"):
-    for i, item in this.query["select"].getElems():
+  if self.query.hasKey("select"):
+    for i, item in self.query["select"].getElems():
       if i > 0: queryString.add(",")
       var column = item.getStr()
       wrapUpper(column)
@@ -25,33 +25,33 @@ proc selectSql*(this: RDB): RDB =
   else:
     queryString.add(" *")
 
-  this.sqlString = queryString
-  return this
+  self.sqlString = queryString
+  return self
 
 
-proc fromSql*(this: RDB): RDB =
-  var table = this.query["table"].getStr()
+proc fromSql*(self: RDB): RDB =
+  var table = self.query["table"].getStr()
   wrapUpper(table)
-  this.sqlString.add(&" FROM {table}")
-  return this
+  self.sqlString.add(&" FROM {table}")
+  return self
 
-proc selectFirstSql*(this:RDB): RDB =
-  this.sqlString.add(" LIMIT 1")
-  return this
+proc selectFirstSql*(self:RDB): RDB =
+  self.sqlString.add(" LIMIT 1")
+  return self
 
-proc selectByIdSql*(this:RDB, id:int, key:string): RDB =
+proc selectByIdSql*(self:RDB, id:int, key:string): RDB =
   var key = key
   wrapUpper(key)
-  if this.sqlString.contains("WHERE"):
-    this.sqlString.add(&" AND {key} = ? LIMIT 1")
+  if self.sqlString.contains("WHERE"):
+    self.sqlString.add(&" AND {key} = ? LIMIT 1")
   else:
-    this.sqlString.add(&" WHERE {key} = ? LIMIT 1")
-  return this
+    self.sqlString.add(&" WHERE {key} = ? LIMIT 1")
+  return self
 
 
-proc joinSql*(this: RDB): RDB =
-  if this.query.hasKey("join"):
-    for row in this.query["join"]:
+proc joinSql*(self: RDB): RDB =
+  if self.query.hasKey("join"):
+    for row in self.query["join"]:
       var table = row["table"].getStr()
       wrapUpper(table)
       var column1 = row["column1"].getStr()
@@ -60,14 +60,14 @@ proc joinSql*(this: RDB): RDB =
       var column2 = row["column2"].getStr()
       wrapUpper(column2)
 
-      this.sqlString.add(&" INNER JOIN {table} ON {column1} {symbol} {column2}")
+      self.sqlString.add(&" INNER JOIN {table} ON {column1} {symbol} {column2}")
 
-  return this
+  return self
 
 
-proc leftJoinSql*(this: RDB): RDB =
-  if this.query.hasKey("left_join"):
-    for row in this.query["left_join"]:
+proc leftJoinSql*(self: RDB): RDB =
+  if self.query.hasKey("left_join"):
+    for row in self.query["left_join"]:
       var table = row["table"].getStr()
       wrapUpper(table)
       var column1 = row["column1"].getStr()
@@ -76,78 +76,78 @@ proc leftJoinSql*(this: RDB): RDB =
       var column2 = row["column2"].getStr()
       wrapUpper(column2)
 
-      this.sqlString.add(&" LEFT JOIN {table} ON {column1} {symbol} {column2}")
+      self.sqlString.add(&" LEFT JOIN {table} ON {column1} {symbol} {column2}")
 
-  return this
+  return self
 
 
-proc whereSql*(this: RDB): RDB =
-  if this.query.hasKey("where"):
-    for i, row in this.query["where"].getElems():
+proc whereSql*(self: RDB): RDB =
+  if self.query.hasKey("where"):
+    for i, row in self.query["where"].getElems():
       var column = row["column"].getStr()
       wrapUpper(column)
       var symbol = row["symbol"].getStr()
       var value = row["value"].getStr()
 
       if i == 0:
-        this.sqlString.add(&" WHERE {column} {symbol} {value}")
+        self.sqlString.add(&" WHERE {column} {symbol} {value}")
       else:
-        this.sqlString.add(&" AND {column} {symbol} {value}")
+        self.sqlString.add(&" AND {column} {symbol} {value}")
 
-  return this
+  return self
 
 
-proc orWhereSql*(this: RDB): RDB =
-  if this.query.hasKey("or_where"):
-    for row in this.query["or_where"]:
+proc orWhereSql*(self: RDB): RDB =
+  if self.query.hasKey("or_where"):
+    for row in self.query["or_where"]:
       var column = row["column"].getStr()
       wrapUpper(column)
       var symbol = row["symbol"].getStr()
       var value = row["value"].getStr()
 
-      if this.sqlString.contains("WHERE"):
-        this.sqlString.add(&" OR {column} {symbol} {value}")
+      if self.sqlString.contains("WHERE"):
+        self.sqlString.add(&" OR {column} {symbol} {value}")
       else:
-        this.sqlString.add(&" WHERE {column} {symbol} {value}")
+        self.sqlString.add(&" WHERE {column} {symbol} {value}")
 
-  return this
+  return self
 
 
-proc whereBetweenSql*(this:RDB): RDB =
-  if this.query.hasKey("where_between"):
-    for row in this.query["where_between"]:
+proc whereBetweenSql*(self:RDB): RDB =
+  if self.query.hasKey("where_between"):
+    for row in self.query["where_between"]:
       var column = row["column"].getStr()
       wrapUpper(column)
       var start = row["width"][0].getFloat()
       var stop = row["width"][1].getFloat()
 
-      if this.sqlString.contains("WHERE"):
-        this.sqlString.add(&" AND {column} BETWEEN {start} AND {stop}")
+      if self.sqlString.contains("WHERE"):
+        self.sqlString.add(&" AND {column} BETWEEN {start} AND {stop}")
       else:
-        this.sqlString.add(&" WHERE {column} BETWEEN {start} AND {stop}")
+        self.sqlString.add(&" WHERE {column} BETWEEN {start} AND {stop}")
 
-  return this
+  return self
 
 
-proc whereNotBetweenSql*(this:RDB): RDB =
-  if this.query.hasKey("where_not_between"):
-    for row in this.query["where_not_between"]:
+proc whereNotBetweenSql*(self:RDB): RDB =
+  if self.query.hasKey("where_not_between"):
+    for row in self.query["where_not_between"]:
       var column = row["column"].getStr()
       wrapUpper(column)
       var start = row["width"][0].getFloat()
       var stop = row["width"][1].getFloat()
 
-      if this.sqlString.contains("WHERE"):
-        this.sqlString.add(&" AND {column} NOT BETWEEN {start} AND {stop}")
+      if self.sqlString.contains("WHERE"):
+        self.sqlString.add(&" AND {column} NOT BETWEEN {start} AND {stop}")
       else:
-        this.sqlString.add(&" WHERE {column} NOT BETWEEN {start} AND {stop}")
-  return this
+        self.sqlString.add(&" WHERE {column} NOT BETWEEN {start} AND {stop}")
+  return self
 
 
-proc whereInSql*(this:RDB): RDB =
-  if this.query.hasKey("where_in"):
+proc whereInSql*(self:RDB): RDB =
+  if self.query.hasKey("where_in"):
     var widthString = ""
-    for row in this.query["where_in"]:
+    for row in self.query["where_in"]:
       var column = row["column"].getStr()
       wrapUpper(column)
       for i, val in row["width"].getElems():
@@ -157,17 +157,17 @@ proc whereInSql*(this:RDB): RDB =
         elif val.kind == JFloat:
           widthString.add($(val.getFloat()))
 
-      if this.sqlString.contains("WHERE"):
-        this.sqlString.add(&" AND {column} IN ({widthString})")
+      if self.sqlString.contains("WHERE"):
+        self.sqlString.add(&" AND {column} IN ({widthString})")
       else:
-        this.sqlString.add(&" WHERE {column} IN ({widthString})")
-  return this
+        self.sqlString.add(&" WHERE {column} IN ({widthString})")
+  return self
 
 
-proc whereNotInSql*(this:RDB): RDB =
-  if this.query.hasKey("where_not_in"):
+proc whereNotInSql*(self:RDB): RDB =
+  if self.query.hasKey("where_not_in"):
     var widthString = ""
-    for row in this.query["where_not_in"]:
+    for row in self.query["where_not_in"]:
       var column = row["column"].getStr()
       wrapUpper(column)
       for i, val in row["width"].getElems():
@@ -177,93 +177,93 @@ proc whereNotInSql*(this:RDB): RDB =
         elif val.kind == JFloat:
           widthString.add($(val.getFloat()))
 
-      if this.sqlString.contains("WHERE"):
-        this.sqlString.add(&" AND {column} NOT IN ({widthString})")
+      if self.sqlString.contains("WHERE"):
+        self.sqlString.add(&" AND {column} NOT IN ({widthString})")
       else:
-        this.sqlString.add(&" WHERE {column} NOT IN ({widthString})")
-  return this
+        self.sqlString.add(&" WHERE {column} NOT IN ({widthString})")
+  return self
 
 
-proc whereNullSql*(this:RDB): RDB =
-  if this.query.hasKey("where_null"):
-    for row in this.query["where_null"]:
+proc whereNullSql*(self:RDB): RDB =
+  if self.query.hasKey("where_null"):
+    for row in self.query["where_null"]:
       var column = row["column"].getStr()
       wrapUpper(column)
-      if this.sqlString.contains("WHERE"):
-        this.sqlString.add(&" AND {column} is null")
+      if self.sqlString.contains("WHERE"):
+        self.sqlString.add(&" AND {column} is null")
       else:
-        this.sqlString.add(&" WHERE {column} is null")
-  return this
+        self.sqlString.add(&" WHERE {column} is null")
+  return self
 
 
-proc groupBySql*(this:RDB): RDB =
-  if this.query.hasKey("group_by"):
-    for row in this.query["group_by"]:
+proc groupBySql*(self:RDB): RDB =
+  if self.query.hasKey("group_by"):
+    for row in self.query["group_by"]:
       var column = row["column"].getStr()
       wrapUpper(column)
-      if this.sqlString.contains("GROUP BY"):
-        this.sqlString.add(&", {column}")
+      if self.sqlString.contains("GROUP BY"):
+        self.sqlString.add(&", {column}")
       else:
-        this.sqlString.add(&" GROUP BY {column}")
-  return this
+        self.sqlString.add(&" GROUP BY {column}")
+  return self
 
 
-proc havingSql*(this:RDB): RDB =
-  if this.query.hasKey("having"):
-    for i, row in this.query["having"].getElems():
+proc havingSql*(self:RDB): RDB =
+  if self.query.hasKey("having"):
+    for i, row in self.query["having"].getElems():
       var column = row["column"].getStr()
       wrapUpper(column)
       var symbol = row["symbol"].getStr()
       var value = row["value"].getStr()
 
       if i == 0:
-        this.sqlString.add(&" HAVING {column} {symbol} {value}")
+        self.sqlString.add(&" HAVING {column} {symbol} {value}")
       else:
-        this.sqlString.add(&" AND {column} {symbol} {value}")
+        self.sqlString.add(&" AND {column} {symbol} {value}")
 
-  return this
+  return self
 
 
-proc orderBySql*(this:RDB): RDB =
-  if this.query.hasKey("order_by"):
-    for row in this.query["order_by"]:
+proc orderBySql*(self:RDB): RDB =
+  if self.query.hasKey("order_by"):
+    for row in self.query["order_by"]:
       var column = row["column"].getStr()
       wrapUpper(column)
       var order = row["order"].getStr()
 
-      if this.sqlString.contains("ORDER BY"):
-        this.sqlString.add(&", {column} {order}")
+      if self.sqlString.contains("ORDER BY"):
+        self.sqlString.add(&", {column} {order}")
       else:
-        this.sqlString.add(&" ORDER BY {column} {order}")
-  return this
+        self.sqlString.add(&" ORDER BY {column} {order}")
+  return self
 
 
-proc limitSql*(this: RDB): RDB =
-  if this.query.hasKey("limit"):
-    var num = this.query["limit"].getInt()
-    this.sqlString.add(&" LIMIT {num}")
+proc limitSql*(self: RDB): RDB =
+  if self.query.hasKey("limit"):
+    var num = self.query["limit"].getInt()
+    self.sqlString.add(&" LIMIT {num}")
 
-  return this
+  return self
 
 
-proc offsetSql*(this: RDB): RDB =
-  if this.query.hasKey("offset"):
-    var num = this.query["offset"].getInt()
-    this.sqlString.add(&" OFFSET {num}")
+proc offsetSql*(self: RDB): RDB =
+  if self.query.hasKey("offset"):
+    var num = self.query["offset"].getInt()
+    self.sqlString.add(&" OFFSET {num}")
 
-  return this
+  return self
 
 
 # ==================== INSERT ====================
 
-proc insertSql*(this: RDB): RDB =
-  var table = this.query["table"].getStr()
+proc insertSql*(self: RDB): RDB =
+  var table = self.query["table"].getStr()
   wrapUpper(table)
-  this.sqlString = &"INSERT INTO {table}"
-  return this
+  self.sqlString = &"INSERT INTO {table}"
+  return self
 
 
-proc insertValueSql*(this: RDB, items: JsonNode): RDB =
+proc insertValueSql*(self: RDB, items: JsonNode): RDB =
   var columns = ""
   var values = ""
 
@@ -279,29 +279,33 @@ proc insertValueSql*(this: RDB, items: JsonNode): RDB =
     columns.add(key)
 
     if val.kind == JInt:
-      this.placeHolder.add($(val.getInt()))
+      self.placeHolder.add($(val.getInt()))
     elif val.kind == JFloat:
-      this.placeHolder.add($(val.getFloat()))
+      self.placeHolder.add($(val.getFloat()))
     elif val.kind == JBool:
       let val =
         if val.getBool():
           1
         else:
           0
-      this.placeHolder.add($val)
+      self.placeHolder.add($val)
     elif val.kind == JObject:
-      this.placeHolder.add($val)
+      self.placeHolder.add($val)
     else:
-      this.placeHolder.add(val.getStr())
-    values.add("?")
+      self.placeHolder.add(val.getStr())
+    # values.add("?")
+    let dbType = getDriver()
+    if dbType == "postgres":
+      values.add("$" & $i)
+    else:
+      values.add("?")
 
-  this.sqlString.add(&" ({columns}) VALUES ({values})")
-  return this
+  self.sqlString.add(&" ({columns}) VALUES ({values})")
+  return self
 
 
-proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
+proc insertValuesSql*(self: RDB, rows: openArray[JsonNode]): RDB =
   var columns = ""
-
   var i = 0
   for key, value in rows[0]:
     if i > 0: columns.add(", ")
@@ -320,42 +324,42 @@ proc insertValuesSql*(this: RDB, rows: openArray[JsonNode]): RDB =
       if valueCount > 0: value.add(", ")
       valueCount += 1
       if val.kind == JInt:
-        this.placeHolder.add($(val.getInt()))
+        self.placeHolder.add($(val.getInt()))
       elif val.kind == JFloat:
-        this.placeHolder.add($(val.getFloat()))
+        self.placeHolder.add($(val.getFloat()))
       elif val.kind == JBool:
         let val =
           if val.getBool():
             1
           else:
             0
-        this.placeHolder.add($val)
+        self.placeHolder.add($val)
       elif val.kind == JObject:
-        this.placeHolder.add($val)
+        self.placeHolder.add($val)
       else:
-        this.placeHolder.add(val.getStr())
-      value.add("?")
+        self.placeHolder.add(val.getStr())
+      values.add("?")
 
     if valuesCount > 0: values.add(", ")
     valuesCount += 1
     values.add(&"({value})")
 
-  this.sqlString.add(&" ({columns}) VALUES {values}")
-  return this
+  self.sqlString.add(&" ({columns}) VALUES {values}")
+  return self
 
 
 # ==================== UPDATE ====================
 
-proc updateSql*(this: RDB): RDB =
-  this.sqlString.add("UPDATE")
+proc updateSql*(self: RDB): RDB =
+  self.sqlString.add("UPDATE")
 
-  var table = this.query["table"].getStr()
+  var table = self.query["table"].getStr()
   wrapUpper(table)
-  this.sqlString.add(&" {table} SET ")
-  return this
+  self.sqlString.add(&" {table} SET ")
+  return self
 
 
-proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
+proc updateValuesSql*(self: RDB, items:JsonNode): RDB =
   var value = ""
 
   var i = 0
@@ -366,53 +370,53 @@ proc updateValuesSql*(this: RDB, items:JsonNode): RDB =
     wrapUpper(key)
     value.add(&"{key} = ?")
 
-  this.sqlString.add(value)
-  return this
+  self.sqlString.add(value)
+  return self
 
 
 # ==================== DELETE ====================
 
-proc deleteSql*(this: RDB): RDB =
-  this.sqlString.add("DELETE")
-  return this
+proc deleteSql*(self: RDB): RDB =
+  self.sqlString.add("DELETE")
+  return self
 
 
-proc deleteByIdSql*(this: RDB, id: int, key: string): RDB =
+proc deleteByIdSql*(self: RDB, id: int, key: string): RDB =
   var key = key
   wrapUpper(key)
-  this.sqlString.add(&" WHERE {key} = ?")
-  return this
+  self.sqlString.add(&" WHERE {key} = ?")
+  return self
 
 # ==================== Aggregates ====================
 
-proc selectCountSql*(this: RDB): RDB =
-  this.sqlString = "SELECT count(*) as aggregate"
-  return this
+proc selectCountSql*(self: RDB): RDB =
+  self.sqlString = "SELECT count(*) as aggregate"
+  return self
 
 
-proc selectMaxSql*(this:RDB, column:string): RDB =
+proc selectMaxSql*(self:RDB, column:string): RDB =
   var column = column
   wrapUpper(column)
-  this.sqlString = &"SELECT max({column}) as aggregate"
-  return this
+  self.sqlString = &"SELECT max({column}) as aggregate"
+  return self
 
 
-proc selectMinSql*(this:RDB, column:string): RDB =
+proc selectMinSql*(self:RDB, column:string): RDB =
   var column = column
   wrapUpper(column)
-  this.sqlString = &"SELECT min({column}) as aggregate"
-  return this
+  self.sqlString = &"SELECT min({column}) as aggregate"
+  return self
 
 
-proc selectAvgSql*(this:RDB, column:string): RDB =
+proc selectAvgSql*(self:RDB, column:string): RDB =
   var column = column
   wrapUpper(column)
-  this.sqlString = &"SELECT avg({column}) as aggregate"
-  return this
+  self.sqlString = &"SELECT avg({column}) as aggregate"
+  return self
 
 
-proc selectSumSql*(this:RDB, column:string): RDB =
+proc selectSumSql*(self:RDB, column:string): RDB =
   var column = column
   wrapUpper(column)
-  this.sqlString = &"SELECT sum({column}) as aggregate"
-  return this
+  self.sqlString = &"SELECT sum({column}) as aggregate"
+  return self

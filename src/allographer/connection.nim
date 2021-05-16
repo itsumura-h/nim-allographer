@@ -28,7 +28,7 @@ import baseEnv
 #   proc pool*():AsyncPool =
 #     newAsyncPool(CONN, USER, PASSWORD, DATABASE, MAX_CONNECTION)
 
-import database/database
+import database
 
 let conn* = open(baseEnv.DRIVER, DATABASE, USER, PASSWORD, HOST, PORT, MAX_CONNECTION)
 
