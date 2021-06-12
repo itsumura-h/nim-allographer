@@ -847,7 +847,7 @@ proc fastPaginate*(this:RDB, display:int, key="id", order:Order=Asc):JsonNode =
       "hasNextId": hasNextId
     }
   else:
-    %*{
+    return %*{
       "previousId": 0,
       "hasPreviousId": false,
       "currentPage": currentPage,
