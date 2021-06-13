@@ -79,6 +79,7 @@ proc check*(this:Schema, tablesArg:varargs[Table]) =
 
 proc schema*(tables:varargs[Table]) =
   driverTypeError()
+  let driver = getDriver()
 
   block:
     var deleteList: seq[string]
@@ -92,7 +93,11 @@ proc schema*(tables:varargs[Table]) =
       try:
         var tableName = deleteList[^index]
         wrapUpper(tableName)
-        let query = &"drop table {tableName}"
+        let query =
+          if driver == "sqlite":
+            &"drop table {tableName}"
+          else:
+            &"drop table {tableName} CASCADE"
         logger(query)
         db.exec(sql query)
       except Exception:
@@ -101,7 +106,6 @@ proc schema*(tables:varargs[Table]) =
 
   for table in tables:
     var query = ""
-    let driver = getDriver()
     case driver:
     of "sqlite":
       query = sqlite_migrate.migrate(table)
