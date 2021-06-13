@@ -92,7 +92,7 @@ proc schema*(tables:varargs[Table]) =
       try:
         var tableName = deleteList[^index]
         wrapUpper(tableName)
-        let query = &"drop table {tableName}"
+        let query = &"drop table {tableName} CASCADE"
         logger(query)
         db.exec(sql query)
       except Exception:
