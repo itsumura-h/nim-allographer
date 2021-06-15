@@ -438,7 +438,8 @@ suite "sqlite generators others":
       "'json' TEXT CHECK (json > 0)"
 
   test "foreign":
-    check foreignColumnGenerator("auth_id") == "'auth_id' INTEGER"
+    check foreignColumnGenerator("auth_id", false, 0) == "'auth_id' INTEGER"
+    check foreignColumnGenerator("auth_id", true, 1) == "'auth_id' INTEGER DEFAULT 1"
     check foreignGenerator("auth_id", "auth", "id", RESTRICT) ==
       ", FOREIGN KEY('auth_id') REFERENCES auth(id) ON DELETE RESTRICT"
     check foreignGenerator("auth_id", "auth", "id", CASCADE) ==
