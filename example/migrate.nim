@@ -19,7 +19,7 @@ schema([
     Column().string("password").nullable(),
     Column().string("address").nullable(),
     Column().date("birth_date").nullable(),
-    Column().foreign("auth_id").reference("id").on("Auth").onDelete(SET_NULL)
+    Column().foreign("auth_id").reference("id").on("Auth").onDelete(SET_NULL).default(1)
   ], reset=true),
 ])
 
@@ -38,7 +38,8 @@ var insertData: seq[JsonNode]
 for i in 1..total:
   let salt = genSalt(10)
   let password = hash(&"password{i}", salt)
-  let authId = if i mod 2 == 0: 1 else: 2
+  # let authId = if i mod 2 == 0: 1 else: 2
+  let authId = 2
   insertData.add(
     %*{
       "oid": $(genOid()),

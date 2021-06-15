@@ -250,7 +250,7 @@ proc generateColumnString*(column:Column):string =
     )
   of rdbForeign:
     columnString.add(
-      foreignColumnGenerator(column.name)
+      foreignColumnGenerator(column.name, column.isDefault, column.defaultInt)
     )
   return columnString
 
