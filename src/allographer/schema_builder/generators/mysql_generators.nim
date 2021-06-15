@@ -362,8 +362,10 @@ proc jsonGenerator*(name:string, nullable:bool, isUnique:bool,
   if isDefault:
     notAllowed("default value", "json")
 
-proc foreignColumnGenerator*(name:string):string =
+proc foreignColumnGenerator*(name:string, isDefault:bool, default:int):string =
   result = &"`{name}` BIGINT"
+  if isDefault:
+    result.add(&" DEFAULT {default}")
 
 proc foreignGenerator*(name:string, table:string, column:string,
                         foreignOnDelete:ForeignOnDelete):string =
