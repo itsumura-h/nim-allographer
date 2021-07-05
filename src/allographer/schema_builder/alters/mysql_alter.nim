@@ -33,31 +33,47 @@ proc getColumns(table:string, previousName:string):string =
 proc change(column:Column, table:string) =
   let db = db()
   defer: db.close()
-  let newColumnDifinition = generateColumnString(column)
-  let query = &"ALTER TABLE {table} CHANGE `{column.previousName}` {newColumnDifinition}"
-  logger(query)
-  db.exec(sql query)
+  try:
+    let newColumnDifinition = generateColumnString(column)
+    let query = &"ALTER TABLE {table} CHANGE `{column.previousName}` {newColumnDifinition}"
+    logger(query)
+    db.exec(sql query)
+  except:
+    let err = getCurrentExceptionMsg()
+    echoErrorMsg(err)
 
 proc delete(column:Column, table:string) =
   let db = db()
   defer: db.close()
-  let query = &"ALTER TABLE {table} DROP `{column.previousName}`"
-  logger(query)
-  db.exec(sql query)
+  try:
+    let query = &"ALTER TABLE {table} DROP `{column.previousName}`"
+    logger(query)
+    db.exec(sql query)
+  except:
+    let err = getCurrentExceptionMsg()
+    echoErrorMsg(err)
 
 proc rename(tableFrom, tableTo:string) =
   let db = db()
   defer: db.close()
-  let query = &"ALTER TABLE {tableFrom} RENAME TO {tableTo}"
-  logger(query)
-  db.exec(sql query)
+  try:
+    let query = &"ALTER TABLE {tableFrom} RENAME TO {tableTo}"
+    logger(query)
+    db.exec(sql query)
+  except:
+    let err = getCurrentExceptionMsg()
+    echoErrorMsg(err)
 
 proc drop(table:string) =
   let db = db()
   defer: db.close()
-  let query = &"DROP TABLE {table}"
-  logger(query)
-  db.exec(sql query)
+  try:
+    let query = &"DROP TABLE {table}"
+    logger(query)
+    db.exec(sql query)
+  except:
+    let err = getCurrentExceptionMsg()
+    echoErrorMsg(err)
 
 proc exec*(table:Table) =
   if table.typ == Nomal:
