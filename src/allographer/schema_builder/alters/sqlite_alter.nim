@@ -34,7 +34,7 @@ proc change(column:Column, table:string) =
     let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '{table}';"
     var schema = db.getValue(sql tableDifinitionSql)
     schema = replace(schema, re"\)$", ",)")
-    let columnRegex = &"'{column.previousName}'.*?,"
+    let columnRegex = &"'{column.name}'.*?,"
     let columnString = generateColumnString(column) & ","
     var query = replace(schema, re(columnRegex), columnString)
     query = replace(query, re",\)", ")")
@@ -68,7 +68,7 @@ proc getColumns(table:string, previousName:string):string =
       columns.add(row[1])
   return columns
 
-proc delete(column:Column, table:string) =
+proc deleteColumn(column:Column, table:string) =
   ## rename existing table as tmp
   ##
   ## create new table with existing table name
@@ -80,21 +80,21 @@ proc delete(column:Column, table:string) =
   defer: db.close()
   try:
     # rename existing table as tmp
-    var query = &"ALTER TABLE {table} RENAME TO alter_table_tmp"
+    var query = &"ALTER TABLE \"{table}\" RENAME TO 'alter_table_tmp'"
     logger(query)
     db.exec(sql query)
     # create new table with existing table name
     let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'alter_table_tmp';"
     var schema = db.getValue(sql tableDifinitionSql)
     schema = replace(schema, re"\)$", ",)")
-    let columnRegex = &"'{column.previousName}'.*?,"
+    let columnRegex = &", '{column.name}'.*?,"
     query = replace(schema, re(columnRegex))
     query = replace(query, re",\)", ")")
     query = replace(query, re"alter_table_tmp", table)
     logger(query)
     db.exec(sql query)
     # copy data from tmp table to new table
-    var columns = getColumns(table, column.previousName)
+    var columns = getColumns(table, column.name)
     query = &"INSERT INTO {table}({columns}) SELECT {columns} FROM alter_table_tmp"
     logger(query)
     db.exec(sql query)
@@ -137,7 +137,8 @@ proc exec*(table:Table) =
       of Change:
         change(column, table.name)
       of Delete:
-        delete(column, table.name)
+        deleteColumn(column, table.name)
+
   elif table.typ == Rename:
     rename(table.name, table.alterTo)
   elif table.typ == Drop:

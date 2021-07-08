@@ -47,35 +47,41 @@ rdb().table("table_drop").insert(table_drop_data)
 
 
 suite "alter table":
-  test "add_column":
-    check rdb().table("table_alter").select("add_column").first.isSome == false
+  # test "add_column":
+  #   check rdb().table("table_alter").select("add_column").first.isSome == false
 
-    alter(
-      table("table_alter", [
-        add().string("add_column").default("")
-      ])
-    )
+  #   alter(
+  #     table("table_alter", [
+  #       add().string("add_column").default("")
+  #     ])
+  #   )
 
-    rdb().table("table_alter").where("id", "=", 1).update(%*{"add_column": "test"})
+  #   rdb().table("table_alter").where("id", "=", 1).update(%*{"add_column": "test"})
 
-    check rdb()
-      .table("table_alter")
-      .select("add_column")
-      .orderBy("id", Asc)
-      .first.get["add_column"]
-      .getStr == "test"
+  #   check rdb()
+  #     .table("table_alter")
+  #     .select("add_column")
+  #     .orderBy("id", Asc)
+  #     .first.get["add_column"]
+  #     .getStr == "test"
 
   test "add foreign key":
-    # check rdb().table("table_alter").select("add_foreign_column").first.isSome == false
+    check rdb().table("table_alter").select("add_foreign_column").first.isSome == false
 
     alter(
       table("table_alter", [
-        delete("add_foreign_column"),
+        delete().column("add_foreign_column"),
         add().foreign("add_foreign_column").reference("id").on("foreign_key_ref").onDelete(SET_NULL),
       ])
     )
-
     check rdb().table("table_alter").select("add_foreign_column").first.isSome == true
+
+    alter(
+      table("table_alter", [
+        delete().foreign("add_foreign_column"),
+      ])
+    )
+    check rdb().table("table_alter").select("add_foreign_column").first.isSome == false
 
 
   # test "changed_column":

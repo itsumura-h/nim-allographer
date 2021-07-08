@@ -260,6 +260,7 @@ proc json*(self:Column, name:string):Column =
 # =============================================================================
 proc foreign*(self:Column, name:string):Column =
   self.name = name
+  self.previousName = name
   self.typ = rdbForeign
   return self
 

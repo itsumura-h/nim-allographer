@@ -110,7 +110,10 @@ proc exec*(table:Table) =
       of Change:
         change(column, table.name)
       of Delete:
-        delete(column, table.name)
+        if column.typ == rdbForeign:
+          delete(column, table.name)
+        else:
+          delete(column, table.name)
   elif table.typ == Rename:
     rename(table.name, table.alterTo)
   elif table.typ == Drop:

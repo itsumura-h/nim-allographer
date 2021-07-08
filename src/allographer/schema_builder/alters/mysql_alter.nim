@@ -21,13 +21,13 @@ proc add(column:Column, table:string) =
       echoErrorMsg(err)
       echoWarningMsg(&"Safety skip alter table '{table}'")
 
-proc getColumns(table:string, previousName:string):string =
+proc getColumns(table:string, name:string):string =
   let db = db()
   defer: db.close()
   var query = &"SHOW COLUMNS FROM {table}"
   var columns:string
   for i, row in db.getAllRows(sql query):
-    if row[0] != previousName:
+    if row[0] != name:
       if i > 0: columns.add(", ")
       columns.add(row[1])
   return columns
@@ -37,7 +37,7 @@ proc change(column:Column, table:string) =
   defer: db.close()
   try:
     let newColumnDifinition = generateColumnString(column)
-    let query = &"ALTER TABLE {table} CHANGE `{column.previousName}` {newColumnDifinition}"
+    let query = &"ALTER TABLE {table} CHANGE `{column.name}` {newColumnDifinition}"
     logger(query)
     db.exec(sql query)
   except:
@@ -48,7 +48,7 @@ proc delete(column:Column, table:string) =
   let db = db()
   defer: db.close()
   try:
-    let query = &"ALTER TABLE {table} DROP `{column.previousName}`"
+    let query = &"ALTER TABLE {table} DROP `{column.name}`"
     logger(query)
     db.exec(sql query)
   except:
@@ -86,7 +86,10 @@ proc exec*(table:Table) =
       of Change:
         change(column, table.name)
       of Delete:
-        delete(column, table.name)
+        if column.typ == rdbForeign:
+          delete(column, table.name)
+        else:
+          delete(column, table.name)
   elif table.typ == Rename:
     rename(table.name, table.alterTo)
   elif table.typ == Drop:
