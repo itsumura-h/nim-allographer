@@ -292,7 +292,6 @@ proc alterForeignGenerator*(table:string, column:string):string =
   return &"REFERENCES {table}({column})"
 
 
-
 proc indexGenerate*(table, column:string):string =
   var table = table
   wrapUpper(table)

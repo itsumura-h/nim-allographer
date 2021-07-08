@@ -403,8 +403,12 @@ proc foreignGenerator*(name:string, tableName:string, column:string,
 
   var tableName = tableName
   wrapUpper(tableName)
-  result = &", FOREIGN KEY(\"{name}\") REFERENCES {tableName}({column})"
-  result.add(&" ON DELETE {onDeleteString}")
+  return &", FOREIGN KEY(\"{name}\") REFERENCES {tableName}({column}) ON DELETE {onDeleteString}"
+
+proc alterForeignGenerator*(name:string, tableName:string, column:string):string =
+  var tableName = tableName
+  wrapUpper(tableName)
+  return &"CONSTRAINT {tablename}_{name} FOREIGN KEY (\"{name}\") REFERENCES {tableName} ({column})"
 
 proc indexGenerate*(table, column:string):string =
   var table = table
