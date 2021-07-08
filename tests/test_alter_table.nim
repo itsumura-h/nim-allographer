@@ -66,12 +66,12 @@ suite "alter table":
       .getStr == "test"
 
   test "add foreign key":
-    check rdb().table("table_alter").select("add_foreign_column").first.isSome == false
+    # check rdb().table("table_alter").select("add_foreign_column").first.isSome == false
 
     alter(
       table("table_alter", [
         delete("add_foreign_column"),
-        add().foreign("add_foreign_column").reference("id").on("foreign_key_ref").onDelete(SET_NULL)
+        add().foreign("add_foreign_column").reference("id").on("foreign_key_ref").onDelete(SET_NULL),
       ])
     )
 

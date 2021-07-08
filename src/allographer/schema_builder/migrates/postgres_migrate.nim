@@ -288,8 +288,9 @@ proc generateAlterForeignString(column:Column):string =
   if column.typ == rdbForeign:
     return alterForeignGenerator(
       column.name,
-        column.info["table"].getStr(),
-        column.info["column"].getStr(),
+      column.info["table"].getStr(),
+      column.info["column"].getStr(),
+      column.foreignOnDelete
     )
 
 proc migrate*(this:Table):string =

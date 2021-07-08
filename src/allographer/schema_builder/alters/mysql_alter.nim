@@ -6,14 +6,16 @@ import ../../utils
 import ../../connection
 
 proc add(column:Column, table:string) =
-  let columnString = generateColumnString(column)
-  let query = &"ALTER TABLE {table} ADD {columnString}"
-  logger(query)
+  # let columnString = generateColumnString(column)
+  # let query = &"ALTER TABLE {table} ADD {columnString}"
+  let querySeq = migrateAlter(column, table)
   block:
     let db = db()
     defer: db.close()
     try:
-      db.exec(sql query)
+      for query in querySeq:
+        logger(query)
+        db.exec(sql query)
     except:
       let err = getCurrentExceptionMsg()
       echoErrorMsg(err)

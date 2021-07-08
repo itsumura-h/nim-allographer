@@ -264,6 +264,15 @@ proc generateForeignString(column:Column):string =
       column.foreignOnDelete
     )
 
+proc generateAlterForeignString(column:Column):string =
+  if column.typ == rdbForeign:
+    return alterForeignGenerator(
+      column.name,
+      column.info["table"].getStr(),
+      column.info["column"].getStr(),
+      column.foreignOnDelete
+    )
+
 proc migrate*(this:Table):string =
   var columnString = ""
   var foreignString = ""
@@ -279,6 +288,17 @@ proc migrate*(this:Table):string =
   var tableName = this.name
   wrapUpper(tableName)
   return &"CREATE TABLE {tableName} ({columnString}{foreignString})"
+
+proc migrateAlter*(column:Column, table:string):seq[string] =
+  let columnString = generateColumnString(column)
+  let foreignString = generateAlterForeignString(column)
+
+  result = @[
+    &"ALTER TABLE `{table}` ADD COLUMN {columnString}"
+  ]
+
+  if foreignString.len > 0:
+    result.add( &"ALTER TABLE `{table}` ADD {foreignString}" )
 
 proc createIndex*(table, column:string):string =
   return indexGenerate(table, column)

@@ -377,8 +377,23 @@ proc foreignGenerator*(name:string, table:string, column:string,
   elif foreignOnDelete == NO_ACTION:
     onDeleteString = "NO ACTION"
 
-  result = &", FOREIGN KEY(`{name}`) REFERENCES {table}({column})"
-  result.add(&" ON DELETE {onDeleteString}")
+  return &", FOREIGN KEY(`{name}`) REFERENCES {table}({column}) ON DELETE {onDeleteString}"
+
+proc alterForeignGenerator*(name:string, tableName:string, column:string,
+                            foreignOnDelete:ForeignOnDelete):string =
+  var onDeleteString = "RESTRICT"
+  if foreignOnDelete == CASCADE:
+    onDeleteString = "CASCADE"
+  elif foreignOnDelete == SET_NULL:
+    onDeleteString = "SET NULL"
+  elif foreignOnDelete == NO_ACTION:
+    onDeleteString = "NO ACTION"
+
+  var constraintName = &"{tablename}_{name}"
+  wrapUpper(constraintName)
+  var tableName = tablename
+  wrapUpper(tableName)
+  return &"CONSTRAINT {constraintName} FOREIGN KEY (`{name}`) REFERENCES {tableName} ({column}) ON DELETE {onDeleteString}"
 
 proc indexGenerate*(table, column:string):string =
   var table = table
