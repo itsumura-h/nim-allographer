@@ -6,8 +6,7 @@ import ../../utils
 import ../../connection
 
 proc add(column:Column, table:string) =
-  let columnString = generateColumnString(column)
-  let query = &"ALTER TABLE \"{table}\" ADD COLUMN {columnString}"
+  let query = migrateAlter(column, table)
   logger(query)
   block:
     let db = db()

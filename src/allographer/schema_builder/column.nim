@@ -114,165 +114,165 @@ proc unsigned*(c: Column): Column =
 # =============================================================================
 # int
 # =============================================================================
-proc increments*(this:Column, name:string): Column =
-  this.name = name
-  this.typ = rdbIncrements
-  return this
+proc increments*(self:Column, name:string): Column =
+  self.name = name
+  self.typ = rdbIncrements
+  return self
 
-proc integer*(this:Column, name:string):Column =
-  this.name = name
-  this.typ = rdbInteger
-  return this
+proc integer*(self:Column, name:string):Column =
+  self.name = name
+  self.typ = rdbInteger
+  return self
 
-proc smallInteger*(this:Column, name:string):Column =
-  this.name = name
-  this.typ = rdbSmallInteger
-  return this
+proc smallInteger*(self:Column, name:string):Column =
+  self.name = name
+  self.typ = rdbSmallInteger
+  return self
 
-proc mediumInteger*(this:Column, name:string):Column =
-  this.name = name
-  this.typ = rdbMediumInteger
-  return this
+proc mediumInteger*(self:Column, name:string):Column =
+  self.name = name
+  self.typ = rdbMediumInteger
+  return self
 
-proc bigInteger*(this:Column, name:string):Column =
-  this.name = name
-  this.typ = rdbBigInteger
-  return this
+proc bigInteger*(self:Column, name:string):Column =
+  self.name = name
+  self.typ = rdbBigInteger
+  return self
 
 # =============================================================================
 # float
 # =============================================================================
-proc decimal*(this:Column, name:string, maximum:int, digit:int): Column =
-  this.name = name
-  this.typ = rdbDecimal
-  this.info = %*{
+proc decimal*(self:Column, name:string, maximum:int, digit:int): Column =
+  self.name = name
+  self.typ = rdbDecimal
+  self.info = %*{
     "maximum": maximum,
     "digit": digit
   }
-  return this
+  return self
 
-proc double*(this:Column, name:string, maximum:int, digit:int):Column =
-  this.name = name
-  this.typ = rdbDouble
-  this.info = %*{
+proc double*(self:Column, name:string, maximum:int, digit:int):Column =
+  self.name = name
+  self.typ = rdbDouble
+  self.info = %*{
     "maximum": maximum,
     "digit": digit
   }
-  return this
+  return self
 
-proc float*(this:Column, name:string):Column =
-  this.name = name
-  this.typ = rdbFloat
-  return this
+proc float*(self:Column, name:string):Column =
+  self.name = name
+  self.typ = rdbFloat
+  return self
 
 # =============================================================================
 # char
 # =============================================================================
-proc char*(this:Column, name:string, maxLength:int): Column =
-  this.name = name
-  this.typ = rdbChar
-  this.info = %*{
+proc char*(self:Column, name:string, maxLength:int): Column =
+  self.name = name
+  self.typ = rdbChar
+  self.info = %*{
     "maxLength": maxLength
   }
-  return this
+  return self
 
-proc string*(this:Column, name:string, length=255):Column =
-  this.name = name
-  this.typ = rdbString
-  this.info = %*{"maxLength": length}
-  return this
+proc string*(self:Column, name:string, length=255):Column =
+  self.name = name
+  self.typ = rdbString
+  self.info = %*{"maxLength": length}
+  return self
 
-proc text*(this:Column, name:string):Column =
-  this.name = name
-  this.typ = rdbText
-  return this
+proc text*(self:Column, name:string):Column =
+  self.name = name
+  self.typ = rdbText
+  return self
 
-proc mediumText*(this:Column, name:string):Column =
-  this.name = name
-  this.typ = rdbMediumText
-  return this
+proc mediumText*(self:Column, name:string):Column =
+  self.name = name
+  self.typ = rdbMediumText
+  return self
 
-proc longText*(this:Column, name:string):Column =
-  this.name = name
-  this.typ = rdbLongText
-  return this
+proc longText*(self:Column, name:string):Column =
+  self.name = name
+  self.typ = rdbLongText
+  return self
 
 # =============================================================================
 # date
 # =============================================================================
-proc date*(this:Column, name:string):Column =
-  this.name = name
-  this.typ = rdbDate
-  return this
+proc date*(self:Column, name:string):Column =
+  self.name = name
+  self.typ = rdbDate
+  return self
 
-proc datetime*(this:Column, name:string):Column =
-  this.name = name
-  this.typ = rdbDatetime
-  return this
+proc datetime*(self:Column, name:string):Column =
+  self.name = name
+  self.typ = rdbDatetime
+  return self
 
-proc time*(this:Column, name:string):Column =
-  this.name = name
-  this.typ = rdbTime
-  return this
+proc time*(self:Column, name:string):Column =
+  self.name = name
+  self.typ = rdbTime
+  return self
 
-proc timestamp*(this:Column, name:string):Column =
-  this.name = name
-  this.typ = rdbTimestamp
-  return this
+proc timestamp*(self:Column, name:string):Column =
+  self.name = name
+  self.typ = rdbTimestamp
+  return self
 
-proc timestamps*(this:Column):Column =
-  this.typ = rdbTimestamps
-  return this
+proc timestamps*(self:Column):Column =
+  self.typ = rdbTimestamps
+  return self
 
-proc softDelete*(this:Column):Column =
-  this.typ = rdbSoftDelete
-  return this
+proc softDelete*(self:Column):Column =
+  self.typ = rdbSoftDelete
+  return self
 
 # =============================================================================
 # others
 # =============================================================================
-proc binary*(this:Column, name:string): Column =
-  this.name = name
-  this.typ = rdbBinary
-  return this
+proc binary*(self:Column, name:string): Column =
+  self.name = name
+  self.typ = rdbBinary
+  return self
 
 # =============================================================================
-proc boolean*(this:Column, name:string): Column =
-  this.name = name
-  this.typ = rdbBoolean
-  return this
+proc boolean*(self:Column, name:string): Column =
+  self.name = name
+  self.typ = rdbBoolean
+  return self
 
-proc enumField*(this:Column, name:string, options:openArray[string]):Column =
-  this.name = name
-  this.typ = rdbEnumField
-  this.info = %*{
+proc enumField*(self:Column, name:string, options:openArray[string]):Column =
+  self.name = name
+  self.typ = rdbEnumField
+  self.info = %*{
     "options": options
   }
-  return this
+  return self
 
-proc json*(this:Column, name:string):Column =
-  this.name = name
-  this.typ = rdbJson
-  return this
+proc json*(self:Column, name:string):Column =
+  self.name = name
+  self.typ = rdbJson
+  return self
 
 # =============================================================================
 # Foreign
 # =============================================================================
-proc foreign*(this:Column, name:string):Column =
-  this.name = name
-  this.typ = rdbForeign
-  return this
+proc foreign*(self:Column, name:string):Column =
+  self.name = name
+  self.typ = rdbForeign
+  return self
 
-proc reference*(this:Column, column:string):Column =
-  this.info = %*{
+proc reference*(self:Column, column:string):Column =
+  self.info = %*{
     "column": column
   }
-  return this
+  return self
 
-proc on*(this:Column, table:string):Column =
-  this.info["table"] = %*table
-  return this
+proc on*(self:Column, table:string):Column =
+  self.info["table"] = %*table
+  return self
 
-proc onDelete*(this:Column, kind:ForeignOnDelete):Column =
-  this.foreignOnDelete = kind
-  return this
+proc onDelete*(self:Column, kind:ForeignOnDelete):Column =
+  self.foreignOnDelete = kind
+  return self
