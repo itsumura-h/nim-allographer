@@ -62,7 +62,13 @@ proc liteWrapUpper(input:var string) =
     input = &"\"{input}\""
 
 proc myWrapUpper(input:var string) =
-  input = &"`{input}`"
+  var isUpper = false
+  for c in input:
+    if c.isUpperAscii():
+      isUpper = true
+      break
+  if isUpper:
+    input = &"`{input}`"
 
 proc pgWrapUpper(input:var string) =
   var isUpper = false
