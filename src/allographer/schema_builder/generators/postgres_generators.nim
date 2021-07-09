@@ -405,7 +405,7 @@ proc foreignGenerator*(name:string, tableName:string, column:string,
   wrapUpper(tableName)
   return &", FOREIGN KEY(\"{name}\") REFERENCES {tableName}({column}) ON DELETE {onDeleteString}"
 
-proc alterForeignGenerator*(name:string, tableName:string, column:string,
+proc alterAddForeignGenerator*(name:string, tableName:string, column:string,
                             foreignOnDelete:ForeignOnDelete):string =
   var onDeleteString = "RESTRICT"
   if foreignOnDelete == CASCADE:

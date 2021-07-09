@@ -264,9 +264,10 @@ proc generateForeignString(column:Column):string =
       column.foreignOnDelete
     )
 
-proc generateAlterForeignString(column:Column):string =
+proc generateAlterForeignString(table:string, column:Column):string =
   if column.typ == rdbForeign:
-    return alterForeignGenerator(
+    return alterAddForeignGenerator(
+      table,
       column.name,
       column.info["table"].getStr(),
       column.info["column"].getStr(),
@@ -289,9 +290,9 @@ proc migrate*(this:Table):string =
   wrapUpper(tableName)
   return &"CREATE TABLE {tableName} ({columnString}{foreignString})"
 
-proc migrateAlter*(column:Column, table:string):seq[string] =
+proc generateAlterAddQueries*(column:Column, table:string):seq[string] =
   let columnString = generateColumnString(column)
-  let foreignString = generateAlterForeignString(column)
+  let foreignString = generateAlterForeignString(table, column)
 
   result = @[
     &"ALTER TABLE `{table}` ADD COLUMN {columnString}"
@@ -299,6 +300,21 @@ proc migrateAlter*(column:Column, table:string):seq[string] =
 
   if foreignString.len > 0:
     result.add( &"ALTER TABLE `{table}` ADD {foreignString}" )
+
+proc generateAlterDeleteQuery*(column:Column, table:string):string =
+  return alterDeleteGenerator(table, column.name)
+
+proc generateAlterDeleteForeignQueries*(column:Column, table:string):seq[string] =
+  return @[
+    alterDeleteForeignGenerator(
+      table,
+      column.name,
+    ),
+    alterDeleteGenerator(
+      table,
+      column.name
+    )
+  ]
 
 proc createIndex*(table, column:string):string =
   return indexGenerate(table, column)

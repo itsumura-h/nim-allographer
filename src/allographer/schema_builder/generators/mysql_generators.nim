@@ -379,7 +379,7 @@ proc foreignGenerator*(name:string, table:string, column:string,
 
   return &", FOREIGN KEY(`{name}`) REFERENCES {table}({column}) ON DELETE {onDeleteString}"
 
-proc alterForeignGenerator*(name:string, tableName:string, column:string,
+proc alterAddForeignGenerator*(table, column, refTable, refColumn:string,
                             foreignOnDelete:ForeignOnDelete):string =
   var onDeleteString = "RESTRICT"
   if foreignOnDelete == CASCADE:
@@ -389,11 +389,24 @@ proc alterForeignGenerator*(name:string, tableName:string, column:string,
   elif foreignOnDelete == NO_ACTION:
     onDeleteString = "NO ACTION"
 
-  var constraintName = &"{tablename}_{name}"
+  var constraintName = &"{table}_{column}"
   wrapUpper(constraintName)
-  var tableName = tablename
-  wrapUpper(tableName)
-  return &"CONSTRAINT {constraintName} FOREIGN KEY (`{name}`) REFERENCES {tableName} ({column}) ON DELETE {onDeleteString}"
+  var refTable = refTable
+  wrapUpper(refTable)
+  return &"CONSTRAINT {constraintName} FOREIGN KEY (`{column}`) REFERENCES {refTable} ({refColumn}) ON DELETE {onDeleteString}"
+
+proc alterDeleteGenerator*(table:string, column:string):string =
+  var table = table
+  wrapUpper(table)
+  return &"ALTER TABLE {table} DROP `{column}`"
+
+proc alterDeleteForeignGenerator*(table, column:string):string =
+  var constraintName = &"{table}_{column}"
+  wrapUpper(constraintName)
+  var table = table
+  wrapUpper(table)
+  return &"ALTER TABLE {table} DROP FOREIGN KEY {constraintName}"
+
 
 proc indexGenerate*(table, column:string):string =
   var table = table

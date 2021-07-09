@@ -288,7 +288,7 @@ proc foreignGenerator*(name:string, table:string, column:string,
 
   return &"FOREIGN KEY('{name}') REFERENCES {table}({column}) ON DELETE {onDeleteString}"
 
-proc alterForeignGenerator*(table:string, column:string):string =
+proc alterAddForeignGenerator*(table:string, column:string):string =
   return &"REFERENCES {table}({column})"
 
 

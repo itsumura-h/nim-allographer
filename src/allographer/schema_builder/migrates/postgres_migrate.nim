@@ -286,7 +286,7 @@ proc generateForeignString(column:Column):string =
 
 proc generateAlterForeignString(column:Column):string =
   if column.typ == rdbForeign:
-    return alterForeignGenerator(
+    return alterAddForeignGenerator(
       column.name,
       column.info["table"].getStr(),
       column.info["column"].getStr(),
