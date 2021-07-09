@@ -44,19 +44,19 @@ proc change(column:Column, table:string) =
     let err = getCurrentExceptionMsg()
     echoErrorMsg(err)
 
-proc deleteColumn(column:Column, table:string) =
+proc deleteColumn(table:string, column:Column) =
   let db = db()
   defer: db.close()
   try:
-    let query = generateAlterDeleteQuery(column, table)
+    let query = generateAlterDeleteQuery(table, column)
     logger(query)
     db.exec(sql query)
   except:
     let err = getCurrentExceptionMsg()
     echoErrorMsg(err)
 
-proc deleteForeign(column:Column, table:string) =
-  let querySeq = generateAlterDeleteForeignQueries(column, table)
+proc deleteForeign(table:string, column:Column) =
+  let querySeq = generateAlterDeleteForeignQueries(table, column)
   let db = db()
   defer: db.close()
   try:
@@ -99,9 +99,9 @@ proc exec*(table:Table) =
         change(column, table.name)
       of Delete:
         if column.typ == rdbForeign:
-          deleteForeign(column, table.name)
+          deleteForeign(table.name, column)
         else:
-          deleteColumn(column, table.name)
+          deleteColumn(table.name, column)
   elif table.typ == Rename:
     rename(table.name, table.alterTo)
   elif table.typ == Drop:

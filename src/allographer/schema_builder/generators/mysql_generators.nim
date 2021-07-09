@@ -407,7 +407,6 @@ proc alterDeleteForeignGenerator*(table, column:string):string =
   wrapUpper(table)
   return &"ALTER TABLE {table} DROP FOREIGN KEY {constraintName}"
 
-
 proc indexGenerate*(table, column:string):string =
   var table = table
   wrapUpper(table)

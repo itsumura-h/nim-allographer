@@ -301,10 +301,10 @@ proc generateAlterAddQueries*(column:Column, table:string):seq[string] =
   if foreignString.len > 0:
     result.add( &"ALTER TABLE `{table}` ADD {foreignString}" )
 
-proc generateAlterDeleteQuery*(column:Column, table:string):string =
+proc generateAlterDeleteQuery*(table:string, column:Column):string =
   return alterDeleteGenerator(table, column.name)
 
-proc generateAlterDeleteForeignQueries*(column:Column, table:string):seq[string] =
+proc generateAlterDeleteForeignQueries*(table:string, column:Column):seq[string] =
   return @[
     alterDeleteForeignGenerator(
       table,
