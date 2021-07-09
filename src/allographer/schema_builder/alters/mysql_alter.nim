@@ -37,7 +37,7 @@ proc change(column:Column, table:string) =
   defer: db.close()
   try:
     let newColumnDifinition = generateColumnString(column)
-    let query = &"ALTER TABLE {table} CHANGE `{column.name}` {newColumnDifinition}"
+    let query = &"ALTER TABLE {table} CHANGE `{column.previousName}` {newColumnDifinition}"
     logger(query)
     db.exec(sql query)
   except:

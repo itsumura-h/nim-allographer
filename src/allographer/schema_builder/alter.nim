@@ -22,10 +22,7 @@ proc add*():Column =
   return Column(alterTyp:Add)
 
 proc change*(name:string):Column =
-  return Column(alterTyp:Change, name:name)
-
-# proc delete*(name:string):Column =
-#   return Column(alterTyp:Delete, name:name)
+  return Column(alterTyp:Change, previousName:name)
 
 proc rename*(alterFrom, alterTo:string):Table =
   return Table(name:alterFrom, alterTo:alterTo, typ:Rename)

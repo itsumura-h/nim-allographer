@@ -275,43 +275,45 @@ proc generateColumnString*(column:Column, tableName=""):string =
     )
   return columnString
 
-proc generateForeignString(column:Column):string =
+proc generateForeignString(table:string, column:Column):string =
   if column.typ == rdbForeign:
     return foreignGenerator(
+        table,
         column.name,
         column.info["table"].getStr(),
         column.info["column"].getStr(),
         column.foreignOnDelete
       )
 
-proc generateAlterForeignString(column:Column):string =
+proc generateAlterForeignString(table:string, column:Column):string =
   if column.typ == rdbForeign:
     return alterAddForeignGenerator(
+      table,
       column.name,
       column.info["table"].getStr(),
       column.info["column"].getStr(),
       column.foreignOnDelete
     )
 
-proc migrate*(this:Table):string =
+proc migrate*(self:Table):string =
   var columnString = ""
   var foreignString = ""
-  for i, column in this.columns:
+  for i, column in self.columns:
     if i > 0: columnString.add(", ")
     columnString.add(
-      generateColumnString(column, this.name)
+      generateColumnString(column, self.name)
     )
     foreignString.add(
-      generateForeignString(column)
+      generateForeignString(self.name, column)
     )
 
-  var tableName = this.name
+  var tableName = self.name
   wrapUpper(tableName)
   return &"CREATE TABLE {tableName} ({columnString}{foreignString})"
 
-proc migrateAlter*(column:Column, table:string):seq[string] =
-  let columnString = generateColumnString(column)
-  let foreignString = generateAlterForeignString(column)
+proc migrateAlter*(table:string, column:Column):seq[string] =
+  let columnString = generateColumnString(column, table)
+  let foreignString = generateAlterForeignString(table, column)
 
   result = @[
     &"ALTER TABLE \"{table}\" ADD COLUMN {columnString}"

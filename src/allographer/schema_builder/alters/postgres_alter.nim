@@ -6,7 +6,7 @@ import ../../utils
 import ../../connection
 
 proc add(column:Column, table:string) =
-  let querySeq = migrateAlter(column, table)
+  let querySeq = migrateAlter(table, column)
   block:
     let db = db()
     defer: db.close()

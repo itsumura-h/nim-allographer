@@ -34,8 +34,12 @@ proc change(column:Column, table:string) =
     let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '{table}';"
     var schema = db.getValue(sql tableDifinitionSql)
     schema = replace(schema, re"\)$", ",)")
-    let columnRegex = &"'{column.name}'.*?,"
+    let columnRegex = &"'{column.previousName}'.*?,"
     let columnString = generateColumnString(column) & ","
+    echo "======"
+    echo schema
+    echo columnRegex
+    echo columnString
     var query = replace(schema, re(columnRegex), columnString)
     query = replace(query, re",\)", ")")
     query = replace(query, re("CREATE TABLE \".+\""), "CREATE TABLE \"alter_table_tmp\"")
