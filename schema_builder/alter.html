@@ -110,14 +110,19 @@ function main() {
     title="add(): Column">add</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">column
+      <li><a class="reference" href="#column%2CColumn%2Cstring"
+    title="column(self: Column; name: string): Column">column,<wbr>Column,<wbr>string</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">change
       <li><a class="reference" href="#change%2Cstring"
     title="change(name: string): Column">change,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">delete
-      <li><a class="reference" href="#delete%2Cstring"
-    title="delete(name: string): Column">delete,<wbr>string</a></li>
+      <li><a class="reference" href="#delete"
+    title="delete(): Column">delete</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">rename
@@ -173,13 +178,6 @@ function main() {
 
 
 </dd>
-<a id="delete,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#delete%2Cstring"><span class="Identifier">delete</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-
-
-</dd>
 <a id="rename,string,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#rename%2Cstring%2Cstring"><span class="Identifier">rename</span></a><span class="Other">(</span><span class="Identifier">alterFrom</span><span class="Other">,</span> <span class="Identifier">alterTo</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="table.html#Table"><span class="Identifier">Table</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -189,6 +187,20 @@ function main() {
 </dd>
 <a id="drop,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#drop%2Cstring"><span class="Identifier">drop</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="table.html#Table"><span class="Identifier">Table</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="delete"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#delete"><span class="Identifier">delete</span></a><span class="Other">(</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="column,Column,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#column%2CColumn%2Cstring"><span class="Identifier">column</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -204,7 +216,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-05 00:38:10 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-10 06:05:45 UTC</small>
       </div>
     </div>
   </div>

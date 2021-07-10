@@ -139,7 +139,7 @@ function main() {
   <ul class="simple simple-toc-section">
       <ul class="simple nested-toc-section">bigInteger
       <li><a class="reference" href="#bigInteger%2CColumn%2Cstring"
-    title="bigInteger(this: Column; name: string): Column">bigInteger,<wbr>Column,<wbr>string</a></li>
+    title="bigInteger(self: Column; name: string): Column">bigInteger,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">nullable
@@ -149,37 +149,37 @@ function main() {
   </ul>
   <ul class="simple nested-toc-section">timestamp
       <li><a class="reference" href="#timestamp%2CColumn%2Cstring"
-    title="timestamp(this: Column; name: string): Column">timestamp,<wbr>Column,<wbr>string</a></li>
+    title="timestamp(self: Column; name: string): Column">timestamp,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">enumField
       <li><a class="reference" href="#enumField%2CColumn%2Cstring%2CopenArray%5Bstring%5D"
-    title="enumField(this: Column; name: string; options: openArray[string]): Column">enumField,<wbr>Column,<wbr>string,<wbr>openArray[string]</a></li>
+    title="enumField(self: Column; name: string; options: openArray[string]): Column">enumField,<wbr>Column,<wbr>string,<wbr>openArray[string]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">on
       <li><a class="reference" href="#on%2CColumn%2Cstring"
-    title="on(this: Column; table: string): Column">on,<wbr>Column,<wbr>string</a></li>
+    title="on(self: Column; table: string): Column">on,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">char
       <li><a class="reference" href="#char%2CColumn%2Cstring%2Cint"
-    title="char(this: Column; name: string; maxLength: int): Column">char,<wbr>Column,<wbr>string,<wbr>int</a></li>
+    title="char(self: Column; name: string; maxLength: int): Column">char,<wbr>Column,<wbr>string,<wbr>int</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">binary
       <li><a class="reference" href="#binary%2CColumn%2Cstring"
-    title="binary(this: Column; name: string): Column">binary,<wbr>Column,<wbr>string</a></li>
+    title="binary(self: Column; name: string): Column">binary,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">longText
       <li><a class="reference" href="#longText%2CColumn%2Cstring"
-    title="longText(this: Column; name: string): Column">longText,<wbr>Column,<wbr>string</a></li>
+    title="longText(self: Column; name: string): Column">longText,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">mediumInteger
       <li><a class="reference" href="#mediumInteger%2CColumn%2Cstring"
-    title="mediumInteger(this: Column; name: string): Column">mediumInteger,<wbr>Column,<wbr>string</a></li>
+    title="mediumInteger(self: Column; name: string): Column">mediumInteger,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">unsigned
@@ -189,17 +189,17 @@ function main() {
   </ul>
   <ul class="simple nested-toc-section">reference
       <li><a class="reference" href="#reference%2CColumn%2Cstring"
-    title="reference(this: Column; column: string): Column">reference,<wbr>Column,<wbr>string</a></li>
+    title="reference(self: Column; column: string): Column">reference,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">softDelete
       <li><a class="reference" href="#softDelete%2CColumn"
-    title="softDelete(this: Column): Column">softDelete,<wbr>Column</a></li>
+    title="softDelete(self: Column): Column">softDelete,<wbr>Column</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">date
       <li><a class="reference" href="#date%2CColumn%2Cstring"
-    title="date(this: Column; name: string): Column">date,<wbr>Column,<wbr>string</a></li>
+    title="date(self: Column; name: string): Column">date,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">default
@@ -219,7 +219,7 @@ function main() {
   </ul>
   <ul class="simple nested-toc-section">onDelete
       <li><a class="reference" href="#onDelete%2CColumn%2CForeignOnDelete"
-    title="onDelete(this: Column; kind: ForeignOnDelete): Column">onDelete,<wbr>Column,<wbr>ForeignOnDelete</a></li>
+    title="onDelete(self: Column; kind: ForeignOnDelete): Column">onDelete,<wbr>Column,<wbr>ForeignOnDelete</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">unique
@@ -229,52 +229,52 @@ function main() {
   </ul>
   <ul class="simple nested-toc-section">text
       <li><a class="reference" href="#text%2CColumn%2Cstring"
-    title="text(this: Column; name: string): Column">text,<wbr>Column,<wbr>string</a></li>
+    title="text(self: Column; name: string): Column">text,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">mediumText
       <li><a class="reference" href="#mediumText%2CColumn%2Cstring"
-    title="mediumText(this: Column; name: string): Column">mediumText,<wbr>Column,<wbr>string</a></li>
+    title="mediumText(self: Column; name: string): Column">mediumText,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">decimal
       <li><a class="reference" href="#decimal%2CColumn%2Cstring%2Cint%2Cint"
-    title="decimal(this: Column; name: string; maximum: int; digit: int): Column">decimal,<wbr>Column,<wbr>string,<wbr>int,<wbr>int</a></li>
+    title="decimal(self: Column; name: string; maximum: int; digit: int): Column">decimal,<wbr>Column,<wbr>string,<wbr>int,<wbr>int</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">integer
       <li><a class="reference" href="#integer%2CColumn%2Cstring"
-    title="integer(this: Column; name: string): Column">integer,<wbr>Column,<wbr>string</a></li>
+    title="integer(self: Column; name: string): Column">integer,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">float
       <li><a class="reference" href="#float%2CColumn%2Cstring"
-    title="float(this: Column; name: string): Column">float,<wbr>Column,<wbr>string</a></li>
+    title="float(self: Column; name: string): Column">float,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">string
       <li><a class="reference" href="#string%2CColumn%2Cstring%2Cint"
-    title="string(this: Column; name: string; length = 255): Column">string,<wbr>Column,<wbr>string,<wbr>int</a></li>
+    title="string(self: Column; name: string; length = 255): Column">string,<wbr>Column,<wbr>string,<wbr>int</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">increments
       <li><a class="reference" href="#increments%2CColumn%2Cstring"
-    title="increments(this: Column; name: string): Column">increments,<wbr>Column,<wbr>string</a></li>
+    title="increments(self: Column; name: string): Column">increments,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">time
       <li><a class="reference" href="#time%2CColumn%2Cstring"
-    title="time(this: Column; name: string): Column">time,<wbr>Column,<wbr>string</a></li>
+    title="time(self: Column; name: string): Column">time,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">datetime
       <li><a class="reference" href="#datetime%2CColumn%2Cstring"
-    title="datetime(this: Column; name: string): Column">datetime,<wbr>Column,<wbr>string</a></li>
+    title="datetime(self: Column; name: string): Column">datetime,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">smallInteger
       <li><a class="reference" href="#smallInteger%2CColumn%2Cstring"
-    title="smallInteger(this: Column; name: string): Column">smallInteger,<wbr>Column,<wbr>string</a></li>
+    title="smallInteger(self: Column; name: string): Column">smallInteger,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">index
@@ -284,27 +284,27 @@ function main() {
   </ul>
   <ul class="simple nested-toc-section">timestamps
       <li><a class="reference" href="#timestamps%2CColumn"
-    title="timestamps(this: Column): Column">timestamps,<wbr>Column</a></li>
+    title="timestamps(self: Column): Column">timestamps,<wbr>Column</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">boolean
       <li><a class="reference" href="#boolean%2CColumn%2Cstring"
-    title="boolean(this: Column; name: string): Column">boolean,<wbr>Column,<wbr>string</a></li>
+    title="boolean(self: Column; name: string): Column">boolean,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">foreign
       <li><a class="reference" href="#foreign%2CColumn%2Cstring"
-    title="foreign(this: Column; name: string): Column">foreign,<wbr>Column,<wbr>string</a></li>
+    title="foreign(self: Column; name: string): Column">foreign,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">json
       <li><a class="reference" href="#json%2CColumn%2Cstring"
-    title="json(this: Column; name: string): Column">json,<wbr>Column,<wbr>string</a></li>
+    title="json(self: Column; name: string): Column">json,<wbr>Column,<wbr>string</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">double
       <li><a class="reference" href="#double%2CColumn%2Cstring%2Cint%2Cint"
-    title="double(this: Column; name: string; maximum: int; digit: int): Column">double,<wbr>Column,<wbr>string,<wbr>int,<wbr>int</a></li>
+    title="double(self: Column; name: string; maximum: int; digit: int): Column">double,<wbr>Column,<wbr>string,<wbr>int,<wbr>int</a></li>
 
   </ul>
 
@@ -455,42 +455,42 @@ function main() {
 
 </dd>
 <a id="increments,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#increments%2CColumn%2Cstring"><span class="Identifier">increments</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#increments%2CColumn%2Cstring"><span class="Identifier">increments</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="integer,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#integer%2CColumn%2Cstring"><span class="Identifier">integer</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#integer%2CColumn%2Cstring"><span class="Identifier">integer</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="smallInteger,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#smallInteger%2CColumn%2Cstring"><span class="Identifier">smallInteger</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#smallInteger%2CColumn%2Cstring"><span class="Identifier">smallInteger</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="mediumInteger,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#mediumInteger%2CColumn%2Cstring"><span class="Identifier">mediumInteger</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#mediumInteger%2CColumn%2Cstring"><span class="Identifier">mediumInteger</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="bigInteger,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#bigInteger%2CColumn%2Cstring"><span class="Identifier">bigInteger</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#bigInteger%2CColumn%2Cstring"><span class="Identifier">bigInteger</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="decimal,Column,string,int,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#decimal%2CColumn%2Cstring%2Cint%2Cint"><span class="Identifier">decimal</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maximum</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">digit</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<dt><pre><span class="Keyword">proc</span> <a href="#decimal%2CColumn%2Cstring%2Cint%2Cint"><span class="Identifier">decimal</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maximum</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">digit</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -498,7 +498,7 @@ function main() {
 
 </dd>
 <a id="double,Column,string,int,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#double%2CColumn%2Cstring%2Cint%2Cint"><span class="Identifier">double</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maximum</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">digit</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<dt><pre><span class="Keyword">proc</span> <a href="#double%2CColumn%2Cstring%2Cint%2Cint"><span class="Identifier">double</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maximum</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">digit</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -506,14 +506,14 @@ function main() {
 
 </dd>
 <a id="float,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#float%2CColumn%2Cstring"><span class="Identifier">float</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#float%2CColumn%2Cstring"><span class="Identifier">float</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="char,Column,string,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#char%2CColumn%2Cstring%2Cint"><span class="Identifier">char</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maxLength</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#char%2CColumn%2Cstring%2Cint"><span class="Identifier">char</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">maxLength</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -521,7 +521,7 @@ function main() {
 
 </dd>
 <a id="string,Column,string,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#string%2CColumn%2Cstring%2Cint"><span class="Identifier">string</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">length</span> <span class="Other">=</span> <span class="DecNumber">255</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#string%2CColumn%2Cstring%2Cint"><span class="Identifier">string</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">length</span> <span class="Other">=</span> <span class="DecNumber">255</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -529,84 +529,84 @@ function main() {
 
 </dd>
 <a id="text,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#text%2CColumn%2Cstring"><span class="Identifier">text</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#text%2CColumn%2Cstring"><span class="Identifier">text</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="mediumText,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#mediumText%2CColumn%2Cstring"><span class="Identifier">mediumText</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#mediumText%2CColumn%2Cstring"><span class="Identifier">mediumText</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="longText,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#longText%2CColumn%2Cstring"><span class="Identifier">longText</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#longText%2CColumn%2Cstring"><span class="Identifier">longText</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="date,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#date%2CColumn%2Cstring"><span class="Identifier">date</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#date%2CColumn%2Cstring"><span class="Identifier">date</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="datetime,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#datetime%2CColumn%2Cstring"><span class="Identifier">datetime</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#datetime%2CColumn%2Cstring"><span class="Identifier">datetime</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="time,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#time%2CColumn%2Cstring"><span class="Identifier">time</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#time%2CColumn%2Cstring"><span class="Identifier">time</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="timestamp,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#timestamp%2CColumn%2Cstring"><span class="Identifier">timestamp</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#timestamp%2CColumn%2Cstring"><span class="Identifier">timestamp</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="timestamps,Column"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#timestamps%2CColumn"><span class="Identifier">timestamps</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#timestamps%2CColumn"><span class="Identifier">timestamps</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="softDelete,Column"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#softDelete%2CColumn"><span class="Identifier">softDelete</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#softDelete%2CColumn"><span class="Identifier">softDelete</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="binary,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#binary%2CColumn%2Cstring"><span class="Identifier">binary</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#binary%2CColumn%2Cstring"><span class="Identifier">binary</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="boolean,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#boolean%2CColumn%2Cstring"><span class="Identifier">boolean</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#boolean%2CColumn%2Cstring"><span class="Identifier">boolean</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="enumField,Column,string,openArray[string]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#enumField%2CColumn%2Cstring%2CopenArray%5Bstring%5D"><span class="Identifier">enumField</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">options</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<dt><pre><span class="Keyword">proc</span> <a href="#enumField%2CColumn%2Cstring%2CopenArray%5Bstring%5D"><span class="Identifier">enumField</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">options</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -614,35 +614,35 @@ function main() {
 
 </dd>
 <a id="json,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#json%2CColumn%2Cstring"><span class="Identifier">json</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#json%2CColumn%2Cstring"><span class="Identifier">json</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="foreign,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#foreign%2CColumn%2Cstring"><span class="Identifier">foreign</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#foreign%2CColumn%2Cstring"><span class="Identifier">foreign</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="reference,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#reference%2CColumn%2Cstring"><span class="Identifier">reference</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#reference%2CColumn%2Cstring"><span class="Identifier">reference</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="on,Column,string"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#on%2CColumn%2Cstring"><span class="Identifier">on</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">table</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#on%2CColumn%2Cstring"><span class="Identifier">on</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">table</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="onDelete,Column,ForeignOnDelete"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#onDelete%2CColumn%2CForeignOnDelete"><span class="Identifier">onDelete</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">kind</span><span class="Other">:</span> <a href="column.html#ForeignOnDelete"><span class="Identifier">ForeignOnDelete</span></a><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#onDelete%2CColumn%2CForeignOnDelete"><span class="Identifier">onDelete</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">kind</span><span class="Other">:</span> <a href="column.html#ForeignOnDelete"><span class="Identifier">ForeignOnDelete</span></a><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -659,7 +659,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-05 00:38:10 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-10 06:05:45 UTC</small>
       </div>
     </div>
   </div>

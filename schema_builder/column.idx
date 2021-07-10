@@ -43,30 +43,30 @@ index	schema_builder/column.html#index,Column	column: index(c: Column): Column
 nullable	schema_builder/column.html#nullable,Column	column: nullable(c: Column): Column	
 unique	schema_builder/column.html#unique,Column	column: unique(c: Column): Column	
 unsigned	schema_builder/column.html#unsigned,Column	column: unsigned(c: Column): Column	
-increments	schema_builder/column.html#increments,Column,string	column: increments(this: Column; name: string): Column	
-integer	schema_builder/column.html#integer,Column,string	column: integer(this: Column; name: string): Column	
-smallInteger	schema_builder/column.html#smallInteger,Column,string	column: smallInteger(this: Column; name: string): Column	
-mediumInteger	schema_builder/column.html#mediumInteger,Column,string	column: mediumInteger(this: Column; name: string): Column	
-bigInteger	schema_builder/column.html#bigInteger,Column,string	column: bigInteger(this: Column; name: string): Column	
-decimal	schema_builder/column.html#decimal,Column,string,int,int	column: decimal(this: Column; name: string; maximum: int; digit: int): Column	
-double	schema_builder/column.html#double,Column,string,int,int	column: double(this: Column; name: string; maximum: int; digit: int): Column	
-float	schema_builder/column.html#float,Column,string	column: float(this: Column; name: string): Column	
-char	schema_builder/column.html#char,Column,string,int	column: char(this: Column; name: string; maxLength: int): Column	
-string	schema_builder/column.html#string,Column,string,int	column: string(this: Column; name: string; length = 255): Column	
-text	schema_builder/column.html#text,Column,string	column: text(this: Column; name: string): Column	
-mediumText	schema_builder/column.html#mediumText,Column,string	column: mediumText(this: Column; name: string): Column	
-longText	schema_builder/column.html#longText,Column,string	column: longText(this: Column; name: string): Column	
-date	schema_builder/column.html#date,Column,string	column: date(this: Column; name: string): Column	
-datetime	schema_builder/column.html#datetime,Column,string	column: datetime(this: Column; name: string): Column	
-time	schema_builder/column.html#time,Column,string	column: time(this: Column; name: string): Column	
-timestamp	schema_builder/column.html#timestamp,Column,string	column: timestamp(this: Column; name: string): Column	
-timestamps	schema_builder/column.html#timestamps,Column	column: timestamps(this: Column): Column	
-softDelete	schema_builder/column.html#softDelete,Column	column: softDelete(this: Column): Column	
-binary	schema_builder/column.html#binary,Column,string	column: binary(this: Column; name: string): Column	
-boolean	schema_builder/column.html#boolean,Column,string	column: boolean(this: Column; name: string): Column	
-enumField	schema_builder/column.html#enumField,Column,string,openArray[string]	column: enumField(this: Column; name: string; options: openArray[string]): Column	
-json	schema_builder/column.html#json,Column,string	column: json(this: Column; name: string): Column	
-foreign	schema_builder/column.html#foreign,Column,string	column: foreign(this: Column; name: string): Column	
-reference	schema_builder/column.html#reference,Column,string	column: reference(this: Column; column: string): Column	
-on	schema_builder/column.html#on,Column,string	column: on(this: Column; table: string): Column	
-onDelete	schema_builder/column.html#onDelete,Column,ForeignOnDelete	column: onDelete(this: Column; kind: ForeignOnDelete): Column	
+increments	schema_builder/column.html#increments,Column,string	column: increments(self: Column; name: string): Column	
+integer	schema_builder/column.html#integer,Column,string	column: integer(self: Column; name: string): Column	
+smallInteger	schema_builder/column.html#smallInteger,Column,string	column: smallInteger(self: Column; name: string): Column	
+mediumInteger	schema_builder/column.html#mediumInteger,Column,string	column: mediumInteger(self: Column; name: string): Column	
+bigInteger	schema_builder/column.html#bigInteger,Column,string	column: bigInteger(self: Column; name: string): Column	
+decimal	schema_builder/column.html#decimal,Column,string,int,int	column: decimal(self: Column; name: string; maximum: int; digit: int): Column	
+double	schema_builder/column.html#double,Column,string,int,int	column: double(self: Column; name: string; maximum: int; digit: int): Column	
+float	schema_builder/column.html#float,Column,string	column: float(self: Column; name: string): Column	
+char	schema_builder/column.html#char,Column,string,int	column: char(self: Column; name: string; maxLength: int): Column	
+string	schema_builder/column.html#string,Column,string,int	column: string(self: Column; name: string; length = 255): Column	
+text	schema_builder/column.html#text,Column,string	column: text(self: Column; name: string): Column	
+mediumText	schema_builder/column.html#mediumText,Column,string	column: mediumText(self: Column; name: string): Column	
+longText	schema_builder/column.html#longText,Column,string	column: longText(self: Column; name: string): Column	
+date	schema_builder/column.html#date,Column,string	column: date(self: Column; name: string): Column	
+datetime	schema_builder/column.html#datetime,Column,string	column: datetime(self: Column; name: string): Column	
+time	schema_builder/column.html#time,Column,string	column: time(self: Column; name: string): Column	
+timestamp	schema_builder/column.html#timestamp,Column,string	column: timestamp(self: Column; name: string): Column	
+timestamps	schema_builder/column.html#timestamps,Column	column: timestamps(self: Column): Column	
+softDelete	schema_builder/column.html#softDelete,Column	column: softDelete(self: Column): Column	
+binary	schema_builder/column.html#binary,Column,string	column: binary(self: Column; name: string): Column	
+boolean	schema_builder/column.html#boolean,Column,string	column: boolean(self: Column; name: string): Column	
+enumField	schema_builder/column.html#enumField,Column,string,openArray[string]	column: enumField(self: Column; name: string; options: openArray[string]): Column	
+json	schema_builder/column.html#json,Column,string	column: json(self: Column; name: string): Column	
+foreign	schema_builder/column.html#foreign,Column,string	column: foreign(self: Column; name: string): Column	
+reference	schema_builder/column.html#reference,Column,string	column: reference(self: Column; column: string): Column	
+on	schema_builder/column.html#on,Column,string	column: on(self: Column; table: string): Column	
+onDelete	schema_builder/column.html#onDelete,Column,ForeignOnDelete	column: onDelete(self: Column; kind: ForeignOnDelete): Column	

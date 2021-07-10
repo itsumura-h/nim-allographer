@@ -105,6 +105,16 @@ function main() {
     title="generateColumnString(column: Column; tableName = &quot;&quot;): string">generateColumnString,<wbr>Column,<wbr>string</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">generateAlterDeleteForeignQueries
+      <li><a class="reference" href="#generateAlterDeleteForeignQueries%2Cstring%2CColumn"
+    title="generateAlterDeleteForeignQueries(table: string; column: Column): seq[string]">generateAlterDeleteForeignQueries,<wbr>string,<wbr>Column</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">generateAlterDeleteQuery
+      <li><a class="reference" href="#generateAlterDeleteQuery%2Cstring%2CColumn"
+    title="generateAlterDeleteQuery(table: string; column: Column): string">generateAlterDeleteQuery,<wbr>string,<wbr>Column</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">createIndex
       <li><a class="reference" href="#createIndex%2Cstring%2Cstring"
     title="createIndex(table, column: string): string">createIndex,<wbr>string,<wbr>string</a></li>
@@ -112,7 +122,12 @@ function main() {
   </ul>
   <ul class="simple nested-toc-section">migrate
       <li><a class="reference" href="#migrate%2CTable"
-    title="migrate(this: Table): string">migrate,<wbr>Table</a></li>
+    title="migrate(self: Table): string">migrate,<wbr>Table</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">migrateAlter
+      <li><a class="reference" href="#migrateAlter%2Cstring%2CColumn"
+    title="migrateAlter(table: string; column: Column): seq[string]">migrateAlter,<wbr>string,<wbr>Column</a></li>
 
   </ul>
 
@@ -143,8 +158,32 @@ function main() {
 
 </dd>
 <a id="migrate,Table"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#migrate%2CTable"><span class="Identifier">migrate</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="../table.html#Table"><span class="Identifier">Table</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span>
+<dt><pre><span class="Keyword">proc</span> <a href="#migrate%2CTable"><span class="Identifier">migrate</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../table.html#Table"><span class="Identifier">Table</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span>
                                     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="migrateAlter,string,Column"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#migrateAlter%2Cstring%2CColumn"><span class="Identifier">migrateAlter</span></a><span class="Other">(</span><span class="Identifier">table</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <a href="../column.html#Column"><span class="Identifier">Column</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="generateAlterDeleteQuery,string,Column"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#generateAlterDeleteQuery%2Cstring%2CColumn"><span class="Identifier">generateAlterDeleteQuery</span></a><span class="Other">(</span><span class="Identifier">table</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <a href="../column.html#Column"><span class="Identifier">Column</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="generateAlterDeleteForeignQueries,string,Column"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#generateAlterDeleteForeignQueries%2Cstring%2CColumn"><span class="Identifier">generateAlterDeleteForeignQueries</span></a><span class="Other">(</span><span class="Identifier">table</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <a href="../column.html#Column"><span class="Identifier">Column</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span>
+    <span class="Identifier">string</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -167,7 +206,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-05 00:38:10 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-10 06:05:45 UTC</small>
       </div>
     </div>
   </div>

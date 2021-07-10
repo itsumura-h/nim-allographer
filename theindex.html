@@ -80,6 +80,30 @@ function main() {
 <li><a class="reference external"
           data-doc-search-tag="alter: alter(tables: varargs[Table])" href="schema_builder/alter.html#alter%2Cvarargs%5BTable%5D">alter: alter(tables: varargs[Table])</a></li>
           </ul></dd>
+<dt><a name="alterAddForeignGenerator" href="#alterAddForeignGenerator"><span>alterAddForeignGenerator:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mysql_generators: alterAddForeignGenerator(table, column, refTable, refColumn: string;
+                         foreignOnDelete: ForeignOnDelete): string" href="schema_builder/generators/mysql_generators.html#alterAddForeignGenerator%2Cstring%2Cstring%2Cstring%2Cstring%2CForeignOnDelete">mysql_generators: alterAddForeignGenerator(table, column, refTable, refColumn: string;
+                         foreignOnDelete: ForeignOnDelete): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="postgres_generators: alterAddForeignGenerator(table, column, refTable, refColumn: string;
+                         foreignOnDelete: ForeignOnDelete): string" href="schema_builder/generators/postgres_generators.html#alterAddForeignGenerator%2Cstring%2Cstring%2Cstring%2Cstring%2CForeignOnDelete">postgres_generators: alterAddForeignGenerator(table, column, refTable, refColumn: string;
+                         foreignOnDelete: ForeignOnDelete): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="sqlite_generators: alterAddForeignGenerator(table: string; column: string): string" href="schema_builder/generators/sqlite_generators.html#alterAddForeignGenerator%2Cstring%2Cstring">sqlite_generators: alterAddForeignGenerator(table: string; column: string): string</a></li>
+          </ul></dd>
+<dt><a name="alterDeleteForeignGenerator" href="#alterDeleteForeignGenerator"><span>alterDeleteForeignGenerator:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mysql_generators: alterDeleteForeignGenerator(table, column: string): string" href="schema_builder/generators/mysql_generators.html#alterDeleteForeignGenerator%2Cstring%2Cstring">mysql_generators: alterDeleteForeignGenerator(table, column: string): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="postgres_generators: alterDeleteForeignGenerator(table, column: string): string" href="schema_builder/generators/postgres_generators.html#alterDeleteForeignGenerator%2Cstring%2Cstring">postgres_generators: alterDeleteForeignGenerator(table, column: string): string</a></li>
+          </ul></dd>
+<dt><a name="alterDeleteGenerator" href="#alterDeleteGenerator"><span>alterDeleteGenerator:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mysql_generators: alterDeleteGenerator(table: string; column: string): string" href="schema_builder/generators/mysql_generators.html#alterDeleteGenerator%2Cstring%2Cstring">mysql_generators: alterDeleteGenerator(table: string; column: string): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="postgres_generators: alterDeleteGenerator(table: string; column: string): string" href="schema_builder/generators/postgres_generators.html#alterDeleteGenerator%2Cstring%2Cstring">postgres_generators: alterDeleteGenerator(table: string; column: string): string</a></li>
+          </ul></dd>
 <dt><a name="AlterTyp" href="#AlterTyp"><span>AlterTyp:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="column: AlterTyp" href="schema_builder/column.html#AlterTyp">column: AlterTyp</a></li>
@@ -98,7 +122,7 @@ function main() {
           </ul></dd>
 <dt><a name="bigInteger" href="#bigInteger"><span>bigInteger:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: bigInteger(this: Column; name: string): Column" href="schema_builder/column.html#bigInteger%2CColumn%2Cstring">column: bigInteger(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: bigInteger(self: Column; name: string): Column" href="schema_builder/column.html#bigInteger%2CColumn%2Cstring">column: bigInteger(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="bigIntGenerator" href="#bigIntGenerator"><span>bigIntGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -112,7 +136,7 @@ function main() {
           </ul></dd>
 <dt><a name="binary" href="#binary"><span>binary:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: binary(this: Column; name: string): Column" href="schema_builder/column.html#binary%2CColumn%2Cstring">column: binary(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: binary(self: Column; name: string): Column" href="schema_builder/column.html#binary%2CColumn%2Cstring">column: binary(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="blobGenerator" href="#blobGenerator"><span>blobGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -130,7 +154,7 @@ function main() {
           </ul></dd>
 <dt><a name="boolean" href="#boolean"><span>boolean:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: boolean(this: Column; name: string): Column" href="schema_builder/column.html#boolean%2CColumn%2Cstring">column: boolean(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: boolean(self: Column; name: string): Column" href="schema_builder/column.html#boolean%2CColumn%2Cstring">column: boolean(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="boolGenerator" href="#boolGenerator"><span>boolGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -160,7 +184,7 @@ function main() {
           </ul></dd>
 <dt><a name="char" href="#char"><span>char:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: char(this: Column; name: string; maxLength: int): Column" href="schema_builder/column.html#char%2CColumn%2Cstring%2Cint">column: char(this: Column; name: string; maxLength: int): Column</a></li>
+          data-doc-search-tag="column: char(self: Column; name: string; maxLength: int): Column" href="schema_builder/column.html#char%2CColumn%2Cstring%2Cint">column: char(self: Column; name: string; maxLength: int): Column</a></li>
           </ul></dd>
 <dt><a name="charGenerator" href="#charGenerator"><span>charGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -183,6 +207,10 @@ function main() {
 <dt><a name="cleanUp" href="#cleanUp"><span>cleanUp:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="base: cleanUp(this: RDB)" href="query_builder/base.html#cleanUp%2CRDB">base: cleanUp(this: RDB)</a></li>
+          </ul></dd>
+<dt><a name="column" href="#column"><span>column:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="alter: column(self: Column; name: string): Column" href="schema_builder/alter.html#column%2CColumn%2Cstring">alter: column(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="Column" href="#Column"><span>Column:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -214,7 +242,7 @@ function main() {
           </ul></dd>
 <dt><a name="date" href="#date"><span>date:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: date(this: Column; name: string): Column" href="schema_builder/column.html#date%2CColumn%2Cstring">column: date(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: date(self: Column; name: string): Column" href="schema_builder/column.html#date%2CColumn%2Cstring">column: date(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="dateGenerator" href="#dateGenerator"><span>dateGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -232,7 +260,7 @@ function main() {
           </ul></dd>
 <dt><a name="datetime" href="#datetime"><span>datetime:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: datetime(this: Column; name: string): Column" href="schema_builder/column.html#datetime%2CColumn%2Cstring">column: datetime(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: datetime(self: Column; name: string): Column" href="schema_builder/column.html#datetime%2CColumn%2Cstring">column: datetime(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="datetimeGenerator" href="#datetimeGenerator"><span>datetimeGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -254,7 +282,7 @@ function main() {
           </ul></dd>
 <dt><a name="decimal" href="#decimal"><span>decimal:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: decimal(this: Column; name: string; maximum: int; digit: int): Column" href="schema_builder/column.html#decimal%2CColumn%2Cstring%2Cint%2Cint">column: decimal(this: Column; name: string; maximum: int; digit: int): Column</a></li>
+          data-doc-search-tag="column: decimal(self: Column; name: string; maximum: int; digit: int): Column" href="schema_builder/column.html#decimal%2CColumn%2Cstring%2Cint%2Cint">column: decimal(self: Column; name: string; maximum: int; digit: int): Column</a></li>
           </ul></dd>
 <dt><a name="decimalGenerator" href="#decimalGenerator"><span>decimalGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -296,7 +324,7 @@ function main() {
           <li><a class="reference external"
           data-doc-search-tag="exec: delete(this: RDB; id: int; key = &quot;id&quot;)" href="query_builder/exec.html#delete%2CRDB%2Cint%2Cstring">exec: delete(this: RDB; id: int; key = &quot;id&quot;)</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="alter: delete(name: string): Column" href="schema_builder/alter.html#delete%2Cstring">alter: delete(name: string): Column</a></li>
+          data-doc-search-tag="alter: delete(): Column" href="schema_builder/alter.html#delete">alter: delete(): Column</a></li>
           </ul></dd>
 <dt><a name="Delete" href="#Delete"><span>Delete:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -326,7 +354,7 @@ function main() {
           </ul></dd>
 <dt><a name="double" href="#double"><span>double:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: double(this: Column; name: string; maximum: int; digit: int): Column" href="schema_builder/column.html#double%2CColumn%2Cstring%2Cint%2Cint">column: double(this: Column; name: string; maximum: int; digit: int): Column</a></li>
+          data-doc-search-tag="column: double(self: Column; name: string; maximum: int; digit: int): Column" href="schema_builder/column.html#double%2CColumn%2Cstring%2Cint%2Cint">column: double(self: Column; name: string; maximum: int; digit: int): Column</a></li>
           </ul></dd>
 <dt><a name="doubleGenerator" href="#doubleGenerator"><span>doubleGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -368,7 +396,7 @@ function main() {
           </ul></dd>
 <dt><a name="enumField" href="#enumField"><span>enumField:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: enumField(this: Column; name: string; options: openArray[string]): Column" href="schema_builder/column.html#enumField%2CColumn%2Cstring%2CopenArray%5Bstring%5D">column: enumField(this: Column; name: string; options: openArray[string]): Column</a></li>
+          data-doc-search-tag="column: enumField(self: Column; name: string; options: openArray[string]): Column" href="schema_builder/column.html#enumField%2CColumn%2Cstring%2CopenArray%5Bstring%5D">column: enumField(self: Column; name: string; options: openArray[string]): Column</a></li>
           </ul></dd>
 <dt><a name="enumGenerator" href="#enumGenerator"><span>enumGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -434,7 +462,7 @@ function main() {
           </ul></dd>
 <dt><a name="float" href="#float"><span>float:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: float(this: Column; name: string): Column" href="schema_builder/column.html#float%2CColumn%2Cstring">column: float(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: float(self: Column; name: string): Column" href="schema_builder/column.html#float%2CColumn%2Cstring">column: float(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="floatGenerator" href="#floatGenerator"><span>floatGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -452,7 +480,7 @@ function main() {
           </ul></dd>
 <dt><a name="foreign" href="#foreign"><span>foreign:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: foreign(this: Column; name: string): Column" href="schema_builder/column.html#foreign%2CColumn%2Cstring">column: foreign(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: foreign(self: Column; name: string): Column" href="schema_builder/column.html#foreign%2CColumn%2Cstring">column: foreign(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="foreignColumnGenerator" href="#foreignColumnGenerator"><span>foreignColumnGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -468,8 +496,8 @@ function main() {
                  foreignOnDelete: ForeignOnDelete): string" href="schema_builder/generators/mysql_generators.html#foreignGenerator%2Cstring%2Cstring%2Cstring%2CForeignOnDelete">mysql_generators: foreignGenerator(name: string; table: string; column: string;
                  foreignOnDelete: ForeignOnDelete): string</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="postgres_generators: foreignGenerator(name: string; tableName: string; column: string;
-                 foreignOnDelete: ForeignOnDelete): string" href="schema_builder/generators/postgres_generators.html#foreignGenerator%2Cstring%2Cstring%2Cstring%2CForeignOnDelete">postgres_generators: foreignGenerator(name: string; tableName: string; column: string;
+          data-doc-search-tag="postgres_generators: foreignGenerator(table, column, refTable, refColumn: string;
+                 foreignOnDelete: ForeignOnDelete): string" href="schema_builder/generators/postgres_generators.html#foreignGenerator%2Cstring%2Cstring%2Cstring%2Cstring%2CForeignOnDelete">postgres_generators: foreignGenerator(table, column, refTable, refColumn: string;
                  foreignOnDelete: ForeignOnDelete): string</a></li>
           <li><a class="reference external"
           data-doc-search-tag="sqlite_generators: foreignGenerator(name: string; table: string; column: string;
@@ -483,6 +511,22 @@ function main() {
 <dt><a name="fromSql" href="#fromSql"><span>fromSql:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="generators: fromSql(this: RDB): RDB" href="query_builder/generators.html#fromSql%2CRDB">generators: fromSql(this: RDB): RDB</a></li>
+          </ul></dd>
+<dt><a name="generateAlterAddQueries" href="#generateAlterAddQueries"><span>generateAlterAddQueries:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mysql_migrate: generateAlterAddQueries(column: Column; table: string): seq[string]" href="schema_builder/migrates/mysql_migrate.html#generateAlterAddQueries%2CColumn%2Cstring">mysql_migrate: generateAlterAddQueries(column: Column; table: string): seq[string]</a></li>
+          </ul></dd>
+<dt><a name="generateAlterDeleteForeignQueries" href="#generateAlterDeleteForeignQueries"><span>generateAlterDeleteForeignQueries:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mysql_migrate: generateAlterDeleteForeignQueries(table: string; column: Column): seq[string]" href="schema_builder/migrates/mysql_migrate.html#generateAlterDeleteForeignQueries%2Cstring%2CColumn">mysql_migrate: generateAlterDeleteForeignQueries(table: string; column: Column): seq[string]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="postgres_migrate: generateAlterDeleteForeignQueries(table: string; column: Column): seq[string]" href="schema_builder/migrates/postgres_migrate.html#generateAlterDeleteForeignQueries%2Cstring%2CColumn">postgres_migrate: generateAlterDeleteForeignQueries(table: string; column: Column): seq[string]</a></li>
+          </ul></dd>
+<dt><a name="generateAlterDeleteQuery" href="#generateAlterDeleteQuery"><span>generateAlterDeleteQuery:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="mysql_migrate: generateAlterDeleteQuery(table: string; column: Column): string" href="schema_builder/migrates/mysql_migrate.html#generateAlterDeleteQuery%2Cstring%2CColumn">mysql_migrate: generateAlterDeleteQuery(table: string; column: Column): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="postgres_migrate: generateAlterDeleteQuery(table: string; column: Column): string" href="schema_builder/migrates/postgres_migrate.html#generateAlterDeleteQuery%2Cstring%2CColumn">postgres_migrate: generateAlterDeleteQuery(table: string; column: Column): string</a></li>
           </ul></dd>
 <dt><a name="generateColumnString" href="#generateColumnString"><span>generateColumnString:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -542,7 +586,7 @@ function main() {
           </ul></dd>
 <dt><a name="increments" href="#increments"><span>increments:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: increments(this: Column; name: string): Column" href="schema_builder/column.html#increments%2CColumn%2Cstring">column: increments(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: increments(self: Column; name: string): Column" href="schema_builder/column.html#increments%2CColumn%2Cstring">column: increments(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="index" href="#index"><span>index:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -600,7 +644,7 @@ function main() {
           </ul></dd>
 <dt><a name="integer" href="#integer"><span>integer:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: integer(this: Column; name: string): Column" href="schema_builder/column.html#integer%2CColumn%2Cstring">column: integer(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: integer(self: Column; name: string): Column" href="schema_builder/column.html#integer%2CColumn%2Cstring">column: integer(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="intGenerator" href="#intGenerator"><span>intGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -638,7 +682,7 @@ function main() {
           </ul></dd>
 <dt><a name="json" href="#json"><span>json:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: json(this: Column; name: string): Column" href="schema_builder/column.html#json%2CColumn%2Cstring">column: json(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: json(self: Column; name: string): Column" href="schema_builder/column.html#json%2CColumn%2Cstring">column: json(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="jsonGenerator" href="#jsonGenerator"><span>jsonGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -682,7 +726,7 @@ function main() {
           </ul></dd>
 <dt><a name="longText" href="#longText"><span>longText:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: longText(this: Column; name: string): Column" href="schema_builder/column.html#longText%2CColumn%2Cstring">column: longText(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: longText(self: Column; name: string): Column" href="schema_builder/column.html#longText%2CColumn%2Cstring">column: longText(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="longTextGenerator" href="#longTextGenerator"><span>longTextGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -704,7 +748,7 @@ function main() {
           </ul></dd>
 <dt><a name="mediumInteger" href="#mediumInteger"><span>mediumInteger:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: mediumInteger(this: Column; name: string): Column" href="schema_builder/column.html#mediumInteger%2CColumn%2Cstring">column: mediumInteger(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: mediumInteger(self: Column; name: string): Column" href="schema_builder/column.html#mediumInteger%2CColumn%2Cstring">column: mediumInteger(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="mediumIntGenerator" href="#mediumIntGenerator"><span>mediumIntGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -720,7 +764,7 @@ function main() {
           </ul></dd>
 <dt><a name="mediumText" href="#mediumText"><span>mediumText:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: mediumText(this: Column; name: string): Column" href="schema_builder/column.html#mediumText%2CColumn%2Cstring">column: mediumText(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: mediumText(self: Column; name: string): Column" href="schema_builder/column.html#mediumText%2CColumn%2Cstring">column: mediumText(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="mediumTextGenerator" href="#mediumTextGenerator"><span>mediumTextGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -732,9 +776,15 @@ function main() {
 <li><a class="reference external"
           data-doc-search-tag="mysql_migrate: migrate(this: Table): string" href="schema_builder/migrates/mysql_migrate.html#migrate%2CTable">mysql_migrate: migrate(this: Table): string</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="postgres_migrate: migrate(this: Table): string" href="schema_builder/migrates/postgres_migrate.html#migrate%2CTable">postgres_migrate: migrate(this: Table): string</a></li>
+          data-doc-search-tag="postgres_migrate: migrate(self: Table): string" href="schema_builder/migrates/postgres_migrate.html#migrate%2CTable">postgres_migrate: migrate(self: Table): string</a></li>
           <li><a class="reference external"
           data-doc-search-tag="sqlite_migrate: migrate(this: Table): string" href="schema_builder/migrates/sqlite_migrate.html#migrate%2CTable">sqlite_migrate: migrate(this: Table): string</a></li>
+          </ul></dd>
+<dt><a name="migrateAlter" href="#migrateAlter"><span>migrateAlter:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="postgres_migrate: migrateAlter(table: string; column: Column): seq[string]" href="schema_builder/migrates/postgres_migrate.html#migrateAlter%2Cstring%2CColumn">postgres_migrate: migrateAlter(table: string; column: Column): seq[string]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="sqlite_migrate: migrateAlter(column: Column; table: string): string" href="schema_builder/migrates/sqlite_migrate.html#migrateAlter%2CColumn%2Cstring">sqlite_migrate: migrateAlter(column: Column; table: string): string</a></li>
           </ul></dd>
 <dt><a name="min" href="#min"><span>min:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -770,11 +820,11 @@ function main() {
           </ul></dd>
 <dt><a name="on" href="#on"><span>on:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: on(this: Column; table: string): Column" href="schema_builder/column.html#on%2CColumn%2Cstring">column: on(this: Column; table: string): Column</a></li>
+          data-doc-search-tag="column: on(self: Column; table: string): Column" href="schema_builder/column.html#on%2CColumn%2Cstring">column: on(self: Column; table: string): Column</a></li>
           </ul></dd>
 <dt><a name="onDelete" href="#onDelete"><span>onDelete:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: onDelete(this: Column; kind: ForeignOnDelete): Column" href="schema_builder/column.html#onDelete%2CColumn%2CForeignOnDelete">column: onDelete(this: Column; kind: ForeignOnDelete): Column</a></li>
+          data-doc-search-tag="column: onDelete(self: Column; kind: ForeignOnDelete): Column" href="schema_builder/column.html#onDelete%2CColumn%2CForeignOnDelete">column: onDelete(self: Column; kind: ForeignOnDelete): Column</a></li>
           </ul></dd>
 <dt><a name="Order" href="#Order"><span>Order:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -922,7 +972,7 @@ function main() {
           </ul></dd>
 <dt><a name="reference" href="#reference"><span>reference:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: reference(this: Column; column: string): Column" href="schema_builder/column.html#reference%2CColumn%2Cstring">column: reference(this: Column; column: string): Column</a></li>
+          data-doc-search-tag="column: reference(self: Column; column: string): Column" href="schema_builder/column.html#reference%2CColumn%2Cstring">column: reference(self: Column; column: string): Column</a></li>
           </ul></dd>
 <dt><a name="rename" href="#rename"><span>rename:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -1008,7 +1058,7 @@ function main() {
           </ul></dd>
 <dt><a name="smallInteger" href="#smallInteger"><span>smallInteger:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: smallInteger(this: Column; name: string): Column" href="schema_builder/column.html#smallInteger%2CColumn%2Cstring">column: smallInteger(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: smallInteger(self: Column; name: string): Column" href="schema_builder/column.html#smallInteger%2CColumn%2Cstring">column: smallInteger(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="smallIntGenerator" href="#smallIntGenerator"><span>smallIntGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -1024,7 +1074,7 @@ function main() {
           </ul></dd>
 <dt><a name="softDelete" href="#softDelete"><span>softDelete:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: softDelete(this: Column): Column" href="schema_builder/column.html#softDelete%2CColumn">column: softDelete(this: Column): Column</a></li>
+          data-doc-search-tag="column: softDelete(self: Column): Column" href="schema_builder/column.html#softDelete%2CColumn">column: softDelete(self: Column): Column</a></li>
           </ul></dd>
 <dt><a name="softDeleteGenerator" href="#softDeleteGenerator"><span>softDeleteGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -1038,7 +1088,7 @@ function main() {
           </ul></dd>
 <dt><a name="string" href="#string"><span>string:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: string(this: Column; name: string; length = 255): Column" href="schema_builder/column.html#string%2CColumn%2Cstring%2Cint">column: string(this: Column; name: string; length = 255): Column</a></li>
+          data-doc-search-tag="column: string(self: Column; name: string; length = 255): Column" href="schema_builder/column.html#string%2CColumn%2Cstring%2Cint">column: string(self: Column; name: string; length = 255): Column</a></li>
           </ul></dd>
 <dt><a name="stringGenerator" href="#stringGenerator"><span>stringGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -1078,7 +1128,7 @@ function main() {
           </ul></dd>
 <dt><a name="text" href="#text"><span>text:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: text(this: Column; name: string): Column" href="schema_builder/column.html#text%2CColumn%2Cstring">column: text(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: text(self: Column; name: string): Column" href="schema_builder/column.html#text%2CColumn%2Cstring">column: text(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="textGenerator" href="#textGenerator"><span>textGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -1096,7 +1146,7 @@ function main() {
           </ul></dd>
 <dt><a name="time" href="#time"><span>time:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: time(this: Column; name: string): Column" href="schema_builder/column.html#time%2CColumn%2Cstring">column: time(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: time(self: Column; name: string): Column" href="schema_builder/column.html#time%2CColumn%2Cstring">column: time(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="timeGenerator" href="#timeGenerator"><span>timeGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -1114,7 +1164,7 @@ function main() {
           </ul></dd>
 <dt><a name="timestamp" href="#timestamp"><span>timestamp:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: timestamp(this: Column; name: string): Column" href="schema_builder/column.html#timestamp%2CColumn%2Cstring">column: timestamp(this: Column; name: string): Column</a></li>
+          data-doc-search-tag="column: timestamp(self: Column; name: string): Column" href="schema_builder/column.html#timestamp%2CColumn%2Cstring">column: timestamp(self: Column; name: string): Column</a></li>
           </ul></dd>
 <dt><a name="timestampGenerator" href="#timestampGenerator"><span>timestampGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -1132,7 +1182,7 @@ function main() {
           </ul></dd>
 <dt><a name="timestamps" href="#timestamps"><span>timestamps:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="column: timestamps(this: Column): Column" href="schema_builder/column.html#timestamps%2CColumn">column: timestamps(this: Column): Column</a></li>
+          data-doc-search-tag="column: timestamps(self: Column): Column" href="schema_builder/column.html#timestamps%2CColumn">column: timestamps(self: Column): Column</a></li>
           </ul></dd>
 <dt><a name="timestampsGenerator" href="#timestampsGenerator"><span>timestampsGenerator:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -1247,7 +1297,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-05 00:38:10 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-10 06:05:45 UTC</small>
       </div>
     </div>
   </div>
