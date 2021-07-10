@@ -50,8 +50,8 @@ If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TA
 ```nim
 alter(
   table("auth", [
-    add.increments("id"),
-    add.string("name"),
+    add().increments("id"),
+    add().string("name"),
   ]),
   table("users",[
     add().string("email").unique().default(""),
