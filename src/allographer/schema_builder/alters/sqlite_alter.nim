@@ -95,16 +95,11 @@ proc deleteColumn(column:Column, table:string) =
     # create new table with existing table name
     let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'alter_table_tmp';"
     var schema = db.getValue(sql tableDifinitionSql)
-    # let columnRegex = &", '{column.name}'.*?\\)"
-    # query = replace(schema, re(columnRegex))
-    # query = replace(query, re",\)$", ")")
-
     schema = replace(schema, re"\)$", ",)")
     let columnRegex = &"'{column.name}'.*?,"
     query = replace(schema, re(columnRegex))
     query = replace(query, re"alter_table_tmp", table)
-    query = replace(query, re",\)", ")")
-    query = replace(query, re", \)", ")")
+    query = replace(query, re",\s*\)", ")")
     logger(query)
     db.exec(sql query)
     # copy data from tmp table to new table
