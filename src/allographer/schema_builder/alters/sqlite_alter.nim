@@ -36,10 +36,6 @@ proc change(column:Column, table:string) =
     schema = replace(schema, re"\)$", ",)")
     let columnRegex = &"'{column.previousName}'.*?,"
     let columnString = generateColumnString(column) & ","
-    echo "======"
-    echo schema
-    echo columnRegex
-    echo columnString
     var query = replace(schema, re(columnRegex), columnString)
     query = replace(query, re",\)", ")")
     query = replace(query, re("CREATE TABLE \".+\""), "CREATE TABLE \"alter_table_tmp\"")
@@ -83,6 +79,15 @@ proc deleteColumn(column:Column, table:string) =
   let db = db()
   defer: db.close()
   try:
+    # delete tmp table
+    let query = &"DROP TABLE alter_table_tmp"
+    logger(query)
+    db.exec(sql query)
+  except:
+    let err = getCurrentExceptionMsg()
+    echoErrorMsg(err)
+
+  try:
     # rename existing table as tmp
     var query = &"ALTER TABLE \"{table}\" RENAME TO 'alter_table_tmp'"
     logger(query)
@@ -90,11 +95,18 @@ proc deleteColumn(column:Column, table:string) =
     # create new table with existing table name
     let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'alter_table_tmp';"
     var schema = db.getValue(sql tableDifinitionSql)
+    echo "==== 1"
+    echo schema
+    # let columnRegex = &", '{column.name}'.*?\\)"
+    # query = replace(schema, re(columnRegex))
+    # query = replace(query, re",\)$", ")")
+
     schema = replace(schema, re"\)$", ",)")
-    let columnRegex = &", '{column.name}'.*?,"
+    let columnRegex = &"'{column.name}'.*?,"
     query = replace(schema, re(columnRegex))
-    query = replace(query, re",\)", ")")
     query = replace(query, re"alter_table_tmp", table)
+    query = replace(query, re",\)", ")")
+    query = replace(query, re", \)", ")")
     logger(query)
     db.exec(sql query)
     # copy data from tmp table to new table

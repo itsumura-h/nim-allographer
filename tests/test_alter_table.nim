@@ -66,8 +66,6 @@ suite "alter table":
       .getStr == "test"
 
   test "add foreign key":
-    check rdb().table("table_alter").select("add_foreign_column").first.isSome == false
-
     alter(
       table("table_alter", [
         delete().column("add_foreign_column"),
