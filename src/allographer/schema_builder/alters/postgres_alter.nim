@@ -6,14 +6,14 @@ import ../../utils
 import ../../connection
 
 proc add(column:Column, table:string) =
-  let columnString = generateColumnString(column)
-  let query = &"ALTER TABLE {table} ADD {columnString}"
-  logger(query)
+  let querySeq = migrateAlter(table, column)
   block:
     let db = db()
     defer: db.close()
     try:
-      db.exec(sql query)
+      for query in querySeq:
+        logger(query)
+        db.exec(sql query)
     except:
       let err = getCurrentExceptionMsg()
       echoErrorMsg(err)
@@ -79,6 +79,29 @@ proc delete(column:Column, table:string) =
     let err = getCurrentExceptionMsg()
     echoErrorMsg(err)
 
+proc deleteColumn(table:string, column:Column) =
+  let db = db()
+  defer: db.close()
+  try:
+    let query = generateAlterDeleteQuery(table, column)
+    logger(query)
+    db.exec(sql query)
+  except:
+    let err = getCurrentExceptionMsg()
+    echoErrorMsg(err)
+
+proc deleteForeign(table:string, column:Column) =
+  let querySeq = generateAlterDeleteForeignQueries(table, column)
+  let db = db()
+  defer: db.close()
+  try:
+    for query in querySeq:
+      logger(query)
+      db.exec(sql query)
+  except:
+    let err = getCurrentExceptionMsg()
+    echoErrorMsg(err)
+
 proc rename(tableFrom, tableTo:string) =
   let db = db()
   defer: db.close()
@@ -110,7 +133,10 @@ proc exec*(table:Table) =
       of Change:
         change(column, table.name)
       of Delete:
-        delete(column, table.name)
+        if column.typ == rdbForeign:
+          deleteForeign(table.name, column)
+        else:
+          deleteColumn(table.name, column)
   elif table.typ == Rename:
     rename(table.name, table.alterTo)
   elif table.typ == Drop:

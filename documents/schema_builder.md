@@ -49,9 +49,14 @@ If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TA
 ### add column
 ```nim
 alter(
-  table("users",
-    add().string("email").unique().default("")
-  )
+  table("auth", [
+    add.increments("id"),
+    add.string("name"),
+  ]),
+  table("users",[
+    add().string("email").unique().default(""),
+    add().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+  ])
 )
 ```
 `>> ALTER TABLE "users" ADD COLUMN 'email' UNIQUE DEFAULT '' CHECK (length('email') <= 255)`
@@ -75,7 +80,8 @@ alter(
 ```nim
 alter(
   table("users",
-    delete("name")
+    delete().column("name")
+    delete().foreign("auth_id")
   )
 )
 ```

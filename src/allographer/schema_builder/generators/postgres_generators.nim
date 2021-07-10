@@ -391,7 +391,7 @@ proc foreignColumnGenerator*(name:string, isDefault:bool, default:int):string =
   if isDefault:
     result.add(&" DEFAULT {default}")
 
-proc foreignGenerator*(name:string, tableName:string, column:string,
+proc foreignGenerator*(table, column, refTable, refColumn:string,
                         foreignOnDelete:ForeignOnDelete):string =
   var onDeleteString = "RESTRICT"
   if foreignOnDelete == CASCADE:
@@ -401,10 +401,37 @@ proc foreignGenerator*(name:string, tableName:string, column:string,
   elif foreignOnDelete == NO_ACTION:
     onDeleteString = "NO ACTION"
 
-  var tableName = tableName
-  wrapUpper(tableName)
-  result = &", FOREIGN KEY(\"{name}\") REFERENCES {tableName}({column})"
-  result.add(&" ON DELETE {onDeleteString}")
+  var refTable = refTable
+  wrapUpper(refTable)
+  return &", FOREIGN KEY(\"{column}\") REFERENCES {refTable}({refColumn}) ON DELETE {onDeleteString}"
+
+proc alterAddForeignGenerator*(table, column, refTable, refColumn:string,
+                            foreignOnDelete:ForeignOnDelete):string =
+  var onDeleteString = "RESTRICT"
+  if foreignOnDelete == CASCADE:
+    onDeleteString = "CASCADE"
+  elif foreignOnDelete == SET_NULL:
+    onDeleteString = "SET NULL"
+  elif foreignOnDelete == NO_ACTION:
+    onDeleteString = "NO ACTION"
+
+  var constraintName = &"{table}_{column}"
+  wrapUpper(constraintName)
+  var refTable = refTable
+  wrapUpper(refTable)
+  return &"CONSTRAINT {constraintName} FOREIGN KEY (\"{column}\") REFERENCES {refTable} ({refColumn}) ON DELETE {onDeleteString}"
+
+proc alterDeleteGenerator*(table:string, column:string):string =
+  var table = table
+  wrapUpper(table)
+  return &"ALTER TABLE {table} DROP {column}"
+
+proc alterDeleteForeignGenerator*(table, column:string):string =
+  var constraintName = &"{table}_{column}"
+  wrapUpper(constraintName)
+  var table = table
+  wrapUpper(table)
+  return &"ALTER TABLE {table} DROP CONSTRAINT {constraintName}"
 
 proc indexGenerate*(table, column:string):string =
   var table = table

@@ -244,6 +244,5 @@ suite "select":
   test "raw query":
     let sql = "SELECT * FROM users WHERE id = ?"
     var res = rdb().raw(sql, "1").getRaw()
-    rdb().raw(sql, "1").exec()
     echo res
     check res[0]["name"].getStr == "user1"

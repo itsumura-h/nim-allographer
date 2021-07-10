@@ -4,6 +4,10 @@ import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
 
 schema(
+  table("foreign_key_ref", [
+    Column().increments("id"),
+    Column().string("name")
+  ], reset=true),
   table("table_alter", [
     Column().increments("id"),
     Column().string("changed_column").unique().default(""),
@@ -61,6 +65,23 @@ suite "alter table":
       .first.get["add_column"]
       .getStr == "test"
 
+  test "add foreign key":
+    alter(
+      table("table_alter", [
+        delete().column("add_foreign_column"),
+        add().foreign("add_foreign_column").reference("id").on("foreign_key_ref").onDelete(SET_NULL),
+      ])
+    )
+    check rdb().table("table_alter").select("add_foreign_column").first.isSome == true
+
+    alter(
+      table("table_alter", [
+        delete().foreign("add_foreign_column"),
+      ])
+    )
+    check rdb().table("table_alter").select("add_foreign_column").first.isSome == false
+
+
   test "changed_column":
     echo rdb()
       .table("table_alter")
@@ -104,7 +125,7 @@ suite "alter table":
 
     alter(
       table("table_alter", [
-        delete("delete_column")
+        delete().column("delete_column")
       ])
     )
 
