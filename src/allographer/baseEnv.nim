@@ -3,7 +3,7 @@ import dotenv
 
 for f in walkDir(getCurrentDir()):
   if f.path.contains(".env"):
-    let env = initDotEnv(getCurrentDir(), f.path.split("/")[^1])
+    let env = initDotEnv(getCurrentDir(), splitPath(f.path).tail)
     env.load()
     echo("used config file '", f.path, "'")
 
