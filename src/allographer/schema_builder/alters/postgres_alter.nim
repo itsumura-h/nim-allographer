@@ -117,7 +117,7 @@ proc drop(table:string) =
   let db = db()
   defer: db.close()
   try:
-    let query = &"DROP TABLE {table}"
+    let query = &"DROP TABLE {table} CASCADE"
     logger(query)
     db.exec(sql query)
   except:
