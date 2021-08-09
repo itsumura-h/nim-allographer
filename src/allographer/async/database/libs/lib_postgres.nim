@@ -15,11 +15,13 @@ proc checkError*(db: PPGconn) =
   if message.len > 0:
     raise newException(DbError, $message)
 
-proc getColumnType*(res: PPGresult, col: int) : DbType =
+proc getColumnType(res: PPGresult, line, col: int32) : DbType =
   ## returns DbType for given column in the row
   ## defined in pg_type.h file in the postgres source code
   ## Wire representation for types: http://www.npgsql.org/dev/types.html
   var oid = pqftype(res, int32(col))
+  if pqgetisnull(res, line, col) == 1:
+    return DbType(kind: dbNull, name: "null")
   ## The integer returned is the internal OID number of the type
   case oid
   of 16: return DbType(kind: DbTypeKind.dbBool, name: "bool")
@@ -150,19 +152,21 @@ proc getColumnType*(res: PPGresult, col: int) : DbType =
   of 705:  return DbType(kind: DbTypeKind.dbUnknown, name: "unknown")
   else: return DbType(kind: DbTypeKind.dbUnknown, name: $oid) ## Query the system table pg_type to determine exactly which type is referenced.
 
-proc setColumnInfo*(columns: var DbColumns; res: PPGresult; L: int32) =
-  setLen(columns, L)
-  for i in 0'i32..<L:
-    columns[i].name = $pqfname(res, i)
-    columns[i].typ = getColumnType(res, i)
-    columns[i].tableName = $(pqftable(res, i)) ## Returns the OID of the table from which the given column was fetched.
-                                               ## Query the system table pg_class to determine exactly which table is referenced.
+proc setColumnInfo*(res: PPGresult; dbRows: var DbRows; line, cols: int32) =
+  var columns: DbColumns
+  setLen(columns, cols)
+  for col in 0'i32..cols-1:
+    columns[col].name = $pqfname(res, col)
+    columns[col].typ = getColumnType(res, line, col)
+    columns[col].tableName = $(pqftable(res, col)) ## Returns the OID of the table from which the given column was fetched.
+                                              ## Query the system table pg_class to determine exactly which table is referenced.
+  dbRows.add(columns)
 
 proc newRow*(L: int): Row =
   newSeq(result, L)
   for i in 0..L-1: result[i] = ""
 
-proc setRow*(res: PPGresult, r: var Row, line, cols: int32) =
+proc setRow*(res: PPGresult, r: var Row,  line, cols: int32) =
   for col in 0'i32..cols-1:
     setLen(r[col], 0)
     let x = pqgetvalue(res, line, col)

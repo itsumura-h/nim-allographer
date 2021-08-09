@@ -8,68 +8,57 @@ proc selectSql*(self: Rdb):string =
   result = self.selectBuilder().sqlString & $self.placeHolder
   echo result
 
-proc getColumns(driver:Driver, db_columns:DbColumns):seq[array[3, string]] =
-  var columns = newSeq[array[3, string]](db_columns.len)
-  for i, row in db_columns:
-    case driver:
-    of SQLite3:
-      columns[i] = [row.name, row.typ.name, $row.typ.size]
-    of MySQL, MariaDB:
-      columns[i] = [row.name, $row.typ.kind, $row.typ.size]
-    of PostgreSQL:
-      columns[i] = [row.name, $row.typ.kind, $row.typ.size]
-  return columns
-
-proc toJson(driver:Driver, results:openArray[seq[string]], columns:openArray[array[3, string]]):seq[JsonNode] =
+proc toJson(driver:Driver, results:openArray[seq[string]], dbRows:DbRows):seq[JsonNode] =
   var response_table = newSeq[JsonNode](results.len)
   for index, rows in results.pairs:
     var response_row = newJObject()
     for i, row in rows:
-      let key = columns[i][0]
-      let typ = columns[i][1]
-      let size = columns[i][2]
+      let key = dbRows[index][i].name
+      let typ = dbRows[index][i].typ.kind
+      let kindName = dbRows[index][i].typ.name
+      let size = dbRows[index][i].typ.size
 
       case driver:
       of SQLite3:
-        if row == "":
+        if typ == dbNull:
           response_row[key] = newJNull()
-        elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(typ):
+        elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(kindName):
           response_row[key] = newJInt(row.parseInt)
-        elif ["NUMERIC", "DECIMAL", "DOUBLE"].contains(typ):
+        elif ["NUMERIC", "DECIMAL", "DOUBLE", "REAL"].contains(kindName):
           response_row[key] = newJFloat(row.parseFloat)
-        elif ["TINYINT", "BOOLEAN"].contains(typ):
+        elif ["TINYINT", "BOOLEAN"].contains(kindName):
           response_row[key] = newJBool(row.parseBool)
         else:
           response_row[key] = newJString(row)
       of MySQL, MariaDB:
-        if row == "":
+        if typ == dbNull:
           response_row[key] = newJNull()
-        elif [$dbInt, $dbUInt].contains(typ) and size == "1":
+        elif [dbInt, dbUInt].contains(typ) and size == 1:
           if row == "0":
             response_row[key] = newJBool(false)
           elif row == "1":
             response_row[key] = newJBool(true)
-        elif [$dbInt, $dbUInt].contains(typ):
+        elif [dbInt, dbUInt].contains(typ):
           response_row[key] = newJInt(row.parseInt)
-        elif [$dbDecimal, $dbFloat].contains(typ):
+        elif [dbDecimal, dbFloat].contains(typ):
           response_row[key] = newJFloat(row.parseFloat)
-        elif [$dbJson].contains(typ):
+        elif [dbJson].contains(typ):
           response_row[key] = row.parseJson
         else:
           response_row[key] = newJString(row)
       of PostgreSQL:
-        if row == "":
+        if typ == dbNull:
           response_row[key] = newJNull()
-        elif [$dbInt, $dbUInt].contains(typ):
+        elif [dbInt, dbUInt].contains(typ):
           response_row[key] = newJInt(row.parseInt)
-        elif [$dbDecimal, $dbFloat].contains(typ):
+        elif [dbDecimal, dbFloat].contains(typ):
           response_row[key] = newJFloat(row.parseFloat)
-        elif [$dbBool].contains(typ):
+        elif [dbBool].contains(typ):
           if row == "f":
             response_row[key] = newJBool(false)
           elif row == "t":
             response_row[key] = newJBool(true)
-        elif [$dbJson].contains(typ):
+        elif [dbJson].contains(typ):
           response_row[key] = row.parseJson
         else:
           response_row[key] = newJString(row)
@@ -78,14 +67,13 @@ proc toJson(driver:Driver, results:openArray[seq[string]], columns:openArray[arr
   return response_table
 
 proc getAllRows(self:Connections, sqlString:string, args:seq[string]):Future[seq[JsonNode]] {.async.} =
-  let (rows, dbColumns) = await self.query(sqlString, args)
+  let (rows, dbRows) = await self.query(sqlString, args)
 
   if rows.len == 0:
     echoErrorMsg(sqlString & $args)
     return newSeq[JsonNode](0)
 
-  let columns = getColumns(self.driver, dbColumns)
-  return toJson(self.driver, rows, columns) # seq[JsonNode]
+  return toJson(self.driver, rows, dbRows) # seq[JsonNode]
 
 proc getAllRowsPlain*(db:Connections, sqlString:string, args:seq[string]):Future[seq[seq[string]]] {.async.} =
   let (rows, _)  = await db.query(sqlString, args)
@@ -98,8 +86,8 @@ proc getRow(self:Connections, sqlString:string, args:seq[string]):Future[Option[
     echoErrorMsg(sqlString & $args)
     return none(JsonNode)
 
-  let columns = getColumns(self.driver, dbColumns)
-  return toJson(self.driver, rows, columns)[0].some
+  # let columns = getColumns(self.driver, dbColumns)
+  return toJson(self.driver, rows, dbColumns)[0].some
 
 proc getRowPlain(self:Connections, sqlString:string, args:seq[string]):Future[seq[string]] {.async.} =
   let (rows, _) = await self.query(sqlString, args)
@@ -251,6 +239,7 @@ proc insertSql*(self: Rdb, items: JsonNode):string =
 
 proc insertId(db:Connections, sqlString:string, placeHolder:seq[string], key:string):Future[int]{.async.} =
   if db.driver == SQLite3:
+    logger(sqlString, placeHolder)
     await db.exec(sqlString, placeHolder)
     let (rows, _) = await db.query("SELECT last_insert_rowid()")
     return rows[0][0].parseInt

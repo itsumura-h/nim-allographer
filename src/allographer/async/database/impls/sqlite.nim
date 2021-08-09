@@ -19,17 +19,17 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
     timeout: timeout
   )
 
-proc query*(db:PSqlite3, query:string, args:seq[string], timeout:int):Future[(seq[Row], DbColumns)] {.async.} =
+proc query*(db:PSqlite3, query:string, args:seq[string], timeout:int):Future[(seq[Row], DbRows)] {.async.} =
   assert(not db.isNil, "Database not connected.")
-  var dbColumns: DbColumns
+  var dbRows: DbRows
   var rows = newSeq[seq[string]]()
-  for row in db.instantRows(dbColumns, query, args):
+  for row in db.instantRows(dbRows, query, args):
     var columns = newSeq[string](row.len)
     for i in 0..row.len()-1:
       columns[i] = row[i]
     rows.add(columns)
 
-  return (rows, dbColumns)
+  return (rows, dbRows)
 
 proc exec*(db:PSqlite3, query: string, args: seq[string], timeout:int) {.async.} =
   assert(not db.isNil, "Database not connected.")
@@ -51,21 +51,21 @@ proc prepare*(db:PSqlite3, query:string, timeout:int):Future[PStmt] {.async.} =
     discard finalize(result)
     dbError(db)
 
-proc preparedQuery*(db:PSqlite3, args:seq[string] = @[], sqliteStmt:PStmt):Future[(seq[Row], DbColumns)] {.async.} =
+proc preparedQuery*(db:PSqlite3, args:seq[string] = @[], sqliteStmt:PStmt):Future[(seq[Row], DbRows)] {.async.} =
   # bind params
   for i, row in args:
     sqliteStmt.bindParam(i+1, row)
   # run query
   assert(not db.isNil, "Database not connected.")
-  var dbColumns: DbColumns
+  var dbRows: DbRows
   var rows = newSeq[seq[string]]()
-  for row in db.instantRows(dbColumns, sqliteStmt):
+  for row in db.instantRows(dbRows, sqliteStmt):
     await sleepAsync(0)
     var columns = newSeq[string](row.len)
     for i in 0..row.len()-1:
       columns[i] = row[i]
     rows.add(columns)
-  return (rows, dbColumns)
+  return (rows, dbRows)
 
 proc preparedExec*(db:PSqlite3, args:seq[string] = @[], sqliteStmt:PStmt) {.async.} =
   # bind params

@@ -14,7 +14,8 @@ let driver = (proc():Driver=
   of "postgres": return PostgreSQL
 )()
 
-let db = dbopen(driver, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("DB_PASSWORD"), host, port, maxConnections, 30)
+# let db = dbopen(driver, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("DB_PASSWORD"), host, port, maxConnections, 30)
+let db = dbopen(SQLite3, ":memory:", maxConnections=95, timeout=30)
 
 suite "Schema builder":
   test "test":
@@ -143,6 +144,7 @@ suite "Schema builder":
           "enumField_column": "a",
           "json_column": {"key": "value"}
         })
+        echo await db.table(dbTyp).get()
         assert true
         db.alter(
           drop(dbTyp)

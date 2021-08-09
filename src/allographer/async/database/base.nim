@@ -84,6 +84,7 @@ type
     primaryKey*: bool  ## is this a primary key?
     foreignKey*: bool  ## is this a foreign key?
   DbColumns* = seq[DbColumn]
+  DbRows* = seq[DbColumns]
 
   DbEffect* = object of IOEffect ## effect that denotes a database operation
   ReadDbEffect* = object of DbEffect ## effect that denotes a read operation

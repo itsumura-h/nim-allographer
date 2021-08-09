@@ -22,7 +22,7 @@ proc dbopen*(driver: Driver, database: string = "", user: string = "", password:
     when isExistsSqlite():
       result = sqlite.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
 
-proc query*(self: Connections, query: string, args: seq[string] = @[]):Future[(seq[Row], DbColumns)] {.async.} =
+proc query*(self: Connections, query: string, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
   let connI = await getFreeConn(self)
   defer: self.returnConn(connI)
   if connI == errorConnectionNum:
@@ -31,13 +31,15 @@ proc query*(self: Connections, query: string, args: seq[string] = @[]):Future[(s
   case self.driver
   of MySQL:
     when isExistsMysql():
-      return await mysql.query(self.pools[connI].mysqlConn, query, args, self.timeout)
+      discard
+      # return await mysql.query(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb():
       discard
       # return = await mariadb.getRows(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
     when isExistsPostgres():
+      discard
       return await postgres.query(self.pools[connI].postgresConn, query, args, self.timeout)
   of SQLite3:
     when isExistsSqlite():
@@ -95,7 +97,7 @@ proc prepare*(self: Connections, query: string, stmtName=""):Future[Prepared] {.
       let sqliteStmt = await sqlite.prepare(self.pools[connI].sqliteConn, query, self.timeout)
       result = Prepared(conn:self, sqliteStmt:sqliteStmt)
 
-proc query*(self:Prepared, args: seq[string] = @[]):Future[(seq[Row], DbColumns)] {.async.} =
+proc query*(self:Prepared, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
   let connI = await getFreeConn(self.conn)
   defer: self.conn.returnConn(connI)
   if connI == errorConnectionNum:

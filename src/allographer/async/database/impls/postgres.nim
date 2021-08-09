@@ -21,11 +21,11 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
     timeout: timeout
   )
 
-proc query*(db:PPGconn, query: string, args: seq[string], timeout:int):Future[(seq[Row], DbColumns)] {.async.} =
+proc query*(db:PPGconn, query: string, args: seq[string], timeout:int):Future[(seq[Row], DbRows)] {.async.} =
   assert db.status == CONNECTION_OK
   let status = pqsendQuery(db, dbFormat(query, args))
   if status != 1: dbError(db) # never seen to fail when async
-  var dbColumns: DbColumns
+  var dbRows: DbRows
   var rows = newSeq[Row]()
   let calledAt = getTime().toUnix()
   while true:
@@ -49,16 +49,16 @@ proc query*(db:PPGconn, query: string, args: seq[string], timeout:int):Future[(s
       # Check if its a real error or just end of results
       db.checkError()
       break
-    setColumnInfo(dbColumns, pqresult, pqnfields(pqresult))
 
     var cols = pqnfields(pqresult)
     var row = newRow(cols)
     for i in 0'i32..pqNtuples(pqresult)-1:
       setRow(pqresult, row, i, cols)
+      setColumnInfo(pqresult, dbRows, i, cols)
       rows.add(row)
     pqclear(pqresult)
 
-  return (rows, dbColumns)
+  return (rows, dbRows)
 
 proc exec*(db:PPGconn, query: string, args: seq[string], timeout:int) {.async.} =
   assert db.status == CONNECTION_OK
@@ -100,13 +100,13 @@ proc prepare*(db:PPGconn, query: string, timeout:int, stmtName:string):Future[in
     pqclear(pqresult)
   return nArgs
 
-proc preparedQuery*(db:PPGconn, args: seq[string], nArgs:int, timeout:int, stmtName:string):Future[(seq[Row], DbColumns)] {.async.} =
+proc preparedQuery*(db:PPGconn, args: seq[string], nArgs:int, timeout:int, stmtName:string):Future[(seq[Row], DbRows)] {.async.} =
   assert db.status == CONNECTION_OK
   let arr = allocCStringArray(args)
   let status = pqsendQueryPrepared(db, stmtName, int32(nArgs), arr, nil, nil, 0)
   deallocCStringArray(arr)
   if status != 1: dbError(db) # never seen to fail when async
-  var dbColumns: DbColumns
+  var dbRows: DbRows
   var rows = newSeq[Row]()
   let calledAt = getTime().toUnix()
   while true:
@@ -130,16 +130,16 @@ proc preparedQuery*(db:PPGconn, args: seq[string], nArgs:int, timeout:int, stmtN
       # Check if its a real error or just end of results
       db.checkError()
       break
-    setColumnInfo(dbColumns, pqresult, pqnfields(pqresult))
 
     var cols = pqnfields(pqresult)
     var row = newRow(cols)
     for i in 0'i32..pqNtuples(pqresult)-1:
       setRow(pqresult, row, i, cols)
       rows.add(row)
+      setColumnInfo(pqresult, dbRows, i, cols)
     pqclear(pqresult)
 
-  return (rows, dbColumns)
+  return (rows, dbRows)
 
 proc preparedExec*(db:PPGconn, args: seq[string], nArgs:int, timeout:int, stmtName:string) {.async.} =
   assert db.status == CONNECTION_OK

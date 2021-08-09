@@ -18,7 +18,8 @@ let
   sqliteDb = dbopen(SQLite3, sqliteHost, maxConnections=maxConnections)
   mysqlDb = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout)
   postgresDb = dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout)
-  db* = postgresDb
+  db* = sqliteDb
+  # db* = postgresDb
 
 template asyncBlock*(body:untyped) =
   waitFor (proc(){.async.}=
