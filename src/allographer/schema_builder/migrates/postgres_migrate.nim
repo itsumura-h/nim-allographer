@@ -3,7 +3,7 @@ import
   ../table,
   ../column
 import ../generators/postgres_generators
-from ../../utils import wrapUpper
+from ../../utils import pgWrapUpper
 
 
 proc generateColumnString*(column:Column, tableName=""):string =
@@ -308,7 +308,7 @@ proc migrate*(self:Table):string =
     )
 
   var tableName = self.name
-  wrapUpper(tableName)
+  pgWrapUpper(tableName)
   return &"CREATE TABLE {tableName} ({columnString}{foreignString})"
 
 proc migrateAlter*(table:string, column:Column):seq[string] =

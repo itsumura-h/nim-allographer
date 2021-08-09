@@ -294,5 +294,5 @@ proc alterAddForeignGenerator*(table:string, column:string):string =
 
 proc indexGenerate*(table, column:string):string =
   var table = table
-  wrapUpper(table)
+  liteWrapUpper(table)
   return &"CREATE INDEX {column}_index ON {table}({column})"

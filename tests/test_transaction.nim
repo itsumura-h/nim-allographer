@@ -40,7 +40,7 @@ suite "transaction":
     var db = query_builder.db()
     defer: db.close()
     try:
-      var user = RDB(db:db).table("users").get()
+      var user = Rdb(db:db).table("users").get()
       echo user
     except:
       discard
@@ -59,7 +59,7 @@ suite "transaction":
       defer: db.close()
       try:
         db.exec(sql"BEGIN")
-        RDB(db:db).table("users").insert(%*{"id": 9, "name": "user9", "email": "user9@example.com"})
+        Rdb(db:db).table("users").insert(%*{"id": 9, "name": "user9", "email": "user9@example.com"})
         db.exec(sql"COMMIT")
       except:
         echo "=== rollback"

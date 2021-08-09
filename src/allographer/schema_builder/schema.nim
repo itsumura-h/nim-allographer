@@ -1,4 +1,4 @@
-import os, json, strutils
+import os, json, strutils, asyncdispatch
 from strformat import `&`
 import
   migrates/sqlite_migrate,
@@ -6,7 +6,7 @@ import
   migrates/postgres_migrate
 import ../utils
 # include ../connection
-import ../connection
+import ../async/async_db
 
 import table
 
@@ -77,50 +77,45 @@ proc check*(this:Schema, tablesArg:varargs[Table]) =
 
 # =============================================================================
 
-proc schema*(tables:varargs[Table]) =
-  driverTypeError()
-  let driver = getDriver()
-
+proc schema*(db:Connections, tables:varargs[Table]) =
   block:
     var deleteList: seq[string]
     for table in tables:
       if table.reset:
         deleteList.add(table.name)
     # delete table in reverse loop
-    let db = db()
     for i, v in deleteList:
       var index = i+1
       try:
         var tableName = deleteList[^index]
-        wrapUpper(tableName)
+        wrapUpper(tableName, db.driver)
         let query =
-          if driver == "sqlite":
+          if db.driver == SQLite3:
             &"drop table {tableName}"
           else:
             &"drop table {tableName} CASCADE"
         logger(query)
-        db.exec(sql query)
+        waitFor db.exec(query)
       except Exception:
         getCurrentExceptionMsg().echoErrorMsg()
-    defer: db.close()
 
   for table in tables:
     var query = ""
-    case driver:
-    of "sqlite":
+    case db.driver:
+    of SQLite3:
       query = sqlite_migrate.migrate(table)
-    of "mysql":
+    of MySQL:
       query = mysql_migrate.migrate(table)
-    of "postgres":
+    of MariaDB:
+      query = mysql_migrate.migrate(table)
+    of PostgreSQL:
       query = postgres_migrate.migrate(table)
 
     logger(query)
 
     block:
-      let db = db()
-      defer: db.close()
       try:
-        db.exec(sql query)
+        waitFor db.exec(query)
       except:
         let err = getCurrentExceptionMsg()
         if err.contains("already exists"):
@@ -134,23 +129,22 @@ proc schema*(tables:varargs[Table]) =
     for column in table.columns:
       if column.isIndex:
         var query = ""
-        let driver = getDriver()
-        case driver:
-        of "sqlite":
+        case db.driver:
+        of SQLite3:
           query = sqlite_migrate.createIndex(table.name, column.name)
-        of "mysql":
+        of MySQL:
           query = mysql_migrate.createIndex(table.name, column.name)
-        of "postgres":
+        of MariaDB:
+          query = mysql_migrate.createIndex(table.name, column.name)
+        of PostgreSQL:
           query = postgres_migrate.createIndex(table.name, column.name)
 
         if query.len > 0:
           logger(query)
 
           block:
-            let db = db()
-            defer: db.close()
             try:
-              db.exec(sql query)
+              waitFor db.exec(query)
             except:
               let err = getCurrentExceptionMsg()
               if err.contains("already exists"):

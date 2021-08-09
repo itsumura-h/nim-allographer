@@ -402,7 +402,7 @@ proc foreignGenerator*(table, column, refTable, refColumn:string,
     onDeleteString = "NO ACTION"
 
   var refTable = refTable
-  wrapUpper(refTable)
+  pgWrapUpper(refTable)
   return &", FOREIGN KEY(\"{column}\") REFERENCES {refTable}({refColumn}) ON DELETE {onDeleteString}"
 
 proc alterAddForeignGenerator*(table, column, refTable, refColumn:string,
@@ -416,24 +416,24 @@ proc alterAddForeignGenerator*(table, column, refTable, refColumn:string,
     onDeleteString = "NO ACTION"
 
   var constraintName = &"{table}_{column}"
-  wrapUpper(constraintName)
+  pgWrapUpper(constraintName)
   var refTable = refTable
-  wrapUpper(refTable)
+  pgWrapUpper(refTable)
   return &"CONSTRAINT {constraintName} FOREIGN KEY (\"{column}\") REFERENCES {refTable} ({refColumn}) ON DELETE {onDeleteString}"
 
 proc alterDeleteGenerator*(table:string, column:string):string =
   var table = table
-  wrapUpper(table)
+  pgWrapUpper(table)
   return &"ALTER TABLE {table} DROP {column}"
 
 proc alterDeleteForeignGenerator*(table, column:string):string =
   var constraintName = &"{table}_{column}"
-  wrapUpper(constraintName)
+  pgWrapUpper(constraintName)
   var table = table
-  wrapUpper(table)
+  pgWrapUpper(table)
   return &"ALTER TABLE {table} DROP CONSTRAINT {constraintName}"
 
 proc indexGenerate*(table, column:string):string =
   var table = table
-  wrapUpper(table)
+  pgWrapUpper(table)
   return &"CREATE INDEX {column}_index ON {table}({column})"

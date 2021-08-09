@@ -2,7 +2,7 @@ import macros, strutils, strformat
 
 
 macro transaction*(bodyInput: untyped):untyped =
-  var bodyStr = bodyInput.repr.replace("rdb()", "RDB(db:db())")
+  var bodyStr = bodyInput.repr.replace("rdb()", "Rdb(db:db())")
   bodyStr.removePrefix
   bodyStr = bodyStr.indent(4)
   bodyStr = fmt"""

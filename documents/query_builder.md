@@ -301,16 +301,16 @@ It run faster than `paginate()` because it doesn't use `offset`.
 |/users?items=5&until=5|`fastPaginateBack(5, 5)`|1,2,3,4,5|
 
 ```nim
-proc fastPaginate(this:RDB, display:int, key="id", order:Order=Asc): JsonNode
+proc fastPaginate(this:Rdb, display:int, key="id", order:Order=Asc): JsonNode
 ```  
 - display...Numer of items per page.  
 - key...Name of a primary key column (option). default is `id`.  
 - order...Asc or Desc (option). default is `Asc`.
 
 ```nim
-proc fastPaginateNext(this:RDB, display:int, id:int, key="id", order:Order=Asc): JsonNode
+proc fastPaginateNext(this:Rdb, display:int, id:int, key="id", order:Order=Asc): JsonNode
 
-proc fastPaginateBack(this:RDB, display:int, id:int, key="id", order:Order=Asc): JsonNode
+proc fastPaginateBack(this:Rdb, display:int, id:int, key="id", order:Order=Asc): JsonNode
 ```
 - display...Numer of items per page.  
 - id...Value of primary key. It should be larger than 0.  

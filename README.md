@@ -7,7 +7,7 @@ allographer
 
 A query builder library inspired by [Laravel/PHP](https://readouble.com/laravel/6.0/en/queries.html) and [Orator/Python](https://orator-orm.com) for Nim
 
-## Easy to access RDB
+## Easy to access Rdb
 ### Query Builder
 ```nim
 import allographer/query_builder
@@ -73,7 +73,7 @@ alter(
 ## Index
 <!--ts-->
    * [allographer](#allographer)
-      * [Easy to access RDB](#easy-to-access-rdb)
+      * [Easy to access Rdb](#easy-to-access-rdb)
          * [Query Builder](#query-builder)
          * [Schema Builder](#schema-builder)
       * [Index](#index)

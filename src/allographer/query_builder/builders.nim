@@ -5,7 +5,7 @@ import base, generators
 
 # ==================== SELECT ====================
 
-proc selectBuilder*(this: RDB): RDB =
+proc selectBuilder*(this: Rdb): Rdb =
   return this.selectSql()
         .fromSql()
         .joinSql()
@@ -23,7 +23,7 @@ proc selectBuilder*(this: RDB): RDB =
         .limitSql()
         .offsetSql()
 
-proc selectFirstBuilder*(this: RDB): RDB =
+proc selectFirstBuilder*(this: Rdb): Rdb =
   return this.selectSql()
         .fromSql()
         .joinSql()
@@ -41,7 +41,7 @@ proc selectFirstBuilder*(this: RDB): RDB =
         .selectFirstSql()
         .offsetSql()
 
-proc selectFindBuilder*(this: RDB, id: int, key: string): RDB =
+proc selectFindBuilder*(this: Rdb, id: int, key: string): Rdb =
   return this.selectSql()
         .fromSql()
         .joinSql()
@@ -58,18 +58,18 @@ proc selectFindBuilder*(this: RDB, id: int, key: string): RDB =
 
 # ==================== INSERT ====================
 
-proc insertValueBuilder*(this: RDB, items: JsonNode): RDB =
+proc insertValueBuilder*(this: Rdb, items: JsonNode): Rdb =
   return this.insertSql()
         .insertValueSql(items)
 
-proc insertValuesBuilder*(this: RDB, rows: openArray[JsonNode]): RDB =
+proc insertValuesBuilder*(this: Rdb, rows: openArray[JsonNode]): Rdb =
   return this.insertSql()
         .insertValuesSql(rows)
 
 
 # ==================== UPDATE ====================
 
-proc updateBuilder*(this: RDB, items: JsonNode): RDB =
+proc updateBuilder*(this: Rdb, items: JsonNode): Rdb =
   return this.updateSql()
         .updateValuesSql(items)
         .whereSql()
@@ -80,7 +80,7 @@ proc updateBuilder*(this: RDB, items: JsonNode): RDB =
 
 # ==================== DELETE ====================
 
-proc deleteBuilder*(this: RDB): RDB =
+proc deleteBuilder*(this: Rdb): Rdb =
   return this.deleteSql()
         .fromSql()
         .joinSql()
@@ -90,7 +90,7 @@ proc deleteBuilder*(this: RDB): RDB =
         .limitSql()
         .offsetSql()
 
-proc deleteByIdBuilder*(this: RDB, id: int, key: string): RDB =
+proc deleteByIdBuilder*(this: Rdb, id: int, key: string): Rdb =
   return this.deleteSql()
         .fromSql()
         .deleteByIdSql(id, key)
@@ -98,7 +98,7 @@ proc deleteByIdBuilder*(this: RDB, id: int, key: string): RDB =
 
 # ==================== Aggregates ====================
 
-proc countBuilder*(this:RDB): RDB =
+proc countBuilder*(this:Rdb): Rdb =
   return this.selectCountSql()
     .fromSql()
     .joinSql()
@@ -116,7 +116,7 @@ proc countBuilder*(this:RDB): RDB =
     .limitSql()
     .offsetSql()
 
-proc maxBuilder*(this:RDB, column:string): RDB =
+proc maxBuilder*(this:Rdb, column:string): Rdb =
   return this.selectMaxSql(column)
     .fromSql()
     .joinSql()
@@ -134,7 +134,7 @@ proc maxBuilder*(this:RDB, column:string): RDB =
     .limitSql()
     .offsetSql()
 
-proc minBuilder*(this:RDB, column:string): RDB =
+proc minBuilder*(this:Rdb, column:string): Rdb =
   return this.selectMinSql(column)
     .fromSql()
     .joinSql()
@@ -152,7 +152,7 @@ proc minBuilder*(this:RDB, column:string): RDB =
     .limitSql()
     .offsetSql()
 
-proc avgBuilder*(this:RDB, column:string): RDB =
+proc avgBuilder*(this:Rdb, column:string): Rdb =
   return this.selectAvgSql(column)
     .fromSql()
     .joinSql()
@@ -170,7 +170,7 @@ proc avgBuilder*(this:RDB, column:string): RDB =
     .limitSql()
     .offsetSql()
 
-proc sumBuilder*(this:RDB, column:string): RDB =
+proc sumBuilder*(this:Rdb, column:string): Rdb =
   return this.selectSumSql(column)
     .fromSql()
     .joinSql()

@@ -1,11 +1,10 @@
 import os, parsecfg, terminal, logging, macros, strformat, strutils
 # self
 import baseEnv
-from connection import getDriver
+import async/async_db
 
-proc driverTypeError*() =
-  let driver = getDriver()
-  if driver != "sqlite" and driver != "mysql" and driver != "postgres":
+proc driverTypeError*(driver:string) =
+  if driver != "sqlite" and driver != "mysql" and driver != "mariadb" and driver != "postgres":
     raise newException(OSError, "invalid DB driver type")
 
 
@@ -52,7 +51,7 @@ proc echoWarningMsg*(msg:string) =
     flushFile(logger.file)
   
 
-proc liteWrapUpper(input:var string) =
+proc liteWrapUpper*(input:var string) =
   var isUpper = false
   for c in input:
     if c.isUpperAscii():
@@ -61,7 +60,7 @@ proc liteWrapUpper(input:var string) =
   if isUpper:
     input = &"\"{input}\""
 
-proc myWrapUpper(input:var string) =
+proc myWrapUpper*(input:var string) =
   var isUpper = false
   for c in input:
     if c.isUpperAscii():
@@ -70,7 +69,7 @@ proc myWrapUpper(input:var string) =
   if isUpper:
     input = &"`{input}`"
 
-proc pgWrapUpper(input:var string) =
+proc pgWrapUpper*(input:var string) =
   var isUpper = false
   for c in input:
     if c.isUpperAscii():
@@ -79,12 +78,11 @@ proc pgWrapUpper(input:var string) =
   if isUpper:
     input = &"\"{input}\""
 
-proc wrapUpper*(input:var string) =
-  let driver = getDriver()
+proc wrapUpper*(input:var string, driver:Driver) =
   case driver:
-  of "sqlite":
+  of SQLite3:
     liteWrapUpper(input)
-  of "mysql":
+  of MySQL, MariaDB:
     myWrapUpper(input)
-  of "postgres":
+  of PostgreSQL:
     pgWrapUpper(input)
