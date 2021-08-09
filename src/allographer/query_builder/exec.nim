@@ -242,7 +242,14 @@ proc findPlain*(self:Rdb, id:int, key="id"):Future[seq[string]]{.async.} =
     getCurrentExceptionMsg().echoErrorMsg()
     return newSeq[string](0)
 
-proc insertId*(db:Connections, sqlString:string, placeHolder:seq[string], key="id"):Future[int]{.async.} =
+
+# ==================== INSERT ====================
+
+proc insertSql*(self: Rdb, items: JsonNode):string =
+  result = self.insertValueBuilder(items).sqlString & $self.placeHolder
+  echo result
+
+proc insertId(db:Connections, sqlString:string, placeHolder:seq[string], key:string):Future[int]{.async.} =
   if db.driver == SQLite3:
     await db.exec(sqlString, placeHolder)
     let (rows, _) = await db.query("SELECT last_insert_rowid()")
@@ -252,15 +259,9 @@ proc insertId*(db:Connections, sqlString:string, placeHolder:seq[string], key="i
     wrapUpper(key, db.driver)
     var sqlString = sqlString
     sqlString.add(&" RETURNING {key}")
-    let (rows, _) = await db.query(sqlString)
+    logger(sqlString, placeHolder)
+    let (rows, _) = await db.query(sqlString, placeHolder)
     return rows[0][0].parseInt
-
-
-# ==================== INSERT ====================
-
-proc insertSql*(self: Rdb, items: JsonNode):string =
-  result = self.insertValueBuilder(items).sqlString & $self.placeHolder
-  echo result
 
 proc insert*(self: Rdb, items: JsonNode){.async.} =
   defer: self.cleanUp()
@@ -268,13 +269,13 @@ proc insert*(self: Rdb, items: JsonNode){.async.} =
   logger(self.sqlString, self.placeHolder)
   await self.db.exec(self.sqlString, self.placeHolder)
 
-proc insert*(self: Rdb, rows: openArray[JsonNode]){.async.} =
+proc insert*(self: Rdb, rows: seq[JsonNode]){.async.} =
   defer: self.cleanUp()
   self.sqlString = self.insertValuesBuilder(rows).sqlString
   logger(self.sqlString, self.placeHolder)
   await self.db.exec(self.sqlString, self.placeHolder)
 
-proc inserts*(self: Rdb, rows: openArray[JsonNode]){.async.} =
+proc inserts*(self: Rdb, rows: seq[JsonNode]){.async.} =
   defer: self.cleanUp()
   for row in rows:
     let sqlString = self.insertValueBuilder(row).sqlString
@@ -282,26 +283,23 @@ proc inserts*(self: Rdb, rows: openArray[JsonNode]){.async.} =
     await self.db.exec(sqlString, self.placeHolder)
     self.placeHolder = @[]
 
-proc insertID*(self: Rdb, items: JsonNode):Future[int] {.async.} =
+proc insertID*(self: Rdb, items: JsonNode, key="id"):Future[int] {.async.} =
   defer: self.cleanUp()
   self.sqlString = self.insertValueBuilder(items).sqlString
-  logger(self.sqlString, self.placeHolder)
-  return await self.db.insertID(self.sqlString, self.placeHolder)
+  return await self.db.insertID(self.sqlString, self.placeHolder, key)
 
-proc insertID*(self: Rdb, rows: openArray[JsonNode]):Future[int] {.async.} =
+proc insertID*(self: Rdb, rows: seq[JsonNode], key="id"):Future[int] {.async.} =
   defer: self.cleanUp()
   self.sqlString = self.insertValuesBuilder(rows).sqlString
-  logger(self.sqlString, self.placeHolder)
-  result = await self.db.insertID(self.sqlString, self.placeHolder)
+  result = await self.db.insertID(self.sqlString, self.placeHolder, key)
   self.placeHolder = @[]
 
-proc insertsID*(self: Rdb, rows: openArray[JsonNode]):Future[seq[int]]{.async.} =
+proc insertsID*(self: Rdb, rows: seq[JsonNode], key="id"):Future[seq[int]]{.async.} =
   defer: self.cleanUp()
   var response = newSeq[int](rows.len)
   for i, row in rows:
     let sqlString = self.insertValueBuilder(row).sqlString
-    logger(sqlString, self.placeHolder)
-    response[i] = await self.db.insertID(sqlString, self.placeHolder)
+    response[i] = await self.db.insertID(sqlString, self.placeHolder, key)
     self.placeHolder = @[]
   return response
 

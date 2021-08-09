@@ -26,6 +26,7 @@ proc table*(db: Connections, tableArg: string): Rdb =
 
 proc raw*(db: Connections, sql:string, arges:varargs[string]): Rdb =
   let self = new Rdb
+  self.db = db
   self.sqlString = sql
   self.placeHolder = @arges
   return self

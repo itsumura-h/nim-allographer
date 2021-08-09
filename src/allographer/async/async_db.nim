@@ -6,21 +6,21 @@ import database/is_exists_lib
 
 export base
 
-proc dbopen*(driver: Driver, database: string = "", user: string = "", password: string = "", host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30): Connections =
+proc dbopen*(driver: Driver, database: string = "", user: string = "", password: string = "", host: string = "", port: int = 0, maxConnections: int = 1, timeout=30): Connections =
   case driver:
   of MySQL:
     when isExistsMysql():
-      result = mysql.dbopen(database, user, password, host, port, maxConnections, timeout)
+      result = mysql.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of MariaDB:
     when isExistsMariadb():
       discard
   #     result = mariadb.dbopen(database, user, password, host, port, maxConnections, timeout)
   of PostgreSQL:
     when isExistsPostgres():
-      result = postgres.dbopen(database, user, password, host, port, maxConnections, timeout)
+      result = postgres.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of SQLite3:
     when isExistsSqlite():
-      result = sqlite.dbopen(database, user, password, host, port, maxConnections, timeout)
+      result = sqlite.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
 
 proc query*(self: Connections, query: string, args: seq[string] = @[]):Future[(seq[Row], DbColumns)] {.async.} =
   let connI = await getFreeConn(self)

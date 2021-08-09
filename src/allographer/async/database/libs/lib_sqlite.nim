@@ -9,6 +9,8 @@ proc dbQuote(s: string): string =
     doAssert dbQuote("'") == "''''"
     doAssert dbQuote("A Foobar's pen.") == "'A Foobar''s pen.'"
 
+  if s == "null":
+    return "null"
   result = "'"
   for c in items(s):
     if c == '\'': add(result, "''")
