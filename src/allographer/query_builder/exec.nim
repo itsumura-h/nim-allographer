@@ -31,7 +31,9 @@ proc toJson(driver:Driver, results:openArray[seq[string]], dbRows:DbRows):seq[Js
         else:
           response_row[key] = newJString(row)
       of MySQL, MariaDB:
-        if typ == dbNull:
+        if row == "--null":
+          response_row[key] = newJNull()
+        elif typ == dbNull:
           response_row[key] = newJNull()
         elif [dbInt, dbUInt].contains(typ) and size == 1:
           if row == "0":

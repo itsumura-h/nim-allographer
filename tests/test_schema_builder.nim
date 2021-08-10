@@ -14,8 +14,9 @@ let driver = (proc():Driver=
   of "postgres": return PostgreSQL
 )()
 
-# let db = dbopen(driver, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("DB_PASSWORD"), host, port, maxConnections, 30)
-let db = dbopen(SQLite3, ":memory:", maxConnections=95, timeout=30)
+# let db = dbopen(PostgreSQL, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("DB_PASSWORD"), getEnv("PG_HOST"), getEnv("PG_PORT").parseInt, maxConnections, 30)
+let db = dbopen(MySQL, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("DB_PASSWORD"), getEnv("MY_HOST"), getEnv("MY_PORT").parseInt, maxConnections, 30)
+# let db = dbopen(SQLite3, ":memory:", maxConnections=95, timeout=30)
 
 suite "Schema builder":
   test "test":
@@ -146,11 +147,10 @@ suite "Schema builder":
         })
         echo await db.table(dbTyp).get()
         assert true
-        db.alter(
-          drop(dbTyp)
-        )
+        # db.alter(
+        #   drop(dbTyp)
+        # )
       except:
         echo getCurrentExceptionMsg()
         assert false
     )()
-

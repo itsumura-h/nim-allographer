@@ -65,18 +65,20 @@ proc setTypeName(t: var DbType; f: PFIELD) =
   of TYPE_ENUM: t.kind = dbEnum
   of TYPE_SET: t.kind = dbSet
   of TYPE_TINY_BLOB, TYPE_MEDIUM_BLOB, TYPE_LONG_BLOB,
-     TYPE_BLOB: t.kind = dbBlob
+    TYPE_BLOB: t.kind = dbBlob
   of TYPE_GEOMETRY:
     t.kind = dbGeometry
 
-proc setColumnInfo*(columns: var DbColumns; res: PRES; L: int) =
-  setLen(columns, L)
-  for i in 0..<L:
+proc setColumnInfo*(res: PRES; dbRows: var DbRows;  line, cols: int) =
+  var columns: DbColumns
+  setLen(columns, cols)
+  for i in 0..<cols:
     let fp = fetch_field_direct(res, cint(i))
     setTypeName(columns[i].typ, fp)
     columns[i].name = $fp.name
     columns[i].tableName = $fp.table
     columns[i].primaryKey = (fp.flags and PRI_KEY_FLAG) != 0
+  dbRows.add(columns)
 
 proc newRow*(L: int): base.Row =
   newSeq(result, L)
@@ -89,6 +91,8 @@ proc properFreeResult*(sqlres: PRES, row: cstringArray) =
 
 proc dbQuote(s: string): string =
   ## DB quotes the string.
+  if s == "null":
+    return "NULL"
   result = newStringOfCap(s.len + 2)
   result.add "'"
   for c in items(s):

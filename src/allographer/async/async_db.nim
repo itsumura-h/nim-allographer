@@ -32,7 +32,7 @@ proc query*(self: Connections, query: string, args: seq[string] = @[]):Future[(s
   of MySQL:
     when isExistsMysql():
       discard
-      # return await mysql.query(self.pools[connI].mysqlConn, query, args, self.timeout)
+      return await mysql.query(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb():
       discard
@@ -55,7 +55,7 @@ proc exec*(self: Connections, query: string, args: seq[string] = @[]) {.async.} 
   of MySQL:
     when isExistsMysql():
       discard
-    #   await mysql.exec(self.pools[connI].mysqlConn, query, args, self.timeout)
+      await mysql.exec(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb():
       discard

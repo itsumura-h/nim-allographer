@@ -6,8 +6,8 @@ let
   user = getEnv("DB_USER")
   password = getEnv("DB_PASSWORD")
   sqliteHost = getEnv("SQLITE_HOST")
-  mysqlHost = getEnv("MYSQL_HOST")
-  mysqlPort = getEnv("MYSQL_PORT").parseInt
+  mysqlHost = getEnv("MY_HOST")
+  mysqlPort = getEnv("MY_PORT").parseInt
   pgHost = getEnv("PG_HOST")
   pgPort = getEnv("PG_PORT").parseInt
   maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
@@ -18,8 +18,8 @@ let
   sqliteDb = dbopen(SQLite3, sqliteHost, maxConnections=maxConnections)
   mysqlDb = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout)
   postgresDb = dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout)
-  db* = sqliteDb
-  # db* = postgresDb
+  # db* = sqliteDb
+  db* = mysqlDb
 
 template asyncBlock*(body:untyped) =
   waitFor (proc(){.async.}=
