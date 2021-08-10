@@ -76,17 +76,17 @@ suite "transaction":
     echo "=== out of transaction"
     echo rdb().table("users").find(11)
 
-  test "insertID":
+  test "insertId":
     transaction:
       let id = rdb().table("users")
-                .insertID(%*{"name": "user11", "email": "user11@example.com"})
+                .insertId(%*{"name": "user11", "email": "user11@example.com"})
       echo id
     echo rdb().table("users").max("id")
 
-  test "insertID":
+  test "insertId":
     transaction:
       let id = rdb().table("users")
-                .insertID([
+                .insertId([
                   %*{"name": "user11", "email": "user11@example.com"},
                   %*{"name": "user12", "email": "user12@example.com"}
                 ])

@@ -272,15 +272,15 @@ proc inserts*(self: Rdb, rows: seq[JsonNode]){.async.} =
     await self.db.exec(sqlString, self.placeHolder)
     self.placeHolder = @[]
 
-proc insertID*(self: Rdb, items: JsonNode, key="id"):Future[int] {.async.} =
+proc insertId*(self: Rdb, items: JsonNode, key="id"):Future[int] {.async.} =
   defer: self.cleanUp()
   self.sqlString = self.insertValueBuilder(items).sqlString
-  return await self.db.insertID(self.sqlString, self.placeHolder, key)
+  return await self.db.insertId(self.sqlString, self.placeHolder, key)
 
-proc insertID*(self: Rdb, rows: seq[JsonNode], key="id"):Future[int] {.async.} =
+proc insertId*(self: Rdb, rows: seq[JsonNode], key="id"):Future[int] {.async.} =
   defer: self.cleanUp()
   self.sqlString = self.insertValuesBuilder(rows).sqlString
-  result = await self.db.insertID(self.sqlString, self.placeHolder, key)
+  result = await self.db.insertId(self.sqlString, self.placeHolder, key)
   self.placeHolder = @[]
 
 proc insertsID*(self: Rdb, rows: seq[JsonNode], key="id"):Future[seq[int]]{.async.} =
@@ -288,7 +288,7 @@ proc insertsID*(self: Rdb, rows: seq[JsonNode], key="id"):Future[seq[int]]{.asyn
   var response = newSeq[int](rows.len)
   for i, row in rows:
     let sqlString = self.insertValueBuilder(row).sqlString
-    response[i] = await self.db.insertID(sqlString, self.placeHolder, key)
+    response[i] = await self.db.insertId(sqlString, self.placeHolder, key)
     self.placeHolder = @[]
   return response
 

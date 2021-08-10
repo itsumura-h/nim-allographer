@@ -458,7 +458,7 @@ import allographer/query_builder
 
 echo rdb()
 .table("users")
-.insertID(%*{
+.insertId(%*{
   "name": "John",
   "email": "John@gmail.com"
 })
@@ -469,7 +469,7 @@ echo rdb()
 ```nim
 import allographer/query_builder
 
-echo rdb().table("users").insertID(
+echo rdb().table("users").insertId(
   [
     %*{"name": "John", "email": "John@gmail.com", "address": "London"},
     %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},

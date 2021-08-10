@@ -111,9 +111,9 @@ suite "select":
       var t = await(db.table("users").find(2)).get
       check t["name"].getStr() == "John"
 
-  test "insertID()":
+  test "insertId()":
     asyncBlock:
-      var id = await db.table("users").insertID(%*{"name": "John"})
+      var id = await db.table("users").insertId(%*{"name": "John"})
       var t = await(db.table("users").find(id)).get
       check t["name"].getStr() == "John"
 
@@ -130,7 +130,7 @@ suite "select":
 
   test "insert nil":
     asyncBlock:
-      var id = await db.table("users").insertID(%*{
+      var id = await db.table("users").insertId(%*{
         "name": "John",
         "email": nil,
         "address": ""

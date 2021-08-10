@@ -70,7 +70,7 @@ echo rdb().table("users").select("id", "email").limit(5).find(3)
 echo ""
 
 rdb().table("users").insert(%*{"name": "John", "email": "John@gmail.com"})
-echo rdb().table("users").insertID(%*{"name": "John", "email": "John@gmail.com"})
+echo rdb().table("users").insertId(%*{"name": "John", "email": "John@gmail.com"})
 
 
 rdb().table("users").insert(
