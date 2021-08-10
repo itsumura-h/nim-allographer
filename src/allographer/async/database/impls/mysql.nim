@@ -58,11 +58,15 @@ proc query*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[(s
       status = fetch_row_nonblocking(res, row.addr)
     if row == nil: break
     var baseRow = newSeq[string](cols)
-    for i in 0..<cols:
-      baseRow[i] = if row[i].isNil: "--null" else: $row[i]
     setColumnInfo(res, dbRows, lines, cols)
+    for i in 0..<cols:
+      if row[i].isNil:
+        dbRows[lines][i].typ.kind = dbNull
+      baseRow[i] = $row[i]
     rows.add(baseRow)
     lines.inc()
+  echo dbRows
+  echo rows
   return (rows, dbRows)
 
 proc exec*(db:PMySQL, query: string, args: seq[string], timeout:int) {.async.} =

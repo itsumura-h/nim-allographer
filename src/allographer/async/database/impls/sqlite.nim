@@ -28,7 +28,6 @@ proc query*(db:PSqlite3, query:string, args:seq[string], timeout:int):Future[(se
     for i in 0..row.len()-1:
       columns[i] = row[i]
     rows.add(columns)
-
   return (rows, dbRows)
 
 proc exec*(db:PSqlite3, query: string, args: seq[string], timeout:int) {.async.} =

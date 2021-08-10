@@ -19,6 +19,7 @@ let
   mysqlDb = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout)
   postgresDb = dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout)
   # db* = sqliteDb
+  # db* = postgresDb
   db* = mysqlDb
 
 template asyncBlock*(body:untyped) =

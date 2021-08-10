@@ -10,7 +10,7 @@ proc dbQuote(s: string): string =
     doAssert dbQuote("A Foobar's pen.") == "'A Foobar''s pen.'"
 
   if s == "null":
-    return "null"
+    return "NULL"
   result = "'"
   for c in items(s):
     if c == '\'': add(result, "''")
