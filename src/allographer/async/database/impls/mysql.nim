@@ -65,8 +65,6 @@ proc query*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[(s
       baseRow[i] = $row[i]
     rows.add(baseRow)
     lines.inc()
-  echo dbRows
-  echo rows
   return (rows, dbRows)
 
 proc exec*(db:PMySQL, query: string, args: seq[string], timeout:int) {.async.} =
