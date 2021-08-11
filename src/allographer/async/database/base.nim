@@ -115,7 +115,8 @@ proc getFreeConn*(self:Connections):Future[int] {.async.} =
       return errorConnectionNum
 
 proc returnConn*(self: Connections, i: int) =
-  self.pools[i].isBusy = false
+  if i != errorConnectionNum:
+    self.pools[i].isBusy = false
 
 proc dbError*(msg: string) {.noreturn, noinline.} =
   ## raises an DbError exception with message `msg`.

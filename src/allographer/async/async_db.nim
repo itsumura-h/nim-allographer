@@ -119,7 +119,7 @@ proc query*(self:Prepared, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {
 
 proc exec*(self:Prepared, args:seq[string] = @[]) {.async.} =
   let connI = await getFreeConn(self.conn)
-  self.conn.returnConn(connI)
+  defer: self.conn.returnConn(connI)
   if connI == errorConnectionNum:
     return
   await sleepAsync(0)
