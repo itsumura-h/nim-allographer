@@ -1,7 +1,6 @@
 import asyncdispatch, macros, strutils, strformat
 import database/base
 import database/impls/mysql, database/impls/mariadb, database/impls/postgres, database/impls/sqlite
-from database/rdb/sqlite as rdbSqlite import PStmt
 import database/is_exists_lib
 
 export base
