@@ -1,8 +1,10 @@
-import unittest, json, strformat, options, asyncdispatch
+import unittest, json, strformat, options, asyncdispatch, random
 
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
 import connections
+
+randomize()
 
 proc setup() =
   db.schema([
@@ -295,8 +297,9 @@ suite "select":
       let sql = "SELECT * FROM users WHERE id = $1"
       let prepared = await db.prepare(sql)
       var futures = newSeq[Future[(seq[Row], DbRows)]]()
-      for i in 0..10:
-        futures.add(prepared.query(@[$i]))
+      for i in 0..500:
+        let n = rand(1..10)
+        futures.add(prepared.query(@[$n]))
       let results = await all(futures)
       prepared.close()
       for res in results:
