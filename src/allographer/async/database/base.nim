@@ -21,6 +21,7 @@ type
     timeout*:int
   Prepared* = ref object
     conn*: Connections
+    connI*:int
     nArgs*: int
     pgStmt*: string
     sqliteStmt*: sqlite.PStmt

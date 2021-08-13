@@ -102,6 +102,8 @@ proc prepare*(db:PPGconn, query: string, timeout:int, stmtName:string):Future[in
 
 proc preparedQuery*(db:PPGconn, args: seq[string], nArgs:int, timeout:int, stmtName:string):Future[(seq[Row], DbRows)] {.async.} =
   assert db.status == CONNECTION_OK
+  while pqisBusy(db) == 1:
+    await sleepAsync(10)
   let arr = allocCStringArray(args)
   let status = pqsendQueryPrepared(db, stmtName, int32(nArgs), arr, nil, nil, 0)
   deallocCStringArray(arr)
@@ -143,6 +145,8 @@ proc preparedQuery*(db:PPGconn, args: seq[string], nArgs:int, timeout:int, stmtN
 
 proc preparedExec*(db:PPGconn, args: seq[string], nArgs:int, timeout:int, stmtName:string) {.async.} =
   assert db.status == CONNECTION_OK
+  while pqisBusy(db) == 1:
+    await sleepAsync(10)
   let arr = allocCStringArray(args)
   let status = pqsendQueryPrepared(db, stmtName, int32(nArgs), arr, nil, nil, 0)
   deallocCStringArray(arr)

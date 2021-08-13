@@ -42,10 +42,10 @@ proc setup() =
 suite "select":
   setup:
     setup()
-  test "get()":
-    asyncBlock:
-      var t = await db.table("users").get()
-      check t[0] == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
+  # test "get()":
+  #   asyncBlock:
+  #     var t = await db.table("users").get()
+  #     check t[0] == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
 
   # test "getPlain()":
   #   asyncBlock:
@@ -289,3 +289,15 @@ suite "select":
   #     var res = await db.raw(sql, "1").getRaw()
   #     echo res
   #     check res[0]["name"].getStr == "user1"
+
+  test "prepare":
+    asyncBlock:
+      let sql = "SELECT * FROM users WHERE id = $1"
+      let prepared = await db.prepare(sql)
+      var futures = newSeq[Future[(seq[Row], DbRows)]]()
+      for i in 0..10:
+        futures.add(prepared.query(@[$i]))
+      let results = await all(futures)
+      prepared.close()
+      for res in results:
+        echo res[0]

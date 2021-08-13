@@ -74,7 +74,6 @@ proc prepare*(self: Connections, query: string, stmtName=""):Future[Prepared] {.
     else:
       stmtName
   let connI = await getFreeConn(self)
-  defer: self.returnConn(connI)
   if connI == errorConnectionNum:
     return
   await sleepAsync(0)
@@ -90,17 +89,13 @@ proc prepare*(self: Connections, query: string, stmtName=""):Future[Prepared] {.
   of PostgreSQL:
     when isExistsPostgres():
       let nArgs = await postgres.prepare(self.pools[connI].postgresConn, query, self.timeout, stmtName)
-      result = Prepared(conn:self, nArgs:nArgs, pgStmt:stmtName)
+      result = Prepared(conn:self, nArgs:nArgs, pgStmt:stmtName, connI:connI)
   of SQLite3:
     when isExistsSqlite():
       let sqliteStmt = await sqlite.prepare(self.pools[connI].sqliteConn, query, self.timeout)
-      result = Prepared(conn:self, sqliteStmt:sqliteStmt)
+      result = Prepared(conn:self, sqliteStmt:sqliteStmt, connI:connI)
 
 proc query*(self:Prepared, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
-  let connI = await getFreeConn(self.conn)
-  defer: self.conn.returnConn(connI)
-  if connI == errorConnectionNum:
-    return
   await sleepAsync(0)
   case self.conn.driver
   of MySQL:
@@ -111,16 +106,12 @@ proc query*(self:Prepared, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {
       discard
   of PostgreSQL:
     when isExistsPostgres():
-      return await postgres.preparedQuery(self.conn.pools[connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
+      return await postgres.preparedQuery(self.conn.pools[self.connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
   of SQLite3:
     when isExistsSqlite():
-      return await sqlite.preparedQuery(self.conn.pools[connI].sqliteConn, args, self.sqliteStmt)
+      return await sqlite.preparedQuery(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)
 
 proc exec*(self:Prepared, args:seq[string] = @[]) {.async.} =
-  let connI = await getFreeConn(self.conn)
-  defer: self.conn.returnConn(connI)
-  if connI == errorConnectionNum:
-    return
   await sleepAsync(0)
   case self.conn.driver
   of MySQL:
@@ -131,10 +122,14 @@ proc exec*(self:Prepared, args:seq[string] = @[]) {.async.} =
       discard
   of PostgreSQL:
     when isExistsPostgres():
-      await postgres.preparedExec(self.conn.pools[connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
+      await postgres.preparedExec(self.conn.pools[self.connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
   of SQLite3:
     when isExistsSqlite():
-      await sqlite.preparedExec(self.conn.pools[connI].sqliteConn, args, self.sqliteStmt)
+      await sqlite.preparedExec(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)
+
+proc close*(self:Prepared) =
+  self.conn.returnConn(self.connI)
+
 
 macro transaction*(bodyInput: untyped):untyped =
   var bodyStr = bodyInput.repr
