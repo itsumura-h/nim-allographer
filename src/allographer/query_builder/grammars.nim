@@ -15,7 +15,10 @@ ORDER BY
 TOP（LIMIT）
 ]#
 
-proc table*(self:Rdb, tableArg: string): Rdb =
+proc table*(rdb:Rdb, tableArg: string): Rdb =
+  let self = new Rdb
+  self.conn = rdb.conn
+  self.log = rdb.log
   self.query = %*{"table": tableArg}
   return self
 
