@@ -1,6 +1,13 @@
-from async/async_db import dbopen
-from async/database/base import Driver
+from async/async_db import open
+from async/database/base as asyncBase import Driver
+import base
 
 export
-  dbopen,
   Driver
+
+proc dbOpen*(driver:Driver, database:string="", user:string="", password:string="",
+            host: string="", port=0, maxConnections=1, timeout=30,
+            isDisplayLog=false, isSubmitFile=false, logDir=""):Rdb =
+  result = new Rdb
+  result.db = open(driver, database, user, password, host, port, maxConnections, timeout)
+  result.log = LogSetting(isDisplayLog:isDisplayLog, isSubmitFile:isSubmitFile, logDir:logDir)

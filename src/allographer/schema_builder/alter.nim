@@ -4,17 +4,18 @@ import
   ./alters/mysql_alter,
   ./alters/postgres_alter
 import ../async/async_db
+import ../base
 
 
-proc alter*(db:Connections, tables:varargs[Table]) =
+proc alter*(rdb:Rdb, tables:varargs[Table]) =
   for table in tables:
-    case db.driver:
+    case rdb.db.driver:
     of SQLite3:
-      sqlite_alter.exec(db, table)
+      sqlite_alter.exec(rdb, table)
     of MySQL, MariaDB:
-      mysql_alter.exec(db, table)
+      mysql_alter.exec(rdb, table)
     of PostgreSQL:
-      postgres_alter.exec(db, table)
+      postgres_alter.exec(rdb, table)
 
 
 proc add*():Column =

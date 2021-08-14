@@ -4,20 +4,21 @@ import ../column
 import ../migrates/mysql_migrate
 import ../../utils
 import ../../async/async_db
+import ../../base
 
-proc add(db:Connections, column:Column, table:string) =
+proc add(rdb:Rdb, column:Column, table:string) =
   # let columnString = generateColumnString(column)
   # let query = &"ALTER TABLE {table} ADD {columnString}"
   let querySeq = generateAlterAddQueries(column, table)
   block:
     try:
       for query in querySeq:
-        logger(query)
-        waitFor db.exec(query)
+        rdb.log.logger(query)
+        waitFor rdb.db.exec(query)
     except:
       let err = getCurrentExceptionMsg()
-      echoErrorMsg(err)
-      echoWarningMsg(&"Safety skip alter table '{table}'")
+      rdb.log.echoErrorMsg(err)
+      rdb.log.echoWarningMsg(&"Safety skip alter table '{table}'")
 
 proc getColumns(db:Connections, table:string, name:string):string =
   var query = &"SHOW COLUMNS FROM {table}"
@@ -29,67 +30,67 @@ proc getColumns(db:Connections, table:string, name:string):string =
       columns.add(row[1])
   return columns
 
-proc change(db:Connections, column:Column, table:string) =
+proc change(rdb:Rdb, column:Column, table:string) =
   try:
     let newColumnDifinition = generateColumnString(column)
     let query = &"ALTER TABLE {table} CHANGE `{column.previousName}` {newColumnDifinition}"
-    logger(query)
-    waitFor db.exec(query)
+    rdb.log.logger(query)
+    waitFor rdb.db.exec(query)
   except:
     let err = getCurrentExceptionMsg()
-    echoErrorMsg(err)
+    rdb.log.echoErrorMsg(err)
 
-proc deleteColumn(db:Connections, table:string, column:Column) =
+proc deleteColumn(rdb:Rdb, table:string, column:Column) =
   try:
     let query = generateAlterDeleteQuery(table, column)
-    logger(query)
-    waitFor db.exec(query)
+    rdb.log.logger(query)
+    waitFor rdb.db.exec(query)
   except:
     let err = getCurrentExceptionMsg()
-    echoErrorMsg(err)
+    rdb.log.echoErrorMsg(err)
 
-proc deleteForeign(db:Connections, table:string, column:Column) =
+proc deleteForeign(rdb:Rdb, table:string, column:Column) =
   let querySeq = generateAlterDeleteForeignQueries(table, column)
   try:
     for query in querySeq:
-      logger(query)
-      waitFor db.exec(query)
+      rdb.log.logger(query)
+      waitFor rdb.db.exec(query)
   except:
     let err = getCurrentExceptionMsg()
-    echoErrorMsg(err)
+    rdb.log.echoErrorMsg(err)
 
-proc rename(db:Connections, tableFrom, tableTo:string) =
+proc rename(rdb:Rdb, tableFrom, tableTo:string) =
   try:
     let query = &"ALTER TABLE {tableFrom} RENAME TO {tableTo}"
-    logger(query)
-    waitFor db.exec(query)
+    rdb.log.logger(query)
+    waitFor rdb.db.exec(query)
   except:
     let err = getCurrentExceptionMsg()
-    echoErrorMsg(err)
+    rdb.log.echoErrorMsg(err)
 
-proc drop(db:Connections, table:string) =
+proc drop(rdb:Rdb, table:string) =
   try:
     let query = &"DROP TABLE {table}"
-    logger(query)
-    waitFor db.exec(query)
+    rdb.log.logger(query)
+    waitFor rdb.db.exec(query)
   except:
     let err = getCurrentExceptionMsg()
-    echoErrorMsg(err)
+    rdb.log.echoErrorMsg(err)
 
-proc exec*(db:Connections, table:Table) =
+proc exec*(rdb:Rdb, table:Table) =
   if table.typ == Nomal:
     for column in table.columns:
       case column.alterTyp
       of Add:
-        add(db, column, table.name)
+        add(rdb, column, table.name)
       of Change:
-        change(db, column, table.name)
+        change(rdb, column, table.name)
       of Delete:
         if column.typ == rdbForeign:
-          deleteForeign(db, table.name, column)
+          deleteForeign(rdb, table.name, column)
         else:
-          deleteColumn(db, table.name, column)
+          deleteColumn(rdb, table.name, column)
   elif table.typ == Rename:
-    rename(db, table.name, table.alterTo)
+    rename(rdb, table.name, table.alterTo)
   elif table.typ == Drop:
-    drop(db, table.name)
+    drop(rdb, table.name)

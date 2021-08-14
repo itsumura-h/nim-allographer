@@ -1,12 +1,12 @@
 import json
 
-import base, generators
+import ../base, generators
 
 
 # ==================== SELECT ====================
 
-proc selectBuilder*(this: Rdb): Rdb =
-  return this.selectSql()
+proc selectBuilder*(self: Rdb): Rdb =
+  return self.selectSql()
         .fromSql()
         .joinSql()
         .leftJoinSql()
@@ -23,8 +23,8 @@ proc selectBuilder*(this: Rdb): Rdb =
         .limitSql()
         .offsetSql()
 
-proc selectFirstBuilder*(this: Rdb): Rdb =
-  return this.selectSql()
+proc selectFirstBuilder*(self: Rdb): Rdb =
+  return self.selectSql()
         .fromSql()
         .joinSql()
         .leftJoinSql()
@@ -41,8 +41,8 @@ proc selectFirstBuilder*(this: Rdb): Rdb =
         .selectFirstSql()
         .offsetSql()
 
-proc selectFindBuilder*(this: Rdb, id: int, key: string): Rdb =
-  return this.selectSql()
+proc selectFindBuilder*(self: Rdb, id: int, key: string): Rdb =
+  return self.selectSql()
         .fromSql()
         .joinSql()
         .leftJoinSql()
@@ -58,19 +58,19 @@ proc selectFindBuilder*(this: Rdb, id: int, key: string): Rdb =
 
 # ==================== INSERT ====================
 
-proc insertValueBuilder*(this: Rdb, items: JsonNode): Rdb =
-  return this.insertSql()
+proc insertValueBuilder*(self: Rdb, items: JsonNode): Rdb =
+  return self.insertSql()
         .insertValueSql(items)
 
-proc insertValuesBuilder*(this: Rdb, rows: openArray[JsonNode]): Rdb =
-  return this.insertSql()
+proc insertValuesBuilder*(self: Rdb, rows: openArray[JsonNode]): Rdb =
+  return self.insertSql()
         .insertValuesSql(rows)
 
 
 # ==================== UPDATE ====================
 
-proc updateBuilder*(this: Rdb, items: JsonNode): Rdb =
-  return this.updateSql()
+proc updateBuilder*(self: Rdb, items: JsonNode): Rdb =
+  return self.updateSql()
         .updateValuesSql(items)
         .whereSql()
         .orWhereSql()
@@ -80,8 +80,8 @@ proc updateBuilder*(this: Rdb, items: JsonNode): Rdb =
 
 # ==================== DELETE ====================
 
-proc deleteBuilder*(this: Rdb): Rdb =
-  return this.deleteSql()
+proc deleteBuilder*(self: Rdb): Rdb =
+  return self.deleteSql()
         .fromSql()
         .joinSql()
         .leftJoinSql()
@@ -90,16 +90,16 @@ proc deleteBuilder*(this: Rdb): Rdb =
         .limitSql()
         .offsetSql()
 
-proc deleteByIdBuilder*(this: Rdb, id: int, key: string): Rdb =
-  return this.deleteSql()
+proc deleteByIdBuilder*(self: Rdb, id: int, key: string): Rdb =
+  return self.deleteSql()
         .fromSql()
         .deleteByIdSql(id, key)
 
 
 # ==================== Aggregates ====================
 
-proc countBuilder*(this:Rdb): Rdb =
-  return this.selectCountSql()
+proc countBuilder*(self:Rdb): Rdb =
+  return self.selectCountSql()
     .fromSql()
     .joinSql()
     .leftJoinSql()
@@ -116,8 +116,8 @@ proc countBuilder*(this:Rdb): Rdb =
     .limitSql()
     .offsetSql()
 
-proc maxBuilder*(this:Rdb, column:string): Rdb =
-  return this.selectMaxSql(column)
+proc maxBuilder*(self:Rdb, column:string): Rdb =
+  return self.selectMaxSql(column)
     .fromSql()
     .joinSql()
     .leftJoinSql()
@@ -134,8 +134,8 @@ proc maxBuilder*(this:Rdb, column:string): Rdb =
     .limitSql()
     .offsetSql()
 
-proc minBuilder*(this:Rdb, column:string): Rdb =
-  return this.selectMinSql(column)
+proc minBuilder*(self:Rdb, column:string): Rdb =
+  return self.selectMinSql(column)
     .fromSql()
     .joinSql()
     .leftJoinSql()
@@ -152,8 +152,8 @@ proc minBuilder*(this:Rdb, column:string): Rdb =
     .limitSql()
     .offsetSql()
 
-proc avgBuilder*(this:Rdb, column:string): Rdb =
-  return this.selectAvgSql(column)
+proc avgBuilder*(self:Rdb, column:string): Rdb =
+  return self.selectAvgSql(column)
     .fromSql()
     .joinSql()
     .leftJoinSql()
@@ -170,8 +170,8 @@ proc avgBuilder*(this:Rdb, column:string): Rdb =
     .limitSql()
     .offsetSql()
 
-proc sumBuilder*(this:Rdb, column:string): Rdb =
-  return this.selectSumSql(column)
+proc sumBuilder*(self:Rdb, column:string): Rdb =
+  return self.selectSumSql(column)
     .fromSql()
     .joinSql()
     .leftJoinSql()

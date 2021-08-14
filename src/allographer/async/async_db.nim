@@ -5,7 +5,8 @@ import database/is_exists_lib
 
 export base
 
-proc dbopen*(driver: Driver, database: string = "", user: string = "", password: string = "", host: string = "", port: int = 0, maxConnections: int = 1, timeout=30): Connections =
+proc open*(driver:Driver, database:string="", user:string="", password:string="",
+            host: string="", port=0, maxConnections=1, timeout=30): Connections =
   case driver:
   of MySQL:
     when isExistsMysql():

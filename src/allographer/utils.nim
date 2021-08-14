@@ -1,22 +1,22 @@
 import os, parsecfg, terminal, logging, macros, strformat, strutils
 # self
-import baseEnv
+import base
 import async/async_db
 
-proc driverTypeError*(driver:string) =
-  if driver != "sqlite" and driver != "mysql" and driver != "mariadb" and driver != "postgres":
-    raise newException(OSError, "invalid DB driver type")
+# proc driverTypeError*(driver:string) =
+#   if driver != "sqlite" and driver != "mysql" and driver != "mariadb" and driver != "postgres":
+#     raise newException(OSError, "invalid DB driver type")
 
 
-proc logger*(output: any, args:varargs[string]) =
+proc logger*(self:LogSetting, output: any, args:varargs[string]) =
   # console log
-  if IS_DISPLAY:
+  if self.isDisplayLog:
     let logger = newConsoleLogger()
     logger.log(lvlDebug, $output & $args)
   # file log
-  if IS_FILE:
+  if self.isSubmitFile:
     # info $output & $args
-    let path = LOG_DIR & "/log.log"
+    let path = self.logDir & "/log.log"
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
     defer: logger.file.close()
@@ -24,26 +24,26 @@ proc logger*(output: any, args:varargs[string]) =
     flushFile(logger.file)
 
 
-proc echoErrorMsg*(msg:string) =
+proc echoErrorMsg*(self:LogSetting, msg:string) =
   # console log
-  if IS_DISPLAY:
+  if self.isDisplayLog:
     styledWriteLine(stdout, fgRed, bgDefault, msg, resetStyle)
   # file log
-  if IS_FILE:
-    let path = LOG_DIR & "/error.log"
+  if self.isSubmitFile:
+    let path = self.logDir & "/error.log"
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
     defer: logger.file.close()
     logger.log(lvlError, msg)
     flushFile(logger.file)
 
-proc echoWarningMsg*(msg:string) =
+proc echoWarningMsg*(self:LogSetting, msg:string) =
   # console log
-  if IS_DISPLAY:
+  if self.isDisplayLog:
     styledWriteLine(stdout, fgYellow, bgDefault, msg, resetStyle)
   # file log
-  if IS_FILE:
-    let path = LOG_DIR & "/error.log"
+  if self.isSubmitFile:
+    let path = self.logDir & "/error.log"
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
     defer: logger.file.close()

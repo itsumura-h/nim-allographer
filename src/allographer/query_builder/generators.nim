@@ -2,7 +2,7 @@ import json
 from strformat import `&`
 from strutils import contains, isUpperAscii
 
-import base
+import ../base
 from ../utils import wrapUpper
 import ../async/async_db
 

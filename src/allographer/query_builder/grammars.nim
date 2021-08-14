@@ -1,6 +1,6 @@
 import json
 import ../async/async_db
-import base
+import ../base
 
 #[
 FROM
@@ -15,18 +15,14 @@ ORDER BY
 TOP（LIMIT）
 ]#
 
-proc table*(db: Connections, tableArg: string): Rdb =
-  let self = new Rdb
-  self.db = db
+proc table*(self:Rdb, tableArg: string): Rdb =
   self.query = %*{"table": tableArg}
   return self
 
 
 # ============================== Raw query ==============================
 
-proc raw*(db: Connections, sql:string, arges:varargs[string]): Rdb =
-  let self = new Rdb
-  self.db = db
+proc raw*(self:Rdb, sql:string, arges:varargs[string]): Rdb =
   self.sqlString = sql
   self.placeHolder = @arges
   return self

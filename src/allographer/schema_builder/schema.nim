@@ -6,6 +6,7 @@ import
   migrates/postgres_migrate
 import ../utils
 # include ../connection
+import ../base
 import ../async/async_db
 
 import table
@@ -77,7 +78,7 @@ proc check*(this:Schema, tablesArg:varargs[Table]) =
 
 # =============================================================================
 
-proc schema*(db:Connections, tables:varargs[Table]) =
+proc schema*(rdb:Rdb, tables:varargs[Table]) =
   block:
     var deleteList: seq[string]
     for table in tables:
@@ -88,20 +89,20 @@ proc schema*(db:Connections, tables:varargs[Table]) =
       var index = i+1
       try:
         var tableName = deleteList[^index]
-        wrapUpper(tableName, db.driver)
+        wrapUpper(tableName, rdb.db.driver)
         let query =
-          if db.driver == SQLite3:
+          if rdb.db.driver == SQLite3:
             &"drop table {tableName}"
           else:
             &"drop table {tableName} CASCADE"
-        logger(query)
-        waitFor db.exec(query)
+        rdb.log.logger(query)
+        waitFor rdb.db.exec(query)
       except Exception:
-        getCurrentExceptionMsg().echoErrorMsg()
+        rdb.log.echoErrorMsg( getCurrentExceptionMsg() )
 
   for table in tables:
     var query = ""
-    case db.driver:
+    case rdb.db.driver:
     of SQLite3:
       query = sqlite_migrate.migrate(table)
     of MySQL:
@@ -111,25 +112,25 @@ proc schema*(db:Connections, tables:varargs[Table]) =
     of PostgreSQL:
       query = postgres_migrate.migrate(table)
 
-    logger(query)
+    rdb.log.logger(query)
 
     block:
       try:
-        waitFor db.exec(query)
+        waitFor rdb.db.exec(query)
       except:
         let err = getCurrentExceptionMsg()
         if err.contains("already exists"):
-          echoErrorMsg(err)
-          echoWarningMsg(&"Safety skip create table '{table.name}'")
+          rdb.log.echoErrorMsg(err)
+          rdb.log.echoWarningMsg(&"Safety skip create table '{table.name}'")
         else:
-          echoErrorMsg(err)
+          rdb.log.echoErrorMsg(err)
 
   # index
   for table in tables:
     for column in table.columns:
       if column.isIndex:
         var query = ""
-        case db.driver:
+        case rdb.db.driver:
         of SQLite3:
           query = sqlite_migrate.createIndex(table.name, column.name)
         of MySQL:
@@ -140,15 +141,15 @@ proc schema*(db:Connections, tables:varargs[Table]) =
           query = postgres_migrate.createIndex(table.name, column.name)
 
         if query.len > 0:
-          logger(query)
+          rdb.log.logger(query)
 
           block:
             try:
-              waitFor db.exec(query)
+              waitFor rdb.db.exec(query)
             except:
               let err = getCurrentExceptionMsg()
               if err.contains("already exists"):
-                echoErrorMsg(err)
-                echoWarningMsg(&"Safety skip create table '{table.name}'")
+                rdb.log.echoErrorMsg(err)
+                rdb.log.echoWarningMsg(&"Safety skip create table '{table.name}'")
               else:
-                echoErrorMsg(err)
+                rdb.log.echoErrorMsg(err)
