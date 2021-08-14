@@ -1,5 +1,5 @@
 import std/[os, strutils]
-import ../src/allographer/query_builder
+import ../src/allographer/connection
 
 let
   database = getEnv("DB_DATABASE")
@@ -18,8 +18,8 @@ let
   sqliteDb = dbopen(SQLite3, sqliteHost, maxConnections=maxConnections)
   mysqlDb = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout)
   postgresDb = dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout)
-  # db* = sqliteDb
-  db* = postgresDb
+  db* = sqliteDb
+  # db* = postgresDb
   # db* = mysqlDb
 
 echo postgresDb.pools[0].postgresConn.status.repr
