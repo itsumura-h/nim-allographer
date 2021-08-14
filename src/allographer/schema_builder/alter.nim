@@ -9,7 +9,7 @@ import ../base
 
 proc alter*(rdb:Rdb, tables:varargs[Table]) =
   for table in tables:
-    case rdb.db.driver:
+    case rdb.conn.driver:
     of SQLite3:
       sqlite_alter.exec(rdb, table)
     of MySQL, MariaDB:

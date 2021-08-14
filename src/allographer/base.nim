@@ -16,7 +16,7 @@ type
     isSubmitFile*: bool
     logDir*: string
   Rdb* = ref object
-    db*: Connections
+    conn*: Connections
     log*: LogSetting
     query*: JsonNode
     sqlString*: string

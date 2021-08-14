@@ -89,20 +89,20 @@ proc schema*(rdb:Rdb, tables:varargs[Table]) =
       var index = i+1
       try:
         var tableName = deleteList[^index]
-        wrapUpper(tableName, rdb.db.driver)
+        wrapUpper(tableName, rdb.conn.driver)
         let query =
-          if rdb.db.driver == SQLite3:
+          if rdb.conn.driver == SQLite3:
             &"drop table {tableName}"
           else:
             &"drop table {tableName} CASCADE"
         rdb.log.logger(query)
-        waitFor rdb.db.exec(query)
+        waitFor rdb.conn.exec(query)
       except Exception:
         rdb.log.echoErrorMsg( getCurrentExceptionMsg() )
 
   for table in tables:
     var query = ""
-    case rdb.db.driver:
+    case rdb.conn.driver:
     of SQLite3:
       query = sqlite_migrate.migrate(table)
     of MySQL:
@@ -116,7 +116,7 @@ proc schema*(rdb:Rdb, tables:varargs[Table]) =
 
     block:
       try:
-        waitFor rdb.db.exec(query)
+        waitFor rdb.conn.exec(query)
       except:
         let err = getCurrentExceptionMsg()
         if err.contains("already exists"):
@@ -130,7 +130,7 @@ proc schema*(rdb:Rdb, tables:varargs[Table]) =
     for column in table.columns:
       if column.isIndex:
         var query = ""
-        case rdb.db.driver:
+        case rdb.conn.driver:
         of SQLite3:
           query = sqlite_migrate.createIndex(table.name, column.name)
         of MySQL:
@@ -145,7 +145,7 @@ proc schema*(rdb:Rdb, tables:varargs[Table]) =
 
           block:
             try:
-              waitFor rdb.db.exec(query)
+              waitFor rdb.conn.exec(query)
             except:
               let err = getCurrentExceptionMsg()
               if err.contains("already exists"):

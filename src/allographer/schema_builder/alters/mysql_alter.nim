@@ -14,7 +14,7 @@ proc add(rdb:Rdb, column:Column, table:string) =
     try:
       for query in querySeq:
         rdb.log.logger(query)
-        waitFor rdb.db.exec(query)
+        waitFor rdb.conn.exec(query)
     except:
       let err = getCurrentExceptionMsg()
       rdb.log.echoErrorMsg(err)
@@ -35,7 +35,7 @@ proc change(rdb:Rdb, column:Column, table:string) =
     let newColumnDifinition = generateColumnString(column)
     let query = &"ALTER TABLE {table} CHANGE `{column.previousName}` {newColumnDifinition}"
     rdb.log.logger(query)
-    waitFor rdb.db.exec(query)
+    waitFor rdb.conn.exec(query)
   except:
     let err = getCurrentExceptionMsg()
     rdb.log.echoErrorMsg(err)
@@ -44,7 +44,7 @@ proc deleteColumn(rdb:Rdb, table:string, column:Column) =
   try:
     let query = generateAlterDeleteQuery(table, column)
     rdb.log.logger(query)
-    waitFor rdb.db.exec(query)
+    waitFor rdb.conn.exec(query)
   except:
     let err = getCurrentExceptionMsg()
     rdb.log.echoErrorMsg(err)
@@ -54,7 +54,7 @@ proc deleteForeign(rdb:Rdb, table:string, column:Column) =
   try:
     for query in querySeq:
       rdb.log.logger(query)
-      waitFor rdb.db.exec(query)
+      waitFor rdb.conn.exec(query)
   except:
     let err = getCurrentExceptionMsg()
     rdb.log.echoErrorMsg(err)
@@ -63,7 +63,7 @@ proc rename(rdb:Rdb, tableFrom, tableTo:string) =
   try:
     let query = &"ALTER TABLE {tableFrom} RENAME TO {tableTo}"
     rdb.log.logger(query)
-    waitFor rdb.db.exec(query)
+    waitFor rdb.conn.exec(query)
   except:
     let err = getCurrentExceptionMsg()
     rdb.log.echoErrorMsg(err)
@@ -72,7 +72,7 @@ proc drop(rdb:Rdb, table:string) =
   try:
     let query = &"DROP TABLE {table}"
     rdb.log.logger(query)
-    waitFor rdb.db.exec(query)
+    waitFor rdb.conn.exec(query)
   except:
     let err = getCurrentExceptionMsg()
     rdb.log.echoErrorMsg(err)

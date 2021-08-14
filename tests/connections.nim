@@ -22,7 +22,7 @@ let
   # db* = postgresDb
   # db* = mysqlDb
 
-echo postgresDb.db.pools[0].postgresConn.status.repr
+echo postgresDb.conn.pools[0].postgresConn.status.repr
 
 template asyncBlock*(body:untyped) =
   waitFor (proc(){.async.}=

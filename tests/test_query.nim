@@ -218,11 +218,11 @@ suite "select":
               .groupBy("auth_id")
               .get()
       echo t
-      if rdb.db.driver == SQLite3:
+      if rdb.conn.driver == SQLite3:
         check t[0]["max(id)"].getStr() == "9"
-      if rdb.db.driver == MySQL:
+      if rdb.conn.driver == MySQL:
         check t[0]["max(id)"].getInt() == 9
-      if rdb.db.driver == PostgreSQL:
+      if rdb.conn.driver == PostgreSQL:
         check t[0]["max"].getInt() == 9
 
   test "having()":

@@ -12,7 +12,7 @@ proc add(rdb:Rdb, column:Column, table:string) =
   rdb.log.logger(query)
   block:
     try:
-      waitFor rdb.db.exec(query)
+      waitFor rdb.conn.exec(query)
     except:
       let err = getCurrentExceptionMsg()
       rdb.log.echoErrorMsg(err)
@@ -30,7 +30,7 @@ proc change(rdb:Rdb, column:Column, table:string) =
     # create tmp table with new column difinition
     #   get existing table schema
     let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '{table}';"
-    var (row, columns) = waitFor rdb.db.query(tableDifinitionSql)
+    var (row, columns) = waitFor rdb.conn.query(tableDifinitionSql)
     let schema = replace(row[0][0], re"\)$", ",)")
     let columnRegex = &"'{column.previousName}'.*?,"
     let columnString = generateColumnString(column) & ","
@@ -38,19 +38,19 @@ proc change(rdb:Rdb, column:Column, table:string) =
     query = replace(query, re",\)", ")")
     query = replace(query, re("CREATE TABLE \".+\""), "CREATE TABLE \"alter_table_tmp\"")
     rdb.log.logger(query)
-    waitFor rdb.db.exec(query)
+    waitFor rdb.conn.exec(query)
     # copy data from existing table to tmp table
     query = &"INSERT INTO alter_table_tmp SELECT * FROM {table}"
     rdb.log.logger(query)
-    waitFor rdb.db.exec(query)
+    waitFor rdb.conn.exec(query)
     # delete existing table
     query = &"DROP TABLE {table}"
     rdb.log.logger(query)
-    waitFor rdb.db.exec(query)
+    waitFor rdb.conn.exec(query)
     # rename tmp table to existing table
     query = &"ALTER TABLE alter_table_tmp RENAME TO {table}"
     rdb.log.logger(query)
-    waitFor rdb.db.exec(query)
+    waitFor rdb.conn.exec(query)
   except:
     let err = getCurrentExceptionMsg()
     rdb.log.echoErrorMsg(err)
@@ -77,7 +77,7 @@ proc deleteColumn(rdb:Rdb, column:Column, table:string) =
     # delete tmp table
     let query = &"DROP TABLE alter_table_tmp"
     rdb.log.logger(query)
-    waitFor rdb.db.exec(query)
+    waitFor rdb.conn.exec(query)
   except:
     let err = getCurrentExceptionMsg()
     rdb.log.echoErrorMsg(err)
@@ -86,26 +86,26 @@ proc deleteColumn(rdb:Rdb, column:Column, table:string) =
     # rename existing table as tmp
     var query = &"ALTER TABLE \"{table}\" RENAME TO 'alter_table_tmp'"
     rdb.log.logger(query)
-    waitFor rdb.db.exec(query)
+    waitFor rdb.conn.exec(query)
     # create new table with existing table name
     let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'alter_table_tmp';"
-    var (rows, _) = waitFor rdb.db.query(tableDifinitionSql)
+    var (rows, _) = waitFor rdb.conn.query(tableDifinitionSql)
     let schema = replace(rows[0][0], re"\)$", ",)")
     let columnRegex = &"'{column.name}'.*?,"
     query = replace(schema, re(columnRegex))
     query = replace(query, re"alter_table_tmp", table)
     query = replace(query, re",\s*\)", ")")
     rdb.log.logger(query)
-    waitFor rdb.db.exec(query)
+    waitFor rdb.conn.exec(query)
     # copy data from tmp table to new table
-    var columns = rdb.db.getColumns(table, column.name)
+    var columns = rdb.conn.getColumns(table, column.name)
     query = &"INSERT INTO {table}({columns}) SELECT {columns} FROM alter_table_tmp"
     rdb.log.logger(query)
-    waitFor rdb.db.exec(query)
+    waitFor rdb.conn.exec(query)
     # delete tmp table
     query = &"DROP TABLE alter_table_tmp"
     rdb.log.logger(query)
-    waitFor rdb.db.exec(query)
+    waitFor rdb.conn.exec(query)
   except:
     let err = getCurrentExceptionMsg()
     rdb.log.echoErrorMsg(err)
@@ -114,7 +114,7 @@ proc rename(rdb:Rdb, tableFrom, tableTo:string) =
   try:
     let query = &"ALTER TABLE {tableFrom} RENAME TO {tableTo}"
     rdb.log.logger(query)
-    waitFor rdb.db.exec(query)
+    waitFor rdb.conn.exec(query)
   except:
     let err = getCurrentExceptionMsg()
     rdb.log.echoErrorMsg(err)
@@ -123,7 +123,7 @@ proc drop(rdb:Rdb, table:string) =
   try:
     let query = &"DROP TABLE {table}"
     rdb.log.logger(query)
-    waitFor rdb.db.exec(query)
+    waitFor rdb.conn.exec(query)
   except:
     let err = getCurrentExceptionMsg()
     rdb.log.echoErrorMsg(err)

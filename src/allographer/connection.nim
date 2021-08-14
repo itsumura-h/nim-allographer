@@ -9,5 +9,5 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
             host: string="", port=0, maxConnections=1, timeout=30,
             isDisplayLog=false, isSubmitFile=false, logDir=""):Rdb =
   result = new Rdb
-  result.db = open(driver, database, user, password, host, port, maxConnections, timeout)
+  result.conn = open(driver, database, user, password, host, port, maxConnections, timeout)
   result.log = LogSetting(isDisplayLog:isDisplayLog, isSubmitFile:isSubmitFile, logDir:logDir)
