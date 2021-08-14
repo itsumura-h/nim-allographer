@@ -53,6 +53,7 @@ suite "select":
   test "getPlain()":
     asyncBlock:
       var t = await rdb.table("users").getPlain()
+      echo t
       check t[0] == @["1", "user1", "user1@gmail.com", "", "1"]
 
   test "first()":

@@ -19,10 +19,8 @@ let
   mysqlDb = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout)
   postgresDb = dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout)
   rdb* = sqliteDb
-  # db* = postgresDb
-  # db* = mysqlDb
-
-echo postgresDb.conn.pools[0].postgresConn.status.repr
+  # rdb* = postgresDb
+  # rdb* = mysqlDb
 
 template asyncBlock*(body:untyped) =
   waitFor (proc(){.async.}=

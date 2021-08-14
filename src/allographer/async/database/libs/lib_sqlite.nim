@@ -70,7 +70,6 @@ proc setColumns(columns: var DbColumns; x: PStmt) =
     toTypeKind(columns[i].typ, column_type(x, i))
     columns[i].tableName = $column_table_name(x, i)
 
-# iterator instantRows*(db: PSqlite3; columns: var DbColumns; query: string, args: seq[string]): InstantRow
 iterator instantRows*(db: PSqlite3; dbRows: var DbRows; query: string, args: seq[string]): InstantRow
                       {.tags: [ReadDbEffect].} =
   ## Similar to `instantRows iterator <#instantRows.i,DbConn,SqlQuery,varargs[string,]>`_,
@@ -106,6 +105,15 @@ iterator instantRows*(db: PSqlite3; dbRows: var DbRows; query: string, args: seq
     while step(stmt) == SQLITE_ROW:
       setColumns(columns, stmt)
       dbRows.add(columns)
+      yield stmt
+  finally:
+    if finalize(stmt) != SQLITE_OK: dbError(db)
+
+iterator instantRowsPlain*(db: PSqlite3; query: string, args: seq[string]): InstantRow
+                      {.tags: [ReadDbEffect].} =
+  var stmt = setupQuery(db, query, args)
+  try:
+    while step(stmt) == SQLITE_ROW:
       yield stmt
   finally:
     if finalize(stmt) != SQLITE_OK: dbError(db)

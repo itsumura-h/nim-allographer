@@ -67,6 +67,39 @@ proc query*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[(s
     lines.inc()
   return (rows, dbRows)
 
+proc queryPlain*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[seq[base.Row]] {.async.} =
+  assert db.ping == 0
+  let query = dbFormat(query, args)
+  var status = real_query_nonblocking(db, query, query.len)
+  while status == NET_ASYNC_NOT_READY:
+    await sleepAsync(0)
+    status = real_query_nonblocking(db, query, query.len)
+  if status == NET_ASYNC_ERROR: dbError(db) # failed
+  var res: PRES
+  status = store_result_nonblocking(db, res.addr)
+  while status == NET_ASYNC_NOT_READY:
+    await sleepAsync(0)
+    status = store_result_nonblocking(db, res.addr)
+  if status == NET_ASYNC_ERROR: dbError(db)
+  if res == nil: dbError(db)
+  let cols = num_fields(res)
+  var rows = newSeq[base.Row]()
+  let calledAt = getTime().toUnix()
+  var lines = 0
+  while true:
+    if getTime().toUnix() >= calledAt + timeout:
+      dbError(db)
+    await sleepAsync(0)
+    var row: mysql.Row
+    status = fetch_row_nonblocking(res, row.addr)
+    while status != NET_ASYNC_COMPLETE:
+      await sleepAsync(0)
+      status = fetch_row_nonblocking(res, row.addr)
+    if row == nil: break
+    rows.add(row.cstringArrayToSeq(cols))
+    lines.inc()
+  return rows
+
 proc exec*(db:PMySQL, query: string, args: seq[string], timeout:int) {.async.} =
   assert db.ping == 0
   let query = dbFormat(query, args)

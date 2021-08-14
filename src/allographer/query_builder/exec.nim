@@ -75,9 +75,8 @@ proc getAllRows(self:Rdb, sqlString:string, args:seq[string]):Future[seq[JsonNod
 
   return toJson(self.conn.driver, rows, dbRows) # seq[JsonNode]
 
-proc getAllRowsPlain*(self:Rdb, sqlString:string, args:seq[string]):Future[seq[seq[string]]] {.async.} =
-  let (rows, _)  = await self.conn.query(sqlString, args)
-  return rows
+proc getRowsPlain(self:Rdb, sqlString:string, args:seq[string]):Future[seq[seq[string]]] {.async.} =
+  return await self.conn.queryPlain(sqlString, args)
 
 proc getRow(self:Rdb, sqlString:string, args:seq[string]):Future[Option[JsonNode]] {.async.} =
   let (rows, dbColumns) = await self.conn.query(sqlString, args)
@@ -89,8 +88,7 @@ proc getRow(self:Rdb, sqlString:string, args:seq[string]):Future[Option[JsonNode
   return toJson(self.conn.driver, rows, dbColumns)[0].some
 
 proc getRowPlain(self:Connections, sqlString:string, args:seq[string]):Future[seq[string]] {.async.} =
-  let (rows, _) = await self.query(sqlString, args)
-  return rows[0]
+  return await(self.queryPlain(sqlString, args))[0]
 
 proc orm(rows:openArray[JsonNode], typ:typedesc):seq[typ.type] =
   var response = newSeq[typ.type](rows.len)
@@ -139,7 +137,7 @@ proc getPlain*(self:Rdb):Future[seq[seq[string]]] {.async.} =
   self.sqlString = self.selectBuilder().sqlString
   try:
     self.log.logger(self.sqlString, self.placeHolder)
-    return await getAllRowsPlain(self, self.sqlString, self.placeHolder)
+    return await getRowsPlain(self, self.sqlString, self.placeHolder)
   except Exception:
     self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )

@@ -30,6 +30,16 @@ proc query*(db:PSqlite3, query:string, args:seq[string], timeout:int):Future[(se
     rows.add(columns)
   return (rows, dbRows)
 
+proc queryPlain*(db:PSqlite3, query:string, args:seq[string], timeout:int):Future[seq[Row]] {.async.} =
+  assert(not db.isNil, "Database not connected.")
+  var rows = newSeq[seq[string]]()
+  for row in db.instantRowsPlain(query, args):
+    var columns = newSeq[string](row.len)
+    for i in 0..row.len()-1:
+      columns[i] = row[i]
+    rows.add(columns)
+  return rows
+
 proc exec*(db:PSqlite3, query: string, args: seq[string], timeout:int) {.async.} =
   assert(not db.isNil, "Database not connected.")
   var q = dbFormat(query, args)
