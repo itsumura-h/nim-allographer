@@ -5,11 +5,12 @@ allographer
 ![Build Status](https://github.com/itsumura-h/nim-allographer/workflows/Build%20and%20test%20Nim/badge.svg)
 
 
-A query builder library inspired by [Laravel/PHP](https://readouble.com/laravel/6.0/en/queries.html) and [Orator/Python](https://orator-orm.com) for Nim
+An asynchronous query builder library inspired by [Laravel/PHP](https://readouble.com/laravel/6.0/en/queries.html) and [Orator/Python](https://orator-orm.com) for Nim
 
 ## Easy to access Rdb
 ### Query Builder
 ```nim
+import asyncdispatch
 import allographer/connection
 import allographer/query_builder
 
@@ -20,13 +21,16 @@ let rdb = dbOpen(PostgreSql, "database", "user", "password" "localhost", 5432, m
 # let rdb = dbOpen(Sqlite3, "/path/to/db/sqlite3.db", maxConnections=maxConnections, timeout=timeout)
 # let rdb = dbOpen(MySQL, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
 
-var result = rdb
-            .table("users")
-            .select("id", "email", "name")
-            .limit(5)
-            .offset(10)
-            .get()
-echo result
+proc main(){.async.} =
+  let result = await rdb
+                    .table("users")
+                    .select("id", "email", "name")
+                    .limit(5)
+                    .offset(10)
+                    .get()
+  echo result
+
+waitFor main()
 
 >> SELECT id, email, name FROM users LIMIT 5 OFFSET 10
 >> @[
@@ -103,13 +107,13 @@ rdb.alter(
 ---
 
 ## Install
-```bach
+```sh
 nimble install allographer
 ```
 
 ## Set up
 First of all, add nim binary path
-```bash
+```sh
 export PATH=$PATH:~/.nimble/bin
 ```
 After install allographer, "dbtool" command is going to be available.  
@@ -118,7 +122,7 @@ After install allographer, "dbtool" command is going to be available.
 Database connection should be definded as singleton variable.
 
 database.nim
-```
+```nim
 import allographer/connection
 
 let rdb* = dbOpen(PostgreSql, "database", "user", "password" "localhost", 5432, maxConnections, timeout)
@@ -131,10 +135,15 @@ let mysqlRdb* = dbOpen(MySQL, "database", "user", "password" "localhost", 3306, 
 Then, call connection when you run query.
 
 run_sql.nim
-```
+```nim
+import asyncdispatch
+import allographer/query_builder
 from database import rdb
 
-echo rdb.table("users").get()
+proc main(){.async.}=
+  echo rdb.table("users").get()
+
+waitFor main()
 ```
 
 ## Logging
