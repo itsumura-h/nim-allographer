@@ -8,3 +8,4 @@ RUN apt update && apt-get install -y \
         libmysqlclient-dev
 ENV PATH $PATH:/root/.nimble/bin
 WORKDIR /root/project
+RUN nimble install -y
