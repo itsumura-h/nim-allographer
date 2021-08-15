@@ -1,9 +1,10 @@
-import unittest, json, strformat, options
+import unittest, json, strformat, options, asyncdispatch
 
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
+import connections
 
-schema(
+rdb.schema(
   table("users", [
     Column().increments("id"),
     COlumn().string("name").nullable(),
@@ -21,37 +22,42 @@ for i in 1..10:
       "birth_date": &"1990-01-{i:02}"
     }
   )
-
-rdb().table("users").insert(users)
+asyncBlock:
+  await rdb.table("users").insert(users)
 
 suite "aggregates":
   test "count()":
-    var t = rdb().table("users").count()
-    echo t
-    check t == 10
+    asyncBlock:
+      var t = await rdb.table("users").count()
+      echo t
+      check t == 10
 
   test "max()":
-    var t = rdb().table("users").max("name").get
-    echo t
-    check t == "user9"
-    var t2 = rdb().table("users").max("id").get
-    echo t2
-    check t2 == "10"
+    asyncBlock:
+      var t = await(rdb.table("users").max("name")).get
+      echo t
+      check t == "user9"
+      var t2 = await(rdb.table("users").max("id")).get
+      echo t2
+      check t2 == "10"
 
   test "min()":
-    var t = rdb().table("users").min("name").get
-    echo t
-    check t == "user1"
-    var t2 = rdb().table("users").min("id").get
-    echo t2
-    check t2 == "1"
+    asyncBlock:
+      var t = await(rdb.table("users").min("name")).get
+      echo t
+      check t == "user1"
+      var t2 = await(rdb.table("users").min("id")).get
+      echo t2
+      check t2 == "1"
 
   test "avg()":
-    var t = rdb().table("users").avg("id").get
-    echo t
-    check t == 5.5
+    asyncBlock:
+      var t = await(rdb.table("users").avg("id")).get
+      echo t
+      check t == 5.5
 
   test "sum()":
-    var t = rdb().table("users").sum("id").get
-    echo t
-    check t == 55.0
+    asyncBlock:
+      var t = await(rdb.table("users").sum("id")).get
+      echo t
+      check t == 55.0

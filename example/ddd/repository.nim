@@ -2,7 +2,7 @@ import json
 import ../../src/allographer/query_builder
 
 type Repository* = ref object
-  rdb:RDB
+  rdb:Rdb
 
 proc newRepository*():Repository =
   return Repository(rdb:rdb())

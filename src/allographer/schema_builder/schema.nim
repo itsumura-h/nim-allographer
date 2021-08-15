@@ -1,4 +1,4 @@
-import os, json, strutils
+import os, json, strutils, asyncdispatch
 from strformat import `&`
 import
   migrates/sqlite_migrate,
@@ -6,7 +6,8 @@ import
   migrates/postgres_migrate
 import ../utils
 # include ../connection
-import ../connection
+import ../base
+import ../async/async_db
 
 import table
 
@@ -77,84 +78,78 @@ proc check*(this:Schema, tablesArg:varargs[Table]) =
 
 # =============================================================================
 
-proc schema*(tables:varargs[Table]) =
-  driverTypeError()
-  let driver = getDriver()
-
+proc schema*(rdb:Rdb, tables:varargs[Table]) =
   block:
     var deleteList: seq[string]
     for table in tables:
       if table.reset:
         deleteList.add(table.name)
     # delete table in reverse loop
-    let db = db()
     for i, v in deleteList:
       var index = i+1
       try:
         var tableName = deleteList[^index]
-        wrapUpper(tableName)
+        wrapUpper(tableName, rdb.conn.driver)
         let query =
-          if driver == "sqlite":
-            &"drop table {tableName}"
+          if rdb.conn.driver == SQLite3:
+            &"DROP TABLE IF EXISTS {tableName}"
           else:
-            &"drop table {tableName} CASCADE"
-        logger(query)
-        db.exec(sql query)
+            &"DROP TABLE IF EXISTS {tableName} CASCADE"
+        rdb.log.logger(query)
+        waitFor rdb.conn.exec(query)
       except Exception:
-        getCurrentExceptionMsg().echoErrorMsg()
-    defer: db.close()
+        rdb.log.echoErrorMsg( getCurrentExceptionMsg() )
 
   for table in tables:
     var query = ""
-    case driver:
-    of "sqlite":
+    case rdb.conn.driver:
+    of SQLite3:
       query = sqlite_migrate.migrate(table)
-    of "mysql":
+    of MySQL:
       query = mysql_migrate.migrate(table)
-    of "postgres":
+    of MariaDB:
+      query = mysql_migrate.migrate(table)
+    of PostgreSQL:
       query = postgres_migrate.migrate(table)
 
-    logger(query)
+    rdb.log.logger(query)
 
     block:
-      let db = db()
-      defer: db.close()
       try:
-        db.exec(sql query)
+        waitFor rdb.conn.exec(query)
       except:
         let err = getCurrentExceptionMsg()
         if err.contains("already exists"):
-          echoErrorMsg(err)
-          echoWarningMsg(&"Safety skip create table '{table.name}'")
+          rdb.log.echoErrorMsg(err)
+          rdb.log.echoWarningMsg(&"Safety skip create table '{table.name}'")
         else:
-          echoErrorMsg(err)
+          rdb.log.echoErrorMsg(err)
 
   # index
   for table in tables:
     for column in table.columns:
       if column.isIndex:
         var query = ""
-        let driver = getDriver()
-        case driver:
-        of "sqlite":
+        case rdb.conn.driver:
+        of SQLite3:
           query = sqlite_migrate.createIndex(table.name, column.name)
-        of "mysql":
+        of MySQL:
           query = mysql_migrate.createIndex(table.name, column.name)
-        of "postgres":
+        of MariaDB:
+          query = mysql_migrate.createIndex(table.name, column.name)
+        of PostgreSQL:
           query = postgres_migrate.createIndex(table.name, column.name)
 
         if query.len > 0:
-          logger(query)
+          rdb.log.logger(query)
 
           block:
-            let db = db()
-            defer: db.close()
             try:
-              db.exec(sql query)
+              waitFor rdb.conn.exec(query)
             except:
               let err = getCurrentExceptionMsg()
               if err.contains("already exists"):
-                echoErrorMsg(err)
-                echoWarningMsg(&"Safety skip create table '{table.name}'")
+                rdb.log.echoErrorMsg(err)
+                rdb.log.echoWarningMsg(&"Safety skip create table '{table.name}'")
               else:
-                echoErrorMsg(err)
+                rdb.log.echoErrorMsg(err)

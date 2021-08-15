@@ -287,7 +287,7 @@ proc migrate*(this:Table):string =
     )
 
   var tableName = this.name
-  wrapUpper(tableName)
+  myWrapUpper(tableName)
   return &"CREATE TABLE {tableName} ({columnString}{foreignString})"
 
 proc generateAlterAddQueries*(column:Column, table:string):seq[string] =

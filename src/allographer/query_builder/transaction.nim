@@ -1,21 +1,18 @@
 import macros, strutils, strformat
 
 
-macro transaction*(bodyInput: untyped):untyped =
-  var bodyStr = bodyInput.repr.replace("rdb()", "RDB(db:db())")
+macro transaction*(rdb:untyped, bodyInput: untyped):untyped =
+  var bodyStr = bodyInput.repr
   bodyStr.removePrefix
   bodyStr = bodyStr.indent(4)
   bodyStr = fmt"""
 block:
-  let db = db()
-  defer: db.close()
   try:
-    db.exec(sql"BEGIN")
+    await {rdb.repr}.raw("BEGIN").exec()
 {bodyStr}
-    db.exec(sql"COMMIT")
+    await {rdb.repr}.raw("COMMIT").exec()
   except:
-    echo getCurrentExceptionMsg()
-    db.exec(sql"ROLLBACK")
+    await {rdb.repr}.raw("ROLLBACK").exec()
 """
   let body = bodyStr.parseStmt()
   return body

@@ -46,7 +46,7 @@ jobs:
       with:
         nim-version: ${{ env.NIM_VERSION }}
     - name: Build
-      run: nimble build -Y
+      run: nimble install -Y
 
   test-on-docker:
     runs-on: ubuntu-latest
@@ -54,12 +54,12 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Test
-      run: docker-compose run allographer nimble test
+      run: docker-compose run allographer-ubuntu nimble test
     - name: Test multi-thread
       run: |
         echo '' >> tests/config.nims
         echo 'switch("threads", "on")' >> tests/config.nims
-        docker-compose run allographer nimble test
+        docker-compose run allographer-ubuntu nimble test
 
   create-tag-draft:
     runs-on: ubuntu-latest

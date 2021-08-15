@@ -1,23 +1,22 @@
 import os, parsecfg, terminal, logging, macros, strformat, strutils
 # self
-import baseEnv
-from connection import getDriver
+import base
+import async/async_db
 
-proc driverTypeError*() =
-  let driver = getDriver()
-  if driver != "sqlite" and driver != "mysql" and driver != "postgres":
-    raise newException(OSError, "invalid DB driver type")
+# proc driverTypeError*(driver:string) =
+#   if driver != "sqlite" and driver != "mysql" and driver != "mariadb" and driver != "postgres":
+#     raise newException(OSError, "invalid DB driver type")
 
 
-proc logger*(output: any, args:varargs[string]) =
+proc logger*(self:LogSetting, output: any, args:varargs[string]) =
   # console log
-  if IS_DISPLAY:
+  if self.shouldDisplayLog:
     let logger = newConsoleLogger()
     logger.log(lvlDebug, $output & $args)
   # file log
-  if IS_FILE:
+  if self.shouldOutputLogFile:
     # info $output & $args
-    let path = LOG_DIR & "/log.log"
+    let path = self.logDir & "/log.log"
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
     defer: logger.file.close()
@@ -25,26 +24,26 @@ proc logger*(output: any, args:varargs[string]) =
     flushFile(logger.file)
 
 
-proc echoErrorMsg*(msg:string) =
+proc echoErrorMsg*(self:LogSetting, msg:string) =
   # console log
-  if IS_DISPLAY:
+  if self.shouldDisplayLog:
     styledWriteLine(stdout, fgRed, bgDefault, msg, resetStyle)
   # file log
-  if IS_FILE:
-    let path = LOG_DIR & "/error.log"
+  if self.shouldOutputLogFile:
+    let path = self.logDir & "/error.log"
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
     defer: logger.file.close()
     logger.log(lvlError, msg)
     flushFile(logger.file)
 
-proc echoWarningMsg*(msg:string) =
+proc echoWarningMsg*(self:LogSetting, msg:string) =
   # console log
-  if IS_DISPLAY:
+  if self.shouldDisplayLog:
     styledWriteLine(stdout, fgYellow, bgDefault, msg, resetStyle)
   # file log
-  if IS_FILE:
-    let path = LOG_DIR & "/error.log"
+  if self.shouldOutputLogFile:
+    let path = self.logDir & "/error.log"
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
     defer: logger.file.close()
@@ -52,7 +51,7 @@ proc echoWarningMsg*(msg:string) =
     flushFile(logger.file)
   
 
-proc liteWrapUpper(input:var string) =
+proc liteWrapUpper*(input:var string) =
   var isUpper = false
   for c in input:
     if c.isUpperAscii():
@@ -61,7 +60,7 @@ proc liteWrapUpper(input:var string) =
   if isUpper:
     input = &"\"{input}\""
 
-proc myWrapUpper(input:var string) =
+proc myWrapUpper*(input:var string) =
   var isUpper = false
   for c in input:
     if c.isUpperAscii():
@@ -70,7 +69,7 @@ proc myWrapUpper(input:var string) =
   if isUpper:
     input = &"`{input}`"
 
-proc pgWrapUpper(input:var string) =
+proc pgWrapUpper*(input:var string) =
   var isUpper = false
   for c in input:
     if c.isUpperAscii():
@@ -79,12 +78,11 @@ proc pgWrapUpper(input:var string) =
   if isUpper:
     input = &"\"{input}\""
 
-proc wrapUpper*(input:var string) =
-  let driver = getDriver()
+proc wrapUpper*(input:var string, driver:Driver) =
   case driver:
-  of "sqlite":
+  of SQLite3:
     liteWrapUpper(input)
-  of "mysql":
+  of MySQL, MariaDB:
     myWrapUpper(input)
-  of "postgres":
+  of PostgreSQL:
     pgWrapUpper(input)

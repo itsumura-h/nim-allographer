@@ -1,13 +1,18 @@
-import unittest, json, times, os
+import unittest, json, times, os, strutils, asyncdispatch
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
+import ../src/allographer/connection
 
-let dbTyp = getEnv("DB_DRIVER", "sqlite")
+let maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
+
+let sqliteDb = dbopen(SQLite3, ":memory:", maxConnections=95, timeout=30, shouldDisplayLog=true)
+let postgresDb = dbopen(PostgreSQL, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("DB_PASSWORD"), getEnv("PG_HOST"), getEnv("PG_PORT").parseInt, maxConnections, 30, shouldDisplayLog=true)
+let mysqlDb = dbopen(MySQL, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("DB_PASSWORD"), getEnv("MY_HOST"), getEnv("MY_PORT").parseInt, maxConnections, 30, shouldDisplayLog=true)
 
 suite "Schema builder":
   test "test":
-    schema([
-      table("sqlite", [
+    sqliteDb.schema(
+      table("schema_builder", [
         Column().increments("increments_column"),
         Column().integer("integer_column").unique().default(1).unsigned().index(),
         Column().smallInteger("smallInteger_column").unique().default(1).unsigned().index(),
@@ -35,98 +40,104 @@ suite "Schema builder":
         Column().boolean("boolean_column").unique().default().index(),
         Column().enumField("enumField_column", ["a", "b"]).unique().default().index(),
         Column().json("json_column").unique().default(%*{"key": "value"}).unsigned().index(),
-      ], reset=true),
+      ], reset=true)
+    )
+    mysqlDb.schema(
+      table("schema_builder", [
+        Column().increments("increments_column"),
+        Column().integer("integer_column").unique().default(1).unsigned(),
+        Column().smallInteger("smallInteger_column").unique().default(1).unsigned(),
+        Column().mediumInteger("mediumInteger_column").unique().default(1).unsigned(),
+        Column().bigInteger("bigInteger_column").unique().default(1).unsigned(),
 
-      # table("mysql", [
-      #   Column().increments("increments_column"),
-      #   Column().integer("integer_column").unique().default(1).unsigned(),
-      #   Column().smallInteger("smallInteger_column").unique().default(1).unsigned(),
-      #   Column().mediumInteger("mediumInteger_column").unique().default(1).unsigned(),
-      #   Column().bigInteger("bigInteger_column").unique().default(1).unsigned(),
+        Column().decimal("decimal_column", 5, 2).unique().default(1).unsigned(),
+        Column().double("double_column", 5, 2).unique().default(1).unsigned(),
+        Column().float("float_column").unique().default(1).unsigned(),
 
-      #   Column().decimal("decimal_column", 5, 2).unique().default(1).unsigned(),
-      #   Column().double("double_column", 5, 2).unique().default(1).unsigned(),
-      #   Column().float("float_column").unique().default(1).unsigned(),
+        Column().char("char_column", 100).unique().default(""),
+        Column().string("string_column").unique().default(""),
+        Column().text("text_column"),
+        Column().mediumText("mediumText_column"),
+        Column().longText("longText_column"),
 
-      #   Column().char("char_column", 100).unique().default(""),
-      #   Column().string("string_column").unique().default(""),
-      #   Column().text("text_column"),
-      #   Column().mediumText("mediumText_column"),
-      #   Column().longText("longText_column"),
+        Column().date("date_column").unique().default(),
+        Column().datetime("datetime_column").unique().default(),
+        Column().time("time_column").unique().default(),
+        Column().timestamp("timestamp_column").unique().default(),
+        Column().timestamps(),
+        Column().softDelete(),
 
-      #   Column().date("date_column").unique().default(),
-      #   Column().datetime("datetime_column").unique().default(),
-      #   Column().time("time_column").unique().default(),
-      #   Column().timestamp("timestamp_column").unique().default(),
-      #   Column().timestamps(),
-      #   Column().softDelete(),
+        Column().binary("binary_column"),
+        Column().boolean("boolean_column").unique().default(),
+        Column().enumField("enumField_column", ["a", "b"]).unique().default("a"),
+        Column().json("json_column"),
+      ], reset=true)
+    )
+    postgresDb.schema(
+      table("schema_builder", [
+        Column().increments("increments_column"),
+        Column().integer("integer_column").unique().default(1).unsigned(),
+        Column().smallInteger("smallInteger_column").unique().default(1).unsigned(),
+        Column().mediumInteger("mediumInteger_column").unique().default(1).unsigned(),
+        Column().bigInteger("bigInteger_column").unique().default(1).unsigned(),
 
-      #   Column().binary("binary_column"),
-      #   Column().boolean("boolean_column").unique().default(),
-      #   Column().enumField("enumField_column", ["a", "b"]).unique().default("a"),
-      #   Column().json("json_column"),
-      # ], reset=true),
+        Column().decimal("decimal_column", 5, 2).unique().default(1).unsigned(),
+        Column().double("double_column", 5, 2).unique().default(1).unsigned(),
+        Column().float("float_column").unique().default(1).unsigned(),
 
-      # table("postgres", [
-      #   Column().increments("increments_column"),
-      #   Column().integer("integer_column").unique().default(1).unsigned(),
-      #   Column().smallInteger("smallInteger_column").unique().default(1).unsigned(),
-      #   Column().mediumInteger("mediumInteger_column").unique().default(1).unsigned(),
-      #   Column().bigInteger("bigInteger_column").unique().default(1).unsigned(),
+        Column().char("char_column", 100).unique().default(""),
+        Column().string("string_column").unique().default(""),
+        Column().text("text_column").unique().default(""),
+        Column().mediumText("mediumText_column").unique().default(""),
+        Column().longText("longText_column").unique().default(""),
 
-      #   Column().decimal("decimal_column", 5, 2).unique().default(1).unsigned(),
-      #   Column().double("double_column", 5, 2).unique().default(1).unsigned(),
-      #   Column().float("float_column").unique().default(1).unsigned(),
+        Column().date("date_column").unique().default(),
+        Column().datetime("datetime_column").unique().default(),
+        Column().time("time_column").unique().default(),
+        Column().timestamp("timestamp_column").unique().default(),
+        Column().timestamps(),
+        Column().softDelete(),
 
-      #   Column().char("char_column", 100).unique().default(""),
-      #   Column().string("string_column").unique().default(""),
-      #   Column().text("text_column").unique().default(""),
-      #   Column().mediumText("mediumText_column").unique().default(""),
-      #   Column().longText("longText_column").unique().default(""),
-
-      #   Column().date("date_column").unique().default(),
-      #   Column().datetime("datetime_column").unique().default(),
-      #   Column().time("time_column").unique().default(),
-      #   Column().timestamp("timestamp_column").unique().default(),
-      #   Column().timestamps(),
-      #   Column().softDelete(),
-
-      #   Column().binary("binary_column").unique().default(),
-      #   Column().boolean("boolean_column").unique().default(),
-      #   Column().enumField("enumField_column", ["a", "b"]).unique().default(),
-      #   Column().json("json_column").default(%*{"key": "value"}),
-      # ], reset=true)
-    ])
+        Column().binary("binary_column").unique().default(),
+        Column().boolean("boolean_column").unique().default(),
+        Column().enumField("enumField_column", ["a", "b"]).unique().default(),
+        Column().json("json_column").default(%*{"key": "value"}),
+      ], reset=true)
+    )
 
   test "insert":
-    try:
-      rdb().table(dbTyp).insert(%*{
-        "increments_column": 1,
-        "integer_column": 1,
-        "smallInteger_column": 1,
-        "mediumInteger_column": 1,
-        "bigInteger_column": 1,
-        "decimal_column": 111.11,
-        "double_column": 111.11,
-        "float_column": 111.11,
-        "char_column": "a",
-        "string_column": "a",
-        "text_column": "a",
-        "mediumText_column": "a",
-        "longText_column": "a",
-        "date_column": "2020-01-01".parse("yyyy-MM-dd").format("yyyy-MM-dd"),
-        "datetime_column": "2020-01-01".parse("yyyy-MM-dd").format("yyyy-MM-dd HH:MM:ss"),
-        "time_column": "2020-01-01".parse("yyyy-MM-dd").format("HH:MM:ss"),
-        "timestamp_column": "2020-01-01".parse("yyyy-MM-dd").format("yyyy-MM-dd HH:MM:ss"),
-        "binary_column": "a",
-        "boolean_column": true,
-        "enumField_column": "a",
-        "json_column": {"key": "value"}
-      })
-      assert true
-      alter(
-        drop(dbTyp)
-      )
-    except:
-      echo getCurrentExceptionMsg()
-      assert false
+    waitFor (proc(){.async.}=
+      try:
+        for rdb in [sqliteDb, mysqlDb, postgresDb]:
+          await rdb.table("schema_builder").insert(%*{
+            "increments_column": 1,
+            "integer_column": 1,
+            "smallInteger_column": 1,
+            "mediumInteger_column": 1,
+            "bigInteger_column": 1,
+            "decimal_column": 111.11,
+            "double_column": 111.11,
+            "float_column": 111.11,
+            "char_column": "a",
+            "string_column": "a",
+            "text_column": "a",
+            "mediumText_column": "a",
+            "longText_column": "a",
+            "date_column": "2020-01-01".parse("yyyy-MM-dd").format("yyyy-MM-dd"),
+            "datetime_column": "2020-01-01".parse("yyyy-MM-dd").format("yyyy-MM-dd HH:MM:ss"),
+            "time_column": "2020-01-01".parse("yyyy-MM-dd").format("HH:MM:ss"),
+            "timestamp_column": "2020-01-01".parse("yyyy-MM-dd").format("yyyy-MM-dd HH:MM:ss"),
+            "binary_column": "a",
+            "boolean_column": true,
+            "enumField_column": "a",
+            "json_column": {"key": "value"}
+          })
+          echo await rdb.table("schema_builder").get()
+          assert true
+          rdb.alter(
+            drop("schema_builder")
+          )
+      except:
+        echo getCurrentExceptionMsg()
+        assert false
+    )()

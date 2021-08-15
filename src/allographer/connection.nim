@@ -1,29 +1,13 @@
-import os, strutils
-import baseEnv
+from async/async_db import open
+from async/database/base as asyncBase import Driver
+import base
 
-when DRIVER == "sqlite":
-  import db_sqlite
-  export db_sqlite
-  # import sqlite3 except close
+export
+  Driver
 
-when DRIVER == "postgres":
-  import ./async/asyncpg
-  export asyncpg
-  import postgres except close
-
-when DRIVER == "mysql":
-  import db_mysql
-  export db_mysql
-  import mysql except close
-
-
-proc db*(): DbConn =
-  open(CONN, USER, PASSWORD, DATABASE)
-
-proc getDriver*():string =
-  return DRIVER
-
-# ==================== async ====================
-when DRIVER == "postgres":
-  proc pool*():AsyncPool =
-    newAsyncPool(CONN, USER, PASSWORD, DATABASE, MAX_CONNECTION)
+proc dbOpen*(driver:Driver, database:string="", user:string="", password:string="",
+            host: string="", port=0, maxConnections=1, timeout=30,
+            shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""):Rdb =
+  result = new Rdb
+  result.conn = open(driver, database, user, password, host, port, maxConnections, timeout)
+  result.log = LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)

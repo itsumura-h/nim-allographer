@@ -9,6 +9,23 @@ services:
       TZ: Asia/Tokyo
     volumes:
       - .:/root/project
+    depends_on:
+      - mysql
+      - postgres
+
+  allographer-ubuntu:
+    build:
+      context: .
+      dockerfile: ./docker/ubuntu/Dockerfile
+    tty: true
+    environment:
+      TZ: Asia/Tokyo
+    volumes:
+      - .:/root/project
+    depends_on:
+      - mysql
+      - postgres
+
   mysql:
     image: mariadb
     tty: true
@@ -19,6 +36,7 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: Password!
       TZ: Asia/Tokyo
+
   postgres:
     image: postgres:alpine
     tty: true

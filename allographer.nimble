@@ -1,21 +1,19 @@
 # Package
 
-version       = "0.18.1"
+version       = "0.19.0"
 author        = "Hidenobu Itsumura @dumblepytech1 as 'medy'"
 description   = "A Nim query builder library inspired by Laravel/PHP and Orator/Python"
 license       = "MIT"
 srcDir        = "src"
-backend       = "c"
-bin           = @["allographer/cli/dbtool"]
-binDir        = "src/bin"
-installExt    = @["nim"]
-skipDirs      = @["allographer/cli"]
+# backend       = "c"
+# bin           = @["allographer/cli/dbtool"]
+# binDir        = "src/bin"
+# installExt    = @["nim"]
+# skipDirs      = @["allographer/cli"]
 
 # Dependencies
 
 requires "nim >= 1.2.0"
-requires "cligen >= 0.9.38"
-requires "progress >= 1.1.1"
 requires "dotenv >= 1.1.1"
 
 import strformat

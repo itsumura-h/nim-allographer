@@ -3,19 +3,19 @@ import
   ./alters/sqlite_alter,
   ./alters/mysql_alter,
   ./alters/postgres_alter
-import ../connection
+import ../async/async_db
+import ../base
 
 
-proc alter*(tables:varargs[Table]) =
+proc alter*(rdb:Rdb, tables:varargs[Table]) =
   for table in tables:
-    let driver = getDriver()
-    case driver:
-    of "sqlite":
-      sqlite_alter.exec(table)
-    of "mysql":
-      mysql_alter.exec(table)
-    of "postgres":
-      postgres_alter.exec(table)
+    case rdb.conn.driver:
+    of SQLite3:
+      sqlite_alter.exec(rdb, table)
+    of MySQL, MariaDB:
+      mysql_alter.exec(rdb, table)
+    of PostgreSQL:
+      postgres_alter.exec(rdb, table)
 
 
 proc add*():Column =

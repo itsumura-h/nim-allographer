@@ -390,24 +390,24 @@ proc alterAddForeignGenerator*(table, column, refTable, refColumn:string,
     onDeleteString = "NO ACTION"
 
   var constraintName = &"{table}_{column}"
-  wrapUpper(constraintName)
+  myWrapUpper(constraintName)
   var refTable = refTable
-  wrapUpper(refTable)
+  myWrapUpper(refTable)
   return &"CONSTRAINT {constraintName} FOREIGN KEY (`{column}`) REFERENCES {refTable} ({refColumn}) ON DELETE {onDeleteString}"
 
 proc alterDeleteGenerator*(table:string, column:string):string =
   var table = table
-  wrapUpper(table)
+  myWrapUpper(table)
   return &"ALTER TABLE {table} DROP `{column}`"
 
 proc alterDeleteForeignGenerator*(table, column:string):string =
   var constraintName = &"{table}_{column}"
-  wrapUpper(constraintName)
+  myWrapUpper(constraintName)
   var table = table
-  wrapUpper(table)
+  myWrapUpper(table)
   return &"ALTER TABLE {table} DROP FOREIGN KEY {constraintName}"
 
 proc indexGenerate*(table, column:string):string =
   var table = table
-  wrapUpper(table)
+  myWrapUpper(table)
   return &"CREATE INDEX {column}_index ON {table}({column})"
