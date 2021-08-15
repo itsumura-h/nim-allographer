@@ -16,7 +16,7 @@ jobs:
     steps:
       - run: echo "no WIP"
 
-  build:
+  install:
     runs-on: ${{ matrix.os }}
     needs: before
     strategy:
@@ -54,7 +54,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Test
-      run: docker-compose run allographer nimble test
+      run: docker-compose run allographer-ubuntu nimble test
     - name: Test multi-thread
       run: |
         echo '' >> tests/config.nims
