@@ -5,10 +5,11 @@ import os, strutils
 import dotenv
 
 for f in walkDir(getCurrentDir()):
-  if f.path.contains(".env"):
-    let env = initDotEnv(getCurrentDir(), f.path.split("/")[^1])
+  if f.path.split("/")[^1] == ".env":
+    let env = initDotEnv(getCurrentDir(), ".env")
     env.load()
     echo("used config file '", f.path, "'")
+    break
 
 type
   LogSetting* = ref object
