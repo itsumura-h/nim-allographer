@@ -92,9 +92,9 @@ proc schema*(rdb:Rdb, tables:varargs[Table]) =
         wrapUpper(tableName, rdb.conn.driver)
         let query =
           if rdb.conn.driver == SQLite3:
-            &"drop table {tableName}"
+            &"DROP TABLE IF EXISTS {tableName}"
           else:
-            &"drop table {tableName} CASCADE"
+            &"DROP TABLE IF EXISTS {tableName} CASCADE"
         rdb.log.logger(query)
         waitFor rdb.conn.exec(query)
       except Exception:

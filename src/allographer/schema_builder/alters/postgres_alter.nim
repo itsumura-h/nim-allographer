@@ -65,14 +65,14 @@ proc change(rdb:Rdb, column:Column, table:string) =
     let err = getCurrentExceptionMsg()
     rdb.log.echoErrorMsg(err)
 
-proc delete(rdb:Rdb, column:Column, table:string) =
-  try:
-    let query = &"ALTER TABLE {table} DROP {column.previousName}"
-    rdb.log.logger(query)
-    waitFor rdb.conn.exec(query)
-  except:
-    let err = getCurrentExceptionMsg()
-    rdb.log.echoErrorMsg(err)
+# proc delete(rdb:Rdb, column:Column, table:string) =
+#   try:
+#     let query = &"ALTER TABLE {table} DROP {column.previousName}"
+#     rdb.log.logger(query)
+#     waitFor rdb.conn.exec(query)
+#   except:
+#     let err = getCurrentExceptionMsg()
+#     rdb.log.echoErrorMsg(err)
 
 proc deleteColumn(rdb:Rdb, table:string, column:Column) =
   try:
@@ -104,7 +104,7 @@ proc rename(rdb:Rdb, tableFrom, tableTo:string) =
 
 proc drop(rdb:Rdb, table:string) =
   try:
-    let query = &"DROP TABLE {table} CASCADE"
+    let query = &"DROP TABLE IF EXISTS {table} CASCADE"
     rdb.log.logger(query)
     waitFor rdb.conn.exec(query)
   except:

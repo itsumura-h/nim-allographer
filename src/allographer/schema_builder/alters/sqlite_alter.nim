@@ -30,7 +30,7 @@ proc change(rdb:Rdb, column:Column, table:string) =
     # create tmp table with new column difinition
     #   get existing table schema
     let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '{table}';"
-    var (row, columns) = waitFor rdb.conn.query(tableDifinitionSql)
+    var (row, _) = waitFor rdb.conn.query(tableDifinitionSql)
     let schema = replace(row[0][0], re"\)$", ",)")
     let columnRegex = &"'{column.previousName}'.*?,"
     let columnString = generateColumnString(column) & ","
@@ -121,7 +121,7 @@ proc rename(rdb:Rdb, tableFrom, tableTo:string) =
 
 proc drop(rdb:Rdb, table:string) =
   try:
-    let query = &"DROP TABLE {table}"
+    let query = &"DROP TABLE IF EXISTS {table}"
     rdb.log.logger(query)
     waitFor rdb.conn.exec(query)
   except:

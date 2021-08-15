@@ -4,7 +4,6 @@ from strutils import contains, isUpperAscii
 
 import ../base
 from ../utils import wrapUpper
-import ../async/async_db
 
 
 # ==================== SELECT ====================

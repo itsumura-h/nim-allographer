@@ -10,9 +10,17 @@ A query builder library inspired by [Laravel/PHP](https://readouble.com/laravel/
 ## Easy to access Rdb
 ### Query Builder
 ```nim
+import allographer/connection
 import allographer/query_builder
 
-var result = rdb()
+let maxConnections = 95
+let timeout = 30
+let rdb = dbOpen(PostgreSql, "database", "user", "password" "localhost", 5432, maxConnections, timeout)
+# also avaiable
+# let rdb = dbOpen(Sqlite3, "/path/to/db/sqlite3.db", maxConnections=maxConnections, timeout=timeout)
+# let rdb = dbOpen(MySQL, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
+
+var result = rdb
             .table("users")
             .select("id", "email", "name")
             .limit(5)
@@ -34,7 +42,8 @@ echo result
 ```nim
 import allographer/schema_builder
 
-schema([
+
+rdb.schema([
   table("auth", [
     Column().increments("id"),
     Column().string("name").nullable(),
@@ -59,7 +68,7 @@ schema([
     FOREIGN KEY(auth_id) REFERENCES auth(id) ON DELETE SET NULL
 )
 
-alter(
+rdb.alter(
   table("users", [
     add().string("email").unique().default(""),
     delete("name")
@@ -79,8 +88,8 @@ alter(
       * [Index](#index)
       * [Install](#install)
       * [Set up](#set-up)
-         * [Create config file](#create-config-file)
-         * [Edit confing file](#edit-confing-file)
+      * [Createing connection](#createing-connection)
+      * [Logging](#logging)
       * [Documents](#documents)
       * [Nim API Documents](#nim-api-documents)
          * [Query Builder](#query-builder-1)
@@ -88,7 +97,7 @@ alter(
       * [Development](#development)
          * [Branch naming rule](#branch-naming-rule)
 
-<!-- Added by: root, at: Fri Aug  7 11:33:24 UTC 2020 -->
+<!-- Added by: root, at: Sun Aug 15 03:35:19 UTC 2021 -->
 
 <!--te-->
 ---
@@ -105,51 +114,39 @@ export PATH=$PATH:~/.nimble/bin
 ```
 After install allographer, "dbtool" command is going to be available.  
 
-### Create config file
-```bash
-cd /your/project/dir
-dbtool makeConf
+## Createing connection
+Database connection should be definded as singleton variable.
+
+database.nim
 ```
-`/your/project/dir/config.nims` will be generated.
+import allographer/connection
 
-### Edit confing file
-By default, config file is set to use sqlite.
+let rdb* = dbOpen(PostgreSql, "database", "user", "password" "localhost", 5432, maxConnections, timeout)
 
-config.nims
+# you can create connection for multiple database at same time.
+let sqliteRdb* = dbOpen(Sqlite3, "/path/to/db/sqlite3.db", maxConnections=maxConnections, timeout=timeout)
+let mysqlRdb* = dbOpen(MySQL, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
+```
+
+Then, call connection when you run query.
+
+run_sql.nim
+```
+from database import rdb
+
+echo rdb.table("users").get()
+```
+
+## Logging
+Please set args in `dbOpen()`
 ```nim
-import os
-
-# DB Connection
-putEnv("DB_DRIVER", "sqlite")
+proc dbOpen*(driver:Driver, database:string="", user:string="", password:string="",
+            host: string="", port=0, maxConnections=1, timeout=30,
+            shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""):Rdb
 ```
-
-.env
-```env
-DB_CONNECTION="/your/project/dir/db.sqlite3"
-DB_USER=""
-DB_PASSWORD=""
-DB_DATABASE=""
-
-# Logging
-LOG_IS_DISPLAY=true
-LOG_IS_FILE=false
-LOG_DIR="/your/project/dir/logs"
-```
-
-- DB_DRIVER: `sqlite` or `mysql` or `postgres`
-- DB_CONNECTION: `sqlite/file/path` or `host:port`
-- DB_USER: login user name
-- DB_PASSWORD: login password
-- DB_DATABASE: specify the database name
-
-From "connection" to "database", these are correspond to args of open proc of Nim std db package
-```nim
-let db = open(connection, user, password, database)
-```
-
-- LOG_IS_DISPLAY: Whether display logging in terminal console or not.
-- LOG_IS_FILE: Whether output logging in log file or not.
-- LOG_DIR: Define logging dir path.
+- shouldDisplayLog: Whether display logging in terminal console or not.
+- shouldOutputLogFile: Whether output logging in log file or not.
+- logDir: Define logging dir path.
 
 
 ## Documents

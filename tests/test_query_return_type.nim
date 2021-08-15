@@ -1,10 +1,10 @@
-import unittest, strformat, json, strutils, options
+import unittest, strformat, json, strutils, options, asyncdispatch
 
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
+import connections
 
-
-schema(
+rdb.schema(
   table("users", [
     Column().increments("id"),
     COlumn().string("name").nullable(),
@@ -22,8 +22,8 @@ for i in 1..5:
       "birth_date": &"1990-01-0{i}"
     }
   )
-
-rdb().table("users").insert(users)
+asyncBlock:
+  await rdb.table("users").insert(users)
 
 
 type Typ = ref object
@@ -49,53 +49,62 @@ proc checkTestOptions(t:Typ, r:Option[Typ]) =
 
 suite "return with type":
   test "get":
-    var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = rdb().table("users").get(Typ)[0]
-    checkTest(t, r)
-  test "getRaw":
-    var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = rdb().raw("select * from users").getRaw(Typ)[0]
-    checkTest(t, r)
-  test "first":
-    var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = rdb().table("users").first(Typ)
-    checkTestOptions(t, r)
-  test "find":
-    var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = rdb().table("users").find(1, Typ)
-    checkTestOptions(t, r)
-  test "transaction":
-    transaction:
+    asyncBlock:
       var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-      var rArr = @[
-        rdb().table("users").get(Typ)[0],
-        rdb().raw("select * from users").getRaw(Typ)[0],
-      ]
-      for r in rArr:
-        checkTest(t, r)
-      var rArr2 = @[
-        rdb().table("users").first(Typ),
-        rdb().table("users").find(1, Typ)
-      ]
-      for r in rArr2:
-        checkTestOptions(t, r)
+      var r = await(rdb.table("users").get()).orm(Typ)[0]
+      checkTest(t, r)
+  test "getRaw":
+    asyncBlock:
+      var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
+      var r = await(rdb.raw("select * from users").getRaw()).orm(Typ)[0]
+      checkTest(t, r)
+  test "first":
+    asyncBlock:
+      var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
+      var r = await(rdb.table("users").first()).orm(Typ)
+      checkTestOptions(t, r)
+  test "find":
+    asyncBlock:
+      var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
+      var r = await(rdb.table("users").find(1)).orm(Typ)
+      checkTestOptions(t, r)
+  test "transaction":
+    asyncBlock:
+      transaction rdb:
+        var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
+        var rArr = @[
+          await(rdb.table("users").get())[0].orm(Typ),
+          await(rdb.raw("select * from users").getRaw())[0].orm(Typ),
+        ]
+        for r in rArr:
+          checkTest(t, r)
+        var rArr2 = @[
+          await(rdb.table("users").first()).orm(Typ),
+          await(rdb.table("users").find(1)).orm(Typ)
+        ]
+        for r in rArr2:
+          checkTestOptions(t, r)
 
 suite "return with type fail":
   test "get":
-    var r = rdb().table("users").where("id", ">", 10).get(Typ)
-    check r.len == 0
-    check r == newSeq[Typ](0)
+    asyncBlock:
+      var r = await(rdb.table("users").where("id", ">", 10).get()).orm(Typ)
+      check r.len == 0
+      check r == newSeq[Typ](0)
   test "getRaw":
-    var r = rdb().raw("select * from users where id > ?", "10").getRaw(Typ)
-    check r.len == 0
-    check r == newSeq[Typ](0)
+    asyncBlock:
+      var r = await(rdb.raw("select * from users where id > ?", "10").getRaw()).orm(Typ)
+      check r.len == 0
+      check r == newSeq[Typ](0)
   test "first":
-    var r = rdb().table("users").where("id", ">", 10).first(Typ)
-    check r.isSome() == false
+    asyncBlock:
+      var r = await(rdb.table("users").where("id", ">", 10).first()).orm(Typ)
+      check r.isSome() == false
   test "find":
-    var r = rdb().table("users").find(10, Typ)
-    check r.isSome() == false
+    asyncBlock:
+      var r = await(rdb.table("users").find(10)).orm(Typ)
+      check r.isSome() == false
 
-alter(
+rdb.alter(
   drop("users")
 )

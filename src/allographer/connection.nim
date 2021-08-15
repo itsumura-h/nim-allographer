@@ -7,7 +7,7 @@ export
 
 proc dbOpen*(driver:Driver, database:string="", user:string="", password:string="",
             host: string="", port=0, maxConnections=1, timeout=30,
-            isDisplayLog=false, isSubmitFile=false, logDir=""):Rdb =
+            shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""):Rdb =
   result = new Rdb
   result.conn = open(driver, database, user, password, host, port, maxConnections, timeout)
-  result.log = LogSetting(isDisplayLog:isDisplayLog, isSubmitFile:isSubmitFile, logDir:logDir)
+  result.log = LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)

@@ -90,14 +90,20 @@ proc getRow(self:Rdb, sqlString:string, args:seq[string]):Future[Option[JsonNode
 proc getRowPlain(self:Connections, sqlString:string, args:seq[string]):Future[seq[string]] {.async.} =
   return await(self.queryPlain(sqlString, args))[0]
 
-proc orm(rows:openArray[JsonNode], typ:typedesc):seq[typ.type] =
+proc orm*(rows:openArray[JsonNode], typ:typedesc):seq[typ.type] =
   var response = newSeq[typ.type](rows.len)
   for i, row in rows:
     response[i] = row.to(typ.type)
   return response
 
-proc orm(row:JsonNode, typ:typedesc):typ.type =
+proc orm*(row:JsonNode, typ:typedesc):typ.type =
   return row.to(typ)
+
+proc orm*(row:Option[JsonNode], typ:typedesc):Option[typ.type] =
+  if row.isSome:
+    return row.get.to(typ.type).some
+  else:
+    return none(typ.type)
 
 proc cleanUp(self:Rdb) =
   self.query = newJNull()
@@ -121,16 +127,16 @@ proc get*(self: Rdb):Future[seq[JsonNode]] {.async.} =
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return newSeq[JsonNode](0)
 
-proc get*(self: Rdb, typ: typedesc): Future[seq[typ.type]] {.async.} =
-  defer: self.cleanUp()
-  self.sqlString = self.selectBuilder().sqlString
-  try:
-    self.log.logger(self.sqlString, self.placeHolder)
-    return await getAllRows(self.conn, self.sqlString, self.placeHolder).orm(typ)
-  except Exception:
-    self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
-    self.log.echoErrorMsg( getCurrentExceptionMsg() )
-    return newSeq[typ.type](0)
+# proc get*(self: Rdb, typ: typedesc): Future[seq[typ.type]] {.async.} =
+#   defer: self.cleanUp()
+#   self.sqlString = self.selectBuilder().sqlString
+#   try:
+#     self.log.logger(self.sqlString, self.placeHolder)
+#     return await(getAllRows(self, self.sqlString, self.placeHolder)).orm(typ)
+#   except Exception:
+#     self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
+#     self.log.echoErrorMsg( getCurrentExceptionMsg() )
+#     return newSeq[typ.type](0)
 
 proc getPlain*(self:Rdb):Future[seq[seq[string]]] {.async.} =
   defer: self.cleanUp()
@@ -153,15 +159,15 @@ proc getRaw*(self: Rdb):Future[seq[JsonNode]]{.async.} =
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return newSeq[JsonNode](0)
 
-proc getRaw*(self: Rdb, typ: typedesc):Future[seq[typ.type]]{.async.} =
-  defer: self.cleanUp()
-  try:
-    self.log.logger(self.sqlString, self.placeHolder)
-    return await getAllRows(self.conn, self.sqlString, self.placeHolder).orm(typ)
-  except Exception:
-    self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
-    self.log.echoErrorMsg( getCurrentExceptionMsg() )
-    return newSeq[typ.type](0)
+# proc getRaw*(self: Rdb, typ: typedesc):Future[seq[typ.type]]{.async.} =
+#   defer: self.cleanUp()
+#   try:
+#     self.log.logger(self.sqlString, self.placeHolder)
+#     return await getAllRows(self.conn, self.sqlString, self.placeHolder).orm(typ)
+#   except Exception:
+#     self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
+#     self.log.echoErrorMsg( getCurrentExceptionMsg() )
+#     return newSeq[typ.type](0)
 
 proc first*(self: Rdb):Future[Option[JsonNode]] {.async.} =
   defer: self.cleanUp()
@@ -174,16 +180,16 @@ proc first*(self: Rdb):Future[Option[JsonNode]] {.async.} =
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return none(JsonNode)
 
-proc first*(self: Rdb, typ: typedesc):Future[Option[typ.type]] =
-  defer: self.cleanUp()
-  self.sqlString = self.selectFirstBuilder().sqlString
-  try:
-    self.log.logger(self.sqlString, self.placeHolder)
-    return await getRow(self.conn, self.sqlString, self.placeHolder).get.orm(typ).some
-  except Exception:
-    self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
-    self.log.echoErrorMsg( getCurrentExceptionMsg() )
-    return none(typ.type)
+# proc first*(self: Rdb, typ: typedesc):Future[Option[typ.type]] =
+#   defer: self.cleanUp()
+#   self.sqlString = self.selectFirstBuilder().sqlString
+#   try:
+#     self.log.logger(self.sqlString, self.placeHolder)
+#     return await getRow(self.conn, self.sqlString, self.placeHolder).get.orm(typ).some
+#   except Exception:
+#     self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
+#     self.log.echoErrorMsg( getCurrentExceptionMsg() )
+#     return none(typ.type)
 
 proc firstPlain*(self: Rdb):Future[seq[string]]{.async.} =
   defer: self.cleanUp()
@@ -208,17 +214,17 @@ proc find*(self: Rdb, id: int, key="id"):Future[Option[JsonNode]]{.async.} =
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return none(JsonNode)
 
-proc find*(self: Rdb, id: int, typ:typedesc, key="id"):Future[Option[typ.type]]{.async.} =
-  defer: self.cleanUp()
-  self.placeHolder.add($id)
-  self.sqlString = self.selectFindBuilder(id, key).sqlString
-  try:
-    self.log.logger(self.sqlString, self.placeHolder)
-    return await getRow(self.conn, self.sqlString, self.placeHolder).get.orm(typ).some
-  except Exception:
-    self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
-    self.log.echoErrorMsg( getCurrentExceptionMsg() )
-    return none(typ.type)
+# proc find*(self: Rdb, id: int, typ:typedesc, key="id"):Future[Option[typ.type]]{.async.} =
+#   defer: self.cleanUp()
+#   self.placeHolder.add($id)
+#   self.sqlString = self.selectFindBuilder(id, key).sqlString
+#   try:
+#     self.log.logger(self.sqlString, self.placeHolder)
+#     return await getRow(self.conn, self.sqlString, self.placeHolder).get.orm(typ).some
+#   except Exception:
+#     self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
+#     self.log.echoErrorMsg( getCurrentExceptionMsg() )
+#     return none(typ.type)
 
 proc findPlain*(self:Rdb, id:int, key="id"):Future[seq[string]]{.async.} =
   defer: self.cleanUp()

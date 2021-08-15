@@ -10,11 +10,11 @@ import async/async_db
 
 proc logger*(self:LogSetting, output: any, args:varargs[string]) =
   # console log
-  if self.isDisplayLog:
+  if self.shouldDisplayLog:
     let logger = newConsoleLogger()
     logger.log(lvlDebug, $output & $args)
   # file log
-  if self.isSubmitFile:
+  if self.shouldOutputLogFile:
     # info $output & $args
     let path = self.logDir & "/log.log"
     createDir(parentDir(path))
@@ -26,10 +26,10 @@ proc logger*(self:LogSetting, output: any, args:varargs[string]) =
 
 proc echoErrorMsg*(self:LogSetting, msg:string) =
   # console log
-  if self.isDisplayLog:
+  if self.shouldDisplayLog:
     styledWriteLine(stdout, fgRed, bgDefault, msg, resetStyle)
   # file log
-  if self.isSubmitFile:
+  if self.shouldOutputLogFile:
     let path = self.logDir & "/error.log"
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
@@ -39,10 +39,10 @@ proc echoErrorMsg*(self:LogSetting, msg:string) =
 
 proc echoWarningMsg*(self:LogSetting, msg:string) =
   # console log
-  if self.isDisplayLog:
+  if self.shouldDisplayLog:
     styledWriteLine(stdout, fgYellow, bgDefault, msg, resetStyle)
   # file log
-  if self.isSubmitFile:
+  if self.shouldOutputLogFile:
     let path = self.logDir & "/error.log"
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)

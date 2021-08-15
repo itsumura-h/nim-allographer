@@ -53,8 +53,18 @@ suite "select":
   test "getPlain()":
     asyncBlock:
       var t = await rdb.table("users").getPlain()
-      echo t
       check t[0] == @["1", "user1", "user1@gmail.com", "", "1"]
+
+  # test "perfomance":
+  #   asyncBlock:
+  #     var s = cpuTime()
+  #     for i in 0..10000:
+  #       asyncCheck rdb.table("users").get()
+  #     echo "get...", cpuTime() - s
+  #     s = cpuTime()
+  #     for i in 0..10000:
+  #       asyncCheck rdb.table("users").getPlain()
+  #     echo "getPlain...", cpuTime() - s
 
   test "first()":
     asyncBlock:
@@ -293,16 +303,3 @@ suite "select":
       var res = await rdb.raw(sql, "1").getRaw()
       echo res
       check res[0]["name"].getStr == "user1"
-
-  # test "prepare":
-  #   asyncBlock:
-  #     let sql = "SELECT * FROM users WHERE id = $1"
-  #     let prepared = await rdb.prepare(sql)
-  #     var futures = newSeq[Future[(seq[Row], DbRows)]]()
-  #     for i in 0..500:
-  #       let n = rand(1..10)
-  #       futures.add(prepared.query(@[$n]))
-  #     let results = await all(futures)
-  #     prepared.close()
-  #     for res in results:
-  #       echo res[0]

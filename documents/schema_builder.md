@@ -21,7 +21,7 @@ Example: Schema Builder
       * [options](#options)
       * [Foreign Key Constraints](#foreign-key-constraints)
 
-<!-- Added by: root, at: Fri Aug  7 11:33:28 UTC 2020 -->
+<!-- Added by: root, at: Sun Aug 15 03:35:25 UTC 2021 -->
 
 <!--te-->
 ---
@@ -29,8 +29,9 @@ Example: Schema Builder
 ## Create table
 ```nim
 import allographer/schema_builder
+from database import rdb
 
-schema([
+rdb.schema([
   table("auth", [
     Column().increments("id"),
     Column().string("name"),
@@ -48,7 +49,7 @@ If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TA
 ## Alter Table
 ### add column
 ```nim
-alter(
+rdb.alter(
   table("auth", [
     add().increments("id"),
     add().string("name"),
@@ -64,7 +65,7 @@ alter(
 
 ### change column
 ```nim
-alter(
+rdb.alter(
   table("users",
     change("name").char("new_name", 20).unique().default("")
   )
@@ -78,7 +79,7 @@ alter(
 
 ### delete column
 ```nim
-alter(
+rdb.alter(
   table("users",
     delete().column("name")
     delete().foreign("auth_id")
@@ -88,7 +89,7 @@ alter(
 
 ### rename table
 ```nim
-alter(
+rdb.alter(
   rename("users", "new_users")
 )
 ```
@@ -96,7 +97,7 @@ alter(
 
 ### drop table
 ```nim
-alter(
+rdb.alter(
   drop("users")
 )
 ```

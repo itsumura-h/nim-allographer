@@ -12,8 +12,8 @@ for f in walkDir(getCurrentDir()):
 
 type
   LogSetting* = ref object
-    isDisplayLog*: bool
-    isSubmitFile*: bool
+    shouldDisplayLog*: bool
+    shouldOutputLogFile*: bool
     logDir*: string
   Rdb* = ref object
     conn*: Connections

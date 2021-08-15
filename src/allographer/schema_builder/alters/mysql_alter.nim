@@ -20,15 +20,15 @@ proc add(rdb:Rdb, column:Column, table:string) =
       rdb.log.echoErrorMsg(err)
       rdb.log.echoWarningMsg(&"Safety skip alter table '{table}'")
 
-proc getColumns(db:Connections, table:string, name:string):string =
-  var query = &"SHOW COLUMNS FROM {table}"
-  var columns:string
-  let (rows, _) = waitFor db.query(query)
-  for i, row in rows:
-    if row[0] != name:
-      if i > 0: columns.add(", ")
-      columns.add(row[1])
-  return columns
+# proc getColumns(db:Connections, table:string, name:string):string =
+#   var query = &"SHOW COLUMNS FROM {table}"
+#   var columns:string
+#   let (rows, _) = waitFor db.query(query)
+#   for i, row in rows:
+#     if row[0] != name:
+#       if i > 0: columns.add(", ")
+#       columns.add(row[1])
+#   return columns
 
 proc change(rdb:Rdb, column:Column, table:string) =
   try:
@@ -70,7 +70,7 @@ proc rename(rdb:Rdb, tableFrom, tableTo:string) =
 
 proc drop(rdb:Rdb, table:string) =
   try:
-    let query = &"DROP TABLE {table}"
+    let query = &"DROP TABLE IF EXISTS {table}"
     rdb.log.logger(query)
     waitFor rdb.conn.exec(query)
   except:
