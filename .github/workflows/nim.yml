@@ -16,7 +16,7 @@ jobs:
     steps:
       - run: echo "no WIP"
 
-  install:
+  build:
     runs-on: ${{ matrix.os }}
     needs: before
     strategy:
