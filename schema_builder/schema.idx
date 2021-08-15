@@ -1,3 +1,3 @@
 Schema	schema_builder/schema.html#Schema	schema: Schema	
 check	schema_builder/schema.html#check,Schema,varargs[Table]	schema: check(this: Schema; tablesArg: varargs[Table])	
-schema	schema_builder/schema.html#schema,varargs[Table]	schema: schema(tables: varargs[Table])	
+schema	schema_builder/schema.html#schema,Rdb,varargs[Table]	schema: schema(rdb: Rdb; tables: varargs[Table])	

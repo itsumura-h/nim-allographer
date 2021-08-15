@@ -17,10 +17,10 @@
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 
 <!-- CSS -->
-<title>query_builder/base</title>
-<link rel="stylesheet" type="text/css" href="../nimdoc.out.css">
+<title>async/database/impls/mariadb</title>
+<link rel="stylesheet" type="text/css" href="../../../nimdoc.out.css">
 
-<script type="text/javascript" src="../dochack.js"></script>
+<script type="text/javascript" src="../../../dochack.js"></script>
 
 <script type="text/javascript">
 function main() {
@@ -62,7 +62,7 @@ function main() {
 <body onload="main()">
 <div class="document" id="documentId">
   <div class="container">
-    <h1 class="title">query_builder/base</h1>
+    <h1 class="title">async/database/impls/mariadb</h1>
     <div class="row">
   <div class="three columns">
   <div class="theme-switch-wrapper">
@@ -75,7 +75,7 @@ function main() {
   <div id="global-links">
     <ul class="simple">
     <li>
-      <a href="../theindex.html">Index</a>
+      <a href="../../../theindex.html">Index</a>
     </li>
     </ul>
   </div>
@@ -98,28 +98,12 @@ function main() {
   </ul>
 </li>
 <li>
-  <a class="reference reference-toplevel" href="#7" id="57">Types</a>
-  <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#RDB"
-    title="RDB = ref object of RootObj
-  db*: DbConn
-  query*: JsonNode
-  sqlString*: string
-  placeHolder*: seq[string]">RDB</a></li>
-
-  </ul>
-</li>
-<li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">isNil
-      <li><a class="reference" href="#isNil%2CDbConn"
-    title="isNil[DbConn](x: DbConn): bool">isNil,<wbr>DbConn</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">cleanUp
-      <li><a class="reference" href="#cleanUp%2CRDB"
-    title="cleanUp(this: RDB)">cleanUp,<wbr>RDB</a></li>
+      <ul class="simple nested-toc-section">dbopen
+      <li><a class="reference" href="#dbopen%2Cstring%2Cstring%2Cstring%2Cstring%2Cint32%2Cint%2Cint"
+    title="dbopen(database: string = &quot;&quot;; user: string = &quot;&quot;; password: string = &quot;&quot;;
+       host: string = &quot;&quot;; port: int32 = 0; maxConnections: int = 1; timeout = 30): Connections">dbopen,<wbr>string,<wbr>string,<wbr>string,<wbr>string,<wbr>int32,<wbr>int,<wbr>int</a></li>
 
   </ul>
 
@@ -136,37 +120,15 @@ function main() {
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="../connection.html">../connection</a>
-</dl></div>
-<div class="section" id="7">
-<h1><a class="toc-backref" href="#7">Types</a></h1>
-<dl class="item">
-<a id="RDB"></a>
-<dt><pre><a href="base.html#RDB"><span class="Identifier">RDB</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span> <span class="Keyword">of</span> <span class="Identifier">RootObj</span>
-  <span class="Identifier">db</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">DbConn</span>
-  <span class="Identifier">query</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">JsonNode</span>
-  <span class="Identifier">sqlString</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
-  <span class="Identifier">placeHolder</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span>
-</pre></dt>
-<dd>
-
-
-
-</dd>
-
+<a class="reference external" href="../base.html">../base</a>, <a class="reference external" href="../rdb/mariadb.html">../rdb/mariadb</a>, <a class="reference external" href="../libs/lib_mariadb.html">../libs/lib_mariadb</a>
 </dl></div>
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
-<a id="isNil,DbConn"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#isNil%2CDbConn"><span class="Identifier">isNil</span></a><span class="Other">[</span><span class="Identifier">DbConn</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">x</span><span class="Other">:</span> <span class="Identifier">DbConn</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">bool</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">noSideEffect</span><span class="Other">,</span> <span class="Identifier">magic</span><span class="Other">:</span> <span class="StringLit">&quot;IsNil&quot;</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="cleanUp,RDB"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#cleanUp%2CRDB"><span class="Identifier">cleanUp</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="base.html#RDB"><span class="Identifier">RDB</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="dbopen,string,string,string,string,int32,int,int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#dbopen%2Cstring%2Cstring%2Cstring%2Cstring%2Cint32%2Cint%2Cint"><span class="Identifier">dbopen</span></a><span class="Other">(</span><span class="Identifier">database</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> <span class="Identifier">user</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> <span class="Identifier">password</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span>
+            <span class="Identifier">host</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> <span class="Identifier">port</span><span class="Other">:</span> <span class="Identifier">int32</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">maxConnections</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">;</span>
+            <span class="Identifier">timeout</span> <span class="Other">=</span> <span class="DecNumber">30</span><span class="Other">)</span><span class="Other">:</span> <a href="../base.html#Connections"><span class="Identifier">Connections</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -182,7 +144,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-16 02:08:21 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-15 04:39:28 UTC</small>
       </div>
     </div>
   </div>

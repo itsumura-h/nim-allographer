@@ -1,0 +1,537 @@
+false	async/database/rdb/mysql.html#false	my_bool.false	
+true	async/database/rdb/mysql.html#true	my_bool.true	
+my_bool	async/database/rdb/mysql.html#my_bool	mysql: my_bool	
+Pmy_bool	async/database/rdb/mysql.html#Pmy_bool	mysql: Pmy_bool	
+PVIO	async/database/rdb/mysql.html#PVIO	mysql: PVIO	
+Pgptr	async/database/rdb/mysql.html#Pgptr	mysql: Pgptr	
+gptr	async/database/rdb/mysql.html#gptr	mysql: gptr	
+Pmy_socket	async/database/rdb/mysql.html#Pmy_socket	mysql: Pmy_socket	
+my_socket	async/database/rdb/mysql.html#my_socket	mysql: my_socket	
+PPByte	async/database/rdb/mysql.html#PPByte	mysql: PPByte	
+cuint	async/database/rdb/mysql.html#cuint	mysql: cuint	
+NET_ASYNC_COMPLETE	async/database/rdb/mysql.html#NET_ASYNC_COMPLETE	NetAsyncStatus.NET_ASYNC_COMPLETE	
+NET_ASYNC_NOT_READY	async/database/rdb/mysql.html#NET_ASYNC_NOT_READY	NetAsyncStatus.NET_ASYNC_NOT_READY	
+NET_ASYNC_ERROR	async/database/rdb/mysql.html#NET_ASYNC_ERROR	NetAsyncStatus.NET_ASYNC_ERROR	
+NET_ASYNC_COMPLETE_NO_MORE_RESULTS	async/database/rdb/mysql.html#NET_ASYNC_COMPLETE_NO_MORE_RESULTS	NetAsyncStatus.NET_ASYNC_COMPLETE_NO_MORE_RESULTS	
+NetAsyncStatus	async/database/rdb/mysql.html#NetAsyncStatus	mysql: NetAsyncStatus	
+NAME_LEN	async/database/rdb/mysql.html#NAME_LEN	mysql: NAME_LEN	
+HOSTNAME_LENGTH	async/database/rdb/mysql.html#HOSTNAME_LENGTH	mysql: HOSTNAME_LENGTH	
+USERNAME_LENGTH	async/database/rdb/mysql.html#USERNAME_LENGTH	mysql: USERNAME_LENGTH	
+SERVER_VERSION_LENGTH	async/database/rdb/mysql.html#SERVER_VERSION_LENGTH	mysql: SERVER_VERSION_LENGTH	
+SQLSTATE_LENGTH	async/database/rdb/mysql.html#SQLSTATE_LENGTH	mysql: SQLSTATE_LENGTH	
+LOCAL_HOST	async/database/rdb/mysql.html#LOCAL_HOST	mysql: LOCAL_HOST	
+LOCAL_HOST_NAMEDPIPE	async/database/rdb/mysql.html#LOCAL_HOST_NAMEDPIPE	mysql: LOCAL_HOST_NAMEDPIPE	
+NAMEDPIPE	async/database/rdb/mysql.html#NAMEDPIPE	mysql: NAMEDPIPE	
+SERVICENAME	async/database/rdb/mysql.html#SERVICENAME	mysql: SERVICENAME	
+COM_SLEEP	async/database/rdb/mysql.html#COM_SLEEP	Enum_server_command.COM_SLEEP	
+COM_QUIT	async/database/rdb/mysql.html#COM_QUIT	Enum_server_command.COM_QUIT	
+COM_INIT_DB	async/database/rdb/mysql.html#COM_INIT_DB	Enum_server_command.COM_INIT_DB	
+COM_QUERY	async/database/rdb/mysql.html#COM_QUERY	Enum_server_command.COM_QUERY	
+COM_FIELD_LIST	async/database/rdb/mysql.html#COM_FIELD_LIST	Enum_server_command.COM_FIELD_LIST	
+COM_CREATE_DB	async/database/rdb/mysql.html#COM_CREATE_DB	Enum_server_command.COM_CREATE_DB	
+COM_DROP_DB	async/database/rdb/mysql.html#COM_DROP_DB	Enum_server_command.COM_DROP_DB	
+COM_REFRESH	async/database/rdb/mysql.html#COM_REFRESH	Enum_server_command.COM_REFRESH	
+COM_SHUTDOWN	async/database/rdb/mysql.html#COM_SHUTDOWN	Enum_server_command.COM_SHUTDOWN	
+COM_STATISTICS	async/database/rdb/mysql.html#COM_STATISTICS	Enum_server_command.COM_STATISTICS	
+COM_PROCESS_INFO	async/database/rdb/mysql.html#COM_PROCESS_INFO	Enum_server_command.COM_PROCESS_INFO	
+COM_CONNECT	async/database/rdb/mysql.html#COM_CONNECT	Enum_server_command.COM_CONNECT	
+COM_PROCESS_KILL	async/database/rdb/mysql.html#COM_PROCESS_KILL	Enum_server_command.COM_PROCESS_KILL	
+COM_DEBUG	async/database/rdb/mysql.html#COM_DEBUG	Enum_server_command.COM_DEBUG	
+COM_PING	async/database/rdb/mysql.html#COM_PING	Enum_server_command.COM_PING	
+COM_TIME	async/database/rdb/mysql.html#COM_TIME	Enum_server_command.COM_TIME	
+COM_DELAYED_INSERT	async/database/rdb/mysql.html#COM_DELAYED_INSERT	Enum_server_command.COM_DELAYED_INSERT	
+COM_CHANGE_USER	async/database/rdb/mysql.html#COM_CHANGE_USER	Enum_server_command.COM_CHANGE_USER	
+COM_BINLOG_DUMP	async/database/rdb/mysql.html#COM_BINLOG_DUMP	Enum_server_command.COM_BINLOG_DUMP	
+COM_TABLE_DUMP	async/database/rdb/mysql.html#COM_TABLE_DUMP	Enum_server_command.COM_TABLE_DUMP	
+COM_CONNECT_OUT	async/database/rdb/mysql.html#COM_CONNECT_OUT	Enum_server_command.COM_CONNECT_OUT	
+COM_REGISTER_SLAVE	async/database/rdb/mysql.html#COM_REGISTER_SLAVE	Enum_server_command.COM_REGISTER_SLAVE	
+COM_STMT_PREPARE	async/database/rdb/mysql.html#COM_STMT_PREPARE	Enum_server_command.COM_STMT_PREPARE	
+COM_STMT_EXECUTE	async/database/rdb/mysql.html#COM_STMT_EXECUTE	Enum_server_command.COM_STMT_EXECUTE	
+COM_STMT_SEND_LONG_DATA	async/database/rdb/mysql.html#COM_STMT_SEND_LONG_DATA	Enum_server_command.COM_STMT_SEND_LONG_DATA	
+COM_STMT_CLOSE	async/database/rdb/mysql.html#COM_STMT_CLOSE	Enum_server_command.COM_STMT_CLOSE	
+COM_STMT_RESET	async/database/rdb/mysql.html#COM_STMT_RESET	Enum_server_command.COM_STMT_RESET	
+COM_SET_OPTION	async/database/rdb/mysql.html#COM_SET_OPTION	Enum_server_command.COM_SET_OPTION	
+COM_STMT_FETCH	async/database/rdb/mysql.html#COM_STMT_FETCH	Enum_server_command.COM_STMT_FETCH	
+COM_END	async/database/rdb/mysql.html#COM_END	Enum_server_command.COM_END	
+Enum_server_command	async/database/rdb/mysql.html#Enum_server_command	mysql: Enum_server_command	
+SCRAMBLE_LENGTH	async/database/rdb/mysql.html#SCRAMBLE_LENGTH	mysql: SCRAMBLE_LENGTH	
+SCRAMBLE_LENGTH_323	async/database/rdb/mysql.html#SCRAMBLE_LENGTH_323	mysql: SCRAMBLE_LENGTH_323	
+SCRAMBLED_PASSWORD_CHAR_LENGTH	async/database/rdb/mysql.html#SCRAMBLED_PASSWORD_CHAR_LENGTH	mysql: SCRAMBLED_PASSWORD_CHAR_LENGTH	
+SCRAMBLED_PASSWORD_CHAR_LENGTH_323	async/database/rdb/mysql.html#SCRAMBLED_PASSWORD_CHAR_LENGTH_323	mysql: SCRAMBLED_PASSWORD_CHAR_LENGTH_323	
+NOT_NULL_FLAG	async/database/rdb/mysql.html#NOT_NULL_FLAG	mysql: NOT_NULL_FLAG	
+PRI_KEY_FLAG	async/database/rdb/mysql.html#PRI_KEY_FLAG	mysql: PRI_KEY_FLAG	
+UNIQUE_KEY_FLAG	async/database/rdb/mysql.html#UNIQUE_KEY_FLAG	mysql: UNIQUE_KEY_FLAG	
+MULTIPLE_KEY_FLAG	async/database/rdb/mysql.html#MULTIPLE_KEY_FLAG	mysql: MULTIPLE_KEY_FLAG	
+BLOB_FLAG	async/database/rdb/mysql.html#BLOB_FLAG	mysql: BLOB_FLAG	
+UNSIGNED_FLAG	async/database/rdb/mysql.html#UNSIGNED_FLAG	mysql: UNSIGNED_FLAG	
+ZEROFILL_FLAG	async/database/rdb/mysql.html#ZEROFILL_FLAG	mysql: ZEROFILL_FLAG	
+BINARY_FLAG	async/database/rdb/mysql.html#BINARY_FLAG	mysql: BINARY_FLAG	
+ENUM_FLAG	async/database/rdb/mysql.html#ENUM_FLAG	mysql: ENUM_FLAG	
+AUTO_INCREMENT_FLAG	async/database/rdb/mysql.html#AUTO_INCREMENT_FLAG	mysql: AUTO_INCREMENT_FLAG	
+TIMESTAMP_FLAG	async/database/rdb/mysql.html#TIMESTAMP_FLAG	mysql: TIMESTAMP_FLAG	
+SET_FLAG	async/database/rdb/mysql.html#SET_FLAG	mysql: SET_FLAG	
+NO_DEFAULT_VALUE_FLAG	async/database/rdb/mysql.html#NO_DEFAULT_VALUE_FLAG	mysql: NO_DEFAULT_VALUE_FLAG	
+NUM_FLAG	async/database/rdb/mysql.html#NUM_FLAG	mysql: NUM_FLAG	
+PART_KEY_FLAG	async/database/rdb/mysql.html#PART_KEY_FLAG	mysql: PART_KEY_FLAG	
+GROUP_FLAG	async/database/rdb/mysql.html#GROUP_FLAG	mysql: GROUP_FLAG	
+UNIQUE_FLAG	async/database/rdb/mysql.html#UNIQUE_FLAG	mysql: UNIQUE_FLAG	
+BINCMP_FLAG	async/database/rdb/mysql.html#BINCMP_FLAG	mysql: BINCMP_FLAG	
+REFRESH_GRANT	async/database/rdb/mysql.html#REFRESH_GRANT	mysql: REFRESH_GRANT	
+REFRESH_LOG	async/database/rdb/mysql.html#REFRESH_LOG	mysql: REFRESH_LOG	
+REFRESH_TABLES	async/database/rdb/mysql.html#REFRESH_TABLES	mysql: REFRESH_TABLES	
+REFRESH_HOSTS	async/database/rdb/mysql.html#REFRESH_HOSTS	mysql: REFRESH_HOSTS	
+REFRESH_STATUS	async/database/rdb/mysql.html#REFRESH_STATUS	mysql: REFRESH_STATUS	
+REFRESH_THREADS	async/database/rdb/mysql.html#REFRESH_THREADS	mysql: REFRESH_THREADS	
+REFRESH_SLAVE	async/database/rdb/mysql.html#REFRESH_SLAVE	mysql: REFRESH_SLAVE	
+REFRESH_MASTER	async/database/rdb/mysql.html#REFRESH_MASTER	mysql: REFRESH_MASTER	
+REFRESH_READ_LOCK	async/database/rdb/mysql.html#REFRESH_READ_LOCK	mysql: REFRESH_READ_LOCK	
+REFRESH_FAST	async/database/rdb/mysql.html#REFRESH_FAST	mysql: REFRESH_FAST	
+REFRESH_QUERY_CACHE	async/database/rdb/mysql.html#REFRESH_QUERY_CACHE	mysql: REFRESH_QUERY_CACHE	
+REFRESH_QUERY_CACHE_FREE	async/database/rdb/mysql.html#REFRESH_QUERY_CACHE_FREE	mysql: REFRESH_QUERY_CACHE_FREE	
+REFRESH_DES_KEY_FILE	async/database/rdb/mysql.html#REFRESH_DES_KEY_FILE	mysql: REFRESH_DES_KEY_FILE	
+REFRESH_USER_RESOURCES	async/database/rdb/mysql.html#REFRESH_USER_RESOURCES	mysql: REFRESH_USER_RESOURCES	
+CLIENT_LONG_PASSWORD	async/database/rdb/mysql.html#CLIENT_LONG_PASSWORD	mysql: CLIENT_LONG_PASSWORD	
+CLIENT_FOUND_ROWS	async/database/rdb/mysql.html#CLIENT_FOUND_ROWS	mysql: CLIENT_FOUND_ROWS	
+CLIENT_LONG_FLAG	async/database/rdb/mysql.html#CLIENT_LONG_FLAG	mysql: CLIENT_LONG_FLAG	
+CLIENT_CONNECT_WITH_DB	async/database/rdb/mysql.html#CLIENT_CONNECT_WITH_DB	mysql: CLIENT_CONNECT_WITH_DB	
+CLIENT_NO_SCHEMA	async/database/rdb/mysql.html#CLIENT_NO_SCHEMA	mysql: CLIENT_NO_SCHEMA	
+CLIENT_COMPRESS	async/database/rdb/mysql.html#CLIENT_COMPRESS	mysql: CLIENT_COMPRESS	
+CLIENT_ODBC	async/database/rdb/mysql.html#CLIENT_ODBC	mysql: CLIENT_ODBC	
+CLIENT_LOCAL_FILES	async/database/rdb/mysql.html#CLIENT_LOCAL_FILES	mysql: CLIENT_LOCAL_FILES	
+CLIENT_IGNORE_SPACE	async/database/rdb/mysql.html#CLIENT_IGNORE_SPACE	mysql: CLIENT_IGNORE_SPACE	
+CLIENT_PROTOCOL_41	async/database/rdb/mysql.html#CLIENT_PROTOCOL_41	mysql: CLIENT_PROTOCOL_41	
+CLIENT_INTERACTIVE	async/database/rdb/mysql.html#CLIENT_INTERACTIVE	mysql: CLIENT_INTERACTIVE	
+CLIENT_SSL	async/database/rdb/mysql.html#CLIENT_SSL	mysql: CLIENT_SSL	
+CLIENT_IGNORE_SIGPIPE	async/database/rdb/mysql.html#CLIENT_IGNORE_SIGPIPE	mysql: CLIENT_IGNORE_SIGPIPE	
+CLIENT_TRANSACTIONS	async/database/rdb/mysql.html#CLIENT_TRANSACTIONS	mysql: CLIENT_TRANSACTIONS	
+CLIENT_RESERVED	async/database/rdb/mysql.html#CLIENT_RESERVED	mysql: CLIENT_RESERVED	
+CLIENT_SECURE_CONNECTION	async/database/rdb/mysql.html#CLIENT_SECURE_CONNECTION	mysql: CLIENT_SECURE_CONNECTION	
+CLIENT_MULTI_STATEMENTS	async/database/rdb/mysql.html#CLIENT_MULTI_STATEMENTS	mysql: CLIENT_MULTI_STATEMENTS	
+CLIENT_MULTI_RESULTS	async/database/rdb/mysql.html#CLIENT_MULTI_RESULTS	mysql: CLIENT_MULTI_RESULTS	
+CLIENT_REMEMBER_OPTIONS	async/database/rdb/mysql.html#CLIENT_REMEMBER_OPTIONS	mysql: CLIENT_REMEMBER_OPTIONS	
+SERVER_STATUS_IN_TRANS	async/database/rdb/mysql.html#SERVER_STATUS_IN_TRANS	mysql: SERVER_STATUS_IN_TRANS	
+SERVER_STATUS_AUTOCOMMIT	async/database/rdb/mysql.html#SERVER_STATUS_AUTOCOMMIT	mysql: SERVER_STATUS_AUTOCOMMIT	
+SERVER_STATUS_MORE_RESULTS	async/database/rdb/mysql.html#SERVER_STATUS_MORE_RESULTS	mysql: SERVER_STATUS_MORE_RESULTS	
+SERVER_MORE_RESULTS_EXISTS	async/database/rdb/mysql.html#SERVER_MORE_RESULTS_EXISTS	mysql: SERVER_MORE_RESULTS_EXISTS	
+SERVER_QUERY_NO_GOOD_INDEX_USED	async/database/rdb/mysql.html#SERVER_QUERY_NO_GOOD_INDEX_USED	mysql: SERVER_QUERY_NO_GOOD_INDEX_USED	
+SERVER_QUERY_NO_INDEX_USED	async/database/rdb/mysql.html#SERVER_QUERY_NO_INDEX_USED	mysql: SERVER_QUERY_NO_INDEX_USED	
+SERVER_STATUS_CURSOR_EXISTS	async/database/rdb/mysql.html#SERVER_STATUS_CURSOR_EXISTS	mysql: SERVER_STATUS_CURSOR_EXISTS	
+SERVER_STATUS_LAST_ROW_SENT	async/database/rdb/mysql.html#SERVER_STATUS_LAST_ROW_SENT	mysql: SERVER_STATUS_LAST_ROW_SENT	
+SERVER_STATUS_DB_DROPPED	async/database/rdb/mysql.html#SERVER_STATUS_DB_DROPPED	mysql: SERVER_STATUS_DB_DROPPED	
+SERVER_STATUS_NO_BACKSLASH_ESCAPES	async/database/rdb/mysql.html#SERVER_STATUS_NO_BACKSLASH_ESCAPES	mysql: SERVER_STATUS_NO_BACKSLASH_ESCAPES	
+ERRMSG_SIZE	async/database/rdb/mysql.html#ERRMSG_SIZE	mysql: ERRMSG_SIZE	
+NET_READ_TIMEOUT	async/database/rdb/mysql.html#NET_READ_TIMEOUT	mysql: NET_READ_TIMEOUT	
+NET_WRITE_TIMEOUT	async/database/rdb/mysql.html#NET_WRITE_TIMEOUT	mysql: NET_WRITE_TIMEOUT	
+NET_WAIT_TIMEOUT	async/database/rdb/mysql.html#NET_WAIT_TIMEOUT	mysql: NET_WAIT_TIMEOUT	
+ONLY_KILL_QUERY	async/database/rdb/mysql.html#ONLY_KILL_QUERY	mysql: ONLY_KILL_QUERY	
+MAX_TINYINT_WIDTH	async/database/rdb/mysql.html#MAX_TINYINT_WIDTH	mysql: MAX_TINYINT_WIDTH	
+MAX_SMALLINT_WIDTH	async/database/rdb/mysql.html#MAX_SMALLINT_WIDTH	mysql: MAX_SMALLINT_WIDTH	
+MAX_MEDIUMINT_WIDTH	async/database/rdb/mysql.html#MAX_MEDIUMINT_WIDTH	mysql: MAX_MEDIUMINT_WIDTH	
+MAX_INT_WIDTH	async/database/rdb/mysql.html#MAX_INT_WIDTH	mysql: MAX_INT_WIDTH	
+MAX_BIGINT_WIDTH	async/database/rdb/mysql.html#MAX_BIGINT_WIDTH	mysql: MAX_BIGINT_WIDTH	
+MAX_CHAR_WIDTH	async/database/rdb/mysql.html#MAX_CHAR_WIDTH	mysql: MAX_CHAR_WIDTH	
+MAX_BLOB_WIDTH	async/database/rdb/mysql.html#MAX_BLOB_WIDTH	mysql: MAX_BLOB_WIDTH	
+Pst_net	async/database/rdb/mysql.html#Pst_net	mysql: Pst_net	
+St_net	async/database/rdb/mysql.html#St_net	mysql: St_net	
+NET	async/database/rdb/mysql.html#NET	mysql: NET	
+PNET	async/database/rdb/mysql.html#PNET	mysql: PNET	
+packet_error	async/database/rdb/mysql.html#packet_error	mysql: packet_error	
+TYPE_DECIMAL	async/database/rdb/mysql.html#TYPE_DECIMAL	Enum_field_types.TYPE_DECIMAL	
+TYPE_TINY	async/database/rdb/mysql.html#TYPE_TINY	Enum_field_types.TYPE_TINY	
+TYPE_SHORT	async/database/rdb/mysql.html#TYPE_SHORT	Enum_field_types.TYPE_SHORT	
+TYPE_LONG	async/database/rdb/mysql.html#TYPE_LONG	Enum_field_types.TYPE_LONG	
+TYPE_FLOAT	async/database/rdb/mysql.html#TYPE_FLOAT	Enum_field_types.TYPE_FLOAT	
+TYPE_DOUBLE	async/database/rdb/mysql.html#TYPE_DOUBLE	Enum_field_types.TYPE_DOUBLE	
+TYPE_NULL	async/database/rdb/mysql.html#TYPE_NULL	Enum_field_types.TYPE_NULL	
+TYPE_TIMESTAMP	async/database/rdb/mysql.html#TYPE_TIMESTAMP	Enum_field_types.TYPE_TIMESTAMP	
+TYPE_LONGLONG	async/database/rdb/mysql.html#TYPE_LONGLONG	Enum_field_types.TYPE_LONGLONG	
+TYPE_INT24	async/database/rdb/mysql.html#TYPE_INT24	Enum_field_types.TYPE_INT24	
+TYPE_DATE	async/database/rdb/mysql.html#TYPE_DATE	Enum_field_types.TYPE_DATE	
+TYPE_TIME	async/database/rdb/mysql.html#TYPE_TIME	Enum_field_types.TYPE_TIME	
+TYPE_DATETIME	async/database/rdb/mysql.html#TYPE_DATETIME	Enum_field_types.TYPE_DATETIME	
+TYPE_YEAR	async/database/rdb/mysql.html#TYPE_YEAR	Enum_field_types.TYPE_YEAR	
+TYPE_NEWDATE	async/database/rdb/mysql.html#TYPE_NEWDATE	Enum_field_types.TYPE_NEWDATE	
+TYPE_VARCHAR	async/database/rdb/mysql.html#TYPE_VARCHAR	Enum_field_types.TYPE_VARCHAR	
+TYPE_BIT	async/database/rdb/mysql.html#TYPE_BIT	Enum_field_types.TYPE_BIT	
+TYPE_NEWDECIMAL	async/database/rdb/mysql.html#TYPE_NEWDECIMAL	Enum_field_types.TYPE_NEWDECIMAL	
+TYPE_ENUM	async/database/rdb/mysql.html#TYPE_ENUM	Enum_field_types.TYPE_ENUM	
+TYPE_SET	async/database/rdb/mysql.html#TYPE_SET	Enum_field_types.TYPE_SET	
+TYPE_TINY_BLOB	async/database/rdb/mysql.html#TYPE_TINY_BLOB	Enum_field_types.TYPE_TINY_BLOB	
+TYPE_MEDIUM_BLOB	async/database/rdb/mysql.html#TYPE_MEDIUM_BLOB	Enum_field_types.TYPE_MEDIUM_BLOB	
+TYPE_LONG_BLOB	async/database/rdb/mysql.html#TYPE_LONG_BLOB	Enum_field_types.TYPE_LONG_BLOB	
+TYPE_BLOB	async/database/rdb/mysql.html#TYPE_BLOB	Enum_field_types.TYPE_BLOB	
+TYPE_VAR_STRING	async/database/rdb/mysql.html#TYPE_VAR_STRING	Enum_field_types.TYPE_VAR_STRING	
+TYPE_STRING	async/database/rdb/mysql.html#TYPE_STRING	Enum_field_types.TYPE_STRING	
+TYPE_GEOMETRY	async/database/rdb/mysql.html#TYPE_GEOMETRY	Enum_field_types.TYPE_GEOMETRY	
+Enum_field_types	async/database/rdb/mysql.html#Enum_field_types	mysql: Enum_field_types	
+CLIENT_MULTI_QUERIES	async/database/rdb/mysql.html#CLIENT_MULTI_QUERIES	mysql: CLIENT_MULTI_QUERIES	
+FIELD_TYPE_DECIMAL	async/database/rdb/mysql.html#FIELD_TYPE_DECIMAL	mysql: FIELD_TYPE_DECIMAL	
+FIELD_TYPE_NEWDECIMAL	async/database/rdb/mysql.html#FIELD_TYPE_NEWDECIMAL	mysql: FIELD_TYPE_NEWDECIMAL	
+FIELD_TYPE_TINY	async/database/rdb/mysql.html#FIELD_TYPE_TINY	mysql: FIELD_TYPE_TINY	
+FIELD_TYPE_SHORT	async/database/rdb/mysql.html#FIELD_TYPE_SHORT	mysql: FIELD_TYPE_SHORT	
+FIELD_TYPE_LONG	async/database/rdb/mysql.html#FIELD_TYPE_LONG	mysql: FIELD_TYPE_LONG	
+FIELD_TYPE_FLOAT	async/database/rdb/mysql.html#FIELD_TYPE_FLOAT	mysql: FIELD_TYPE_FLOAT	
+FIELD_TYPE_DOUBLE	async/database/rdb/mysql.html#FIELD_TYPE_DOUBLE	mysql: FIELD_TYPE_DOUBLE	
+FIELD_TYPE_NULL	async/database/rdb/mysql.html#FIELD_TYPE_NULL	mysql: FIELD_TYPE_NULL	
+FIELD_TYPE_TIMESTAMP	async/database/rdb/mysql.html#FIELD_TYPE_TIMESTAMP	mysql: FIELD_TYPE_TIMESTAMP	
+FIELD_TYPE_LONGLONG	async/database/rdb/mysql.html#FIELD_TYPE_LONGLONG	mysql: FIELD_TYPE_LONGLONG	
+FIELD_TYPE_INT24	async/database/rdb/mysql.html#FIELD_TYPE_INT24	mysql: FIELD_TYPE_INT24	
+FIELD_TYPE_DATE	async/database/rdb/mysql.html#FIELD_TYPE_DATE	mysql: FIELD_TYPE_DATE	
+FIELD_TYPE_TIME	async/database/rdb/mysql.html#FIELD_TYPE_TIME	mysql: FIELD_TYPE_TIME	
+FIELD_TYPE_DATETIME	async/database/rdb/mysql.html#FIELD_TYPE_DATETIME	mysql: FIELD_TYPE_DATETIME	
+FIELD_TYPE_YEAR	async/database/rdb/mysql.html#FIELD_TYPE_YEAR	mysql: FIELD_TYPE_YEAR	
+FIELD_TYPE_NEWDATE	async/database/rdb/mysql.html#FIELD_TYPE_NEWDATE	mysql: FIELD_TYPE_NEWDATE	
+FIELD_TYPE_ENUM	async/database/rdb/mysql.html#FIELD_TYPE_ENUM	mysql: FIELD_TYPE_ENUM	
+FIELD_TYPE_SET	async/database/rdb/mysql.html#FIELD_TYPE_SET	mysql: FIELD_TYPE_SET	
+FIELD_TYPE_TINY_BLOB	async/database/rdb/mysql.html#FIELD_TYPE_TINY_BLOB	mysql: FIELD_TYPE_TINY_BLOB	
+FIELD_TYPE_MEDIUM_BLOB	async/database/rdb/mysql.html#FIELD_TYPE_MEDIUM_BLOB	mysql: FIELD_TYPE_MEDIUM_BLOB	
+FIELD_TYPE_LONG_BLOB	async/database/rdb/mysql.html#FIELD_TYPE_LONG_BLOB	mysql: FIELD_TYPE_LONG_BLOB	
+FIELD_TYPE_BLOB	async/database/rdb/mysql.html#FIELD_TYPE_BLOB	mysql: FIELD_TYPE_BLOB	
+FIELD_TYPE_VAR_STRING	async/database/rdb/mysql.html#FIELD_TYPE_VAR_STRING	mysql: FIELD_TYPE_VAR_STRING	
+FIELD_TYPE_STRING	async/database/rdb/mysql.html#FIELD_TYPE_STRING	mysql: FIELD_TYPE_STRING	
+FIELD_TYPE_CHAR	async/database/rdb/mysql.html#FIELD_TYPE_CHAR	mysql: FIELD_TYPE_CHAR	
+FIELD_TYPE_INTERVAL	async/database/rdb/mysql.html#FIELD_TYPE_INTERVAL	mysql: FIELD_TYPE_INTERVAL	
+FIELD_TYPE_GEOMETRY	async/database/rdb/mysql.html#FIELD_TYPE_GEOMETRY	mysql: FIELD_TYPE_GEOMETRY	
+FIELD_TYPE_BIT	async/database/rdb/mysql.html#FIELD_TYPE_BIT	mysql: FIELD_TYPE_BIT	
+SHUTDOWN_KILLABLE_CONNECT	async/database/rdb/mysql.html#SHUTDOWN_KILLABLE_CONNECT	mysql: SHUTDOWN_KILLABLE_CONNECT	
+SHUTDOWN_KILLABLE_TRANS	async/database/rdb/mysql.html#SHUTDOWN_KILLABLE_TRANS	mysql: SHUTDOWN_KILLABLE_TRANS	
+SHUTDOWN_KILLABLE_LOCK_TABLE	async/database/rdb/mysql.html#SHUTDOWN_KILLABLE_LOCK_TABLE	mysql: SHUTDOWN_KILLABLE_LOCK_TABLE	
+SHUTDOWN_KILLABLE_UPDATE	async/database/rdb/mysql.html#SHUTDOWN_KILLABLE_UPDATE	mysql: SHUTDOWN_KILLABLE_UPDATE	
+SHUTDOWN_DEFAULT	async/database/rdb/mysql.html#SHUTDOWN_DEFAULT	Enum_shutdown_level.SHUTDOWN_DEFAULT	
+SHUTDOWN_WAIT_CONNECTIONS	async/database/rdb/mysql.html#SHUTDOWN_WAIT_CONNECTIONS	Enum_shutdown_level.SHUTDOWN_WAIT_CONNECTIONS	
+SHUTDOWN_WAIT_TRANSACTIONS	async/database/rdb/mysql.html#SHUTDOWN_WAIT_TRANSACTIONS	Enum_shutdown_level.SHUTDOWN_WAIT_TRANSACTIONS	
+SHUTDOWN_WAIT_UPDATES	async/database/rdb/mysql.html#SHUTDOWN_WAIT_UPDATES	Enum_shutdown_level.SHUTDOWN_WAIT_UPDATES	
+SHUTDOWN_WAIT_ALL_BUFFERS	async/database/rdb/mysql.html#SHUTDOWN_WAIT_ALL_BUFFERS	Enum_shutdown_level.SHUTDOWN_WAIT_ALL_BUFFERS	
+SHUTDOWN_WAIT_CRITICAL_BUFFERS	async/database/rdb/mysql.html#SHUTDOWN_WAIT_CRITICAL_BUFFERS	Enum_shutdown_level.SHUTDOWN_WAIT_CRITICAL_BUFFERS	
+KILL_QUERY	async/database/rdb/mysql.html#KILL_QUERY	Enum_shutdown_level.KILL_QUERY	
+KILL_CONNECTION	async/database/rdb/mysql.html#KILL_CONNECTION	Enum_shutdown_level.KILL_CONNECTION	
+Enum_shutdown_level	async/database/rdb/mysql.html#Enum_shutdown_level	mysql: Enum_shutdown_level	
+CURSOR_TYPE_NO_CURSOR	async/database/rdb/mysql.html#CURSOR_TYPE_NO_CURSOR	Enum_cursor_type.CURSOR_TYPE_NO_CURSOR	
+CURSOR_TYPE_READ_ONLY	async/database/rdb/mysql.html#CURSOR_TYPE_READ_ONLY	Enum_cursor_type.CURSOR_TYPE_READ_ONLY	
+CURSOR_TYPE_FOR_UPDATE	async/database/rdb/mysql.html#CURSOR_TYPE_FOR_UPDATE	Enum_cursor_type.CURSOR_TYPE_FOR_UPDATE	
+CURSOR_TYPE_SCROLLABLE	async/database/rdb/mysql.html#CURSOR_TYPE_SCROLLABLE	Enum_cursor_type.CURSOR_TYPE_SCROLLABLE	
+Enum_cursor_type	async/database/rdb/mysql.html#Enum_cursor_type	mysql: Enum_cursor_type	
+OPTION_MULTI_STATEMENTS_ON	async/database/rdb/mysql.html#OPTION_MULTI_STATEMENTS_ON	Enum_mysql_set_option.OPTION_MULTI_STATEMENTS_ON	
+OPTION_MULTI_STATEMENTS_OFF	async/database/rdb/mysql.html#OPTION_MULTI_STATEMENTS_OFF	Enum_mysql_set_option.OPTION_MULTI_STATEMENTS_OFF	
+Enum_mysql_set_option	async/database/rdb/mysql.html#Enum_mysql_set_option	mysql: Enum_mysql_set_option	
+my_net_init	async/database/rdb/mysql.html#my_net_init,PNET,PVIO	mysql: my_net_init(net: PNET; vio: PVIO): my_bool	
+my_net_local_init	async/database/rdb/mysql.html#my_net_local_init,PNET	mysql: my_net_local_init(net: PNET)	
+net_end	async/database/rdb/mysql.html#net_end,PNET	mysql: net_end(net: PNET)	
+net_clear	async/database/rdb/mysql.html#net_clear,PNET	mysql: net_clear(net: PNET)	
+net_realloc	async/database/rdb/mysql.html#net_realloc,PNET,int	mysql: net_realloc(net: PNET; len: int): my_bool	
+net_flush	async/database/rdb/mysql.html#net_flush,PNET	mysql: net_flush(net: PNET): my_bool	
+my_net_write	async/database/rdb/mysql.html#my_net_write,PNET,cstring,int	mysql: my_net_write(net: PNET; packet: cstring; length: int): my_bool	
+net_write_command	async/database/rdb/mysql.html#net_write_command,PNET,char,cstring,int,cstring,int	mysql: net_write_command(net: PNET; command: char; header: cstring; head_len: int;\n                  packet: cstring; length: int): my_bool	
+net_real_write	async/database/rdb/mysql.html#net_real_write,PNET,cstring,int	mysql: net_real_write(net: PNET; packet: cstring; length: int): cint	
+my_net_read	async/database/rdb/mysql.html#my_net_read,PNET	mysql: my_net_read(net: PNET): int	
+Psockaddr	async/database/rdb/mysql.html#Psockaddr	mysql: Psockaddr	
+Sockaddr	async/database/rdb/mysql.html#Sockaddr	mysql: Sockaddr	
+my_connect	async/database/rdb/mysql.html#my_connect,my_socket,Psockaddr,cuint,cuint	mysql: my_connect(s: my_socket; name: Psockaddr; namelen: cuint; timeout: cuint): cint	
+Prand_struct	async/database/rdb/mysql.html#Prand_struct	mysql: Prand_struct	
+Rand_struct	async/database/rdb/mysql.html#Rand_struct	mysql: Rand_struct	
+STRING_RESULT	async/database/rdb/mysql.html#STRING_RESULT	Item_result.STRING_RESULT	
+REAL_RESULT	async/database/rdb/mysql.html#REAL_RESULT	Item_result.REAL_RESULT	
+INT_RESULT	async/database/rdb/mysql.html#INT_RESULT	Item_result.INT_RESULT	
+ROW_RESULT	async/database/rdb/mysql.html#ROW_RESULT	Item_result.ROW_RESULT	
+DECIMAL_RESULT	async/database/rdb/mysql.html#DECIMAL_RESULT	Item_result.DECIMAL_RESULT	
+Item_result	async/database/rdb/mysql.html#Item_result	mysql: Item_result	
+PItem_result	async/database/rdb/mysql.html#PItem_result	mysql: PItem_result	
+Pst_udf_args	async/database/rdb/mysql.html#Pst_udf_args	mysql: Pst_udf_args	
+St_udf_args	async/database/rdb/mysql.html#St_udf_args	mysql: St_udf_args	
+UDF_ARGS	async/database/rdb/mysql.html#UDF_ARGS	mysql: UDF_ARGS	
+PUDF_ARGS	async/database/rdb/mysql.html#PUDF_ARGS	mysql: PUDF_ARGS	
+Pst_udf_init	async/database/rdb/mysql.html#Pst_udf_init	mysql: Pst_udf_init	
+St_udf_init	async/database/rdb/mysql.html#St_udf_init	mysql: St_udf_init	
+UDF_INIT	async/database/rdb/mysql.html#UDF_INIT	mysql: UDF_INIT	
+PUDF_INIT	async/database/rdb/mysql.html#PUDF_INIT	mysql: PUDF_INIT	
+NET_HEADER_SIZE	async/database/rdb/mysql.html#NET_HEADER_SIZE	mysql: NET_HEADER_SIZE	
+COMP_HEADER_SIZE	async/database/rdb/mysql.html#COMP_HEADER_SIZE	mysql: COMP_HEADER_SIZE	
+randominit	async/database/rdb/mysql.html#randominit,Prand_struct,int,int	mysql: randominit(para1: Prand_struct; seed1: int; seed2: int)	
+my_rnd	async/database/rdb/mysql.html#my_rnd,Prand_struct	mysql: my_rnd(para1: Prand_struct): cdouble	
+create_random_string	async/database/rdb/mysql.html#create_random_string,cstring,cuint,Prand_struct	mysql: create_random_string(fto: cstring; len: cuint; rand_st: Prand_struct)	
+hash_password	async/database/rdb/mysql.html#hash_password,int,cstring,cuint	mysql: hash_password(fto: int; password: cstring; password_len: cuint)	
+make_scrambled_password_323	async/database/rdb/mysql.html#make_scrambled_password_323,cstring,cstring	mysql: make_scrambled_password_323(fto: cstring; password: cstring)	
+scramble_323	async/database/rdb/mysql.html#scramble_323,cstring,cstring,cstring	mysql: scramble_323(fto: cstring; message: cstring; password: cstring)	
+check_scramble_323	async/database/rdb/mysql.html#check_scramble_323,cstring,cstring,int	mysql: check_scramble_323(para1: cstring; message: cstring; salt: int): my_bool	
+get_salt_from_password_323	async/database/rdb/mysql.html#get_salt_from_password_323,ptr.int,cstring	mysql: get_salt_from_password_323(res: ptr int; password: cstring)	
+make_password_from_salt_323	async/database/rdb/mysql.html#make_password_from_salt_323,cstring,ptr.int	mysql: make_password_from_salt_323(fto: cstring; salt: ptr int)	
+octet2hex	async/database/rdb/mysql.html#octet2hex,cstring,cstring,cuint	mysql: octet2hex(fto: cstring; str: cstring; length: cuint): cstring	
+make_scrambled_password	async/database/rdb/mysql.html#make_scrambled_password,cstring,cstring	mysql: make_scrambled_password(fto: cstring; password: cstring)	
+scramble	async/database/rdb/mysql.html#scramble,cstring,cstring,cstring	mysql: scramble(fto: cstring; message: cstring; password: cstring)	
+check_scramble	async/database/rdb/mysql.html#check_scramble,cstring,cstring,pointer	mysql: check_scramble(reply: cstring; message: cstring; hash_stage2: pointer): my_bool	
+get_salt_from_password	async/database/rdb/mysql.html#get_salt_from_password,pointer,cstring	mysql: get_salt_from_password(res: pointer; password: cstring)	
+make_password_from_salt	async/database/rdb/mysql.html#make_password_from_salt,cstring,pointer	mysql: make_password_from_salt(fto: cstring; hash_stage2: pointer)	
+get_tty_password	async/database/rdb/mysql.html#get_tty_password,cstring	mysql: get_tty_password(opt_message: cstring): cstring	
+errno_to_sqlstate	async/database/rdb/mysql.html#errno_to_sqlstate,cuint	mysql: errno_to_sqlstate(errno: cuint): cstring	
+modify_defaults_file	async/database/rdb/mysql.html#modify_defaults_file,cstring,cstring,cstring,cstring,cint	mysql: modify_defaults_file(file_location: cstring; option: cstring;\n                     option_value: cstring; section_name: cstring;\n                     remove_option: cint): cint	
+load_defaults	async/database/rdb/mysql.html#load_defaults,cstring,cstringArray,ptr.cint,ptr.cstringArray	mysql: load_defaults(conf_file: cstring; groups: cstringArray; argc: ptr cint;\n              argv: ptr cstringArray): cint	
+my_init	async/database/rdb/mysql.html#my_init	mysql: my_init(): my_bool	
+my_thread_init	async/database/rdb/mysql.html#my_thread_init	mysql: my_thread_init(): my_bool	
+my_thread_end	async/database/rdb/mysql.html#my_thread_end	mysql: my_thread_end()	
+NULL_LENGTH	async/database/rdb/mysql.html#NULL_LENGTH	mysql: NULL_LENGTH	
+STMT_HEADER	async/database/rdb/mysql.html#STMT_HEADER	mysql: STMT_HEADER	
+LONG_DATA_HEADER	async/database/rdb/mysql.html#LONG_DATA_HEADER	mysql: LONG_DATA_HEADER	
+CLIENT_NET_READ_TIMEOUT	async/database/rdb/mysql.html#CLIENT_NET_READ_TIMEOUT	mysql: CLIENT_NET_READ_TIMEOUT	
+CLIENT_NET_WRITE_TIMEOUT	async/database/rdb/mysql.html#CLIENT_NET_WRITE_TIMEOUT	mysql: CLIENT_NET_WRITE_TIMEOUT	
+Pst_mysql_field	async/database/rdb/mysql.html#Pst_mysql_field	mysql: Pst_mysql_field	
+St_mysql_field	async/database/rdb/mysql.html#St_mysql_field	mysql: St_mysql_field	
+FIELD	async/database/rdb/mysql.html#FIELD	mysql: FIELD	
+PFIELD	async/database/rdb/mysql.html#PFIELD	mysql: PFIELD	
+PROW	async/database/rdb/mysql.html#PROW	mysql: PROW	
+ROW	async/database/rdb/mysql.html#ROW	mysql: ROW	
+PFIELD_OFFSET	async/database/rdb/mysql.html#PFIELD_OFFSET	mysql: PFIELD_OFFSET	
+FIELD_OFFSET	async/database/rdb/mysql.html#FIELD_OFFSET	mysql: FIELD_OFFSET	
+my_ulonglong	async/database/rdb/mysql.html#my_ulonglong	mysql: my_ulonglong	
+Pmy_ulonglong	async/database/rdb/mysql.html#Pmy_ulonglong	mysql: Pmy_ulonglong	
+COUNT_ERROR	async/database/rdb/mysql.html#COUNT_ERROR	mysql: COUNT_ERROR	
+Pst_mysql_rows	async/database/rdb/mysql.html#Pst_mysql_rows	mysql: Pst_mysql_rows	
+St_mysql_rows	async/database/rdb/mysql.html#St_mysql_rows	mysql: St_mysql_rows	
+ROWS	async/database/rdb/mysql.html#ROWS	mysql: ROWS	
+PROWS	async/database/rdb/mysql.html#PROWS	mysql: PROWS	
+PROW_OFFSET	async/database/rdb/mysql.html#PROW_OFFSET	mysql: PROW_OFFSET	
+ROW_OFFSET	async/database/rdb/mysql.html#ROW_OFFSET	mysql: ROW_OFFSET	
+ALLOC_MAX_BLOCK_TO_DROP	async/database/rdb/mysql.html#ALLOC_MAX_BLOCK_TO_DROP	mysql: ALLOC_MAX_BLOCK_TO_DROP	
+ALLOC_MAX_BLOCK_USAGE_BEFORE_DROP	async/database/rdb/mysql.html#ALLOC_MAX_BLOCK_USAGE_BEFORE_DROP	mysql: ALLOC_MAX_BLOCK_USAGE_BEFORE_DROP	
+Pst_used_mem	async/database/rdb/mysql.html#Pst_used_mem	mysql: Pst_used_mem	
+St_used_mem	async/database/rdb/mysql.html#St_used_mem	mysql: St_used_mem	
+USED_MEM	async/database/rdb/mysql.html#USED_MEM	mysql: USED_MEM	
+PUSED_MEM	async/database/rdb/mysql.html#PUSED_MEM	mysql: PUSED_MEM	
+Pst_mem_root	async/database/rdb/mysql.html#Pst_mem_root	mysql: Pst_mem_root	
+St_mem_root	async/database/rdb/mysql.html#St_mem_root	mysql: St_mem_root	
+MEM_ROOT	async/database/rdb/mysql.html#MEM_ROOT	mysql: MEM_ROOT	
+PMEM_ROOT	async/database/rdb/mysql.html#PMEM_ROOT	mysql: PMEM_ROOT	
+Pst_mysql_data	async/database/rdb/mysql.html#Pst_mysql_data	mysql: Pst_mysql_data	
+St_mysql_data	async/database/rdb/mysql.html#St_mysql_data	mysql: St_mysql_data	
+DATA	async/database/rdb/mysql.html#DATA	mysql: DATA	
+PDATA	async/database/rdb/mysql.html#PDATA	mysql: PDATA	
+OPT_CONNECT_TIMEOUT	async/database/rdb/mysql.html#OPT_CONNECT_TIMEOUT	Option.OPT_CONNECT_TIMEOUT	
+OPT_COMPRESS	async/database/rdb/mysql.html#OPT_COMPRESS	Option.OPT_COMPRESS	
+OPT_NAMED_PIPE	async/database/rdb/mysql.html#OPT_NAMED_PIPE	Option.OPT_NAMED_PIPE	
+INIT_COMMAND	async/database/rdb/mysql.html#INIT_COMMAND	Option.INIT_COMMAND	
+READ_DEFAULT_FILE	async/database/rdb/mysql.html#READ_DEFAULT_FILE	Option.READ_DEFAULT_FILE	
+READ_DEFAULT_GROUP	async/database/rdb/mysql.html#READ_DEFAULT_GROUP	Option.READ_DEFAULT_GROUP	
+SET_CHARSET_DIR	async/database/rdb/mysql.html#SET_CHARSET_DIR	Option.SET_CHARSET_DIR	
+SET_CHARSET_NAME	async/database/rdb/mysql.html#SET_CHARSET_NAME	Option.SET_CHARSET_NAME	
+OPT_LOCAL_INFILE	async/database/rdb/mysql.html#OPT_LOCAL_INFILE	Option.OPT_LOCAL_INFILE	
+OPT_PROTOCOL	async/database/rdb/mysql.html#OPT_PROTOCOL	Option.OPT_PROTOCOL	
+SHARED_MEMORY_BASE_NAME	async/database/rdb/mysql.html#SHARED_MEMORY_BASE_NAME	Option.SHARED_MEMORY_BASE_NAME	
+OPT_READ_TIMEOUT	async/database/rdb/mysql.html#OPT_READ_TIMEOUT	Option.OPT_READ_TIMEOUT	
+OPT_WRITE_TIMEOUT	async/database/rdb/mysql.html#OPT_WRITE_TIMEOUT	Option.OPT_WRITE_TIMEOUT	
+OPT_USE_RESULT	async/database/rdb/mysql.html#OPT_USE_RESULT	Option.OPT_USE_RESULT	
+OPT_USE_REMOTE_CONNECTION	async/database/rdb/mysql.html#OPT_USE_REMOTE_CONNECTION	Option.OPT_USE_REMOTE_CONNECTION	
+OPT_USE_EMBEDDED_CONNECTION	async/database/rdb/mysql.html#OPT_USE_EMBEDDED_CONNECTION	Option.OPT_USE_EMBEDDED_CONNECTION	
+OPT_GUESS_CONNECTION	async/database/rdb/mysql.html#OPT_GUESS_CONNECTION	Option.OPT_GUESS_CONNECTION	
+SET_CLIENT_IP	async/database/rdb/mysql.html#SET_CLIENT_IP	Option.SET_CLIENT_IP	
+SECURE_AUTH	async/database/rdb/mysql.html#SECURE_AUTH	Option.SECURE_AUTH	
+REPORT_DATA_TRUNCATION	async/database/rdb/mysql.html#REPORT_DATA_TRUNCATION	Option.REPORT_DATA_TRUNCATION	
+OPT_RECONNECT	async/database/rdb/mysql.html#OPT_RECONNECT	Option.OPT_RECONNECT	
+Option	async/database/rdb/mysql.html#Option	mysql: Option	
+MAX_MYSQL_MANAGER_ERR	async/database/rdb/mysql.html#MAX_MYSQL_MANAGER_ERR	mysql: MAX_MYSQL_MANAGER_ERR	
+MAX_MYSQL_MANAGER_MSG	async/database/rdb/mysql.html#MAX_MYSQL_MANAGER_MSG	mysql: MAX_MYSQL_MANAGER_MSG	
+MANAGER_OK	async/database/rdb/mysql.html#MANAGER_OK	mysql: MANAGER_OK	
+MANAGER_INFO	async/database/rdb/mysql.html#MANAGER_INFO	mysql: MANAGER_INFO	
+MANAGER_ACCESS	async/database/rdb/mysql.html#MANAGER_ACCESS	mysql: MANAGER_ACCESS	
+MANAGER_CLIENT_ERR	async/database/rdb/mysql.html#MANAGER_CLIENT_ERR	mysql: MANAGER_CLIENT_ERR	
+MANAGER_INTERNAL_ERR	async/database/rdb/mysql.html#MANAGER_INTERNAL_ERR	mysql: MANAGER_INTERNAL_ERR	
+St_dynamic_array	async/database/rdb/mysql.html#St_dynamic_array	mysql: St_dynamic_array	
+DYNAMIC_ARRAY	async/database/rdb/mysql.html#DYNAMIC_ARRAY	mysql: DYNAMIC_ARRAY	
+Pst_dynamic_array	async/database/rdb/mysql.html#Pst_dynamic_array	mysql: Pst_dynamic_array	
+Pst_mysql_options	async/database/rdb/mysql.html#Pst_mysql_options	mysql: Pst_mysql_options	
+St_mysql_options	async/database/rdb/mysql.html#St_mysql_options	mysql: St_mysql_options	
+STATUS_READY	async/database/rdb/mysql.html#STATUS_READY	Status.STATUS_READY	
+STATUS_GET_RESULT	async/database/rdb/mysql.html#STATUS_GET_RESULT	Status.STATUS_GET_RESULT	
+STATUS_USE_RESULT	async/database/rdb/mysql.html#STATUS_USE_RESULT	Status.STATUS_USE_RESULT	
+Status	async/database/rdb/mysql.html#Status	mysql: Status	
+PROTOCOL_DEFAULT	async/database/rdb/mysql.html#PROTOCOL_DEFAULT	Protocol_type.PROTOCOL_DEFAULT	
+PROTOCOL_TCP	async/database/rdb/mysql.html#PROTOCOL_TCP	Protocol_type.PROTOCOL_TCP	
+PROTOCOL_SOCKET	async/database/rdb/mysql.html#PROTOCOL_SOCKET	Protocol_type.PROTOCOL_SOCKET	
+PROTOCOL_PIPE	async/database/rdb/mysql.html#PROTOCOL_PIPE	Protocol_type.PROTOCOL_PIPE	
+PROTOCOL_MEMORY	async/database/rdb/mysql.html#PROTOCOL_MEMORY	Protocol_type.PROTOCOL_MEMORY	
+Protocol_type	async/database/rdb/mysql.html#Protocol_type	mysql: Protocol_type	
+RPL_MASTER	async/database/rdb/mysql.html#RPL_MASTER	Rpl_type.RPL_MASTER	
+RPL_SLAVE	async/database/rdb/mysql.html#RPL_SLAVE	Rpl_type.RPL_SLAVE	
+RPL_ADMIN	async/database/rdb/mysql.html#RPL_ADMIN	Rpl_type.RPL_ADMIN	
+Rpl_type	async/database/rdb/mysql.html#Rpl_type	mysql: Rpl_type	
+Charset_info_st	async/database/rdb/mysql.html#Charset_info_st	mysql: Charset_info_st	
+CHARSET_INFO	async/database/rdb/mysql.html#CHARSET_INFO	mysql: CHARSET_INFO	
+Pcharset_info_st	async/database/rdb/mysql.html#Pcharset_info_st	mysql: Pcharset_info_st	
+Pcharacter_set	async/database/rdb/mysql.html#Pcharacter_set	mysql: Pcharacter_set	
+Character_set	async/database/rdb/mysql.html#Character_set	mysql: Character_set	
+MY_CHARSET_INFO	async/database/rdb/mysql.html#MY_CHARSET_INFO	mysql: MY_CHARSET_INFO	
+PMY_CHARSET_INFO	async/database/rdb/mysql.html#PMY_CHARSET_INFO	mysql: PMY_CHARSET_INFO	
+Pst_mysql_methods	async/database/rdb/mysql.html#Pst_mysql_methods	mysql: Pst_mysql_methods	
+Pst_mysql	async/database/rdb/mysql.html#Pst_mysql	mysql: Pst_mysql	
+St_mysql	async/database/rdb/mysql.html#St_mysql	mysql: St_mysql	
+MySQL	async/database/rdb/mysql.html#MySQL	mysql: MySQL	
+PMySQL	async/database/rdb/mysql.html#PMySQL	mysql: PMySQL	
+Pst_mysql_res	async/database/rdb/mysql.html#Pst_mysql_res	mysql: Pst_mysql_res	
+St_mysql_res	async/database/rdb/mysql.html#St_mysql_res	mysql: St_mysql_res	
+RES	async/database/rdb/mysql.html#RES	mysql: RES	
+PRES	async/database/rdb/mysql.html#PRES	mysql: PRES	
+Pst_mysql_stmt	async/database/rdb/mysql.html#Pst_mysql_stmt	mysql: Pst_mysql_stmt	
+PSTMT	async/database/rdb/mysql.html#PSTMT	mysql: PSTMT	
+St_mysql_methods	async/database/rdb/mysql.html#St_mysql_methods	mysql: St_mysql_methods	
+METHODS	async/database/rdb/mysql.html#METHODS	mysql: METHODS	
+PMETHODS	async/database/rdb/mysql.html#PMETHODS	mysql: PMETHODS	
+Pst_mysql_manager	async/database/rdb/mysql.html#Pst_mysql_manager	mysql: Pst_mysql_manager	
+St_mysql_manager	async/database/rdb/mysql.html#St_mysql_manager	mysql: St_mysql_manager	
+MANAGER	async/database/rdb/mysql.html#MANAGER	mysql: MANAGER	
+PMANAGER	async/database/rdb/mysql.html#PMANAGER	mysql: PMANAGER	
+Pst_mysql_parameters	async/database/rdb/mysql.html#Pst_mysql_parameters	mysql: Pst_mysql_parameters	
+St_mysql_parameters	async/database/rdb/mysql.html#St_mysql_parameters	mysql: St_mysql_parameters	
+PARAMETERS	async/database/rdb/mysql.html#PARAMETERS	mysql: PARAMETERS	
+PPARAMETERS	async/database/rdb/mysql.html#PPARAMETERS	mysql: PPARAMETERS	
+STMT_INIT_DONE	async/database/rdb/mysql.html#STMT_INIT_DONE	Enum_mysql_stmt_state.STMT_INIT_DONE	
+STMT_PREPARE_DONE	async/database/rdb/mysql.html#STMT_PREPARE_DONE	Enum_mysql_stmt_state.STMT_PREPARE_DONE	
+STMT_EXECUTE_DONE	async/database/rdb/mysql.html#STMT_EXECUTE_DONE	Enum_mysql_stmt_state.STMT_EXECUTE_DONE	
+STMT_FETCH_DONE	async/database/rdb/mysql.html#STMT_FETCH_DONE	Enum_mysql_stmt_state.STMT_FETCH_DONE	
+Enum_mysql_stmt_state	async/database/rdb/mysql.html#Enum_mysql_stmt_state	mysql: Enum_mysql_stmt_state	
+Pst_mysql_bind	async/database/rdb/mysql.html#Pst_mysql_bind	mysql: Pst_mysql_bind	
+St_mysql_bind	async/database/rdb/mysql.html#St_mysql_bind	mysql: St_mysql_bind	
+BIND	async/database/rdb/mysql.html#BIND	mysql: BIND	
+PBIND	async/database/rdb/mysql.html#PBIND	mysql: PBIND	
+St_mysql_stmt	async/database/rdb/mysql.html#St_mysql_stmt	mysql: St_mysql_stmt	
+STMT	async/database/rdb/mysql.html#STMT	mysql: STMT	
+STMT_ATTR_UPDATE_MAX_LENGTH	async/database/rdb/mysql.html#STMT_ATTR_UPDATE_MAX_LENGTH	Enum_stmt_attr_type.STMT_ATTR_UPDATE_MAX_LENGTH	
+STMT_ATTR_CURSOR_TYPE	async/database/rdb/mysql.html#STMT_ATTR_CURSOR_TYPE	Enum_stmt_attr_type.STMT_ATTR_CURSOR_TYPE	
+STMT_ATTR_PREFETCH_ROWS	async/database/rdb/mysql.html#STMT_ATTR_PREFETCH_ROWS	Enum_stmt_attr_type.STMT_ATTR_PREFETCH_ROWS	
+Enum_stmt_attr_type	async/database/rdb/mysql.html#Enum_stmt_attr_type	mysql: Enum_stmt_attr_type	
+server_init	async/database/rdb/mysql.html#server_init,cint,cstringArray,cstringArray	mysql: server_init(argc: cint; argv: cstringArray; groups: cstringArray): cint	
+server_end	async/database/rdb/mysql.html#server_end	mysql: server_end()	
+library_init	async/database/rdb/mysql.html#library_init,cint,cstringArray,cstringArray	mysql: library_init(argc: cint; argv: cstringArray; groups: cstringArray): cint	
+library_end	async/database/rdb/mysql.html#library_end	mysql: library_end()	
+get_parameters	async/database/rdb/mysql.html#get_parameters	mysql: get_parameters(): PPARAMETERS	
+thread_init	async/database/rdb/mysql.html#thread_init	mysql: thread_init(): my_bool	
+thread_end	async/database/rdb/mysql.html#thread_end	mysql: thread_end()	
+num_rows	async/database/rdb/mysql.html#num_rows,PRES	mysql: num_rows(res: PRES): my_ulonglong	
+num_fields	async/database/rdb/mysql.html#num_fields,PRES	mysql: num_fields(res: PRES): cuint	
+eof	async/database/rdb/mysql.html#eof,PRES	mysql: eof(res: PRES): my_bool	
+fetch_field_direct	async/database/rdb/mysql.html#fetch_field_direct,PRES,cuint	mysql: fetch_field_direct(res: PRES; fieldnr: cuint): PFIELD	
+fetch_fields	async/database/rdb/mysql.html#fetch_fields,PRES	mysql: fetch_fields(res: PRES): PFIELD	
+row_tell	async/database/rdb/mysql.html#row_tell,PRES	mysql: row_tell(res: PRES): ROW_OFFSET	
+field_tell	async/database/rdb/mysql.html#field_tell,PRES	mysql: field_tell(res: PRES): FIELD_OFFSET	
+field_count	async/database/rdb/mysql.html#field_count,PMySQL	mysql: field_count(MySQL: PMySQL): cuint	
+affected_rows	async/database/rdb/mysql.html#affected_rows,PMySQL	mysql: affected_rows(MySQL: PMySQL): my_ulonglong	
+insert_id	async/database/rdb/mysql.html#insert_id,PMySQL	mysql: insert_id(MySQL: PMySQL): my_ulonglong	
+errno	async/database/rdb/mysql.html#errno,PMySQL	mysql: errno(MySQL: PMySQL): cuint	
+error	async/database/rdb/mysql.html#error,PMySQL	mysql: error(MySQL: PMySQL): cstring	
+sqlstate	async/database/rdb/mysql.html#sqlstate,PMySQL	mysql: sqlstate(MySQL: PMySQL): cstring	
+warning_count	async/database/rdb/mysql.html#warning_count,PMySQL	mysql: warning_count(MySQL: PMySQL): cuint	
+info	async/database/rdb/mysql.html#info,PMySQL	mysql: info(MySQL: PMySQL): cstring	
+thread_id	async/database/rdb/mysql.html#thread_id,PMySQL	mysql: thread_id(MySQL: PMySQL): int	
+character_set_name	async/database/rdb/mysql.html#character_set_name,PMySQL	mysql: character_set_name(MySQL: PMySQL): cstring	
+set_character_set	async/database/rdb/mysql.html#set_character_set,PMySQL,cstring	mysql: set_character_set(MySQL: PMySQL; csname: cstring): int32	
+init	async/database/rdb/mysql.html#init,PMySQL	mysql: init(MySQL: PMySQL): PMySQL	
+ssl_set	async/database/rdb/mysql.html#ssl_set,PMySQL,cstring,cstring,cstring,cstring,cstring	mysql: ssl_set(MySQL: PMySQL; key: cstring; cert: cstring; ca: cstring;\n        capath: cstring; cipher: cstring): my_bool	
+change_user	async/database/rdb/mysql.html#change_user,PMySQL,cstring,cstring,cstring	mysql: change_user(MySQL: PMySQL; user: cstring; passwd: cstring; db: cstring): my_bool	
+real_connect	async/database/rdb/mysql.html#real_connect,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,int	mysql: real_connect(MySQL: PMySQL; host: cstring; user: cstring; passwd: cstring;\n             db: cstring; port: cuint; unix_socket: cstring; clientflag: int): PMySQL	
+real_connect_nonblocking	async/database/rdb/mysql.html#real_connect_nonblocking,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,int	mysql: real_connect_nonblocking(MySQL: PMySQL; host: cstring; user: cstring;\n                         passwd: cstring; db: cstring; port: cuint;\n                         unix_socket: cstring; clientflag: int): NetAsyncStatus	
+fetch_row_nonblocking	async/database/rdb/mysql.html#fetch_row_nonblocking,PRES,PROW	mysql: fetch_row_nonblocking(MYSQL_RES: PRES; MYSQL_ROW: PROW): NetAsyncStatus	
+free_result_nonblocking	async/database/rdb/mysql.html#free_result_nonblocking,PRES	mysql: free_result_nonblocking(MYSQL_RES: PRES): NetAsyncStatus	
+fetch_next_result_nonblocking	async/database/rdb/mysql.html#fetch_next_result_nonblocking,PMySQL	mysql: fetch_next_result_nonblocking(MySQL: PMySQL): NetAsyncStatus	
+real_query_nonblocking	async/database/rdb/mysql.html#real_query_nonblocking,PMySQL,cstring,int	mysql: real_query_nonblocking(MySQL: PMySQL; q: cstring; length: int): NetAsyncStatus	
+store_result_nonblocking	async/database/rdb/mysql.html#store_result_nonblocking,PMySQL,ptr.PRES	mysql: store_result_nonblocking(MySQL: PMySQL; MYSQL_RES: ptr PRES): NetAsyncStatus	
+select_db	async/database/rdb/mysql.html#select_db,PMySQL,cstring	mysql: select_db(MySQL: PMySQL; db: cstring): cint	
+query	async/database/rdb/mysql.html#query,PMySQL,cstring	mysql: query(MySQL: PMySQL; q: cstring): cint	
+send_query	async/database/rdb/mysql.html#send_query,PMySQL,cstring,int	mysql: send_query(MySQL: PMySQL; q: cstring; len: int): cint	
+real_query	async/database/rdb/mysql.html#real_query,PMySQL,cstring,int	mysql: real_query(MySQL: PMySQL; q: cstring; len: int): cint	
+store_result	async/database/rdb/mysql.html#store_result,PMySQL	mysql: store_result(MySQL: PMySQL): PRES	
+use_result	async/database/rdb/mysql.html#use_result,PMySQL	mysql: use_result(MySQL: PMySQL): PRES	
+master_query	async/database/rdb/mysql.html#master_query,PMySQL,cstring,int	mysql: master_query(MySQL: PMySQL; q: cstring; len: int): my_bool	
+master_send_query	async/database/rdb/mysql.html#master_send_query,PMySQL,cstring,int	mysql: master_send_query(MySQL: PMySQL; q: cstring; len: int): my_bool	
+slave_query	async/database/rdb/mysql.html#slave_query,PMySQL,cstring,int	mysql: slave_query(MySQL: PMySQL; q: cstring; len: int): my_bool	
+slave_send_query	async/database/rdb/mysql.html#slave_send_query,PMySQL,cstring,int	mysql: slave_send_query(MySQL: PMySQL; q: cstring; len: int): my_bool	
+get_character_set_info	async/database/rdb/mysql.html#get_character_set_info,PMySQL,PMY_CHARSET_INFO	mysql: get_character_set_info(MySQL: PMySQL; charset: PMY_CHARSET_INFO)	
+LOCAL_INFILE_ERROR_LEN	async/database/rdb/mysql.html#LOCAL_INFILE_ERROR_LEN	mysql: LOCAL_INFILE_ERROR_LEN	
+set_local_infile_default	async/database/rdb/mysql.html#set_local_infile_default,PMySQL	mysql: set_local_infile_default(MySQL: PMySQL)	
+enable_rpl_parse	async/database/rdb/mysql.html#enable_rpl_parse,PMySQL	mysql: enable_rpl_parse(MySQL: PMySQL)	
+disable_rpl_parse	async/database/rdb/mysql.html#disable_rpl_parse,PMySQL	mysql: disable_rpl_parse(MySQL: PMySQL)	
+rpl_parse_enabled	async/database/rdb/mysql.html#rpl_parse_enabled,PMySQL	mysql: rpl_parse_enabled(MySQL: PMySQL): cint	
+enable_reads_from_master	async/database/rdb/mysql.html#enable_reads_from_master,PMySQL	mysql: enable_reads_from_master(MySQL: PMySQL)	
+disable_reads_from_master	async/database/rdb/mysql.html#disable_reads_from_master,PMySQL	mysql: disable_reads_from_master(MySQL: PMySQL)	
+reads_from_master_enabled	async/database/rdb/mysql.html#reads_from_master_enabled,PMySQL	mysql: reads_from_master_enabled(MySQL: PMySQL): my_bool	
+rpl_query_type	async/database/rdb/mysql.html#rpl_query_type,cstring,cint	mysql: rpl_query_type(q: cstring; length: cint): Rpl_type	
+rpl_probe	async/database/rdb/mysql.html#rpl_probe,PMySQL	mysql: rpl_probe(MySQL: PMySQL): my_bool	
+set_master	async/database/rdb/mysql.html#set_master,PMySQL,cstring,cuint,cstring,cstring	mysql: set_master(MySQL: PMySQL; host: cstring; port: cuint; user: cstring;\n           passwd: cstring): cint	
+add_slave	async/database/rdb/mysql.html#add_slave,PMySQL,cstring,cuint,cstring,cstring	mysql: add_slave(MySQL: PMySQL; host: cstring; port: cuint; user: cstring;\n          passwd: cstring): cint	
+shutdown	async/database/rdb/mysql.html#shutdown,PMySQL,Enum_shutdown_level	mysql: shutdown(MySQL: PMySQL; shutdown_level: Enum_shutdown_level): cint	
+dump_debug_info	async/database/rdb/mysql.html#dump_debug_info,PMySQL	mysql: dump_debug_info(MySQL: PMySQL): cint	
+refresh	async/database/rdb/mysql.html#refresh,PMySQL,cuint	mysql: refresh(sql: PMySQL; refresh_options: cuint): cint	
+kill	async/database/rdb/mysql.html#kill,PMySQL,int	mysql: kill(MySQL: PMySQL; pid: int): cint	
+set_server_option	async/database/rdb/mysql.html#set_server_option,PMySQL,Enum_mysql_set_option	mysql: set_server_option(MySQL: PMySQL; option: Enum_mysql_set_option): cint	
+ping	async/database/rdb/mysql.html#ping,PMySQL	mysql: ping(MySQL: PMySQL): cint	
+stat	async/database/rdb/mysql.html#stat,PMySQL	mysql: stat(MySQL: PMySQL): cstring	
+get_server_info	async/database/rdb/mysql.html#get_server_info,PMySQL	mysql: get_server_info(MySQL: PMySQL): cstring	
+get_client_info	async/database/rdb/mysql.html#get_client_info	mysql: get_client_info(): cstring	
+get_client_version	async/database/rdb/mysql.html#get_client_version	mysql: get_client_version(): int	
+get_host_info	async/database/rdb/mysql.html#get_host_info,PMySQL	mysql: get_host_info(MySQL: PMySQL): cstring	
+get_server_version	async/database/rdb/mysql.html#get_server_version,PMySQL	mysql: get_server_version(MySQL: PMySQL): int	
+get_proto_info	async/database/rdb/mysql.html#get_proto_info,PMySQL	mysql: get_proto_info(MySQL: PMySQL): cuint	
+list_dbs	async/database/rdb/mysql.html#list_dbs,PMySQL,cstring	mysql: list_dbs(MySQL: PMySQL; wild: cstring): PRES	
+list_tables	async/database/rdb/mysql.html#list_tables,PMySQL,cstring	mysql: list_tables(MySQL: PMySQL; wild: cstring): PRES	
+list_processes	async/database/rdb/mysql.html#list_processes,PMySQL	mysql: list_processes(MySQL: PMySQL): PRES	
+options	async/database/rdb/mysql.html#options,PMySQL,Option,cstring	mysql: options(MySQL: PMySQL; option: Option; arg: cstring): cint	
+free_result	async/database/rdb/mysql.html#free_result,PRES	mysql: free_result(result: PRES)	
+data_seek	async/database/rdb/mysql.html#data_seek,PRES,my_ulonglong	mysql: data_seek(result: PRES; offset: my_ulonglong)	
+row_seek	async/database/rdb/mysql.html#row_seek,PRES,St_mysql_rows	mysql: row_seek(result: PRES; offset: ROW_OFFSET): ROW_OFFSET	
+field_seek	async/database/rdb/mysql.html#field_seek,PRES,FIELD_OFFSET	mysql: field_seek(result: PRES; offset: FIELD_OFFSET): FIELD_OFFSET	
+fetch_row	async/database/rdb/mysql.html#fetch_row,PRES	mysql: fetch_row(result: PRES): ROW	
+fetch_lengths	async/database/rdb/mysql.html#fetch_lengths,PRES	mysql: fetch_lengths(result: PRES): ptr int	
+fetch_field	async/database/rdb/mysql.html#fetch_field,PRES	mysql: fetch_field(result: PRES): PFIELD	
+list_fields	async/database/rdb/mysql.html#list_fields,PMySQL,cstring,cstring	mysql: list_fields(MySQL: PMySQL; table: cstring; wild: cstring): PRES	
+escape_string	async/database/rdb/mysql.html#escape_string,cstring,cstring,int	mysql: escape_string(fto: cstring; from: cstring; from_length: int): int	
+hex_string	async/database/rdb/mysql.html#hex_string,cstring,cstring,int	mysql: hex_string(fto: cstring; from: cstring; from_length: int): int	
+real_escape_string	async/database/rdb/mysql.html#real_escape_string,PMySQL,cstring,cstring,int	mysql: real_escape_string(MySQL: PMySQL; fto: cstring; from: cstring; len: int): int	
+debug	async/database/rdb/mysql.html#debug,cstring	mysql: debug(debug: cstring)	
+myodbc_remove_escape	async/database/rdb/mysql.html#myodbc_remove_escape,PMySQL,cstring	mysql: myodbc_remove_escape(MySQL: PMySQL; name: cstring)	
+thread_safe	async/database/rdb/mysql.html#thread_safe	mysql: thread_safe(): cuint	
+embedded	async/database/rdb/mysql.html#embedded	mysql: embedded(): my_bool	
+manager_init	async/database/rdb/mysql.html#manager_init,PMANAGER	mysql: manager_init(con: PMANAGER): PMANAGER	
+manager_connect	async/database/rdb/mysql.html#manager_connect,PMANAGER,cstring,cstring,cstring,cuint	mysql: manager_connect(con: PMANAGER; host: cstring; user: cstring; passwd: cstring;\n                port: cuint): PMANAGER	
+manager_close	async/database/rdb/mysql.html#manager_close,PMANAGER	mysql: manager_close(con: PMANAGER)	
+manager_command	async/database/rdb/mysql.html#manager_command,PMANAGER,cstring,cint	mysql: manager_command(con: PMANAGER; cmd: cstring; cmd_len: cint): cint	
+manager_fetch_line	async/database/rdb/mysql.html#manager_fetch_line,PMANAGER,cstring,cint	mysql: manager_fetch_line(con: PMANAGER; res_buf: cstring; res_buf_size: cint): cint	
+read_query_result	async/database/rdb/mysql.html#read_query_result,PMySQL	mysql: read_query_result(MySQL: PMySQL): my_bool	
+stmt_init	async/database/rdb/mysql.html#stmt_init,PMySQL	mysql: stmt_init(MySQL: PMySQL): PSTMT	
+stmt_prepare	async/database/rdb/mysql.html#stmt_prepare,PSTMT,cstring,int	mysql: stmt_prepare(stmt: PSTMT; query: cstring; len: int): cint	
+stmt_execute	async/database/rdb/mysql.html#stmt_execute,PSTMT	mysql: stmt_execute(stmt: PSTMT): cint	
+stmt_fetch	async/database/rdb/mysql.html#stmt_fetch,PSTMT	mysql: stmt_fetch(stmt: PSTMT): cint	
+stmt_fetch_column	async/database/rdb/mysql.html#stmt_fetch_column,PSTMT,PBIND,cuint,int	mysql: stmt_fetch_column(stmt: PSTMT; bind: PBIND; column: cuint; offset: int): cint	
+stmt_store_result	async/database/rdb/mysql.html#stmt_store_result,PSTMT	mysql: stmt_store_result(stmt: PSTMT): cint	
+stmt_param_count	async/database/rdb/mysql.html#stmt_param_count,PSTMT	mysql: stmt_param_count(stmt: PSTMT): int	
+stmt_attr_set	async/database/rdb/mysql.html#stmt_attr_set,PSTMT,Enum_stmt_attr_type,pointer	mysql: stmt_attr_set(stmt: PSTMT; attr_type: Enum_stmt_attr_type; attr: pointer): my_bool	
+stmt_attr_get	async/database/rdb/mysql.html#stmt_attr_get,PSTMT,Enum_stmt_attr_type,pointer	mysql: stmt_attr_get(stmt: PSTMT; attr_type: Enum_stmt_attr_type; attr: pointer): my_bool	
+stmt_bind_param	async/database/rdb/mysql.html#stmt_bind_param,PSTMT,PBIND	mysql: stmt_bind_param(stmt: PSTMT; bnd: PBIND): my_bool	
+stmt_bind_result	async/database/rdb/mysql.html#stmt_bind_result,PSTMT,PBIND	mysql: stmt_bind_result(stmt: PSTMT; bnd: PBIND): my_bool	
+stmt_close	async/database/rdb/mysql.html#stmt_close,PSTMT	mysql: stmt_close(stmt: PSTMT): my_bool	
+stmt_reset	async/database/rdb/mysql.html#stmt_reset,PSTMT	mysql: stmt_reset(stmt: PSTMT): my_bool	
+stmt_free_result	async/database/rdb/mysql.html#stmt_free_result,PSTMT	mysql: stmt_free_result(stmt: PSTMT): my_bool	
+stmt_send_long_data	async/database/rdb/mysql.html#stmt_send_long_data,PSTMT,cuint,cstring,int	mysql: stmt_send_long_data(stmt: PSTMT; param_number: cuint; data: cstring; len: int): my_bool	
+stmt_result_metadata	async/database/rdb/mysql.html#stmt_result_metadata,PSTMT	mysql: stmt_result_metadata(stmt: PSTMT): PRES	
+stmt_param_metadata	async/database/rdb/mysql.html#stmt_param_metadata,PSTMT	mysql: stmt_param_metadata(stmt: PSTMT): PRES	
+stmt_errno	async/database/rdb/mysql.html#stmt_errno,PSTMT	mysql: stmt_errno(stmt: PSTMT): cuint	
+stmt_error	async/database/rdb/mysql.html#stmt_error,PSTMT	mysql: stmt_error(stmt: PSTMT): cstring	
+stmt_sqlstate	async/database/rdb/mysql.html#stmt_sqlstate,PSTMT	mysql: stmt_sqlstate(stmt: PSTMT): cstring	
+stmt_row_seek	async/database/rdb/mysql.html#stmt_row_seek,PSTMT,St_mysql_rows	mysql: stmt_row_seek(stmt: PSTMT; offset: ROW_OFFSET): ROW_OFFSET	
+stmt_row_tell	async/database/rdb/mysql.html#stmt_row_tell,PSTMT	mysql: stmt_row_tell(stmt: PSTMT): ROW_OFFSET	
+stmt_data_seek	async/database/rdb/mysql.html#stmt_data_seek,PSTMT,my_ulonglong	mysql: stmt_data_seek(stmt: PSTMT; offset: my_ulonglong)	
+stmt_num_rows	async/database/rdb/mysql.html#stmt_num_rows,PSTMT	mysql: stmt_num_rows(stmt: PSTMT): my_ulonglong	
+stmt_affected_rows	async/database/rdb/mysql.html#stmt_affected_rows,PSTMT	mysql: stmt_affected_rows(stmt: PSTMT): my_ulonglong	
+stmt_insert_id	async/database/rdb/mysql.html#stmt_insert_id,PSTMT	mysql: stmt_insert_id(stmt: PSTMT): my_ulonglong	
+stmt_field_count	async/database/rdb/mysql.html#stmt_field_count,PSTMT	mysql: stmt_field_count(stmt: PSTMT): cuint	
+commit	async/database/rdb/mysql.html#commit,PMySQL	mysql: commit(MySQL: PMySQL): my_bool	
+rollback	async/database/rdb/mysql.html#rollback,PMySQL	mysql: rollback(MySQL: PMySQL): my_bool	
+autocommit	async/database/rdb/mysql.html#autocommit,PMySQL,my_bool	mysql: autocommit(MySQL: PMySQL; auto_mode: my_bool): my_bool	
+more_results	async/database/rdb/mysql.html#more_results,PMySQL	mysql: more_results(MySQL: PMySQL): my_bool	
+next_result	async/database/rdb/mysql.html#next_result,PMySQL	mysql: next_result(MySQL: PMySQL): cint	
+close	async/database/rdb/mysql.html#close,PMySQL	mysql: close(sock: PMySQL)	
+NO_DATA	async/database/rdb/mysql.html#NO_DATA	mysql: NO_DATA	
+DATA_TRUNCATED	async/database/rdb/mysql.html#DATA_TRUNCATED	mysql: DATA_TRUNCATED	
+net_safe_read	async/database/rdb/mysql.html#net_safe_read,PMySQL	mysql: net_safe_read(MySQL: PMySQL): cuint	
+IS_PRI_KEY	async/database/rdb/mysql.html#IS_PRI_KEY,int32	mysql: IS_PRI_KEY(n: int32): bool	
+IS_NOT_NULL	async/database/rdb/mysql.html#IS_NOT_NULL,int32	mysql: IS_NOT_NULL(n: int32): bool	
+IS_BLOB	async/database/rdb/mysql.html#IS_BLOB,int32	mysql: IS_BLOB(n: int32): bool	
+IS_NUM_FIELD	async/database/rdb/mysql.html#IS_NUM_FIELD,Pst_mysql_field	mysql: IS_NUM_FIELD(f: Pst_mysql_field): bool	
+IS_NUM	async/database/rdb/mysql.html#IS_NUM,Enum_field_types	mysql: IS_NUM(t: Enum_field_types): bool	
+INTERNAL_NUM_FIELD	async/database/rdb/mysql.html#INTERNAL_NUM_FIELD,Pst_mysql_field	mysql: INTERNAL_NUM_FIELD(f: Pst_mysql_field): bool	
+reload	async/database/rdb/mysql.html#reload,PMySQL	mysql: reload(x: PMySQL): cint	

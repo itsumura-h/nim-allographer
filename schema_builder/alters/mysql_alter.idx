@@ -1,1 +1,1 @@
-exec	schema_builder/alters/mysql_alter.html#exec,Table	mysql_alter: exec(table: Table)	
+exec	schema_builder/alters/mysql_alter.html#exec,Rdb,Table	mysql_alter: exec(rdb: Rdb; table: Table)	

@@ -1,4 +1,4 @@
-alter	schema_builder/alter.html#alter,varargs[Table]	alter: alter(tables: varargs[Table])	
+alter	schema_builder/alter.html#alter,Rdb,varargs[Table]	alter: alter(rdb: Rdb; tables: varargs[Table])	
 add	schema_builder/alter.html#add	alter: add(): Column	
 change	schema_builder/alter.html#change,string	alter: change(name: string): Column	
 rename	schema_builder/alter.html#rename,string,string	alter: rename(alterFrom, alterTo: string): Table	

@@ -131,8 +131,8 @@ function main() {
 
   </ul>
   <ul class="simple nested-toc-section">alter
-      <li><a class="reference" href="#alter%2Cvarargs%5BTable%5D"
-    title="alter(tables: varargs[Table])">alter,<wbr>varargs[Table]</a></li>
+      <li><a class="reference" href="#alter%2CRdb%2Cvarargs%5BTable%5D"
+    title="alter(rdb: Rdb; tables: varargs[Table])">alter,<wbr>Rdb,<wbr>varargs[Table]</a></li>
 
   </ul>
 
@@ -149,16 +149,16 @@ function main() {
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="table.html">table</a>, <a class="reference external" href="column.html">column</a>, <a class="reference external" href="alters/sqlite_alter.html">alters/sqlite_alter</a>, <a class="reference external" href="alters/mysql_alter.html">alters/mysql_alter</a>, <a class="reference external" href="alters/postgres_alter.html">alters/postgres_alter</a>, <a class="reference external" href="../connection.html">../connection</a>
+<a class="reference external" href="table.html">table</a>, <a class="reference external" href="column.html">column</a>, <a class="reference external" href="alters/sqlite_alter.html">alters/sqlite_alter</a>, <a class="reference external" href="alters/mysql_alter.html">alters/mysql_alter</a>, <a class="reference external" href="alters/postgres_alter.html">alters/postgres_alter</a>, <a class="reference external" href="../async/async_db.html">../async/async_db</a>, <a class="reference external" href="../base.html">../base</a>
 </dl></div>
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
-<a id="alter,varargs[Table]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#alter%2Cvarargs%5BTable%5D"><span class="Identifier">alter</span></a><span class="Other">(</span><span class="Identifier">tables</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><a href="table.html#Table"><span class="Identifier">Table</span></a><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span>
-    <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">DbEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="alter,Rdb,varargs[Table]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#alter%2CRdb%2Cvarargs%5BTable%5D"><span class="Identifier">alter</span></a><span class="Other">(</span><span class="Identifier">rdb</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">tables</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><a href="table.html#Table"><span class="Identifier">Table</span></a><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -216,7 +216,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-07-16 02:08:23 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-15 04:39:28 UTC</small>
       </div>
     </div>
   </div>

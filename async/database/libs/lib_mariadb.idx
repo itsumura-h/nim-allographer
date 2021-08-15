@@ -1,0 +1,5 @@
+dbError	async/database/libs/lib_mariadb.html#dbError,PMySQL	lib_mariadb: dbError(db: PMySQL)	
+checkError	async/database/libs/lib_mariadb.html#checkError,PMySQL	lib_mariadb: checkError(db: PMySQL)	
+setColumnInfo	async/database/libs/lib_mariadb.html#setColumnInfo,DbColumns,PRES,int	lib_mariadb: setColumnInfo(columns: var DbColumns; res: PRES; L: int)	
+newRow	async/database/libs/lib_mariadb.html#newRow,int	lib_mariadb: newRow(L: int): base.Row	
+properFreeResult	async/database/libs/lib_mariadb.html#properFreeResult,PRES,cstringArray	lib_mariadb: properFreeResult(sqlres: PRES; row: cstringArray)	

@@ -1,0 +1,1 @@
+dbopen	async/database/impls/mariadb.html#dbopen,string,string,string,string,int32,int,int	mariadb: dbopen(database: string = &quot;&quot;; user: string = &quot;&quot;; password: string = &quot;&quot;;\n       host: string = &quot;&quot;; port: int32 = 0; maxConnections: int = 1; timeout = 30): Connections	

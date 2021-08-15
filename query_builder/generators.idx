@@ -1,30 +1,30 @@
-selectSql	query_builder/generators.html#selectSql,RDB	generators: selectSql(this: RDB): RDB	
-fromSql	query_builder/generators.html#fromSql,RDB	generators: fromSql(this: RDB): RDB	
-selectFirstSql	query_builder/generators.html#selectFirstSql,RDB	generators: selectFirstSql(this: RDB): RDB	
-selectByIdSql	query_builder/generators.html#selectByIdSql,RDB,int,string	generators: selectByIdSql(this: RDB; id: int; key: string): RDB	
-joinSql	query_builder/generators.html#joinSql,RDB	generators: joinSql(this: RDB): RDB	
-leftJoinSql	query_builder/generators.html#leftJoinSql,RDB	generators: leftJoinSql(this: RDB): RDB	
-whereSql	query_builder/generators.html#whereSql,RDB	generators: whereSql(this: RDB): RDB	
-orWhereSql	query_builder/generators.html#orWhereSql,RDB	generators: orWhereSql(this: RDB): RDB	
-whereBetweenSql	query_builder/generators.html#whereBetweenSql,RDB	generators: whereBetweenSql(this: RDB): RDB	
-whereNotBetweenSql	query_builder/generators.html#whereNotBetweenSql,RDB	generators: whereNotBetweenSql(this: RDB): RDB	
-whereInSql	query_builder/generators.html#whereInSql,RDB	generators: whereInSql(this: RDB): RDB	
-whereNotInSql	query_builder/generators.html#whereNotInSql,RDB	generators: whereNotInSql(this: RDB): RDB	
-whereNullSql	query_builder/generators.html#whereNullSql,RDB	generators: whereNullSql(this: RDB): RDB	
-groupBySql	query_builder/generators.html#groupBySql,RDB	generators: groupBySql(this: RDB): RDB	
-havingSql	query_builder/generators.html#havingSql,RDB	generators: havingSql(this: RDB): RDB	
-orderBySql	query_builder/generators.html#orderBySql,RDB	generators: orderBySql(this: RDB): RDB	
-limitSql	query_builder/generators.html#limitSql,RDB	generators: limitSql(this: RDB): RDB	
-offsetSql	query_builder/generators.html#offsetSql,RDB	generators: offsetSql(this: RDB): RDB	
-insertSql	query_builder/generators.html#insertSql,RDB	generators: insertSql(this: RDB): RDB	
-insertValueSql	query_builder/generators.html#insertValueSql,RDB,JsonNode	generators: insertValueSql(this: RDB; items: JsonNode): RDB	
-insertValuesSql	query_builder/generators.html#insertValuesSql,RDB,openArray[JsonNode]	generators: insertValuesSql(this: RDB; rows: openArray[JsonNode]): RDB	
-updateSql	query_builder/generators.html#updateSql,RDB	generators: updateSql(this: RDB): RDB	
-updateValuesSql	query_builder/generators.html#updateValuesSql,RDB,JsonNode	generators: updateValuesSql(this: RDB; items: JsonNode): RDB	
-deleteSql	query_builder/generators.html#deleteSql,RDB	generators: deleteSql(this: RDB): RDB	
-deleteByIdSql	query_builder/generators.html#deleteByIdSql,RDB,int,string	generators: deleteByIdSql(this: RDB; id: int; key: string): RDB	
-selectCountSql	query_builder/generators.html#selectCountSql,RDB	generators: selectCountSql(this: RDB): RDB	
-selectMaxSql	query_builder/generators.html#selectMaxSql,RDB,string	generators: selectMaxSql(this: RDB; column: string): RDB	
-selectMinSql	query_builder/generators.html#selectMinSql,RDB,string	generators: selectMinSql(this: RDB; column: string): RDB	
-selectAvgSql	query_builder/generators.html#selectAvgSql,RDB,string	generators: selectAvgSql(this: RDB; column: string): RDB	
-selectSumSql	query_builder/generators.html#selectSumSql,RDB,string	generators: selectSumSql(this: RDB; column: string): RDB	
+selectSql	query_builder/generators.html#selectSql,Rdb	generators: selectSql(self: Rdb): Rdb	
+fromSql	query_builder/generators.html#fromSql,Rdb	generators: fromSql(self: Rdb): Rdb	
+selectFirstSql	query_builder/generators.html#selectFirstSql,Rdb	generators: selectFirstSql(self: Rdb): Rdb	
+selectByIdSql	query_builder/generators.html#selectByIdSql,Rdb,int,string	generators: selectByIdSql(self: Rdb; id: int; key: string): Rdb	
+joinSql	query_builder/generators.html#joinSql,Rdb	generators: joinSql(self: Rdb): Rdb	
+leftJoinSql	query_builder/generators.html#leftJoinSql,Rdb	generators: leftJoinSql(self: Rdb): Rdb	
+whereSql	query_builder/generators.html#whereSql,Rdb	generators: whereSql(self: Rdb): Rdb	
+orWhereSql	query_builder/generators.html#orWhereSql,Rdb	generators: orWhereSql(self: Rdb): Rdb	
+whereBetweenSql	query_builder/generators.html#whereBetweenSql,Rdb	generators: whereBetweenSql(self: Rdb): Rdb	
+whereNotBetweenSql	query_builder/generators.html#whereNotBetweenSql,Rdb	generators: whereNotBetweenSql(self: Rdb): Rdb	
+whereInSql	query_builder/generators.html#whereInSql,Rdb	generators: whereInSql(self: Rdb): Rdb	
+whereNotInSql	query_builder/generators.html#whereNotInSql,Rdb	generators: whereNotInSql(self: Rdb): Rdb	
+whereNullSql	query_builder/generators.html#whereNullSql,Rdb	generators: whereNullSql(self: Rdb): Rdb	
+groupBySql	query_builder/generators.html#groupBySql,Rdb	generators: groupBySql(self: Rdb): Rdb	
+havingSql	query_builder/generators.html#havingSql,Rdb	generators: havingSql(self: Rdb): Rdb	
+orderBySql	query_builder/generators.html#orderBySql,Rdb	generators: orderBySql(self: Rdb): Rdb	
+limitSql	query_builder/generators.html#limitSql,Rdb	generators: limitSql(self: Rdb): Rdb	
+offsetSql	query_builder/generators.html#offsetSql,Rdb	generators: offsetSql(self: Rdb): Rdb	
+insertSql	query_builder/generators.html#insertSql,Rdb	generators: insertSql(self: Rdb): Rdb	
+insertValueSql	query_builder/generators.html#insertValueSql,Rdb,JsonNode	generators: insertValueSql(self: Rdb; items: JsonNode): Rdb	
+insertValuesSql	query_builder/generators.html#insertValuesSql,Rdb,openArray[JsonNode]	generators: insertValuesSql(self: Rdb; rows: openArray[JsonNode]): Rdb	
+updateSql	query_builder/generators.html#updateSql,Rdb	generators: updateSql(self: Rdb): Rdb	
+updateValuesSql	query_builder/generators.html#updateValuesSql,Rdb,JsonNode	generators: updateValuesSql(self: Rdb; items: JsonNode): Rdb	
+deleteSql	query_builder/generators.html#deleteSql,Rdb	generators: deleteSql(self: Rdb): Rdb	
+deleteByIdSql	query_builder/generators.html#deleteByIdSql,Rdb,int,string	generators: deleteByIdSql(self: Rdb; id: int; key: string): Rdb	
+selectCountSql	query_builder/generators.html#selectCountSql,Rdb	generators: selectCountSql(self: Rdb): Rdb	
+selectMaxSql	query_builder/generators.html#selectMaxSql,Rdb,string	generators: selectMaxSql(self: Rdb; column: string): Rdb	
+selectMinSql	query_builder/generators.html#selectMinSql,Rdb,string	generators: selectMinSql(self: Rdb; column: string): Rdb	
+selectAvgSql	query_builder/generators.html#selectAvgSql,Rdb,string	generators: selectAvgSql(self: Rdb; column: string): Rdb	
+selectSumSql	query_builder/generators.html#selectSumSql,Rdb,string	generators: selectSumSql(self: Rdb; column: string): Rdb	

@@ -1,0 +1,6 @@
+dbError	async/database/libs/lib_postgres.html#dbError,PPGconn	lib_postgres: dbError(db: PPGconn)	
+checkError	async/database/libs/lib_postgres.html#checkError,PPGconn	lib_postgres: checkError(db: PPGconn)	
+setColumnInfo	async/database/libs/lib_postgres.html#setColumnInfo,PPGresult,DbRows,int32,int32	lib_postgres: setColumnInfo(res: PPGresult; dbRows: var DbRows; line, cols: int32)	
+newRow	async/database/libs/lib_postgres.html#newRow,int	lib_postgres: newRow(L: int): Row	
+setRow	async/database/libs/lib_postgres.html#setRow,PPGresult,Row,int32,int32	lib_postgres: setRow(res: PPGresult; r: var Row; line, cols: int32)	
+dbFormat	async/database/libs/lib_postgres.html#dbFormat,string,varargs[string]	lib_postgres: dbFormat(formatstr: string; args: varargs[string]): string	

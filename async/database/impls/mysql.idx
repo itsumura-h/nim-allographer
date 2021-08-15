@@ -1,0 +1,4 @@
+dbopen	async/database/impls/mysql.html#dbopen,string,string,string,string,int32,int,int	mysql: dbopen(database: string = &quot;&quot;; user: string = &quot;&quot;; password: string = &quot;&quot;;\n       host: string = &quot;&quot;; port: int32 = 0; maxConnections: int = 1; timeout = 30): Connections	
+query	async/database/impls/mysql.html#query,PMySQL,string,seq[string],int	mysql: query(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[\n    (seq[base.Row], DbRows)]	
+queryPlain	async/database/impls/mysql.html#queryPlain,PMySQL,string,seq[string],int	mysql: queryPlain(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[\n    seq[base.Row]]	
+exec	async/database/impls/mysql.html#exec,PMySQL,string,seq[string],int	mysql: exec(db: PMySQL; query: string; args: seq[string]; timeout: int): owned(\n    Future[void])	
