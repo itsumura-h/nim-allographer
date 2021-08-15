@@ -46,7 +46,7 @@ jobs:
       with:
         nim-version: ${{ env.NIM_VERSION }}
     - name: Build
-      run: nimble build -Y
+      run: nimble install -Y
 
   test-on-docker:
     runs-on: ubuntu-latest
