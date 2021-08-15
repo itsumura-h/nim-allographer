@@ -59,7 +59,7 @@ jobs:
       run: |
         echo '' >> tests/config.nims
         echo 'switch("threads", "on")' >> tests/config.nims
-        docker-compose run allographer nimble test
+        docker-compose run allographer-ubuntu nimble test
 
   create-tag-draft:
     runs-on: ubuntu-latest
