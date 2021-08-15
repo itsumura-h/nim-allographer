@@ -8,4 +8,5 @@ RUN apt update && apt-get install -y \
         libmysqlclient-dev
 ENV PATH $PATH:/root/.nimble/bin
 WORKDIR /root/project
+COPY ./allographer.nimble .
 RUN nimble install -y
