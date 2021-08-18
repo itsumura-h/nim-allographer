@@ -33,8 +33,7 @@ proc query*(self: Connections, query: string, args: seq[string] = @[]):Future[(s
       return await mysql.query(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb():
-      discard
-      # return await mariadb.query(self.pools[connI].mariadbConn, query, args, self.timeout)
+      return await mariadb.query(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
     when isExistsPostgres():
       discard
@@ -56,8 +55,7 @@ proc queryPlain*(self: Connections, query: string, args: seq[string] = @[]):Futu
       return await mysql.queryPlain(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb():
-      discard
-      # return = await mariadb.getRows(self.pools[connI].mariadbConn, query, args, self.timeout)
+      return await mariadb.queryPlain(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
     when isExistsPostgres():
       discard

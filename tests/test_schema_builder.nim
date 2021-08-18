@@ -106,40 +106,40 @@ suite "Schema builder":
     #   ], reset=true)
     # )
 
-  # test "insert":
-  #   waitFor (proc(){.async.}=
-  #     try:
-  #       # for rdb in [sqliteDb, mysqlDb, postgresDb]:
-  #       for rdb in [mysqlDb]:
-  #         await rdb.table("schema_builder").insert(%*{
-  #           "increments_column": 1,
-  #           "integer_column": 1,
-  #           "smallInteger_column": 1,
-  #           "mediumInteger_column": 1,
-  #           "bigInteger_column": 1,
-  #           "decimal_column": 111.11,
-  #           "double_column": 111.11,
-  #           "float_column": 111.11,
-  #           "char_column": "a",
-  #           "string_column": "a",
-  #           "text_column": "a",
-  #           "mediumText_column": "a",
-  #           "longText_column": "a",
-  #           "date_column": "2020-01-01".parse("yyyy-MM-dd").format("yyyy-MM-dd"),
-  #           "datetime_column": "2020-01-01".parse("yyyy-MM-dd").format("yyyy-MM-dd HH:MM:ss"),
-  #           "time_column": "2020-01-01".parse("yyyy-MM-dd").format("HH:MM:ss"),
-  #           "timestamp_column": "2020-01-01".parse("yyyy-MM-dd").format("yyyy-MM-dd HH:MM:ss"),
-  #           "binary_column": "a",
-  #           "boolean_column": true,
-  #           "enumField_column": "a",
-  #           "json_column": {"key": "value"}
-  #         })
-  #         echo await rdb.table("schema_builder").get()
-  #         assert true
-  #         rdb.alter(
-  #           drop("schema_builder")
-  #         )
-  #     except:
-  #       echo getCurrentExceptionMsg()
-  #       assert false
-  #   )()
+  test "insert":
+    waitFor (proc(){.async.}=
+      try:
+        # for rdb in [sqliteDb, mysqlDb, postgresDb]:
+        for rdb in [mysqlDb]:
+          await rdb.table("schema_builder").insert(%*{
+            "increments_column": 1,
+            "integer_column": 1,
+            "smallInteger_column": 1,
+            "mediumInteger_column": 1,
+            "bigInteger_column": 1,
+            "decimal_column": 111.11,
+            "double_column": 111.11,
+            "float_column": 111.11,
+            "char_column": "a",
+            "string_column": "a",
+            "text_column": "a",
+            "mediumText_column": "a",
+            "longText_column": "a",
+            "date_column": "2020-01-01".parse("yyyy-MM-dd").format("yyyy-MM-dd"),
+            "datetime_column": "2020-01-01".parse("yyyy-MM-dd").format("yyyy-MM-dd HH:MM:ss"),
+            "time_column": "2020-01-01".parse("yyyy-MM-dd").format("HH:MM:ss"),
+            "timestamp_column": "2020-01-01".parse("yyyy-MM-dd").format("yyyy-MM-dd HH:MM:ss"),
+            "binary_column": "a",
+            "boolean_column": true,
+            "enumField_column": "a",
+            "json_column": {"key": "value"}
+          })
+          echo await rdb.table("schema_builder").get()
+          assert true
+          rdb.alter(
+            drop("schema_builder")
+          )
+      except:
+        echo getCurrentExceptionMsg()
+        assert false
+    )()

@@ -1,9 +1,10 @@
+import asyncdispatch
 import ../base
 import ../rdb/mariadb
 
 type InstantRow* = object ## a handle that can be used to get a row's
                        ## column text on demand
-  row: cstringArray
+  row*: cstringArray
   len: int
 
 proc dbError*(db: PMySQL) {.noreturn.} =
@@ -124,22 +125,37 @@ proc dbFormat*(formatstr: string, args: seq[string]): string =
     else:
       add(result, c)
 
-proc rawExec(db:PMySQL, query:string, args: seq[string]) =
+proc rawExec*(db:PMySQL, query:string, args: seq[string]) =
   var q = dbFormat(query, args)
   if realQuery(db, q, q.len) != 0'i32: dbError(db)
 
-iterator instantRows*(db: PMySQL; columns: var DbColumns; query: string;
+iterator instantRows*(db: PMySQL; dbRows: var DbRows; query: string;
                       args: seq[string]): InstantRow =
   ## Same as fastRows but returns a handle that can be used to get column text
   ## on demand using []. Returned handle is valid only within the iterator body.
   rawExec(db, query, args)
   var sqlres = mariadb.useResult(db)
+  var dbColumns: DbColumns
   if sqlres != nil:
     let L = int(mariadb.numFields(sqlres))
-    setColumnInfo(columns, sqlres, L)
     var row: cstringArray
     while true:
-      row = mariadb.fetchRow(sqlres)
+      setColumnInfo(dbColumns, sqlres, L)
+      dbRows.add(dbColumns)
+      for i in 0..L:
+        row = mariadb.fetchRow(sqlres)
       if row == nil: break
       yield InstantRow(row: row, len: L)
     properFreeResult(sqlres, row)
+
+proc `[]`*(row: InstantRow, col: int): string {.inline.} =
+  ## Returns text for given column of the row.
+  $row.row[col]
+
+proc unsafeColumnAt*(row: InstantRow, index: int): cstring {.inline.} =
+  ## Return cstring of given column of the row
+  row.row[index]
+
+proc len*(row: InstantRow): int {.inline.} =
+  ## Returns number of columns in the row.
+  row.len

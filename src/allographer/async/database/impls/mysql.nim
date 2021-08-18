@@ -49,7 +49,7 @@ proc query*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[(s
   var lines = 0
   while true:
     if getTime().toUnix() >= calledAt + timeout:
-      dbError(db)
+      return
     await sleepAsync(0)
     var row: mysql.Row
     status = fetch_row_nonblocking(res, row.addr)

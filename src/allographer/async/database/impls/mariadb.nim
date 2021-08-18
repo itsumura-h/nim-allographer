@@ -25,40 +25,59 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
     timeout: timeout
   )
 
-proc query*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[seq[base.Row]] {.async.} =
+proc query*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[(seq[base.Row], DbRows)] {.async.} =
   assert db.ping == 0
-  let query = dbFormat(query, args)
-  var status = real_query_nonblocking(db, query, query.len)
-  while status == NET_ASYNC_NOT_READY:
-    await sleepAsync(0)
-    status = real_query_nonblocking(db, query, query.len)
-  if status == NET_ASYNC_ERROR: dbError(db) # failed
-  var res: PRES
-  status = store_result_nonblocking(db, res.addr)
-  while status == NET_ASYNC_NOT_READY:
-    await sleepAsync(0)
-    status = store_result_nonblocking(db, res.addr)
-  if status == NET_ASYNC_ERROR: dbError(db)
-  if res == nil: dbError(db)
-  let L = num_fields(res)
-  var rows = newSeq[base.Row]()
+  var dbRows: DbRows
+  var rows = newSeq[seq[string]]()
+  var lines = 0
+
+  rawExec(db, query, args)
+  var sqlres = mariadb.useResult(db)
   let calledAt = getTime().toUnix()
+  var dbColumns: DbColumns
+  let cols = int(mariadb.numFields(sqlres))
   while true:
     if getTime().toUnix() >= calledAt + timeout:
-      dbError(db)
+      return
     await sleepAsync(0)
     var row: mariadb.Row
-    status = fetch_row_nonblocking(res, row.addr)
-    while status != NET_ASYNC_COMPLETE:
-      await sleepAsync(0)
-      status = fetch_row_nonblocking(res, row.addr)
+    var baseRow = newSeq[string](cols)
+    setColumnInfo(dbColumns, sqlres, cols)
+    row = mariadb.fetchRow(sqlres)
     if row == nil: break
-    var baseRow = newSeq[string](L)
-    for i in 0..<L:
+    for i in 0..<cols:
+      if row[i].isNil:
+        dbColumns[i].typ.kind = dbNull
       baseRow[i] = $row[i]
     rows.add(baseRow)
-  var dbColumns: DbColumns
-  setColumnInfo(dbColumns, res, L)
+    dbRows.add(dbColumns)
+    lines.inc()
+  free_result(sqlres)
+  return (rows, dbRows)
+
+proc queryPlain*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[seq[base.Row]] {.async.} =
+  assert db.ping == 0
+  var dbRows: DbRows
+  var rows = newSeq[seq[string]]()
+  var lines = 0
+
+  rawExec(db, query, args)
+  var sqlres = mariadb.useResult(db)
+  let calledAt = getTime().toUnix()
+  let cols = int(mariadb.numFields(sqlres))
+  while true:
+    if getTime().toUnix() >= calledAt + timeout:
+      return
+    await sleepAsync(0)
+    var row: mariadb.Row
+    var baseRow = newSeq[string](cols)
+    row = mariadb.fetchRow(sqlres)
+    if row == nil: break
+    for i in 0..<cols:
+      baseRow[i] = $row[i]
+    rows.add(baseRow)
+    lines.inc()
+  free_result(sqlres)
   return rows
 
 proc exec*(db:PMySQL, query: string, args: seq[string], timeout:int) {.async.} =
