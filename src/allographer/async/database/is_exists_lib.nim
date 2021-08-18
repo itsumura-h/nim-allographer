@@ -36,7 +36,6 @@ func isExistsMysql*():bool =
     if osName == "alpine":
       return false
     else: # Ubuntu/Debian/CentOS...
-      # const query = "ldconfig -p | grep libmysqlclient.so"
       const query = "ldconfig -p | grep libmysqlclient.so"
       const res = gorgeEx(query)
       return res.exitCode == 0 and res.output.len > 0
