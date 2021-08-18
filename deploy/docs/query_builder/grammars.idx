@@ -1,0 +1,24 @@
+table	query_builder/grammars.html#table,Rdb,string	grammars: table(rdb: Rdb; tableArg: string): Rdb	
+raw	query_builder/grammars.html#raw,Rdb,string,varargs[string]	grammars: raw(self: Rdb; sql: string; arges: varargs[string]): Rdb	
+select	query_builder/grammars.html#select,Rdb,varargs[string]	grammars: select(self: Rdb; columnsArg: varargs[string]): Rdb	
+`distinct`	query_builder/grammars.html#distinct,Rdb	grammars: `distinct`(self: Rdb): Rdb	
+join	query_builder/grammars.html#join,Rdb,string,string,string,string	grammars: join(self: Rdb; table: string; column1: string; symbol: string; column2: string): Rdb	
+leftJoin	query_builder/grammars.html#leftJoin,Rdb,string,string,string,string	grammars: leftJoin(self: Rdb; table: string; column1: string; symbol: string;\n         column2: string): Rdb	
+where	query_builder/grammars.html#where,Rdb,string,string,	grammars: where(self: Rdb; column: string; symbol: string;\n      value: string | int | float | bool): Rdb	
+where	query_builder/grammars.html#where,Rdb,string,string,_2	grammars: where(self: Rdb; column: string; symbol: string; value: nil.type): Rdb	
+orWhere	query_builder/grammars.html#orWhere,Rdb,string,string,	grammars: orWhere(self: Rdb; column: string; symbol: string;\n        value: string | int | float | bool): Rdb	
+orWhere	query_builder/grammars.html#orWhere,Rdb,string,string,_2	grammars: orWhere(self: Rdb; column: string; symbol: string; value: nil.type): Rdb	
+whereBetween	query_builder/grammars.html#whereBetween,Rdb,string,array[,]	grammars: whereBetween(self: Rdb; column: string; width: array[2, int | float]): Rdb	
+whereNotBetween	query_builder/grammars.html#whereNotBetween,Rdb,string,array[,]	grammars: whereNotBetween(self: Rdb; column: string; width: array[2, int | float]): Rdb	
+whereIn	query_builder/grammars.html#whereIn,Rdb,string,seq[]	grammars: whereIn(self: Rdb; column: string; width: seq[int | float]): Rdb	
+whereNotIn	query_builder/grammars.html#whereNotIn,Rdb,string,seq[]	grammars: whereNotIn(self: Rdb; column: string; width: seq[int | float]): Rdb	
+whereNull	query_builder/grammars.html#whereNull,Rdb,string	grammars: whereNull(self: Rdb; column: string): Rdb	
+groupBy	query_builder/grammars.html#groupBy,Rdb,string	grammars: groupBy(self: Rdb; column: string): Rdb	
+having	query_builder/grammars.html#having,Rdb,string,string,	grammars: having(self: Rdb; column: string; symbol: string;\n       value: string | int | float | bool): Rdb	
+having	query_builder/grammars.html#having,Rdb,string,string,_2	grammars: having(self: Rdb; column: string; symbol: string; value: nil.type): Rdb	
+Asc	query_builder/grammars.html#Asc	Order.Asc	
+Desc	query_builder/grammars.html#Desc	Order.Desc	
+Order	query_builder/grammars.html#Order	grammars: Order	
+orderBy	query_builder/grammars.html#orderBy,Rdb,string,Order	grammars: orderBy(self: Rdb; column: string; order: Order): Rdb	
+limit	query_builder/grammars.html#limit,Rdb,int	grammars: limit(self: Rdb; num: int): Rdb	
+offset	query_builder/grammars.html#offset,Rdb,int	grammars: offset(self: Rdb; num: int): Rdb	

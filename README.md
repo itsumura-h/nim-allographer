@@ -20,6 +20,7 @@ let rdb = dbOpen(PostgreSql, "database", "user", "password" "localhost", 5432, m
 # also avaiable
 # let rdb = dbOpen(Sqlite3, "/path/to/db/sqlite3.db", maxConnections=maxConnections, timeout=timeout)
 # let rdb = dbOpen(MySQL, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
+# let rdb = dbOpen(MariaDB, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
 
 proc main(){.async.} =
   let result = await rdb
@@ -101,7 +102,7 @@ rdb.alter(
       * [Development](#development)
          * [Branch naming rule](#branch-naming-rule)
 
-<!-- Added by: root, at: Sun Aug 15 03:35:19 UTC 2021 -->
+<!-- Added by: root, at: Wed Aug 18 20:41:09 UTC 2021 -->
 
 <!--te-->
 ---
@@ -130,6 +131,7 @@ let rdb* = dbOpen(PostgreSql, "database", "user", "password" "localhost", 5432, 
 # you can create connection for multiple database at same time.
 let sqliteRdb* = dbOpen(Sqlite3, "/path/to/db/sqlite3.db", maxConnections=maxConnections, timeout=timeout)
 let mysqlRdb* = dbOpen(MySQL, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
+let mariaRdb* = dbOpen(MariaDB, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
 ```
 
 Then, call connection when you run query.
@@ -141,7 +143,7 @@ import allographer/query_builder
 from database import rdb
 
 proc main(){.async.}=
-  echo rdb.table("users").get()
+  echo await rdb.table("users").get()
 
 waitFor main()
 ```

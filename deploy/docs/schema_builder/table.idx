@@ -1,0 +1,6 @@
+Nomal	schema_builder/table.html#Nomal	TableTyp.Nomal	
+Rename	schema_builder/table.html#Rename	TableTyp.Rename	
+Drop	schema_builder/table.html#Drop	TableTyp.Drop	
+TableTyp	schema_builder/table.html#TableTyp	table: TableTyp	
+Table	schema_builder/table.html#Table	table: Table	
+table	schema_builder/table.html#table,string,openArray[Column]	table: table(name: string; columns: openArray[Column]; reset = false): Table	

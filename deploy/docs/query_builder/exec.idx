@@ -1,0 +1,34 @@
+selectSql	query_builder/exec.html#selectSql,Rdb	exec: selectSql(self: Rdb): string	
+orm	query_builder/exec.html#orm,openArray[JsonNode],typedesc	exec: orm(rows: openArray[JsonNode]; typ: typedesc): seq[typ.type]	
+orm	query_builder/exec.html#orm,JsonNode,typedesc	exec: orm(row: JsonNode; typ: typedesc): typ.type	
+orm	query_builder/exec.html#orm,Option[JsonNode],typedesc	exec: orm(row: Option[JsonNode]; typ: typedesc): Option[typ.type]	
+toSql	query_builder/exec.html#toSql,Rdb	exec: toSql(self: Rdb): string	
+get	query_builder/exec.html#get,Rdb	exec: get(self: Rdb): Future[seq[JsonNode]]	
+getPlain	query_builder/exec.html#getPlain,Rdb	exec: getPlain(self: Rdb): Future[seq[seq[string]]]	
+getRaw	query_builder/exec.html#getRaw,Rdb	exec: getRaw(self: Rdb): Future[seq[JsonNode]]	
+first	query_builder/exec.html#first,Rdb	exec: first(self: Rdb): Future[Option[JsonNode]]	
+firstPlain	query_builder/exec.html#firstPlain,Rdb	exec: firstPlain(self: Rdb): Future[seq[string]]	
+find	query_builder/exec.html#find,Rdb,int,string	exec: find(self: Rdb; id: int; key = &quot;id&quot;): Future[Option[JsonNode]]	
+findPlain	query_builder/exec.html#findPlain,Rdb,int,string	exec: findPlain(self: Rdb; id: int; key = &quot;id&quot;): Future[seq[string]]	
+insertSql	query_builder/exec.html#insertSql,Rdb,JsonNode	exec: insertSql(self: Rdb; items: JsonNode): string	
+insert	query_builder/exec.html#insert,Rdb,JsonNode	exec: insert(self: Rdb; items: JsonNode): owned(Future[void])	
+insert	query_builder/exec.html#insert,Rdb,seq[JsonNode]	exec: insert(self: Rdb; rows: seq[JsonNode]): owned(Future[void])	
+inserts	query_builder/exec.html#inserts,Rdb,seq[JsonNode]	exec: inserts(self: Rdb; rows: seq[JsonNode]): owned(Future[void])	
+insertId	query_builder/exec.html#insertId,Rdb,JsonNode,string	exec: insertId(self: Rdb; items: JsonNode; key = &quot;id&quot;): Future[int]	
+insertId	query_builder/exec.html#insertId,Rdb,seq[JsonNode],string	exec: insertId(self: Rdb; rows: seq[JsonNode]; key = &quot;id&quot;): Future[int]	
+insertsID	query_builder/exec.html#insertsID,Rdb,seq[JsonNode],string	exec: insertsID(self: Rdb; rows: seq[JsonNode]; key = &quot;id&quot;): Future[seq[int]]	
+updateSql	query_builder/exec.html#updateSql,Rdb,JsonNode	exec: updateSql(self: Rdb; items: JsonNode): string	
+update	query_builder/exec.html#update,Rdb,JsonNode	exec: update(self: Rdb; items: JsonNode): owned(Future[void])	
+deleteSql	query_builder/exec.html#deleteSql,Rdb	exec: deleteSql(self: Rdb): string	
+delete	query_builder/exec.html#delete,Rdb	exec: delete(self: Rdb): owned(Future[void])	
+delete	query_builder/exec.html#delete,Rdb,int,string	exec: delete(self: Rdb; id: int; key = &quot;id&quot;): owned(Future[void])	
+exec	query_builder/exec.html#exec,Rdb	exec: exec(self: Rdb): owned(Future[void])	
+count	query_builder/exec.html#count,Rdb	exec: count(self: Rdb): Future[int]	
+max	query_builder/exec.html#max,Rdb,string	exec: max(self: Rdb; column: string): Future[Option[string]]	
+min	query_builder/exec.html#min,Rdb,string	exec: min(self: Rdb; column: string): Future[Option[string]]	
+avg	query_builder/exec.html#avg,Rdb,string	exec: avg(self: Rdb; column: string): Future[Option[float]]	
+sum	query_builder/exec.html#sum,Rdb,string	exec: sum(self: Rdb; column: string): Future[Option[float]]	
+paginate	query_builder/exec.html#paginate,Rdb,int,int	exec: paginate(self: Rdb; display: int; page: int = 1): Future[JsonNode]	
+fastPaginate	query_builder/exec.html#fastPaginate,Rdb,int,string,Order	exec: fastPaginate(self: Rdb; display: int; key = &quot;id&quot;; order: Order = Asc): Future[\n    JsonNode]	
+fastPaginateNext	query_builder/exec.html#fastPaginateNext,Rdb,int,int,string,Order	exec: fastPaginateNext(self: Rdb; display, id: int; key = &quot;id&quot;; order: Order = Asc): Future[\n    JsonNode]	
+fastPaginateBack	query_builder/exec.html#fastPaginateBack,Rdb,int,int,string,Order	exec: fastPaginateBack(self: Rdb; display, id: int; key = &quot;id&quot;; order: Order = Asc): Future[\n    JsonNode]	

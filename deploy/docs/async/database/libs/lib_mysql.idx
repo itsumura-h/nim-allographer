@@ -1,0 +1,6 @@
+dbError	async/database/libs/lib_mysql.html#dbError,PMySQL	lib_mysql: dbError(db: PMySQL)	
+checkError	async/database/libs/lib_mysql.html#checkError,PMySQL	lib_mysql: checkError(db: PMySQL)	
+setColumnInfo	async/database/libs/lib_mysql.html#setColumnInfo,PRES,DbRows,int,int	lib_mysql: setColumnInfo(res: PRES; dbRows: var DbRows; line, cols: int)	
+newRow	async/database/libs/lib_mysql.html#newRow,int	lib_mysql: newRow(L: int): base.Row	
+properFreeResult	async/database/libs/lib_mysql.html#properFreeResult,PRES,cstringArray	lib_mysql: properFreeResult(sqlres: PRES; row: cstringArray)	
+dbFormat	async/database/libs/lib_mysql.html#dbFormat,string,varargs[string,]	lib_mysql: dbFormat(formatstr: string; args: varargs[string, `$`]): string	
