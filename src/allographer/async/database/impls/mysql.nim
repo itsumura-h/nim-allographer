@@ -65,6 +65,7 @@ proc query*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[(s
       baseRow[i] = $row[i]
     rows.add(baseRow)
     lines.inc()
+  free_result(res)
   return (rows, dbRows)
 
 proc queryPlain*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[seq[base.Row]] {.async.} =
@@ -98,6 +99,7 @@ proc queryPlain*(db: PMySQL, query: string, args: seq[string], timeout:int):Futu
     if row == nil: break
     rows.add(row.cstringArrayToSeq(cols))
     lines.inc()
+  free_result(res)
   return rows
 
 proc exec*(db:PMySQL, query: string, args: seq[string], timeout:int) {.async.} =

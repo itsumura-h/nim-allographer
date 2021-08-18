@@ -5,13 +5,14 @@ when defined(nimHasStyleChecks):
 when defined(unix):
   when defined(macosx):
     const
-      lib = "libmariadbclient(|.20|.19|.18|.17|.16|.15).dylib"
+      lib = "libmariadb(|.21|.20|.19|.18|.17|.16|.15).dylib"
   else:
     const
-      lib = "libmariadbclient.so(|.20|.19|.18|.17|.16|.15)"
+      lib = "libmariadb.so(|.3)"
 when defined(windows):
   const
     lib = "libmariadb.dll"
+
 type
   my_bool* = bool
   Pmy_bool* = ptr my_bool
@@ -24,8 +25,8 @@ type
   cuint* = cint
 
 type NetAsyncStatus* = enum
-  NET_ASYNC_NOT_READY
   NET_ASYNC_COMPLETE
+  NET_ASYNC_NOT_READY
   NET_ASYNC_ERROR
   NET_ASYNC_COMPLETE_NO_MORE_RESULTS
 
@@ -502,7 +503,8 @@ type
     OPT_LOCAL_INFILE, OPT_PROTOCOL, SHARED_MEMORY_BASE_NAME, OPT_READ_TIMEOUT,
     OPT_WRITE_TIMEOUT, OPT_USE_RESULT, OPT_USE_REMOTE_CONNECTION,
     OPT_USE_EMBEDDED_CONNECTION, OPT_GUESS_CONNECTION, SET_CLIENT_IP,
-    SECURE_AUTH, REPORT_DATA_TRUNCATION, OPT_RECONNECT
+    SECURE_AUTH, REPORT_DATA_TRUNCATION, OPT_RECONNECT,
+    MYSQL_OPT_NONBLOCK
 {.deprecated: [Tst_mysql_data: St_mysql_data, TDATA: DATA, Toption: Option].}
 
 const
@@ -868,19 +870,34 @@ proc character_set_name*(MySQL: PMySQL): cstring{.stdcall, dynlib: lib,
 proc set_character_set*(MySQL: PMySQL, csname: cstring): int32{.stdcall, dynlib: lib,
     importc: "mysql_set_character_set".}
 proc init*(MySQL: PMySQL): PMySQL{.stdcall, dynlib: lib, importc: "mysql_init".}
+# proc init*(MySQL: var PMySQL){.stdcall, dynlib: lib, importc: "mysql_init".}
 proc ssl_set*(MySQL: PMySQL, key: cstring, cert: cstring, ca: cstring, capath: cstring,
               cipher: cstring): my_bool{.stdcall, dynlib: lib,
     importc: "mysql_ssl_set".}
 proc change_user*(MySQL: PMySQL, user: cstring, passwd: cstring, db: cstring): my_bool{.
     stdcall, dynlib: lib, importc: "mysql_change_user".}
 proc real_connect*(MySQL: PMySQL, host: cstring, user: cstring, passwd: cstring,
-                   db: cstring, port: int, unix_socket: cstring,
+                   db: cstring, port: cuint, unix_socket: cstring,
                    clientflag: int): PMySQL{.stdcall, dynlib: lib,
                                         importc: "mysql_real_connect".}
-proc real_connect_start*(MariaDB: PMySQL, host: cstring, user: cstring, passwd: cstring,
+# proc real_connect_start*(ret: ptr PMySQL, MySQL: PMySQL, host: cstring, user: cstring, passwd: cstring,
+#                    db: cstring, port: cuint, unix_socket: cstring,
+#                    clientflag: int): int{.stdcall, dynlib: lib,
+#                                         importc: "mysql_real_connect_start".}
+proc real_connect_start*(ret: ptr PMySQL, mysql: PMySQL, host: cstring, user: cstring, passwd: cstring,
                    db: cstring, port: cuint, unix_socket: cstring,
-                   clientflag: int): NetAsyncStatus{.stdcall, dynlib: lib,
+                   clientflag: culong): cint{.stdcall, dynlib: lib,
                                         importc: "mysql_real_connect_start".}
+proc fetch_row_nonblocking*(MYSQL_RES: PRES, MYSQL_ROW: PROW): NetAsyncStatus{.stdcall, dynlib: lib,
+                                        importc: "mysql_fetch_row_nonblocking".}
+proc free_result_nonblocking*(MYSQL_RES: PRES): NetAsyncStatus{.stdcall, dynlib: lib,
+                                        importc: "mysql_free_result_nonblocking".}
+proc fetch_next_result_nonblocking*(MySQL: PMySQL): NetAsyncStatus{.stdcall, dynlib: lib,
+                                        importc: "mysql_next_result_nonblocking".}
+proc real_query_nonblocking*(MySQL: PMySQL, q: cstring, length: int): NetAsyncStatus{.stdcall, dynlib: lib,
+                                        importc: "mysql_real_query_nonblocking".}
+proc store_result_nonblocking*(MySQL: PMySQL, MYSQL_RES: ptr PRES): NetAsyncStatus{.stdcall, dynlib: lib,
+                                        importc: "mysql_store_result_nonblocking".}
 proc select_db*(MySQL: PMySQL, db: cstring): cint{.stdcall, dynlib: lib,
     importc: "mysql_select_db".}
 proc query*(MySQL: PMySQL, q: cstring): cint{.stdcall, dynlib: lib, importc: "mysql_query".}
