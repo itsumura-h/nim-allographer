@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: before
     steps:
-    - uses: actions/checkout@v1
+    # - uses: actions/checkout@v1
     - name: Test
       run: docker-compose run allographer-ubuntu nimble test
     - name: Test multi-thread
