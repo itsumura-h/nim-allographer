@@ -57,11 +57,8 @@ proc query*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[(se
 
 proc queryPlain*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[seq[base.Row]] {.async.} =
   assert db.ping == 0
-  var dbRows: DbRows
-  var rows = newSeq[seq[string]]()
-  var lines = 0
-
   rawExec(db, query, args)
+  var rows = newSeq[seq[string]]()
   var sqlres = mariadb.useResult(db)
   let calledAt = getTime().toUnix()
   let cols = int(mariadb.numFields(sqlres))
@@ -76,7 +73,6 @@ proc queryPlain*(db:PMySQL, query: string, args: seq[string], timeout:int):Futur
     for i in 0..<cols:
       baseRow[i] = $row[i]
     rows.add(baseRow)
-    lines.inc()
   free_result(sqlres)
   return rows
 

@@ -22,11 +22,11 @@ proc open*(driver:Driver, database:string="", user:string="", password:string=""
       result = sqlite.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
 
 proc query*(self: Connections, query: string, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
+  await sleepAsync(0)
   let connI = await getFreeConn(self)
   defer: self.returnConn(connI)
   if connI == errorConnectionNum:
     return
-  await sleepAsync(0)
   case self.driver
   of MySQL:
     when isExistsMysql():

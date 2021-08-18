@@ -95,6 +95,8 @@ proc properFreeResult*(sqlres: PRES, row: cstringArray) =
 
 proc dbQuote(s: string): string =
   ## DB quotes the string.
+  if s == "null":
+    return "NULL"
   result = newStringOfCap(s.len + 2)
   result.add "'"
   for c in items(s):
@@ -114,8 +116,6 @@ proc dbQuote(s: string): string =
   add(result, '\'')
 
 proc dbFormat*(formatstr: string, args: seq[string]): string =
-  if formatstr == "null":
-    return "NULL"
   result = ""
   var a = 0
   for c in items(formatstr):
