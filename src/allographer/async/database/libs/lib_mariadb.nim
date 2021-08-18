@@ -1,5 +1,11 @@
+import asyncdispatch
 import ../base
 import ../rdb/mariadb
+
+type InstantRow* = object ## a handle that can be used to get a row's
+                       ## column text on demand
+  row*: cstringArray
+  len: int
 
 proc dbError*(db: PMySQL) {.noreturn.} =
   ## raises a DbError exception.
@@ -86,3 +92,70 @@ proc properFreeResult*(sqlres: PRES, row: cstringArray) =
   if row != nil:
     while fetchRow(sqlres) != nil: discard
   freeResult(sqlres)
+
+proc dbQuote(s: string): string =
+  ## DB quotes the string.
+  if s == "null":
+    return "NULL"
+  result = newStringOfCap(s.len + 2)
+  result.add "'"
+  for c in items(s):
+    # see https://cheatsheetseries.owasp.org/cheatsheets/SQL_Injection_Prevention_Cheat_Sheet.html#mysql-escaping
+    case c
+    of '\0': result.add "\\0"
+    of '\b': result.add "\\b"
+    of '\t': result.add "\\t"
+    of '\l': result.add "\\n"
+    of '\r': result.add "\\r"
+    of '\x1a': result.add "\\Z"
+    of '"': result.add "\\\""
+    of '\'': result.add "\\'"
+    of '\\': result.add "\\\\"
+    of '_': result.add "\\_"
+    else: result.add c
+  add(result, '\'')
+
+proc dbFormat*(formatstr: string, args: seq[string]): string =
+  result = ""
+  var a = 0
+  for c in items(formatstr):
+    if c == '?':
+      add(result, dbQuote(args[a]))
+      inc(a)
+    else:
+      add(result, c)
+
+proc rawExec*(db:PMySQL, query:string, args: seq[string]) =
+  var q = dbFormat(query, args)
+  if realQuery(db, q, q.len) != 0'i32: dbError(db)
+
+iterator instantRows*(db: PMySQL; dbRows: var DbRows; query: string;
+                      args: seq[string]): InstantRow =
+  ## Same as fastRows but returns a handle that can be used to get column text
+  ## on demand using []. Returned handle is valid only within the iterator body.
+  rawExec(db, query, args)
+  var sqlres = mariadb.useResult(db)
+  var dbColumns: DbColumns
+  if sqlres != nil:
+    let L = int(mariadb.numFields(sqlres))
+    var row: cstringArray
+    while true:
+      setColumnInfo(dbColumns, sqlres, L)
+      dbRows.add(dbColumns)
+      for i in 0..L:
+        row = mariadb.fetchRow(sqlres)
+      if row == nil: break
+      yield InstantRow(row: row, len: L)
+    properFreeResult(sqlres, row)
+
+proc `[]`*(row: InstantRow, col: int): string {.inline.} =
+  ## Returns text for given column of the row.
+  $row.row[col]
+
+proc unsafeColumnAt*(row: InstantRow, index: int): cstring {.inline.} =
+  ## Return cstring of given column of the row
+  row.row[index]
+
+proc len*(row: InstantRow): int {.inline.} =
+  ## Returns number of columns in the row.
+  row.len

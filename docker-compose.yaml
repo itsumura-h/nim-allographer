@@ -10,7 +10,7 @@ services:
     volumes:
       - .:/root/project
     depends_on:
-      - mysql
+      - mariadb
       - postgres
 
   allographer-ubuntu:
@@ -23,10 +23,10 @@ services:
     volumes:
       - .:/root/project
     depends_on:
-      - mysql
+      - mariadb
       - postgres
 
-  mysql:
+  mariadb:
     image: mariadb
     tty: true
     command: --default-authentication-plugin=mysql_native_password

@@ -13,8 +13,7 @@ proc open*(driver:Driver, database:string="", user:string="", password:string=""
       result = mysql.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of MariaDB:
     when isExistsMariadb():
-      discard
-  #     result = mariadb.dbopen(database, user, password, host, port, maxConnections, timeout)
+      result = mariadb.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of PostgreSQL:
     when isExistsPostgres():
       result = postgres.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
@@ -23,20 +22,18 @@ proc open*(driver:Driver, database:string="", user:string="", password:string=""
       result = sqlite.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
 
 proc query*(self: Connections, query: string, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
+  await sleepAsync(0)
   let connI = await getFreeConn(self)
   defer: self.returnConn(connI)
   if connI == errorConnectionNum:
     return
-  await sleepAsync(0)
   case self.driver
   of MySQL:
     when isExistsMysql():
-      discard
       return await mysql.query(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb():
-      discard
-      # return = await mariadb.getRows(self.pools[connI].mariadbConn, query, args, self.timeout)
+      return await mariadb.query(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
     when isExistsPostgres():
       discard
@@ -58,8 +55,7 @@ proc queryPlain*(self: Connections, query: string, args: seq[string] = @[]):Futu
       return await mysql.queryPlain(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb():
-      discard
-      # return = await mariadb.getRows(self.pools[connI].mariadbConn, query, args, self.timeout)
+      return await mariadb.queryPlain(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
     when isExistsPostgres():
       discard
@@ -79,12 +75,10 @@ proc exec*(self: Connections, query: string, args: seq[string] = @[]) {.async.} 
   case self.driver
   of MySQL:
     when isExistsMysql():
-      discard
       await mysql.exec(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb():
-      discard
-  #     await mariadb.exec(self.pools[connI].mariadbConn, query, args, self.timeout)
+      await mariadb.exec(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
     when isExistsPostgres():
       await postgres.exec(self.pools[connI].postgresConn, query, args, self.timeout)

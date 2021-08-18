@@ -7,6 +7,7 @@ let
   password = getEnv("DB_PASSWORD")
   sqliteHost = getEnv("SQLITE_HOST")
   mysqlHost = getEnv("MY_HOST")
+  mariadbHost = getEnv("MARIA_HOST")
   mysqlPort = getEnv("MY_PORT").parseInt
   pgHost = getEnv("PG_HOST")
   pgPort = getEnv("PG_PORT").parseInt
@@ -16,11 +17,13 @@ let
 
 let
   sqliteDb = dbopen(SQLite3, sqliteHost, maxConnections=maxConnections)
-  mysqlDb = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout)
+  # mysqlDb = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout)
+  mariaDb = dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout)
   postgresDb = dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout)
-  # rdb* = sqliteDb
-  rdb* = postgresDb
+  rdb* = sqliteDb
+  # rdb* = postgresDb
   # rdb* = mysqlDb
+  # rdb* = mariaDb
 
 template asyncBlock*(body:untyped) =
   waitFor (proc(){.async.}=

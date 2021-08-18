@@ -1,4 +1,4 @@
-import unittest, json, strformat, options, asyncdispatch, random
+import unittest, json, strformat, options, asyncdispatch, random, times
 
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
@@ -55,16 +55,16 @@ suite "select":
       var t = await rdb.table("users").getPlain()
       check t[0] == @["1", "user1", "user1@gmail.com", "", "1"]
 
-  # test "perfomance":
-  #   asyncBlock:
-  #     var s = cpuTime()
-  #     for i in 0..10000:
-  #       asyncCheck rdb.table("users").get()
-  #     echo "get...", cpuTime() - s
-  #     s = cpuTime()
-  #     for i in 0..10000:
-  #       asyncCheck rdb.table("users").getPlain()
-  #     echo "getPlain...", cpuTime() - s
+  test "perfomance":
+    asyncBlock:
+      var s = cpuTime()
+      for i in 0..100:
+        discard await rdb.table("users").get()
+      echo "get...", cpuTime() - s
+      s = cpuTime()
+      for i in 0..100:
+        discard await rdb.table("users").getPlain()
+      echo "getPlain...", cpuTime() - s
 
   test "first()":
     asyncBlock:

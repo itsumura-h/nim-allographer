@@ -1,6 +1,6 @@
 import strutils
 
-func getOsName():string =
+func getOsName*():string =
   const f = staticRead("/etc/os-release")
   for row in f.split("\n"):
     let kv = row.split("=")
@@ -55,7 +55,7 @@ func isExistsMariadb*():bool =
       const res = gorgeEx(query)
       return res.exitCode == 0 and res.output.len > 0
     else: # Ubuntu/Debian/CentOS...
-      const query = "ldconfig -p | grep libmariadb.so"
+      const query = "ldconfig -p | grep -e libmysqlclient.so -e libmariadbclient.so"
       const res = gorgeEx(query)
       return res.exitCode == 0 and res.output.len > 0
   else: # Windows

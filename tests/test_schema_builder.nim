@@ -7,7 +7,8 @@ let maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
 
 let sqliteDb = dbopen(SQLite3, ":memory:", maxConnections=95, timeout=30, shouldDisplayLog=true)
 let postgresDb = dbopen(PostgreSQL, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("DB_PASSWORD"), getEnv("PG_HOST"), getEnv("PG_PORT").parseInt, maxConnections, 30, shouldDisplayLog=true)
-let mysqlDb = dbopen(MySQL, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("DB_PASSWORD"), getEnv("MY_HOST"), getEnv("MY_PORT").parseInt, maxConnections, 30, shouldDisplayLog=true)
+# let mysqlDb = dbopen(MySQL, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("DB_PASSWORD"), getEnv("MY_HOST"), getEnv("MY_PORT").parseInt, maxConnections, 30, shouldDisplayLog=true)
+let mariaDb = dbopen(MariaDB, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("DB_PASSWORD"), getEnv("MARIA_HOST"), getEnv("MY_PORT").parseInt, maxConnections, 30, shouldDisplayLog=true)
 
 suite "Schema builder":
   test "test":
@@ -42,7 +43,7 @@ suite "Schema builder":
         Column().json("json_column").unique().default(%*{"key": "value"}).unsigned().index(),
       ], reset=true)
     )
-    mysqlDb.schema(
+    mariaDb.schema(
       table("schema_builder", [
         Column().increments("increments_column"),
         Column().integer("integer_column").unique().default(1).unsigned(),
@@ -108,7 +109,7 @@ suite "Schema builder":
   test "insert":
     waitFor (proc(){.async.}=
       try:
-        for rdb in [sqliteDb, mysqlDb, postgresDb]:
+        for rdb in [sqliteDb, mariaDb, postgresDb]:
           await rdb.table("schema_builder").insert(%*{
             "increments_column": 1,
             "integer_column": 1,
