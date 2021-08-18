@@ -66,6 +66,8 @@ function main() {
     Modules: <a href="async/async_db.html">async/async_db</a>, <a href="async/database/base.html">async/database/base</a>, <a href="async/database/impls/mariadb.html">async/database/impls/mariadb</a>, <a href="async/database/impls/mysql.html">async/database/impls/mysql</a>, <a href="async/database/impls/postgres.html">async/database/impls/postgres</a>, <a href="async/database/impls/sqlite.html">async/database/impls/sqlite</a>, <a href="async/database/is_exists_lib.html">async/database/is_exists_lib</a>, <a href="async/database/libs/lib_mariadb.html">async/database/libs/lib_mariadb</a>, <a href="async/database/libs/lib_mysql.html">async/database/libs/lib_mysql</a>, <a href="async/database/libs/lib_postgres.html">async/database/libs/lib_postgres</a>, <a href="async/database/libs/lib_sqlite.html">async/database/libs/lib_sqlite</a>, <a href="async/database/rdb/mariadb.html">async/database/rdb/mariadb</a>, <a href="async/database/rdb/mysql.html">async/database/rdb/mysql</a>, <a href="async/database/rdb/postgres.html">async/database/rdb/postgres</a>, <a href="async/database/rdb/sqlite.html">async/database/rdb/sqlite</a>, <a href="base.html">base</a>, <a href="query_builder/builders.html">query_builder/builders</a>, <a href="query_builder/exec.html">query_builder/exec</a>, <a href="query_builder/generators.html">query_builder/generators</a>, <a href="query_builder/grammars.html">query_builder/grammars</a>, <a href="query_builder/transaction.html">query_builder/transaction</a>, <a href="schema_builder/alter.html">schema_builder/alter</a>, <a href="schema_builder/alters/mysql_alter.html">schema_builder/alters/mysql_alter</a>, <a href="schema_builder/alters/postgres_alter.html">schema_builder/alters/postgres_alter</a>, <a href="schema_builder/alters/sqlite_alter.html">schema_builder/alters/sqlite_alter</a>, <a href="schema_builder/column.html">schema_builder/column</a>, <a href="schema_builder/generators/generator_util.html">schema_builder/generators/generator_util</a>, <a href="schema_builder/generators/mysql_generators.html">schema_builder/generators/mysql_generators</a>, <a href="schema_builder/generators/postgres_generators.html">schema_builder/generators/postgres_generators</a>, <a href="schema_builder/generators/sqlite_generators.html">schema_builder/generators/sqlite_generators</a>, <a href="schema_builder/migrates/mysql_migrate.html">schema_builder/migrates/mysql_migrate</a>, <a href="schema_builder/migrates/postgres_migrate.html">schema_builder/migrates/postgres_migrate</a>, <a href="schema_builder/migrates/sqlite_migrate.html">schema_builder/migrates/sqlite_migrate</a>, <a href="schema_builder/schema.html">schema_builder/schema</a>, <a href="schema_builder/table.html">schema_builder/table</a>, <a href="utils.html">utils</a>.<br/><p /><h2>API symbols</h2>
 <dl><dt><a name="%60%5B%5D%60" href="#%60%5B%5D%60"><span>`[]`:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="lib_mariadb: `[]`(row: InstantRow; col: int): string" href="async/database/libs/lib_mariadb.html#%5B%5D%2CInstantRow%2Cint">lib_mariadb: `[]`(row: InstantRow; col: int): string</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="lib_sqlite: `[]`(row: InstantRow; col: int32): string" href="async/database/libs/lib_sqlite.html#%5B%5D%2CInstantRow%2Cint32">lib_sqlite: `[]`(row: InstantRow; col: int32): string</a></li>
           </ul></dd>
 <dt><a name="%60distinct%60" href="#%60distinct%60"><span>`distinct`:</span></a></dt><dd><ul class="simple">
@@ -1180,6 +1182,8 @@ function main() {
           </ul></dd>
 <dt><a name="dbFormat" href="#dbFormat"><span>dbFormat:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="lib_mariadb: dbFormat(formatstr: string; args: seq[string]): string" href="async/database/libs/lib_mariadb.html#dbFormat%2Cstring%2Cseq%5Bstring%5D">lib_mariadb: dbFormat(formatstr: string; args: seq[string]): string</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="lib_mysql: dbFormat(formatstr: string; args: varargs[string, `$`]): string" href="async/database/libs/lib_mysql.html#dbFormat%2Cstring%2Cvarargs%5Bstring%2C%5D">lib_mysql: dbFormat(formatstr: string; args: varargs[string, `$`]): string</a></li>
           <li><a class="reference external"
           data-doc-search-tag="lib_postgres: dbFormat(formatstr: string; args: varargs[string]): string" href="async/database/libs/lib_postgres.html#dbFormat%2Cstring%2Cvarargs%5Bstring%5D">lib_postgres: dbFormat(formatstr: string; args: varargs[string]): string</a></li>
@@ -1620,6 +1624,10 @@ function main() {
           <li><a class="reference external"
           data-doc-search-tag="async_db: exec(self: Prepared; args: seq[string] = @[]): owned(Future[void])" href="async/async_db.html#exec%2CPrepared%2Cseq%5Bstring%5D">async_db: exec(self: Prepared; args: seq[string] = @[]): owned(Future[void])</a></li>
           <li><a class="reference external"
+          data-doc-search-tag="mariadb: exec(db: PMySQL; query: string; args: seq[string]; timeout: int): owned(
+    Future[void])" href="async/database/impls/mariadb.html#exec%2CPMySQL%2Cstring%2Cseq%5Bstring%5D%2Cint">mariadb: exec(db: PMySQL; query: string; args: seq[string]; timeout: int): owned(
+    Future[void])</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="mysql: exec(db: PMySQL; query: string; args: seq[string]; timeout: int): owned(
     Future[void])" href="async/database/impls/mysql.html#exec%2CPMySQL%2Cstring%2Cseq%5Bstring%5D%2Cint">mysql: exec(db: PMySQL; query: string; args: seq[string]; timeout: int): owned(
     Future[void])</a></li>
@@ -1698,6 +1706,8 @@ function main() {
           </ul></dd>
 <dt><a name="fetch_next_result_nonblocking" href="#fetch_next_result_nonblocking"><span>fetch_next_result_nonblocking:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="mariadb: fetch_next_result_nonblocking(MySQL: PMySQL): NetAsyncStatus" href="async/database/rdb/mariadb.html#fetch_next_result_nonblocking%2CPMySQL">mariadb: fetch_next_result_nonblocking(MySQL: PMySQL): NetAsyncStatus</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="mysql: fetch_next_result_nonblocking(MySQL: PMySQL): NetAsyncStatus" href="async/database/rdb/mysql.html#fetch_next_result_nonblocking%2CPMySQL">mysql: fetch_next_result_nonblocking(MySQL: PMySQL): NetAsyncStatus</a></li>
           </ul></dd>
 <dt><a name="fetch_row" href="#fetch_row"><span>fetch_row:</span></a></dt><dd><ul class="simple">
@@ -1708,6 +1718,8 @@ function main() {
           </ul></dd>
 <dt><a name="fetch_row_nonblocking" href="#fetch_row_nonblocking"><span>fetch_row_nonblocking:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="mariadb: fetch_row_nonblocking(MYSQL_RES: PRES; MYSQL_ROW: PROW): NetAsyncStatus" href="async/database/rdb/mariadb.html#fetch_row_nonblocking%2CPRES%2CPROW">mariadb: fetch_row_nonblocking(MYSQL_RES: PRES; MYSQL_ROW: PROW): NetAsyncStatus</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="mysql: fetch_row_nonblocking(MYSQL_RES: PRES; MYSQL_ROW: PROW): NetAsyncStatus" href="async/database/rdb/mysql.html#fetch_row_nonblocking%2CPRES%2CPROW">mysql: fetch_row_nonblocking(MYSQL_RES: PRES; MYSQL_ROW: PROW): NetAsyncStatus</a></li>
           </ul></dd>
 <dt><a name="FIELD" href="#FIELD"><span>FIELD:</span></a></dt><dd><ul class="simple">
@@ -1988,6 +2000,8 @@ function main() {
           </ul></dd>
 <dt><a name="free_result_nonblocking" href="#free_result_nonblocking"><span>free_result_nonblocking:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="mariadb: free_result_nonblocking(MYSQL_RES: PRES): NetAsyncStatus" href="async/database/rdb/mariadb.html#free_result_nonblocking%2CPRES">mariadb: free_result_nonblocking(MYSQL_RES: PRES): NetAsyncStatus</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="mysql: free_result_nonblocking(MYSQL_RES: PRES): NetAsyncStatus" href="async/database/rdb/mysql.html#free_result_nonblocking%2CPRES">mysql: free_result_nonblocking(MYSQL_RES: PRES): NetAsyncStatus</a></li>
           </ul></dd>
 <dt><a name="free_table" href="#free_table"><span>free_table:</span></a></dt><dd><ul class="simple">
@@ -2057,6 +2071,10 @@ function main() {
           data-doc-search-tag="mariadb: get_host_info(MySQL: PMySQL): cstring" href="async/database/rdb/mariadb.html#get_host_info%2CPMySQL">mariadb: get_host_info(MySQL: PMySQL): cstring</a></li>
           <li><a class="reference external"
           data-doc-search-tag="mysql: get_host_info(MySQL: PMySQL): cstring" href="async/database/rdb/mysql.html#get_host_info%2CPMySQL">mysql: get_host_info(MySQL: PMySQL): cstring</a></li>
+          </ul></dd>
+<dt><a name="getOsName" href="#getOsName"><span>getOsName:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="is_exists_lib: getOsName(): string" href="async/database/is_exists_lib.html#getOsName">is_exists_lib: getOsName(): string</a></li>
           </ul></dd>
 <dt><a name="get_parameters" href="#get_parameters"><span>get_parameters:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -2248,10 +2266,14 @@ function main() {
           </ul></dd>
 <dt><a name="InstantRow" href="#InstantRow"><span>InstantRow:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="lib_mariadb: InstantRow" href="async/database/libs/lib_mariadb.html#InstantRow">lib_mariadb: InstantRow</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="sqlite: InstantRow" href="async/database/rdb/sqlite.html#InstantRow">sqlite: InstantRow</a></li>
           </ul></dd>
 <dt><a name="instantRows" href="#instantRows"><span>instantRows:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="lib_mariadb: instantRows(db: PMySQL; dbRows: var DbRows; query: string; args: seq[string]): InstantRow" href="async/database/libs/lib_mariadb.html#instantRows.i%2CPMySQL%2CDbRows%2Cstring%2Cseq%5Bstring%5D">lib_mariadb: instantRows(db: PMySQL; dbRows: var DbRows; query: string; args: seq[string]): InstantRow</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="lib_sqlite: instantRows(db: PSqlite3; dbRows: var DbRows; sqliteStmt: PStmt): InstantRow" href="async/database/libs/lib_sqlite.html#instantRows.i%2CPSqlite3%2CDbRows%2CPStmt">lib_sqlite: instantRows(db: PSqlite3; dbRows: var DbRows; sqliteStmt: PStmt): InstantRow</a></li>
           <li><a class="reference external"
           data-doc-search-tag="lib_sqlite: instantRows(db: PSqlite3; dbRows: var DbRows; query: string; args: seq[string]): InstantRow" href="async/database/libs/lib_sqlite.html#instantRows.i%2CPSqlite3%2CDbRows%2Cstring%2Cseq%5Bstring%5D">lib_sqlite: instantRows(db: PSqlite3; dbRows: var DbRows; query: string; args: seq[string]): InstantRow</a></li>
@@ -2406,6 +2428,8 @@ function main() {
           </ul></dd>
 <dt><a name="len" href="#len"><span>len:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="lib_mariadb: len(row: InstantRow): int" href="async/database/libs/lib_mariadb.html#len%2CInstantRow">lib_mariadb: len(row: InstantRow): int</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="lib_sqlite: len(row: InstantRow): int32" href="async/database/libs/lib_sqlite.html#len%2CInstantRow">lib_sqlite: len(row: InstantRow): int32</a></li>
           </ul></dd>
 <dt><a name="library_end" href="#library_end"><span>library_end:</span></a></dt><dd><ul class="simple">
@@ -2891,6 +2915,10 @@ function main() {
           data-doc-search-tag="mariadb: MySQL" href="async/database/rdb/mariadb.html#MySQL">mariadb: MySQL</a></li>
           <li><a class="reference external"
           data-doc-search-tag="mysql: MySQL" href="async/database/rdb/mysql.html#MySQL">mysql: MySQL</a></li>
+          </ul></dd>
+<dt><a name="MYSQL_OPT_NONBLOCK" href="#MYSQL_OPT_NONBLOCK"><span>MYSQL_OPT_NONBLOCK:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="Option.MYSQL_OPT_NONBLOCK" href="async/database/rdb/mariadb.html#MYSQL_OPT_NONBLOCK">Option.MYSQL_OPT_NONBLOCK</a></li>
           </ul></dd>
 <dt><a name="my_thread_end" href="#my_thread_end"><span>my_thread_end:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -4398,6 +4426,10 @@ function main() {
           <li><a class="reference external"
           data-doc-search-tag="async_db: query(self: Prepared; args: seq[string] = @[]): Future[(seq[Row], DbRows)]" href="async/async_db.html#query%2CPrepared%2Cseq%5Bstring%5D">async_db: query(self: Prepared; args: seq[string] = @[]): Future[(seq[Row], DbRows)]</a></li>
           <li><a class="reference external"
+          data-doc-search-tag="mariadb: query(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[
+    (seq[base.Row], DbRows)]" href="async/database/impls/mariadb.html#query%2CPMySQL%2Cstring%2Cseq%5Bstring%5D%2Cint">mariadb: query(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[
+    (seq[base.Row], DbRows)]</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="mysql: query(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[
     (seq[base.Row], DbRows)]" href="async/database/impls/mysql.html#query%2CPMySQL%2Cstring%2Cseq%5Bstring%5D%2Cint">mysql: query(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[
     (seq[base.Row], DbRows)]</a></li>
@@ -4419,6 +4451,10 @@ function main() {
           data-doc-search-tag="async_db: queryPlain(self: Connections; query: string; args: seq[string] = @[]): Future[
     seq[Row]]" href="async/async_db.html#queryPlain%2CConnections%2Cstring%2Cseq%5Bstring%5D">async_db: queryPlain(self: Connections; query: string; args: seq[string] = @[]): Future[
     seq[Row]]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="mariadb: queryPlain(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[
+    seq[base.Row]]" href="async/database/impls/mariadb.html#queryPlain%2CPMySQL%2Cstring%2Cseq%5Bstring%5D%2Cint">mariadb: queryPlain(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[
+    seq[base.Row]]</a></li>
           <li><a class="reference external"
           data-doc-search-tag="mysql: queryPlain(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[
     seq[base.Row]]" href="async/database/impls/mysql.html#queryPlain%2CPMySQL%2Cstring%2Cseq%5Bstring%5D%2Cint">mysql: queryPlain(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[
@@ -4451,6 +4487,10 @@ function main() {
 <dt><a name="raw" href="#raw"><span>raw:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="grammars: raw(self: Rdb; sql: string; arges: varargs[string]): Rdb" href="query_builder/grammars.html#raw%2CRdb%2Cstring%2Cvarargs%5Bstring%5D">grammars: raw(self: Rdb; sql: string; arges: varargs[string]): Rdb</a></li>
+          </ul></dd>
+<dt><a name="rawExec" href="#rawExec"><span>rawExec:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="lib_mariadb: rawExec(db: PMySQL; query: string; args: seq[string])" href="async/database/libs/lib_mariadb.html#rawExec%2CPMySQL%2Cstring%2Cseq%5Bstring%5D">lib_mariadb: rawExec(db: PMySQL; query: string; args: seq[string])</a></li>
           </ul></dd>
 <dt><a name="Rdb" href="#Rdb"><span>Rdb:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -4587,8 +4627,8 @@ function main() {
 <dt><a name="real_connect" href="#real_connect"><span>real_connect:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="mariadb: real_connect(MySQL: PMySQL; host: cstring; user: cstring; passwd: cstring;
-             db: cstring; port: int; unix_socket: cstring; clientflag: int): PMySQL" href="async/database/rdb/mariadb.html#real_connect%2CPMySQL%2Ccstring%2Ccstring%2Ccstring%2Ccstring%2Cint%2Ccstring%2Cint">mariadb: real_connect(MySQL: PMySQL; host: cstring; user: cstring; passwd: cstring;
-             db: cstring; port: int; unix_socket: cstring; clientflag: int): PMySQL</a></li>
+             db: cstring; port: cuint; unix_socket: cstring; clientflag: int): PMySQL" href="async/database/rdb/mariadb.html#real_connect%2CPMySQL%2Ccstring%2Ccstring%2Ccstring%2Ccstring%2Ccuint%2Ccstring%2Cint">mariadb: real_connect(MySQL: PMySQL; host: cstring; user: cstring; passwd: cstring;
+             db: cstring; port: cuint; unix_socket: cstring; clientflag: int): PMySQL</a></li>
           <li><a class="reference external"
           data-doc-search-tag="mysql: real_connect(MySQL: PMySQL; host: cstring; user: cstring; passwd: cstring;
              db: cstring; port: cuint; unix_socket: cstring; clientflag: int): PMySQL" href="async/database/rdb/mysql.html#real_connect%2CPMySQL%2Ccstring%2Ccstring%2Ccstring%2Ccstring%2Ccuint%2Ccstring%2Cint">mysql: real_connect(MySQL: PMySQL; host: cstring; user: cstring; passwd: cstring;
@@ -4604,11 +4644,11 @@ function main() {
           </ul></dd>
 <dt><a name="real_connect_start" href="#real_connect_start"><span>real_connect_start:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="mariadb: real_connect_start(MariaDB: PMySQL; host: cstring; user: cstring;
+          data-doc-search-tag="mariadb: real_connect_start(ret: ptr PMySQL; mysql: PMySQL; host: cstring; user: cstring;
                    passwd: cstring; db: cstring; port: cuint;
-                   unix_socket: cstring; clientflag: int): NetAsyncStatus" href="async/database/rdb/mariadb.html#real_connect_start%2CPMySQL%2Ccstring%2Ccstring%2Ccstring%2Ccstring%2Ccuint%2Ccstring%2Cint">mariadb: real_connect_start(MariaDB: PMySQL; host: cstring; user: cstring;
+                   unix_socket: cstring; clientflag: culong): cint" href="async/database/rdb/mariadb.html#real_connect_start%2Cptr.PMySQL%2CPMySQL%2Ccstring%2Ccstring%2Ccstring%2Ccstring%2Ccuint%2Ccstring%2Cculong">mariadb: real_connect_start(ret: ptr PMySQL; mysql: PMySQL; host: cstring; user: cstring;
                    passwd: cstring; db: cstring; port: cuint;
-                   unix_socket: cstring; clientflag: int): NetAsyncStatus</a></li>
+                   unix_socket: cstring; clientflag: culong): cint</a></li>
           </ul></dd>
 <dt><a name="real_escape_string" href="#real_escape_string"><span>real_escape_string:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -4624,6 +4664,8 @@ function main() {
           </ul></dd>
 <dt><a name="real_query_nonblocking" href="#real_query_nonblocking"><span>real_query_nonblocking:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="mariadb: real_query_nonblocking(MySQL: PMySQL; q: cstring; length: int): NetAsyncStatus" href="async/database/rdb/mariadb.html#real_query_nonblocking%2CPMySQL%2Ccstring%2Cint">mariadb: real_query_nonblocking(MySQL: PMySQL; q: cstring; length: int): NetAsyncStatus</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="mysql: real_query_nonblocking(MySQL: PMySQL; q: cstring; length: int): NetAsyncStatus" href="async/database/rdb/mysql.html#real_query_nonblocking%2CPMySQL%2Ccstring%2Cint">mysql: real_query_nonblocking(MySQL: PMySQL; q: cstring; length: int): NetAsyncStatus</a></li>
           </ul></dd>
 <dt><a name="REAL_RESULT" href="#REAL_RESULT"><span>REAL_RESULT:</span></a></dt><dd><ul class="simple">
@@ -5982,6 +6024,8 @@ function main() {
           </ul></dd>
 <dt><a name="store_result_nonblocking" href="#store_result_nonblocking"><span>store_result_nonblocking:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="mariadb: store_result_nonblocking(MySQL: PMySQL; MYSQL_RES: ptr PRES): NetAsyncStatus" href="async/database/rdb/mariadb.html#store_result_nonblocking%2CPMySQL%2Cptr.PRES">mariadb: store_result_nonblocking(MySQL: PMySQL; MYSQL_RES: ptr PRES): NetAsyncStatus</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="mysql: store_result_nonblocking(MySQL: PMySQL; MYSQL_RES: ptr PRES): NetAsyncStatus" href="async/database/rdb/mysql.html#store_result_nonblocking%2CPMySQL%2Cptr.PRES">mysql: store_result_nonblocking(MySQL: PMySQL; MYSQL_RES: ptr PRES): NetAsyncStatus</a></li>
           </ul></dd>
 <dt><a name="string" href="#string"><span>string:</span></a></dt><dd><ul class="simple">
@@ -6364,6 +6408,10 @@ function main() {
           <li><a class="reference external"
           data-doc-search-tag="mysql: UNIQUE_KEY_FLAG" href="async/database/rdb/mysql.html#UNIQUE_KEY_FLAG">mysql: UNIQUE_KEY_FLAG</a></li>
           </ul></dd>
+<dt><a name="unsafeColumnAt" href="#unsafeColumnAt"><span>unsafeColumnAt:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="lib_mariadb: unsafeColumnAt(row: InstantRow; index: int): cstring" href="async/database/libs/lib_mariadb.html#unsafeColumnAt%2CInstantRow%2Cint">lib_mariadb: unsafeColumnAt(row: InstantRow; index: int): cstring</a></li>
+          </ul></dd>
 <dt><a name="unsigned" href="#unsigned"><span>unsigned:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="column: unsigned(c: Column): Column" href="schema_builder/column.html#unsigned%2CColumn">column: unsigned(c: Column): Column</a></li>
@@ -6545,7 +6593,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-15 09:43:20 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-18 12:21:22 UTC</small>
       </div>
     </div>
   </div>

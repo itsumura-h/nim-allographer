@@ -100,10 +100,28 @@ function main() {
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">dbopen
+      <ul class="simple nested-toc-section">query
+      <li><a class="reference" href="#query%2CPMySQL%2Cstring%2Cseq%5Bstring%5D%2Cint"
+    title="query(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[
+    (seq[base.Row], DbRows)]">query,<wbr>PMySQL,<wbr>string,<wbr>seq[string],<wbr>int</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">dbopen
       <li><a class="reference" href="#dbopen%2Cstring%2Cstring%2Cstring%2Cstring%2Cint32%2Cint%2Cint"
     title="dbopen(database: string = &quot;&quot;; user: string = &quot;&quot;; password: string = &quot;&quot;;
        host: string = &quot;&quot;; port: int32 = 0; maxConnections: int = 1; timeout = 30): Connections">dbopen,<wbr>string,<wbr>string,<wbr>string,<wbr>string,<wbr>int32,<wbr>int,<wbr>int</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">queryPlain
+      <li><a class="reference" href="#queryPlain%2CPMySQL%2Cstring%2Cseq%5Bstring%5D%2Cint"
+    title="queryPlain(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[
+    seq[base.Row]]">queryPlain,<wbr>PMySQL,<wbr>string,<wbr>seq[string],<wbr>int</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">exec
+      <li><a class="reference" href="#exec%2CPMySQL%2Cstring%2Cseq%5Bstring%5D%2Cint"
+    title="exec(db: PMySQL; query: string; args: seq[string]; timeout: int): owned(
+    Future[void])">exec,<wbr>PMySQL,<wbr>string,<wbr>seq[string],<wbr>int</a></li>
 
   </ul>
 
@@ -128,7 +146,33 @@ function main() {
 <a id="dbopen,string,string,string,string,int32,int,int"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#dbopen%2Cstring%2Cstring%2Cstring%2Cstring%2Cint32%2Cint%2Cint"><span class="Identifier">dbopen</span></a><span class="Other">(</span><span class="Identifier">database</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> <span class="Identifier">user</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> <span class="Identifier">password</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span>
             <span class="Identifier">host</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> <span class="Identifier">port</span><span class="Other">:</span> <span class="Identifier">int32</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">maxConnections</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">;</span>
-            <span class="Identifier">timeout</span> <span class="Other">=</span> <span class="DecNumber">30</span><span class="Other">)</span><span class="Other">:</span> <a href="../base.html#Connections"><span class="Identifier">Connections</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+            <span class="Identifier">timeout</span> <span class="Other">=</span> <span class="DecNumber">30</span><span class="Other">)</span><span class="Other">:</span> <a href="../base.html#Connections"><span class="Identifier">Connections</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="query,PMySQL,string,seq[string],int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#query%2CPMySQL%2Cstring%2Cseq%5Bstring%5D%2Cint"><span class="Identifier">query</span></a><span class="Other">(</span><span class="Identifier">db</span><span class="Other">:</span> <a href="../rdb/mariadb.html#PMySQL"><span class="Identifier">PMySQL</span></a><span class="Other">;</span> <span class="Identifier">query</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">timeout</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span>
+    <span class="Other">(</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">base</span><span class="Other">.</span><span class="Identifier">Row</span><span class="Other">]</span><span class="Other">,</span> <a href="../base.html#DbRows"><span class="Identifier">DbRows</span></a><span class="Other">)</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+                               <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="queryPlain,PMySQL,string,seq[string],int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#queryPlain%2CPMySQL%2Cstring%2Cseq%5Bstring%5D%2Cint"><span class="Identifier">queryPlain</span></a><span class="Other">(</span><span class="Identifier">db</span><span class="Other">:</span> <a href="../rdb/mariadb.html#PMySQL"><span class="Identifier">PMySQL</span></a><span class="Other">;</span> <span class="Identifier">query</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">timeout</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span>
+    <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">base</span><span class="Other">.</span><span class="Identifier">Row</span><span class="Other">]</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+                     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="exec,PMySQL,string,seq[string],int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#exec%2CPMySQL%2Cstring%2Cseq%5Bstring%5D%2Cint"><span class="Identifier">exec</span></a><span class="Other">(</span><span class="Identifier">db</span><span class="Other">:</span> <a href="../rdb/mariadb.html#PMySQL"><span class="Identifier">PMySQL</span></a><span class="Other">;</span> <span class="Identifier">query</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">timeout</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span>
+    <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -144,7 +188,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-15 09:43:20 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-18 12:21:21 UTC</small>
       </div>
     </div>
   </div>

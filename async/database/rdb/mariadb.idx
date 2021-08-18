@@ -9,8 +9,8 @@ Pmy_socket	async/database/rdb/mariadb.html#Pmy_socket	mariadb: Pmy_socket
 my_socket	async/database/rdb/mariadb.html#my_socket	mariadb: my_socket	
 PPByte	async/database/rdb/mariadb.html#PPByte	mariadb: PPByte	
 cuint	async/database/rdb/mariadb.html#cuint	mariadb: cuint	
-NET_ASYNC_NOT_READY	async/database/rdb/mariadb.html#NET_ASYNC_NOT_READY	NetAsyncStatus.NET_ASYNC_NOT_READY	
 NET_ASYNC_COMPLETE	async/database/rdb/mariadb.html#NET_ASYNC_COMPLETE	NetAsyncStatus.NET_ASYNC_COMPLETE	
+NET_ASYNC_NOT_READY	async/database/rdb/mariadb.html#NET_ASYNC_NOT_READY	NetAsyncStatus.NET_ASYNC_NOT_READY	
 NET_ASYNC_ERROR	async/database/rdb/mariadb.html#NET_ASYNC_ERROR	NetAsyncStatus.NET_ASYNC_ERROR	
 NET_ASYNC_COMPLETE_NO_MORE_RESULTS	async/database/rdb/mariadb.html#NET_ASYNC_COMPLETE_NO_MORE_RESULTS	NetAsyncStatus.NET_ASYNC_COMPLETE_NO_MORE_RESULTS	
 NetAsyncStatus	async/database/rdb/mariadb.html#NetAsyncStatus	mariadb: NetAsyncStatus	
@@ -325,6 +325,7 @@ SET_CLIENT_IP	async/database/rdb/mariadb.html#SET_CLIENT_IP	Option.SET_CLIENT_IP
 SECURE_AUTH	async/database/rdb/mariadb.html#SECURE_AUTH	Option.SECURE_AUTH	
 REPORT_DATA_TRUNCATION	async/database/rdb/mariadb.html#REPORT_DATA_TRUNCATION	Option.REPORT_DATA_TRUNCATION	
 OPT_RECONNECT	async/database/rdb/mariadb.html#OPT_RECONNECT	Option.OPT_RECONNECT	
+MYSQL_OPT_NONBLOCK	async/database/rdb/mariadb.html#MYSQL_OPT_NONBLOCK	Option.MYSQL_OPT_NONBLOCK	
 Option	async/database/rdb/mariadb.html#Option	mariadb: Option	
 MAX_MYSQL_MANAGER_ERR	async/database/rdb/mariadb.html#MAX_MYSQL_MANAGER_ERR	mariadb: MAX_MYSQL_MANAGER_ERR	
 MAX_MYSQL_MANAGER_MSG	async/database/rdb/mariadb.html#MAX_MYSQL_MANAGER_MSG	mariadb: MAX_MYSQL_MANAGER_MSG	
@@ -424,8 +425,13 @@ set_character_set	async/database/rdb/mariadb.html#set_character_set,PMySQL,cstri
 init	async/database/rdb/mariadb.html#init,PMySQL	mariadb: init(MySQL: PMySQL): PMySQL	
 ssl_set	async/database/rdb/mariadb.html#ssl_set,PMySQL,cstring,cstring,cstring,cstring,cstring	mariadb: ssl_set(MySQL: PMySQL; key: cstring; cert: cstring; ca: cstring;\n        capath: cstring; cipher: cstring): my_bool	
 change_user	async/database/rdb/mariadb.html#change_user,PMySQL,cstring,cstring,cstring	mariadb: change_user(MySQL: PMySQL; user: cstring; passwd: cstring; db: cstring): my_bool	
-real_connect	async/database/rdb/mariadb.html#real_connect,PMySQL,cstring,cstring,cstring,cstring,int,cstring,int	mariadb: real_connect(MySQL: PMySQL; host: cstring; user: cstring; passwd: cstring;\n             db: cstring; port: int; unix_socket: cstring; clientflag: int): PMySQL	
-real_connect_start	async/database/rdb/mariadb.html#real_connect_start,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,int	mariadb: real_connect_start(MariaDB: PMySQL; host: cstring; user: cstring;\n                   passwd: cstring; db: cstring; port: cuint;\n                   unix_socket: cstring; clientflag: int): NetAsyncStatus	
+real_connect	async/database/rdb/mariadb.html#real_connect,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,int	mariadb: real_connect(MySQL: PMySQL; host: cstring; user: cstring; passwd: cstring;\n             db: cstring; port: cuint; unix_socket: cstring; clientflag: int): PMySQL	
+real_connect_start	async/database/rdb/mariadb.html#real_connect_start,ptr.PMySQL,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,culong	mariadb: real_connect_start(ret: ptr PMySQL; mysql: PMySQL; host: cstring; user: cstring;\n                   passwd: cstring; db: cstring; port: cuint;\n                   unix_socket: cstring; clientflag: culong): cint	
+fetch_row_nonblocking	async/database/rdb/mariadb.html#fetch_row_nonblocking,PRES,PROW	mariadb: fetch_row_nonblocking(MYSQL_RES: PRES; MYSQL_ROW: PROW): NetAsyncStatus	
+free_result_nonblocking	async/database/rdb/mariadb.html#free_result_nonblocking,PRES	mariadb: free_result_nonblocking(MYSQL_RES: PRES): NetAsyncStatus	
+fetch_next_result_nonblocking	async/database/rdb/mariadb.html#fetch_next_result_nonblocking,PMySQL	mariadb: fetch_next_result_nonblocking(MySQL: PMySQL): NetAsyncStatus	
+real_query_nonblocking	async/database/rdb/mariadb.html#real_query_nonblocking,PMySQL,cstring,int	mariadb: real_query_nonblocking(MySQL: PMySQL; q: cstring; length: int): NetAsyncStatus	
+store_result_nonblocking	async/database/rdb/mariadb.html#store_result_nonblocking,PMySQL,ptr.PRES	mariadb: store_result_nonblocking(MySQL: PMySQL; MYSQL_RES: ptr PRES): NetAsyncStatus	
 select_db	async/database/rdb/mariadb.html#select_db,PMySQL,cstring	mariadb: select_db(MySQL: PMySQL; db: cstring): cint	
 query	async/database/rdb/mariadb.html#query,PMySQL,cstring	mariadb: query(MySQL: PMySQL; q: cstring): cint	
 send_query	async/database/rdb/mariadb.html#send_query,PMySQL,cstring,int	mariadb: send_query(MySQL: PMySQL; q: cstring; len: int): cint	

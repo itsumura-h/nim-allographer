@@ -92,6 +92,12 @@ function main() {
   </div>
   <ul class="simple simple-toc" id="toc-list">
 <li>
+  <a class="reference reference-toplevel" href="#6" id="56">Imports</a>
+  <ul class="simple simple-toc-section">
+    
+  </ul>
+</li>
+<li>
   <a class="reference reference-toplevel" href="#7" id="57">Types</a>
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#my_bool"
@@ -114,7 +120,7 @@ function main() {
     title="cuint = cint">cuint</a></li>
   <li><a class="reference" href="#NetAsyncStatus"
     title="NetAsyncStatus = enum
-  NET_ASYNC_NOT_READY, NET_ASYNC_COMPLETE, NET_ASYNC_ERROR,
+  NET_ASYNC_COMPLETE, NET_ASYNC_NOT_READY, NET_ASYNC_ERROR,
   NET_ASYNC_COMPLETE_NO_MORE_RESULTS">NetAsyncStatus</a></li>
   <li><a class="reference" href="#Enum_server_command"
     title="Enum_server_command = enum
@@ -334,7 +340,7 @@ function main() {
   OPT_LOCAL_INFILE, OPT_PROTOCOL, SHARED_MEMORY_BASE_NAME, OPT_READ_TIMEOUT,
   OPT_WRITE_TIMEOUT, OPT_USE_RESULT, OPT_USE_REMOTE_CONNECTION,
   OPT_USE_EMBEDDED_CONNECTION, OPT_GUESS_CONNECTION, SET_CLIENT_IP, SECURE_AUTH,
-  REPORT_DATA_TRUNCATION, OPT_RECONNECT">Option</a></li>
+  REPORT_DATA_TRUNCATION, OPT_RECONNECT, MYSQL_OPT_NONBLOCK">Option</a></li>
   <li><a class="reference" href="#St_dynamic_array"
     title="St_dynamic_array {.final.} = object
   buffer*: cstring
@@ -1091,6 +1097,11 @@ function main() {
     title="thread_init(): my_bool">thread_init</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">real_query_nonblocking
+      <li><a class="reference" href="#real_query_nonblocking%2CPMySQL%2Ccstring%2Cint"
+    title="real_query_nonblocking(MySQL: PMySQL; q: cstring; length: int): NetAsyncStatus">real_query_nonblocking,<wbr>PMySQL,<wbr>cstring,<wbr>int</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">rpl_probe
       <li><a class="reference" href="#rpl_probe%2CPMySQL"
     title="rpl_probe(MySQL: PMySQL): my_bool">rpl_probe,<wbr>PMySQL</a></li>
@@ -1099,11 +1110,6 @@ function main() {
   <ul class="simple nested-toc-section">read_query_result
       <li><a class="reference" href="#read_query_result%2CPMySQL"
     title="read_query_result(MySQL: PMySQL): my_bool">read_query_result,<wbr>PMySQL</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">stmt_reset
-      <li><a class="reference" href="#stmt_reset%2CPSTMT"
-    title="stmt_reset(stmt: PSTMT): my_bool">stmt_reset,<wbr>PSTMT</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">server_init
@@ -1153,9 +1159,9 @@ function main() {
 
   </ul>
   <ul class="simple nested-toc-section">real_connect
-      <li><a class="reference" href="#real_connect%2CPMySQL%2Ccstring%2Ccstring%2Ccstring%2Ccstring%2Cint%2Ccstring%2Cint"
+      <li><a class="reference" href="#real_connect%2CPMySQL%2Ccstring%2Ccstring%2Ccstring%2Ccstring%2Ccuint%2Ccstring%2Cint"
     title="real_connect(MySQL: PMySQL; host: cstring; user: cstring; passwd: cstring;
-             db: cstring; port: int; unix_socket: cstring; clientflag: int): PMySQL">real_connect,<wbr>PMySQL,<wbr>cstring,<wbr>cstring,<wbr>cstring,<wbr>cstring,<wbr>int,<wbr>cstring,<wbr>int</a></li>
+             db: cstring; port: cuint; unix_socket: cstring; clientflag: int): PMySQL">real_connect,<wbr>PMySQL,<wbr>cstring,<wbr>cstring,<wbr>cstring,<wbr>cstring,<wbr>cuint,<wbr>cstring,<wbr>int</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">use_result
@@ -1183,9 +1189,9 @@ function main() {
     title="thread_end()">thread_end</a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">stmt_attr_get
-      <li><a class="reference" href="#stmt_attr_get%2CPSTMT%2CEnum_stmt_attr_type%2Cpointer"
-    title="stmt_attr_get(stmt: PSTMT; attr_type: Enum_stmt_attr_type; attr: pointer): my_bool">stmt_attr_get,<wbr>PSTMT,<wbr>Enum_stmt_attr_type,<wbr>pointer</a></li>
+  <ul class="simple nested-toc-section">fetch_next_result_nonblocking
+      <li><a class="reference" href="#fetch_next_result_nonblocking%2CPMySQL"
+    title="fetch_next_result_nonblocking(MySQL: PMySQL): NetAsyncStatus">fetch_next_result_nonblocking,<wbr>PMySQL</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">rpl_query_type
@@ -1198,9 +1204,24 @@ function main() {
     title="free_result(result: PRES)">free_result,<wbr>PRES</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">stmt_attr_get
+      <li><a class="reference" href="#stmt_attr_get%2CPSTMT%2CEnum_stmt_attr_type%2Cpointer"
+    title="stmt_attr_get(stmt: PSTMT; attr_type: Enum_stmt_attr_type; attr: pointer): my_bool">stmt_attr_get,<wbr>PSTMT,<wbr>Enum_stmt_attr_type,<wbr>pointer</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">stmt_reset
+      <li><a class="reference" href="#stmt_reset%2CPSTMT"
+    title="stmt_reset(stmt: PSTMT): my_bool">stmt_reset,<wbr>PSTMT</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">stmt_errno
       <li><a class="reference" href="#stmt_errno%2CPSTMT"
     title="stmt_errno(stmt: PSTMT): cuint">stmt_errno,<wbr>PSTMT</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">ping
+      <li><a class="reference" href="#ping%2CPMySQL"
+    title="ping(MySQL: PMySQL): cint">ping,<wbr>PMySQL</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">stmt_row_tell
@@ -1211,11 +1232,6 @@ function main() {
   <ul class="simple nested-toc-section">IS_PRI_KEY
       <li><a class="reference" href="#IS_PRI_KEY%2Cint32"
     title="IS_PRI_KEY(n: int32): bool">IS_PRI_KEY,<wbr>int32</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">ping
-      <li><a class="reference" href="#ping%2CPMySQL"
-    title="ping(MySQL: PMySQL): cint">ping,<wbr>PMySQL</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">IS_NUM
@@ -1321,6 +1337,11 @@ function main() {
   <ul class="simple nested-toc-section">field_tell
       <li><a class="reference" href="#field_tell%2CPRES"
     title="field_tell(res: PRES): FIELD_OFFSET">field_tell,<wbr>PRES</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">free_result_nonblocking
+      <li><a class="reference" href="#free_result_nonblocking%2CPRES"
+    title="free_result_nonblocking(MYSQL_RES: PRES): NetAsyncStatus">free_result_nonblocking,<wbr>PRES</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">get_client_info
@@ -1429,6 +1450,11 @@ function main() {
         capath: cstring; cipher: cstring): my_bool">ssl_set,<wbr>PMySQL,<wbr>cstring,<wbr>cstring,<wbr>cstring,<wbr>cstring,<wbr>cstring</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">store_result_nonblocking
+      <li><a class="reference" href="#store_result_nonblocking%2CPMySQL%2Cptr.PRES"
+    title="store_result_nonblocking(MySQL: PMySQL; MYSQL_RES: ptr PRES): NetAsyncStatus">store_result_nonblocking,<wbr>PMySQL,<wbr>ptr.PRES</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">set_master
       <li><a class="reference" href="#set_master%2CPMySQL%2Ccstring%2Ccuint%2Ccstring%2Ccstring"
     title="set_master(MySQL: PMySQL; host: cstring; port: cuint; user: cstring;
@@ -1441,24 +1467,24 @@ function main() {
           passwd: cstring): cint">add_slave,<wbr>PMySQL,<wbr>cstring,<wbr>cuint,<wbr>cstring,<wbr>cstring</a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">stmt_affected_rows
-      <li><a class="reference" href="#stmt_affected_rows%2CPSTMT"
-    title="stmt_affected_rows(stmt: PSTMT): my_ulonglong">stmt_affected_rows,<wbr>PSTMT</a></li>
-
-  </ul>
   <ul class="simple nested-toc-section">manager_command
       <li><a class="reference" href="#manager_command%2CPMANAGER%2Ccstring%2Ccint"
     title="manager_command(con: PMANAGER; cmd: cstring; cmd_len: cint): cint">manager_command,<wbr>PMANAGER,<wbr>cstring,<wbr>cint</a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">commit
-      <li><a class="reference" href="#commit%2CPMySQL"
-    title="commit(MySQL: PMySQL): my_bool">commit,<wbr>PMySQL</a></li>
+  <ul class="simple nested-toc-section">stmt_affected_rows
+      <li><a class="reference" href="#stmt_affected_rows%2CPSTMT"
+    title="stmt_affected_rows(stmt: PSTMT): my_ulonglong">stmt_affected_rows,<wbr>PSTMT</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">disable_rpl_parse
       <li><a class="reference" href="#disable_rpl_parse%2CPMySQL"
     title="disable_rpl_parse(MySQL: PMySQL)">disable_rpl_parse,<wbr>PMySQL</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">commit
+      <li><a class="reference" href="#commit%2CPMySQL"
+    title="commit(MySQL: PMySQL): my_bool">commit,<wbr>PMySQL</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">get_proto_info
@@ -1628,10 +1654,10 @@ function main() {
 
   </ul>
   <ul class="simple nested-toc-section">real_connect_start
-      <li><a class="reference" href="#real_connect_start%2CPMySQL%2Ccstring%2Ccstring%2Ccstring%2Ccstring%2Ccuint%2Ccstring%2Cint"
-    title="real_connect_start(MariaDB: PMySQL; host: cstring; user: cstring;
+      <li><a class="reference" href="#real_connect_start%2Cptr.PMySQL%2CPMySQL%2Ccstring%2Ccstring%2Ccstring%2Ccstring%2Ccuint%2Ccstring%2Cculong"
+    title="real_connect_start(ret: ptr PMySQL; mysql: PMySQL; host: cstring; user: cstring;
                    passwd: cstring; db: cstring; port: cuint;
-                   unix_socket: cstring; clientflag: int): NetAsyncStatus">real_connect_start,<wbr>PMySQL,<wbr>cstring,<wbr>cstring,<wbr>cstring,<wbr>cstring,<wbr>cuint,<wbr>cstring,<wbr>int</a></li>
+                   unix_socket: cstring; clientflag: culong): cint">real_connect_start,<wbr>ptr.PMySQL,<wbr>PMySQL,<wbr>cstring,<wbr>cstring,<wbr>cstring,<wbr>cstring,<wbr>cuint,<wbr>cstring,<wbr>culong</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">library_end
@@ -1729,6 +1755,11 @@ function main() {
     title="stmt_param_count(stmt: PSTMT): int">stmt_param_count,<wbr>PSTMT</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">fetch_row_nonblocking
+      <li><a class="reference" href="#fetch_row_nonblocking%2CPRES%2CPROW"
+    title="fetch_row_nonblocking(MYSQL_RES: PRES; MYSQL_ROW: PROW): NetAsyncStatus">fetch_row_nonblocking,<wbr>PRES,<wbr>PROW</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">my_net_init
       <li><a class="reference" href="#my_net_init%2CPNET%2CPVIO"
     title="my_net_init(net: PNET; vio: PVIO): my_bool">my_net_init,<wbr>PNET,<wbr>PVIO</a></li>
@@ -1775,7 +1806,12 @@ function main() {
   <div id="tocRoot"></div>
   
   <p class="module-desc"></p>
-  <div class="section" id="7">
+  <div class="section" id="6">
+<h1><a class="toc-backref" href="#6">Imports</a></h1>
+<dl class="item">
+<a class="reference external" href="../is_exists_lib.html">../is_exists_lib</a>
+</dl></div>
+<div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
 <a id="my_bool"></a>
@@ -1843,7 +1879,7 @@ function main() {
 </dd>
 <a id="NetAsyncStatus"></a>
 <dt><pre><a href="mariadb.html#NetAsyncStatus"><span class="Identifier">NetAsyncStatus</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">NET_ASYNC_NOT_READY</span><span class="Other">,</span> <span class="Identifier">NET_ASYNC_COMPLETE</span><span class="Other">,</span> <span class="Identifier">NET_ASYNC_ERROR</span><span class="Other">,</span>
+  <span class="Identifier">NET_ASYNC_COMPLETE</span><span class="Other">,</span> <span class="Identifier">NET_ASYNC_NOT_READY</span><span class="Other">,</span> <span class="Identifier">NET_ASYNC_ERROR</span><span class="Other">,</span>
   <span class="Identifier">NET_ASYNC_COMPLETE_NO_MORE_RESULTS</span></pre></dt>
 <dd>
 
@@ -2332,7 +2368,7 @@ function main() {
   <span class="Identifier">OPT_LOCAL_INFILE</span><span class="Other">,</span> <span class="Identifier">OPT_PROTOCOL</span><span class="Other">,</span> <span class="Identifier">SHARED_MEMORY_BASE_NAME</span><span class="Other">,</span> <span class="Identifier">OPT_READ_TIMEOUT</span><span class="Other">,</span>
   <span class="Identifier">OPT_WRITE_TIMEOUT</span><span class="Other">,</span> <span class="Identifier">OPT_USE_RESULT</span><span class="Other">,</span> <span class="Identifier">OPT_USE_REMOTE_CONNECTION</span><span class="Other">,</span>
   <span class="Identifier">OPT_USE_EMBEDDED_CONNECTION</span><span class="Other">,</span> <span class="Identifier">OPT_GUESS_CONNECTION</span><span class="Other">,</span> <span class="Identifier">SET_CLIENT_IP</span><span class="Other">,</span> <span class="Identifier">SECURE_AUTH</span><span class="Other">,</span>
-  <span class="Identifier">REPORT_DATA_TRUNCATION</span><span class="Other">,</span> <span class="Identifier">OPT_RECONNECT</span></pre></dt>
+  <span class="Identifier">REPORT_DATA_TRUNCATION</span><span class="Other">,</span> <span class="Identifier">OPT_RECONNECT</span><span class="Other">,</span> <span class="Identifier">MYSQL_OPT_NONBLOCK</span></pre></dt>
 <dd>
 
 
@@ -4348,20 +4384,61 @@ function main() {
 
 
 </dd>
-<a id="real_connect,PMySQL,cstring,cstring,cstring,cstring,int,cstring,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#real_connect%2CPMySQL%2Ccstring%2Ccstring%2Ccstring%2Ccstring%2Cint%2Ccstring%2Cint"><span class="Identifier">real_connect</span></a><span class="Other">(</span><span class="Identifier">MySQL</span><span class="Other">:</span> <a href="mariadb.html#PMySQL"><span class="Identifier">PMySQL</span></a><span class="Other">;</span> <span class="Identifier">host</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">user</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">passwd</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span>
-                  <span class="Identifier">db</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">port</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">unix_socket</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">clientflag</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="mariadb.html#PMySQL"><span class="Identifier">PMySQL</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">stdcall</span><span class="Other">,</span> <span class="Identifier">dynlib</span><span class="Other">:</span> <span class="Identifier">lib</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;mysql_real_connect&quot;</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="real_connect,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#real_connect%2CPMySQL%2Ccstring%2Ccstring%2Ccstring%2Ccstring%2Ccuint%2Ccstring%2Cint"><span class="Identifier">real_connect</span></a><span class="Other">(</span><span class="Identifier">MySQL</span><span class="Other">:</span> <a href="mariadb.html#PMySQL"><span class="Identifier">PMySQL</span></a><span class="Other">;</span> <span class="Identifier">host</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">user</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">passwd</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span>
+                  <span class="Identifier">db</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">port</span><span class="Other">:</span> <a href="mariadb.html#cuint"><span class="Identifier">cuint</span></a><span class="Other">;</span> <span class="Identifier">unix_socket</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span>
+                  <span class="Identifier">clientflag</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="mariadb.html#PMySQL"><span class="Identifier">PMySQL</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">stdcall</span><span class="Other">,</span> <span class="Identifier">dynlib</span><span class="Other">:</span> <span class="Identifier">lib</span><span class="Other">,</span>
+    <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;mysql_real_connect&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="real_connect_start,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#real_connect_start%2CPMySQL%2Ccstring%2Ccstring%2Ccstring%2Ccstring%2Ccuint%2Ccstring%2Cint"><span class="Identifier">real_connect_start</span></a><span class="Other">(</span><span class="Identifier">MariaDB</span><span class="Other">:</span> <a href="mariadb.html#PMySQL"><span class="Identifier">PMySQL</span></a><span class="Other">;</span> <span class="Identifier">host</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">user</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span>
-                        <span class="Identifier">passwd</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">db</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">port</span><span class="Other">:</span> <a href="mariadb.html#cuint"><span class="Identifier">cuint</span></a><span class="Other">;</span>
-                        <span class="Identifier">unix_socket</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">clientflag</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="mariadb.html#NetAsyncStatus"><span class="Identifier">NetAsyncStatus</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+<a id="real_connect_start,ptr.PMySQL,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,culong"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#real_connect_start%2Cptr.PMySQL%2CPMySQL%2Ccstring%2Ccstring%2Ccstring%2Ccstring%2Ccuint%2Ccstring%2Cculong"><span class="Identifier">real_connect_start</span></a><span class="Other">(</span><span class="Identifier">ret</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="mariadb.html#PMySQL"><span class="Identifier">PMySQL</span></a><span class="Other">;</span> <span class="Identifier">mysql</span><span class="Other">:</span> <a href="mariadb.html#PMySQL"><span class="Identifier">PMySQL</span></a><span class="Other">;</span> <span class="Identifier">host</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span>
+                        <span class="Identifier">user</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">passwd</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">db</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span>
+                        <span class="Identifier">port</span><span class="Other">:</span> <a href="mariadb.html#cuint"><span class="Identifier">cuint</span></a><span class="Other">;</span> <span class="Identifier">unix_socket</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">clientflag</span><span class="Other">:</span> <span class="Identifier">culong</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">cint</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
     <span class="Identifier">stdcall</span><span class="Other">,</span> <span class="Identifier">dynlib</span><span class="Other">:</span> <span class="Identifier">lib</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;mysql_real_connect_start&quot;</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="fetch_row_nonblocking,PRES,PROW"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#fetch_row_nonblocking%2CPRES%2CPROW"><span class="Identifier">fetch_row_nonblocking</span></a><span class="Other">(</span><span class="Identifier">MYSQL_RES</span><span class="Other">:</span> <a href="mariadb.html#PRES"><span class="Identifier">PRES</span></a><span class="Other">;</span> <span class="Identifier">MYSQL_ROW</span><span class="Other">:</span> <a href="mariadb.html#PROW"><span class="Identifier">PROW</span></a><span class="Other">)</span><span class="Other">:</span> <a href="mariadb.html#NetAsyncStatus"><span class="Identifier">NetAsyncStatus</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">stdcall</span><span class="Other">,</span> <span class="Identifier">dynlib</span><span class="Other">:</span> <span class="Identifier">lib</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;mysql_fetch_row_nonblocking&quot;</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="free_result_nonblocking,PRES"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#free_result_nonblocking%2CPRES"><span class="Identifier">free_result_nonblocking</span></a><span class="Other">(</span><span class="Identifier">MYSQL_RES</span><span class="Other">:</span> <a href="mariadb.html#PRES"><span class="Identifier">PRES</span></a><span class="Other">)</span><span class="Other">:</span> <a href="mariadb.html#NetAsyncStatus"><span class="Identifier">NetAsyncStatus</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">stdcall</span><span class="Other">,</span>
+    <span class="Identifier">dynlib</span><span class="Other">:</span> <span class="Identifier">lib</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;mysql_free_result_nonblocking&quot;</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="fetch_next_result_nonblocking,PMySQL"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#fetch_next_result_nonblocking%2CPMySQL"><span class="Identifier">fetch_next_result_nonblocking</span></a><span class="Other">(</span><span class="Identifier">MySQL</span><span class="Other">:</span> <a href="mariadb.html#PMySQL"><span class="Identifier">PMySQL</span></a><span class="Other">)</span><span class="Other">:</span> <a href="mariadb.html#NetAsyncStatus"><span class="Identifier">NetAsyncStatus</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">stdcall</span><span class="Other">,</span>
+    <span class="Identifier">dynlib</span><span class="Other">:</span> <span class="Identifier">lib</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;mysql_next_result_nonblocking&quot;</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="real_query_nonblocking,PMySQL,cstring,int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#real_query_nonblocking%2CPMySQL%2Ccstring%2Cint"><span class="Identifier">real_query_nonblocking</span></a><span class="Other">(</span><span class="Identifier">MySQL</span><span class="Other">:</span> <a href="mariadb.html#PMySQL"><span class="Identifier">PMySQL</span></a><span class="Other">;</span> <span class="Identifier">q</span><span class="Other">:</span> <span class="Identifier">cstring</span><span class="Other">;</span> <span class="Identifier">length</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="mariadb.html#NetAsyncStatus"><span class="Identifier">NetAsyncStatus</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">stdcall</span><span class="Other">,</span> <span class="Identifier">dynlib</span><span class="Other">:</span> <span class="Identifier">lib</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;mysql_real_query_nonblocking&quot;</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="store_result_nonblocking,PMySQL,ptr.PRES"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#store_result_nonblocking%2CPMySQL%2Cptr.PRES"><span class="Identifier">store_result_nonblocking</span></a><span class="Other">(</span><span class="Identifier">MySQL</span><span class="Other">:</span> <a href="mariadb.html#PMySQL"><span class="Identifier">PMySQL</span></a><span class="Other">;</span> <span class="Identifier">MYSQL_RES</span><span class="Other">:</span> <span class="Keyword">ptr</span> <a href="mariadb.html#PRES"><span class="Identifier">PRES</span></a><span class="Other">)</span><span class="Other">:</span> <a href="mariadb.html#NetAsyncStatus"><span class="Identifier">NetAsyncStatus</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">stdcall</span><span class="Other">,</span> <span class="Identifier">dynlib</span><span class="Other">:</span> <span class="Identifier">lib</span><span class="Other">,</span> <span class="Identifier">importc</span><span class="Other">:</span> <span class="StringLit">&quot;mysql_store_result_nonblocking&quot;</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -5176,7 +5253,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-15 09:43:20 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-08-18 12:21:21 UTC</small>
       </div>
     </div>
   </div>

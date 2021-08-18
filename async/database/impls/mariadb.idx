@@ -1,1 +1,4 @@
 dbopen	async/database/impls/mariadb.html#dbopen,string,string,string,string,int32,int,int	mariadb: dbopen(database: string = &quot;&quot;; user: string = &quot;&quot;; password: string = &quot;&quot;;\n       host: string = &quot;&quot;; port: int32 = 0; maxConnections: int = 1; timeout = 30): Connections	
+query	async/database/impls/mariadb.html#query,PMySQL,string,seq[string],int	mariadb: query(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[\n    (seq[base.Row], DbRows)]	
+queryPlain	async/database/impls/mariadb.html#queryPlain,PMySQL,string,seq[string],int	mariadb: queryPlain(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[\n    seq[base.Row]]	
+exec	async/database/impls/mariadb.html#exec,PMySQL,string,seq[string],int	mariadb: exec(db: PMySQL; query: string; args: seq[string]; timeout: int): owned(\n    Future[void])	
