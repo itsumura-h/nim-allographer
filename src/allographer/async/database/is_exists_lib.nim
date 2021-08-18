@@ -1,6 +1,6 @@
 import strutils
 
-func getOsName():string =
+func getOsName*():string =
   const f = staticRead("/etc/os-release")
   for row in f.split("\n"):
     let kv = row.split("=")
@@ -51,7 +51,7 @@ func isExistsMariadb*():bool =
   elif defined(linux) or defined(bsd):
     const osName = getOsName()
     if osName == "alpine":
-      const query = "cat /lib/apk/db/installed | grep -e libmysqlclient.so -e libmariadbclient.so"
+      const query = "cat /lib/apk/db/installed | grep libmariadb.so"
       const res = gorgeEx(query)
       return res.exitCode == 0 and res.output.len > 0
     else: # Ubuntu/Debian/CentOS...

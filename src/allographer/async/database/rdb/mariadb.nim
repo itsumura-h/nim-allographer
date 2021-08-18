@@ -1,17 +1,19 @@
+from ../is_exists_lib import getOsName
 {.push, callconv: cdecl.}
 when defined(nimHasStyleChecks):
   {.push styleChecks: off.}
 
 when defined(unix):
   when defined(macosx):
-    const
-      lib = "libmariadb(|.21|.20|.19|.18|.17|.16|.15).dylib"
+    const lib = "libmariadb(|.21|.20|.19|.18|.17|.16|.15).dylib"
   else:
-    const
-      lib = "libmariadb.so(|.3)"
+    const osName = getOsName()
+    when osName == "alpine":
+      const lib = "libmariadb.so(|.3)"
+    else:
+      const lib = "libmysqlclient.so(|.21|.20|.19|.18|.17|.16|.15)"
 when defined(windows):
-  const
-    lib = "libmariadb.dll"
+  const lib = "libmariadb.dll"
 
 type
   my_bool* = bool
