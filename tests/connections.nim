@@ -19,10 +19,10 @@ let
   mysqlDb = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout)
   mariaDb = dbopen(MariaDB, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout)
   postgresDb = dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout)
-  # rdb* = sqliteDb
+  rdb* = sqliteDb
   # rdb* = postgresDb
   # rdb* = mysqlDb
-  rdb* = mariaDb
+  # rdb* = mariaDb
 
 template asyncBlock*(body:untyped) =
   waitFor (proc(){.async.}=
