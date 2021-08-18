@@ -15,6 +15,8 @@ let
   timeout = getEnv("DB_TIMEOUT").parseInt
 
 
+echo database, " ", user, " ", password, " ", mysqlHost, " ", mysqlPort, " ", maxConnections
+
 let
   sqliteDb = dbopen(SQLite3, sqliteHost, maxConnections=maxConnections)
   mysqlDb = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout)
