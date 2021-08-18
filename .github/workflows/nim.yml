@@ -55,8 +55,8 @@ jobs:
     - uses: actions/checkout@v1
     - name: Test
       run: |
-        docker container prune -y
-        docker image prune -y
+        docker container prune
+        docker image prune
         docker-compose run allographer-ubuntu nimble test
     - name: Test multi-thread
       run: |
