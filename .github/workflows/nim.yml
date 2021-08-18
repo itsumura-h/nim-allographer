@@ -57,6 +57,7 @@ jobs:
       run: |
         yes | docker container prune
         yes | docker image prune
+        docker ps -a
         docker-compose run allographer-ubuntu nimble test
     - name: Test multi-thread
       run: |
