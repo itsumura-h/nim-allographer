@@ -8,7 +8,6 @@ for f in walkDir(getCurrentDir()):
   if f.path.split("/")[^1] == ".env":
     let env = initDotEnv(getCurrentDir(), ".env")
     env.load()
-    echo("used config file '", f.path, "'")
     break
 
 type
@@ -22,4 +21,3 @@ type
     query*: JsonNode
     sqlString*: string
     placeHolder*: seq[string]
-
