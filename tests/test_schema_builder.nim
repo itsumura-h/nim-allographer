@@ -13,6 +13,10 @@ let mariaDb = dbopen(MariaDB, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("
 suite "Schema builder":
   test "test":
     sqliteDb.schema(
+      table("foreigh_table", [
+        Column().increments("id"),
+        Column().string("name"),
+      ], reset=true),
       table("schema_builder", [
         Column().increments("increments_column"),
         Column().integer("integer_column").unique().default(1).unsigned().index(),
@@ -37,6 +41,8 @@ suite "Schema builder":
         Column().timestamps(),
         Column().softDelete(),
 
+        Column().foreign("foreign_id").reference("id").on("foreigh_table").onDelete(SET_NULL),
+
         Column().binary("binary_column").unique().default().unsigned().index(),
         Column().boolean("boolean_column").unique().default().index(),
         Column().enumField("enumField_column", ["a", "b"]).unique().default().index(),
@@ -44,6 +50,10 @@ suite "Schema builder":
       ], reset=true)
     )
     mysqlDb.schema(
+      table("foreigh_table", [
+        Column().increments("id"),
+        Column().string("name"),
+      ], reset=true),
       table("schema_builder", [
         Column().increments("increments_column"),
         Column().integer("integer_column").unique().default(1).unsigned(),
@@ -67,6 +77,8 @@ suite "Schema builder":
         Column().timestamp("timestamp_column").unique().default(),
         Column().timestamps(),
         Column().softDelete(),
+
+        Column().foreign("foreign_id").reference("id").on("foreigh_table").onDelete(SET_NULL),
 
         Column().binary("binary_column"),
         Column().boolean("boolean_column").unique().default(),
@@ -75,6 +87,10 @@ suite "Schema builder":
       ], reset=true)
     )
     mariaDb.schema(
+      table("foreigh_table", [
+        Column().increments("id"),
+        Column().string("name"),
+      ], reset=true),
       table("schema_builder", [
         Column().increments("increments_column"),
         Column().integer("integer_column").unique().default(1).unsigned(),
@@ -99,6 +115,8 @@ suite "Schema builder":
         Column().timestamps(),
         Column().softDelete(),
 
+        Column().foreign("foreign_id").reference("id").on("foreigh_table").onDelete(SET_NULL),
+
         Column().binary("binary_column"),
         Column().boolean("boolean_column").unique().default(),
         Column().enumField("enumField_column", ["a", "b"]).unique().default("a"),
@@ -106,6 +124,10 @@ suite "Schema builder":
       ], reset=true)
     )
     postgresDb.schema(
+      table("foreigh_table", [
+        Column().increments("id"),
+        Column().string("name"),
+      ], reset=true),
       table("schema_builder", [
         Column().increments("increments_column"),
         Column().integer("integer_column").unique().default(1).unsigned(),
@@ -129,6 +151,8 @@ suite "Schema builder":
         Column().timestamp("timestamp_column").unique().default(),
         Column().timestamps(),
         Column().softDelete(),
+
+        Column().foreign("foreign_id").reference("id").on("foreigh_table").onDelete(SET_NULL),
 
         Column().binary("binary_column").unique().default(),
         Column().boolean("boolean_column").unique().default(),
