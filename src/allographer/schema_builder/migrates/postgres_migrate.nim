@@ -303,9 +303,10 @@ proc migrate*(self:Table):string =
     columnString.add(
       generateColumnString(column, self.name)
     )
-    foreignString.add(
-      generateForeignString(self.name, column)
-    )
+    if column.typ == rdbForeign:
+      foreignString.add(
+        generateForeignString(self.name, column)
+      )
 
   var tableName = self.name
   pgWrapUpper(tableName)

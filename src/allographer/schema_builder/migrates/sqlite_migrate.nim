@@ -278,10 +278,11 @@ proc migrate*(this:Table):string =
     columnString.add(
       generateColumnString(column)
     )
-    if foreignString.len > 0: foreignString.add(", ")
-    foreignString.add(
-      generateForeignString(column)
-    )
+    if column.typ == rdbForeign:
+      if foreignString.len > 0: foreignString.add(", ")
+      foreignString.add(
+        generateForeignString(column)
+      )
 
   return &"CREATE TABLE \"{this.name}\" ({columnString}{foreignString})"
 

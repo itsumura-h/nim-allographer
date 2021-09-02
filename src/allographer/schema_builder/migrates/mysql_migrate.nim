@@ -282,9 +282,10 @@ proc migrate*(this:Table):string =
     columnString.add(
       generateColumnString(column)
     )
-    foreignString.add(
-      generateForeignString(column)
-    )
+    if column.typ == rdbForeign:
+      foreignString.add(
+        generateForeignString(column)
+      )
 
   var tableName = this.name
   myWrapUpper(tableName)
