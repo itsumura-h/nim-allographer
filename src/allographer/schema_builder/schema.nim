@@ -120,7 +120,7 @@ proc schema*(rdb:Rdb, tables:varargs[Table]) =
       except:
         let err = getCurrentExceptionMsg()
         if err.contains("already exists"):
-          rdb.log.echoErrorMsg(err)
+          rdb.log.echoErrorMsg(err.splitLines()[0])
           rdb.log.echoWarningMsg(&"Safety skip create table '{table.name}'")
         else:
           rdb.log.echoErrorMsg(err)
