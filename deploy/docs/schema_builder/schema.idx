@@ -1,3 +1,4 @@
-Schema	schema_builder/schema.html#Schema	schema: Schema	
-check	schema_builder/schema.html#check,Schema,varargs[Table]	schema: check(this: Schema; tablesArg: varargs[Table])	
+MigrationTable	schema_builder/schema.html#MigrationTable	schema: MigrationTable	
+MigrationTables	schema_builder/schema.html#MigrationTables	schema: MigrationTables	
+new	schema_builder/schema.html#new,typeMigrationTables	schema: new(typ: type MigrationTables): MigrationTables	
 schema	schema_builder/schema.html#schema,Rdb,varargs[Table]	schema: schema(rdb: Rdb; tables: varargs[Table])	
