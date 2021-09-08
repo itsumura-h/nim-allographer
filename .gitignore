@@ -20,6 +20,7 @@ lcov.info
 .migration.json
 *logs/*
 *.log
+testresults
 
 
 gh-pages*

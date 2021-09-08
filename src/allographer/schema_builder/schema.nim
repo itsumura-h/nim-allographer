@@ -11,15 +11,6 @@ import ../async/async_db
 import table
 
 
-# =============================================================================
-
-#[
-block:
-  var record = Record.new()
-  if record.shouldRunQuery(query):
-    waitFor rdb.conn.exec(query)
-    record.saveHash()
-]#
 type MigrationTable* = ref object
   obj*:Table
   name*:string
