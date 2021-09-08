@@ -1,4 +1,4 @@
-import std/[os, strutils]
+import os, strutils
 import ../src/allographer/connection
 
 let

@@ -388,7 +388,14 @@ proc deleteByIdSql*(self: Rdb, id: int, key: string): Rdb =
 # ==================== Aggregates ====================
 
 proc selectCountSql*(self: Rdb): Rdb =
-  self.sqlString = "SELECT count(*) as aggregate"
+  var queryString =
+    if self.query.hasKey("select"):
+      var column = self.query["select"][0].getStr
+      wrapUpper(column, self.conn.driver)
+      &"{column}"
+    else:
+      "*"
+  self.sqlString = &"SELECT count({queryString}) as aggregate"
   return self
 
 

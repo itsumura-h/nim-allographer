@@ -17,9 +17,11 @@ coverage
 lcov.info
 
 *.sqlite3
-migration.json
+.migration.json
 *logs/*
 *.log
+testresults
+
 
 gh-pages*
 .DS_Store
