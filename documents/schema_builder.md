@@ -13,6 +13,8 @@ Example: Schema Builder
          * [delete column](#delete-column)
          * [rename table](#rename-table)
          * [drop table](#drop-table)
+      * [Migration history](#migration-history)
+         * [seeder template](#seeder-template)
       * [integer](#integer)
       * [float](#float)
       * [char](#char)
@@ -21,7 +23,7 @@ Example: Schema Builder
       * [options](#options)
       * [Foreign Key Constraints](#foreign-key-constraints)
 
-<!-- Added by: root, at: Wed Aug 18 20:41:13 UTC 2021 -->
+<!-- Added by: root, at: Wed Sep  8 15:38:12 UTC 2021 -->
 
 <!--te-->
 ---
@@ -126,13 +128,13 @@ rdb.schema(
   ])
 )
 
-seeder "auth":
+seeder rdb, "auth":
   waitFor rdb.table("auth").insert(@[
     %*{"name": "admin"},
     %*{"name": "member"}
   ])
 
-seeder "users":
+seeder rdb, "users":
   var data: seq[JsonNode]
   for i in 1..10:
     data.add(%*{
