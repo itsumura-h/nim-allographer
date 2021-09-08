@@ -100,18 +100,28 @@ function main() {
 <li>
   <a class="reference reference-toplevel" href="#7" id="57">Types</a>
   <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#Schema"
-    title="Schema = ref object
-  tables*: seq[Table]">Schema</a></li>
+      <li><a class="reference" href="#MigrationTable"
+    title="MigrationTable = ref object
+  obj*: Table
+  name*: string
+  shouldRun*: bool
+  query*: string
+  indexQuery*: seq[string]
+  queryHash*: string">MigrationTable</a></li>
+  <li><a class="reference" href="#MigrationTables"
+    title="MigrationTables = ref object
+  recordPath*: string
+  record*: JsonNode
+  tables*: seq[MigrationTable]">MigrationTables</a></li>
 
   </ul>
 </li>
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">check
-      <li><a class="reference" href="#check%2CSchema%2Cvarargs%5BTable%5D"
-    title="check(this: Schema; tablesArg: varargs[Table])">check,<wbr>Schema,<wbr>varargs[Table]</a></li>
+      <ul class="simple nested-toc-section">new
+      <li><a class="reference" href="#new%2CtypeMigrationTables"
+    title="new(typ: type MigrationTables): MigrationTables">new,<wbr>typeMigrationTables</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">schema
@@ -138,9 +148,25 @@ function main() {
 <div class="section" id="7">
 <h1><a class="toc-backref" href="#7">Types</a></h1>
 <dl class="item">
-<a id="Schema"></a>
-<dt><pre><a href="schema.html#Schema"><span class="Identifier">Schema</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
-  <span class="Identifier">tables</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="table.html#Table"><span class="Identifier">Table</span></a><span class="Other">]</span>
+<a id="MigrationTable"></a>
+<dt><pre><a href="schema.html#MigrationTable"><span class="Identifier">MigrationTable</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
+  <span class="Identifier">obj</span><span class="Operator">*</span><span class="Other">:</span> <a href="table.html#Table"><span class="Identifier">Table</span></a>
+  <span class="Identifier">name</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
+  <span class="Identifier">shouldRun</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
+  <span class="Identifier">query</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
+  <span class="Identifier">indexQuery</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span>
+  <span class="Identifier">queryHash</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
+</pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="MigrationTables"></a>
+<dt><pre><a href="schema.html#MigrationTables"><span class="Identifier">MigrationTables</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
+  <span class="Identifier">recordPath</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
+  <span class="Identifier">record</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">JsonNode</span>
+  <span class="Identifier">tables</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="schema.html#MigrationTable"><span class="Identifier">MigrationTable</span></a><span class="Other">]</span>
 </pre></dt>
 <dd>
 
@@ -152,20 +178,19 @@ function main() {
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
-<a id="check,Schema,varargs[Table]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#check%2CSchema%2Cvarargs%5BTable%5D"><span class="Identifier">check</span></a><span class="Other">(</span><span class="Identifier">this</span><span class="Other">:</span> <a href="schema.html#Schema"><span class="Identifier">Schema</span></a><span class="Other">;</span> <span class="Identifier">tablesArg</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><a href="table.html#Table"><span class="Identifier">Table</span></a><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span>
-    <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">JsonParsingError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="new,typeMigrationTables"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#new%2CtypeMigrationTables"><span class="Identifier">new</span></a><span class="Other">(</span><span class="Identifier">typ</span><span class="Other">:</span> <span class="Keyword">type</span> <span class="Identifier">MigrationTables</span><span class="Other">)</span><span class="Other">:</span> <a href="schema.html#MigrationTables"><span class="Identifier">MigrationTables</span></a></pre></dt>
 <dd>
 
 
 
 </dd>
 <a id="schema,Rdb,varargs[Table]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#schema%2CRdb%2Cvarargs%5BTable%5D"><span class="Identifier">schema</span></a><span class="Other">(</span><span class="Identifier">rdb</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">tables</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><a href="table.html#Table"><span class="Identifier">Table</span></a><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span>
-    <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span>
-    <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dt><pre><span class="Keyword">proc</span> <a href="#schema%2CRdb%2Cvarargs%5BTable%5D"><span class="Identifier">schema</span></a><span class="Other">(</span><span class="Identifier">rdb</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">tables</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><a href="table.html#Table"><span class="Identifier">Table</span></a><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span>
+    <span class="Identifier">JsonParsingError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span>
+    <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span>
+    <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -181,7 +206,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-09-04 05:38:12 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-09-08 15:26:40 UTC</small>
       </div>
     </div>
   </div>
