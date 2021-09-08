@@ -1,9 +1,14 @@
-import unittest, json, strformat, options, asyncdispatch, random, times
+discard """
+  cmd: "nim c -d:reset -r $file"
+"""
+
+import unittest, json, strformat, options, asyncdispatch, random, times, os
 
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
 import ../src/allographer/connection
 import connections
+
 
 randomize()
 
@@ -12,14 +17,14 @@ proc setup() =
     table("auth",[
       Column().increments("id"),
       Column().string("auth")
-    ], reset=true),
+    ]),
     table("users",[
       Column().increments("id"),
       Column().string("name").nullable(),
       Column().string("email").nullable(),
       Column().string("address").nullable(),
       Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-    ], reset=true)
+    ])
   ])
 
   # seeder
@@ -40,266 +45,295 @@ proc setup() =
         }
       )
 
+    echo await rdb.table("users").count()
     await rdb.table("users").insert(users)
 
-suite "select":
-  setup:
-    setup()
-  test "get()":
-    asyncBlock:
-      var t = await rdb.table("users").get()
-      check t[0] == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
 
-  test "getPlain()":
-    asyncBlock:
-      var t = await rdb.table("users").getPlain()
-      check t[0] == @["1", "user1", "user1@gmail.com", "", "1"]
+block getTest:
+  setup()
+  asyncBlock:
+    var t = await rdb.table("users").get()
+    check t[0] == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
 
-  test "perfomance":
-    asyncBlock:
-      var s = cpuTime()
-      for i in 0..100:
-        discard await rdb.table("users").get()
-      echo "get...", cpuTime() - s
-      s = cpuTime()
-      for i in 0..100:
-        discard await rdb.table("users").getPlain()
-      echo "getPlain...", cpuTime() - s
+block getPlainTest:
+  setup()
+  asyncBlock:
+    var t = await rdb.table("users").getPlain()
+    check t[0] == @["1", "user1", "user1@gmail.com", "", "1"]
 
-  test "first()":
-    asyncBlock:
-      var t = await(rdb.table("users").where("name", "=", "user1").first).get
-      check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
+block perfomanceTest:
+  setup()
+  asyncBlock:
+    var s = cpuTime()
+    for i in 0..100:
+      discard await rdb.table("users").get()
+    echo "get...", cpuTime() - s
+    s = cpuTime()
+    for i in 0..100:
+      discard await rdb.table("users").getPlain()
+    echo "getPlain...", cpuTime() - s
 
-  test "firstPlain()":
-    asyncBlock:
-      var t = await rdb.table("users").firstPlain()
-      check t == @["1", "user1", "user1@gmail.com", "", "1"]
+block firstTest:
+  setup()
+  asyncBlock:
+    var t = await(rdb.table("users").where("name", "=", "user1").first).get
+    check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
 
-  test "find()":
-    asyncBlock:
-      var t = await(rdb.table("users").find(1)).get
-      check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
+block firstPlainTest:
+  setup()
+  asyncBlock:
+    var t = await rdb.table("users").firstPlain()
+    check t == @["1", "user1", "user1@gmail.com", "", "1"]
 
-  test "findPlain()":
-    asyncBlock:
-      var t = await rdb.table("users").findPlain(1)
-      check t == @["1", "user1", "user1@gmail.com", "", "1"]
+block findTest:
+  setup()
+  asyncBlock:
+    var t = rdb.table("users").find(1).await.get
+    check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
 
-  test "select()":
-    asyncBlock:
-      var t = await rdb.table("users").select("name", "email").get()
-      check t[0] == %*{"name": "user1", "email": "user1@gmail.com"}
+block findPlainTest:
+  setup()
+  asyncBlock:
+    var t = await rdb.table("users").findPlain(1)
+    check t == @["1", "user1", "user1@gmail.com", "", "1"]
 
-  test "select(as)":
-    asyncBlock:
-      var t = await rdb.table("users").select("name as user_name", "email").get()
-      check t[0] == %*{"user_name": "user1", "email": "user1@gmail.com"}
+block selectTest:
+  setup()
+  asyncBlock:
+    var t = await rdb.table("users").select("name", "email").get()
+    check t[0] == %*{"name": "user1", "email": "user1@gmail.com"}
 
-  test "where":
-    asyncBlock:
-      var t = await rdb.table("users").where("auth_id", "=", "1").get()
-      check t == @[
-        %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1},
-        %*{"id": 3, "name": "user3", "email": "user3@gmail.com", "address":newJNull(), "auth_id": 1},
-        %*{"id": 5, "name": "user5", "email": "user5@gmail.com", "address":newJNull(), "auth_id": 1},
-        %*{"id": 7, "name": "user7", "email": "user7@gmail.com", "address":newJNull(), "auth_id": 1},
-        %*{"id": 9, "name": "user9", "email": "user9@gmail.com", "address":newJNull(), "auth_id": 1}
-      ]
+block selectAsTest:
+  setup()
+  asyncBlock:
+    var t = await rdb.table("users").select("name as user_name", "email").get()
+    check t[0] == %*{"user_name": "user1", "email": "user1@gmail.com"}
 
-  test "orWhere":
-    asyncBlock:
-      var t = await rdb.table("users").where("auth_id", "=", "1").orWhere("name", "=", "user2").get()
-      check t == @[
-        %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1},
-        %*{"id": 2, "name": "user2", "email": "user2@gmail.com", "address":newJNull(), "auth_id": 2},
-        %*{"id": 3, "name": "user3", "email": "user3@gmail.com", "address":newJNull(), "auth_id": 1},
-        %*{"id": 5, "name": "user5", "email": "user5@gmail.com", "address":newJNull(), "auth_id": 1},
-        %*{"id": 7, "name": "user7", "email": "user7@gmail.com", "address":newJNull(), "auth_id": 1},
-        %*{"id": 9, "name": "user9", "email": "user9@gmail.com", "address":newJNull(), "auth_id": 1}
-      ]
+block whereTest:
+  setup()
+  asyncBlock:
+    var t = await rdb.table("users").where("auth_id", "=", "1").get()
+    check t == @[
+      %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 3, "name": "user3", "email": "user3@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 5, "name": "user5", "email": "user5@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 7, "name": "user7", "email": "user7@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 9, "name": "user9", "email": "user9@gmail.com", "address":newJNull(), "auth_id": 1}
+    ]
 
-  test "update()":
-    asyncBlock:
-      await rdb.table("users").where("id", "=", 2).update(%*{"name": "John"})
-      var t = await(rdb.table("users").find(2)).get
-      check t["name"].getStr() == "John"
+block orWhereTest:
+  setup()
+  asyncBlock:
+    var t = await rdb.table("users").where("auth_id", "=", "1").orWhere("name", "=", "user2").get()
+    check t == @[
+      %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 2, "name": "user2", "email": "user2@gmail.com", "address":newJNull(), "auth_id": 2},
+      %*{"id": 3, "name": "user3", "email": "user3@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 5, "name": "user5", "email": "user5@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 7, "name": "user7", "email": "user7@gmail.com", "address":newJNull(), "auth_id": 1},
+      %*{"id": 9, "name": "user9", "email": "user9@gmail.com", "address":newJNull(), "auth_id": 1}
+    ]
 
-  test "insertId()":
-    asyncBlock:
-      var id = await rdb.table("users").insertId(%*{"name": "John"})
-      var t = await(rdb.table("users").find(id)).get
-      check t["name"].getStr() == "John"
+block updateTest:
+  setup()
+  asyncBlock:
+    await rdb.table("users").where("id", "=", 2).update(%*{"name": "John"})
+    var t = await(rdb.table("users").find(2)).get
+    check t["name"].getStr() == "John"
 
-  test "insertsID()":
-    asyncBlock:
-      var ids = await rdb.table("users").insertsID(@[
-        %*{"name": "John"},
-        %*{"email": "Paul@gmail.com"},
-      ])
-      var t = await(rdb.table("users").find(ids[0])).get
-      check t["name"].getStr() == "John"
-      t = await(rdb.table("users").find(ids[1])).get
-      check t["email"].getStr() == "Paul@gmail.com"
+block insertIdTest:
+  setup()
+  asyncBlock:
+    var id = await rdb.table("users").insertId(%*{"name": "John"})
+    var t = await(rdb.table("users").find(id)).get
+    check t["name"].getStr() == "John"
 
-  test "insert nil":
-    asyncBlock:
-      var id = await rdb.table("users").insertId(%*{
-        "name": "John",
-        "email": nil,
-        "address": ""
-      })
-      var res = await rdb.table("users").find(id)
-      echo res.get
-      check res.get["email"] == newJNull()
+block insertsIDTest:
+  setup()
+  asyncBlock:
+    var ids = await rdb.table("users").insertsID(@[
+      %*{"name": "John"},
+      %*{"email": "Paul@gmail.com"},
+    ])
+    var t = await(rdb.table("users").find(ids[0])).get
+    check t["name"].getStr() == "John"
+    t = await(rdb.table("users").find(ids[1])).get
+    check t["email"].getStr() == "Paul@gmail.com"
 
-      res = await rdb.table("users").where("email", "is", nil).first()
-      echo res.get
-      check res.get["email"] == newJNull()
+block insertnilTest:
+  setup()
+  asyncBlock:
+    var id = await rdb.table("users").insertId(%*{
+      "name": "John",
+      "email": newJNull(),
+      "address": ""
+    })
+    var res = await rdb.table("users").find(id)
+    echo res.get
+    check res.get["email"] == newJNull()
 
-  test "distinct":
-    asyncBlock:
-      var t = rdb.table("users").select("id", "name").distinct()
-      check t.query.hasKey("distinct") == true
+    res = await rdb.table("users").where("email", "is", nil).first()
+    echo res.get
+    check res.get["email"] == newJNull()
 
-  test "whereBetween()":
-    asyncBlock:
-      var t = await rdb
-              .table("users")
-              .select("id", "name")
-              .where("auth_id", "=", 1)
-              .whereBetween("id", [6, 9])
-              .get()
-      echo t
-      check t[0]["name"].getStr() == "user7"
+block distinctTest:
+  setup()
+  asyncBlock:
+    var t = rdb.table("users").select("id", "name").distinct()
+    check t.query.hasKey("distinct") == true
 
-  test "whereNotBetween()":
-    asyncBlock:
-      var t = await rdb
-              .table("users")
-              .select("id", "name")
-              .where("auth_id", "=", 1)
-              .whereNotBetween("id", [1, 4])
-              .get()
-      check t[0]["name"].getStr() == "user5"
+block whereBetweenTest:
+  setup()
+  asyncBlock:
+    var t = await rdb
+            .table("users")
+            .select("id", "name")
+            .where("auth_id", "=", 1)
+            .whereBetween("id", [6, 9])
+            .get()
+    echo t
+    check t[0]["name"].getStr() == "user7"
 
-  test "whereIn()":
-    asyncBlock:
-      var t = await rdb
-              .table("users")
-              .select("id", "name")
-              .whereBetween("id", [4, 10])
-              .whereIn("id", @[5, 6, 7])
-              .get()
-      echo t
-      check t[0]["name"].getStr() == "user5"
+block whereNotBetweenTest:
+  setup()
+  asyncBlock:
+    var t = await rdb
+            .table("users")
+            .select("id", "name")
+            .where("auth_id", "=", 1)
+            .whereNotBetween("id", [1, 4])
+            .get()
+    check t[0]["name"].getStr() == "user5"
 
-  test "whereNotIn()":
-    asyncBlock:
-      var t = await rdb
-              .table("users")
-              .select("id", "name")
-              .whereBetween("id", [4, 10])
-              .whereNotIn("id", @[5, 6, 7])
-              .get()
-      echo t
-      check t == @[
-        %*{"id":4, "name": "user4"},
-        %*{"id":8, "name": "user8"},
-        %*{"id":9, "name": "user9"},
-        %*{"id":10, "name": "user10"},
-      ]
+block whereInTest:
+  setup()
+  asyncBlock:
+    var t = await rdb
+            .table("users")
+            .select("id", "name")
+            .whereBetween("id", [4, 10])
+            .whereIn("id", @[5, 6, 7])
+            .get()
+    echo t
+    check t[0]["name"].getStr() == "user5"
 
-  test "whereNull()":
-    asyncBlock:
-      await rdb.table("users").insert(%*{"email": "user11@gmail.com"})
-      var t = await rdb
-              .table("users")
-              .select("id", "name", "email")
-              .whereNull("name")
-              .get()
-      echo t
-      check t[0]["id"].getInt() == 11
+block whereNotInTest:
+  setup()
+  asyncBlock:
+    var t = await rdb
+            .table("users")
+            .select("id", "name")
+            .whereBetween("id", [4, 10])
+            .whereNotIn("id", @[5, 6, 7])
+            .get()
+    echo t
+    check t == @[
+      %*{"id":4, "name": "user4"},
+      %*{"id":8, "name": "user8"},
+      %*{"id":9, "name": "user9"},
+      %*{"id":10, "name": "user10"},
+    ]
 
-  test "groupBy()":
-    asyncBlock:
-      var t = await rdb
-              .table("users")
-              .select("max(id)")
-              .groupBy("auth_id")
-              .get()
-      echo t
-      if rdb.conn.driver == SQLite3:
-        check t[0]["max(id)"].getStr() == "9"
-      if rdb.conn.driver == MySQL:
-        check t[0]["max(id)"].getInt() == 9
-      if rdb.conn.driver == PostgreSQL:
-        check t[0]["max"].getInt() == 9
+block whereNullTest:
+  setup()
+  asyncBlock:
+    await rdb.table("users").insert(%*{"email": "user11@gmail.com"})
+    var t = await rdb
+            .table("users")
+            .select("id", "name", "email")
+            .whereNull("name")
+            .get()
+    echo t
+    check t[0]["id"].getInt() == 11
 
-  test "having()":
-    asyncBlock:
-      var t = await rdb
-              .table("users")
-              .select("id", "name")
-              .groupBy("auth_id")
-              .groupBy("id")
-              .having("auth_id", "=", 1)
-              .get()
-      echo t
-      check t[0]["id"].getInt() == 1
+block groupByTest:
+  setup()
+  asyncBlock:
+    var t = await rdb
+            .table("users")
+            .select("max(id)")
+            .groupBy("auth_id")
+            .get()
+    echo t
+    if rdb.conn.driver == SQLite3:
+      check t[0]["max(id)"].getStr() == "9"
+    if rdb.conn.driver == MySQL:
+      check t[0]["max(id)"].getInt() == 9
+    if rdb.conn.driver == PostgreSQL:
+      check t[0]["max"].getInt() == 9
 
-  test "orderBy()":
-    asyncBlock:
-      var t = await rdb.table("users")
-              .orderBy("auth_id", Asc)
-              .orderBy("id", Desc)
-              .get()
-      echo t
-      check t[0]["id"].getInt() == 9
+block havingTest:
+  setup()
+  asyncBlock:
+    var t = await rdb
+            .table("users")
+            .select("id", "name")
+            .groupBy("auth_id")
+            .groupBy("id")
+            .having("auth_id", "=", 1)
+            .get()
+    echo t
+    check t[0]["id"].getInt() == 1
 
-  test "join()":
-    asyncBlock:
-      var t = await rdb.table("users")
-              .select("users.id", "users.name")
-              .join("auth", "auth.id", "=", "users.auth_id")
-              .where("auth.id", "=", "2")
-              .get()
-      echo t
-      check t[0]["name"].getStr() == "user2"
+block orderByTest:
+  setup()
+  asyncBlock:
+    var t = await rdb.table("users")
+            .orderBy("auth_id", Asc)
+            .orderBy("id", Desc)
+            .get()
+    echo t
+    check t[0]["id"].getInt() == 9
 
-  test "leftJoin()":
-    asyncBlock:
-      await rdb.table("users").insert(%*{
-        "name": "user11"
-      })
-      var t = await rdb.table("users")
-              .select("users.id", "users.name", "users.auth_id")
-              .leftJoin("auth", "auth.id", "=", "users.auth_id")
-              .orderBy("users.id", Desc)
-              .get()
-      echo t
-      check t[0]["name"].getStr() == "user11"
-      check t[0]["auth_id"] == newJNull()
+block joinTest:
+  setup()
+  asyncBlock:
+    var t = await rdb.table("users")
+            .select("users.id", "users.name")
+            .join("auth", "auth.id", "=", "users.auth_id")
+            .where("auth.id", "=", "2")
+            .get()
+    echo t
+    check t[0]["name"].getStr() == "user2"
 
-  test "result is null":
-    asyncBlock:
-      check await(rdb.table("users").find(50)).isSome == false
-      check newSeq[JsonNode](0) == await rdb.table("users").where("id", "=", 50).get()
+block leftJoinTest:
+  setup()
+  asyncBlock:
+    await rdb.table("users").insert(%*{
+      "name": "user11"
+    })
+    var t = await rdb.table("users")
+            .select("users.id", "users.name", "users.auth_id")
+            .leftJoin("auth", "auth.id", "=", "users.auth_id")
+            .orderBy("users.id", Desc)
+            .get()
+    echo t
+    check t[0]["name"].getStr() == "user11"
+    check t[0]["auth_id"] == newJNull()
 
-  test "delete":
-    asyncBlock:
-      echo await rdb.table("users").get()
-      await rdb.table("users").delete(1)
-      check  await(rdb.table("users").find(1)).isSome == false
+block resultIsNullTest:
+  setup()
+  asyncBlock:
+    check await(rdb.table("users").find(50)).isSome == false
+    check newSeq[JsonNode](0) == await rdb.table("users").where("id", "=", 50).get()
 
-  test "delete with where":
-    asyncBlock:
-      await rdb.table("users").where("name", "=", "user2").delete()
-      check await(rdb.table("users").find(2)).isSome == false
+block deleteTest:
+  setup()
+  asyncBlock:
+    echo await rdb.table("users").get()
+    await rdb.table("users").delete(1)
+    check  await(rdb.table("users").find(1)).isSome == false
 
-  test "raw query":
-    asyncBlock:
-      let sql = "SELECT * FROM users WHERE id = ?"
-      var res = await rdb.raw(sql, "1").getRaw()
-      echo res
-      check res[0]["name"].getStr == "user1"
+block deleteWithWhereTest:
+  setup()
+  asyncBlock:
+    await rdb.table("users").where("name", "=", "user2").delete()
+    check await(rdb.table("users").find(2)).isSome == false
+
+block rawQueryTest:
+  setup()
+  asyncBlock:
+    let sql = "SELECT * FROM users WHERE id = ?"
+    var res = await rdb.raw(sql, "1").getRaw()
+    echo res
+    check res[0]["name"].getStr == "user1"

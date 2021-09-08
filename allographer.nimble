@@ -17,7 +17,13 @@ requires "nim >= 1.2.0"
 requires "dotenv >= 1.1.1"
 
 import strformat
-from os import `/`
+import os
+
+task test, "run testament test":
+  exec "testament p 'tests/test_*.nim'"
+  for kind, path in walkDir(getCurrentDir() / "tests"):
+    if not path.contains("."):
+      exec "rm -f " & path
 
 task docs, "Generate API documents":
   let

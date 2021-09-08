@@ -41,10 +41,9 @@ rdb.schema([
     Column().increments("id"),
     Column().string("name"),
     Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-  ], reset=true)
+  ])
 ])
 ```
-If you set `reset=true` in args of `Table().create`, `DROP TABLE` and `CREATE TABLE` will be run.
 
 ## Alter Table
 ### add column
@@ -102,6 +101,69 @@ rdb.alter(
 )
 ```
 `>> DROP TABLE users`
+
+## Migration history
+allographer generate `.migration.json`. It has migration history data which have hash key generated a query.
+
+
+```nim
+# migrate.nim
+import json
+import allographer/schema_builder
+import allographer/query_builder
+
+let rdb = dbopen(SQLite3, "/path/to/db.sqlite")
+
+rdb.schema(
+  table("auth", [
+    Column().increments("id"),
+    Column().string("name")
+  ]),
+  table("users", [
+    Column().increments("id"),
+    Column().string("name"),
+    Column().foreign("auth_id").reference("id").in("auth").onDelete(SET_NULL)
+  ])
+)
+
+seeder "auth":
+  waitFor rdb.table("auth").insert(@[
+    %*{"name": "admin"},
+    %*{"name": "member"}
+  ])
+
+seeder "users":
+  var data: seq[JsonNode]
+  for i in 1..10:
+    data.add(%*{
+      "name": &"user{i}",
+      "auth_id": if i mod 2 == 0: 1 else: 2
+    })
+  waitFor rdb.table("users").insert(data)
+```
+
+```sh
+# first time
+nim c -r migrate
+>> run query and generate .migration.json
+# secound time
+nim c -r migrate
+>> nothing to do
+# reset existsing table and run migration again
+nim c -r migrate --reset
+ or
+nim c -d:reset -r migrate
+>> drop table and create table
+```
+
+### seeder template
+The `seeder` block allows the code in the block to work only when the table or specified column is empty.
+
+```nim
+template seeder*(rdb:Rdb, tableName:string, body:untyped):untyped
+
+template seeder*(rdb:Rdb, tableName, column:string, body:untyped):untyped
+```
 
 
 ## integer
