@@ -377,7 +377,7 @@ proc foreignGenerator*(name:string, table:string, column:string,
   elif foreignOnDelete == NO_ACTION:
     onDeleteString = "NO ACTION"
 
-  return &", FOREIGN KEY(`{name}`) REFERENCES {table}({column}) ON DELETE {onDeleteString}"
+  return &"FOREIGN KEY(`{name}`) REFERENCES {table}({column}) ON DELETE {onDeleteString}"
 
 proc alterAddForeignGenerator*(table, column, refTable, refColumn:string,
                             foreignOnDelete:ForeignOnDelete):string =

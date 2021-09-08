@@ -2,7 +2,7 @@ discard """
   cmd: "nim c -d:reset -r $file"
 """
 
-import unittest, json, times, os, strutils, asyncdispatch
+import unittest, json, times, os, strutils, asyncdispatch, distros
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
 import ../src/allographer/connection
@@ -53,43 +53,44 @@ block:
       Column().json("json_column").unique().default(%*{"key": "value"}).unsigned().index(),
     ], reset=true)
   )
-  mysqlDb.schema(
-    table("foreigh_table", [
-      Column().increments("id"),
-      Column().string("name"),
-    ], reset=true),
-    table("schema_builder", [
-      Column().increments("increments_column"),
-      Column().integer("integer_column").unique().default(1).unsigned(),
-      Column().smallInteger("smallInteger_column").unique().default(1).unsigned(),
-      Column().mediumInteger("mediumInteger_column").unique().default(1).unsigned(),
-      Column().bigInteger("bigInteger_column").unique().default(1).unsigned(),
+  if detectOs(Ubuntu):
+    mysqlDb.schema(
+      table("foreigh_table", [
+        Column().increments("id"),
+        Column().string("name"),
+      ], reset=true),
+      table("schema_builder", [
+        Column().increments("increments_column"),
+        Column().integer("integer_column").unique().default(1).unsigned(),
+        Column().smallInteger("smallInteger_column").unique().default(1).unsigned(),
+        Column().mediumInteger("mediumInteger_column").unique().default(1).unsigned(),
+        Column().bigInteger("bigInteger_column").unique().default(1).unsigned(),
 
-      Column().decimal("decimal_column", 5, 2).unique().default(1).unsigned(),
-      Column().double("double_column", 5, 2).unique().default(1).unsigned(),
-      Column().float("float_column").unique().default(1).unsigned(),
+        Column().decimal("decimal_column", 5, 2).unique().default(1).unsigned(),
+        Column().double("double_column", 5, 2).unique().default(1).unsigned(),
+        Column().float("float_column").unique().default(1).unsigned(),
 
-      Column().char("char_column", 100).unique().default(""),
-      Column().string("string_column").unique().default(""),
-      Column().text("text_column"),
-      Column().mediumText("mediumText_column"),
-      Column().longText("longText_column"),
+        Column().char("char_column", 100).unique().default(""),
+        Column().string("string_column").unique().default(""),
+        Column().text("text_column"),
+        Column().mediumText("mediumText_column"),
+        Column().longText("longText_column"),
 
-      Column().date("date_column").unique().default(),
-      Column().datetime("datetime_column").unique().default(),
-      Column().time("time_column").unique().default(),
-      Column().timestamp("timestamp_column").unique().default(),
-      Column().timestamps(),
-      Column().softDelete(),
+        Column().date("date_column").unique().default(),
+        Column().datetime("datetime_column").unique().default(),
+        Column().time("time_column").unique().default(),
+        Column().timestamp("timestamp_column").unique().default(),
+        Column().timestamps(),
+        Column().softDelete(),
 
-      Column().foreign("foreign_id").reference("id").on("foreigh_table").onDelete(SET_NULL),
+        Column().foreign("foreign_id").reference("id").on("foreigh_table").onDelete(SET_NULL),
 
-      Column().binary("binary_column"),
-      Column().boolean("boolean_column").unique().default(),
-      Column().enumField("enumField_column", ["a", "b"]).unique().default("a"),
-      Column().json("json_column"),
-    ], reset=true)
-  )
+        Column().binary("binary_column"),
+        Column().boolean("boolean_column").unique().default(),
+        Column().enumField("enumField_column", ["a", "b"]).unique().default("a"),
+        Column().json("json_column"),
+      ], reset=true)
+    )
   mariaDb.schema(
     table("foreigh_table", [
       Column().increments("id"),
@@ -168,7 +169,12 @@ block:
 block:
   waitFor (proc(){.async.}=
     try:
-      for rdb in [sqliteDb, mysqlDb, mariaDb, postgresDb]:
+      let list =
+        if detectOs(Ubuntu):
+          @[sqliteDb, mysqlDb, mariaDb, postgresDb]
+        else:
+          @[sqliteDb, mariaDb, postgresDb]
+      for rdb in list:
         await rdb.table("schema_builder").insert(%*{
           "increments_column": 1,
           "integer_column": 1,
