@@ -403,7 +403,7 @@ proc foreignGenerator*(table, column, refTable, refColumn:string,
 
   var refTable = refTable
   pgWrapUpper(refTable)
-  return &", FOREIGN KEY(\"{column}\") REFERENCES {refTable}({refColumn}) ON DELETE {onDeleteString}"
+  return &"FOREIGN KEY(\"{column}\") REFERENCES {refTable}({refColumn}) ON DELETE {onDeleteString}"
 
 proc alterAddForeignGenerator*(table, column, refTable, refColumn:string,
                             foreignOnDelete:ForeignOnDelete):string =

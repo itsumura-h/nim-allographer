@@ -304,6 +304,7 @@ proc migrate*(self:Table):string =
       generateColumnString(column, self.name)
     )
     if column.typ == rdbForeign:
+      if columnString.len > 0 or foreignString.len > 0: foreignString.add(", ")
       foreignString.add(
         generateForeignString(self.name, column)
       )

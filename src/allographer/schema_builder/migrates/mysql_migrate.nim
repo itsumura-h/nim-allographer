@@ -283,6 +283,7 @@ proc migrate*(this:Table):string =
       generateColumnString(column)
     )
     if column.typ == rdbForeign:
+      if columnString.len > 0 or foreignString.len > 0: foreignString.add(", ")
       foreignString.add(
         generateForeignString(column)
       )

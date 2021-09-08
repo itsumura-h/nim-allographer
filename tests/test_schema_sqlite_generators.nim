@@ -440,10 +440,10 @@ block:
   check foreignColumnGenerator("auth_id", false, 0) == "'auth_id' INTEGER"
   check foreignColumnGenerator("auth_id", true, 1) == "'auth_id' INTEGER DEFAULT 1"
   check foreignGenerator("auth_id", "auth", "id", RESTRICT) ==
-    ", FOREIGN KEY('auth_id') REFERENCES auth(id) ON DELETE RESTRICT"
+    "FOREIGN KEY('auth_id') REFERENCES auth(id) ON DELETE RESTRICT"
   check foreignGenerator("auth_id", "auth", "id", CASCADE) ==
-    ", FOREIGN KEY('auth_id') REFERENCES auth(id) ON DELETE CASCADE"
+    "FOREIGN KEY('auth_id') REFERENCES auth(id) ON DELETE CASCADE"
   check foreignGenerator("auth_id", "auth", "id", SET_NULL) ==
-    ", FOREIGN KEY('auth_id') REFERENCES auth(id) ON DELETE SET NULL"
+    "FOREIGN KEY('auth_id') REFERENCES auth(id) ON DELETE SET NULL"
   check foreignGenerator("auth_id", "auth", "id", NO_ACTION) ==
-    ", FOREIGN KEY('auth_id') REFERENCES auth(id) ON DELETE NO ACTION"
+    "FOREIGN KEY('auth_id') REFERENCES auth(id) ON DELETE NO ACTION"
