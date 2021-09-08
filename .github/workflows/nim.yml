@@ -16,37 +16,37 @@ jobs:
     steps:
       - run: echo "no WIP"
 
-  build:
-    runs-on: ${{ matrix.os }}
-    needs: before
-    strategy:
-      matrix:
-        os:
-          - ubuntu-latest
-          # - macOS-latest
-          # Need sqlite3_64.dll
-          # - windows-latest
-    env:
-      NIM_VERSION: 1.2.0
-    steps:
-    - uses: actions/checkout@v1
-    - name: Cache choosenim
-      id: cache-choosenim
-      uses: actions/cache@v1
-      with:
-        path: ~/.choosenim
-        key: ${{ runner.os }}-choosenim-${{ env.NIM_VERSION }}
-    - name: Cache nimble
-      id: cache-nimble
-      uses: actions/cache@v1
-      with:
-        path: ~/.nimble
-        key: ${{ runner.os }}-nimble-${{ env.NIM_VERSION }}
-    - uses: jiro4989/setup-nim-action@v1
-      with:
-        nim-version: ${{ env.NIM_VERSION }}
-    - name: Build
-      run: nimble install -Y
+  # build:
+  #   runs-on: ${{ matrix.os }}
+  #   needs: before
+  #   strategy:
+  #     matrix:
+  #       os:
+  #         - ubuntu-latest
+  #         # - macOS-latest
+  #         # Need sqlite3_64.dll
+  #         # - windows-latest
+  #   env:
+  #     NIM_VERSION: 1.2.0
+  #   steps:
+  #   - uses: actions/checkout@v1
+  #   - name: Cache choosenim
+  #     id: cache-choosenim
+  #     uses: actions/cache@v1
+  #     with:
+  #       path: ~/.choosenim
+  #       key: ${{ runner.os }}-choosenim-${{ env.NIM_VERSION }}
+  #   - name: Cache nimble
+  #     id: cache-nimble
+  #     uses: actions/cache@v1
+  #     with:
+  #       path: ~/.nimble
+  #       key: ${{ runner.os }}-nimble-${{ env.NIM_VERSION }}
+  #   - uses: jiro4989/setup-nim-action@v1
+  #     with:
+  #       nim-version: ${{ env.NIM_VERSION }}
+  #   - name: Build
+  #     run: nimble install -Y
 
   test-on-docker:
     runs-on: ubuntu-latest
