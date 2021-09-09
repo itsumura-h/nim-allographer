@@ -36,6 +36,7 @@ from database import rdb
 rdb.schema([
   table("auth", [
     Column().increments("id"),
+    Column().uuid("uuid"),
     Column().string("name"),
     Column().timestamps()
   ]),
@@ -43,6 +44,7 @@ rdb.schema([
     Column().increments("id"),
     Column().string("name"),
     Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+    Column().strForeign("uuid").reference("uuid").on("auth").onDelete(SET_NULL)
   ])
 ])
 ```
@@ -187,6 +189,7 @@ template seeder*(rdb:Rdb, tableName, column:string, body:untyped):untyped
 ## char
 |Command|Description|
 |---|---|
+|`uuid("name")`|VARCHAR indexed and unique column.|
 |`char("name", 100)`|CHAR equivalent column with an optional length.|
 |`string("name")`|VARCHAR equivalent column.|
 |`string("name", 100)`|VARCHAR equivalent column with a optional length.|
@@ -224,10 +227,15 @@ template seeder*(rdb:Rdb, tableName, column:string, body:untyped):untyped
 ## Foreign Key Constraints
 For example, let's define a `user_id` column on the table that references the `id` column on a `users` table:
 ```nim
-Schema().foreign("user_id")
-.reference("id")
-.on("users")
-.onDelete(SET_NULL)
+Column().foreign("user_id")
+  .reference("id")
+  .on("users")
+  .onDelete(SET_NULL)
+
+Column().strForeign("uuid")
+  .reference("uuid")
+  .on("users")
+  .onDelete(SET_NULL)
 ```
 
 arg of `onDelete` is enum

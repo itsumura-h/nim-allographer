@@ -57,6 +57,7 @@ type
     rdbEnumField = "rdbEnumField"
     rdbJson = "rdbJson"
     rdbForeign = "rdbForeign"
+    rdbStrForeign = "rdbStrForeign"
 
   ForeignOnDelete* = enum
     RESTRICT = "RESTRICT"
@@ -182,6 +183,14 @@ proc string*(self:Column, name:string, length=255):Column =
   self.info = %*{"maxLength": length}
   return self
 
+proc uuid*(self:Column, name:string):Column =
+  self.name = name
+  self.typ = rdbString
+  self.isUnique = true
+  self.isIndex = true
+  self.info = %*{"maxLength": 255}
+  return self
+
 proc text*(self:Column, name:string):Column =
   self.name = name
   self.typ = rdbText
@@ -262,12 +271,24 @@ proc foreign*(self:Column, name:string):Column =
   self.name = name
   self.previousName = name
   self.typ = rdbForeign
+  self.isUnique = true
+  self.isIndex = true
+  return self
+
+proc strForeign*(self:Column, name:string, length=255):Column =
+  self.name = name
+  self.previousName = name
+  self.typ = rdbStrForeign
+  self.isUnique = true
+  self.isIndex = true
+  self.info = %*{"maxLength": length}
   return self
 
 proc reference*(self:Column, column:string):Column =
-  self.info = %*{
-    "column": column
-  }
+  if self.info.isNil:
+    self.info = %*{"column": column}
+  else:
+    self.info["column"] = %column
   return self
 
 proc on*(self:Column, table:string):Column =

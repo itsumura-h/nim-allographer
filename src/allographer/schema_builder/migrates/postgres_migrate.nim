@@ -273,10 +273,19 @@ proc generateColumnString*(column:Column, tableName=""):string =
     columnString.add(
       foreignColumnGenerator(column.name, column.isDefault, column.defaultInt)
     )
+  of rdbStrForeign:
+    columnString.add(
+      strForeignColumnGenerator(
+        column.name,
+        column.info["maxLength"].getInt,
+        column.isDefault,
+        column.defaultString
+      )
+    )
   return columnString
 
 proc generateForeignString(table:string, column:Column):string =
-  if column.typ == rdbForeign:
+  if column.typ == rdbForeign or column.typ == rdbStrForeign:
     return foreignGenerator(
         table,
         column.name,
@@ -286,7 +295,7 @@ proc generateForeignString(table:string, column:Column):string =
       )
 
 proc generateAlterForeignString(table:string, column:Column):string =
-  if column.typ == rdbForeign:
+  if column.typ == rdbForeign or column.typ == rdbStrForeign:
     return alterAddForeignGenerator(
       table,
       column.name,
@@ -303,7 +312,7 @@ proc migrate*(self:Table):string =
     columnString.add(
       generateColumnString(column, self.name)
     )
-    if column.typ == rdbForeign:
+    if column.typ == rdbForeign or column.typ == rdbStrForeign:
       if columnString.len > 0 or foreignString.len > 0: foreignString.add(", ")
       foreignString.add(
         generateForeignString(self.name, column)

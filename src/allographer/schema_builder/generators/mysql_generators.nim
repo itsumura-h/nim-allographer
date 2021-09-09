@@ -1,4 +1,4 @@
-import json, strformat
+import json, strformat, strutils
 import ../column, generator_util
 import ../../utils
 
@@ -367,6 +367,12 @@ proc foreignColumnGenerator*(name:string, isDefault:bool, default:int):string =
   if isDefault:
     result.add(&" DEFAULT {default}")
 
+proc strForeignColumnGenerator*(name:string, maxLength:int, isDefault:bool, default:string):string =
+  result = &"`{name}` VARCHAR({maxLength})"
+  result.add(" UNIQUE")
+  if isDefault:
+    result.add(&" DEFAULT {default}")
+
 proc foreignGenerator*(name:string, table:string, column:string,
                         foreignOnDelete:ForeignOnDelete):string =
   var onDeleteString = "RESTRICT"
@@ -409,5 +415,6 @@ proc alterDeleteForeignGenerator*(table, column:string):string =
 
 proc indexGenerate*(table, column:string):string =
   var table = table
+  let smallTable = table.toLowerAscii()
   myWrapUpper(table)
-  return &"CREATE INDEX {column}_index ON {table}({column})"
+  return &"CREATE INDEX {smallTable}_{column}_index ON {table}({column})"
