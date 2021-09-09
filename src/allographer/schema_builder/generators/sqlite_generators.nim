@@ -1,4 +1,4 @@
-import json, strformat
+import json, strformat, strutils
 import ../column
 import ../../utils
 from db_common import DbError
@@ -276,6 +276,12 @@ proc foreignColumnGenerator*(name:string, isDefault:bool, default:int):string =
   if isDefault:
     result.add(&" DEFAULT {default}")
 
+proc strForeignColumnGenerator*(name:string, isDefault:bool, default:string):string =
+  result = &"'{name}' VARCHAR"
+  result.add(" UNIQUE")
+  if isDefault:
+    result.add(&" DEFAULT {default}")
+
 proc foreignGenerator*(name:string, table:string, column:string,
                         foreignOnDelete:ForeignOnDelete):string =
   var onDeleteString = "RESTRICT"
@@ -294,5 +300,6 @@ proc alterAddForeignGenerator*(table:string, column:string):string =
 
 proc indexGenerate*(table, column:string):string =
   var table = table
+  let smallTable = table.toLowerAscii()
   liteWrapUpper(table)
-  return &"CREATE INDEX {column}_index ON {table}({column})"
+  return &"CREATE INDEX {smallTable}_{column}_index ON {table}({column})"

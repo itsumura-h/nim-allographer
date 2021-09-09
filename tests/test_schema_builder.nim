@@ -2,7 +2,7 @@ discard """
   cmd: "nim c -d:reset -r $file"
 """
 
-import unittest, json, times, os, strutils, asyncdispatch, distros
+import unittest, json, times, os, strutils, asyncdispatch, distros, oids
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
 import ../src/allographer/connection
@@ -19,8 +19,9 @@ block:
   sqliteDb.schema(
     table("foreigh_table", [
       Column().increments("id"),
+      Column().uuid("uuid"),
       Column().string("name"),
-    ], reset=true),
+    ]),
     table("schema_builder", [
       Column().increments("increments_column"),
       Column().integer("integer_column").unique().default(1).unsigned().index(),
@@ -46,19 +47,21 @@ block:
       Column().softDelete(),
 
       Column().foreign("foreign_id").reference("id").on("foreigh_table").onDelete(SET_NULL),
+      Column().strForeign("uuid").reference("uuid").on("foreigh_table").onDelete(SET_NULL),
 
       Column().binary("binary_column").unique().default().unsigned().index(),
       Column().boolean("boolean_column").unique().default().index(),
       Column().enumField("enumField_column", ["a", "b"]).unique().default().index(),
       Column().json("json_column").unique().default(%*{"key": "value"}).unsigned().index(),
-    ], reset=true)
+    ])
   )
   if detectOs(Ubuntu):
     mysqlDb.schema(
       table("foreigh_table", [
         Column().increments("id"),
+        Column().uuid("uuid"),
         Column().string("name"),
-      ], reset=true),
+      ]),
       table("schema_builder", [
         Column().increments("increments_column"),
         Column().integer("integer_column").unique().default(1).unsigned(),
@@ -84,18 +87,20 @@ block:
         Column().softDelete(),
 
         Column().foreign("foreign_id").reference("id").on("foreigh_table").onDelete(SET_NULL),
+        Column().strForeign("uuid").reference("uuid").on("foreigh_table").onDelete(SET_NULL),
 
         Column().binary("binary_column"),
         Column().boolean("boolean_column").unique().default(),
         Column().enumField("enumField_column", ["a", "b"]).unique().default("a"),
         Column().json("json_column"),
-      ], reset=true)
+      ])
     )
   mariaDb.schema(
     table("foreigh_table", [
       Column().increments("id"),
+      Column().uuid("uuid"),
       Column().string("name"),
-    ], reset=true),
+    ]),
     table("schema_builder", [
       Column().increments("increments_column"),
       Column().integer("integer_column").unique().default(1).unsigned(),
@@ -121,18 +126,20 @@ block:
       Column().softDelete(),
 
       Column().foreign("foreign_id").reference("id").on("foreigh_table").onDelete(SET_NULL),
+      Column().strForeign("uuid").reference("uuid").on("foreigh_table").onDelete(SET_NULL),
 
       Column().binary("binary_column"),
       Column().boolean("boolean_column").unique().default(),
       Column().enumField("enumField_column", ["a", "b"]).unique().default("a"),
       Column().json("json_column"),
-    ], reset=true)
+    ])
   )
   postgresDb.schema(
     table("foreigh_table", [
       Column().increments("id"),
+      Column().uuid("uuid"),
       Column().string("name"),
-    ], reset=true),
+    ]),
     table("schema_builder", [
       Column().increments("increments_column"),
       Column().integer("integer_column").unique().default(1).unsigned(),
@@ -158,12 +165,13 @@ block:
       Column().softDelete(),
 
       Column().foreign("foreign_id").reference("id").on("foreigh_table").onDelete(SET_NULL),
+      Column().strForeign("uuid").reference("uuid").on("foreigh_table").onDelete(SET_NULL),
 
       Column().binary("binary_column").unique().default(),
       Column().boolean("boolean_column").unique().default(),
       Column().enumField("enumField_column", ["a", "b"]).unique().default(),
       Column().json("json_column").default(%*{"key": "value"}),
-    ], reset=true)
+    ])
   )
 
 block:
@@ -175,6 +183,11 @@ block:
         else:
           @[sqliteDb, mariaDb, postgresDb]
       for rdb in list:
+        let uuid = $genOid()
+        await rdb.table("foreigh_table").insert(%*{
+          "uuid": uuid,
+          "name": "a"
+        })
         await rdb.table("schema_builder").insert(%*{
           "increments_column": 1,
           "integer_column": 1,
@@ -193,12 +206,19 @@ block:
           "datetime_column": "2020-01-01".parse("yyyy-MM-dd").format("yyyy-MM-dd HH:MM:ss"),
           "time_column": "2020-01-01".parse("yyyy-MM-dd").format("HH:MM:ss"),
           "timestamp_column": "2020-01-01".parse("yyyy-MM-dd").format("yyyy-MM-dd HH:MM:ss"),
+          "foreign_id": 1,
+          "uuid": uuid,
           "binary_column": "a",
           "boolean_column": true,
           "enumField_column": "a",
           "json_column": {"key": "value"}
         })
-        echo await rdb.table("schema_builder").get()
+        # echo await rdb.table("schema_builder").get()
+        echo await rdb.table("schema_builder")
+                    .select("schema_builder.foreign_id", "schema_builder.uuid")
+                    .join("foreigh_table", "foreigh_table.uuid", "=", "schema_builder.uuid")
+                    .where("foreigh_table.id", "=", 1)
+                    .get()
         assert true
         rdb.alter(
           drop("schema_builder")
