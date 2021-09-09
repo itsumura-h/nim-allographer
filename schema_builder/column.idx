@@ -27,6 +27,7 @@ rdbBoolean	schema_builder/column.html#rdbBoolean	RdbTypekind.rdbBoolean
 rdbEnumField	schema_builder/column.html#rdbEnumField	RdbTypekind.rdbEnumField	
 rdbJson	schema_builder/column.html#rdbJson	RdbTypekind.rdbJson	
 rdbForeign	schema_builder/column.html#rdbForeign	RdbTypekind.rdbForeign	
+rdbStrForeign	schema_builder/column.html#rdbStrForeign	RdbTypekind.rdbStrForeign	
 RdbTypekind	schema_builder/column.html#RdbTypekind	column: RdbTypekind	
 RESTRICT	schema_builder/column.html#RESTRICT	ForeignOnDelete.RESTRICT	
 CASCADE	schema_builder/column.html#CASCADE	ForeignOnDelete.CASCADE	
@@ -53,6 +54,7 @@ double	schema_builder/column.html#double,Column,string,int,int	column: double(se
 float	schema_builder/column.html#float,Column,string	column: float(self: Column; name: string): Column	
 char	schema_builder/column.html#char,Column,string,int	column: char(self: Column; name: string; maxLength: int): Column	
 string	schema_builder/column.html#string,Column,string,int	column: string(self: Column; name: string; length = 255): Column	
+uuid	schema_builder/column.html#uuid,Column,string	column: uuid(self: Column; name: string): Column	
 text	schema_builder/column.html#text,Column,string	column: text(self: Column; name: string): Column	
 mediumText	schema_builder/column.html#mediumText,Column,string	column: mediumText(self: Column; name: string): Column	
 longText	schema_builder/column.html#longText,Column,string	column: longText(self: Column; name: string): Column	
@@ -67,6 +69,7 @@ boolean	schema_builder/column.html#boolean,Column,string	column: boolean(self: C
 enumField	schema_builder/column.html#enumField,Column,string,openArray[string]	column: enumField(self: Column; name: string; options: openArray[string]): Column	
 json	schema_builder/column.html#json,Column,string	column: json(self: Column; name: string): Column	
 foreign	schema_builder/column.html#foreign,Column,string	column: foreign(self: Column; name: string): Column	
+strForeign	schema_builder/column.html#strForeign,Column,string,int	column: strForeign(self: Column; name: string; length = 255): Column	
 reference	schema_builder/column.html#reference,Column,string	column: reference(self: Column; column: string): Column	
 on	schema_builder/column.html#on,Column,string	column: on(self: Column; table: string): Column	
 onDelete	schema_builder/column.html#onDelete,Column,ForeignOnDelete	column: onDelete(self: Column; kind: ForeignOnDelete): Column	

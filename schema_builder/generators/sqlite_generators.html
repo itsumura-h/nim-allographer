@@ -215,6 +215,11 @@ function main() {
               isDefault: bool; default: string): string">textGenerator,<wbr>string,<wbr>bool,<wbr>bool,<wbr>bool,<wbr>bool,<wbr>string</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">strForeignColumnGenerator
+      <li><a class="reference" href="#strForeignColumnGenerator%2Cstring%2Cbool%2Cstring"
+    title="strForeignColumnGenerator(name: string; isDefault: bool; default: string): string">strForeignColumnGenerator,<wbr>string,<wbr>bool,<wbr>string</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">timestampGenerator
       <li><a class="reference" href="#timestampGenerator%2Cstring%2Cbool%2Cbool%2Cbool%2Cbool"
     title="timestampGenerator(name: string; nullable: bool; isUnique: bool;
@@ -396,6 +401,14 @@ function main() {
 
 
 </dd>
+<a id="strForeignColumnGenerator,string,bool,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#strForeignColumnGenerator%2Cstring%2Cbool%2Cstring"><span class="Identifier">strForeignColumnGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">isDefault</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">;</span> <span class="Identifier">default</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
 <a id="foreignGenerator,string,string,string,ForeignOnDelete"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#foreignGenerator%2Cstring%2Cstring%2Cstring%2CForeignOnDelete"><span class="Identifier">foreignGenerator</span></a><span class="Other">(</span><span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">table</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span>
                       <span class="Identifier">foreignOnDelete</span><span class="Other">:</span> <a href="../column.html#ForeignOnDelete"><span class="Identifier">ForeignOnDelete</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
@@ -431,7 +444,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-09-08 18:33:37 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-09-09 05:25:00 UTC</small>
       </div>
     </div>
   </div>

@@ -126,7 +126,8 @@ function main() {
   rdbTime = &quot;rdbTime&quot;, rdbTimestamp = &quot;rdbTimestamp&quot;,
   rdbTimestamps = &quot;rdbTimestamps&quot;, rdbSoftDelete = &quot;rdbSoftDelete&quot;,
   rdbBinary = &quot;rdbBinary&quot;, rdbBoolean = &quot;rdbBoolean&quot;,
-  rdbEnumField = &quot;rdbEnumField&quot;, rdbJson = &quot;rdbJson&quot;, rdbForeign = &quot;rdbForeign&quot;">RdbTypekind</a></li>
+  rdbEnumField = &quot;rdbEnumField&quot;, rdbJson = &quot;rdbJson&quot;, rdbForeign = &quot;rdbForeign&quot;,
+  rdbStrForeign = &quot;rdbStrForeign&quot;">RdbTypekind</a></li>
   <li><a class="reference" href="#ForeignOnDelete"
     title="ForeignOnDelete = enum
   RESTRICT = &quot;RESTRICT&quot;, CASCADE = &quot;CASCADE&quot;, SET_NULL = &quot;SET_NULL&quot;,
@@ -142,6 +143,11 @@ function main() {
     title="bigInteger(self: Column; name: string): Column">bigInteger,<wbr>Column,<wbr>string</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">uuid
+      <li><a class="reference" href="#uuid%2CColumn%2Cstring"
+    title="uuid(self: Column; name: string): Column">uuid,<wbr>Column,<wbr>string</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">nullable
       <li><a class="reference" href="#nullable%2CColumn"
     title="nullable(c: Column): Column">nullable,<wbr>Column</a></li>
@@ -155,6 +161,11 @@ function main() {
   <ul class="simple nested-toc-section">enumField
       <li><a class="reference" href="#enumField%2CColumn%2Cstring%2CopenArray%5Bstring%5D"
     title="enumField(self: Column; name: string; options: openArray[string]): Column">enumField,<wbr>Column,<wbr>string,<wbr>openArray[string]</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">strForeign
+      <li><a class="reference" href="#strForeign%2CColumn%2Cstring%2Cint"
+    title="strForeign(self: Column; name: string; length = 255): Column">strForeign,<wbr>Column,<wbr>string,<wbr>int</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">on
@@ -364,7 +375,8 @@ function main() {
   <span class="Identifier">rdbTime</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbTime&quot;</span><span class="Other">,</span> <span class="Identifier">rdbTimestamp</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbTimestamp&quot;</span><span class="Other">,</span>
   <span class="Identifier">rdbTimestamps</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbTimestamps&quot;</span><span class="Other">,</span> <span class="Identifier">rdbSoftDelete</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbSoftDelete&quot;</span><span class="Other">,</span>
   <span class="Identifier">rdbBinary</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbBinary&quot;</span><span class="Other">,</span> <span class="Identifier">rdbBoolean</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbBoolean&quot;</span><span class="Other">,</span>
-  <span class="Identifier">rdbEnumField</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbEnumField&quot;</span><span class="Other">,</span> <span class="Identifier">rdbJson</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbJson&quot;</span><span class="Other">,</span> <span class="Identifier">rdbForeign</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbForeign&quot;</span></pre></dt>
+  <span class="Identifier">rdbEnumField</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbEnumField&quot;</span><span class="Other">,</span> <span class="Identifier">rdbJson</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbJson&quot;</span><span class="Other">,</span> <span class="Identifier">rdbForeign</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbForeign&quot;</span><span class="Other">,</span>
+  <span class="Identifier">rdbStrForeign</span> <span class="Other">=</span> <span class="StringLit">&quot;rdbStrForeign&quot;</span></pre></dt>
 <dd>
 
 
@@ -528,6 +540,13 @@ function main() {
 
 
 </dd>
+<a id="uuid,Column,string"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#uuid%2CColumn%2Cstring"><span class="Identifier">uuid</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
 <a id="text,Column,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#text%2CColumn%2Cstring"><span class="Identifier">text</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -627,6 +646,14 @@ function main() {
 
 
 </dd>
+<a id="strForeign,Column,string,int"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#strForeign%2CColumn%2Cstring%2Cint"><span class="Identifier">strForeign</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">name</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">length</span> <span class="Other">=</span> <span class="DecNumber">255</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
 <a id="reference,Column,string"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#reference%2CColumn%2Cstring"><span class="Identifier">reference</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="column.html#Column"><span class="Identifier">Column</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
@@ -659,7 +686,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-09-08 18:33:37 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2021-09-09 05:25:00 UTC</small>
       </div>
     </div>
   </div>
