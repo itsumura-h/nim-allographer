@@ -21,7 +21,7 @@ block:
       Column().increments("id"),
       Column().uuid("uuid"),
       Column().string("name"),
-    ], reset=true),
+    ]),
     table("schema_builder", [
       Column().increments("increments_column"),
       Column().integer("integer_column").unique().default(1).unsigned().index(),
@@ -59,8 +59,9 @@ block:
     mysqlDb.schema(
       table("foreigh_table", [
         Column().increments("id"),
+        Column().uuid("uuid"),
         Column().string("name"),
-      ], reset=true),
+      ]),
       table("schema_builder", [
         Column().increments("increments_column"),
         Column().integer("integer_column").unique().default(1).unsigned(),
@@ -86,19 +87,20 @@ block:
         Column().softDelete(),
 
         Column().foreign("foreign_id").reference("id").on("foreigh_table").onDelete(SET_NULL),
+        Column().strForeign("uuid").reference("uuid").on("foreigh_table").onDelete(SET_NULL),
 
         Column().binary("binary_column"),
         Column().boolean("boolean_column").unique().default(),
         Column().enumField("enumField_column", ["a", "b"]).unique().default("a"),
         Column().json("json_column"),
-      ], reset=true)
+      ])
     )
   mariaDb.schema(
     table("foreigh_table", [
       Column().increments("id"),
       Column().uuid("uuid"),
       Column().string("name"),
-    ], reset=true),
+    ]),
     table("schema_builder", [
       Column().increments("increments_column"),
       Column().integer("integer_column").unique().default(1).unsigned(),
@@ -130,14 +132,14 @@ block:
       Column().boolean("boolean_column").unique().default(),
       Column().enumField("enumField_column", ["a", "b"]).unique().default("a"),
       Column().json("json_column"),
-    ], reset=true)
+    ])
   )
   postgresDb.schema(
     table("foreigh_table", [
       Column().increments("id"),
       Column().uuid("uuid"),
       Column().string("name"),
-    ], reset=true),
+    ]),
     table("schema_builder", [
       Column().increments("increments_column"),
       Column().integer("integer_column").unique().default(1).unsigned(),
@@ -169,7 +171,7 @@ block:
       Column().boolean("boolean_column").unique().default(),
       Column().enumField("enumField_column", ["a", "b"]).unique().default(),
       Column().json("json_column").default(%*{"key": "value"}),
-    ], reset=true)
+    ])
   )
 
 block:
