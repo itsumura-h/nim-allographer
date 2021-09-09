@@ -369,7 +369,6 @@ proc foreignColumnGenerator*(name:string, isDefault:bool, default:int):string =
 
 proc strForeignColumnGenerator*(name:string, maxLength:int, isDefault:bool, default:string):string =
   result = &"`{name}` VARCHAR({maxLength})"
-  result.add(" UNIQUE")
   if isDefault:
     result.add(&" DEFAULT {default}")
 
