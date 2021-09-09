@@ -271,7 +271,6 @@ proc foreign*(self:Column, name:string):Column =
   self.name = name
   self.previousName = name
   self.typ = rdbForeign
-  self.isUnique = true
   self.isIndex = true
   return self
 
@@ -279,7 +278,6 @@ proc strForeign*(self:Column, name:string, length=255):Column =
   self.name = name
   self.previousName = name
   self.typ = rdbStrForeign
-  self.isUnique = true
   self.isIndex = true
   self.info = %*{"maxLength": length}
   return self
