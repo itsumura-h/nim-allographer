@@ -91,6 +91,12 @@ block findTest:
     var t = rdb.table("users").find(1).await.get
     check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
 
+block findStringTest:
+  setup()
+  asyncBlock:
+    var t = rdb.table("users").find("1").await.get
+    check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "auth_id": 1}
+
 block findPlainTest:
   setup()
   asyncBlock:

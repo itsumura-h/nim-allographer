@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.19.1"
+version       = "0.19.2"
 author        = "Hidenobu Itsumura @dumblepytech1 as 'medy'"
 description   = "A Nim query builder library inspired by Laravel/PHP and Orator/Python"
 license       = "MIT"

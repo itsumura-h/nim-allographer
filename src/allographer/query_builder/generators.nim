@@ -39,7 +39,7 @@ proc selectFirstSql*(self:Rdb): Rdb =
   self.sqlString.add(" LIMIT 1")
   return self
 
-proc selectByIdSql*(self:Rdb, id:int, key:string): Rdb =
+proc selectByIdSql*(self:Rdb, key:string): Rdb =
   var key = key
   wrapUpper(key, self.conn.driver)
   if self.sqlString.contains("WHERE"):
