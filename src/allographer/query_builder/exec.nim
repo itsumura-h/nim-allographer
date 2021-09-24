@@ -202,10 +202,10 @@ proc firstPlain*(self: Rdb):Future[seq[string]]{.async.} =
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return newSeq[string](0)
 
-proc find*(self: Rdb, id: int, key="id"):Future[Option[JsonNode]]{.async.} =
+proc find*(self: Rdb, id: string, key="id"):Future[Option[JsonNode]]{.async.} =
   defer: self.cleanUp()
-  self.placeHolder.add($id)
-  self.sqlString = self.selectFindBuilder(id, key).sqlString
+  self.placeHolder.add(id)
+  self.sqlString = self.selectFindBuilder(key).sqlString
   try:
     self.log.logger(self.sqlString, self.placeHolder)
     return await getRow(self, self.sqlString, self.placeHolder)
@@ -213,6 +213,9 @@ proc find*(self: Rdb, id: int, key="id"):Future[Option[JsonNode]]{.async.} =
     self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return none(JsonNode)
+
+proc find*(self: Rdb, id: int, key="id"):Future[Option[JsonNode]]{.async.} =
+  return await self.find($id, key)
 
 # proc find*(self: Rdb, id: int, typ:typedesc, key="id"):Future[Option[typ.type]]{.async.} =
 #   defer: self.cleanUp()
@@ -229,7 +232,7 @@ proc find*(self: Rdb, id: int, key="id"):Future[Option[JsonNode]]{.async.} =
 proc findPlain*(self:Rdb, id:int, key="id"):Future[seq[string]]{.async.} =
   defer: self.cleanUp()
   self.placeHolder.add($id)
-  self.sqlString = self.selectFindBuilder(id, key).sqlString
+  self.sqlString = self.selectFindBuilder(key).sqlString
   try:
     self.log.logger(self.sqlString, self.placeHolder)
     return await getRowPlain(self.conn, self.sqlString, self.placeHolder)

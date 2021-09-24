@@ -41,7 +41,7 @@ proc selectFirstBuilder*(self: Rdb): Rdb =
         .selectFirstSql()
         .offsetSql()
 
-proc selectFindBuilder*(self: Rdb, id: int, key: string): Rdb =
+proc selectFindBuilder*(self: Rdb, key: string): Rdb =
   return self.selectSql()
         .fromSql()
         .joinSql()
@@ -53,7 +53,7 @@ proc selectFindBuilder*(self: Rdb, id: int, key: string): Rdb =
         .whereInSql()
         .whereNotInSql()
         .whereNullSql()
-        .selectByIdSql(id, key)
+        .selectByIdSql(key)
 
 
 # ==================== INSERT ====================
