@@ -8,6 +8,7 @@ getPlain	query_builder/exec.html#getPlain,Rdb	exec: getPlain(self: Rdb): Future[
 getRaw	query_builder/exec.html#getRaw,Rdb	exec: getRaw(self: Rdb): Future[seq[JsonNode]]	
 first	query_builder/exec.html#first,Rdb	exec: first(self: Rdb): Future[Option[JsonNode]]	
 firstPlain	query_builder/exec.html#firstPlain,Rdb	exec: firstPlain(self: Rdb): Future[seq[string]]	
+find	query_builder/exec.html#find,Rdb,string,string	exec: find(self: Rdb; id: string; key = &quot;id&quot;): Future[Option[JsonNode]]	
 find	query_builder/exec.html#find,Rdb,int,string	exec: find(self: Rdb; id: int; key = &quot;id&quot;): Future[Option[JsonNode]]	
 findPlain	query_builder/exec.html#findPlain,Rdb,int,string	exec: findPlain(self: Rdb; id: int; key = &quot;id&quot;): Future[seq[string]]	
 insertSql	query_builder/exec.html#insertSql,Rdb,JsonNode	exec: insertSql(self: Rdb; items: JsonNode): string	

@@ -1,7 +1,7 @@
 selectSql	query_builder/generators.html#selectSql,Rdb	generators: selectSql(self: Rdb): Rdb	
 fromSql	query_builder/generators.html#fromSql,Rdb	generators: fromSql(self: Rdb): Rdb	
 selectFirstSql	query_builder/generators.html#selectFirstSql,Rdb	generators: selectFirstSql(self: Rdb): Rdb	
-selectByIdSql	query_builder/generators.html#selectByIdSql,Rdb,int,string	generators: selectByIdSql(self: Rdb; id: int; key: string): Rdb	
+selectByIdSql	query_builder/generators.html#selectByIdSql,Rdb,string	generators: selectByIdSql(self: Rdb; key: string): Rdb	
 joinSql	query_builder/generators.html#joinSql,Rdb	generators: joinSql(self: Rdb): Rdb	
 leftJoinSql	query_builder/generators.html#leftJoinSql,Rdb	generators: leftJoinSql(self: Rdb): Rdb	
 whereSql	query_builder/generators.html#whereSql,Rdb	generators: whereSql(self: Rdb): Rdb	
