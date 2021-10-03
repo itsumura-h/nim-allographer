@@ -17,7 +17,6 @@ requires "nim >= 1.2.0"
 requires "dotenv >= 1.1.1"
 
 import strformat
-import os
 
 task test, "run testament test":
   exec "testament p 'tests/test_*.nim'"
