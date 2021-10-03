@@ -16,11 +16,11 @@ srcDir        = "src"
 requires "nim >= 1.2.0"
 requires "dotenv >= 1.1.1"
 
-import strformat
+import strformat, os
 
 task test, "run testament test":
   exec "testament p 'tests/test_*.nim'"
-  for kind, path in walkDir(getCurrentDir() / "tests"):
+  for kind, path in walkDir(os.getCurrentDir() / "tests"):
     if not path.contains("."):
       exec "rm -f " & path
 
@@ -45,7 +45,7 @@ task setupTool, "Setup tool docker image":
   exec &"docker build -t {toolImage} -f tool_Dockerfile ."
 
 proc generateToc(dir: string) =
-  let cwd = getCurrentDir()
+  let cwd = os.getCurrentDir()
   for f in listFiles(dir):
     if 3 < f.len:
       let ext = f[^3..^1]
