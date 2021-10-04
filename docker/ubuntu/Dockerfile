@@ -1,23 +1,14 @@
-FROM nimlang/nim:1.4.8-ubuntu
+FROM nimlang/nim:1.4.8-regular
 
-# RUN cat /etc/os-release
-# RUN apt upgrade -y ca-certificates
-# RUN update-ca-certificates
-# RUN apt update -y
-# RUN apt upgrade -y
-# RUN apt install -y \
-#         vim \
-#         curl \
-#         sqlite \
-#         libpq-dev \
-#         libmysqlclient-dev \
-#         --fix-missing
-RUN apt update && apt-get install -y \
+RUN apt update; apt install -y libgnutls30 && \
+    apt upgrade -y && \
+    apt install -y --no-install-recommends \
         vim \
         curl \
         sqlite \
         libpq-dev \
         libmysqlclient-dev
+RUN rm -rf /var/lib/apt/lists/*
 ENV PATH $PATH:/root/.nimble/bin
 WORKDIR /root/project
 COPY ./allographer.nimble .
