@@ -1,4 +1,4 @@
-import strutils
+import std/[os,strutils]
 
 func getOsName*():string =
   const f = staticRead("/etc/os-release")
@@ -9,9 +9,11 @@ func getOsName*():string =
 
 func isExistsSqlite*():bool =
   when defined(macosx):
-    const query = "ldconfig -p | grep libsqlite3.dylib" # TODO
+    const query = "brew --prefix sqlite"
     const res = gorgeEx(query)
-    return res.exitCode == 0 and res.output.len > 0
+    if res.exitCode == 0: return true
+    const libPath = os.getEnv("DYLD_SQLITE_PATH", "/usr/lib/sqlite3.dylib")
+    return fileExists( libPath )
   elif defined(linux) or defined(bsd):
     const osName = getOsName()
     when osName == "alpine":
@@ -28,9 +30,11 @@ func isExistsSqlite*():bool =
 
 func isExistsMysql*():bool =
   when defined(macosx):
-    const query = "ldconfig -p | grep libmysqlclient.dylib" # TODO
+    const query = "brew --prefix mysql"
     const res = gorgeEx(query)
-    return res.exitCode == 0 and res.output.len > 0
+    if res.exitCode == 0: return true
+    const libPath = os.getEnv("DYLD_MYSQL_PATH", "/usr/lib/libmysqlclient.dylib")
+    return fileExists( libPath )
   elif defined(linux) or defined(bsd):
     const osName = getOsName()
     if osName == "alpine":
@@ -45,9 +49,11 @@ func isExistsMysql*():bool =
 
 func isExistsMariadb*():bool =
   when defined(macosx):
-    const query = "ldconfig -p | grep libmariadb.dylib" # TODO
+    const query = "brew --prefix mariadb"
     const res = gorgeEx(query)
-    return res.exitCode == 0 and res.output.len > 0
+    if res.exitCode == 0: return true
+    const libPath = os.getEnv("DYLD_MARIADB_PATH", "/usr/lib/libmariadb.dylib")
+    return fileExists( libPath )
   elif defined(linux) or defined(bsd):
     const osName = getOsName()
     if osName == "alpine":
@@ -64,9 +70,11 @@ func isExistsMariadb*():bool =
 
 func isExistsPostgres*():bool =
   when defined(macosx):
-    const query = "ldconfig -p | grep libpq.dylib" # TODO
+    const query = "brew --prefix postgres"
     const res = gorgeEx(query)
-    return res.exitCode == 0 and res.output.len > 0
+    if res.exitCode == 0: return true
+    const libPath = os.getEnv("DYLD_POSTGRES_PATH", "/usr/lib/libpq.dylib")
+    return fileExists( libPath )
   elif defined(linux) or defined(bsd):
     const osName = getOsName()
     if osName == "alpine":
