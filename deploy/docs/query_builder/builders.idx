@@ -1,6 +1,6 @@
 selectBuilder	query_builder/builders.html#selectBuilder,Rdb	builders: selectBuilder(self: Rdb): Rdb	
 selectFirstBuilder	query_builder/builders.html#selectFirstBuilder,Rdb	builders: selectFirstBuilder(self: Rdb): Rdb	
-selectFindBuilder	query_builder/builders.html#selectFindBuilder,Rdb,int,string	builders: selectFindBuilder(self: Rdb; id: int; key: string): Rdb	
+selectFindBuilder	query_builder/builders.html#selectFindBuilder,Rdb,string	builders: selectFindBuilder(self: Rdb; key: string): Rdb	
 insertValueBuilder	query_builder/builders.html#insertValueBuilder,Rdb,JsonNode	builders: insertValueBuilder(self: Rdb; items: JsonNode): Rdb	
 insertValuesBuilder	query_builder/builders.html#insertValuesBuilder,Rdb,openArray[JsonNode]	builders: insertValuesBuilder(self: Rdb; rows: openArray[JsonNode]): Rdb	
 updateBuilder	query_builder/builders.html#updateBuilder,Rdb,JsonNode	builders: updateBuilder(self: Rdb; items: JsonNode): Rdb	

@@ -186,7 +186,6 @@ proc orWhere*(self: Rdb, column: string, symbol: string, value: nil.type): Rdb =
     })
   return self
 
-
 proc whereBetween*(self:Rdb, column:string, width:array[2, int|float]): Rdb =
   if self.query.hasKey("where_between") == false:
     self.query["where_between"] = %*[{
@@ -200,6 +199,18 @@ proc whereBetween*(self:Rdb, column:string, width:array[2, int|float]): Rdb =
     })
   return self
 
+proc whereBetween*(self:Rdb, column:string, width:array[2, string]): Rdb =
+  if self.query.hasKey("where_between_string") == false:
+    self.query["where_between_string"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    self.query["where_between_string"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return self
 
 proc whereNotBetween*(self:Rdb, column:string, width:array[2, int|float]): Rdb =
   if self.query.hasKey("where_not_between") == false:
@@ -214,6 +225,18 @@ proc whereNotBetween*(self:Rdb, column:string, width:array[2, int|float]): Rdb =
     })
   return self
 
+proc whereNotBetween*(self:Rdb, column:string, width:array[2, string]): Rdb =
+  if self.query.hasKey("where_not_between_string") == false:
+    self.query["where_not_between_string"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    self.query["where_not_between_string"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return self
 
 proc whereIn*(self:Rdb, column:string, width:seq[int|float]): Rdb =
   if self.query.hasKey("where_in") == false:

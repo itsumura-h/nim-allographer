@@ -165,11 +165,12 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 [Schema Builder](./documents/schema_builder.md)  
 
 ## Nim API Documents
+[connection](https://itsumura-h.github.io/nim-allographer/connection.html)  
+
 ### Query Builder
 [base](https://itsumura-h.github.io/nim-allographer/query_builder/base.html)  
 [grammars](https://itsumura-h.github.io/nim-allographer/query_builder/grammars.html)  
 [exec](https://itsumura-h.github.io/nim-allographer/query_builder/exec.html)  
-[connection](https://itsumura-h.github.io/nim-allographer/connection.html)  
 
 ### Schema Builder
 [schema](https://itsumura-h.github.io/nim-allographer/schema_builder/schema.html)  
