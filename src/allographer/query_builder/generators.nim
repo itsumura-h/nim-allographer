@@ -28,7 +28,6 @@ proc selectSql*(self: Rdb): Rdb =
   self.sqlString = queryString
   return self
 
-
 proc fromSql*(self: Rdb): Rdb =
   var table = self.query["table"].getStr()
   wrapUpper(table, self.conn.driver)
@@ -48,7 +47,6 @@ proc selectByIdSql*(self:Rdb, key:string): Rdb =
     self.sqlString.add(&" WHERE {key} = ? LIMIT 1")
   return self
 
-
 proc joinSql*(self: Rdb): Rdb =
   if self.query.hasKey("join"):
     for row in self.query["join"]:
@@ -61,9 +59,7 @@ proc joinSql*(self: Rdb): Rdb =
       wrapUpper(column2, self.conn.driver)
 
       self.sqlString.add(&" INNER JOIN {table} ON {column1} {symbol} {column2}")
-
   return self
-
 
 proc leftJoinSql*(self: Rdb): Rdb =
   if self.query.hasKey("left_join"):
@@ -77,9 +73,7 @@ proc leftJoinSql*(self: Rdb): Rdb =
       wrapUpper(column2, self.conn.driver)
 
       self.sqlString.add(&" LEFT JOIN {table} ON {column1} {symbol} {column2}")
-
   return self
-
 
 proc whereSql*(self: Rdb): Rdb =
   if self.query.hasKey("where"):
@@ -93,9 +87,7 @@ proc whereSql*(self: Rdb): Rdb =
         self.sqlString.add(&" WHERE {column} {symbol} {value}")
       else:
         self.sqlString.add(&" AND {column} {symbol} {value}")
-
   return self
-
 
 proc orWhereSql*(self: Rdb): Rdb =
   if self.query.hasKey("or_where"):
@@ -109,9 +101,7 @@ proc orWhereSql*(self: Rdb): Rdb =
         self.sqlString.add(&" OR {column} {symbol} {value}")
       else:
         self.sqlString.add(&" WHERE {column} {symbol} {value}")
-
   return self
-
 
 proc whereBetweenSql*(self:Rdb): Rdb =
   if self.query.hasKey("where_between"):
@@ -125,9 +115,21 @@ proc whereBetweenSql*(self:Rdb): Rdb =
         self.sqlString.add(&" AND {column} BETWEEN {start} AND {stop}")
       else:
         self.sqlString.add(&" WHERE {column} BETWEEN {start} AND {stop}")
-
   return self
 
+proc whereBetweenStringSql*(self:Rdb): Rdb =
+  if self.query.hasKey("where_between_string"):
+    for row in self.query["where_between_string"]:
+      var column = row["column"].getStr()
+      wrapUpper(column, self.conn.driver)
+      var start = row["width"][0].getStr
+      var stop = row["width"][1].getStr
+
+      if self.sqlString.contains("WHERE"):
+        self.sqlString.add(&" AND {column} BETWEEN '{start}' AND '{stop}'")
+      else:
+        self.sqlString.add(&" WHERE {column} BETWEEN '{start}' AND '{stop}'")
+  return self
 
 proc whereNotBetweenSql*(self:Rdb): Rdb =
   if self.query.hasKey("where_not_between"):
@@ -143,6 +145,19 @@ proc whereNotBetweenSql*(self:Rdb): Rdb =
         self.sqlString.add(&" WHERE {column} NOT BETWEEN {start} AND {stop}")
   return self
 
+proc whereNotBetweenStringSql*(self:Rdb): Rdb =
+  if self.query.hasKey("where_not_between_string"):
+    for row in self.query["where_not_between_string"]:
+      var column = row["column"].getStr()
+      wrapUpper(column, self.conn.driver)
+      var start = row["width"][0].getStr
+      var stop = row["width"][1].getStr
+
+      if self.sqlString.contains("WHERE"):
+        self.sqlString.add(&" AND {column} NOT BETWEEN '{start}' AND '{stop}'")
+      else:
+        self.sqlString.add(&" WHERE {column} NOT BETWEEN '{start}' AND '{stop}'")
+  return self
 
 proc whereInSql*(self:Rdb): Rdb =
   if self.query.hasKey("where_in"):

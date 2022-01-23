@@ -17,7 +17,7 @@
 <link href='https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600' rel='stylesheet' type='text/css'/>
 
 <!-- CSS -->
-<title>async/database/libs/lib_mysql</title>
+<title>src/allographer/async/database/libs/lib_mysql</title>
 <link rel="stylesheet" type="text/css" href="../../../nimdoc.out.css">
 
 <script type="text/javascript" src="../../../dochack.js"></script>
@@ -34,7 +34,6 @@ function main() {
     }
   }
 
-  const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
   function switchTheme(e) {
       if (e.target.checked) {
           document.documentElement.setAttribute('data-theme', 'dark');
@@ -45,24 +44,32 @@ function main() {
       }
   }
 
-  toggleSwitch.addEventListener('change', switchTheme, false);
+  const toggleSwitch = document.querySelector('.theme-switch input[type="checkbox"]');
+  if (toggleSwitch !== null) {
+    toggleSwitch.addEventListener('change', switchTheme, false);
+  }
 
-  const currentTheme = localStorage.getItem('theme') ? localStorage.getItem('theme') : null;
+  var currentTheme = localStorage.getItem('theme');
+  if (!currentTheme && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+    currentTheme = 'dark';
+  }
   if (currentTheme) {
     document.documentElement.setAttribute('data-theme', currentTheme);
 
-    if (currentTheme === 'dark') {
+    if (currentTheme === 'dark' && toggleSwitch !== null) {
       toggleSwitch.checked = true;
     }
   }
 }
+
+window.addEventListener('DOMContentLoaded', main);
 </script>
 
 </head>
-<body onload="main()">
+<body>
 <div class="document" id="documentId">
   <div class="container">
-    <h1 class="title">async/database/libs/lib_mysql</h1>
+    <h1 class="title">src/allographer/async/database/libs/lib_mysql</h1>
     <div class="row">
   <div class="three columns">
   <div class="theme-switch-wrapper">
@@ -100,34 +107,34 @@ function main() {
 <li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">newRow
-      <li><a class="reference" href="#newRow%2Cint"
-    title="newRow(L: int): base.Row">newRow,<wbr>int</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">checkError
+      <ul class="simple nested-toc-section">checkError
       <li><a class="reference" href="#checkError%2CPMySQL"
-    title="checkError(db: PMySQL)">checkError,<wbr>PMySQL</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">dbFormat
-      <li><a class="reference" href="#dbFormat%2Cstring%2Cvarargs%5Bstring%2C%5D"
-    title="dbFormat(formatstr: string; args: varargs[string, `$`]): string">dbFormat,<wbr>string,<wbr>varargs[string,<wbr>]</a></li>
+    title="checkError(db: PMySQL)">checkError(db: PMySQL)</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">dbError
       <li><a class="reference" href="#dbError%2CPMySQL"
-    title="dbError(db: PMySQL)">dbError,<wbr>PMySQL</a></li>
+    title="dbError(db: PMySQL)">dbError(db: PMySQL)</a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">setColumnInfo
-      <li><a class="reference" href="#setColumnInfo%2CPRES%2CDbRows%2Cint%2Cint"
-    title="setColumnInfo(res: PRES; dbRows: var DbRows; line, cols: int)">setColumnInfo,<wbr>PRES,<wbr>DbRows,<wbr>int,<wbr>int</a></li>
+  <ul class="simple nested-toc-section">dbFormat
+      <li><a class="reference" href="#dbFormat%2Cstring%2Cvarargs%5Bstring%2C%5D"
+    title="dbFormat(formatstr: string; args: varargs[string, `$`]): string">dbFormat(formatstr: string; args: varargs[string, `$`]): string</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">newRow
+      <li><a class="reference" href="#newRow%2Cint"
+    title="newRow(L: int): base.Row">newRow(L: int): base.Row</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">properFreeResult
       <li><a class="reference" href="#properFreeResult%2CPRES%2CcstringArray"
-    title="properFreeResult(sqlres: PRES; row: cstringArray)">properFreeResult,<wbr>PRES,<wbr>cstringArray</a></li>
+    title="properFreeResult(sqlres: PRES; row: cstringArray)">properFreeResult(sqlres: PRES; row: cstringArray)</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">setColumnInfo
+      <li><a class="reference" href="#setColumnInfo%2CPRES%2CDbRows%2Cint%2Cint"
+    title="setColumnInfo(res: PRES; dbRows: var DbRows; line, cols: int)">setColumnInfo(res: PRES; dbRows: var DbRows; line, cols: int)</a></li>
 
   </ul>
 
@@ -137,6 +144,7 @@ function main() {
 </ul>
 
   </div>
+  
   <div class="nine columns" id="content">
   <div id="tocRoot"></div>
   
@@ -149,50 +157,56 @@ function main() {
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
-<a id="dbError,PMySQL"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#dbError%2CPMySQL"><span class="Identifier">dbError</span></a><span class="Other">(</span><span class="Identifier">db</span><span class="Other">:</span> <a href="../rdb/mysql.html#PMySQL"><span class="Identifier">PMySQL</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">noreturn</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
-<dd>
-
-raises a DbError exception.
-
-</dd>
-<a id="checkError,PMySQL"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#checkError%2CPMySQL"><span class="Identifier">checkError</span></a><span class="Other">(</span><span class="Identifier">db</span><span class="Other">:</span> <a href="../rdb/mysql.html#PMySQL"><span class="Identifier">PMySQL</span></a><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<div id="checkError,PMySQL">
+<dt><pre><span class="Keyword">proc</span> <a href="#checkError%2CPMySQL"><span class="Identifier">checkError</span></a><span class="Other">(</span><span class="Identifier">db</span><span class="Other">:</span> <a href="../rdb/mysql.html#PMySQL"><span class="Identifier">PMySQL</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 Raises a DbError exception.
 
 </dd>
-<a id="setColumnInfo,PRES,DbRows,int,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#setColumnInfo%2CPRES%2CDbRows%2Cint%2Cint"><span class="Identifier">setColumnInfo</span></a><span class="Other">(</span><span class="Identifier">res</span><span class="Other">:</span> <a href="../rdb/mysql.html#PRES"><span class="Identifier">PRES</span></a><span class="Other">;</span> <span class="Identifier">dbRows</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="../base.html#DbRows"><span class="Identifier">DbRows</span></a><span class="Other">;</span> <span class="Identifier">line</span><span class="Other">,</span> <span class="Identifier">cols</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="dbError,PMySQL">
+<dt><pre><span class="Keyword">proc</span> <a href="#dbError%2CPMySQL"><span class="Identifier">dbError</span></a><span class="Other">(</span><span class="Identifier">db</span><span class="Other">:</span> <a href="../rdb/mysql.html#PMySQL"><span class="Identifier">PMySQL</span></a><span class="Other">)</span> {.<span class="Identifier">noreturn</span><span class="Other">,</span> <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">DbError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+raises a DbError exception.
+
+</dd>
+</div>
+<div id="dbFormat,string,varargs[string,]">
+<dt><pre><span class="Keyword">proc</span> <a href="#dbFormat%2Cstring%2Cvarargs%5Bstring%2C%5D"><span class="Identifier">dbFormat</span></a><span class="Other">(</span><span class="Identifier">formatstr</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Other">`</span><span class="Operator">$</span><span class="Other">`</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="newRow,int"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#newRow%2Cint"><span class="Identifier">newRow</span></a><span class="Other">(</span><span class="Identifier">L</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">base</span><span class="Other">.</span><span class="Identifier">Row</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="newRow,int">
+<dt><pre><span class="Keyword">proc</span> <a href="#newRow%2Cint"><span class="Identifier">newRow</span></a><span class="Other">(</span><span class="Identifier">L</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">base</span><span class="Other">.</span><span class="Identifier">Row</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="properFreeResult,PRES,cstringArray"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#properFreeResult%2CPRES%2CcstringArray"><span class="Identifier">properFreeResult</span></a><span class="Other">(</span><span class="Identifier">sqlres</span><span class="Other">:</span> <a href="../rdb/mysql.html#PRES"><span class="Identifier">PRES</span></a><span class="Other">;</span> <span class="Identifier">row</span><span class="Other">:</span> <span class="Identifier">cstringArray</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="properFreeResult,PRES,cstringArray">
+<dt><pre><span class="Keyword">proc</span> <a href="#properFreeResult%2CPRES%2CcstringArray"><span class="Identifier">properFreeResult</span></a><span class="Other">(</span><span class="Identifier">sqlres</span><span class="Other">:</span> <a href="../rdb/mysql.html#PRES"><span class="Identifier">PRES</span></a><span class="Other">;</span> <span class="Identifier">row</span><span class="Other">:</span> <span class="Identifier">cstringArray</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="dbFormat,string,varargs[string,]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#dbFormat%2Cstring%2Cvarargs%5Bstring%2C%5D"><span class="Identifier">dbFormat</span></a><span class="Other">(</span><span class="Identifier">formatstr</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">,</span> <span class="Other">`</span><span class="Operator">$</span><span class="Other">`</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">string</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+</div>
+<div id="setColumnInfo,PRES,DbRows,int,int">
+<dt><pre><span class="Keyword">proc</span> <a href="#setColumnInfo%2CPRES%2CDbRows%2Cint%2Cint"><span class="Identifier">setColumnInfo</span></a><span class="Other">(</span><span class="Identifier">res</span><span class="Other">:</span> <a href="../rdb/mysql.html#PRES"><span class="Identifier">PRES</span></a><span class="Other">;</span> <span class="Identifier">dbRows</span><span class="Other">:</span> <span class="Keyword">var</span> <a href="../base.html#DbRows"><span class="Identifier">DbRows</span></a><span class="Other">;</span> <span class="Identifier">line</span><span class="Other">,</span> <span class="Identifier">cols</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
 
 </dd>
+</div>
 
 </dl></div>
 
@@ -203,7 +217,7 @@ Raises a DbError exception.
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-09-08 15:54:18 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-01-22 10:46:07 UTC</small>
       </div>
     </div>
   </div>
