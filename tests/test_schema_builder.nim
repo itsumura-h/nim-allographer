@@ -16,6 +16,7 @@ let mariaDb = dbopen(MariaDB, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("
 
 
 block:
+  echo "=== sqlite"
   sqliteDb.schema(
     table("foreigh_table", [
       Column().increments("id"),
@@ -56,6 +57,7 @@ block:
     ])
   )
   if detectOs(Ubuntu):
+    echo "=== mysql"
     mysqlDb.schema(
       table("foreigh_table", [
         Column().increments("id"),
@@ -95,6 +97,7 @@ block:
         Column().json("json_column"),
       ])
     )
+  echo "=== mariadb"
   mariaDb.schema(
     table("foreigh_table", [
       Column().increments("id"),
@@ -134,6 +137,7 @@ block:
       Column().json("json_column"),
     ])
   )
+  echo "=== postgres"
   postgresDb.schema(
     table("foreigh_table", [
       Column().increments("id"),
