@@ -2,7 +2,7 @@ discard """
   cmd: "nim c -d:reset -r $file"
 """
 
-import unittest, json, strformat, options, asyncdispatch, random, times, os
+import unittest, json, strformat, options, asyncdispatch, random, times
 
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
