@@ -7,7 +7,9 @@ leftJoinSql	query_builder/generators.html#leftJoinSql,Rdb	generators: leftJoinSq
 whereSql	query_builder/generators.html#whereSql,Rdb	generators: whereSql(self: Rdb): Rdb	
 orWhereSql	query_builder/generators.html#orWhereSql,Rdb	generators: orWhereSql(self: Rdb): Rdb	
 whereBetweenSql	query_builder/generators.html#whereBetweenSql,Rdb	generators: whereBetweenSql(self: Rdb): Rdb	
+whereBetweenStringSql	query_builder/generators.html#whereBetweenStringSql,Rdb	generators: whereBetweenStringSql(self: Rdb): Rdb	
 whereNotBetweenSql	query_builder/generators.html#whereNotBetweenSql,Rdb	generators: whereNotBetweenSql(self: Rdb): Rdb	
+whereNotBetweenStringSql	query_builder/generators.html#whereNotBetweenStringSql,Rdb	generators: whereNotBetweenStringSql(self: Rdb): Rdb	
 whereInSql	query_builder/generators.html#whereInSql,Rdb	generators: whereInSql(self: Rdb): Rdb	
 whereNotInSql	query_builder/generators.html#whereNotInSql,Rdb	generators: whereNotInSql(self: Rdb): Rdb	
 whereNullSql	query_builder/generators.html#whereNullSql,Rdb	generators: whereNullSql(self: Rdb): Rdb	

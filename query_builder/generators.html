@@ -160,6 +160,11 @@ function main() {
     title="joinSql(self: Rdb): Rdb">joinSql,<wbr>Rdb</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">whereNotBetweenStringSql
+      <li><a class="reference" href="#whereNotBetweenStringSql%2CRdb"
+    title="whereNotBetweenStringSql(self: Rdb): Rdb">whereNotBetweenStringSql,<wbr>Rdb</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">orWhereSql
       <li><a class="reference" href="#orWhereSql%2CRdb"
     title="orWhereSql(self: Rdb): Rdb">orWhereSql,<wbr>Rdb</a></li>
@@ -243,6 +248,11 @@ function main() {
   <ul class="simple nested-toc-section">selectMinSql
       <li><a class="reference" href="#selectMinSql%2CRdb%2Cstring"
     title="selectMinSql(self: Rdb; column: string): Rdb">selectMinSql,<wbr>Rdb,<wbr>string</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">whereBetweenStringSql
+      <li><a class="reference" href="#whereBetweenStringSql%2CRdb"
+    title="whereBetweenStringSql(self: Rdb): Rdb">whereBetweenStringSql,<wbr>Rdb</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">whereNotInSql
@@ -332,8 +342,24 @@ function main() {
 
 
 </dd>
+<a id="whereBetweenStringSql,Rdb"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#whereBetweenStringSql%2CRdb"><span class="Identifier">whereBetweenStringSql</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">)</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
 <a id="whereNotBetweenSql,Rdb"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#whereNotBetweenSql%2CRdb"><span class="Identifier">whereNotBetweenSql</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">)</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="whereNotBetweenStringSql,Rdb"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#whereNotBetweenStringSql%2CRdb"><span class="Identifier">whereNotBetweenStringSql</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">)</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
@@ -498,7 +524,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-10-04 13:52:54 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-01-23 12:44:23 UTC</small>
       </div>
     </div>
   </div>

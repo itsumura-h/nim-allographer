@@ -117,6 +117,8 @@ function main() {
   <ul class="simple nested-toc-section">whereNotBetween
       <li><a class="reference" href="#whereNotBetween%2CRdb%2Cstring%2Carray%5B%2C%5D"
     title="whereNotBetween(self: Rdb; column: string; width: array[2, int | float]): Rdb">whereNotBetween,<wbr>Rdb,<wbr>string,<wbr>array[,<wbr>]</a></li>
+  <li><a class="reference" href="#whereNotBetween%2CRdb%2Cstring%2Carray%5B%2Cstring%5D"
+    title="whereNotBetween(self: Rdb; column: string; width: array[2, string]): Rdb">whereNotBetween,<wbr>Rdb,<wbr>string,<wbr>array[,<wbr>string]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">orderBy
@@ -127,6 +129,8 @@ function main() {
   <ul class="simple nested-toc-section">whereBetween
       <li><a class="reference" href="#whereBetween%2CRdb%2Cstring%2Carray%5B%2C%5D"
     title="whereBetween(self: Rdb; column: string; width: array[2, int | float]): Rdb">whereBetween,<wbr>Rdb,<wbr>string,<wbr>array[,<wbr>]</a></li>
+  <li><a class="reference" href="#whereBetween%2CRdb%2Cstring%2Carray%5B%2Cstring%5D"
+    title="whereBetween(self: Rdb; column: string; width: array[2, string]): Rdb">whereBetween,<wbr>Rdb,<wbr>string,<wbr>array[,<wbr>string]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">having
@@ -325,8 +329,24 @@ function main() {
 
 
 </dd>
+<a id="whereBetween,Rdb,string,array[,string]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#whereBetween%2CRdb%2Cstring%2Carray%5B%2Cstring%5D"><span class="Identifier">whereBetween</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">width</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+
+
+</dd>
 <a id="whereNotBetween,Rdb,string,array[,]"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#whereNotBetween%2CRdb%2Cstring%2Carray%5B%2C%5D"><span class="Identifier">whereNotBetween</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">width</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">float</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a></pre></dt>
+<dd>
+
+
+
+</dd>
+<a id="whereNotBetween,Rdb,string,array[,string]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#whereNotBetween%2CRdb%2Cstring%2Carray%5B%2Cstring%5D"><span class="Identifier">whereNotBetween</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">width</span><span class="Other">:</span> <span class="Identifier">array</span><span class="Other">[</span><span class="DecNumber">2</span><span class="Other">,</span> <span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma">
+    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -408,7 +428,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2021-10-04 13:52:54 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-01-23 12:44:23 UTC</small>
       </div>
     </div>
   </div>

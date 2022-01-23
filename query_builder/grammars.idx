@@ -9,7 +9,9 @@ where	query_builder/grammars.html#where,Rdb,string,string,_2	grammars: where(sel
 orWhere	query_builder/grammars.html#orWhere,Rdb,string,string,	grammars: orWhere(self: Rdb; column: string; symbol: string;\n        value: string | int | float | bool): Rdb	
 orWhere	query_builder/grammars.html#orWhere,Rdb,string,string,_2	grammars: orWhere(self: Rdb; column: string; symbol: string; value: nil.type): Rdb	
 whereBetween	query_builder/grammars.html#whereBetween,Rdb,string,array[,]	grammars: whereBetween(self: Rdb; column: string; width: array[2, int | float]): Rdb	
+whereBetween	query_builder/grammars.html#whereBetween,Rdb,string,array[,string]	grammars: whereBetween(self: Rdb; column: string; width: array[2, string]): Rdb	
 whereNotBetween	query_builder/grammars.html#whereNotBetween,Rdb,string,array[,]	grammars: whereNotBetween(self: Rdb; column: string; width: array[2, int | float]): Rdb	
+whereNotBetween	query_builder/grammars.html#whereNotBetween,Rdb,string,array[,string]	grammars: whereNotBetween(self: Rdb; column: string; width: array[2, string]): Rdb	
 whereIn	query_builder/grammars.html#whereIn,Rdb,string,seq[]	grammars: whereIn(self: Rdb; column: string; width: seq[int | float]): Rdb	
 whereNotIn	query_builder/grammars.html#whereNotIn,Rdb,string,seq[]	grammars: whereNotIn(self: Rdb; column: string; width: seq[int | float]): Rdb	
 whereNull	query_builder/grammars.html#whereNull,Rdb,string	grammars: whereNull(self: Rdb; column: string): Rdb	
