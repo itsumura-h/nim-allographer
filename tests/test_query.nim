@@ -39,30 +39,30 @@ proc setup() =
     var users: seq[JsonNode]
     for i in 1..10:
       let authId = if i mod 2 == 0: 2 else: 1
+      let month = if i > 9: $i else: &"0{i}"
       users.add(
         %*{
           "name": &"user{i}",
           "email": &"user{i}@gmail.com",
           "auth_id": authId,
-          "submit_on": &"2020-{i}-1",
-          "submit_at": &"2020-{i}-1 00:00:00",
+          "submit_on": &"2020-{month}-01",
+          "submit_at": &"2020-{month}-01 00:00:00",
         }
       )
 
-    echo await rdb.table("users").count()
     await rdb.table("users").insert(users)
 
 block getTest:
   setup()
   asyncBlock:
     var t = await rdb.table("users").get()
-    check t[0] == %*{"id":1,"name":"user1","email":"user1@gmail.com","address":newJNull(),"submit_on":"2020-1-1","submit_at":"2020-1-1 00:00:00","auth_id":1}
+    check t[0] == %*{"id":1,"name":"user1","email":"user1@gmail.com","address":newJNull(),"submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00","auth_id":1}
 
 block getPlainTest:
   setup()
   asyncBlock:
     var t = await rdb.table("users").getPlain()
-    check t[0] == @["1", "user1", "user1@gmail.com", "", "2020-1-1", "2020-1-1 00:00:00", "1"]
+    check t[0] == @["1", "user1", "user1@gmail.com", "", "2020-01-01", "2020-01-01 00:00:00", "1"]
 
 block perfomanceTest:
   setup()
@@ -80,31 +80,31 @@ block firstTest:
   setup()
   asyncBlock:
     var t = await(rdb.table("users").where("name", "=", "user1").first).get
-    check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "submit_on":"2020-1-1","submit_at":"2020-1-1 00:00:00", "auth_id": 1}
+    check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00", "auth_id": 1}
 
 block firstPlainTest:
   setup()
   asyncBlock:
     var t = await rdb.table("users").firstPlain()
-    check t == @["1", "user1", "user1@gmail.com", "", "2020-1-1", "2020-1-1 00:00:00", "1"]
+    check t == @["1", "user1", "user1@gmail.com", "", "2020-01-01", "2020-01-01 00:00:00", "1"]
 
 block findTest:
   setup()
   asyncBlock:
     var t = rdb.table("users").find(1).await.get
-    check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "submit_on":"2020-1-1","submit_at":"2020-1-1 00:00:00", "auth_id": 1}
+    check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00", "auth_id": 1}
 
 block findStringTest:
   setup()
   asyncBlock:
     var t = rdb.table("users").find("1").await.get
-    check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "submit_on":"2020-1-1","submit_at":"2020-1-1 00:00:00", "auth_id": 1}
+    check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00", "auth_id": 1}
 
 block findPlainTest:
   setup()
   asyncBlock:
     var t = await rdb.table("users").findPlain(1)
-    check t == @["1", "user1", "user1@gmail.com", "", "2020-1-1", "2020-1-1 00:00:00", "1"]
+    check t == @["1", "user1", "user1@gmail.com", "", "2020-01-01", "2020-01-01 00:00:00", "1"]
 
 block selectTest:
   setup()
@@ -123,11 +123,11 @@ block whereTest:
   asyncBlock:
     var t = await rdb.table("users").where("auth_id", "=", "1").get()
     check t == @[
-      %*{"id":1,"name":"user1","email":"user1@gmail.com","address":newJNull(),"submit_on":"2020-1-1","submit_at":"2020-1-1 00:00:00","auth_id":1},
-      %*{"id":3,"name":"user3","email":"user3@gmail.com","address":newJNull(),"submit_on":"2020-3-1","submit_at":"2020-3-1 00:00:00","auth_id":1},
-      %*{"id":5,"name":"user5","email":"user5@gmail.com","address":newJNull(),"submit_on":"2020-5-1","submit_at":"2020-5-1 00:00:00","auth_id":1},
-      %*{"id":7,"name":"user7","email":"user7@gmail.com","address":newJNull(),"submit_on":"2020-7-1","submit_at":"2020-7-1 00:00:00","auth_id":1},
-      %*{"id":9,"name":"user9","email":"user9@gmail.com","address":newJNull(),"submit_on":"2020-9-1","submit_at":"2020-9-1 00:00:00","auth_id":1}
+      %*{"id":1,"name":"user1","email":"user1@gmail.com","address":newJNull(),"submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00","auth_id":1},
+      %*{"id":3,"name":"user3","email":"user3@gmail.com","address":newJNull(),"submit_on":"2020-03-01","submit_at":"2020-03-01 00:00:00","auth_id":1},
+      %*{"id":5,"name":"user5","email":"user5@gmail.com","address":newJNull(),"submit_on":"2020-05-01","submit_at":"2020-05-01 00:00:00","auth_id":1},
+      %*{"id":7,"name":"user7","email":"user7@gmail.com","address":newJNull(),"submit_on":"2020-07-01","submit_at":"2020-07-01 00:00:00","auth_id":1},
+      %*{"id":9,"name":"user9","email":"user9@gmail.com","address":newJNull(),"submit_on":"2020-09-01","submit_at":"2020-09-01 00:00:00","auth_id":1}
     ]
 
 block orWhereTest:
@@ -135,12 +135,12 @@ block orWhereTest:
   asyncBlock:
     var t = await rdb.table("users").where("auth_id", "=", "1").orWhere("name", "=", "user2").get()
     check t == @[
-      %*{"id":1,"name":"user1","email":"user1@gmail.com","address":newJNull(),"submit_on":"2020-1-1","submit_at":"2020-1-1 00:00:00","auth_id":1},
-      %*{"id":2,"name":"user2","email":"user2@gmail.com","address":newJNull(),"submit_on":"2020-2-1","submit_at":"2020-2-1 00:00:00","auth_id":2},
-      %*{"id":3,"name":"user3","email":"user3@gmail.com","address":newJNull(),"submit_on":"2020-3-1","submit_at":"2020-3-1 00:00:00","auth_id":1},
-      %*{"id":5,"name":"user5","email":"user5@gmail.com","address":newJNull(),"submit_on":"2020-5-1","submit_at":"2020-5-1 00:00:00","auth_id":1},
-      %*{"id":7,"name":"user7","email":"user7@gmail.com","address":newJNull(),"submit_on":"2020-7-1","submit_at":"2020-7-1 00:00:00","auth_id":1},
-      %*{"id":9,"name":"user9","email":"user9@gmail.com","address":newJNull(),"submit_on":"2020-9-1","submit_at":"2020-9-1 00:00:00","auth_id":1}
+      %*{"id":1,"name":"user1","email":"user1@gmail.com","address":newJNull(),"submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00","auth_id":1},
+      %*{"id":2,"name":"user2","email":"user2@gmail.com","address":newJNull(),"submit_on":"2020-02-01","submit_at":"2020-02-01 00:00:00","auth_id":2},
+      %*{"id":3,"name":"user3","email":"user3@gmail.com","address":newJNull(),"submit_on":"2020-03-01","submit_at":"2020-03-01 00:00:00","auth_id":1},
+      %*{"id":5,"name":"user5","email":"user5@gmail.com","address":newJNull(),"submit_on":"2020-05-01","submit_at":"2020-05-01 00:00:00","auth_id":1},
+      %*{"id":7,"name":"user7","email":"user7@gmail.com","address":newJNull(),"submit_on":"2020-07-01","submit_at":"2020-07-01 00:00:00","auth_id":1},
+      %*{"id":9,"name":"user9","email":"user9@gmail.com","address":newJNull(),"submit_on":"2020-09-01","submit_at":"2020-09-01 00:00:00","auth_id":1}
     ]
 
 block updateTest:
@@ -208,13 +208,13 @@ block whereBetweenStringTest:
   asyncBlock:
     var t = await rdb
             .table("users")
-            .whereBetween("submit_at", ["2020-1-1 00:00:00", "2020-1-31 00:00:00"])
+            .whereBetween("submit_at", ["2020-01-01 00:00:00", "2020-01-31 00:00:00"])
             .get()
     check t[0]["name"].getStr == "user1"
 
     t = await rdb
         .table("users")
-        .whereBetween("submit_on", ["2020-1-1", "2020-1-31"])
+        .whereBetween("submit_on", ["2020-01-01", "2020-01-31"])
         .get()
     check t[0]["name"].getStr == "user1"
 
