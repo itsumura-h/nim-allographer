@@ -10,7 +10,7 @@ An asynchronous query builder library inspired by [Laravel/PHP](https://readoubl
 ## Easy to access Rdb
 ### Query Builder
 ```nim
-import asyncdispatch
+import asyncdispatch, json
 import allographer/connection
 import allographer/query_builder
 
