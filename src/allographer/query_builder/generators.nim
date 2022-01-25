@@ -349,6 +349,8 @@ proc insertValuesSql*(self: Rdb, rows: openArray[JsonNode]): Rdb =
         self.placeHolder.add($val)
       elif val.kind == JObject:
         self.placeHolder.add($val)
+      elif val.kind == JNull:
+        self.placeHolder.add("null")
       else:
         self.placeHolder.add(val.getStr())
       value.add("?")
