@@ -1,15 +1,16 @@
 selectSql	query_builder/exec.html#selectSql,Rdb	exec: selectSql(self: Rdb): string	
-orm	query_builder/exec.html#orm,openArray[JsonNode],typedesc	exec: orm(rows: openArray[JsonNode]; typ: typedesc): seq[typ.type]	
-orm	query_builder/exec.html#orm,JsonNode,typedesc	exec: orm(row: JsonNode; typ: typedesc): typ.type	
-orm	query_builder/exec.html#orm,Option[JsonNode],typedesc	exec: orm(row: Option[JsonNode]; typ: typedesc): Option[typ.type]	
 toSql	query_builder/exec.html#toSql,Rdb	exec: toSql(self: Rdb): string	
 get	query_builder/exec.html#get,Rdb	exec: get(self: Rdb): Future[seq[JsonNode]]	
+get	query_builder/exec.html#get,Rdb,typedesc[T]	exec: get[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]	
 getPlain	query_builder/exec.html#getPlain,Rdb	exec: getPlain(self: Rdb): Future[seq[seq[string]]]	
 getRaw	query_builder/exec.html#getRaw,Rdb	exec: getRaw(self: Rdb): Future[seq[JsonNode]]	
+getRaw	query_builder/exec.html#getRaw,Rdb,typedesc[T]	exec: getRaw[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]	
 first	query_builder/exec.html#first,Rdb	exec: first(self: Rdb): Future[Option[JsonNode]]	
+first	query_builder/exec.html#first,Rdb,typedesc[T]	exec: first[T](self: Rdb; typ: typedesc[T]): Future[Option[T]]	
 firstPlain	query_builder/exec.html#firstPlain,Rdb	exec: firstPlain(self: Rdb): Future[seq[string]]	
 find	query_builder/exec.html#find,Rdb,string,string	exec: find(self: Rdb; id: string; key = &quot;id&quot;): Future[Option[JsonNode]]	
 find	query_builder/exec.html#find,Rdb,int,string	exec: find(self: Rdb; id: int; key = &quot;id&quot;): Future[Option[JsonNode]]	
+find	query_builder/exec.html#find,Rdb,int,typedesc[T],string	exec: find[T](self: Rdb; id: int; typ: typedesc[T]; key = &quot;id&quot;): Future[Option[T]]	
 findPlain	query_builder/exec.html#findPlain,Rdb,int,string	exec: findPlain(self: Rdb; id: int; key = &quot;id&quot;): Future[seq[string]]	
 insertSql	query_builder/exec.html#insertSql,Rdb,JsonNode	exec: insertSql(self: Rdb; items: JsonNode): string	
 insert	query_builder/exec.html#insert,Rdb,JsonNode	exec: insert(self: Rdb; items: JsonNode): owned(Future[void])	

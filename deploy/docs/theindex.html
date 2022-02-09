@@ -1931,6 +1931,8 @@ window.addEventListener('DOMContentLoaded', main);
 <li><a class="reference external"
           data-doc-search-tag="exec: find(self: Rdb; id: int; key = &quot;id&quot;): Future[Option[JsonNode]]" href="query_builder/exec.html#find%2CRdb%2Cint%2Cstring">exec: find(self: Rdb; id: int; key = &quot;id&quot;): Future[Option[JsonNode]]</a></li>
           <li><a class="reference external"
+          data-doc-search-tag="exec: find[T](self: Rdb; id: int; typ: typedesc[T]; key = &quot;id&quot;): Future[Option[T]]" href="query_builder/exec.html#find%2CRdb%2Cint%2Ctypedesc%5BT%5D%2Cstring">exec: find[T](self: Rdb; id: int; typ: typedesc[T]; key = &quot;id&quot;): Future[Option[T]]</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="exec: find(self: Rdb; id: string; key = &quot;id&quot;): Future[Option[JsonNode]]" href="query_builder/exec.html#find%2CRdb%2Cstring%2Cstring">exec: find(self: Rdb; id: string; key = &quot;id&quot;): Future[Option[JsonNode]]</a></li>
           </ul></dd>
 <dt><a name="findPlain" href="#findPlain"><span>findPlain:</span></a></dt><dd><ul class="simple">
@@ -1940,6 +1942,8 @@ window.addEventListener('DOMContentLoaded', main);
 <dt><a name="first" href="#first"><span>first:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="exec: first(self: Rdb): Future[Option[JsonNode]]" href="query_builder/exec.html#first%2CRdb">exec: first(self: Rdb): Future[Option[JsonNode]]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="exec: first[T](self: Rdb; typ: typedesc[T]): Future[Option[T]]" href="query_builder/exec.html#first%2CRdb%2Ctypedesc%5BT%5D">exec: first[T](self: Rdb; typ: typedesc[T]): Future[Option[T]]</a></li>
           </ul></dd>
 <dt><a name="firstPlain" href="#firstPlain"><span>firstPlain:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -2044,6 +2048,8 @@ window.addEventListener('DOMContentLoaded', main);
 <dt><a name="get" href="#get"><span>get:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="exec: get(self: Rdb): Future[seq[JsonNode]]" href="query_builder/exec.html#get%2CRdb">exec: get(self: Rdb): Future[seq[JsonNode]]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="exec: get[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]" href="query_builder/exec.html#get%2CRdb%2Ctypedesc%5BT%5D">exec: get[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]</a></li>
           </ul></dd>
 <dt><a name="get_auxdata" href="#get_auxdata"><span>get_auxdata:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -2100,6 +2106,8 @@ window.addEventListener('DOMContentLoaded', main);
 <dt><a name="getRaw" href="#getRaw"><span>getRaw:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="exec: getRaw(self: Rdb): Future[seq[JsonNode]]" href="query_builder/exec.html#getRaw%2CRdb">exec: getRaw(self: Rdb): Future[seq[JsonNode]]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="exec: getRaw[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]" href="query_builder/exec.html#getRaw%2CRdb%2Ctypedesc%5BT%5D">exec: getRaw[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]</a></li>
           </ul></dd>
 <dt><a name="get_salt_from_password" href="#get_salt_from_password"><span>get_salt_from_password:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -3302,14 +3310,6 @@ window.addEventListener('DOMContentLoaded', main);
 <dt><a name="orderBySql" href="#orderBySql"><span>orderBySql:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="generators: orderBySql(self: Rdb): Rdb" href="query_builder/generators.html#orderBySql%2CRdb">generators: orderBySql(self: Rdb): Rdb</a></li>
-          </ul></dd>
-<dt><a name="orm" href="#orm"><span>orm:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="exec: orm(row: JsonNode; typ: typedesc): typ.type" href="query_builder/exec.html#orm%2CJsonNode%2Ctypedesc">exec: orm(row: JsonNode; typ: typedesc): typ.type</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="exec: orm(rows: openArray[JsonNode]; typ: typedesc): seq[typ.type]" href="query_builder/exec.html#orm%2CopenArray%5BJsonNode%5D%2Ctypedesc">exec: orm(rows: openArray[JsonNode]; typ: typedesc): seq[typ.type]</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="exec: orm(row: Option[JsonNode]; typ: typedesc): Option[typ.type]" href="query_builder/exec.html#orm%2COption%5BJsonNode%5D%2Ctypedesc">exec: orm(row: Option[JsonNode]; typ: typedesc): Option[typ.type]</a></li>
           </ul></dd>
 <dt><a name="orWhere" href="#orWhere"><span>orWhere:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -6648,7 +6648,7 @@ window.addEventListener('DOMContentLoaded', main);
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-01-22 10:46:08 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-02-09 18:53:46 UTC</small>
       </div>
     </div>
   </div>
