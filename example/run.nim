@@ -1,14 +1,16 @@
-import strformat, json, progress
+import strformat, json, progress, asyncdispatch
 import bcrypt
 
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
 
-schema([
+from connections import rdb
+
+rdb.schema([
   table("auth",[
     Column().increments("id"),
     Column().string("auth")
-  ], reset=true),
+  ]),
   table("users",[
     Column().increments("id"),
     Column().string("name").nullable(),
@@ -17,11 +19,11 @@ schema([
     Column().string("address").nullable(),
     Column().date("birth_date").nullable(),
     Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-  ], reset=true)
+  ])
 ])
 
 # シーダー
-rdb().table("auth").insert([
+waitFor rdb.table("auth").insert(@[
   %*{"auth": "admin"},
   %*{"auth": "user"}
 ])
@@ -47,11 +49,11 @@ for i in 1..total:
   pb.increment()
 pb.finish()
 
-rdb().table("users").insert(insertData)
+waitFor rdb.table("users").insert(insertData)
 
-echo  rdb().table("users").get()
+echo  waitFor rdb.table("users").get()
 
-echo rdb()
+echo waitFor rdb
     .table("users")
     .select("users.id", "users.email")
     .where("name", "=", "user3")
@@ -62,45 +64,45 @@ echo rdb()
     .get()
 
 
-echo rdb().table("users").select("id", "email").limit(5).get()
-echo rdb().table("users").select("id", "email").limit(5).first()
-echo rdb().table("users").find(4)
-echo rdb().table("users").select("id", "email").limit(5).find(3)
+echo waitFor rdb.table("users").select("id", "email").limit(5).get()
+echo waitFor rdb.table("users").select("id", "email").limit(5).first()
+echo waitFor rdb.table("users").find(4)
+echo waitFor rdb.table("users").select("id", "email").limit(5).find(3)
 
 echo ""
 
-rdb().table("users").insert(%*{"name": "John", "email": "John@gmail.com"})
-echo rdb().table("users").insertId(%*{"name": "John", "email": "John@gmail.com"})
+waitFor rdb.table("users").insert(%*{"name": "John", "email": "John@gmail.com"})
+echo waitFor rdb.table("users").insertId(%*{"name": "John", "email": "John@gmail.com"})
 
 
-rdb().table("users").insert(
-  [
+waitFor rdb.table("users").insert(
+  @[
       %*{"name": "John", "email": "John@gmail.com"},
       %*{"name": "Paul", "email": "Paul@gmail.com"}
   ]
 )
 
-rdb().table("users").inserts(
-  [
+waitFor rdb.table("users").inserts(
+  @[
       %*{"name": "Mick", "email": "Mick@gmail.com"},
       %*{"name": "Keith", "password": "KeithPass"}
   ]
 )
 
 
-rdb().table("users").where("id", "=", 2).update(%*{"name": "David"})
-rdb().table("users").where("id", "=", 2).update(%*{"name": "David"})
-echo rdb().table("users").select().where("name", "=", "David").get()
-echo rdb().table("users").find(2)
+waitFor rdb.table("users").where("id", "=", 2).update(%*{"name": "David"})
+waitFor rdb.table("users").where("id", "=", 2).update(%*{"name": "David"})
+echo waitFor rdb.table("users").select().where("name", "=", "David").get()
+echo waitFor rdb.table("users").find(2)
 
-rdb().table("users").where("name", "=", "David").delete()
-rdb().table("users").delete(3)
-echo rdb().table("users").find(3)
-echo rdb().table("users").limit(5).get()
-echo rdb().table("users").select("name").where("address", "is", nil).get()
+waitFor rdb.table("users").where("name", "=", "David").delete()
+waitFor rdb.table("users").delete(3)
+echo waitFor rdb.table("users").find(3)
+echo waitFor rdb.table("users").limit(5).get()
+echo waitFor rdb.table("users").select("name").where("address", "is", nil).get()
 
 # # sql check
-let r = rdb()
+let r = waitFor rdb
     .table("users")
     .select("users.id", "users.email")
     .where("name", "=", "user3")
@@ -124,9 +126,9 @@ type User = ref object
   address:string
   birth_date:string
   auth_id:int
-let users = rdb().table("users").limit(5).get(User)
+let users = waitFor rdb.table("users").limit(5).get(User)
 for user in users:
   echo user.name
 
-rdb().raw("DROP TABLE users").exec()
-rdb().raw("DROP TABLE auth").exec()
+waitFor rdb.raw("DROP TABLE users").exec()
+waitFor rdb.raw("DROP TABLE auth").exec()

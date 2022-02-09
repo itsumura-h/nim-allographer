@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.20.0"
+version       = "0.21.0"
 author        = "Hidenobu Itsumura @dumblepytech1 as 'medy'"
 description   = "A Nim query builder library inspired by Laravel/PHP and Orator/Python"
 license       = "MIT"
@@ -14,7 +14,7 @@ srcDir        = "src"
 # Dependencies
 
 requires "nim >= 1.2.0"
-requires "dotenv >= 1.1.1"
+requires "dotenv >= 2.0.0"
 
 import strformat, os
 

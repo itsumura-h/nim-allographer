@@ -14,7 +14,7 @@ rdb.schema(
     Column().date("birth_date").nullable(),
     Column().string("null").nullable(),
     Column().boolean("bool").default(false)
-  ], reset=true)
+  ])
 )
 
 var users: seq[JsonNode]
@@ -53,57 +53,57 @@ proc checkTestOptions(t:Typ, r:Option[Typ]) =
 block:
   asyncBlock:
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = await(rdb.table("users").get()).orm(Typ)[0]
+    var r = await(rdb.table("users").get(Typ))[0]
     checkTest(t, r)
 block:
   asyncBlock:
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = await(rdb.raw("select * from users").getRaw()).orm(Typ)[0]
+    var r = await(rdb.raw("select * from users").getRaw(Typ))[0]
     checkTest(t, r)
 block:
   asyncBlock:
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = await(rdb.table("users").first()).orm(Typ)
+    var r = await rdb.table("users").first(Typ)
     checkTestOptions(t, r)
 block:
   asyncBlock:
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = await(rdb.table("users").find(1)).orm(Typ)
+    var r = await(rdb.table("users").find(1, Typ))
     checkTestOptions(t, r)
 block:
   asyncBlock:
     transaction rdb:
       var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
       var rArr = @[
-        await(rdb.table("users").get())[0].orm(Typ),
-        await(rdb.raw("select * from users").getRaw())[0].orm(Typ),
+        await(rdb.table("users").get(Typ))[0],
+        await(rdb.raw("select * from users").getRaw(Typ))[0],
       ]
       for r in rArr:
         checkTest(t, r)
       var rArr2 = @[
-        await(rdb.table("users").first()).orm(Typ),
-        await(rdb.table("users").find(1)).orm(Typ)
+        await(rdb.table("users").first(Typ)),
+        await(rdb.table("users").find(1, Typ))
       ]
       for r in rArr2:
         checkTestOptions(t, r)
 
 block:
   asyncBlock:
-    var r = await(rdb.table("users").where("id", ">", 10).get()).orm(Typ)
+    var r = await(rdb.table("users").where("id", ">", 10).get(Typ))
     check r.len == 0
     check r == newSeq[Typ](0)
 block:
   asyncBlock:
-    var r = await(rdb.raw("select * from users where id > ?", "10").getRaw()).orm(Typ)
+    var r = await(rdb.raw("select * from users where id > ?", "10").getRaw(Typ))
     check r.len == 0
     check r == newSeq[Typ](0)
 block:
   asyncBlock:
-    var r = await(rdb.table("users").where("id", ">", 10).first()).orm(Typ)
+    var r = await(rdb.table("users").where("id", ">", 10).first(Typ))
     check r.isSome() == false
 block:
   asyncBlock:
-    var r = await(rdb.table("users").find(10)).orm(Typ)
+    var r = await(rdb.table("users").find(10, Typ))
     check r.isSome() == false
 
 rdb.alter(

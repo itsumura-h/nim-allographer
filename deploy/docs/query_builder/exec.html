@@ -160,6 +160,8 @@ window.addEventListener('DOMContentLoaded', main);
     title="find(self: Rdb; id: int; key = &quot;id&quot;): Future[Option[JsonNode]]">find(self: Rdb; id: int; key = &quot;id&quot;): Future[Option[JsonNode]]</a></li>
   <li><a class="reference" href="#find%2CRdb%2Cstring%2Cstring"
     title="find(self: Rdb; id: string; key = &quot;id&quot;): Future[Option[JsonNode]]">find(self: Rdb; id: string; key = &quot;id&quot;): Future[Option[JsonNode]]</a></li>
+  <li><a class="reference" href="#find%2CRdb%2Cint%2Ctypedesc%5BT%5D%2Cstring"
+    title="find[T](self: Rdb; id: int; typ: typedesc[T]; key = &quot;id&quot;): Future[Option[T]]">find[T](self: Rdb; id: int; typ: typedesc[T]; key = &quot;id&quot;): Future[Option[T]]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">findPlain
@@ -170,6 +172,8 @@ window.addEventListener('DOMContentLoaded', main);
   <ul class="simple nested-toc-section">first
       <li><a class="reference" href="#first%2CRdb"
     title="first(self: Rdb): Future[Option[JsonNode]]">first(self: Rdb): Future[Option[JsonNode]]</a></li>
+  <li><a class="reference" href="#first%2CRdb%2Ctypedesc%5BT%5D"
+    title="first[T](self: Rdb; typ: typedesc[T]): Future[Option[T]]">first[T](self: Rdb; typ: typedesc[T]): Future[Option[T]]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">firstPlain
@@ -180,6 +184,8 @@ window.addEventListener('DOMContentLoaded', main);
   <ul class="simple nested-toc-section">get
       <li><a class="reference" href="#get%2CRdb"
     title="get(self: Rdb): Future[seq[JsonNode]]">get(self: Rdb): Future[seq[JsonNode]]</a></li>
+  <li><a class="reference" href="#get%2CRdb%2Ctypedesc%5BT%5D"
+    title="get[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]">get[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">getPlain
@@ -190,6 +196,8 @@ window.addEventListener('DOMContentLoaded', main);
   <ul class="simple nested-toc-section">getRaw
       <li><a class="reference" href="#getRaw%2CRdb"
     title="getRaw(self: Rdb): Future[seq[JsonNode]]">getRaw(self: Rdb): Future[seq[JsonNode]]</a></li>
+  <li><a class="reference" href="#getRaw%2CRdb%2Ctypedesc%5BT%5D"
+    title="getRaw[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]">getRaw[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">insert
@@ -229,15 +237,6 @@ window.addEventListener('DOMContentLoaded', main);
   <ul class="simple nested-toc-section">min
       <li><a class="reference" href="#min%2CRdb%2Cstring"
     title="min(self: Rdb; column: string): Future[Option[string]]">min(self: Rdb; column: string): Future[Option[string]]</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">orm
-      <li><a class="reference" href="#orm%2CJsonNode%2Ctypedesc"
-    title="orm(row: JsonNode; typ: typedesc): typ.type">orm(row: JsonNode; typ: typedesc): typ.type</a></li>
-  <li><a class="reference" href="#orm%2COption%5BJsonNode%5D%2Ctypedesc"
-    title="orm(row: Option[JsonNode]; typ: typedesc): Option[typ.type]">orm(row: Option[JsonNode]; typ: typedesc): Option[typ.type]</a></li>
-  <li><a class="reference" href="#orm%2CopenArray%5BJsonNode%5D%2Ctypedesc"
-    title="orm(rows: openArray[JsonNode]; typ: typedesc): seq[typ.type]">orm(rows: openArray[JsonNode]; typ: typedesc): seq[typ.type]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">paginate
@@ -401,6 +400,14 @@ It is only used with raw()
 
 </dd>
 </div>
+<div id="find,Rdb,int,typedesc[T],string">
+<dt><pre><span class="Keyword">proc</span> <a href="#find%2CRdb%2Cint%2Ctypedesc%5BT%5D%2Cstring"><span class="Identifier">find</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">]</span></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
 <div id="findPlain,Rdb,int,string">
 <dt><pre><span class="Keyword">proc</span> <a href="#findPlain%2CRdb%2Cint%2Cstring"><span class="Identifier">findPlain</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
@@ -415,6 +422,14 @@ It is only used with raw()
 <dt><pre><span class="Keyword">proc</span> <a href="#first%2CRdb"><span class="Identifier">first</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">]</span> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
     <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="first,Rdb,typedesc[T]">
+<dt><pre><span class="Keyword">proc</span> <a href="#first%2CRdb%2Ctypedesc%5BT%5D"><span class="Identifier">first</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">]</span></pre></dt>
 <dd>
 
 
@@ -441,6 +456,14 @@ It is only used with raw()
 
 </dd>
 </div>
+<div id="get,Rdb,typedesc[T]">
+<dt><pre><span class="Keyword">proc</span> <a href="#get%2CRdb%2Ctypedesc%5BT%5D"><span class="Identifier">get</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">]</span></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
 <div id="getPlain,Rdb">
 <dt><pre><span class="Keyword">proc</span> <a href="#getPlain%2CRdb"><span class="Identifier">getPlain</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span><span class="Other">]</span> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
@@ -455,6 +478,14 @@ It is only used with raw()
 <dt><pre><span class="Keyword">proc</span> <a href="#getRaw%2CRdb"><span class="Identifier">getRaw</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
     <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
     <span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="getRaw,Rdb,typedesc[T]">
+<dt><pre><span class="Keyword">proc</span> <a href="#getRaw%2CRdb%2Ctypedesc%5BT%5D"><span class="Identifier">getRaw</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">]</span></pre></dt>
 <dd>
 
 
@@ -550,30 +581,6 @@ It is only used with raw()
 
 </dd>
 </div>
-<div id="orm,JsonNode,typedesc">
-<dt><pre><span class="Keyword">proc</span> <a href="#orm%2CJsonNode%2Ctypedesc"><span class="Identifier">orm</span></a><span class="Other">(</span><span class="Identifier">row</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">typ</span><span class="Other">.</span><span class="Keyword">type</span></pre></dt>
-<dd>
-
-
-
-</dd>
-</div>
-<div id="orm,Option[JsonNode],typedesc">
-<dt><pre><span class="Keyword">proc</span> <a href="#orm%2COption%5BJsonNode%5D%2Ctypedesc"><span class="Identifier">orm</span></a><span class="Other">(</span><span class="Identifier">row</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">typ</span><span class="Other">.</span><span class="Keyword">type</span><span class="Other">]</span></pre></dt>
-<dd>
-
-
-
-</dd>
-</div>
-<div id="orm,openArray[JsonNode],typedesc">
-<dt><pre><span class="Keyword">proc</span> <a href="#orm%2CopenArray%5BJsonNode%5D%2Ctypedesc"><span class="Identifier">orm</span></a><span class="Other">(</span><span class="Identifier">rows</span><span class="Other">:</span> <span class="Identifier">openArray</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">typ</span><span class="Other">.</span><span class="Keyword">type</span><span class="Other">]</span></pre></dt>
-<dd>
-
-
-
-</dd>
-</div>
 <div id="paginate,Rdb,int,int">
 <dt><pre><span class="Keyword">proc</span> <a href="#paginate%2CRdb%2Cint%2Cint"><span class="Identifier">paginate</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">display</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">page</span><span class="Other">:</span> <span class="Identifier">int</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
@@ -639,7 +646,7 @@ It is only used with raw()
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-01-22 10:46:03 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-02-09 18:53:42 UTC</small>
       </div>
     </div>
   </div>

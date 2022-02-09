@@ -1,1 +1,0 @@
-coco --cov='!tests' --cov='!nimcache' --compiler='--hints:off'

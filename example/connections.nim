@@ -15,14 +15,11 @@ let
   timeout = getEnv("DB_TIMEOUT").parseInt
 
 let
-  sqliteDb = dbopen(SQLite3, sqliteHost, maxConnections=maxConnections, shouldDisplayLog=true)
-  # mysqlDb = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout)
-  # mariaDb = dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout)
-  # postgresDb = dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout)
-  rdb* = sqliteDb
-  # rdb* = postgresDb
-  # rdb* = mysqlDb
-  # rdb* = mariaDb
+  # rdb* = dbopen(SQLite3, sqliteHost, maxConnections=maxConnections, shouldDisplayLog=true)
+  rdb* = dbopen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=true)
+  # rdb* = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout)
+  # rdb* = dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout)
+  # rdb* = dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout)
 
 template asyncBlock*(body:untyped) =
   waitFor (proc(){.async.}=
