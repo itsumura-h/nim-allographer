@@ -34,7 +34,7 @@ Example: Query Builder
       * [Aggregates](#aggregates)
       * [Transaction](#transaction)
 
-<!-- Added by: root, at: Wed Sep  8 15:38:17 UTC 2021 -->
+<!-- Added by: root, at: Wed Feb  9 18:56:26 UTC 2022 -->
 
 <!--te-->
 ---
@@ -84,12 +84,9 @@ type Typ = ref object
   null: string
   is_admin: bool
 
-var rows = await(
-            rdb.table("test")
+var rows = await rdb.table("test")
             .select("id", "float", "char", "datetime", "null", "is_admin")
-            .get()
-          )
-          .orm(Typ)
+            .get(Typ)
 ```
 
 ```nim
@@ -114,17 +111,17 @@ echo rows[0].is_admin
 
 If DB response is empty, `get` and `getRaw` return empty seq, `find` and `first` return optional object.
 ```nim
-let response = await rdb.table("test").get().orm(Typ)
+let response = await rdb.table("test").get(Typ)
 assert response.len == 0
 
-let response = await rdb.raw("select * from users").getRaw().orm(Typ)
+let response = await rdb.raw("select * from users").getRaw(Typ)
 assert response.len == 0
 
-let response = await rdb.table("test").find(1).orm(Typ)
+let response = await rdb.table("test").find(1, Typ)
 assert response.type == Option[Typ]
 assert response.isSome == false
 
-let response = await rdb.table("test").first().orm(Typ)
+let response = await rdb.table("test").first(Typ)
 assert response.type == Option[Typ]
 assert response.isSome == false
 ```
