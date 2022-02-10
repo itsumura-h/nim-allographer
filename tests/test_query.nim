@@ -52,6 +52,10 @@ proc setup() =
 
     await rdb.table("users").insert(users)
 
+# =============================================================================
+# test
+# =============================================================================
+
 block getTest:
   setup()
   asyncBlock:
@@ -117,6 +121,16 @@ block selectAsTest:
   asyncBlock:
     var t = await rdb.table("users").select("name as user_name", "email").get()
     check t[0] == %*{"user_name": "user1", "email": "user1@gmail.com"}
+
+block selectLikeTest:
+  setup()
+  asyncBlock:
+    var t = await rdb.table("users").select("email").where("email", "LIKE", "%10%").get()
+    check t == @[%*{"email":"user10@gmail.com"}]
+    t = await rdb.table("users").select("email").where("email", "LIKE", "user10%").get()
+    check t == @[%*{"email":"user10@gmail.com"}]
+    t = await rdb.table("users").select("email").where("email", "LIKE", "%10@gmail.com%").get()
+    check t == @[%*{"email":"user10@gmail.com"}]
 
 block whereTest:
   setup()
