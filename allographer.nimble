@@ -14,7 +14,6 @@ srcDir        = "src"
 # Dependencies
 
 requires "nim >= 1.2.0"
-requires "dotenv >= 2.0.0"
 
 import strformat, os
 

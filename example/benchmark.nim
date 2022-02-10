@@ -2,20 +2,21 @@ import json, random, asyncdispatch, times
 
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
+from connections import rdb
 
 randomize()
 const range1_10000 = 1..10000
 
 proc migrate() {.async.} =
-  schema(
+  rdb.schema(
     table("World", [
       Column().increments("id"),
       Column().integer("randomNumber").default(0)
-    ], reset=true),
+    ]),
     table("Fortune", [
       Column().increments("id"),
       Column().string("message")
-    ], reset=true)
+    ])
   )
 
   var data = newSeq[JsonNode]()
@@ -23,7 +24,7 @@ proc migrate() {.async.} =
     data.add(
       %*{"randomNumber": rand(1..10000)}
     )
-  rdb().table("World").insert(data)
+  await rdb.table("World").insert(data)
 
   data = @[
     %*{"id": 1, "message": "fortune: No such file or directory"},
@@ -40,28 +41,28 @@ proc migrate() {.async.} =
     %*{"id": 12, "message": "フレームワークのベンチマーク"},
   ]
 
-  await rdb().table("Fortune").asyncInsert(data)
+  await rdb.table("Fortune").insert(data)
 
 
 proc main() {.async.} =
   const countNum = 500
   var response = newSeq[JsonNode](countNum)
-  var getFutures = newSeq[Future[Row]](countNum)
+  var getFutures = newSeq[Future[seq[string]]](countNum)
   var updateFutures = newSeq[Future[void]](countNum)
   for i in 1..countNum:
     let index = rand(range1_10000)
     let number = rand(range1_10000)
-    getFutures[i-1] = rdb().table("World").select("id", "randomNumber").asyncFindPlain(index)
-    updateFutures[i-1] = rdb()
+    getFutures[i-1] = rdb.table("World").select("id", "randomNumber").findPlain(index)
+    updateFutures[i-1] = rdb
                         .table("World")
                         .where("id", "=", index)
-                        .asyncUpdate(%*{"randomNumber": number})
+                        .update(%*{"randomNumber": number})
     response[i-1] = %*{"id":index, "randomNumber": number}
 
   discard await all(getFutures)
   await all(updateFutures)
 
-# waitFor migrate()
+waitFor migrate()
 # waitFor main()
 let start = cpuTime()
 for i in 1..20:
