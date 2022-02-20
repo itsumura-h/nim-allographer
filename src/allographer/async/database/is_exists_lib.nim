@@ -1,11 +1,16 @@
 import std/[os,strutils]
 
 func getOsName*():string =
-  const f = staticRead("/etc/os-release")
-  for row in f.split("\n"):
-    let kv = row.split("=")
-    if kv[0] == "ID":
-      return kv[1]
+  when defined(maxosx) or defined(linux) or defined(bsd):
+    const f = staticRead("/etc/os-release")
+    for row in f.split("\n"):
+      let kv = row.split("=")
+      if kv[0] == "ID":
+        return kv[1]
+  elif defined(windows):
+    return "windows"
+  else:
+    return ""
 
 func isExistsSqlite*():bool =
   when defined(macosx):
