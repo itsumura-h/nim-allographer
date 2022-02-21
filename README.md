@@ -121,6 +121,19 @@ After install allographer, "dbtool" command is going to be available.
 
 If you get `SIGSEGV: Illegal storage access. (Attempt to read from nil?)` when trying to use the database you likely have a problem with the library path. On OS X the default is to check for the `brew --prefix` of the chosen driver, if that doesn't work it will look in `/usr/lib` or an environment variable `DYLD_xxx_PATH` where `xxx` if your driver: `SQLITE`, `MARIADB`, `MYSQL` or `POSTGRES`.
 
+## Configuation
+Allographer load emvironment variables of `sqlite`, `postgres`, `mysql` and `mariadb` to define which process should be **compiled**.<br>
+These emvironment variables should be set at **compile time**, and create `config.nims` not `.env`
+
+config.nims
+```nim
+import os
+
+putEnv("sqlite", "true")
+putEnv("postgres", "true")
+```
+In this example, even if your environment lacks `mysqlclient-dev`, compile will success. However if your environment lacks `sqlite3`, compile will fail.
+
 ## Createing connection
 Database connection should be definded as singleton variable.
 
