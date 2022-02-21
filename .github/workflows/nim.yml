@@ -54,12 +54,12 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Test
-      run: docker-compose run allographer-ubuntu nimble test
+      run: docker-compose run app-ubuntu nimble test
     - name: Test multi-thread
       run: |
         echo '' >> tests/config.nims
         echo 'switch("threads", "on")' >> tests/config.nims
-        docker-compose run allographer-ubuntu nimble test
+        docker-compose run app-ubuntu nimble test
 
   create-tag-draft:
     runs-on: ubuntu-latest
