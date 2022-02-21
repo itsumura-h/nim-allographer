@@ -91,11 +91,11 @@ proc default*(c: Column, value:JsonNode): Column =
   c.defaultJson = value
   return c
 
-proc default*(c:Column):Column =
+proc default*(c: Column):Column =
   c.isDefault = true
   return c
 
-proc index*(c:Column):Column =
+proc index*(c: Column):Column =
   c.isIndex = true
   return c
 
@@ -103,7 +103,7 @@ proc nullable*(c: Column): Column =
   c.isNullable = true
   return c
 
-proc unique*(c:Column): Column =
+proc unique*(c: Column): Column =
   c.isUnique = true
   return c
 
