@@ -93,6 +93,7 @@ rdb.alter(
       * [Index](#index)
       * [Install](#install)
       * [Set up](#set-up)
+      * [Configuation](#configuation)
       * [Createing connection](#createing-connection)
       * [Logging](#logging)
       * [Documents](#documents)
@@ -102,7 +103,7 @@ rdb.alter(
       * [Development](#development)
          * [Branch naming rule](#branch-naming-rule)
 
-<!-- Added by: root, at: Wed Feb  9 18:56:13 UTC 2022 -->
+<!-- Added by: root, at: Tue Feb 22 03:11:48 UTC 2022 -->
 
 <!--te-->
 ---
