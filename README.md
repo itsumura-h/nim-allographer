@@ -129,8 +129,8 @@ config.nims
 ```nim
 import os
 
-putEnv("sqlite", "true")
-putEnv("postgres", "true")
+putEnv("sqlite", $true)
+putEnv("postgres", $true)
 ```
 In this example, even if your environment lacks `mysqlclient-dev`, compile will success. However if your environment lacks `sqlite3`, compile will fail.
 
