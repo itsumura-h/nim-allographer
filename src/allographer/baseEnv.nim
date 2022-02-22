@@ -1,7 +1,7 @@
 import os, strutils
 
 const
-  isExistsSqlite* = when existsEnv("sqlite"): getEnv("sqlite").parseBool else: false
-  isExistsPostgres* = when existsEnv("postgres"): getEnv("postgres").parseBool else: false
-  isExistsMysql* = when existsEnv("mysql"): getEnv("mysql").parseBool else: false
-  isExistsMariadb* = when existsEnv("mariadb"): getEnv("mariadb").parseBool else: false
+  isExistsSqlite* = when existsEnv("DB_SQLITE"): getEnv("DB_SQLITE").parseBool else: false
+  isExistsPostgres* = when existsEnv("DB_POSTGRES"): getEnv("DB_POSTGRES").parseBool else: false
+  isExistsMysql* = when existsEnv("DB_MYSQL"): getEnv("DB_MYSQL").parseBool else: false
+  isExistsMariadb* = when existsEnv("DB_MARIADB"): getEnv("DB_MARIADB").parseBool else: false

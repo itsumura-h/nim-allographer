@@ -1,6 +1,6 @@
 import os
 
-putEnv("sqlite", "true")
-putEnv("postgres", "true")
-putEnv("mysql", "true")
-putEnv("mariadb", "true")
+putEnv("DB_SQLITE", $true)
+putEnv("DB_POSTGRES", $true)
+putEnv("DB_MYSQL", $true)
+putEnv("DB_MARIADB", $true)

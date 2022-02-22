@@ -1,2 +1,4 @@
+import os
+
 switch("path", "$projectDir/../src")
-putEnv("sqlite", "true")
+putEnv("DB_SQLITE", $true)
