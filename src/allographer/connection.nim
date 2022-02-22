@@ -1,3 +1,4 @@
+import json
 from async/async_db import open
 from async/database/base as asyncBase import Driver
 import base
@@ -11,3 +12,4 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
   result = new Rdb
   result.conn = open(driver, database, user, password, host, port, maxConnections, timeout)
   result.log = LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)
+  result.query = newJObject()

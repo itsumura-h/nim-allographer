@@ -1,9 +1,9 @@
 version: '3'
 services:
-  allographer:
+  app-alpine:
     build:
       context: .
-      dockerfile: ./docker/app/Dockerfile
+      dockerfile: ./docker/alpine/Dockerfile
     tty: true
     environment:
       TZ: Asia/Tokyo
@@ -13,7 +13,7 @@ services:
       - mariadb
       - postgres
 
-  allographer-ubuntu:
+  app-ubuntu:
     build:
       context: .
       dockerfile: ./docker/ubuntu/Dockerfile

@@ -1,5 +1,6 @@
 import os
 
-# putEnv("DB_DRIVER", "sqlite") # sqlite / mysql / postgres
-putEnv("DB_DRIVER", "mysql") # sqlite / mysql / postgres
-# putEnv("DB_DRIVER", "postgres") # sqlite / mysql / postgres
+putEnv("DB_SQLITE", $true)
+putEnv("DB_POSTGRES", $true)
+putEnv("DB_MYSQL", $true)
+putEnv("DB_MARIADB", $true)

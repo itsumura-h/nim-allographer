@@ -1,4 +1,4 @@
-FROM nimlang/nim:1.4.8-regular
+FROM nimlang/nim:1.6.2-ubuntu-regular
 
 RUN apt update; apt install -y libgnutls30 && \
     apt upgrade -y && \
@@ -13,3 +13,6 @@ ENV PATH $PATH:/root/.nimble/bin
 WORKDIR /root/project
 COPY ./allographer.nimble .
 RUN nimble install -y
+RUN nimble install -y \
+           bcrypt \
+           progress

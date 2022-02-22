@@ -1,24 +1,26 @@
 import asyncdispatch, macros, strutils, strformat
 import database/base
 import database/impls/mysql, database/impls/mariadb, database/impls/postgres, database/impls/sqlite
-import database/is_exists_lib
+# import database/is_exists_lib
+import ../baseEnv
 
 export base
+
 
 proc open*(driver:Driver, database:string="", user:string="", password:string="",
             host: string="", port=0, maxConnections=1, timeout=30): Connections =
   case driver:
   of MySQL:
-    when isExistsMysql():
+    when isExistsMysql:
       result = mysql.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of MariaDB:
-    when isExistsMariadb():
+    when isExistsMariadb:
       result = mariadb.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of PostgreSQL:
-    when isExistsPostgres():
+    when isExistsPostgres:
       result = postgres.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of SQLite3:
-    when isExistsSqlite():
+    when isExistsSqlite:
       result = sqlite.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
 
 proc query*(self: Connections, query: string, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
@@ -29,17 +31,17 @@ proc query*(self: Connections, query: string, args: seq[string] = @[]):Future[(s
     return
   case self.driver
   of MySQL:
-    when isExistsMysql():
+    when isExistsMysql:
       return await mysql.query(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
-    when isExistsMariadb():
+    when isExistsMariadb:
       return await mariadb.query(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
-    when isExistsPostgres():
+    when isExistsPostgres:
       discard
       return await postgres.query(self.pools[connI].postgresConn, query, args, self.timeout)
   of SQLite3:
-    when isExistsSqlite():
+    when isExistsSqlite:
       return await sqlite.query(self.pools[connI].sqliteConn, query, args, self.timeout)
 
 proc queryPlain*(self: Connections, query: string, args: seq[string] = @[]):Future[seq[Row]] {.async.} =
@@ -50,18 +52,18 @@ proc queryPlain*(self: Connections, query: string, args: seq[string] = @[]):Futu
   await sleepAsync(0)
   case self.driver
   of MySQL:
-    when isExistsMysql():
+    when isExistsMysql:
       discard
       return await mysql.queryPlain(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
-    when isExistsMariadb():
+    when isExistsMariadb:
       return await mariadb.queryPlain(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
-    when isExistsPostgres():
+    when isExistsPostgres:
       discard
       return await postgres.queryPlain(self.pools[connI].postgresConn, query, args, self.timeout)
   of SQLite3:
-    when isExistsSqlite():
+    when isExistsSqlite:
       discard
       return await sqlite.queryPlain(self.pools[connI].sqliteConn, query, args, self.timeout)
 
@@ -74,16 +76,16 @@ proc exec*(self: Connections, query: string, args: seq[string] = @[]) {.async.} 
   await sleepAsync(0)
   case self.driver
   of MySQL:
-    when isExistsMysql():
+    when isExistsMysql:
       await mysql.exec(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
-    when isExistsMariadb():
+    when isExistsMariadb:
       await mariadb.exec(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
-    when isExistsPostgres():
+    when isExistsPostgres:
       await postgres.exec(self.pools[connI].postgresConn, query, args, self.timeout)
   of SQLite3:
-    when isExistsSqlite():
+    when isExistsSqlite:
       await sqlite.exec(self.pools[connI].sqliteConn, query, args, self.timeout)
   self.returnConn(connI)
 
@@ -99,19 +101,19 @@ proc prepare*(self: Connections, query: string, stmtName=""):Future[Prepared] {.
   await sleepAsync(0)
   case self.driver
   of MySQL:
-    when isExistsMysql():
+    when isExistsMysql:
       discard
       # await mysql.prepare(self.pools[connI].mysqlConn, query, self.timeout)
   of MariaDB:
-    when isExistsMariadb():
+    when isExistsMariadb:
       discard
       # await mariadb.prepare(self.pools[connI].mariadbConn, query, self.timeout)
   of PostgreSQL:
-    when isExistsPostgres():
+    when isExistsPostgres:
       let nArgs = await postgres.prepare(self.pools[connI].postgresConn, query, self.timeout, stmtName)
       result = Prepared(conn:self, nArgs:nArgs, pgStmt:stmtName, connI:connI)
   of SQLite3:
-    when isExistsSqlite():
+    when isExistsSqlite:
       let sqliteStmt = await sqlite.prepare(self.pools[connI].sqliteConn, query, self.timeout)
       result = Prepared(conn:self, sqliteStmt:sqliteStmt, connI:connI)
 
@@ -119,52 +121,33 @@ proc query*(self:Prepared, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {
   await sleepAsync(0)
   case self.conn.driver
   of MySQL:
-    when isExistsMysql():
+    when isExistsMysql:
       discard
   of MariaDB:
-    when isExistsMariadb():
+    when isExistsMariadb:
       discard
   of PostgreSQL:
-    when isExistsPostgres():
+    when isExistsPostgres:
       return await postgres.preparedQuery(self.conn.pools[self.connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
   of SQLite3:
-    when isExistsSqlite():
+    when isExistsSqlite:
       return await sqlite.preparedQuery(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)
 
 proc exec*(self:Prepared, args:seq[string] = @[]) {.async.} =
   await sleepAsync(0)
   case self.conn.driver
   of MySQL:
-    when isExistsMysql():
+    when isExistsMysql:
       discard
   of MariaDB:
-    when isExistsMariadb():
+    when isExistsMariadb:
       discard
   of PostgreSQL:
-    when isExistsPostgres():
+    when isExistsPostgres:
       await postgres.preparedExec(self.conn.pools[self.connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
   of SQLite3:
-    when isExistsSqlite():
+    when isExistsSqlite:
       await sqlite.preparedExec(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)
 
 proc close*(self:Prepared) =
   self.conn.returnConn(self.connI)
-
-
-macro transaction*(bodyInput: untyped):untyped =
-  var bodyStr = bodyInput.repr
-  bodyStr.removePrefix
-  bodyStr = bodyStr.indent(4)
-  bodyStr = fmt("""
-waitFor (proc(){.async.}=
-  await db.exec("BEGIN")
-  try:
-[bodyStr]
-    await db.exec("COMMIT")
-  except:
-    await db.exec("ROLLBACK")
-    echo getCurrentExceptionMsg()
-)()
-""", '[', ']')
-  let body = bodyStr.parseStmt()
-  return body
