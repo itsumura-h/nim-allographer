@@ -124,7 +124,7 @@ If you get `SIGSEGV: Illegal storage access. (Attempt to read from nil?)` when t
 
 ## Configuation
 Allographer loads emvironment variables of `DB_SQLITE`, `DB_POSTGRES`, `DB_MYSQL` and `DB_MARIADB` to define which process should be **compiled**.<br>
-These emvironment variables should be set at **compile time**, and create `config.nims` not `.env`
+These environment variables have to be set at compile time, so they have to be written in `config.nims` not in `.env`.
 
 config.nims
 ```nim
@@ -133,7 +133,7 @@ import os
 putEnv("DB_SQLITE", $true)
 putEnv("DB_POSTGRES", $true)
 ```
-In this example, even if your environment lacks `mysqlclient-dev`, compile will success. However if your environment lacks `sqlite3`, compile will fail.
+In this example, even if your runtime environment lacks `mysqlclient-dev`, execution will success. However if your runtime environment lacks `sqlite3`, execution will fail.
 
 ## Createing connection
 Database connection should be definded as singleton variable.
