@@ -1,8 +1,15 @@
-import strformat, strutils, json
+import strformat, strutils, json, asyncdispatch, times
+import ../../base
 import
   ../table,
   ../column
+import ./migrate_interface
 import ../generators/sqlite_generators
+import ../../query_builder
+
+
+proc isExistsTable*(table:string):string =
+  return sqlite_generators.isExistsTableQuery(table)
 
 proc generateColumnString*(column:Column):string =
   var columnString = ""
@@ -274,10 +281,16 @@ proc generateAlterForeignString(column:Column):string =
       column.info["column"].getStr(),
     )
 
-proc migrate*(this:Table):string =
+type SqliteMigrate* = ref object
+  rdb: Rdb
+
+proc new*(_:type SqliteMigrate, rdb:Rdb):SqliteMigrate =
+  return SqliteMigrate(rdb:rdb)
+
+proc migrateSql(self:SqliteMigrate, table:Table):string =
   var columnString = ""
   var foreignString = ""
-  for i, column in this.columns:
+  for i, column in table.columns:
     if i > 0: columnString.add(", ")
     columnString.add(
       generateColumnString(column)
@@ -288,9 +301,34 @@ proc migrate*(this:Table):string =
         generateForeignString(column)
       )
 
-  return &"CREATE TABLE \"{this.name}\" ({columnString}{foreignString})"
+  return &"CREATE TABLE IF NOT EXISTS \"{table.name}\" ({columnString}{foreignString})"
 
-proc migrateAlter*(column:Column, table:string):string =
+proc createIndex(self:SqliteMigrate, table, column:string):(string, string) =
+  return (indexGenerate(table, column), indexName(table, column))
+
+# proc createIndex(self:SqliteMigrate, table, column:string):string =
+#   return indexGenerate(table, column)
+
+proc dropTableQuery(self:SqliteMigrate, tableName:string):string =
+  return &"DROP TABLE IF EXISTS {tableName}"
+
+proc dropIndexQuery(self:SqliteMigrate, indexName:string):string =
+  return &"DROP INDEX IF EXISTS {indexName}"
+
+proc saveHistoryQuery(
+  self:SqliteMigrate,
+  query, txHash:string,
+  status:bool,
+  runAt:string
+):string =
+  return self.rdb.table("allographer_migrations").insertSql(%*{
+    "query": query,
+    "tx_id":txHash,
+    "status": status,
+    "run_at": runAt
+  })
+
+proc migrateAlter(self:SqliteMigrate, column:Column, table:string):string =
   let columnString = generateColumnString(column)
   let foreignString = generateAlterForeignString(column)
 
@@ -299,6 +337,14 @@ proc migrateAlter*(column:Column, table:string):string =
   else:
     return &"ALTER TABLE \"{table}\" ADD COLUMN {columnString}"
 
-
-proc createIndex*(table, column:string):string =
-  return indexGenerate(table, column)
+proc toInterface*(self:SqliteMigrate):IMigrate =
+  return (
+    migrateSql:proc(table:Table):string = self.migrateSql(table),
+    createIndex:proc(table, column:string):(string, string) = self.createIndex(table, column),
+    # createIndex:proc(table, column:string):string = self.createIndex(table, column),
+    dropTableQuery:proc(tableName:string):string = self.dropTableQuery(tableName),
+    dropIndexQuery:proc(indexName:string):string = self.dropIndexQuery(indexName),
+    saveHistoryQuery:proc(query, txHash:string, status:bool, runAt:string):string =
+      self.saveHistoryQuery(query, txHash, status, runAt),
+    migrateAlter:proc(column:Column, table:string):string = self.migrateAlter(column, table),
+  )

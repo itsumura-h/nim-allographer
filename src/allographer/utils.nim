@@ -8,11 +8,11 @@ import async/async_db
 #     raise newException(OSError, "invalid DB driver type")
 
 
-proc logger*(self:LogSetting, output: any, args:varargs[string]) =
+proc logger*(self:LogSetting, output: auto, args:varargs[string]) =
   # console log
   if self.shouldDisplayLog:
     let logger = newConsoleLogger()
-    logger.log(lvlDebug, $output & $args)
+    logger.log(lvlDebug, $output & " " & $args)
   # file log
   if self.shouldOutputLogFile:
     # info $output & $args
@@ -20,7 +20,7 @@ proc logger*(self:LogSetting, output: any, args:varargs[string]) =
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
     defer: logger.file.close()
-    logger.log(lvlDebug, $output & $args)
+    logger.log(lvlDebug, $output & " " & $args)
     flushFile(logger.file)
 
 

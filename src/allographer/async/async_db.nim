@@ -89,6 +89,29 @@ proc exec*(self: Connections, query: string, args: seq[string] = @[]) {.async.} 
       await sqlite.exec(self.pools[connI].sqliteConn, query, args, self.timeout)
   self.returnConn(connI)
 
+proc getColumns*(self:Connections, query:string, args: seq[string] = @[]):Future[seq[string]] {.async.} =
+  await sleepAsync(0)
+  let connI = await getFreeConn(self)
+  defer: self.returnConn(connI)
+  if connI == errorConnectionNum:
+    return
+  case self.driver
+  of MySQL:
+    when isExistsMysql:
+      discard
+      # return await mysql.query(self.pools[connI].mysqlConn, query, args, self.timeout)
+  of MariaDB:
+    when isExistsMariadb:
+      discard
+      # return await mariadb.query(self.pools[connI].mariadbConn, query, args, self.timeout)
+  of PostgreSQL:
+    when isExistsPostgres:
+      discard
+      # return await postgres.query(self.pools[connI].postgresConn, query, args, self.timeout)
+  of SQLite3:
+    when isExistsSqlite:
+      return await sqlite.getColumns(self.pools[connI].sqliteConn, query, args, self.timeout)
+
 proc prepare*(self: Connections, query: string, stmtName=""):Future[Prepared] {.async.} =
   let stmtName =
     if stmtName.len == 0:

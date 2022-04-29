@@ -3,6 +3,10 @@ import ../column
 import ../../utils
 from db_common import DbError
 
+
+proc isExistsTableQuery*(tableName:string):string =
+  return &"SELECT true FROM sqlite_master WHERE type='table' AND name='{tableName}';"
+
 # =============================================================================
 # int
 # =============================================================================
@@ -302,3 +306,9 @@ proc indexGenerate*(table, column:string):string =
   let smallTable = table.toLowerAscii()
   liteWrapUpper(table)
   return &"CREATE INDEX {smallTable}_{column}_index ON {table}({column})"
+
+proc indexName*(table, column:string):string =
+  var table = table
+  let smallTable = table.toLowerAscii()
+  liteWrapUpper(table)
+  return &"{smallTable}_{column}_index"

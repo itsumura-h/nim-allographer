@@ -130,6 +130,20 @@ iterator instantRows*(db: PSqlite3, dbRows: var DbRows, sqliteStmt: PStmt): Inst
   finally:
     if finalize(sqliteStmt) != SQLITE_OK: dbError(db)
 
+proc getColumns*(db: PSqlite3; dbRows: var DbRows; query: string, args: seq[string]):seq[string] =
+  var stmt = setupQuery(db, query, args)
+  try:
+    var i:int32 = 0
+    while true:
+      let name = column_name(stmt, i)
+      if name.len == 0: break
+      result.add($name)
+      i.inc()
+  finally:
+    if finalize(stmt) != SQLITE_OK: dbError(db)
+
+  return result
+
 proc len*(row: InstantRow): int32 {.inline.} =
   ## Returns number of columns in a row.
   ##

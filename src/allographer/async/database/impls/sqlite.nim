@@ -55,6 +55,11 @@ proc exec*(db:PSqlite3, query: string, args: seq[string], timeout:int) {.async.}
   if not res:
     dbError(db)
 
+proc getColumns*(db:PSqlite3, query:string, args:seq[string], timeout:int):Future[seq[string]] {.async.} =
+  assert(not db.isNil, "Database not connected.")
+  var dbRows: DbRows
+  return db.getColumns(dbRows, query, args)
+
 proc prepare*(db:PSqlite3, query:string, timeout:int):Future[PStmt] {.async.} =
   if prepare_v2(db, query, query.len.cint, result, nil) != SQLITE_OK:
     discard finalize(result)

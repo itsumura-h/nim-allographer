@@ -66,52 +66,6 @@ type
     NO_ACTION = "NO_ACTION"
 
 
-proc default*(c: Column, value:bool): Column =
-  c.isDefault = true
-  c.defaultBool = value
-  return c
-
-proc default*(c: Column, value:int): Column =
-  c.isDefault = true
-  c.defaultInt = value
-  return c
-
-proc default*(c: Column, value:float): Column =
-  c.isDefault = true
-  c.defaultFloat = value
-  return c
-
-proc default*(c: Column, value:string): Column =
-  c.isDefault = true
-  c.defaultString = value
-  return c
-
-proc default*(c: Column, value:JsonNode): Column =
-  c.isDefault = true
-  c.defaultJson = value
-  return c
-
-proc default*(c: Column):Column =
-  c.isDefault = true
-  return c
-
-proc index*(c: Column):Column =
-  c.isIndex = true
-  return c
-
-proc nullable*(c: Column): Column =
-  c.isNullable = true
-  return c
-
-proc unique*(c: Column): Column =
-  c.isUnique = true
-  return c
-
-proc unsigned*(c: Column): Column =
-  c.isUnsigned = true
-  return c
-
-
 # =============================================================================
 # int
 # =============================================================================
@@ -245,7 +199,6 @@ proc binary*(self:Column, name:string): Column =
   self.typ = rdbBinary
   return self
 
-# =============================================================================
 proc boolean*(self:Column, name:string): Column =
   self.name = name
   self.typ = rdbBoolean
@@ -296,3 +249,51 @@ proc on*(self:Column, table:string):Column =
 proc onDelete*(self:Column, kind:ForeignOnDelete):Column =
   self.foreignOnDelete = kind
   return self
+
+# =============================================================================
+# options
+# =============================================================================
+proc default*(c: Column, value:bool): Column =
+  c.isDefault = true
+  c.defaultBool = value
+  return c
+
+proc default*(c: Column, value:int): Column =
+  c.isDefault = true
+  c.defaultInt = value
+  return c
+
+proc default*(c: Column, value:float): Column =
+  c.isDefault = true
+  c.defaultFloat = value
+  return c
+
+proc default*(c: Column, value:string): Column =
+  c.isDefault = true
+  c.defaultString = value
+  return c
+
+proc default*(c: Column, value:JsonNode): Column =
+  c.isDefault = true
+  c.defaultJson = value
+  return c
+
+proc default*(c: Column):Column =
+  c.isDefault = true
+  return c
+
+proc index*(c: Column):Column =
+  c.isIndex = true
+  return c
+
+proc nullable*(c: Column): Column =
+  c.isNullable = true
+  return c
+
+proc unique*(c: Column): Column =
+  c.isUnique = true
+  return c
+
+proc unsigned*(c: Column): Column =
+  c.isUnsigned = true
+  return c

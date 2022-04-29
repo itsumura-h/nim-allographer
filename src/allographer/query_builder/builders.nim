@@ -193,3 +193,8 @@ proc sumBuilder*(self:Rdb, column:string): Rdb =
     .orderBySql()
     .limitSql()
     .offsetSql()
+
+proc columnBuilder*(self:Rdb):Rdb =
+  return self.selectSql()
+        .fromSql()
+        .selectFirstSql()

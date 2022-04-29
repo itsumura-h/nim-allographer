@@ -87,6 +87,9 @@ proc getRow(self:Rdb, sqlString:string, args:seq[string]):Future[Option[JsonNode
 
   return toJson(self.conn.driver, rows, dbColumns)[0].some
 
+proc getColumn(self:Rdb, sqlString:string, args:seq[string]):Future[seq[string]] {.async.} =
+  return await self.conn.getColumns(sqlString, args)
+
 proc getRowPlain(self:Connections, sqlString:string, args:seq[string]):Future[seq[string]] {.async.} =
   return await(self.queryPlain(sqlString, args))[0]
 
@@ -115,6 +118,18 @@ proc cleanUp(self:Rdb) =
 proc toSql*(self: Rdb): string =
   self.sqlString = self.selectBuilder().sqlString
   return self.sqlString
+
+proc columns*(self:Rdb):Future[seq[string]] {.async.} =
+  ## get columns sequence from table
+  defer: self.cleanUp()
+  self.sqlString = self.columnBuilder().sqlString
+  try:
+    self.log.logger(self.sqlString, self.placeHolder)
+    return getColumn(self, self.sqlString, self.placeHolder).await
+  except Exception:
+    self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    return newSeq[string]()
 
 proc get*(self: Rdb):Future[seq[JsonNode]] {.async.} =
   defer: self.cleanUp()
@@ -150,6 +165,7 @@ proc getPlain*(self:Rdb):Future[seq[seq[string]]] {.async.} =
     return newSeq[seq[string]](0)
 
 proc getRaw*(self: Rdb):Future[seq[JsonNode]]{.async.} =
+  ## It is only used with raw()
   defer: self.cleanUp()
   try:
     self.log.logger(self.sqlString, self.placeHolder)
@@ -160,6 +176,7 @@ proc getRaw*(self: Rdb):Future[seq[JsonNode]]{.async.} =
     return newSeq[JsonNode](0)
 
 proc getRaw*[T](self: Rdb, typ: typedesc[T]):Future[seq[T]]{.async.} =
+  ## It is only used with raw()
   defer: self.cleanUp()
   try:
     self.log.logger(self.sqlString, self.placeHolder)
@@ -245,7 +262,7 @@ proc findPlain*(self:Rdb, id:int, key="id"):Future[seq[string]]{.async.} =
 # ==================== INSERT ====================
 
 proc insertSql*(self: Rdb, items: JsonNode):string =
-  result = self.insertValueBuilder(items).sqlString & $self.placeHolder
+  result = self.insertValueBuilder(items).sqlString
   echo result
 
 proc insertId(self:Rdb, sqlString:string, placeHolder:seq[string], key:string):Future[int]{.async.} =
