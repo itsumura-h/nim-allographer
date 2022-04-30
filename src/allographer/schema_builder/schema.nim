@@ -1,20 +1,22 @@
-import os, json, strutils, asyncdispatch, std/sha1, times, strformat, options
+import os, json, options
 import ../base
 import ../async/async_db
 import ../query_builder
-import ../utils
 import ./grammers
 import ./queries/query_interface
 import ./queries/sqlite/sqlite_query
+import ./queries/mysql/mysql_query
 
 
 proc create*(rdb:Rdb, tables:varargs[Table]) =
   let cmd = commandLineParams()
   let isReset = defined(reset) or cmd.contains("--reset")
   let generator =
-    case rdb.conn.driver
+    case rdb.driver
     of SQLite3:
       SqliteQuery.new(rdb).toInterface()
+    of MySQL:
+      MysqlQuery.new(rdb).toInterface()
     else:
       SqliteQuery.new(rdb).toInterface()
 
@@ -30,12 +32,14 @@ proc create*(rdb:Rdb, tables:varargs[Table]) =
   generator.createTableSql(migrationTable)
   generator.runQuery(migrationTable.query)
 
-  for i, table in tables:
-    if isReset:
+  if isReset:
+    # delete table in reverse loop in tables
+    for i in countdown(tables.len-1, 0):
+      let table = tables[i]
       generator.resetTable(table)
 
+  for table in tables:
     let history = generator.getHistories(table)
-
     # not exists history || reset => create table
     if history.len == 0 or isReset:
       generator.createTableSql(table)
@@ -55,9 +59,11 @@ proc alter*(rdb:Rdb, tables:varargs[Table]) =
   let cmd = commandLineParams()
   let isReset = defined(reset) or cmd.contains("--reset")
   let generator =
-    case rdb.conn.driver
+    case rdb.driver
     of SQLite3:
       SqliteQuery.new(rdb).toInterface()
+    of MySQL:
+      MysqlQuery.new(rdb).toInterface()
     else:
       SqliteQuery.new(rdb).toInterface()
 
@@ -71,9 +77,9 @@ proc alter*(rdb:Rdb, tables:varargs[Table]) =
         of AddColumn:
           generator.addColumnSql(column, table)
           if shouldRunProcess(history, column.checksum, isReset):
-            generator.runQueryThenSaveHistory(table.name, column.query, column.checksum)
+            generator.addColumn(column, table)
         of ChangeColumn:
-          generator.changeColumnSql(column)
+          generator.changeColumnSql(column, table)
           if shouldRunProcess(history, column.checksum, isReset):
             generator.changeColumn(column, table)
         of RenameColumn:

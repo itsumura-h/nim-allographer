@@ -22,7 +22,7 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
       createdAt: getTime().toUnix(),
     )
   result = Connections(
-    driver: Driver.MySQL,
+    # driver: Driver.MySQL,
     pools: pools,
     timeout: timeout
   )

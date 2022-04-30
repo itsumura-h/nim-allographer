@@ -16,7 +16,7 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
       createdAt: getTime().toUnix(),
     )
   result = Connections(
-    driver: PostgreSQL,
+    # driver: PostgreSQL,
     pools: pools,
     timeout: timeout
   )

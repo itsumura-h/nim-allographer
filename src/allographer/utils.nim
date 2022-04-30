@@ -1,7 +1,6 @@
 import os, parsecfg, terminal, logging, macros, strformat, strutils
 # self
-import base
-import async/async_db
+import ./base
 
 # proc driverTypeError*(driver:string) =
 #   if driver != "sqlite" and driver != "mysql" and driver != "mariadb" and driver != "postgres":

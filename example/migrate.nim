@@ -1,8 +1,9 @@
 import strformat, json, oids, asyncdispatch
-import bcrypt
+# import bcrypt
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
 import connections
+
 
 # migration
 rdb.create([
@@ -26,7 +27,7 @@ rdb.create([
 rdb.alter([
   table("Users", [
     # カラム追加
-    Column.string("aaa").add(),
+    Column.string("aaa").default("").add(),
     Column.foreign("bbb").reference("id").on("Auth").onDelete(SET_NULL).add(),
     # カラム定義変更
     Column.string("aaa").nullable().change(),

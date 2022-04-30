@@ -1,7 +1,7 @@
 import asyncdispatch, macros, strutils, strformat
 import database/base
+import ../base as a
 import database/impls/mysql, database/impls/mariadb, database/impls/postgres, database/impls/sqlite
-# import database/is_exists_lib
 import ../baseEnv
 
 export base
@@ -23,13 +23,13 @@ proc open*(driver:Driver, database:string="", user:string="", password:string=""
     when isExistsSqlite:
       result = sqlite.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
 
-proc query*(self: Connections, query: string, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
+proc query*(self: Connections, driver:Driver, query: string, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
   await sleepAsync(0)
   let connI = await getFreeConn(self)
   defer: self.returnConn(connI)
   if connI == errorConnectionNum:
     return
-  case self.driver
+  case driver
   of MySQL:
     when isExistsMysql:
       return await mysql.query(self.pools[connI].mysqlConn, query, args, self.timeout)
@@ -44,13 +44,13 @@ proc query*(self: Connections, query: string, args: seq[string] = @[]):Future[(s
     when isExistsSqlite:
       return await sqlite.query(self.pools[connI].sqliteConn, query, args, self.timeout)
 
-proc queryPlain*(self: Connections, query: string, args: seq[string] = @[]):Future[seq[Row]] {.async.} =
+proc queryPlain*(self: Connections, driver:Driver, query: string, args: seq[string] = @[]):Future[seq[Row]] {.async.} =
   let connI = await getFreeConn(self)
   defer: self.returnConn(connI)
   if connI == errorConnectionNum:
     return
   await sleepAsync(0)
-  case self.driver
+  case driver
   of MySQL:
     when isExistsMysql:
       discard
@@ -68,13 +68,13 @@ proc queryPlain*(self: Connections, query: string, args: seq[string] = @[]):Futu
       return await sqlite.queryPlain(self.pools[connI].sqliteConn, query, args, self.timeout)
 
 
-proc exec*(self: Connections, query: string, args: seq[string] = @[]) {.async.} =
+proc exec*(self: Connections, driver:Driver, query: string, args: seq[string] = @[]) {.async.} =
   let connI = await getFreeConn(self)
   defer: self.returnConn(connI)
   if connI == errorConnectionNum:
     return
   await sleepAsync(0)
-  case self.driver
+  case driver
   of MySQL:
     when isExistsMysql:
       await mysql.exec(self.pools[connI].mysqlConn, query, args, self.timeout)
@@ -89,13 +89,13 @@ proc exec*(self: Connections, query: string, args: seq[string] = @[]) {.async.} 
       await sqlite.exec(self.pools[connI].sqliteConn, query, args, self.timeout)
   self.returnConn(connI)
 
-proc getColumns*(self:Connections, query:string, args: seq[string] = @[]):Future[seq[string]] {.async.} =
+proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string] = @[]):Future[seq[string]] {.async.} =
   await sleepAsync(0)
   let connI = await getFreeConn(self)
   defer: self.returnConn(connI)
   if connI == errorConnectionNum:
     return
-  case self.driver
+  case driver
   of MySQL:
     when isExistsMysql:
       discard
@@ -112,7 +112,7 @@ proc getColumns*(self:Connections, query:string, args: seq[string] = @[]):Future
     when isExistsSqlite:
       return await sqlite.getColumns(self.pools[connI].sqliteConn, query, args, self.timeout)
 
-proc prepare*(self: Connections, query: string, stmtName=""):Future[Prepared] {.async.} =
+proc prepare*(self: Connections, driver:Driver, query: string, stmtName=""):Future[Prepared] {.async.} =
   let stmtName =
     if stmtName.len == 0:
       randStr(10)
@@ -122,7 +122,7 @@ proc prepare*(self: Connections, query: string, stmtName=""):Future[Prepared] {.
   if connI == errorConnectionNum:
     return
   await sleepAsync(0)
-  case self.driver
+  case driver
   of MySQL:
     when isExistsMysql:
       discard
@@ -140,9 +140,9 @@ proc prepare*(self: Connections, query: string, stmtName=""):Future[Prepared] {.
       let sqliteStmt = await sqlite.prepare(self.pools[connI].sqliteConn, query, self.timeout)
       result = Prepared(conn:self, sqliteStmt:sqliteStmt, connI:connI)
 
-proc query*(self:Prepared, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
+proc query*(self:Prepared, driver:Driver, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
   await sleepAsync(0)
-  case self.conn.driver
+  case driver
   of MySQL:
     when isExistsMysql:
       discard
@@ -156,9 +156,9 @@ proc query*(self:Prepared, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {
     when isExistsSqlite:
       return await sqlite.preparedQuery(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)
 
-proc exec*(self:Prepared, args:seq[string] = @[]) {.async.} =
+proc exec*(self:Prepared, driver:Driver, args:seq[string] = @[]) {.async.} =
   await sleepAsync(0)
-  case self.conn.driver
+  case driver
   of MySQL:
     when isExistsMysql:
       discard

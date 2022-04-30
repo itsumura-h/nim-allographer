@@ -3,11 +3,11 @@ import rdb/mysql, rdb/mariadb, rdb/postgres, rdb/sqlite
 
 type
   DbError* = object of IOError ## exception that is raised if a database error occurs
-  Driver* = enum
-    MySQL
-    MariaDB
-    PostgreSQL
-    SQLite3
+  # Driver* = enum
+  #   MySQL
+  #   MariaDB
+  #   PostgreSQL
+  #   SQLite3
   Pool* = ref object
     mysqlConn*: mysql.PMySQL
     mariadbConn*: mariadb.PMySQL
@@ -16,7 +16,7 @@ type
     isBusy*: bool
     createdAt*: int64
   Connections* = ref object
-    driver*: Driver
+    # driver*: Driver
     pools*: seq[Pool]
     timeout*:int
   Prepared* = ref object

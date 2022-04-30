@@ -1,4 +1,17 @@
-from ../is_exists_lib import getOsName
+import strutils
+
+func getOsName*():string =
+  when defined(maxosx) or defined(linux) or defined(bsd):
+    const f = staticRead("/etc/os-release")
+    for row in f.split("\n"):
+      let kv = row.split("=")
+      if kv[0] == "ID":
+        return kv[1]
+  elif defined(windows):
+    return "windows"
+  else:
+    return ""
+
 {.push, callconv: cdecl.}
 when defined(nimHasStyleChecks):
   {.push styleChecks: off.}

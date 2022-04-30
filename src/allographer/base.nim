@@ -1,5 +1,7 @@
 import os, strutils, json, streams, parsecfg
-import async/async_db
+# import async/async_db
+import async/database/base
+
 
 for f in walkDir(getCurrentDir()):
   if f.path.split("/")[^1] == ".env":
@@ -20,7 +22,13 @@ type
     shouldDisplayLog*: bool
     shouldOutputLogFile*: bool
     logDir*: string
+  Driver* = enum
+    MySQL
+    MariaDB
+    PostgreSQL
+    SQLite3
   Rdb* = ref object
+    driver*: Driver
     conn*: Connections
     log*: LogSetting
     query*: JsonNode

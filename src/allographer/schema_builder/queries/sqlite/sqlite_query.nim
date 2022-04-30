@@ -1,10 +1,18 @@
-import json, options, strformat, re, asyncdispatch, std/sha1, times, strutils, sequtils, std/sugar
-import ../../../base
-import ../../../query_builder
-import ../../../utils
-import ../../grammers
-import ../query_interface
-import ./impl
+import
+  std/json,
+  std/options,
+  std/strformat,
+  std/re,
+  std/asyncdispatch,
+  std/sha1,
+  std/times,
+  std/strutils,
+  std/sequtils,
+  ../../../base,
+  ../../../query_builder,
+  ../../grammers,
+  ../query_interface,
+  ./impl
 
 type SqliteQuery* = ref object
   rdb:Rdb
@@ -100,21 +108,23 @@ proc getHistories(self:SqliteQuery, table:Table):JsonNode =
     result[table["checksum"].getStr] = table
 
 
-proc runQuery(self:SqliteQuery, query:string) =
-  self.rdb.raw(query).exec.waitFor
+proc runQuery(self:SqliteQuery, query:seq[string]) =
+  for row in query:
+    self.rdb.raw(row).exec.waitFor
 
 
-proc runQueryThenSaveHistory(self:SqliteQuery, tableName, query, checksum:string) =
+proc runQueryThenSaveHistory(self:SqliteQuery, tableName:string, query:seq[string], checksum:string) =
   var isSuccess = false
   try:
-    self.rdb.raw(query).exec.waitFor
+    for row in query:
+      self.rdb.raw(row).exec.waitFor
     isSuccess = true
   except:
     echo getCurrentExceptionMsg()
   
   self.rdb.table("allographer_migrations").insert(%*{
     "name": tableName,
-    "query": query,
+    "query": query.join("; "),
     "checksum": checksum,
     "created_at": $now().utc,
     "status": isSuccess
@@ -127,19 +137,19 @@ proc createTableSql(self:SqliteQuery, table:Table) =
   var foreignString = ""
   for i, column in table.columns:
     if i > 0: columnString.add(", ")
-    let query = generateColumnString(column)
-    column.query = query
-    columnString.add(query)
+    var columnQuery = generateColumnString(column)
+    columnString.add(columnQuery)
     if column.typ == rdbForeign or column.typ == rdbStrForeign:
       if columnString.len > 0 or foreignString.len > 0:
         foreignString.add(", ")
         column.query.add(", ")
       let query = generateForeignString(column)
       foreignString.add(query)
-      column.query.add(query)
+      columnQuery.add(query)
+    column.query.add(columnQuery)
 
-  table.query = &"CREATE TABLE IF NOT EXISTS \"{table.name}\" ({columnString}{foreignString})"
-  table.checksum = $table.query.secureHash()
+  table.query.add &"CREATE TABLE IF NOT EXISTS \"{table.name}\" ({columnString}{foreignString})"
+  table.checksum = $table.query.join("; ").secureHash()
 
 
 proc addColumnSql(self:SqliteQuery, column:Column, table:Table) =
@@ -147,15 +157,18 @@ proc addColumnSql(self:SqliteQuery, column:Column, table:Table) =
 
   if column.typ == rdbForeign or column.typ == rdbStrForeign:
     let foreignString = generateAlterAddForeignString(column)
-    column.query = &"ALTER TABLE \"{table.name}\" ADD COLUMN {columnString} {foreignString}"
+    column.query.add &"ALTER TABLE \"{table.name}\" ADD COLUMN {columnString} {foreignString}"
   else:
-    column.query = &"ALTER TABLE \"{table.name}\" ADD COLUMN {columnString}"
-  column.checksum = $column.query.secureHash()
+    column.query.add &"ALTER TABLE \"{table.name}\" ADD COLUMN {columnString}"
+  column.checksum = $column.query.join("; ").secureHash()
+
+proc addColumn(self:SqliteQuery, column:Column, table:Table) =
+  self.runQueryThenSaveHistory(table.name, column.query, column.checksum)
 
 
-proc changeColumnSql(self:SqliteQuery, column:Column) =
-  column.query = generateColumnString(column)
-  column.checksum = $column.query.secureHash()
+proc changeColumnSql(self:SqliteQuery, column:Column, table:Table) =
+  column.query.add generateColumnString(column)
+  column.checksum = $column.query.join("; ").secureHash()
 
 proc changeColumn(self:SqliteQuery, column:Column, table:Table) =
   ## create tmp table with new column difinition
@@ -206,8 +219,8 @@ proc changeColumn(self:SqliteQuery, column:Column, table:Table) =
 
 
 proc renameColumnSql(self:SqliteQuery, column:Column, table:Table) =
-  column.query = &"rename {column.previousName} to {column.name} in {table.name}"
-  column.checksum = $column.query.secureHash()
+  column.query.add &"rename {column.previousName} to {column.name} in {table.name}"
+  column.checksum = $column.query.join("; ").secureHash()
 
 proc renameColumn(self:SqliteQuery, column:Column, table:Table) =
   ## create tmp table with new column difinition
@@ -221,7 +234,7 @@ proc renameColumn(self:SqliteQuery, column:Column, table:Table) =
   var rows = self.rdb.raw(tableDifinitionSql).getRaw.waitFor
   let schema = replace(rows[0]["sql"].getStr, re"\)$", ",)")
   let columnRegex = &"'{column.previousName}'.*?,"
-  
+
   var columnString = rows[0]["sql"].getStr.findAll(re(&"'{column.previousName}'.*?,"))[0]
   columnString = columnString.multiReplace(
     (column.previousName, column.name)
@@ -248,6 +261,7 @@ proc renameColumn(self:SqliteQuery, column:Column, table:Table) =
 
   # copy data from existing table to tmp table
   let oldColumns = self.rdb.table(table.name).columns().waitFor
+  echo oldColumns
   let newColumns = oldColumns.map(
     proc(x:string):string =
       if x == column.previousName:
@@ -268,8 +282,8 @@ proc renameColumn(self:SqliteQuery, column:Column, table:Table) =
 
 
 proc deleteColumnSql(self:SqliteQuery, column:Column, table:Table) =
-  column.query = &"delete {column.name} in {table.name}"
-  column.checksum = $column.query.secureHash()
+  column.query.add &"delete {column.name} in {table.name}"
+  column.checksum = $column.query.join("; ").secureHash()
 
 proc deleteColumn(self:SqliteQuery, column:Column, table:Table) =
   ## create tmp table with new column difinition
@@ -320,13 +334,14 @@ proc deleteColumn(self:SqliteQuery, column:Column, table:Table) =
 
 
 proc renameTableSql*(self:SqliteQuery, table:Table) =
-  table.query = &"ALTER TABLE \"{table.previousName}\" RENAME TO \"{table.name}\""
-  table.checksum = $table.query.secureHash
+  table.query.add &"ALTER TABLE \"{table.previousName}\" RENAME TO \"{table.name}\""
+  table.checksum = $table.query.join("; ").secureHash
 
 proc renameTable(self:SqliteQuery, table:Table) =
   var isSuccess = false
   try:
-    self.rdb.raw(table.query).exec.waitFor
+    for row in table.query:
+      self.rdb.raw(row).exec.waitFor
     isSuccess = true
   except:
     echo getCurrentExceptionMsg()
@@ -342,20 +357,21 @@ proc renameTable(self:SqliteQuery, table:Table) =
 
 
 proc dropTableSql(self:SqliteQuery, table:Table) =
-  table.query = &"DROP TABLE \"{table.name}\""
-  table.checksum = $table.query.secureHash
+  table.query.add &"DROP TABLE \"{table.name}\""
+  table.checksum = $table.query.join("; ").secureHash
 
 proc dropTable(self:SqliteQuery, table:Table) =
   var isSuccess = false
   try:
-    self.rdb.raw(table.query).exec.waitFor
+    for row in table.query:
+      self.rdb.raw(row).exec.waitFor
     isSuccess = true
   except:
     echo getCurrentExceptionMsg()
 
   self.rdb.table("allographer_migrations").insert(%*{
     "name": table.name,
-    "query": table.query,
+    "query": table.query.join("; "),
     "checksum": table.checksum,
     "created_at": $now().utc,
     "status": isSuccess
@@ -366,11 +382,12 @@ proc toInterface*(self:SqliteQuery):IGenerator =
   return (
     resetTable:proc(table:Table) = self.resetTable(table),
     getHistories:proc(table:Table):JsonNode = self.getHistories(table),
-    runQuery:proc(query:string) = self.runQuery(query),
-    runQueryThenSaveHistory:proc(tableName, query, checksum:string) = self.runQueryThenSaveHistory(tableName, query, checksum),
+    runQuery:proc(query:seq[string]) = self.runQuery(query),
+    runQueryThenSaveHistory:proc(tableName:string, query:seq[string], checksum:string) = self.runQueryThenSaveHistory(tableName, query, checksum),
     createTableSql:proc(table:Table) = self.createTableSql(table),
     addColumnSql:proc(column:Column, table:Table) = self.addColumnSql(column, table),
-    changeColumnSql:proc(column:Column) = self.changeColumnSql(column),
+    addColumn:proc(column:Column, table:Table) = self.addColumn(column, table),
+    changeColumnSql:proc(column:Column, table:Table) = self.changeColumnSql(column, table),
     changeColumn:proc(column:Column, table:Table) = self.changeColumn(column, table),
     renameColumnSql:proc(column:Column, table:Table) = self.renameColumnSql(column, table),
     renameColumn:proc(column:Column, table:Table) = self.renameColumn(column, table),

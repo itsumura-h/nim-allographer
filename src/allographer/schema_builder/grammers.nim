@@ -5,7 +5,7 @@ type
     name*: string
     columns*: seq[Column]
     construction*: JsonNode
-    query*: string
+    query*: seq[string]
     checksum*:string
     migrationType*: TableMigrationType
     previousName*:string
@@ -25,7 +25,7 @@ type
     defaultJson*: JsonNode
     foreignOnDelete*: ForeignOnDelete
     info*: JsonNode
-    query*: string
+    query*: seq[string]
     checksum*:string
     construction*:JsonNode
     # alter table
@@ -144,7 +144,7 @@ proc table*(name:string, columns:varargs[Column]):Table =
     name: name,
     columns: @columns,
     construction: jsonColumns,
-    query: "",
+    query: newSeq[string](),
     migrationType: CreateTable
   )
 
@@ -153,7 +153,7 @@ proc rename*(src, dest:string):Table =
     name: dest,
     columns: newSeq[Column](),
     construction: newJObject(),
-    query: "",
+    query: newSeq[string](),
     migrationType: RenameTable,
     previousName: src
   )
@@ -163,7 +163,7 @@ proc drop*(name:string):Table =
     name: name,
     columns: newSeq[Column](),
     construction: newJObject(),
-    query: "",
+    query: newSeq[string](),
     migrationType: DropTable,
   )
 

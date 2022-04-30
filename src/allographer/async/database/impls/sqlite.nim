@@ -14,7 +14,7 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
       createdAt: getTime().toUnix(),
     )
   result = Connections(
-    driver: SQLite3,
+    # driver: SQLite3,
     pools: pools,
     timeout: timeout
   )

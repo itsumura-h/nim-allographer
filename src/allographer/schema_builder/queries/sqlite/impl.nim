@@ -1,4 +1,4 @@
-import json, strformat, strutils, sequtils
+import json, strformat, strutils
 import ../../../async/database/base
 import ../../../utils
 import ../../grammers
@@ -303,11 +303,11 @@ proc alterAddForeignGenerator*(column:Column):string =
   return &"REFERENCES {tableName}({columnName}) ON DELETE {onDeleteString}"
 
 
-proc indexGenerate*(table, column:string):string =
-  var table = table
-  let smallTable = table.toLowerAscii()
-  liteWrapUpper(table)
-  return &"CREATE INDEX {smallTable}_{column}_index ON {table}({column})"
+# proc indexGenerate*(table, column:string):string =
+#   var table = table
+#   let smallTable = table.toLowerAscii()
+#   liteWrapUpper(table)
+#   return &"CREATE INDEX {smallTable}_{column}_index ON {table}({column})"
 
 proc indexName*(table, column:string):string =
   var table = table
