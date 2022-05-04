@@ -17,8 +17,8 @@ let
 let
   # rdb* = dbopen(SQLite3, sqliteHost, maxConnections=maxConnections, shouldDisplayLog=true)
   # rdb* = dbopen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=true)
-  rdb* = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=true)
-  # rdb* = dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout)
+  # rdb* = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=true)
+  rdb* = dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=true)
 
 template asyncBlock*(body:untyped) =
   waitFor (proc(){.async.}=

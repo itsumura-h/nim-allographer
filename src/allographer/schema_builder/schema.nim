@@ -11,11 +11,12 @@ import ./queries/mysql/mysql_query
 proc create*(rdb:Rdb, tables:varargs[Table]) =
   let cmd = commandLineParams()
   let isReset = defined(reset) or cmd.contains("--reset")
+  echo rdb.driver
   let generator =
     case rdb.driver
     of SQLite3:
       SqliteQuery.new(rdb).toInterface()
-    of MySQL:
+    of MySQL, MariaDB:
       MysqlQuery.new(rdb).toInterface()
     else:
       SqliteQuery.new(rdb).toInterface()
@@ -62,7 +63,7 @@ proc alter*(rdb:Rdb, tables:varargs[Table]) =
     case rdb.driver
     of SQLite3:
       SqliteQuery.new(rdb).toInterface()
-    of MySQL:
+    of MySQL, MariaDB:
       MysqlQuery.new(rdb).toInterface()
     else:
       SqliteQuery.new(rdb).toInterface()
