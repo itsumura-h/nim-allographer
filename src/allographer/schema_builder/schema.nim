@@ -6,6 +6,7 @@ import ./grammers
 import ./queries/query_interface
 import ./queries/sqlite/sqlite_query
 import ./queries/mysql/mysql_query
+import ./queries/postgre/postgre_query
 
 
 proc create*(rdb:Rdb, tables:varargs[Table]) =
@@ -18,6 +19,8 @@ proc create*(rdb:Rdb, tables:varargs[Table]) =
       SqliteQuery.new(rdb).toInterface()
     of MySQL, MariaDB:
       MysqlQuery.new(rdb).toInterface()
+    of PostgreSQL:
+      PostgreQuery.new(rdb).toInterface()
     else:
       SqliteQuery.new(rdb).toInterface()
 
@@ -65,6 +68,8 @@ proc alter*(rdb:Rdb, tables:varargs[Table]) =
       SqliteQuery.new(rdb).toInterface()
     of MySQL, MariaDB:
       MysqlQuery.new(rdb).toInterface()
+    of PostgreSQL:
+      PostgreQuery.new(rdb).toInterface()
     else:
       SqliteQuery.new(rdb).toInterface()
 

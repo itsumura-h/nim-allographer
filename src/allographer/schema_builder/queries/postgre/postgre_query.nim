@@ -10,96 +10,93 @@ import
   std/sequtils,
   ../../../base,
   ../../../query_builder,
-  ../../../utils,
   ../../grammers,
   ../query_interface,
   ./impl
 
-
-type MysqlQuery* = ref object
+type PostgreQuery* = ref object
   rdb:Rdb
 
-proc new*(_:type MysqlQuery, rdb:Rdb):MysqlQuery =
-  return MysqlQuery(rdb:rdb)
-
+proc new*(_:type PostgreQuery, rdb:Rdb):PostgreQuery =
+  return PostgreQuery(rdb:rdb)
 
 # ==================== private ====================
-proc generateColumnString(column:Column, table:Table):string =
+proc generateColumnString(column:Column, table:Table, isAlter=false):string =
   case column.typ:
     # int
   of rdbIncrements:
-    return column.serialGenerator()
+    return column.serialGenerator(table, isAlter)
   of rdbInteger:
-    return column.intGenerator()
+    return column.intGenerator(table, isAlter)
   of rdbSmallInteger:
-    return column.intGenerator()
+    return column.intGenerator(table, isAlter)
   of rdbMediumInteger:
-    return column.intGenerator()
+    return column.intGenerator(table, isAlter)
   of rdbBigInteger:
-    return column.intGenerator()
+    return column.intGenerator(table, isAlter)
     # float
   of rdbDecimal:
-    return column.decimalGenerator()
+    return column.decimalGenerator(table, isAlter)
   of rdbDouble:
-    return column.decimalGenerator()
+    return column.decimalGenerator(table)
   of rdbFloat:
-    return column.floatGenerator()
+    return column.floatGenerator(table, isAlter)
     # char
   of rdbUuid:
-    return column.stringGenerator()
+    return column.stringGenerator(table, isAlter)
   of rdbChar:
-    return column.charGenerator()
+    return column.charGenerator(table, isAlter)
   of rdbString:
-    return column.stringGenerator()
+    return column.stringGenerator(table, isAlter)
     # text
   of rdbText:
-    return column.textGenerator()
+    return column.textGenerator(table, isAlter)
   of rdbMediumText:
-    return column.textGenerator()
+    return column.textGenerator(table, isAlter)
   of rdbLongText:
-    return column.textGenerator()
+    return column.textGenerator(table, isAlter)
     # date
   of rdbDate:
-    return column.dateGenerator()
+    return column.dateGenerator(table, isAlter)
   of rdbDatetime:
-    return column.datetimeGenerator()
+    return column.datetimeGenerator(table, isAlter)
   of rdbTime:
-    return column.timeGenerator()
+    return column.timeGenerator(table, isAlter)
   of rdbTimestamp:
-    return column.timestampGenerator()
+    return column.timestampGenerator(table, isAlter)
   of rdbTimestamps:
-    return column.timestampsGenerator()
+    return column.timestampsGenerator(table)
   of rdbSoftDelete:
-    return column.softDeleteGenerator()
+    return column.softDeleteGenerator(table, isAlter)
     # others
   of rdbBinary:
-    return column.blobGenerator()
+    return column.blobGenerator(table, isAlter)
   of rdbBoolean:
-    return column.boolGenerator()
+    return column.boolGenerator(table, isAlter)
   of rdbEnumField:
-    return column.enumGenerator()
+    return column.enumGenerator(table, isAlter)
   of rdbJson:
-    return column.jsonGenerator()
+    return column.jsonGenerator(table, isAlter)
   # foreign
   of rdbForeign:
-    return column.foreignColumnGenerator()
+    return column.foreignColumnGenerator(table, isAlter)
   of rdbStrForeign:
-    return column.strForeignColumnGenerator()
+    return column.strForeignColumnGenerator(table, isAlter)
   else:
     return ""
 
 proc generateForeignString(column:Column, table:Table):string =
-  return column.foreignGenerator()
+  return column.foreignGenerator(table)
 
 proc generateAlterAddForeignString(column:Column, table:Table):string =
   return column.alterAddForeignGenerator(table)
 
 # ==================== public ====================
-proc resetTable(self:MysqlQuery, table:Table) =
-  self.rdb.raw(&"DROP TABLE IF EXISTS {table.name} CASCADE").exec.waitFor
+proc resetTable(self:PostgreQuery, table:Table) =
+  self.rdb.raw(&"DROP TABLE IF EXISTS \"{table.name}\"").exec.waitFor
 
 
-proc getHistories(self:MysqlQuery, table:Table):JsonNode =
+proc getHistories(self:PostgreQuery, table:Table):JsonNode =
   let tables = self.rdb.table("allographer_migrations")
             .where("name", "=", table.name)
             .orderBy("created_at", Desc)
@@ -111,12 +108,12 @@ proc getHistories(self:MysqlQuery, table:Table):JsonNode =
     result[table["checksum"].getStr] = table
 
 
-proc runQuery(self:MysqlQuery, query:seq[string]) =
+proc runQuery(self:PostgreQuery, query:seq[string]) =
   for row in query:
     self.rdb.raw(row).exec.waitFor
 
 
-proc runQueryThenSaveHistory(self:MysqlQuery, tableName:string, query:seq[string], checksum:string) =
+proc runQueryThenSaveHistory(self:PostgreQuery, tableName:string, query:seq[string], checksum:string) =
   var isSuccess = false
   try:
     for row in query:
@@ -129,96 +126,89 @@ proc runQueryThenSaveHistory(self:MysqlQuery, tableName:string, query:seq[string
     "name": tableName,
     "query": query.join("; "),
     "checksum": checksum,
-    "created_at": $now().format("yyyy-MM-dd HH:mm:ss"),
+    "created_at": $now().utc,
     "status": isSuccess
   })
   .waitFor
 
-proc createTableSql(self:MysqlQuery, table:Table) =
+
+proc createTableSql(self:PostgreQuery, table:Table) =
   var columnString = ""
   var foreignString = ""
   for i, column in table.columns:
     if i > 0: columnString.add(", ")
-    var query = generateColumnString(column, table)
-    columnString.add(query)
+    var columnQuery = generateColumnString(column, table)
+    columnString.add(columnQuery)
     if column.typ == rdbForeign or column.typ == rdbStrForeign:
       if columnString.len > 0 or foreignString.len > 0:
         foreignString.add(", ")
-        query.add(", ")
-      let columnQuery = generateForeignString(column, table)
-      foreignString.add(columnQuery)
-      query.add(columnQuery)
-    column.query.add query
+        column.query.add(", ")
+      let query = generateForeignString(column, table)
+      foreignString.add(query)
+      columnQuery.add(query)
+    column.query.add(columnQuery)
 
-  var tableName = table.name
-  myWrapUpper(tableName)
-  table.query.add &"CREATE TABLE IF NOT EXISTS {tableName} ({columnString}{foreignString})"
+  table.query.add &"CREATE TABLE IF NOT EXISTS \"{table.name}\" ({columnString}{foreignString})"
   table.checksum = $table.query.join("; ").secureHash()
 
 
-proc addColumnSql(self:MysqlQuery, column:Column, table:Table) =
+proc addColumnSql(self:PostgreQuery, column:Column, table:Table) =
   let columnString = generateColumnString(column, table)
-
-  column.query.add &"ALTER TABLE `{table.name}` ADD COLUMN {columnString}"
+  column.query.add &"ALTER TABLE \"{table.name}\" ADD COLUMN {columnString}"
 
   if column.typ == rdbForeign or column.typ == rdbStrForeign:
     let foreignString = generateAlterAddForeignString(column, table)
-    column.query.add(&"ALTER TABLE `{table.name}` ADD {foreignString}")
-  column.checksum = $column.query.join("; ").secureHash()
-
-
-proc addColumn(self:MysqlQuery, column:Column, table:Table) =
-  self.runQueryThenSaveHistory(table.name, column.query, column.checksum)
-
-
-proc changeColumnSql(self:MysqlQuery, column:Column, table:Table) =
-  let columnString = generateColumnString(column, table)
-  let query = &"ALTER TABLE `{table.name}` MODIFY COLUMN {columnString}"
-  column.query.add(query)
-  column.checksum = $column.query.join("; ").secureHash()
-
-
-proc changeColumn(self:MysqlQuery, column:Column, table:Table) =
-  self.runQueryThenSaveHistory(table.name, column.query, column.checksum)
-
-
-proc renameColumnSql(self:MysqlQuery, column:Column, table:Table) =
-  let query = &"ALTER TABLE `{table.name}` RENAME COLUMN {column.previousName} TO {column.name}"
-  column.query.add(query)
-  column.checksum = $column.query.join("; ").secureHash()
-
-
-proc renameColumn(self:MysqlQuery, column:Column, table:Table) =
-  self.runQueryThenSaveHistory(table.name, column.query, column.checksum)
-
-
-proc deleteColumnSql(self:MysqlQuery, column:Column, table:Table) =
-  let query = &"ALTER TABLE `{table.name}` DROP {column.name}"
-  column.query.add(query)
-  column.checksum = $column.query.join("; ").secureHash()
-
-
-proc deleteColumn(self:MysqlQuery, column:Column, table:Table) =
-  self.runQueryThenSaveHistory(table.name, column.query, column.checksum)
-
-proc renameTableSql(self:MysqlQuery, table:Table) =
-  let query = &"ALTER TABLE `{table.previousName}` RENAME TO {table.name}"
-  table.query.add(query)
-  table.checksum = $table.query.join("; ").secureHash()
-
-proc renameTable(self:MysqlQuery, table:Table) =
-  self.runQueryThenSaveHistory(table.name, table.query, table.checksum)
+    column.query.add &"ALTER TABLE \"{table.name}\" ADD {foreignString}"
   
-proc dropTableSql(self:MysqlQuery, table:Table) =
-  let query = &"DROP TABLE IF EXISTS `{table.name}`"
-  table.query.add(query)
-  table.checksum = $table.query.join("; ").secureHash()
+  column.checksum = $column.query.join("; ").secureHash()
 
-proc dropTable(self:MysqlQuery, table:Table) =
+proc addColumn(self:PostgreQuery, column:Column, table:Table) =
+  self.runQueryThenSaveHistory(table.name, column.query, column.checksum)
+
+
+proc changeColumnSql(self:PostgreQuery, column:Column, table:Table) =
+  let columnString = generateColumnString(column, table, true)
+  let query = &"ALTER TABLE \"{table.name}\" ALTER COLUMN {columnString}"
+  column.query.add(query)
+  column.checksum = $column.query.join("; ").secureHash()
+
+proc changeColumn(self:PostgreQuery, column:Column, table:Table) =
+  self.runQueryThenSaveHistory(table.name, column.query, column.checksum)
+
+
+proc renameColumnSql(self:PostgreQuery, column:Column, table:Table) =
+  column.query.add &"ALTER TABLE \"{table.name}\" RENAME COLUMN {column.previousName} TO {column.name}"
+  column.checksum = $column.query.join("; ").secureHash()
+
+proc renameColumn(self:PostgreQuery, column:Column, table:Table) =
+  self.runQueryThenSaveHistory(table.name, column.query, column.checksum)
+
+
+proc deleteColumnSql(self:PostgreQuery, column:Column, table:Table) =
+  column.query.add &"ALTER TABLE \"{table.name}\" DROP COLUMN {column.name}"
+  column.checksum = $column.query.join("; ").secureHash()
+
+proc deleteColumn(self:PostgreQuery, column:Column, table:Table) =
+  self.runQueryThenSaveHistory(table.name, column.query, column.checksum)
+
+
+proc renameTableSql*(self:PostgreQuery, table:Table) =
+  table.query.add &"ALTER TABLE \"{table.previousName}\" RENAME TO \"{table.name}\""
+  table.checksum = $table.query.join("; ").secureHash
+
+proc renameTable(self:PostgreQuery, table:Table) =
   self.runQueryThenSaveHistory(table.name, table.query, table.checksum)
 
 
-proc toInterface*(self:MysqlQuery):IGenerator =
+proc dropTableSql(self:PostgreQuery, table:Table) =
+  table.query.add &"DROP TABLE IF EXISTS \"{table.name}\" CASCADE"
+  table.checksum = $table.query.join("; ").secureHash
+
+proc dropTable(self:PostgreQuery, table:Table) =
+  self.runQueryThenSaveHistory(table.name, table.query, table.checksum)
+
+
+proc toInterface*(self:PostgreQuery):IGenerator =
   return (
     resetTable:proc(table:Table) = self.resetTable(table),
     getHistories:proc(table:Table):JsonNode = self.getHistories(table),

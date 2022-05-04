@@ -354,17 +354,10 @@ proc jsonGenerator*(column:Column):string =
 # =============================================================================
 # foreign key
 # =============================================================================
-proc foreignColumnGenerator*(column:Column, table:Table):string =
+proc foreignColumnGenerator*(column:Column):string =
   result = &"`{column.name}` BIGINT"
   if column.isDefault:
     result.add(&" DEFAULT {column.defaultInt}")
-  
-  # var table = table.name
-  # let smallTable = table.toLowerAscii()
-  # myWrapUpper(table)
-  # result.add(&", INDEX {smallTable}_{column.name}_index({column.name})")
-
-  
 
 proc strForeignColumnGenerator*(column:Column):string =
   let maxLength = column.info["maxLength"].getInt
@@ -385,8 +378,8 @@ proc foreignGenerator*(column:Column):string =
       "NO ACTION"
   
   let refColumn = column.info["column"].getStr
-  let refTable = column.info["table"].getStr
-
+  var refTable = column.info["table"].getStr
+  myWrapUpper(refTable)
   return &"FOREIGN KEY(`{column.name}`) REFERENCES {refTable}({refColumn}) ON DELETE {onDeleteString}"
 
 proc alterAddForeignGenerator*(column:Column, table:Table):string =

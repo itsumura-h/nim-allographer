@@ -33,7 +33,7 @@ rdb.alter([
     Column.string("aaa").nullable().change(),
     # カラム名変更
     Column.renameColumn("aaa", "ccc"),
-    # カラム削除
+    # # カラム削除
     Column.deleteColumn("ccc"),
   ]),
   # テーブル名変更
