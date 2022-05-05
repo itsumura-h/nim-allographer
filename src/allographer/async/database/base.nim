@@ -93,16 +93,6 @@ type
 
 const errorConnectionNum* = 99999
 
-proc stmtFormat(args: varargs[string, `$`]): string =
-  result = ""
-  let argsLen = args.len
-  var count = 1
-  for c in items(args):
-    if count == argsLen:
-      add(result, c)
-    else:
-      add(result, c & ",")
-      inc(count)
 
 proc getFreeConn*(self:Connections):Future[int] {.async.} =
   let calledAt = getTime().toUnix()

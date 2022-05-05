@@ -1,6 +1,4 @@
-import json, strformat, strutils, sequtils
-import ../../../async/database/base
-import ../../../utils
+import json, strformat, strutils
 import ../../grammers
 import ../generator_utils
 
@@ -466,7 +464,7 @@ proc foreignGenerator*(column:Column, table:Table, isAlter=false):string =
 
   let refColumn = column.info["column"].getStr
   let refTable = column.info["table"].getStr
-  return &"FOREIGN KEY(\"{column.name}\") REFERENCES \"{refTable}\"({refColumn}) ON DELETE {onDeleteString}"
+  return &"FOREIGN KEY(\"{column.name}\") REFERENCES \"{refTable}\"(\"{refColumn}\") ON DELETE {onDeleteString}"
 
 proc alterAddForeignGenerator*(column:Column, table:Table, isAlter=false):string =
   var onDeleteString = "RESTRICT"
@@ -480,7 +478,7 @@ proc alterAddForeignGenerator*(column:Column, table:Table, isAlter=false):string
   let constraintName = &"{table.name}_{column.name}"
   let refColumn = column.info["column"].getStr
   let refTable = column.info["table"].getStr
-  return &"CONSTRAINT \"{constraintName}\" FOREIGN KEY (\"{column.name}\") REFERENCES \"{refTable}\" ('{refColumn}') ON DELETE {onDeleteString}"
+  return &"CONSTRAINT \"{constraintName}\" FOREIGN KEY (\"{column.name}\") REFERENCES \"{refTable}\" (\"{refColumn}\") ON DELETE {onDeleteString}"
 
 proc alterDeleteGenerator*(column:Column, table:Table, isAlter=false):string =
   return &"ALTER TABLE \"{table.name}\" DROP '{column.name}'"

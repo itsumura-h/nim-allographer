@@ -2,12 +2,10 @@ import
   std/json,
   std/options,
   std/strformat,
-  std/re,
   std/asyncdispatch,
   std/sha1,
   std/times,
   std/strutils,
-  std/sequtils,
   ../../../base,
   ../../../query_builder,
   ../../grammers,
@@ -82,8 +80,6 @@ proc generateColumnString(column:Column, table:Table, isAlter=false):string =
     return column.foreignColumnGenerator(table, isAlter)
   of rdbStrForeign:
     return column.strForeignColumnGenerator(table, isAlter)
-  else:
-    return ""
 
 proc generateForeignString(column:Column, table:Table):string =
   return column.foreignGenerator(table)

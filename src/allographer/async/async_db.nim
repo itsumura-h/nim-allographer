@@ -1,4 +1,4 @@
-import asyncdispatch, macros, strutils, strformat
+import asyncdispatch, strutils
 import database/base
 import ../base as a
 import database/impls/mysql, database/impls/mariadb, database/impls/postgres, database/impls/sqlite

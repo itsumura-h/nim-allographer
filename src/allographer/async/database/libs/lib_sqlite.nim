@@ -46,7 +46,7 @@ proc dbFormat*(formatstr: string, args: varargs[string]): string =
 proc setupQuery(db: PSqlite3, query: string, args: varargs[string]): PStmt =
   assert(not db.isNil, "Database not connected.")
   var q = dbFormat(query, args)
-  if prepare_v2(db, q, q.len.cint, result, nil) != SQLITE_OK: dbError(db)
+  if prepare_v2(db, q.cstring, q.len.cint, result, nil) != SQLITE_OK: dbError(db)
 
 proc toTypeKind(t: var DbType; x: int32) =
   case x

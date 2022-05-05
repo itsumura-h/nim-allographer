@@ -79,4 +79,4 @@ proc queryPlain*(db:PMySQL, query: string, args: seq[string], timeout:int):Futur
 proc exec*(db:PMySQL, query: string, args: seq[string], timeout:int) {.async.} =
   var q = dbFormat(query, args)
   await sleepAsync(0)
-  if realQuery(db, q, q.len) != 0'i32: dbError(db)
+  if realQuery(db, q.cstring, q.len) != 0'i32: dbError(db)

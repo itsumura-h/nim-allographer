@@ -15,8 +15,8 @@ let
   timeout = getEnv("DB_TIMEOUT").parseInt
 
 let
-  rdb* = dbopen(SQLite3, sqliteHost, maxConnections=maxConnections, shouldDisplayLog=true)
-  # rdb* = dbopen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=true)
+  # rdb* = dbopen(SQLite3, sqliteHost, maxConnections=maxConnections, shouldDisplayLog=true)
+  rdb* = dbopen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=true)
   # rdb* = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=true)
   # rdb* = dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=true)
   # rdb* = dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=true)

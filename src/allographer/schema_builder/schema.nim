@@ -1,6 +1,5 @@
 import os, json, options
 import ../base
-import ../async/async_db
 import ../query_builder
 import ./grammers
 import ./queries/query_interface
@@ -21,8 +20,6 @@ proc create*(rdb:Rdb, tables:varargs[Table]) =
       MysqlQuery.new(rdb).toInterface()
     of PostgreSQL:
       PostgreQuery.new(rdb).toInterface()
-    else:
-      SqliteQuery.new(rdb).toInterface()
 
   # migration table
   let migrationTable = table("allographer_migrations", [
@@ -70,8 +67,6 @@ proc alter*(rdb:Rdb, tables:varargs[Table]) =
       MysqlQuery.new(rdb).toInterface()
     of PostgreSQL:
       PostgreQuery.new(rdb).toInterface()
-    else:
-      SqliteQuery.new(rdb).toInterface()
 
   for i, table in tables:
     # カラム変更

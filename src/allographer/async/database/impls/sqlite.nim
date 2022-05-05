@@ -45,7 +45,7 @@ proc exec*(db:PSqlite3, query: string, args: seq[string], timeout:int) {.async.}
   var q = dbFormat(query, args)
   var stmt: PStmt
   var res:bool
-  if prepare_v2(db, q, q.len.cint, stmt, nil) == SQLITE_OK:
+  if prepare_v2(db, q.cstring, q.len.cint, stmt, nil) == SQLITE_OK:
     let x = step(stmt)
     if x in {SQLITE_DONE, SQLITE_ROW}:
       res = finalize(stmt) == SQLITE_OK

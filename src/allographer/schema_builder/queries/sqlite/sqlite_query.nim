@@ -82,8 +82,6 @@ proc generateColumnString(column:Column):string =
     return column.foreignColumnGenerator()
   of rdbStrForeign:
     return column.strForeignColumnGenerator()
-  else:
-    return ""
 
 proc generateForeignString(column:Column):string =
   return column.foreignGenerator()
