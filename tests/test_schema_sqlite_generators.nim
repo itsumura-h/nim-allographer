@@ -3,447 +3,322 @@ discard """
 """
 
 import unittest
-include ../src/allographer/schema_builder/generators/sqlite_generators
+include ../src/allographer/schema_builder/queries/sqlite/impl
+import ../src/allographer/schema_builder
 
 
 block:
-  check serialGenerator("id") == "'id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"
+  check Column.increments("id").serialGenerator() ==
+    "'id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"
 
 block:
-  let nullable = true
-  let isUnique, isDefault, isUnsigned = false
-  check intGenerator("int", nullable, isUnique, isUnsigned, isDefault, 0) ==
-    "'int' INTEGER"
-
-block:
-  let nullable, isUnique, isDefault, isUnsigned = false
-  check intGenerator("int", nullable, isUnique, isUnsigned, isDefault, 0) ==
+  check Column.integer("int").intGenerator() ==
     "'int' INTEGER NOT NULL"
 
 block:
-  let nullable, isUnique = true
-  let isDefault, isUnsigned = false
-  check intGenerator("int", nullable, isUnique, isUnsigned, isDefault, 0) ==
+  check Column.integer("int").nullable().intGenerator() ==
+    "'int' INTEGER"
+
+block:
+  check Column.integer("int").nullable().unique().intGenerator() ==
     "'int' INTEGER UNIQUE"
 
 block:
-  let nullable, isDefault = true
-  let isUnique, isUnsigned = false
-  check intGenerator("int", nullable, isUnique, isUnsigned, isDefault, 0) ==
+  check Column.integer("int").nullable().default(0).intGenerator() ==
     "'int' INTEGER DEFAULT 0"
 
 block:
-  var nullable, isUnsigned = true
-  var isUnique, isDefault = false
-  check intGenerator("int", nullable, isUnique, isUnsigned, isDefault, 0) ==
+  check Column.integer("int").nullable().unsigned().intGenerator() ==
     "'int' INTEGER CHECK (int > 0)"
 
-  nullable= false
-  check intGenerator("int", nullable, isUnique, isUnsigned, isDefault, 0) ==
+  check Column.integer("int").unsigned().intGenerator() ==
     "'int' INTEGER NOT NULL CHECK (int > 0)"
 
-
 block:
-  let nullable = true
-  let isUnique, isDefault, isUnsigned = false
-  check decimalGenerator("decimal", 5, 3, nullable, isUnique, isUnsigned, isDefault, 0.0) ==
-    "'decimal' NUMERIC"
-
-block:
-  let nullable, isUnique, isDefault, isUnsigned = false
-  check decimalGenerator("decimal", 5, 3, nullable, isUnique, isUnsigned, isDefault, 0.0) ==
+  check Column.decimal("decimal", 5, 3).decimalGenerator() ==
     "'decimal' NUMERIC NOT NULL"
 
 block:
-  let nullable, isDefault = true
-  let isUnique, isUnsigned = false
-  check decimalGenerator("decimal", 5, 3, nullable, isUnique, isUnsigned, isDefault, 0.0) ==
+  check Column.decimal("decimal", 5, 3).nullable().decimalGenerator() ==
+    "'decimal' NUMERIC"
+
+block:
+  check Column.decimal("decimal", 5, 3).nullable().default(0.0).decimalGenerator() ==
     "'decimal' NUMERIC DEFAULT 0.0"
 
 block:
-  var nullable, isUnsigned = true
-  var isUnique, isDefault = false
-  check decimalGenerator("decimal", 5, 3, nullable, isUnique, isUnsigned, isDefault, 0.0) ==
+  check Column.decimal("decimal", 5, 3).nullable().unsigned().decimalGenerator() ==
     "'decimal' NUMERIC CHECK (decimal > 0)"
 
-  nullable = false
-  check decimalGenerator("decimal", 5, 3, nullable, isUnique, isUnsigned, isDefault, 0.0) ==
+  check Column.decimal("decimal", 5, 3).unsigned().decimalGenerator() ==
     "'decimal' NUMERIC NOT NULL CHECK (decimal > 0)"
 
 block:
-  let nullable = true
-  let isUnique, isDefault, isUnsigned = false
-  check floatGenerator("decimal", nullable, isUnique, isUnsigned, isDefault, 0.0) ==
-    "'decimal' REAL"
-
-block:
-  let nullable, isUnique, isDefault, isUnsigned = false
-  check floatGenerator("decimal", nullable, isUnique, isUnsigned, isDefault, 0.0) ==
+  check Column.float("decimal").floatGenerator() ==
     "'decimal' REAL NOT NULL"
 
 block:
-  let nullable, isUnique = true
-  let isDefault, isUnsigned = false
-  check floatGenerator("decimal", nullable, isUnique, isUnsigned, isDefault, 0.0) ==
+  check Column.float("decimal").nullable().floatGenerator() ==
+    "'decimal' REAL"
+
+block:
+  check Column.float("decimal").nullable().unique().floatGenerator() ==
     "'decimal' REAL UNIQUE"
 
 block:
-  let nullable, isDefault = true
-  let isUnique, isUnsigned = false
-  check floatGenerator("decimal", nullable, isUnique, isUnsigned, isDefault, 0.0) ==
+  check Column.float("decimal").nullable().default(0.0).floatGenerator() ==
     "'decimal' REAL DEFAULT 0.0"
 
 block:
-  var nullable, isUnsigned = true
-  var isUnique, isDefault = false
-  check floatGenerator("decimal", nullable, isUnique, isUnsigned, isDefault, 0.0) ==
+  check Column.float("decimal").nullable().unsigned().floatGenerator() ==
     "'decimal' REAL CHECK (decimal > 0)"
 
 block:
-  let nullable = true
-  let isUnique, isDefault, isUnsigned = false
-  check charGenerator("char", 255, nullable, isUnique, isUnsigned, isDefault, "") ==
-    "'char' VARCHAR CHECK (length('char') <= 255)"
-
-block:
-  let nullable, isUnique, isDefault, isUnsigned = false
-  check charGenerator("char", 255, nullable, isUnique, isUnsigned, isDefault, "") ==
+  check Column.char("char", 255).charGenerator() ==
     "'char' VARCHAR NOT NULL CHECK (length('char') <= 255)"
 
 block:
-  let nullable, isUnique = true
-  let isDefault, isUnsigned = false
-  check charGenerator("char", 255, nullable, isUnique, isUnsigned, isDefault, "") ==
-    "'char' VARCHAR UNIQUE CHECK (length('char') <= 255)"
-
-block:
-  let nullable, isDefault = true
-  let isUnique, isUnsigned = false
-  check charGenerator("char", 255, nullable, isUnique, isUnsigned, isDefault, "") ==
-    "'char' VARCHAR DEFAULT '' CHECK (length('char') <= 255)"
-
-block:
-  var nullable, isUnsigned = true
-  var isUnique, isDefault = false
-  check charGenerator("char", 255, nullable, isUnique, isUnsigned, isDefault, "") ==
-    "'char' VARCHAR CHECK (length('char') <= 255) CHECK (char > 0)"
-
-block:
-  let nullable = true
-  let isUnique, isDefault, isUnsigned = false
-  check varcharGenerator("char", 255, nullable, isUnique, isUnsigned, isDefault, "") ==
+  check Column.char("char", 255).nullable().charGenerator() ==
     "'char' VARCHAR CHECK (length('char') <= 255)"
 
 block:
-  let nullable, isUnique, isDefault, isUnsigned = false
-  check varcharGenerator("char", 255, nullable, isUnique, isUnsigned, isDefault, "") ==
-    "'char' VARCHAR NOT NULL CHECK (length('char') <= 255)"
-
-block:
-  let nullable, isUnique = true
-  let isDefault, isUnsigned = false
-  check varcharGenerator("char", 255, nullable, isUnique, isUnsigned, isDefault, "") ==
+  check Column.char("char", 255).nullable().unique().charGenerator() ==
     "'char' VARCHAR UNIQUE CHECK (length('char') <= 255)"
 
 block:
-  let nullable, isDefault = true
-  let isUnique, isUnsigned = false
-  check varcharGenerator("char", 255, nullable, isUnique, isUnsigned, isDefault, "") ==
+  check Column.char("char", 255).nullable().default("").charGenerator() ==
     "'char' VARCHAR DEFAULT '' CHECK (length('char') <= 255)"
 
 block:
-  var nullable, isUnsigned = true
-  var isUnique, isDefault= false
-  check varcharGenerator("char", 255, nullable, isUnique, isUnsigned, isDefault, "") ==
+  check Column.char("char", 255).nullable().unsigned().charGenerator() ==
     "'char' VARCHAR CHECK (length('char') <= 255) CHECK (char > 0)"
 
 block:
-  let nullable = true
-  let isUnique, isDefault, isUnsigned = false
-  check textGenerator("char", nullable, isUnique, isUnsigned, isDefault, "") ==
-    "'char' TEXT"
+  check Column.string("char").varcharGenerator() ==
+    "'char' VARCHAR NOT NULL CHECK (length('char') <= 255)"
 
 block:
-  let nullable, isUnique, isDefault, isUnsigned = false
-  check textGenerator("char", nullable, isUnique, isUnsigned, isDefault, "") ==
+  check Column.string("char").nullable().varcharGenerator() ==
+    "'char' VARCHAR CHECK (length('char') <= 255)"
+
+block:
+  check Column.string("char").nullable().unique().varcharGenerator() ==
+    "'char' VARCHAR UNIQUE CHECK (length('char') <= 255)"
+
+block:
+  check Column.string("char").nullable().default("").varcharGenerator() ==
+    "'char' VARCHAR DEFAULT '' CHECK (length('char') <= 255)"
+
+block:
+  check Column.string("char").nullable().unsigned().varcharGenerator() ==
+    "'char' VARCHAR CHECK (length('char') <= 255) CHECK (char > 0)"
+
+block:
+  check Column.text("char").textGenerator() ==
     "'char' TEXT NOT NULL"
 
 block:
-  let nullable, isUnique = true
-  let isDefault, isUnsigned = false
-  check textGenerator("char", nullable, isUnique, isUnsigned, isDefault, "") ==
+  check Column.text("char").nullable().textGenerator() ==
+    "'char' TEXT"
+
+block:
+  check Column.text("char").nullable().unique().textGenerator() ==
     "'char' TEXT UNIQUE"
 
 block:
-  let nullable, isDefault = true
-  let isUnique, isUnsigned = false
-  check textGenerator("char", nullable, isUnique, isUnsigned, isDefault, "") ==
+  check Column.text("char").nullable().default("").textGenerator() ==
     "'char' TEXT DEFAULT ''"
 
 block:
-  var nullable, isUnsigned = true
-  var isUnique, isDefault= false
-  check textGenerator("char", nullable, isUnique, isUnsigned, isDefault, "") ==
+  check Column.text("char").nullable().unsigned().textGenerator() ==
     "'char' TEXT CHECK (char > 0)"
 
 block:
-  var nullable = true
-  let isUnique, isDefault, isUnsigned = false
-  check dateGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
-    "'date' DATE"
-
-block:
-  let nullable, isUnique, isDefault, isUnsigned = false
-  check dateGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.date("date").dateGenerator() ==
     "'date' DATE NOT NULL"
 
 block:
-  let nullable, isUnique = true
-  let isDefault, isUnsigned = false
-  check dateGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.date("date").nullable().dateGenerator() ==
+    "'date' DATE"
+
+block:
+  check Column.date("date").nullable().unique().dateGenerator() ==
     "'date' DATE UNIQUE"
 
 block:
-  let nullable, isDefault = true
-  let isUnique, isUnsigned = false
-  check dateGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.date("date").nullable().default().dateGenerator() ==
     "'date' DATE DEFAULT CURRENT_TIMESTAMP"
 
 block:
-  var nullable, isUnsigned = true
-  var isUnique, isDefault= false
-  check dateGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.date("date").nullable().unsigned().dateGenerator() ==
     "'date' DATE CHECK (date > 0)"
 
 block:
-  let nullable = true
-  let isUnique, isDefault, isUnsigned = false
-  check datetimeGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
-    "'date' DATETIME"
-
-block:
-  let nullable, isUnique, isDefault, isUnsigned = false
-  check datetimeGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.datetime("date").datetimeGenerator() ==
     "'date' DATETIME NOT NULL"
 
 block:
-  let nullable, isUnique = true
-  let isDefault, isUnsigned = false
-  check datetimeGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.datetime("date").nullable().datetimeGenerator() ==
+    "'date' DATETIME"
+
+block:
+  check Column.datetime("date").nullable().unique().datetimeGenerator() ==
     "'date' DATETIME UNIQUE"
 
 block:
-  let nullable, isDefault = true
-  let isUnique, isUnsigned = false
-  check datetimeGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.datetime("date").nullable().default().datetimeGenerator() ==
     "'date' DATETIME DEFAULT CURRENT_TIMESTAMP"
 
 block:
-  var nullable, isUnsigned = true
-  var isUnique, isDefault= false
-  check datetimeGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.datetime("date").nullable().unsigned().datetimeGenerator() ==
     "'date' DATETIME CHECK (date > 0)"
 
 block:
-  let nullable = true
-  let isUnique, isDefault, isUnsigned = false
-  check timeGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
-    "'date' TIME"
-
-block:
-  let nullable, isUnique, isDefault, isUnsigned = false
-  check timeGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.time("date").timeGenerator() ==
     "'date' TIME NOT NULL"
 
 block:
-  let nullable, isUnique = true
-  let isDefault, isUnsigned = false
-  check timeGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.time("date").nullable().timeGenerator() ==
+    "'date' TIME"
+
+block:
+  check Column.time("date").nullable().unique().timeGenerator() ==
     "'date' TIME UNIQUE"
 
 block:
-  let nullable, isDefault = true
-  let isUnique, isUnsigned = false
-  check timeGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.time("date").nullable().default().timeGenerator() ==
     "'date' TIME DEFAULT CURRENT_TIMESTAMP"
 
 block:
-  var nullable, isUnsigned = true
-  var isUnique, isDefault= false
-  check timeGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.time("date").nullable().unsigned().timeGenerator() ==
     "'date' TIME CHECK (date > 0)"
 
 block:
-  let nullable = true
-  let isUnique, isDefault, isUnsigned = false
-  check timestampGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
-    "'date' DATETIME"
-
-block:
-  let nullable, isUnique, isDefault, isUnsigned = false
-  check timestampGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.timestamp("date").timestampGenerator() ==
     "'date' DATETIME NOT NULL"
 
 block:
-  let nullable, isUnique = true
-  let isDefault, isUnsigned = false
-  check timestampGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.timestamp("date").nullable().timestampGenerator() ==
+    "'date' DATETIME"
+
+block:
+  check Column.timestamp("date").nullable().unique().timestampGenerator() ==
     "'date' DATETIME UNIQUE"
 
 block:
-  let nullable, isDefault = true
-  let isUnique, isUnsigned = false
-  check timestampGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.timestamp("date").nullable().default().timestampGenerator() ==
     "'date' DATETIME DEFAULT CURRENT_TIMESTAMP"
 
 block:
-  var nullable, isUnsigned = true
-  var isUnique, isDefault= false
-  check timestampGenerator("date", nullable, isUnique, isUnsigned, isDefault) ==
+  check Column.timestamp("date").nullable().unsigned().timestampGenerator() ==
     "'date' DATETIME CHECK (date > 0)"
 
 block:
-  check timestampsGenerator() ==
+  check Column.timestamps().timestampsGenerator() ==
     "'created_at' DATETIME DEFAULT CURRENT_TIMESTAMP, 'updated_at' DATETIME DEFAULT CURRENT_TIMESTAMP"
 
 block:
-  check softDeleteGenerator() == "'deleted_at' DATETIME"
+  check Column.softDelete().softDeleteGenerator() ==
+    "'deleted_at' DATETIME"
 
 block:
-  let nullable = true
-  let isUnique, isDefault, isUnsigned = false
-  check blobGenerator("blob", nullable, isUnique, isUnsigned, isDefault, "") ==
-    "'blob' BLOB"
-
-block:
-  let nullable, isUnique, isDefault, isUnsigned = false
-  check blobGenerator("blob", nullable, isUnique, isUnsigned, isDefault, "") ==
+  check Column.binary("blob").blobGenerator() ==
     "'blob' BLOB NOT NULL"
 
 block:
-  let nullable, isUnique = true
-  let isDefault, isUnsigned = false
-  check blobGenerator("blob", nullable, isUnique, isUnsigned, isDefault, "") ==
-    "'blob' BLOB UNIQUE"
+  check Column.binary("blob").nullable().blobGenerator() ==
+    "'blob' BLOB"
 
 block:
-  let nullable, isDefault = true
-  let isUnique, isUnsigned = false
-  check blobGenerator("blob", nullable, isUnique, isUnsigned, isDefault, "") ==
+  check Column.binary("blob").nullable().blobGenerator() ==
+    "'blob' BLOB"
+
+block:
+  check Column.binary("blob").nullable().default().blobGenerator() ==
     "'blob' BLOB DEFAULT ''"
 
 block:
-  var nullable, isUnsigned = true
-  var isUnique, isDefault= false
-  check blobGenerator("blob", nullable, isUnique, isUnsigned, isDefault, "") ==
+  check Column.binary("blob").nullable().unsigned().blobGenerator() ==
     "'blob' BLOB CHECK (blob > 0)"
 
 block:
-  let nullable = true
-  let isUnique, isDefault, isUnsigned = false
-  check boolGenerator("bool", nullable, isUnique, isUnsigned, isDefault, false) ==
-    "'bool' TINYINT"
-
-block:
-  let nullable, isUnique, isDefault, isUnsigned = false
-  check boolGenerator("bool", nullable, isUnique, isUnsigned, isDefault, false) ==
+  check Column.boolean("bool").boolGenerator() ==
     "'bool' TINYINT NOT NULL"
 
 block:
-  let nullable, isUnique = true
-  let isDefault, isUnsigned = false
-  check boolGenerator("bool", nullable, isUnique, isUnsigned, isDefault, false) ==
+  check Column.boolean("bool").nullable().boolGenerator() ==
+    "'bool' TINYINT"
+
+block:
+  check Column.boolean("bool").nullable().unique().boolGenerator() ==
     "'bool' TINYINT UNIQUE"
 
 block:
-  let nullable, isDefault = true
-  let isUnique, isUnsigned = false
-  check boolGenerator("bool", nullable, isUnique, isUnsigned, isDefault, false) ==
+  check Column.boolean("bool").nullable().default(false).boolGenerator() ==
     "'bool' TINYINT DEFAULT false"
 
-  check boolGenerator("bool", nullable, isUnique, isUnsigned, isDefault, true) ==
+  check Column.boolean("bool").nullable().default(true).boolGenerator() ==
     "'bool' TINYINT DEFAULT true"
 
 block:
-  var nullable, isUnsigned = true
-  var isUnique, isDefault= false
   try:
-    discard boolGenerator("blob", nullable, isUnique, isUnsigned, isDefault, false)
+    discard Column.boolean("bool").nullable().unsigned().boolGenerator()
     check false
   except DbError:
     check true
 
 block:
-  let nullable = true
-  let isUnique, isDefault, isUnsigned = false
-  check enumGenerator("enum", [%"a", %"b"], nullable, isUnique, isUnsigned, isDefault, "") ==
-    "'enum' VARCHAR CHECK (enum = 'a' OR enum = 'b')"
-
-block:
-  let nullable, isUnique, isDefault, isUnsigned = false
-  check enumGenerator("enum", [%"a", %"b"], nullable, isUnique, isUnsigned, isDefault, "") ==
+  check Column.enumField("enum", ["a", "b"]).enumGenerator() ==
     "'enum' VARCHAR NOT NULL CHECK (enum = 'a' OR enum = 'b')"
 
 block:
-  let nullable, isUnique = true
-  let isDefault, isUnsigned = false
-  check enumGenerator("enum", [%"a", %"b"], nullable, isUnique, isUnsigned, isDefault, "") ==
+  check Column.enumField("enum", ["a", "b"]).nullable().enumGenerator() ==
+    "'enum' VARCHAR CHECK (enum = 'a' OR enum = 'b')"
+
+block:
+  check Column.enumField("enum", ["a", "b"]).nullable().unique().enumGenerator() ==
     "'enum' VARCHAR UNIQUE CHECK (enum = 'a' OR enum = 'b')"
 
 block:
-  let nullable, isDefault = true
-  let isUnique, isUnsigned = false
-  check enumGenerator("enum", [%"a", %"b"], nullable, isUnique, isUnsigned, isDefault, "a") ==
+  check Column.enumField("enum", ["a", "b"]).nullable().default("a").enumGenerator() ==
     "'enum' VARCHAR DEFAULT 'a' CHECK (enum = 'a' OR enum = 'b')"
 
 block:
-  var nullable, isUnsigned = true
-  var isUnique, isDefault= false
   try:
-    discard enumGenerator("enum", [%"a", %"b"], nullable, isUnique, isUnsigned, isDefault, "a")
+    discard Column.enumField("enum", ["a", "b"]).nullable().unsigned().enumGenerator()
     check false
   except DbError:
     check true
 
 block:
-  let nullable = true
-  let isUnique, isDefault, isUnsigned = false
-  check jsonGenerator("json", nullable, isUnique, isUnsigned, isDefault, newJNull()) ==
-    "'json' TEXT"
-
-block:
-  let nullable, isUnique, isDefault, isUnsigned = false
-  check jsonGenerator("json", nullable, isUnique, isUnsigned, isDefault, newJNull()) ==
+  check Column.json("json").jsonGenerator() ==
     "'json' TEXT NOT NULL"
 
 block:
-  let nullable, isUnique = true
-  let isDefault, isUnsigned = false
-  check jsonGenerator("json", nullable, isUnique, isUnsigned, isDefault, newJNull()) ==
+  check Column.json("json").nullable().jsonGenerator() ==
+    "'json' TEXT"
+
+block:
+  check Column.json("json").nullable().unique().jsonGenerator() ==
     "'json' TEXT UNIQUE"
 
 block:
-  let nullable, isDefault = true
-  let isUnique, isUnsigned = false
-  check jsonGenerator("json", nullable, isUnique, isUnsigned, isDefault, %*{"key":"value"}) ==
+  check Column.json("json").nullable().default(%*{"key":"value"}).jsonGenerator() ==
     """'json' TEXT DEFAULT '{
   "key": "value"
 }'"""
 
 block:
-  var nullable, isUnsigned = true
-  var isUnique, isDefault= false
-  check jsonGenerator("json", nullable, isUnique, isUnsigned, isDefault, newJNull()) ==
+  check Column.json("json").nullable().unsigned().jsonGenerator() ==
     "'json' TEXT CHECK (json > 0)"
 
 block:
-  check foreignColumnGenerator("auth_id", false, 0) == "'auth_id' INTEGER"
-  check foreignColumnGenerator("auth_id", true, 1) == "'auth_id' INTEGER DEFAULT 1"
-  check foreignGenerator("auth_id", "auth", "id", RESTRICT) ==
+  check Column.foreign("auth_id").nullable().foreignColumnGenerator() == "'auth_id' INTEGER"
+  check Column.foreign("auth_id").reference("id").on("auth").onDelete(RESTRICT).foreignGenerator() ==
     "FOREIGN KEY('auth_id') REFERENCES auth(id) ON DELETE RESTRICT"
-  check foreignGenerator("auth_id", "auth", "id", CASCADE) ==
+  check Column.foreign("auth_id").reference("id").on("auth").onDelete(CASCADE).foreignGenerator() ==
     "FOREIGN KEY('auth_id') REFERENCES auth(id) ON DELETE CASCADE"
-  check foreignGenerator("auth_id", "auth", "id", SET_NULL) ==
+  check Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL).foreignGenerator() ==
     "FOREIGN KEY('auth_id') REFERENCES auth(id) ON DELETE SET NULL"
-  check foreignGenerator("auth_id", "auth", "id", NO_ACTION) ==
+  check Column.foreign("auth_id").reference("id").on("auth").onDelete(NO_ACTION).foreignGenerator() ==
     "FOREIGN KEY('auth_id') REFERENCES auth(id) ON DELETE NO ACTION"

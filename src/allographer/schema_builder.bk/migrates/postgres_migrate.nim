@@ -319,8 +319,8 @@ proc migrate*(self:Table):string =
       )
 
   var tableName = self.name
-  pgWrapUpper(tableName)
-  return &"CREATE TABLE {tableName} ({columnString}{foreignString})"
+  # pgWrapUpper(tableName)
+  return &"CREATE TABLE \"{tableName}\" ({columnString}{foreignString})"
 
 proc migrateAlter*(table:string, column:Column):seq[string] =
   let columnString = generateColumnString(column, table)

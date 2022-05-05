@@ -17,7 +17,7 @@ proc open*(driver:Driver, database:string="", user:string="", password:string=""
     when isExistsMariadb:
       result = mariadb.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of PostgreSQL:
-    when isExistsPostgres:
+    when isExistsPostgre:
       result = postgres.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of SQLite3:
     when isExistsSqlite:
@@ -37,7 +37,7 @@ proc query*(self: Connections, driver:Driver, query: string, args: seq[string] =
     when isExistsMariadb:
       return await mariadb.query(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
-    when isExistsPostgres:
+    when isExistsPostgre:
       discard
       return await postgres.query(self.pools[connI].postgresConn, query, args, self.timeout)
   of SQLite3:
@@ -59,7 +59,7 @@ proc queryPlain*(self: Connections, driver:Driver, query: string, args: seq[stri
     when isExistsMariadb:
       return await mariadb.queryPlain(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
-    when isExistsPostgres:
+    when isExistsPostgre:
       discard
       return await postgres.queryPlain(self.pools[connI].postgresConn, query, args, self.timeout)
   of SQLite3:
@@ -82,7 +82,7 @@ proc exec*(self: Connections, driver:Driver, query: string, args: seq[string] = 
     when isExistsMariadb:
       await mariadb.exec(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
-    when isExistsPostgres:
+    when isExistsPostgre:
       await postgres.exec(self.pools[connI].postgresConn, query, args, self.timeout)
   of SQLite3:
     when isExistsSqlite:
@@ -105,7 +105,7 @@ proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string
       discard
       # return await mariadb.query(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
-    when isExistsPostgres:
+    when isExistsPostgre:
       discard
       # return await postgres.query(self.pools[connI].postgresConn, query, args, self.timeout)
   of SQLite3:
@@ -132,7 +132,7 @@ proc prepare*(self: Connections, driver:Driver, query: string, stmtName=""):Futu
       discard
       # await mariadb.prepare(self.pools[connI].mariadbConn, query, self.timeout)
   of PostgreSQL:
-    when isExistsPostgres:
+    when isExistsPostgre:
       let nArgs = await postgres.prepare(self.pools[connI].postgresConn, query, self.timeout, stmtName)
       result = Prepared(conn:self, nArgs:nArgs, pgStmt:stmtName, connI:connI)
   of SQLite3:
@@ -150,7 +150,7 @@ proc query*(self:Prepared, driver:Driver, args: seq[string] = @[]):Future[(seq[R
     when isExistsMariadb:
       discard
   of PostgreSQL:
-    when isExistsPostgres:
+    when isExistsPostgre:
       return await postgres.preparedQuery(self.conn.pools[self.connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
   of SQLite3:
     when isExistsSqlite:
@@ -166,7 +166,7 @@ proc exec*(self:Prepared, driver:Driver, args:seq[string] = @[]) {.async.} =
     when isExistsMariadb:
       discard
   of PostgreSQL:
-    when isExistsPostgres:
+    when isExistsPostgre:
       await postgres.preparedExec(self.conn.pools[self.connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
   of SQLite3:
     when isExistsSqlite:

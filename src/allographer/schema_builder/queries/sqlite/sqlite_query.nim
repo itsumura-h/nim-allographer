@@ -235,7 +235,7 @@ proc renameColumn(self:SqliteQuery, column:Column, table:Table) =
   let schema = replace(rows[0]["sql"].getStr, re"\)$", ",)")
   let columnRegex = &"'{column.previousName}'.*?,"
 
-  var columnString = rows[0]["sql"].getStr.findAll(re(&"'{column.previousName}'.*?,"))[0]
+  var columnString = rows[0]["sql"].getStr.findAll(re(columnRegex))[0]
   columnString = columnString.multiReplace(
     (column.previousName, column.name)
   )
@@ -296,9 +296,8 @@ proc deleteColumn(self:SqliteQuery, column:Column, table:Table) =
   let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '{table.name}'"
   var rows = self.rdb.raw(tableDifinitionSql).getRaw.waitFor
   let schema = replace(rows[0]["sql"].getStr, re"\)$", ", )")
-  let columnRegex = &"'{column.previousName}'.*?,"
   
-  var columnString = rows[0]["sql"].getStr.findAll(re(&"'{column.name}'.*?,\\s"))[0]
+  var columnString = schema.findAll(re(&"'{column.name}'.*?,\\s"))[0]
   var query = schema.replace(columnString, "")
   query = query.replace(", )", ")")
   query = query.replace(re("CREATE TABLE \".+\""), "CREATE TABLE \"alter_table_tmp\"")

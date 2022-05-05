@@ -13,19 +13,19 @@ import connections
 randomize()
 
 proc setup() =
-  rdb.schema([
+  rdb.create([
     table("auth",[
-      Column().increments("id"),
-      Column().string("auth")
+      Column.increments("id"),
+      Column.string("auth")
     ]),
     table("users",[
-      Column().increments("id"),
-      Column().string("name").nullable(),
-      Column().string("email").nullable(),
-      Column().string("address").nullable(),
-      Column().date("submit_on").nullable(),
-      Column().datetime("submit_at").nullable(),
-      Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+      Column.increments("id"),
+      Column.string("name").nullable(),
+      Column.string("email").nullable(),
+      Column.string("address").nullable(),
+      Column.date("submit_on").nullable(),
+      Column.datetime("submit_at").nullable(),
+      Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
     ])
   ])
 
@@ -308,11 +308,11 @@ block groupByTest:
             .groupBy("auth_id")
             .get()
     echo t
-    if rdb.conn.driver == SQLite3:
+    if rdb.driver == SQLite3:
       check t[0]["max(id)"].getStr() == "9"
-    if rdb.conn.driver == MySQL:
+    if rdb.driver == MySQL:
       check t[0]["max(id)"].getInt() == 9
-    if rdb.conn.driver == PostgreSQL:
+    if rdb.driver == PostgreSQL:
       check t[0]["max"].getInt() == 9
 
 block havingTest:

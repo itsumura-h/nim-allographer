@@ -465,9 +465,8 @@ proc foreignGenerator*(column:Column, table:Table, isAlter=false):string =
     onDeleteString = "NO ACTION"
 
   let refColumn = column.info["column"].getStr
-  var refTable = column.info["table"].getStr
-  pgWrapUpper(refTable)
-  return &"FOREIGN KEY(\"{column.name}\") REFERENCES {refTable}({refColumn}) ON DELETE {onDeleteString}"
+  let refTable = column.info["table"].getStr
+  return &"FOREIGN KEY(\"{column.name}\") REFERENCES \"{refTable}\"({refColumn}) ON DELETE {onDeleteString}"
 
 proc alterAddForeignGenerator*(column:Column, table:Table, isAlter=false):string =
   var onDeleteString = "RESTRICT"
@@ -478,27 +477,18 @@ proc alterAddForeignGenerator*(column:Column, table:Table, isAlter=false):string
   elif column.foreignOnDelete == NO_ACTION:
     onDeleteString = "NO ACTION"
 
-  var constraintName = &"{table.name}_{column.name}"
-  pgWrapUpper(constraintName)
+  let constraintName = &"{table.name}_{column.name}"
   let refColumn = column.info["column"].getStr
-  var refTable = column.info["table"].getStr
-  pgWrapUpper(refTable)
-  return &"CONSTRAINT {constraintName} FOREIGN KEY (\"{column.name}\") REFERENCES {refTable} ({refColumn}) ON DELETE {onDeleteString}"
+  let refTable = column.info["table"].getStr
+  return &"CONSTRAINT \"{constraintName}\" FOREIGN KEY (\"{column.name}\") REFERENCES \"{refTable}\" ('{refColumn}') ON DELETE {onDeleteString}"
 
 proc alterDeleteGenerator*(column:Column, table:Table, isAlter=false):string =
-  var tableName = table.name
-  pgWrapUpper(tableName)
-  return &"ALTER TABLE {tableName} DROP {column.name}"
+  return &"ALTER TABLE \"{table.name}\" DROP '{column.name}'"
 
 proc alterDeleteForeignGenerator*(column:Column, table:Table, isAlter=false):string =
-  var constraintName = &"{table.name}_{column.name}"
-  pgWrapUpper(constraintName)
-  var tableName = table.name
-  pgWrapUpper(tableName)
-  return &"ALTER TABLE {tableName} DROP CONSTRAINT {constraintName}"
+  let constraintName = &"{table.name}_{column.name}"
+  return &"ALTER TABLE \"{table.name}\" DROP CONSTRAINT {constraintName}"
 
 proc indexGenerate*(column:Column, table:Table, isAlter=false):string =
-  var tableName = table.name
-  let smallTable = tableName.toLowerAscii()
-  pgWrapUpper(tableName)
-  return &"CREATE INDEX {smallTable}_{column.name}_index ON {tableName}({column.name})"
+  let smallTable = table.name.toLowerAscii()
+  return &"CREATE INDEX \"{smallTable}_{column.name}_index\" ON \"{table.name}\"(\"{column.name}\")"

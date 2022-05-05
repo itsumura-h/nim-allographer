@@ -393,6 +393,7 @@ proc exec*(self: Rdb){.async.} =
 # ==================== Aggregates ====================
 
 proc count*(self:Rdb):Future[int]{.async.} =
+  defer: self.cleanUp()
   self.sqlString = self.countBuilder().sqlString
   self.log.logger(self.sqlString, self.placeHolder)
   let response =  await self.getRow(self.sqlString, self.placeHolder)
@@ -408,6 +409,7 @@ proc count*(self:Rdb):Future[int]{.async.} =
     return 0
 
 proc max*(self:Rdb, column:string):Future[Option[string]]{.async.} =
+  defer: self.cleanUp()
   self.sqlString = self.maxBuilder(column).sqlString
   self.log.logger(self.sqlString, self.placeHolder)
   let response =  await self.getRow(self.sqlString, self.placeHolder)
@@ -423,6 +425,7 @@ proc max*(self:Rdb, column:string):Future[Option[string]]{.async.} =
     return none(string)
 
 proc min*(self:Rdb, column:string):Future[Option[string]]{.async.} =
+  defer: self.cleanUp()
   self.sqlString = self.minBuilder(column).sqlString
   self.log.logger(self.sqlString, self.placeHolder)
   let response =  await self.getRow(self.sqlString, self.placeHolder)
@@ -438,6 +441,7 @@ proc min*(self:Rdb, column:string):Future[Option[string]]{.async.} =
     return none(string)
 
 proc avg*(self:Rdb, column:string):Future[Option[float]]{.async.} =
+  defer: self.cleanUp()
   self.sqlString = self.avgBuilder(column).sqlString
   self.log.logger(self.sqlString, self.placeHolder)
   let response =  await self.getRow(self.sqlString, self.placeHolder)
@@ -451,6 +455,7 @@ proc avg*(self:Rdb, column:string):Future[Option[float]]{.async.} =
     return none(float)
 
 proc sum*(self:Rdb, column:string):Future[Option[float]]{.async.} =
+  defer: self.cleanUp()
   self.sqlString = self.sumBuilder(column).sqlString
   self.log.logger(self.sqlString, self.placeHolder)
   let response = await self.getRow(self.sqlString, self.placeHolder)
@@ -466,13 +471,15 @@ proc sum*(self:Rdb, column:string):Future[Option[float]]{.async.} =
 
 # ==================== Paginate ====================
 
-from grammars import where, limit, offset, orderBy, Order
+from grammars import table, where, limit, offset, orderBy, Order
 
 proc paginate*(self:Rdb, display:int, page:int=1):Future[JsonNode]{.async.} =
+  defer: self.cleanUp()
+  let tableName = self.query["table"].getStr()
   if not page > 0: raise newException(Exception, "Arg page should be larger than 0")
-  let total = await self.count()
+  let total = self.table(tableName).count().await
   let offset = (page - 1) * display
-  let currentPage = await self.limit(display).offset(offset).get()
+  let currentPage = self.table(tableName).limit(display).offset(offset).get().await
   let count = currentPage.len()
   let hasMorePages = if page * display < total: true else: false
   let lastPage = int(total / display)
@@ -520,13 +527,14 @@ proc getLastItem(self:Rdb, keyArg:string, order:Order=Asc):Future[int]{.async.} 
 
 
 proc fastPaginate*(self:Rdb, display:int, key="id", order:Order=Asc):Future[JsonNode]{.async.} =
+  defer: self.cleanUp()
   self.sqlString = @[self.selectBuilder().sqlString][0]
   if order == Asc:
     self.sqlString = &"{self.sqlString} ORDER BY {key} ASC LIMIT {display + 1}"
   else:
     self.sqlString = &"{self.sqlString} ORDER BY {key} DESC LIMIT {display + 1}"
   self.log.logger(self.sqlString, self.placeHolder)
-  var currentPage = await self.getAllRows(self.sqlString, self.placeHolder)
+  var currentPage = self.getAllRows(self.sqlString, self.placeHolder).await
   if currentPage.len > 0:
     let newKey = if key.contains("."): key.split(".")[1] else: key
     let nextId = currentPage[currentPage.len-1][newKey].getInt()
@@ -553,6 +561,7 @@ proc fastPaginate*(self:Rdb, display:int, key="id", order:Order=Asc):Future[Json
 
 
 proc fastPaginateNext*(self:Rdb, display, id:int, key="id", order:Order=Asc):Future[JsonNode]{.async.} =
+  defer: self.cleanUp()
   if not id > 0: raise newException(Exception, "Arg id should be larger than 0")
   self.sqlString = @[self.selectBuilder().sqlString][0]
   let firstItem = await getFirstItem(self, key, order)
@@ -616,6 +625,7 @@ SELECT * FROM (
 
 
 proc fastPaginateBack*(self:Rdb, display, id:int, key="id", order:Order=Asc):Future[JsonNode]{.async.} =
+  defer: self.cleanUp()
   if not id > 0: raise newException(Exception, "Arg id should be larger than 0")
   self.sqlString = @[self.selectBuilder().sqlString][0]
   let lastItem = await self.getLastItem(key, order)

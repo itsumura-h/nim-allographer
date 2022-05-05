@@ -9,22 +9,22 @@ import ../src/allographer/query_builder
 import connections
 
 
-rdb.schema(
+rdb.create(
   table("foreign_key_ref", [
-    Column().increments("id"),
-    Column().string("name")
+    Column.increments("id"),
+    Column.string("name")
   ]),
   table("table_alter", [
-    Column().increments("id"),
-    Column().string("changed_column").unique().default(""),
-    Column().integer("changed_int").unique().default(0).unsigned(),
-    Column().string("delete_column").nullable(),
+    Column.increments("id"),
+    Column.string("changed_column").unique().default(""),
+    Column.integer("changed_int").unique().default(0).unsigned(),
+    Column.string("delete_column").nullable(),
   ]),
   table("table_rename", [
-    Column().increments("id"),
+    Column.increments("id"),
   ]),
   table("table_drop", [
-    Column().increments("id"),
+    Column.increments("id"),
   ])
 )
 
@@ -49,143 +49,150 @@ for i in 1..10:
   table_drop_data[i-1] = %*{
     "id": i
   }
+
 asyncBlock:
-  await rdb.table("table_alter").insert(table_alter_data)
-  await rdb.table("table_rename").insert(table_rename_data)
-  await rdb.table("table_drop").insert(table_drop_data)
+  rdb.table("table_alter").insert(table_alter_data).await
+  rdb.table("table_rename").insert(table_rename_data).await
+  rdb.table("table_drop").insert(table_drop_data).await
 
 
 block addColumnTest:
   asyncBlock:
-    check await(rdb.table("table_alter").select("add_column").first).isSome == false
+    check rdb.table("table_alter").select("add_column").first.await.isSome == false
 
     rdb.alter(
       table("table_alter", [
-        add().string("add_column").default("")
+        Column.string("add_column").default("")
       ])
     )
 
-    await rdb.table("table_alter").where("id", "=", 1).update(%*{"add_column": "test"})
+    rdb.table("table_alter").where("id", "=", 1).update(%*{"add_column": "test"}).await
 
-    check await(rdb
+    check rdb
       .table("table_alter")
       .select("add_column")
       .orderBy("id", Asc)
-      .first).get["add_column"]
+      .first
+      .await
+      .get["add_column"]
       .getStr == "test"
 
 block addForeignKeyTest:
   asyncBlock:
     rdb.alter(
       table("table_alter", [
-        delete().column("add_foreign_column"),
-        add().foreign("add_foreign_column").reference("id").on("foreign_key_ref").onDelete(SET_NULL),
+        Column.foreign("add_foreign_column").reference("id").on("foreign_key_ref").onDelete(SET_NULL).add(),
       ])
     )
-    check await(rdb.table("table_alter").select("add_foreign_column").first).isSome == true
+    check rdb.table("table_alter").select("add_foreign_column").first.await.isSome == true
 
     rdb.alter(
       table("table_alter", [
-        delete().foreign("add_foreign_column"),
+        Column.deleteColumn("add_foreign_column"),
       ])
     )
-    check await(rdb.table("table_alter").select("add_foreign_column").first).isSome == false
+    check rdb.table("table_alter").select("add_foreign_column").first.await.isSome == false
 
 
 block changedColumnTest:
   asyncBlock:
-    echo await rdb
+    echo rdb
       .table("table_alter")
       .select("changed_column")
       .orderBy("id", Asc)
       .get()
-    check await(rdb
+      .await
+    check rdb
       .table("table_alter")
       .select("changed_column")
       .orderBy("id", Asc)
-      .first).get["changed_column"]
+      .first.await
+      .get["changed_column"]
       .getStr == "change1"
 
     rdb.alter(
       table("table_alter", [
-        change("changed_column").string("changed_column_success", 100).unique().default(""),
-        change("changed_int").mediumInteger("changed_int_success").unique().default(0).unsigned(),
+        Column.renameColumn("changed_column", "changed_column_success"),
+        Column.renameColumn("changed_int", "changed_int_success"),
       ])
     )
 
-    check await(rdb
+    check rdb
       .table("table_alter")
       .select("changed_column_success")
       .orderBy("id", Asc)
-      .first).get["changed_column_success"]
+      .first
+      .await
+      .get["changed_column_success"]
       .getStr == "change1"
 
-    check await(rdb
+    check rdb
       .table("table_alter")
       .select("changed_int_success")
       .orderBy("id", Asc)
-      .first).get["changed_int_success"]
+      .first
+      .await
+      .get["changed_int_success"]
       .getInt == 1
 
 block deleteColumnTest:
   asyncBlock:
-    check await(rdb
+    check rdb
       .table("table_alter")
       .select("delete_column")
       .orderBy("id", Asc)
-      .first).get["delete_column"].getStr == "delete1"
+      .first.await
+      .get["delete_column"].getStr == "delete1"
 
     rdb.alter(
       table("table_alter", [
-        delete().column("delete_column")
+        Column.deleteColumn("delete_column")
       ])
     )
 
-    check await(rdb
+    check rdb
       .table("table_alter")
       .select("delete_column")
       .orderBy("id", Asc)
-      .first).isSome == false
+      .first
+      .await
+      .isSome == false
 
 block renameTest:
   asyncBlock:
-    check await(
-        rdb
-        .table("table_rename")
-        .orderBy("id", Asc)
-        .first
-      )
+    check rdb
+      .table("table_rename")
+      .orderBy("id", Asc)
+      .first
+      .await
       .get["id"]
       .getInt == 1
 
     rdb.alter(rename("table_rename", "table_rename_success"))
 
-    check await(
-        rdb
-        .table("table_rename_success")
-        .orderBy("id", Asc)
-        .first
-      )
+    check rdb
+      .table("table_rename_success")
+      .orderBy("id", Asc)
+      .first
+      .await
       .get["id"]
       .getInt == 1
 
 block dropTableTest:
   asyncBlock:
-    check await(
-      rdb
+    check rdb
       .table("table_drop")
       .orderBy("id", Asc)
       .first
-    )
-    .get["id"]
-    .getInt == 1
+      .await
+      .get["id"]
+      .getInt == 1
 
     rdb.alter(drop("table_drop"))
 
-    check await(
-      rdb
+    check rdb
       .table("table_drop")
       .orderBy("id", Asc)
       .first
-    )
-    .isSome == false
+      .await
+      .isSome == false

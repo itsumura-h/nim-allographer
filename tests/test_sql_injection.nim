@@ -9,29 +9,30 @@ import connections
 
 
 proc setup() =
-  rdb.schema([
-    table("auth",[
-      Column().increments("id"),
-      Column().string("auth")
-    ], reset=true),
+  rdb.create(
+    table("auth", [
+      Column.increments("id"),
+      Column.string("auth")
+    ]),
     table("users",[
-      Column().increments("id"),
-      Column().string("name").nullable(),
-      Column().string("email").nullable(),
-      Column().string("password").nullable(),
-      Column().string("salt").nullable(),
-      Column().string("address").nullable(),
-      Column().date("birth_date").nullable(),
-      Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-    ], reset=true)
-  ])
+      Column.increments("id"),
+      Column.string("name").nullable(),
+      Column.string("email").nullable(),
+      Column.string("password").nullable(),
+      Column.string("salt").nullable(),
+      Column.string("address").nullable(),
+      Column.date("birth_date").nullable(),
+      Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+    ])
+  )
 
   # シーダー
   asyncBlock:
-    await rdb.table("auth").insert(@[
+    rdb.table("auth").insert(@[
       %*{"auth": "admin"},
       %*{"auth": "user"}
     ])
+    .await
     var insertData: seq[JsonNode]
     for i in 1..100:
       let authId = if i mod 2 == 0: 1 else: 2
@@ -42,13 +43,13 @@ proc setup() =
           "auth_id": authId
         }
       )
-    await rdb.table("users").insert(insertData)
+    rdb.table("users").insert(insertData).await
 
 block:
   setup()
   asyncBlock:
-    var x = await rdb.table("users").where("name", "=", "user1").get()
-    var y = await rdb.table("users").where("name", "=", "user1' AND 'A' = 'A").get()
+    var x = rdb.table("users").where("name", "=", "user1").get().await
+    var y = rdb.table("users").where("name", "=", "user1' AND 'A' = 'A").get().await
     echo x
     echo y
     check x != y
@@ -56,8 +57,8 @@ block:
 block:
   setup()
   asyncBlock:
-    var x = await rdb.table("users").where("name", "=", "user1").get()
-    var y = await rdb.table("users").where("name", "=", "user1' AND 'A' = 'B").get()
+    var x = rdb.table("users").where("name", "=", "user1").get().await
+    var y = rdb.table("users").where("name", "=", "user1' AND 'A' = 'B").get().await
     echo x
     echo y
     check x != y
@@ -65,8 +66,8 @@ block:
 block:
   setup()
   asyncBlock:
-    var x = await rdb.table("users").where("name", "=", "user1").get()
-    var y = await rdb.table("users").where("name", "=", "user1' OR 'A' = 'B").get()
+    var x = rdb.table("users").where("name", "=", "user1").get().await
+    var y = rdb.table("users").where("name", "=", "user1' OR 'A' = 'B").get().await
     echo x
     echo y
     check x != y
@@ -74,10 +75,10 @@ block:
 block:
   setup()
   asyncBlock:
-    var x = await rdb.table("users").where("id", "=", 1).get()
+    var x = rdb.table("users").where("id", "=", 1).get().await
     var y: seq[JsonNode]
     try:
-      y = await rdb.table("users").where("id", "=", "2-1").get()
+      y = rdb.table("users").where("id", "=", "2-1").get().await
     except Exception:
       y = @[]
     echo x
@@ -87,14 +88,18 @@ block:
 block:
   setup()
   asyncBlock:
-    var x = await rdb.table("users").select("name", "email")
+    var x = rdb.table("users").select("name", "email")
             .join("auth", "auth.id", "=", "users.auth_id")
-            .where("auth.id", "=", 1).get()
+            .where("auth.id", "=", 1)
+            .get()
+            .await
     var y: seq[JsonNode]
     try:
-      y = await rdb.table("users").select("name", "email")
+      y = rdb.table("users").select("name", "email")
               .join("auth", "auth.id", "=", "users.auth_id")
-              .where("auth.id", "=", "2-1").get()
+              .where("auth.id", "=", "2-1")
+              .get()
+              .await
     except Exception:
       y = @[]
     echo x

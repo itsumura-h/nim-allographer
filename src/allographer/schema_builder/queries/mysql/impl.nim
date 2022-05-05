@@ -379,8 +379,7 @@ proc foreignGenerator*(column:Column):string =
   
   let refColumn = column.info["column"].getStr
   var refTable = column.info["table"].getStr
-  myWrapUpper(refTable)
-  return &"FOREIGN KEY(`{column.name}`) REFERENCES {refTable}({refColumn}) ON DELETE {onDeleteString}"
+  return &"FOREIGN KEY(`{column.name}`) REFERENCES `{refTable}`(`{refColumn}`) ON DELETE {onDeleteString}"
 
 proc alterAddForeignGenerator*(column:Column, table:Table):string =
   let onDeleteString =
@@ -396,26 +395,20 @@ proc alterAddForeignGenerator*(column:Column, table:Table):string =
   
   let tableName = table.name
   var constraintName = &"{tableName}_{column.name}"
-  myWrapUpper(constraintName)
   var refTable = column.info["table"].getStr
-  myWrapUpper(refTable)
   let refColumn = column.info["column"].getStr
-  return &"CONSTRAINT {constraintName} FOREIGN KEY (`{column.name}`) REFERENCES {refTable} ({refColumn}) ON DELETE {onDeleteString}"
+  return &"CONSTRAINT `{constraintName}` FOREIGN KEY (`{column.name}`) REFERENCES `{refTable}`({refColumn}) ON DELETE {onDeleteString}"
 
 proc alterDeleteGenerator*(column:Column, table:Table):string =
   var table = table.name
-  myWrapUpper(table)
-  return &"ALTER TABLE {table} DROP `{column.name}`"
+  return &"ALTER TABLE `{table}` DROP `{column.name}`"
 
 proc alterDeleteForeignGenerator*(column:Column, table:Table):string =
   var tableName = table.name
   var constraintName = &"{tableName}_{column.name}"
-  myWrapUpper(constraintName)
-  myWrapUpper(tableName)
-  return &"ALTER TABLE {table.name} DROP FOREIGN KEY {constraintName}"
+  return &"ALTER TABLE `{table.name}` DROP FOREIGN KEY `{constraintName}`"
 
 proc indexGenerate*(column:Column, table:Table):string =
   var table = table.name
   let smallTable = table.toLowerAscii()
-  myWrapUpper(table)
-  return &"CREATE INDEX {smallTable}_{column.name}_index ON {table}({column.name})"
+  return &"CREATE INDEX `{smallTable}_{column.name}_index` ON `{table}`(`{column.name}`)"

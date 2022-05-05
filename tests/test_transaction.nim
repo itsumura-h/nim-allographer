@@ -8,26 +8,27 @@ import ../src/allographer/query_builder
 import connections
 
 proc setup() =
-  rdb.schema([
+  rdb.create([
     table("auth",[
-      Column().increments("id"),
-      Column().string("auth")
-    ], reset=true),
+      Column.increments("id"),
+      Column.string("auth")
+    ]),
     table("users",[
-      Column().increments("id"),
-      Column().string("name").nullable(),
-      Column().string("email").nullable(),
-      Column().string("address").nullable(),
-      Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-    ], reset=true)
+      Column.increments("id"),
+      Column.string("name").nullable(),
+      Column.string("email").nullable(),
+      Column.string("address").nullable(),
+      Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+    ])
   ])
 
   # seeder
   asyncBlock:
-    await rdb.table("auth").insert(@[
+    rdb.table("auth").insert(@[
       %*{"auth": "admin"},
       %*{"auth": "user"}
     ])
+    .await
 
     var users: seq[JsonNode]
     for i in 1..10:
@@ -40,13 +41,13 @@ proc setup() =
         }
       )
 
-    await rdb.table("users").insert(users)
+    rdb.table("users").insert(users).await
 
 block:
   setup()
   asyncBlock:
     try:
-      var user = await rdb.table("users").get()
+      var user = rdb.table("users").get().await
       echo user
     except:
       discard
@@ -55,24 +56,24 @@ block:
   setup()
   asyncBlock:
     transaction rdb:
-      var user= await(rdb.table("users").select("id").where("name", "=", "user3").first).get
+      var user = rdb.table("users").select("id").where("name", "=", "user3").first.await.get
       var id = user["id"].getInt()
       echo id
-      user = await(rdb.table("users").select("name", "email").find(id)).get
+      user = rdb.table("users").select("name", "email").find(id).await.get
       echo user
 
 block:
   waitFor (proc(){.async.}=
     try:
-      await rdb.raw("BEGIN").exec()
-      await rdb.table("users").insert(%*{"id": 9, "name": "user9", "email": "user9@example.com"})
-      await rdb.raw("COMMIT").exec()
+      rdb.raw("BEGIN").exec().await
+      rdb.table("users").insert(%*{"id": 9, "name": "user9", "email": "user9@example.com"}).await
+      rdb.raw("COMMIT").exec().await
     except:
       echo "=== rollback"
       echo getCurrentExceptionMsg()
-      await rdb.raw("ROLLBACK").exec()
+      rdb.raw("ROLLBACK").exec().await
 
-    echo await rdb.table("users").find(11)
+    echo rdb.table("users").find(11).await
   )()
 
 block:
@@ -80,41 +81,44 @@ block:
   asyncBlock:
     transaction rdb:
       echo "=== in transaction"
-      await rdb.table("users").insert(%*{"id": 9, "name": "user9", "email": "user9@example.com"})
+      rdb.table("users").insert(%*{"id": 9, "name": "user9", "email": "user9@example.com"}).await
       echo "=== end of transaction"
     echo "=== out of transaction"
-    echo await rdb.table("users").find(11)
+    echo rdb.table("users").find(11).await
 
 block:
   setup()
   asyncBlock:
     transaction rdb:
-      let id = await rdb.table("users")
+      let id = rdb.table("users")
                 .insertId(%*{"name": "user11", "email": "user11@example.com"})
+                .await
       echo id
-    echo await rdb.table("users").max("id")
+    echo rdb.table("users").max("id").await
 
 block:
   setup()
   asyncBlock:
     transaction rdb:
-      let id = await rdb.table("users")
+      let id = rdb.table("users")
                 .insertId(@[
                   %*{"name": "user11", "email": "user11@example.com"},
                   %*{"name": "user12", "email": "user12@example.com"}
                 ])
+                .await
       echo id
-    echo await rdb.table("users").max("id")
+    echo rdb.table("users").max("id").await
 
 block:
   setup()
   asyncBlock:
     transaction rdb:
-      discard await rdb.table("users").insertsID(
+      discard rdb.table("users").insertsID(
         @[
           %*{"name": "John", "email": "John@gmail.com", "address": "London"},
           %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
           %*{"name": "George", "birth_date": "1943-02-25", "address": "London"},
         ]
       )
-    echo await rdb.table("users").where("id", ">", 10).get()
+      .await
+    echo rdb.table("users").where("id", ">", 10).get().await

@@ -28,7 +28,7 @@ proc create*(rdb:Rdb, tables:varargs[Table]) =
   let migrationTable = table("allographer_migrations", [
     Column.increments("id"),
     Column.string("name"),
-    Column.string("query"),
+    Column.text("query"),
     Column.string("checksum").index(),
     Column.datetime("created_at"),
     Column.boolean("status")

@@ -150,9 +150,7 @@ proc createTableSql(self:MysqlQuery, table:Table) =
       query.add(columnQuery)
     column.query.add query
 
-  var tableName = table.name
-  myWrapUpper(tableName)
-  table.query.add &"CREATE TABLE IF NOT EXISTS {tableName} ({columnString}{foreignString})"
+  table.query.add &"CREATE TABLE IF NOT EXISTS `{table.name}` ({columnString}{foreignString})"
   table.checksum = $table.query.join("; ").secureHash()
 
 

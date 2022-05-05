@@ -303,14 +303,6 @@ proc alterAddForeignGenerator*(column:Column):string =
   return &"REFERENCES {tableName}({columnName}) ON DELETE {onDeleteString}"
 
 
-# proc indexGenerate*(table, column:string):string =
-#   var table = table
-#   let smallTable = table.toLowerAscii()
-#   liteWrapUpper(table)
-#   return &"CREATE INDEX {smallTable}_{column}_index ON {table}({column})"
-
 proc indexName*(table, column:string):string =
-  var table = table
   let smallTable = table.toLowerAscii()
-  liteWrapUpper(table)
   return &"{smallTable}_{column}_index"

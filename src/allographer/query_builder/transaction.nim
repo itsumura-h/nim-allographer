@@ -8,11 +8,11 @@ macro transaction*(rdb:untyped, bodyInput: untyped):untyped =
   bodyStr = fmt"""
 block:
   try:
-    await {rdb.repr}.raw("BEGIN").exec()
+    {rdb.repr}.raw("BEGIN").exec().await
 {bodyStr}
-    await {rdb.repr}.raw("COMMIT").exec()
+    {rdb.repr}.raw("COMMIT").exec().await
   except:
-    await {rdb.repr}.raw("ROLLBACK").exec()
+    {rdb.repr}.raw("ROLLBACK").exec().await
 """
   let body = bodyStr.parseStmt()
   return body

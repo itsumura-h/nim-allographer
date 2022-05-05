@@ -7,26 +7,27 @@ import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
 import connections
 
-rdb.schema([
+rdb.create([
   table("auth",[
-    Column().increments("id"),
-    Column().string("auth")
+    Column.increments("id"),
+    Column.string("auth")
   ]),
   table("users",[
-    Column().increments("id"),
-    Column().string("name").nullable(),
-    Column().string("email").nullable(),
-    Column().string("address").nullable(),
-    Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+    Column.increments("id"),
+    Column.string("name").nullable(),
+    Column.string("email").nullable(),
+    Column.string("address").nullable(),
+    Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
   ])
 ])
 
 # seeder
 asyncBlock:
-  await rdb.table("auth").insert(@[
+  rdb.table("auth").insert(@[
     %*{"auth": "admin"},
     %*{"auth": "user"}
   ])
+  .await
 
 var insertData: seq[JsonNode]
 for i in 1..20:
@@ -40,53 +41,53 @@ for i in 1..20:
   )
 
 asyncBlock:
-  await rdb.table("users").insert(insertData)
+  rdb.table("users").insert(insertData).await
 
 
 block:
   asyncBlock:
-    var t = await rdb.table("users").select("id", "name").paginate(3, 2)
+    var t = rdb.table("users").select("id", "name").paginate(3, 2).await
     echo t
     check t["count"].getInt() == 3
 
 block:
   asyncBlock:
-    var t = await rdb.table("users").select("id", "name").paginate(3, 2)
+    var t = rdb.table("users").select("id", "name").paginate(3, 2).await
     check t["currentPage"][0]["id"].getInt() == 4
 
 block:
   asyncBlock:
-    var t = await rdb.table("users").select("id", "name").paginate(3, 2)
+    var t = rdb.table("users").select("id", "name").paginate(3, 2).await
     check t["hasMorePages"].getBool() == true
 
 block:
   asyncBlock:
-    var t = await rdb.table("users").select("id", "name").paginate(3, 2)
+    var t = rdb.table("users").select("id", "name").paginate(3, 2).await
     check t["lastPage"].getInt() == 6
 
 block:
   asyncBlock:
-    var t = await rdb.table("users").select("id", "name").paginate(3, 3)
+    var t = rdb.table("users").select("id", "name").paginate(3, 3).await
     check t["nextPage"].getInt() == 4
 
 block:
   asyncBlock:
-    var t = await rdb.table("users").select("id", "name").paginate(3, 2)
+    var t = rdb.table("users").select("id", "name").paginate(3, 2).await
     check t["perPage"].getInt() == 3
 
 block:
   asyncBlock:
-    var t = await rdb.table("users").select("id", "name").paginate(3, 1)
+    var t = rdb.table("users").select("id", "name").paginate(3, 1).await
     check t["previousPage"].getInt() == 1
 
 block:
   asyncBlock:
-    var t = await rdb.table("users").select("id", "name").paginate(3, 2)
+    var t = rdb.table("users").select("id", "name").paginate(3, 2).await
     check t["total"].getInt() == 20
 
 block:
   asyncBlock:
-    var t = await rdb.table("users").select("id", "name").fastPaginate(3)
+    var t = rdb.table("users").select("id", "name").fastPaginate(3).await
     echo t
     check t["previousId"].getInt == 0
     check t["currentPage"][0]["id"].getInt == 1
@@ -94,7 +95,7 @@ block:
 
 block:
   asyncBlock:
-    var t = await rdb.table("users").select("id", "name").fastPaginate(3, order=Desc)
+    var t = rdb.table("users").select("id", "name").fastPaginate(3, order=Desc).await
     echo t
     check t["previousId"].getInt == 0
     check t["currentPage"][0]["id"].getInt == 20
@@ -102,7 +103,7 @@ block:
 
 block:
   asyncBlock:
-    var t = await rdb.table("users").select("id", "name").fastPaginateNext(3, 5)
+    var t = rdb.table("users").select("id", "name").fastPaginateNext(3, 5).await
     echo t
     check t["previousId"].getInt == 4
     check t["currentPage"][0]["id"].getInt == 5
@@ -110,7 +111,7 @@ block:
 
 block:
   asyncBlock:
-    var t = await rdb.table("users").select("id", "name").fastPaginateNext(3, 5, order=Desc)
+    var t = rdb.table("users").select("id", "name").fastPaginateNext(3, 5, order=Desc).await
     echo t
     check t["previousId"].getInt == 6
     check t["currentPage"][0]["id"].getInt == 5
@@ -118,7 +119,7 @@ block:
 
 block:
   asyncBlock:
-    var t = await rdb.table("users").select("id", "name").fastPaginateBack(3, 5)
+    var t = rdb.table("users").select("id", "name").fastPaginateBack(3, 5).await
     echo t
     check t["previousId"].getInt == 2
     check t["currentPage"][0]["id"].getInt == 3
@@ -126,7 +127,7 @@ block:
 
 block:
   asyncBlock:
-    var t = await rdb.table("users").select("id", "name").fastPaginateBack(3, 5, order=Desc)
+    var t = rdb.table("users").select("id", "name").fastPaginateBack(3, 5, order=Desc).await
     echo t
     check t["previousId"].getInt == 8
     check t["currentPage"][0]["id"].getInt == 7
@@ -134,11 +135,12 @@ block:
 
 block:
   asyncBlock:
-    var t = await rdb.table("users")
+    var t = rdb.table("users")
             .select("users.id", "users.name", "users.auth_id")
             .join("auth", "auth.id", "=", "users.auth_id")
             .where("auth.id", "=", 2)
             .fastPaginate(3, key="users.id")
+            .await
     echo t
     check t["hasPreviousId"].getBool == false
     check t["currentPage"][0]["id"].getInt == 2
@@ -146,17 +148,19 @@ block:
 
 block:
   asyncBlock:
-    var t = await rdb.table("users")
+    var t = rdb.table("users")
             .select("users.id", "users.name")
             .join("auth", "auth.id", "=", "users.auth_id")
             .where("auth.id", "=", 2)
             .fastPaginate(3, key="users.id")
+            .await
 
-    t = await rdb.table("users")
+    t = rdb.table("users")
             .select("users.id", "users.name")
             .join("auth", "auth.id", "=", "users.auth_id")
             .where("auth.id", "=", 2)
             .fastPaginateNext(3, t["nextId"].getInt, key="users.id")
+            .await
     echo t
     check t["previousId"].getInt == 6
     check t["currentPage"][0]["id"].getInt == 8
@@ -164,17 +168,19 @@ block:
 
 block:
   asyncBlock:
-    var t = await rdb.table("users")
+    var t = rdb.table("users")
             .select("users.id", "users.name")
             .join("auth", "auth.id", "=", "users.auth_id")
             .where("auth.id", "=", 2)
             .fastPaginateNext(3, 10, key="users.id")
+            .await
 
-    t = await rdb.table("users")
+    t = rdb.table("users")
             .select("users.id", "users.name")
             .join("auth", "auth.id", "=", "users.auth_id")
             .where("auth.id", "=", 2)
             .fastPaginateBack(3, t["previousId"].getInt, key="users.id")
+            .await
     echo t
     check t["hasPreviousId"].getBool == true
     check t["currentPage"][0]["id"].getInt == 4
@@ -182,60 +188,66 @@ block:
 
 block:
   asyncBlock:
-    var t = await rdb.table("users")
+    var t = rdb.table("users")
             .select("users.id", "users.name")
             .where("id", "<", "2")
             .fastPaginate(2, key="users.id")
+            .await
     echo t
     check t["currentPage"].len == 1
     check t["hasNextId"].getBool == false
 
 block:
   asyncBlock:
-    var t = await rdb.table("users")
+    var t = rdb.table("users")
             .select("users.id", "users.name")
             .where("id", "<", "4")
             .fastPaginate(2, key="users.id")
+            .await
     echo t
     check t["currentPage"].len == 2
     check t["hasNextId"].getBool == true
 
 block:
   asyncBlock:
-    var t = await rdb.table("users")
+    var t = rdb.table("users")
             .select("users.id", "users.name")
             .where("id", "<", "5")
             .fastPaginate(2, key="users.id")
+            .await
     echo t
     check t["currentPage"].len == 2
     check t["hasNextId"].getBool == true
 
 block:
   asyncBlock:
-    var t = await rdb.table("users")
+    var t = rdb.table("users")
             .select("users.id", "users.name")
             .where("id", "<", "2")
             .fastPaginateNext(2, 1, key="users.id")
+            .await
     echo t
     check t["currentPage"].len == 1
     check t["hasNextId"].getBool == false
 
 block:
   asyncBlock:
-    var t = await rdb.table("users")
+    var t = rdb.table("users")
             .select("users.id", "users.name")
             .where("id", "<", "4")
             .fastPaginateNext(2, 1, key="users.id")
+            .await
     echo t
     check t["currentPage"].len == 2
     check t["hasNextId"].getBool == true
 
 block:
   asyncBlock:
-    var t = await rdb.table("users")
+    var t = rdb.table("users")
             .select("users.id", "users.name")
             .where("id", "<", "5")
             .fastPaginateNext(2, 1, key="users.id")
+            .await
     echo t
     check t["currentPage"].len == 2
     check t["hasNextId"].getBool == true
@@ -243,30 +255,33 @@ block:
 
 block:
   asyncBlock:
-    var t = await rdb.table("users")
+    var t = rdb.table("users")
             .select("users.id", "users.name")
             .where("id", ">=", 20)
             .fastPaginateBack(2, 20, key="users.id")
+            .await
     echo t
     check t["currentPage"].len == 1
     check t["hasPreviousId"].getBool == false
 
 block:
   asyncBlock:
-    var t = await rdb.table("users")
+    var t = rdb.table("users")
             .select("users.id", "users.name")
             .where("id", ">=", 19)
             .fastPaginateBack(2, 20, key="users.id")
+            .await
     echo t
     check t["currentPage"].len == 2
     check t["hasPreviousId"].getBool == false
 
 block:
   asyncBlock:
-    var t = await rdb.table("users")
+    var t = rdb.table("users")
             .select("users.id", "users.name")
             .where("id", ">=", 18)
             .fastPaginateBack(2, 20, key="users.id")
+            .await
     echo t
     check t["currentPage"].len == 2
     check t["hasPreviousId"].getBool == true

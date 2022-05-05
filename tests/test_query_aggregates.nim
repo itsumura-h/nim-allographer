@@ -8,13 +8,13 @@ import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
 import connections
 
-rdb.schema(
+rdb.create(
   table("users", [
-    Column().increments("id"),
-    COlumn().string("name").nullable(),
-    Column().date("birth_date").nullable(),
-    Column().string("null").nullable(),
-    Column().boolean("bool").default(false)
+    Column.increments("id"),
+    Column.string("name").nullable(),
+    Column.date("birth_date").nullable(),
+    Column.string("null").nullable(),
+    Column.boolean("bool").default(false)
   ])
 )
 
