@@ -11,7 +11,6 @@ import ./queries/postgre/postgre_query
 proc create*(rdb:Rdb, tables:varargs[Table]) =
   let cmd = commandLineParams()
   let isReset = defined(reset) or cmd.contains("--reset")
-  echo rdb.driver
   let generator =
     case rdb.driver
     of SQLite3:

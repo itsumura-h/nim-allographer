@@ -293,10 +293,16 @@ proc deleteColumn(self:SqliteQuery, column:Column, table:Table) =
   ## rename tmp table to existing table
   let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '{table.name}'"
   var rows = self.rdb.raw(tableDifinitionSql).getRaw.waitFor
-  let schema = replace(rows[0]["sql"].getStr, re"\)$", ", )")
+  var query = replace(rows[0]["sql"].getStr, re"\)$", ", )")
   
-  var columnString = schema.findAll(re(&"'{column.name}'.*?,\\s"))[0]
-  var query = schema.replace(columnString, "")
+  var columnString = query.findAll(re(&"'{column.name}'.*?,\\s"))[0]
+  query = query.replace(columnString, "")
+
+  let columnStringArr = query.findAll(re(&"FOREIGN KEY\\('{column.name}'\\).*?,\\s"))
+  if columnStringArr.len > 0:
+    columnString = columnStringArr[0]
+    query = query.replace(columnString, "")
+  
   query = query.replace(", )", ")")
   query = query.replace(re("CREATE TABLE \".+\""), "CREATE TABLE \"alter_table_tmp\"")
 

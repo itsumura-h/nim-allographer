@@ -1,7 +1,7 @@
 import json, strformat, strutils
-import ../../../async/database/base
-# import ../../../utils
+# import ../../../async/database/base
 import ../../grammers
+import ../generator_utils
 
 
 # =============================================================================
@@ -77,7 +77,7 @@ proc charGenerator*(column:Column):string =
   result.add(&" CHECK (length('{column.name}') <= {maxLength})")
 
   if column.isUnsigned:
-    result.add(&" CHECK ({column.name} > 0)")
+    notAllowed("unsigned", "char", column.name)
 
 proc varcharGenerator*(column:Column):string =
   result = &"'{column.name}' VARCHAR"
@@ -95,7 +95,7 @@ proc varcharGenerator*(column:Column):string =
   result.add(&" CHECK (length('{column.name}') <= {maxLength})")
 
   if column.isUnsigned:
-    result.add(&" CHECK ({column.name} > 0)")
+    notAllowed("unsigned", "varchar", column.name)
 
 proc textGenerator*(column:Column):string =
   result = &"'{column.name}' TEXT"
@@ -110,7 +110,7 @@ proc textGenerator*(column:Column):string =
     result.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    result.add(&" CHECK ({column.name} > 0)")
+    notAllowed("unsigned", "text", column.name)
 
 # =============================================================================
 # date
@@ -128,7 +128,7 @@ proc dateGenerator*(column:Column):string =
     result.add(&" DEFAULT CURRENT_TIMESTAMP")
 
   if column.isUnsigned:
-    result.add(&" CHECK ({column.name} > 0)")
+    notAllowed("unsigned", "date", column.name)
 
 proc datetimeGenerator*(column:Column):string =
   result = &"'{column.name}' DATETIME"
@@ -143,7 +143,7 @@ proc datetimeGenerator*(column:Column):string =
     result.add(&" DEFAULT CURRENT_TIMESTAMP")
 
   if column.isUnsigned:
-    result.add(&" CHECK ({column.name} > 0)")
+    notAllowed("unsigned", "datetime", column.name)
 
 proc timeGenerator*(column:Column):string =
   result = &"'{column.name}' TIME"
@@ -158,7 +158,7 @@ proc timeGenerator*(column:Column):string =
     result.add(&" DEFAULT CURRENT_TIMESTAMP")
 
   if column.isUnsigned:
-    result.add(&" CHECK ({column.name} > 0)")
+    notAllowed("unsigned", "time", column.name)
 
 proc timestampGenerator*(column:Column):string =
   result = &"'{column.name}' DATETIME"
@@ -173,7 +173,7 @@ proc timestampGenerator*(column:Column):string =
     result.add(&" DEFAULT CURRENT_TIMESTAMP")
 
   if column.isUnsigned:
-    result.add(&" CHECK ({column.name} > 0)")
+    notAllowed("unsigned", "timestamp", column.name)
 
 proc timestampsGenerator*(column:Column):string =
   result = "'created_at' DATETIME DEFAULT CURRENT_TIMESTAMP, "
@@ -198,7 +198,7 @@ proc blobGenerator*(column:Column):string =
     result.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    result.add(&" CHECK ({column.name} > 0)")
+    notAllowed("unsigned", "blob", column.name)
 
 proc boolGenerator*(column:Column):string =
   result = &"'{column.name}' TINYINT"
@@ -213,7 +213,7 @@ proc boolGenerator*(column:Column):string =
     result.add(&" DEFAULT {column.defaultBool}")
 
   if column.isUnsigned:
-    raise newException(DbError, "unsigned is not allowed for bool in sqlite")
+    notAllowed("unsigned", "bool", column.name)
 
 proc enumOptionsGenerator(name:string, options:seq[string]):string =
   var optionsString = ""
@@ -245,7 +245,7 @@ proc enumGenerator*(column:Column):string =
   result.add(&" CHECK ({optionsString})")
 
   if column.isUnsigned:
-    raise newException(DbError, "unsigned is not allowed for enum in sqlite")
+    notAllowed("unsigned", "enum", column.name)
 
 proc jsonGenerator*(column:Column):string =
   result = &"'{column.name}' TEXT"
@@ -260,7 +260,7 @@ proc jsonGenerator*(column:Column):string =
     result.add(&" DEFAULT '{column.defaultJson.pretty}'")
 
   if column.isUnsigned:
-    result.add(&" CHECK ({column.name} > 0)")
+    notAllowed("unsigned", "json", column.name)
 
 # =============================================================================
 # foreign key

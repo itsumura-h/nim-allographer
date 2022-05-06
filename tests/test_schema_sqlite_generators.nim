@@ -3,6 +3,7 @@ discard """
 """
 
 import unittest
+from db_common import DbError
 include ../src/allographer/schema_builder/queries/sqlite/impl
 import ../src/allographer/schema_builder
 
@@ -90,10 +91,6 @@ block:
     "'char' VARCHAR DEFAULT '' CHECK (length('char') <= 255)"
 
 block:
-  check Column.char("char", 255).nullable().unsigned().charGenerator() ==
-    "'char' VARCHAR CHECK (length('char') <= 255) CHECK (char > 0)"
-
-block:
   check Column.string("char").varcharGenerator() ==
     "'char' VARCHAR NOT NULL CHECK (length('char') <= 255)"
 
@@ -108,10 +105,6 @@ block:
 block:
   check Column.string("char").nullable().default("").varcharGenerator() ==
     "'char' VARCHAR DEFAULT '' CHECK (length('char') <= 255)"
-
-block:
-  check Column.string("char").nullable().unsigned().varcharGenerator() ==
-    "'char' VARCHAR CHECK (length('char') <= 255) CHECK (char > 0)"
 
 block:
   check Column.text("char").textGenerator() ==
@@ -130,10 +123,6 @@ block:
     "'char' TEXT DEFAULT ''"
 
 block:
-  check Column.text("char").nullable().unsigned().textGenerator() ==
-    "'char' TEXT CHECK (char > 0)"
-
-block:
   check Column.date("date").dateGenerator() ==
     "'date' DATE NOT NULL"
 
@@ -148,10 +137,6 @@ block:
 block:
   check Column.date("date").nullable().default().dateGenerator() ==
     "'date' DATE DEFAULT CURRENT_TIMESTAMP"
-
-block:
-  check Column.date("date").nullable().unsigned().dateGenerator() ==
-    "'date' DATE CHECK (date > 0)"
 
 block:
   check Column.datetime("date").datetimeGenerator() ==
@@ -170,10 +155,6 @@ block:
     "'date' DATETIME DEFAULT CURRENT_TIMESTAMP"
 
 block:
-  check Column.datetime("date").nullable().unsigned().datetimeGenerator() ==
-    "'date' DATETIME CHECK (date > 0)"
-
-block:
   check Column.time("date").timeGenerator() ==
     "'date' TIME NOT NULL"
 
@@ -190,10 +171,6 @@ block:
     "'date' TIME DEFAULT CURRENT_TIMESTAMP"
 
 block:
-  check Column.time("date").nullable().unsigned().timeGenerator() ==
-    "'date' TIME CHECK (date > 0)"
-
-block:
   check Column.timestamp("date").timestampGenerator() ==
     "'date' DATETIME NOT NULL"
 
@@ -208,10 +185,6 @@ block:
 block:
   check Column.timestamp("date").nullable().default().timestampGenerator() ==
     "'date' DATETIME DEFAULT CURRENT_TIMESTAMP"
-
-block:
-  check Column.timestamp("date").nullable().unsigned().timestampGenerator() ==
-    "'date' DATETIME CHECK (date > 0)"
 
 block:
   check Column.timestamps().timestampsGenerator() ==
@@ -238,10 +211,6 @@ block:
     "'blob' BLOB DEFAULT ''"
 
 block:
-  check Column.binary("blob").nullable().unsigned().blobGenerator() ==
-    "'blob' BLOB CHECK (blob > 0)"
-
-block:
   check Column.boolean("bool").boolGenerator() ==
     "'bool' TINYINT NOT NULL"
 
@@ -261,13 +230,6 @@ block:
     "'bool' TINYINT DEFAULT true"
 
 block:
-  try:
-    discard Column.boolean("bool").nullable().unsigned().boolGenerator()
-    check false
-  except DbError:
-    check true
-
-block:
   check Column.enumField("enum", ["a", "b"]).enumGenerator() ==
     "'enum' VARCHAR NOT NULL CHECK (enum = 'a' OR enum = 'b')"
 
@@ -282,13 +244,6 @@ block:
 block:
   check Column.enumField("enum", ["a", "b"]).nullable().default("a").enumGenerator() ==
     "'enum' VARCHAR DEFAULT 'a' CHECK (enum = 'a' OR enum = 'b')"
-
-block:
-  try:
-    discard Column.enumField("enum", ["a", "b"]).nullable().unsigned().enumGenerator()
-    check false
-  except DbError:
-    check true
 
 block:
   check Column.json("json").jsonGenerator() ==
@@ -307,10 +262,6 @@ block:
     """'json' TEXT DEFAULT '{
   "key": "value"
 }'"""
-
-block:
-  check Column.json("json").nullable().unsigned().jsonGenerator() ==
-    "'json' TEXT CHECK (json > 0)"
 
 block:
   check Column.foreign("auth_id").nullable().foreignColumnGenerator() == "'auth_id' INTEGER"

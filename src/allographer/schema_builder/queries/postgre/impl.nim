@@ -188,7 +188,7 @@ proc charGenerator*(column:Column, table:Table, isAlter=false):string =
     result.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "char")
+    notAllowed("unsigned", "char", column.name)
 
 proc stringGenerator*(column:Column, table:Table, isAlter=false):string =
   let maxLength = column.info["maxLength"].getInt
@@ -210,7 +210,7 @@ proc stringGenerator*(column:Column, table:Table, isAlter=false):string =
     result.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "string")
+    notAllowed("unsigned", "string", column.name)
 
 proc textGenerator*(column:Column, table:Table, isAlter=false):string =
   if isAlter:
@@ -231,7 +231,7 @@ proc textGenerator*(column:Column, table:Table, isAlter=false):string =
     result.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "text")
+    notAllowed("unsigned", "text", column.name)
 
 # =============================================================================
 # date
@@ -255,7 +255,7 @@ proc dateGenerator*(column:Column, table:Table, isAlter=false):string =
     result.add(&" DEFAULT (NOW())")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "date")
+    notAllowed("unsigned", "date", column.name)
 
 proc datetimeGenerator*(column:Column, table:Table, isAlter=false):string =
   if isAlter:
@@ -276,7 +276,7 @@ proc datetimeGenerator*(column:Column, table:Table, isAlter=false):string =
     result.add(&" DEFAULT (NOW())")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "date")
+    notAllowed("unsigned", "date", column.name)
 
 proc timeGenerator*(column:Column, table:Table, isAlter=false):string =
   if isAlter:
@@ -297,7 +297,7 @@ proc timeGenerator*(column:Column, table:Table, isAlter=false):string =
     result.add(&" DEFAULT (NOW())")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "date")
+    notAllowed("unsigned", "date", column.name)
 
 proc timestampGenerator*(column:Column, table:Table, isAlter=false):string =
   if isAlter:
@@ -318,7 +318,7 @@ proc timestampGenerator*(column:Column, table:Table, isAlter=false):string =
     result.add(&" DEFAULT (NOW())")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "date")
+    notAllowed("unsigned", "date", column.name)
 
 proc timestampsGenerator*(column:Column, table:Table):string =
   result = "\"created_at\" TIMESTAMP, "
@@ -352,7 +352,7 @@ proc blobGenerator*(column:Column, table:Table, isAlter=false):string =
     result.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "blob")
+    notAllowed("unsigned", "blob", column.name)
 
 proc boolGenerator*(column:Column, table:Table, isAlter=false):string =
   if isAlter:
@@ -373,7 +373,7 @@ proc boolGenerator*(column:Column, table:Table, isAlter=false):string =
     result.add(&" DEFAULT {column.defaultBool}")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "bool")
+    notAllowed("unsigned", "bool", column.name)
 
 proc enumOptionsGenerator(name:string, options:seq[string]):string =
   var optionsString = ""
@@ -404,7 +404,7 @@ proc enumGenerator*(column:Column, table:Table, isAlter=false):string =
     result.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "text")
+    notAllowed("unsigned", "text", column.name)
 
   var options:seq[string]
   for row in column.info["options"].items:
@@ -422,9 +422,6 @@ proc jsonGenerator*(column:Column, table:Table, isAlter=false):string =
   if column.isUnique or not column.isNullable or column.isDefault:
     result.add(&" CONSTRAINT {table.name}_{column.name}")
 
-  if column.isUnique:
-    notAllowed("unique", "json")
-
   if not column.isNullable:
     result.add(" NOT NULL")
 
@@ -432,7 +429,7 @@ proc jsonGenerator*(column:Column, table:Table, isAlter=false):string =
     result.add(&" DEFAULT '{column.defaultJson.pretty}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "json")
+    notAllowed("unsigned", "json", column.name)
 
 proc foreignColumnGenerator*(column:Column, table:Table, isAlter=false):string =
   if isAlter:

@@ -1,6 +1,4 @@
-import json, strformat, strutils
-# import ../../../async/database/base
-# import ../../../utils
+import json, strformat
 import ../../grammers
 import ../generator_utils
 
@@ -130,7 +128,7 @@ proc charGenerator*(column:Column):string =
   result = &"`{column.name}` CHAR({maxLength})"
 
   if column.isUnsigned:
-    notAllowed("unsigned", "char")
+    notAllowed("unsigned", "char", column.name)
 
   if column.isUnique:
     result.add(" UNIQUE")
@@ -146,7 +144,7 @@ proc stringGenerator*(column:Column):string =
   result = &"`{column.name}` VARCHAR({maxLength})"
 
   if column.isUnsigned:
-    notAllowed("unsigned", "string")
+    notAllowed("unsigned", "string", column.name)
 
   if column.isUnique:
     result.add(" UNIQUE")
@@ -161,10 +159,10 @@ proc textGenerator*(column:Column):string =
   result = &"`{column.name}` TEXT"
 
   if column.isUnsigned:
-    notAllowed("unsigned", "text")
+    notAllowed("unsigned", "text", column.name)
 
   if column.isUnique:
-    notAllowed("unique", "text")
+    notAllowed("unique", "text", column.name)
 
   if column.isDefault:
     result.add(&" DEFAULT '{column.defaultString}'")
@@ -176,10 +174,10 @@ proc mediumTextGenerator*(column:Column):string =
   result = &"`{column.name}` MEDIUMTEXT"
 
   if column.isUnsigned:
-    notAllowed("unsigned", "medium text")
+    notAllowed("unsigned", "medium text", column.name)
 
   if column.isUnique:
-    notAllowed("unique", "medium text")
+    notAllowed("unique", "medium text", column.name)
 
   if column.isDefault:
     result.add(&" DEFAULT '{column.defaultString}'")
@@ -191,10 +189,10 @@ proc longTextGenerator*(column:Column):string =
   result = &"`{column.name}` LONGTEXT"
 
   if column.isUnsigned:
-    notAllowed("unsigned", "long text")
+    notAllowed("unsigned", "long text", column.name)
 
   if column.isUnique:
-    notAllowed("unique", "long text")
+    notAllowed("unique", "long text", column.name)
 
   if column.isDefault:
     result.add(&" DEFAULT '{column.defaultString}'")
@@ -209,7 +207,7 @@ proc dateGenerator*(column:Column):string =
   result = &"`{column.name}` DATE"
 
   if column.isUnsigned:
-    notAllowed("unsigned", "date")
+    notAllowed("unsigned", "date", column.name)
 
   if column.isUnique:
     result.add(" UNIQUE")
@@ -224,7 +222,7 @@ proc datetimeGenerator*(column:Column):string =
   result = &"`{column.name}` DATETIME"
 
   if column.isUnsigned:
-    notAllowed("unsigned", "datetime")
+    notAllowed("unsigned", "datetime", column.name)
 
   if column.isUnique:
     result.add(" UNIQUE")
@@ -239,7 +237,7 @@ proc timeGenerator*(column:Column):string =
   result = &"`{column.name}` TIME"
 
   if column.isUnsigned:
-    notAllowed("unsigned", "time")
+    notAllowed("unsigned", "time", column.name)
 
   if column.isUnique:
     result.add(" UNIQUE")
@@ -254,7 +252,7 @@ proc timestampGenerator*(column:Column):string =
   result = &"`{column.name}` DATETIME"
 
   if column.isUnsigned:
-    notAllowed("unsigned", "timestamp")
+    notAllowed("unsigned", "timestamp", column.name)
 
   if column.isUnique:
     result.add(" UNIQUE")
@@ -279,10 +277,10 @@ proc blobGenerator*(column:Column):string =
   result = &"`{column.name}` BLOB"
 
   if column.isUnsigned:
-    notAllowed("unsigned", "blob")
+    notAllowed("unsigned", "blob", column.name)
 
   if column.isUnique:
-    notAllowed("unique", "blob")
+    notAllowed("unique", "blob", column.name)
 
   if column.isDefault:
     result.add(&" DEFAULT '{column.defaultString}'")
@@ -294,7 +292,7 @@ proc boolGenerator*(column:Column):string =
   result = &"`{column.name}` BOOLEAN"
 
   if column.isUnsigned:
-    notAllowed("unsigned", "bool")
+    notAllowed("unsigned", "bool", column.name)
 
   if column.isUnique:
     result.add(" UNIQUE")
@@ -325,7 +323,7 @@ proc enumGenerator*(column:Column):string =
   result = &"`{column.name}` ENUM({optionsString})"
 
   if column.isUnsigned:
-    notAllowed("unsigned", "enum")
+    notAllowed("unsigned", "enum", column.name)
 
   if column.isUnique:
     result.add(" UNIQUE")
@@ -340,16 +338,17 @@ proc jsonGenerator*(column:Column):string =
   result = &"`{column.name}` JSON"
 
   if column.isUnsigned:
-    notAllowed("unsigned", "json")
+    notAllowed("unsigned", "json", column.name)
 
   if column.isUnique:
-    notAllowed("unique", "json")
+    notAllowed("unique", "json", column.name)
 
   if not column.isNullable:
     result.add(" NOT NULL")
 
   if column.isDefault:
-    notAllowed("default value", "json")
+    result.add(&" DEFAULT '{column.defaultJson.pretty}'")
+    # notAllowed("default value", "json", column.name)
 
 # =============================================================================
 # foreign key
@@ -378,7 +377,7 @@ proc foreignGenerator*(column:Column):string =
       "NO ACTION"
   
   let refColumn = column.info["column"].getStr
-  var refTable = column.info["table"].getStr
+  let refTable = column.info["table"].getStr
   return &"FOREIGN KEY(`{column.name}`) REFERENCES `{refTable}`(`{refColumn}`) ON DELETE {onDeleteString}"
 
 proc alterAddForeignGenerator*(column:Column, table:Table):string =
@@ -394,8 +393,8 @@ proc alterAddForeignGenerator*(column:Column, table:Table):string =
       "NO ACTION"
   
   let tableName = table.name
-  var constraintName = &"{tableName}_{column.name}"
-  var refTable = column.info["table"].getStr
+  let constraintName = &"{tableName}_{column.name}"
+  let refTable = column.info["table"].getStr
   let refColumn = column.info["column"].getStr
   return &"CONSTRAINT `{constraintName}` FOREIGN KEY (`{column.name}`) REFERENCES `{refTable}`({refColumn}) ON DELETE {onDeleteString}"
 

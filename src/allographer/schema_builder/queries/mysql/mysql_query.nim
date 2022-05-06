@@ -91,7 +91,7 @@ proc generateAlterAddForeignString(column:Column, table:Table):string =
 
 # ==================== public ====================
 proc resetTable(self:MysqlQuery, table:Table) =
-  self.rdb.raw(&"DROP TABLE IF EXISTS {table.name} CASCADE").exec.waitFor
+  self.rdb.raw(&"DROP TABLE IF EXISTS `{table.name}` CASCADE").exec.waitFor
 
 
 proc getHistories(self:MysqlQuery, table:Table):JsonNode =
@@ -176,7 +176,7 @@ proc changeColumn(self:MysqlQuery, column:Column, table:Table) =
 
 
 proc renameColumnSql(self:MysqlQuery, column:Column, table:Table) =
-  let query = &"ALTER TABLE `{table.name}` RENAME COLUMN {column.previousName} TO {column.name}"
+  let query = &"ALTER TABLE `{table.name}` RENAME COLUMN `{column.previousName}` TO `{column.name}`"
   column.query.add(query)
   column.checksum = $column.query.join("; ").secureHash()
 
@@ -189,17 +189,19 @@ proc deleteColumnSql(self:MysqlQuery, column:Column, table:Table) =
   column.query.add(&"ALTER TABLE `{table.name}` DROP `{column.name}`")
   column.checksum = $column.query.join("; ").secureHash()
 
-
 proc deleteColumn(self:MysqlQuery, column:Column, table:Table) =
-  let res = self.rdb.raw(&"SHOW INDEX FROM {table.name}").getRaw().waitFor
-  var hasIndex = false
+  let res = self.rdb.raw(&"SHOW CREATE TABLE `{table.name}`").getRaw().waitFor
+  var query = ""
   var keyName = ""
+  var hasIndex = false
   for row in res:
-    if row["Column_name"].getStr == column.name:
+    query = row["Create Table"].getStr
+  for row in query.splitLines:
+    if row.contains("CONSTRAINT") and row.contains(column.name):
       hasIndex = true
-      keyName = row["Key_name"].getStr
+      keyName = row.strip().splitWhitespace()[1].replace("`", "")
       break
-  
+
   if hasIndex:
     column.query.insert(
       &"ALTER TABLE `{table.name}` DROP FOREIGN KEY `{keyName}`",
@@ -207,8 +209,9 @@ proc deleteColumn(self:MysqlQuery, column:Column, table:Table) =
     )
   self.runQueryThenSaveHistory(table.name, column.query, column.checksum)
 
+
 proc renameTableSql(self:MysqlQuery, table:Table) =
-  let query = &"ALTER TABLE `{table.previousName}` RENAME TO {table.name}"
+  let query = &"ALTER TABLE `{table.previousName}` RENAME TO `{table.name}`"
   table.query.add(query)
   table.checksum = $table.query.join("; ").secureHash()
 
