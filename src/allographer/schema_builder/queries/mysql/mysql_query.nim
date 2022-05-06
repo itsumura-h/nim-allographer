@@ -186,12 +186,25 @@ proc renameColumn(self:MysqlQuery, column:Column, table:Table) =
 
 
 proc deleteColumnSql(self:MysqlQuery, column:Column, table:Table) =
-  let query = &"ALTER TABLE `{table.name}` DROP {column.name}"
-  column.query.add(query)
+  column.query.add(&"ALTER TABLE `{table.name}` DROP `{column.name}`")
   column.checksum = $column.query.join("; ").secureHash()
 
 
 proc deleteColumn(self:MysqlQuery, column:Column, table:Table) =
+  let res = self.rdb.raw(&"SHOW INDEX FROM {table.name}").getRaw().waitFor
+  var hasIndex = false
+  var keyName = ""
+  for row in res:
+    if row["Column_name"].getStr == column.name:
+      hasIndex = true
+      keyName = row["Key_name"].getStr
+      break
+  
+  if hasIndex:
+    column.query.insert(
+      &"ALTER TABLE `{table.name}` DROP FOREIGN KEY `{keyName}`",
+      0
+    )
   self.runQueryThenSaveHistory(table.name, column.query, column.checksum)
 
 proc renameTableSql(self:MysqlQuery, table:Table) =

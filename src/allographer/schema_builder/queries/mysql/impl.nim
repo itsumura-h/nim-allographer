@@ -399,16 +399,16 @@ proc alterAddForeignGenerator*(column:Column, table:Table):string =
   let refColumn = column.info["column"].getStr
   return &"CONSTRAINT `{constraintName}` FOREIGN KEY (`{column.name}`) REFERENCES `{refTable}`({refColumn}) ON DELETE {onDeleteString}"
 
-proc alterDeleteGenerator*(column:Column, table:Table):string =
-  var table = table.name
-  return &"ALTER TABLE `{table}` DROP `{column.name}`"
+# proc alterDeleteGenerator*(column:Column, table:Table):string =
+#   var table = table.name
+#   return &"ALTER TABLE `{table}` DROP `{column.name}`"
 
-proc alterDeleteForeignGenerator*(column:Column, table:Table):string =
-  var tableName = table.name
-  var constraintName = &"{tableName}_{column.name}"
-  return &"ALTER TABLE `{table.name}` DROP FOREIGN KEY `{constraintName}`"
+# proc alterDeleteForeignGenerator*(column:Column, table:Table):string =
+#   var tableName = table.name
+#   var constraintName = &"{tableName}_{column.name}"
+#   return &"ALTER TABLE `{table.name}` DROP FOREIGN KEY `{constraintName}`"
 
-proc indexGenerate*(column:Column, table:Table):string =
-  var table = table.name
-  let smallTable = table.toLowerAscii()
-  return &"CREATE INDEX `{smallTable}_{column.name}_index` ON `{table}`(`{column.name}`)"
+# proc indexGenerate*(column:Column, table:Table):string =
+#   var table = table.name
+#   let smallTable = table.toLowerAscii()
+#   return &"CREATE INDEX `{smallTable}_{column.name}_index` ON `{table}`(`{column.name}`)"

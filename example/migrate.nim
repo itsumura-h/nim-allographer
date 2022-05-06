@@ -22,19 +22,19 @@ rdb.create([
 
 rdb.alter([
   table("Users", [
-    # カラム追加
+    # add column
     Column.string("aaa").default("").add(),
     Column.foreign("bbb").reference("id").on("Auth").onDelete(SET_NULL).add(),
-    # カラム定義変更
+    # change column definition
     Column.string("aaa").nullable().change(),
-    # カラム名変更
+    # change column name
     Column.renameColumn("aaa", "ccc"),
-    # カラム削除
+    # delete column
     Column.deleteColumn("ccc"),
     Column.deleteColumn("bbb"),
   ]),
-  # テーブル名変更
+  # change table name
   rename("Users", "members"),
-  # テーブル削除
+  # drop table
   drop("members"),
 ])
