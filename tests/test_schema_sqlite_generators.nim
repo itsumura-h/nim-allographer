@@ -3,7 +3,6 @@ discard """
 """
 
 import unittest
-from db_common import DbError
 include ../src/allographer/schema_builder/queries/sqlite/impl
 import ../src/allographer/schema_builder
 

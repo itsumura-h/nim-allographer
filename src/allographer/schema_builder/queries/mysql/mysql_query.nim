@@ -191,11 +191,9 @@ proc deleteColumnSql(self:MysqlQuery, column:Column, table:Table) =
 
 proc deleteColumn(self:MysqlQuery, column:Column, table:Table) =
   let res = self.rdb.raw(&"SHOW CREATE TABLE `{table.name}`").getRaw().waitFor
-  var query = ""
   var keyName = ""
   var hasIndex = false
-  for row in res:
-    query = row["Create Table"].getStr
+  let query = res[0]["Create Table"].getStr
   for row in query.splitLines:
     if row.contains("CONSTRAINT") and row.contains(column.name):
       hasIndex = true
