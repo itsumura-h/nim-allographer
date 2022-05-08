@@ -2,16 +2,21 @@ discard """
   cmd: "nim c -d:reset -r $file"
 """
 
-import unittest, json, strformat, options, asyncdispatch, random, times
-
-import ../src/allographer/schema_builder
-import ../src/allographer/query_builder
-import ../src/allographer/connection
-import connections
+import
+  std/unittest,
+  std/json,
+  std/strformat,
+  std/options,
+  std/asyncdispatch,
+  std/random,
+  std/times,
+  ../src/allographer/schema_builder,
+  ../src/allographer/query_builder,
+  ../src/allographer/connection,
+  ./connections
 
 
 randomize()
-
 
 proc setup(rdb:Rdb) =
   rdb.create([

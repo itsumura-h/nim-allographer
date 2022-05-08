@@ -1,10 +1,12 @@
-import os, parsecfg, terminal, logging, macros, strformat, strutils
-# self
-import ./base
-
-# proc driverTypeError*(driver:string) =
-#   if driver != "sqlite" and driver != "mysql" and driver != "mariadb" and driver != "postgres":
-#     raise newException(OSError, "invalid DB driver type")
+import
+  std/os,
+  std/parsecfg,
+  std/terminal,
+  std/logging,
+  std/macros,
+  std/strformat,
+  std/strutils,
+  ./base
 
 
 proc logger*(self:LogSetting, output: auto, args:varargs[string]) =

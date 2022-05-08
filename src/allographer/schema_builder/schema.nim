@@ -1,11 +1,14 @@
-import os, json, options
-import ../base
-import ../query_builder
-import ./grammers
-import ./queries/query_interface
-import ./queries/sqlite/sqlite_query
-import ./queries/mysql/mysql_query
-import ./queries/postgre/postgre_query
+import
+  std/os, 
+  std/json,
+  std/options,
+  ../base,
+  ../query_builder,
+  ./grammers,
+  ./queries/query_interface,
+  ./queries/sqlite/sqlite_query,
+  ./queries/mysql/mysql_query,
+  ./queries/postgre/postgre_query
 
 
 proc create*(rdb:Rdb, tables:varargs[Table]) =

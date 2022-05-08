@@ -2,10 +2,16 @@ discard """
   cmd: "nim c -d:reset -r $file"
 """
 
-import unittest, json, strformat, options, asyncdispatch
-import ../src/allographer/schema_builder
-import ../src/allographer/query_builder
-import connections
+import
+  std/unittest,
+  std/json,
+  std/strformat,
+  std/strutils,
+  std/options,
+  std/asyncdispatch,
+  ../src/allographer/schema_builder,
+  ../src/allographer/query_builder,
+  ./connections
 
 
 proc setup(rdb:Rdb) =
@@ -49,11 +55,9 @@ for rdb in dbConnections:
   block:
     setup(rdb)
     asyncBlock:
-      try:
-        var user = rdb.table("users").get().await
-        echo user
-      except:
-        discard
+      var user = rdb.table("users").get().await
+      echo user
+      check true
 
   block:
     setup(rdb)
@@ -61,56 +65,41 @@ for rdb in dbConnections:
       transaction rdb:
         var user = rdb.table("users").select("id").where("name", "=", "user3").first.await.get
         var id = user["id"].getInt()
-        echo id
+        check id == 3
         user = rdb.table("users").select("name", "email").find(id).await.get
-        echo user
+        check user == %*{"name":"user3","email":"user3@gmail.com"}
 
   block:
-    waitFor (proc(){.async.}=
+    asyncBlock:
       try:
         rdb.raw("BEGIN").exec().await
         rdb.table("users").insert(%*{"id": 9, "name": "user9", "email": "user9@example.com"}).await
         rdb.raw("COMMIT").exec().await
+        check false
       except:
         echo "=== rollback"
         echo getCurrentExceptionMsg()
         rdb.raw("ROLLBACK").exec().await
-
-      echo rdb.table("users").find(11).await
-    )()
+        check true
 
   block:
     setup(rdb)
     asyncBlock:
       transaction rdb:
-        echo "=== in transaction"
         rdb.table("users").insert(%*{"id": 9, "name": "user9", "email": "user9@example.com"}).await
-        echo "=== end of transaction"
-      echo "=== out of transaction"
-      echo rdb.table("users").find(11).await
+        check false
+      check true
 
   block:
     setup(rdb)
     asyncBlock:
+      var id:int
       transaction rdb:
-        let id = rdb.table("users")
+        id = rdb.table("users")
                   .insertId(%*{"name": "user11", "email": "user11@example.com"})
                   .await
         echo id
-      echo rdb.table("users").max("id").await
-
-  block:
-    setup(rdb)
-    asyncBlock:
-      transaction rdb:
-        let id = rdb.table("users")
-                  .insertId(@[
-                    %*{"name": "user11", "email": "user11@example.com"},
-                    %*{"name": "user12", "email": "user12@example.com"}
-                  ])
-                  .await
-        echo id
-      echo rdb.table("users").max("id").await
+      check rdb.table("users").max("id").await.get == $id
 
   block:
     setup(rdb)
@@ -124,4 +113,4 @@ for rdb in dbConnections:
           ]
         )
         .await
-      echo rdb.table("users").where("id", ">", 10).get().await
+      check rdb.table("users").where("id", ">", 10).get().await.len == 0

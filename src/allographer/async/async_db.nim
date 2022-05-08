@@ -23,6 +23,7 @@ proc open*(driver:Driver, database:string="", user:string="", password:string=""
     when isExistsSqlite:
       result = sqlite.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
 
+
 proc query*(self: Connections, driver:Driver, query: string, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
   sleepAsync(0).await
   let connI = getFreeConn(self).await
@@ -43,6 +44,7 @@ proc query*(self: Connections, driver:Driver, query: string, args: seq[string] =
   of SQLite3:
     when isExistsSqlite:
       return await sqlite.query(self.pools[connI].sqliteConn, query, args, self.timeout)
+
 
 proc queryPlain*(self: Connections, driver:Driver, query: string, args: seq[string] = @[]):Future[seq[Row]] {.async.} =
   let connI = getFreeConn(self).await
@@ -89,6 +91,7 @@ proc exec*(self: Connections, driver:Driver, query: string, args: seq[string] = 
       await sqlite.exec(self.pools[connI].sqliteConn, query, args, self.timeout)
   self.returnConn(connI)
 
+
 proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string] = @[]):Future[seq[string]] {.async.} =
   sleepAsync(0).await
   let connI = getFreeConn(self).await
@@ -111,6 +114,7 @@ proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string
   of SQLite3:
     when isExistsSqlite:
       return await sqlite.getColumns(self.pools[connI].sqliteConn, query, args, self.timeout)
+
 
 proc prepare*(self: Connections, driver:Driver, query: string, stmtName=""):Future[Prepared] {.async.} =
   let connI = getFreeConn(self).await
@@ -140,6 +144,7 @@ proc prepare*(self: Connections, driver:Driver, query: string, stmtName=""):Futu
       let sqliteStmt = await sqlite.prepare(self.pools[connI].sqliteConn, query, self.timeout)
       result = Prepared(conn:self, sqliteStmt:sqliteStmt, connI:connI)
 
+
 proc query*(self:Prepared, driver:Driver, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
   sleepAsync(0).await
   case driver
@@ -156,6 +161,7 @@ proc query*(self:Prepared, driver:Driver, args: seq[string] = @[]):Future[(seq[R
     when isExistsSqlite:
       return await sqlite.preparedQuery(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)
 
+
 proc exec*(self:Prepared, driver:Driver, args:seq[string] = @[]) {.async.} =
   sleepAsync(0).await
   case driver
@@ -171,6 +177,7 @@ proc exec*(self:Prepared, driver:Driver, args:seq[string] = @[]) {.async.} =
   of SQLite3:
     when isExistsSqlite:
       await sqlite.preparedExec(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)
+
 
 proc close*(self:Prepared) =
   self.conn.returnConn(self.connI)

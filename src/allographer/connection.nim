@@ -1,6 +1,7 @@
-import json
+import
+  std/json,
+  ./base
 from async/async_db import open
-import base
 
 export
   Driver

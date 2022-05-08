@@ -1,4 +1,6 @@
-import os, strutils
+import
+  std/os,
+  std/strutils
 
 const
   isExistsSqlite* = when existsEnv("DB_SQLITE"): getEnv("DB_SQLITE").parseBool else: false

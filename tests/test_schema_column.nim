@@ -2,8 +2,11 @@ discard """
   cmd: "nim c -d:reset -r $file"
 """
 
-import unittest, json
+import
+  std/unittest,
+  std/json
 include ../src/allographer/schema_builder/grammers
+
 
 block:
   var t = Column.new().default(true)

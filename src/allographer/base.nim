@@ -1,6 +1,10 @@
-import os, strutils, json, streams, parsecfg
-# import async/async_db
-import async/database/base
+import
+  std/os,
+  std/strutils,
+  std/json,
+  std/streams,
+  std/parsecfg,
+  ./async/database/base
 
 
 for f in walkDir(getCurrentDir()):

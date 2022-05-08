@@ -2,9 +2,10 @@ discard """
   cmd: "nim c -d:reset -r $file"
 """
 
-import unittest
+import
+  std/unittest,
+  ../src/allographer/schema_builder
 include ../src/allographer/schema_builder/queries/sqlite/impl
-import ../src/allographer/schema_builder
 
 
 block:

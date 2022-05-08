@@ -1,6 +1,7 @@
-import json
-
-import ../base, generators
+import
+  std/json,
+  ../base,
+  ./generators
 
 
 # ==================== SELECT ====================

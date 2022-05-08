@@ -2,10 +2,14 @@ discard """
   cmd: "nim c -d:reset -r $file"
 """
 
-import unittest, json, strformat, asyncdispatch
-import ../src/allographer/schema_builder
-import ../src/allographer/query_builder
-import connections
+import
+  std/unittest,
+  std/json,
+  std/strformat,
+  std/asyncdispatch,
+  ../src/allographer/schema_builder,
+  ../src/allographer/query_builder,
+  ./connections
 
 
 for rdb in dbConnections:

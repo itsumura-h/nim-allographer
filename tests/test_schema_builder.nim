@@ -2,11 +2,19 @@ discard """
   cmd: "nim c -d:reset -r $file"
 """
 
-import unittest, json, times, os, strutils, asyncdispatch, distros, oids
-import ../src/allographer/schema_builder
-import ../src/allographer/query_builder
-import ../src/allographer/connection
-import connections
+import
+  std/unittest,
+  std/json,
+  std/times,
+  std/os,
+  std/strutils,
+  std/asyncdispatch,
+  std/distros,
+  std/oids,
+  ../src/allographer/schema_builder,
+  ../src/allographer/query_builder,
+  ../src/allographer/connection,
+  ./connections
 
 
 block:

@@ -1,9 +1,9 @@
-import json
-from strformat import `&`
-from strutils import contains, isUpperAscii
-
-import ../base
-from ../utils import wrapUpper
+import
+  std/json,
+  std/strformat,
+  std/strutils,
+  ../base,
+  ../utils
 
 
 # ==================== SELECT ====================
@@ -28,15 +28,18 @@ proc selectSql*(self: Rdb): Rdb =
   self.sqlString = queryString
   return self
 
+
 proc fromSql*(self: Rdb): Rdb =
   var table = self.query["table"].getStr()
   wrapUpper(table, self.driver)
   self.sqlString.add(&" FROM {table}")
   return self
 
+
 proc selectFirstSql*(self:Rdb): Rdb =
   self.sqlString.add(" LIMIT 1")
   return self
+
 
 proc selectByIdSql*(self:Rdb, key:string): Rdb =
   var key = key
@@ -46,6 +49,7 @@ proc selectByIdSql*(self:Rdb, key:string): Rdb =
   else:
     self.sqlString.add(&" WHERE {key} = ? LIMIT 1")
   return self
+
 
 proc joinSql*(self: Rdb): Rdb =
   if self.query.hasKey("join"):
@@ -61,6 +65,7 @@ proc joinSql*(self: Rdb): Rdb =
       self.sqlString.add(&" INNER JOIN {table} ON {column1} {symbol} {column2}")
   return self
 
+
 proc leftJoinSql*(self: Rdb): Rdb =
   if self.query.hasKey("left_join"):
     for row in self.query["left_join"]:
@@ -74,6 +79,7 @@ proc leftJoinSql*(self: Rdb): Rdb =
 
       self.sqlString.add(&" LEFT JOIN {table} ON {column1} {symbol} {column2}")
   return self
+
 
 proc whereSql*(self: Rdb): Rdb =
   if self.query.hasKey("where"):
@@ -89,6 +95,7 @@ proc whereSql*(self: Rdb): Rdb =
         self.sqlString.add(&" AND {column} {symbol} {value}")
   return self
 
+
 proc orWhereSql*(self: Rdb): Rdb =
   if self.query.hasKey("or_where"):
     for row in self.query["or_where"]:
@@ -102,6 +109,7 @@ proc orWhereSql*(self: Rdb): Rdb =
       else:
         self.sqlString.add(&" WHERE {column} {symbol} {value}")
   return self
+
 
 proc whereBetweenSql*(self:Rdb): Rdb =
   if self.query.hasKey("where_between"):
@@ -117,6 +125,7 @@ proc whereBetweenSql*(self:Rdb): Rdb =
         self.sqlString.add(&" WHERE {column} BETWEEN {start} AND {stop}")
   return self
 
+
 proc whereBetweenStringSql*(self:Rdb): Rdb =
   if self.query.hasKey("where_between_string"):
     for row in self.query["where_between_string"]:
@@ -130,6 +139,7 @@ proc whereBetweenStringSql*(self:Rdb): Rdb =
       else:
         self.sqlString.add(&" WHERE {column} BETWEEN '{start}' AND '{stop}'")
   return self
+
 
 proc whereNotBetweenSql*(self:Rdb): Rdb =
   if self.query.hasKey("where_not_between"):
@@ -145,6 +155,7 @@ proc whereNotBetweenSql*(self:Rdb): Rdb =
         self.sqlString.add(&" WHERE {column} NOT BETWEEN {start} AND {stop}")
   return self
 
+
 proc whereNotBetweenStringSql*(self:Rdb): Rdb =
   if self.query.hasKey("where_not_between_string"):
     for row in self.query["where_not_between_string"]:
@@ -158,6 +169,7 @@ proc whereNotBetweenStringSql*(self:Rdb): Rdb =
       else:
         self.sqlString.add(&" WHERE {column} NOT BETWEEN '{start}' AND '{stop}'")
   return self
+
 
 proc whereInSql*(self:Rdb): Rdb =
   if self.query.hasKey("where_in"):

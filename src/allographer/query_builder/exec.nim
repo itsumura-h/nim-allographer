@@ -68,11 +68,9 @@ proc toJson(driver:Driver, results:openArray[seq[string]], dbRows:DbRows):seq[Js
 
 proc getAllRows(self:Rdb, sqlString:string, args:seq[string]):Future[seq[JsonNode]] {.async.} =
   let (rows, dbRows) = self.conn.query(self.driver, sqlString, args).await
-
   if rows.len == 0:
     self.log.echoErrorMsg(sqlString & $args)
     return newSeq[JsonNode](0)
-
   return toJson(self.driver, rows, dbRows) # seq[JsonNode]
 
 proc getRowsPlain(self:Rdb, sqlString:string, args:seq[string]):Future[seq[seq[string]]] {.async.} =
@@ -80,11 +78,9 @@ proc getRowsPlain(self:Rdb, sqlString:string, args:seq[string]):Future[seq[seq[s
 
 proc getRow(self:Rdb, sqlString:string, args:seq[string]):Future[Option[JsonNode]] {.async.} =
   let (rows, dbColumns) = self.conn.query(self.driver, sqlString, args).await
-
   if rows.len == 0:
     self.log.echoErrorMsg(sqlString & $args)
     return none(JsonNode)
-
   return toJson(self.driver, rows, dbColumns)[0].some
 
 proc getColumn(self:Rdb, sqlString:string, args:seq[string]):Future[seq[string]] {.async.} =
