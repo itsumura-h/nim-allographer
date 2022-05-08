@@ -95,7 +95,7 @@ proc resetTable(self:MysqlQuery, table:Table) =
 
 
 proc getHistories(self:MysqlQuery, table:Table):JsonNode =
-  let tables = self.rdb.table("allographer_migrations")
+  let tables = self.rdb.table("_migrations")
             .where("name", "=", table.name)
             .orderBy("created_at", Desc)
             .get()
@@ -120,7 +120,7 @@ proc runQueryThenSaveHistory(self:MysqlQuery, tableName:string, query:seq[string
   except:
     echo getCurrentExceptionMsg()
   
-  self.rdb.table("allographer_migrations").insert(%*{
+  self.rdb.table("_migrations").insert(%*{
     "name": tableName,
     "query": query.join("; "),
     "checksum": checksum,

@@ -30,13 +30,14 @@ proc setup(rdb:Rdb) =
   ])
 
   # seeder
-  asyncBlock:
+  seeder rdb, "auth":
     rdb.table("auth").insert(@[
       %*{"auth": "admin"},
       %*{"auth": "user"}
     ])
-    .await
+    .waitFor
 
+  seeder rdb, "users":
     var users: seq[JsonNode]
     for i in 1..10:
       let authId = if i mod 2 == 0: 2 else: 1
@@ -48,7 +49,7 @@ proc setup(rdb:Rdb) =
         }
       )
 
-    rdb.table("users").insert(users).await
+    rdb.table("users").insert(users).waitFor
 
 
 for rdb in dbConnections:

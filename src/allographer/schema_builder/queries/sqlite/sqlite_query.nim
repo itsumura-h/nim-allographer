@@ -95,7 +95,7 @@ proc resetTable(self:SqliteQuery, table:Table) =
 
 
 proc getHistories(self:SqliteQuery, table:Table):JsonNode =
-  let tables = self.rdb.table("allographer_migrations")
+  let tables = self.rdb.table("_migrations")
             .where("name", "=", table.name)
             .orderBy("created_at", Desc)
             .get()
@@ -120,7 +120,7 @@ proc runQueryThenSaveHistory(self:SqliteQuery, tableName:string, query:seq[strin
   except:
     echo getCurrentExceptionMsg()
   
-  self.rdb.table("allographer_migrations").insert(%*{
+  self.rdb.table("_migrations").insert(%*{
     "name": tableName,
     "query": query.join("; "),
     "checksum": checksum,
@@ -196,7 +196,7 @@ proc changeColumn(self:SqliteQuery, column:Column, table:Table) =
     echo getCurrentExceptionMsg()
 
   columnString = columnString.replace(",", "")
-  self.rdb.table("allographer_migrations").insert(%*{
+  self.rdb.table("_migrations").insert(%*{
     "name": table.name,
     "query": columnString,
     "checksum": $columnString.secureHash,
@@ -248,7 +248,7 @@ proc renameColumn(self:SqliteQuery, column:Column, table:Table) =
   except:
     echo getCurrentExceptionMsg()
 
-  self.rdb.table("allographer_migrations").insert(%*{
+  self.rdb.table("_migrations").insert(%*{
     "name": table.name,
     "query": column.query,
     "checksum": column.checksum,
@@ -313,7 +313,7 @@ proc deleteColumn(self:SqliteQuery, column:Column, table:Table) =
   except:
     echo getCurrentExceptionMsg()
 
-  self.rdb.table("allographer_migrations").insert(%*{
+  self.rdb.table("_migrations").insert(%*{
     "name": table.name,
     "query": column.query,
     "checksum": column.checksum,
@@ -349,7 +349,7 @@ proc renameTable(self:SqliteQuery, table:Table) =
   except:
     echo getCurrentExceptionMsg()
 
-  self.rdb.table("allographer_migrations").insert(%*{
+  self.rdb.table("_migrations").insert(%*{
     "name": table.name,
     "query": table.query,
     "checksum": table.checksum,
@@ -372,7 +372,7 @@ proc dropTable(self:SqliteQuery, table:Table) =
   except:
     echo getCurrentExceptionMsg()
 
-  self.rdb.table("allographer_migrations").insert(%*{
+  self.rdb.table("_migrations").insert(%*{
     "name": table.name,
     "query": table.query.join("; "),
     "checksum": table.checksum,

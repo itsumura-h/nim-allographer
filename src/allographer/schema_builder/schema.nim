@@ -24,7 +24,7 @@ proc create*(rdb:Rdb, tables:varargs[Table]) =
       PostgreQuery.new(rdb).toInterface()
 
   # migration table
-  let migrationTable = table("allographer_migrations", [
+  let migrationTable = table("_migrations", [
     Column.increments("id"),
     Column.string("name"),
     Column.text("query"),

@@ -50,14 +50,14 @@ import allographer/schema_builder
 
 rdb.schema([
   table("auth", [
-    Column().increments("id"),
-    Column().string("name").nullable(),
-    Column().timestamp("created_at").default()
+    Column.increments("id"),
+    Column.string("name").nullable(),
+    Column.timestamp("created_at").default()
   ]),
   table("users", [
-    Column().increments("id"),
-    Column().string("name"),
-    Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+    Column.increments("id"),
+    Column.string("name"),
+    Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
   ])
 ])
 
@@ -75,8 +75,8 @@ rdb.schema([
 
 rdb.alter(
   table("users", [
-    add().string("email").unique().default(""),
-    delete("name")
+    Column.string("email").unique().default("").add(),
+    deleteColumn("name")
   ])
 )
 
@@ -201,8 +201,8 @@ Please create this branch name when you will create a new pull request.
 
 | Branch | Description |
 | ------ | ----------- |
-| feature/*** | New feature branch |
-| hotfix/*** | Bug fix branch |
-| chore/*** | Chore work or maintenance |
+| feature-*** | New feature branch |
+| hotfix-*** | Bug fix branch |
+| chore-*** | Chore work or maintenance |
 
 This naming rule automatically labels the pull request.

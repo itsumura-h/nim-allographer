@@ -28,26 +28,26 @@ for rdb in dbConnections:
   ])
 
   # seeder
-  asyncBlock:
+  seeder rdb, "auth":
     rdb.table("auth").insert(@[
       %*{"auth": "admin"},
       %*{"auth": "user"}
     ])
-    .await
+    .waitFor
 
-  var insertData: seq[JsonNode]
-  for i in 1..20:
-    let authId = if i mod 2 == 0: 2 else: 1
-    insertData.add(
-      %*{
-        "name": &"user{i}",
-        "email": &"user{i}@gmail.com",
-        "auth_id": authId
-      }
-    )
+  seeder rdb, "users":
+    var insertData: seq[JsonNode]
+    for i in 1..20:
+      let authId = if i mod 2 == 0: 2 else: 1
+      insertData.add(
+        %*{
+          "name": &"user{i}",
+          "email": &"user{i}@gmail.com",
+          "auth_id": authId
+        }
+      )
 
-  asyncBlock:
-    rdb.table("users").insert(insertData).await
+    rdb.table("users").insert(insertData).waitFor
 
 
   block:

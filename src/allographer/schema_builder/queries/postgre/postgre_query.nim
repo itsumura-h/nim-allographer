@@ -93,7 +93,7 @@ proc resetTable(self:PostgreQuery, table:Table) =
 
 
 proc getHistories(self:PostgreQuery, table:Table):JsonNode =
-  let tables = self.rdb.table("allographer_migrations")
+  let tables = self.rdb.table("_migrations")
             .where("name", "=", table.name)
             .orderBy("created_at", Desc)
             .get()
@@ -118,7 +118,7 @@ proc runQueryThenSaveHistory(self:PostgreQuery, tableName:string, query:seq[stri
   except:
     echo getCurrentExceptionMsg()
   
-  self.rdb.table("allographer_migrations").insert(%*{
+  self.rdb.table("_migrations").insert(%*{
     "name": tableName,
     "query": query.join("; "),
     "checksum": checksum,
