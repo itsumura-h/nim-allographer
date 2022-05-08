@@ -130,5 +130,5 @@ let users = waitFor rdb.table("users").limit(5).get(User)
 for user in users:
   echo user.name
 
-waitFor rdb.raw("DROP TABLE users").exec()
-waitFor rdb.raw("DROP TABLE auth").exec()
+# waitFor rdb.raw("DROP TABLE users").exec()
+# waitFor rdb.raw("DROP TABLE auth").exec()

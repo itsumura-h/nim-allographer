@@ -1,4 +1,4 @@
-table	query_builder/grammars.html#table,Rdb,string	grammars: table(rdb: Rdb; tableArg: string): Rdb	
+table	query_builder/grammars.html#table,Rdb,string	grammars: table(self: Rdb; tableArg: string): Rdb	
 raw	query_builder/grammars.html#raw,Rdb,string,varargs[string]	grammars: raw(self: Rdb; sql: string; arges: varargs[string]): Rdb	
 select	query_builder/grammars.html#select,Rdb,varargs[string]	grammars: select(self: Rdb; columnsArg: varargs[string]): Rdb	
 `distinct`	query_builder/grammars.html#distinct,Rdb	grammars: `distinct`(self: Rdb): Rdb	

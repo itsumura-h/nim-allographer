@@ -1,6 +1,7 @@
-import json
-
-import ../base, generators
+import
+  std/json,
+  ../base,
+  ./generators
 
 
 # ==================== SELECT ====================
@@ -193,3 +194,8 @@ proc sumBuilder*(self:Rdb, column:string): Rdb =
     .orderBySql()
     .limitSql()
     .offsetSql()
+
+proc columnBuilder*(self:Rdb):Rdb =
+  return self.selectSql()
+        .fromSql()
+        .selectFirstSql()

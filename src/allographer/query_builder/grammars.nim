@@ -15,11 +15,11 @@ ORDER BY
 TOP（LIMIT）
 ]#
 
-proc table*(rdb:Rdb, tableArg: string): Rdb =
-  let self = new Rdb
-  self.conn = rdb.conn
-  self.log = rdb.log
-  self.query = %*{"table": tableArg}
+proc table*(self:Rdb, tableArg: string): Rdb =
+  if self.query.kind == JNull:
+    self.query = newJObject()
+  
+  self.query["table"] = %tableArg
   return self
 
 
@@ -34,10 +34,13 @@ proc raw*(self:Rdb, sql:string, arges:varargs[string]): Rdb =
 # ============================== SELECT ==============================
 
 proc select*(self: Rdb, columnsArg: varargs[string]): Rdb =
+  if self.query.kind == JNull:
+    self.query = newJObject()
+
   if columnsArg.len == 0:
     self.query["select"] = %["*"]
   else:
-    self.query["select"] = %*columnsArg
+    self.query["select"] = %columnsArg
   return self
 
 

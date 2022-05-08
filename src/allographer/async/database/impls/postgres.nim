@@ -8,7 +8,7 @@ import ../libs/lib_postgres
 proc dbopen*(database: string = "", user: string = "", password: string = "", host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30): Connections =
   var pools = newSeq[Pool](maxConnections)
   for i in 0..<maxConnections:
-    let conn = postgres.pqsetdbLogin(host, $port, nil, nil, database, user, password)
+    let conn = postgres.pqsetdbLogin(host, port.`$`.cstring, nil, nil, database, user, password)
     if pqStatus(conn) != CONNECTION_OK: dbError(conn)
     pools[i] = Pool(
       postgresConn: conn,
@@ -16,14 +16,13 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
       createdAt: getTime().toUnix(),
     )
   result = Connections(
-    driver: PostgreSQL,
     pools: pools,
     timeout: timeout
   )
 
 proc query*(db:PPGconn, query: string, args: seq[string], timeout:int):Future[(seq[Row], DbRows)] {.async.} =
   assert db.status == CONNECTION_OK
-  let status = pqsendQuery(db, dbFormat(query, args))
+  let status = pqsendQuery(db, dbFormat(query, args).cstring)
   if status != 1: dbError(db) # never seen to fail when async
   var dbRows: DbRows
   var rows = newSeq[Row]()
@@ -38,7 +37,7 @@ proc query*(db:PPGconn, query: string, args: seq[string], timeout:int):Future[(s
         # https://www.postgresql.jp/document/12.0/html/libpq-cancel.html
         let cancel = pqGetCancel(db)
         var err = ""
-        let res = pqCancel(cancel, err, 0)
+        let res = pqCancel(cancel, err.cstring, 0)
         if res == 0:
           raise newException(DbError, err)
         return
@@ -62,7 +61,7 @@ proc query*(db:PPGconn, query: string, args: seq[string], timeout:int):Future[(s
 
 proc queryPlain*(db:PPGconn, query: string, args: seq[string], timeout:int):Future[seq[Row]] {.async.} =
   assert db.status == CONNECTION_OK
-  let status = pqsendQuery(db, dbFormat(query, args))
+  let status = pqsendQuery(db, dbFormat(query, args).cstring)
   if status != 1: dbError(db) # never seen to fail when async
   var rows = newSeq[Row]()
   let calledAt = getTime().toUnix()
@@ -76,7 +75,7 @@ proc queryPlain*(db:PPGconn, query: string, args: seq[string], timeout:int):Futu
         # https://www.postgresql.jp/document/12.0/html/libpq-cancel.html
         let cancel = pqGetCancel(db)
         var err = ""
-        let res = pqCancel(cancel, err, 0)
+        let res = pqCancel(cancel, err.cstring, 0)
         if res == 0:
           raise newException(DbError, err)
         return
@@ -99,7 +98,7 @@ proc queryPlain*(db:PPGconn, query: string, args: seq[string], timeout:int):Futu
 
 proc exec*(db:PPGconn, query: string, args: seq[string], timeout:int) {.async.} =
   assert db.status == CONNECTION_OK
-  let success = pqsendQuery(db, dbFormat(query, args))
+  let success = pqsendQuery(db, dbFormat(query, args).cstring)
   if success != 1: dbError(db)
   let calledAt = getTime().toUnix()
   await sleepAsync(0)
@@ -110,7 +109,7 @@ proc exec*(db:PPGconn, query: string, args: seq[string], timeout:int) {.async.} 
       if getTime().toUnix() >= calledAt + timeout:
         let cancel = pqGetCancel(db)
         var err = ""
-        let res = pqCancel(cancel, err, 0)
+        let res = pqCancel(cancel, err.cstring, 0)
         if res == 0:
           raise newException(DbError, err)
         return
@@ -126,7 +125,7 @@ proc exec*(db:PPGconn, query: string, args: seq[string], timeout:int) {.async.} 
 proc prepare*(db:PPGconn, query: string, timeout:int, stmtName:string):Future[int] {.async.} =
   assert db.status == CONNECTION_OK
   let nArgs = query.count('$')
-  let success = pqsendPrepare(db, stmtName, dbFormat(query), int32(nArgs), nil)
+  let success = pqsendPrepare(db, stmtName, dbFormat(query).cstring, int32(nArgs), nil)
   if success != 1: dbError(db)
   while true:
     var pqresult = pqgetResult(db)
@@ -158,7 +157,7 @@ proc preparedQuery*(db:PPGconn, args: seq[string], nArgs:int, timeout:int, stmtN
         # https://www.postgresql.jp/document/12.0/html/libpq-cancel.html
         let cancel = pqGetCancel(db)
         var err = ""
-        let res = pqCancel(cancel, err, 0)
+        let res = pqCancel(cancel, err.cstring, 0)
         if res == 0:
           raise newException(DbError, err)
         return
@@ -199,7 +198,7 @@ proc preparedExec*(db:PPGconn, args: seq[string], nArgs:int, timeout:int, stmtNa
         # https://www.postgresql.jp/document/12.0/html/libpq-cancel.html
         let cancel = pqGetCancel(db)
         var err = ""
-        let res = pqCancel(cancel, err, 0)
+        let res = pqCancel(cancel, err.cstring, 0)
         if res == 0:
           raise newException(DbError, err)
         return

@@ -1,11 +1,7 @@
 import
-  schema_builder/schema,
-  schema_builder/column,
-  schema_builder/table,
-  schema_builder/alter
+  ./schema_builder/schema,
+  ./schema_builder/grammers
 
 export
   schema,
-  column,
-  table,
-  alter
+  grammers

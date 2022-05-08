@@ -1,4 +1,4 @@
-logger	utils.html#logger,LogSetting,any,varargs[string]	utils: logger(self: LogSetting; output: any; args: varargs[string])	
+logger	utils.html#logger,LogSetting,auto,varargs[string]	utils: logger(self: LogSetting; output: auto; args: varargs[string])	
 echoErrorMsg	utils.html#echoErrorMsg,LogSetting,string	utils: echoErrorMsg(self: LogSetting; msg: string)	
 echoWarningMsg	utils.html#echoWarningMsg,LogSetting,string	utils: echoWarningMsg(self: LogSetting; msg: string)	
 liteWrapUpper	utils.html#liteWrapUpper,string	utils: liteWrapUpper(input: var string)	

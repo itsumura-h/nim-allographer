@@ -3,11 +3,6 @@ import rdb/mysql, rdb/mariadb, rdb/postgres, rdb/sqlite
 
 type
   DbError* = object of IOError ## exception that is raised if a database error occurs
-  Driver* = enum
-    MySQL
-    MariaDB
-    PostgreSQL
-    SQLite3
   Pool* = ref object
     mysqlConn*: mysql.PMySQL
     mariadbConn*: mariadb.PMySQL
@@ -16,7 +11,6 @@ type
     isBusy*: bool
     createdAt*: int64
   Connections* = ref object
-    driver*: Driver
     pools*: seq[Pool]
     timeout*:int
   Prepared* = ref object
@@ -93,16 +87,6 @@ type
 
 const errorConnectionNum* = 99999
 
-proc stmtFormat(args: varargs[string, `$`]): string =
-  result = ""
-  let argsLen = args.len
-  var count = 1
-  for c in items(args):
-    if count == argsLen:
-      add(result, c)
-    else:
-      add(result, c & ",")
-      inc(count)
 
 proc getFreeConn*(self:Connections):Future[int] {.async.} =
   let calledAt = getTime().toUnix()

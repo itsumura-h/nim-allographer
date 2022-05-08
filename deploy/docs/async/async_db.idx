@@ -1,9 +1,9 @@
 open	async/async_db.html#open,Driver,string,string,string,string,int,int,int	async_db: open(driver: Driver; database: string = &quot;&quot;; user: string = &quot;&quot;;\n     password: string = &quot;&quot;; host: string = &quot;&quot;; port = 0; maxConnections = 1;\n     timeout = 30): Connections	
-query	async/async_db.html#query,Connections,string,seq[string]	async_db: query(self: Connections; query: string; args: seq[string] = @[]): Future[\n    (seq[Row], DbRows)]	
-queryPlain	async/async_db.html#queryPlain,Connections,string,seq[string]	async_db: queryPlain(self: Connections; query: string; args: seq[string] = @[]): Future[\n    seq[Row]]	
-exec	async/async_db.html#exec,Connections,string,seq[string]	async_db: exec(self: Connections; query: string; args: seq[string] = @[]): owned(\n    Future[void])	
-prepare	async/async_db.html#prepare,Connections,string,string	async_db: prepare(self: Connections; query: string; stmtName = &quot;&quot;): Future[Prepared]	
-query	async/async_db.html#query,Prepared,seq[string]	async_db: query(self: Prepared; args: seq[string] = @[]): Future[(seq[Row], DbRows)]	
-exec	async/async_db.html#exec,Prepared,seq[string]	async_db: exec(self: Prepared; args: seq[string] = @[]): owned(Future[void])	
+query	async/async_db.html#query,Connections,Driver,string,seq[string]	async_db: query(self: Connections; driver: Driver; query: string; args: seq[string] = @[]): Future[\n    (seq[Row], DbRows)]	
+queryPlain	async/async_db.html#queryPlain,Connections,Driver,string,seq[string]	async_db: queryPlain(self: Connections; driver: Driver; query: string;\n           args: seq[string] = @[]): Future[seq[Row]]	
+exec	async/async_db.html#exec,Connections,Driver,string,seq[string]	async_db: exec(self: Connections; driver: Driver; query: string; args: seq[string] = @[]): owned(\n    Future[void])	
+getColumns	async/async_db.html#getColumns,Connections,Driver,string,seq[string]	async_db: getColumns(self: Connections; driver: Driver; query: string;\n           args: seq[string] = @[]): Future[seq[string]]	
+prepare	async/async_db.html#prepare,Connections,Driver,string,string	async_db: prepare(self: Connections; driver: Driver; query: string; stmtName = &quot;&quot;): Future[\n    Prepared]	
+query	async/async_db.html#query,Prepared,Driver,seq[string]	async_db: query(self: Prepared; driver: Driver; args: seq[string] = @[]): Future[\n    (seq[Row], DbRows)]	
+exec	async/async_db.html#exec,Prepared,Driver,seq[string]	async_db: exec(self: Prepared; driver: Driver; args: seq[string] = @[]): owned(\n    Future[void])	
 close	async/async_db.html#close,Prepared	async_db: close(self: Prepared)	
-transaction	async/async_db.html#transaction.m,untyped	async_db: transaction(bodyInput: untyped): untyped	

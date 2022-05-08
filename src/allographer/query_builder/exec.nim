@@ -67,28 +67,27 @@ proc toJson(driver:Driver, results:openArray[seq[string]], dbRows:DbRows):seq[Js
   return response_table
 
 proc getAllRows(self:Rdb, sqlString:string, args:seq[string]):Future[seq[JsonNode]] {.async.} =
-  let (rows, dbRows) = await self.conn.query(sqlString, args)
-
+  let (rows, dbRows) = self.conn.query(self.driver, sqlString, args).await
   if rows.len == 0:
     self.log.echoErrorMsg(sqlString & $args)
     return newSeq[JsonNode](0)
-
-  return toJson(self.conn.driver, rows, dbRows) # seq[JsonNode]
+  return toJson(self.driver, rows, dbRows) # seq[JsonNode]
 
 proc getRowsPlain(self:Rdb, sqlString:string, args:seq[string]):Future[seq[seq[string]]] {.async.} =
-  return await self.conn.queryPlain(sqlString, args)
+  return self.conn.queryPlain(self.driver, sqlString, args).await
 
 proc getRow(self:Rdb, sqlString:string, args:seq[string]):Future[Option[JsonNode]] {.async.} =
-  let (rows, dbColumns) = await self.conn.query(sqlString, args)
-
+  let (rows, dbColumns) = self.conn.query(self.driver, sqlString, args).await
   if rows.len == 0:
     self.log.echoErrorMsg(sqlString & $args)
     return none(JsonNode)
+  return toJson(self.driver, rows, dbColumns)[0].some
 
-  return toJson(self.conn.driver, rows, dbColumns)[0].some
+proc getColumn(self:Rdb, sqlString:string, args:seq[string]):Future[seq[string]] {.async.} =
+  return self.conn.getColumns(self.driver, sqlString, args).await
 
-proc getRowPlain(self:Connections, sqlString:string, args:seq[string]):Future[seq[string]] {.async.} =
-  return await(self.queryPlain(sqlString, args))[0]
+proc getRowPlain(self:Connections, driver:Driver, sqlString:string, args:seq[string]):Future[seq[string]] {.async.} =
+  return await(self.queryPlain(driver, sqlString, args))[0]
 
 proc orm[T](rows:openArray[JsonNode], typ:typedesc[T]):seq[T] =
   var response = newSeq[T](rows.len)
@@ -116,12 +115,24 @@ proc toSql*(self: Rdb): string =
   self.sqlString = self.selectBuilder().sqlString
   return self.sqlString
 
+proc columns*(self:Rdb):Future[seq[string]] {.async.} =
+  ## get columns sequence from table
+  defer: self.cleanUp()
+  self.sqlString = self.columnBuilder().sqlString
+  try:
+    self.log.logger(self.sqlString, self.placeHolder)
+    return getColumn(self, self.sqlString, self.placeHolder).await
+  except Exception:
+    self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    return newSeq[string]()
+
 proc get*(self: Rdb):Future[seq[JsonNode]] {.async.} =
   defer: self.cleanUp()
   self.sqlString = self.selectBuilder().sqlString
   try:
     self.log.logger(self.sqlString, self.placeHolder)
-    return await getAllRows(self, self.sqlString, self.placeHolder)
+    return getAllRows(self, self.sqlString, self.placeHolder).await
   except Exception:
     self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
@@ -143,23 +154,25 @@ proc getPlain*(self:Rdb):Future[seq[seq[string]]] {.async.} =
   self.sqlString = self.selectBuilder().sqlString
   try:
     self.log.logger(self.sqlString, self.placeHolder)
-    return await getRowsPlain(self, self.sqlString, self.placeHolder)
+    return getRowsPlain(self, self.sqlString, self.placeHolder).await
   except Exception:
     self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return newSeq[seq[string]](0)
 
 proc getRaw*(self: Rdb):Future[seq[JsonNode]]{.async.} =
+  ## It is only used with raw()
   defer: self.cleanUp()
   try:
     self.log.logger(self.sqlString, self.placeHolder)
-    return await getAllRows(self, self.sqlString, self.placeHolder)
+    return getAllRows(self, self.sqlString, self.placeHolder).await
   except Exception:
     self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return newSeq[JsonNode](0)
 
 proc getRaw*[T](self: Rdb, typ: typedesc[T]):Future[seq[T]]{.async.} =
+  ## It is only used with raw()
   defer: self.cleanUp()
   try:
     self.log.logger(self.sqlString, self.placeHolder)
@@ -174,7 +187,7 @@ proc first*(self: Rdb):Future[Option[JsonNode]] {.async.} =
   self.sqlString = self.selectFirstBuilder().sqlString
   try:
     self.log.logger(self.sqlString, self.placeHolder)
-    return await getRow(self, self.sqlString, self.placeHolder)
+    return getRow(self, self.sqlString, self.placeHolder).await
   except Exception:
     self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
@@ -196,7 +209,7 @@ proc firstPlain*(self: Rdb):Future[seq[string]]{.async.} =
   self.sqlString = self.selectFirstBuilder().sqlString
   try:
     self.log.logger(self.sqlString, self.placeHolder)
-    return await getRowPlain(self.conn, self.sqlString, self.placeHolder)
+    return getRowPlain(self.conn, self.driver, self.sqlString, self.placeHolder).await
   except Exception:
     self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
@@ -208,14 +221,14 @@ proc find*(self: Rdb, id: string, key="id"):Future[Option[JsonNode]]{.async.} =
   self.sqlString = self.selectFindBuilder(key).sqlString
   try:
     self.log.logger(self.sqlString, self.placeHolder)
-    return await getRow(self, self.sqlString, self.placeHolder)
+    return getRow(self, self.sqlString, self.placeHolder).await
   except Exception:
     self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return none(JsonNode)
 
 proc find*(self: Rdb, id: int, key="id"):Future[Option[JsonNode]]{.async.} =
-  return await self.find($id, key)
+  return self.find($id, key).await
 
 proc find*[T](self: Rdb, id: int, typ:typedesc[T], key="id"):Future[Option[T]]{.async.} =
   defer: self.cleanUp()
@@ -235,7 +248,7 @@ proc findPlain*(self:Rdb, id:int, key="id"):Future[seq[string]]{.async.} =
   self.sqlString = self.selectFindBuilder(key).sqlString
   try:
     self.log.logger(self.sqlString, self.placeHolder)
-    return await getRowPlain(self.conn, self.sqlString, self.placeHolder)
+    return getRowPlain(self.conn, self.driver, self.sqlString, self.placeHolder).await
   except Exception:
     self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
@@ -245,53 +258,58 @@ proc findPlain*(self:Rdb, id:int, key="id"):Future[seq[string]]{.async.} =
 # ==================== INSERT ====================
 
 proc insertSql*(self: Rdb, items: JsonNode):string =
-  result = self.insertValueBuilder(items).sqlString & $self.placeHolder
+  result = self.insertValueBuilder(items).sqlString
   echo result
 
 proc insertId(self:Rdb, sqlString:string, placeHolder:seq[string], key:string):Future[int]{.async.} =
-  if self.conn.driver == SQLite3:
+  if self.driver == SQLite3:
     self.log.logger(sqlString, placeHolder)
-    await self.conn.exec(sqlString, placeHolder)
-    let (rows, _) = await self.conn.query("SELECT last_insert_rowid()")
+    self.conn.exec(self.driver, sqlString, placeHolder).await
+    let (rows, _) = self.conn.query(self.driver, "SELECT last_insert_rowid()").await
+    return rows[0][0].parseInt
+  elif self.driver == MySQL or self.driver == MariaDB:
+    self.log.logger(sqlString, placeHolder)
+    self.conn.exec(self.driver, sqlString, placeHolder).await
+    let (rows, _) = self.conn.query(self.driver, "SELECT LAST_INSERT_ID()").await
     return rows[0][0].parseInt
   else:
     var key = key
-    wrapUpper(key, self.conn.driver)
+    wrapUpper(key, self.driver)
     var sqlString = sqlString
     sqlString.add(&" RETURNING {key}")
     self.log.logger(sqlString, placeHolder)
-    let (rows, _) = await self.conn.query(sqlString, placeHolder)
+    let (rows, _) = self.conn.query(self.driver, sqlString, placeHolder).await
     return rows[0][0].parseInt
 
 proc insert*(self: Rdb, items: JsonNode){.async.} =
   defer: self.cleanUp()
   self.sqlString = self.insertValueBuilder(items).sqlString
   self.log.logger(self.sqlString, self.placeHolder)
-  await self.conn.exec(self.sqlString, self.placeHolder)
+  self.conn.exec(self.driver, self.sqlString, self.placeHolder).await
 
 proc insert*(self: Rdb, rows: seq[JsonNode]){.async.} =
   defer: self.cleanUp()
   self.sqlString = self.insertValuesBuilder(rows).sqlString
   self.log.logger(self.sqlString, self.placeHolder)
-  await self.conn.exec(self.sqlString, self.placeHolder)
+  self.conn.exec(self.driver, self.sqlString, self.placeHolder).await
 
 proc inserts*(self: Rdb, rows: seq[JsonNode]){.async.} =
   defer: self.cleanUp()
   for row in rows:
     let sqlString = self.insertValueBuilder(row).sqlString
     self.log.logger(sqlString, self.placeHolder)
-    await self.conn.exec(sqlString, self.placeHolder)
+    self.conn.exec(self.driver, sqlString, self.placeHolder).await
     self.placeHolder = @[]
 
 proc insertId*(self: Rdb, items: JsonNode, key="id"):Future[int] {.async.} =
   defer: self.cleanUp()
   self.sqlString = self.insertValueBuilder(items).sqlString
-  return await self.insertId(self.sqlString, self.placeHolder, key)
+  return self.insertId(self.sqlString, self.placeHolder, key).await
 
 proc insertId*(self: Rdb, rows: seq[JsonNode], key="id"):Future[int] {.async.} =
   defer: self.cleanUp()
   self.sqlString = self.insertValuesBuilder(rows).sqlString
-  result = await self.insertId(self.sqlString, self.placeHolder, key)
+  result = self.insertId(self.sqlString, self.placeHolder, key).await
   self.placeHolder = @[]
 
 proc insertsID*(self: Rdb, rows: seq[JsonNode], key="id"):Future[seq[int]]{.async.} =
@@ -299,7 +317,7 @@ proc insertsID*(self: Rdb, rows: seq[JsonNode], key="id"):Future[seq[int]]{.asyn
   var response = newSeq[int](rows.len)
   for i, row in rows:
     let sqlString = self.insertValueBuilder(row).sqlString
-    response[i] = await self.insertId(sqlString, self.placeHolder, key)
+    response[i] = self.insertId(sqlString, self.placeHolder, key).await
     self.placeHolder = @[]
   return response
 
@@ -343,7 +361,7 @@ proc update*(self: Rdb, items: JsonNode){.async.} =
   self.sqlString = self.updateBuilder(items).sqlString
 
   self.log.logger(self.sqlString, self.placeHolder)
-  await self.conn.exec(self.sqlString, self.placeHolder)
+  self.conn.exec(self.driver, self.sqlString, self.placeHolder).await
 
 # ==================== DELETE ====================
 
@@ -355,14 +373,14 @@ proc delete*(self: Rdb){.async.} =
   defer: self.cleanUp()
   self.sqlString = self.deleteBuilder().sqlString
   self.log.logger(self.sqlString, self.placeHolder)
-  await self.conn.exec(self.sqlString, self.placeHolder)
+  self.conn.exec(self.driver, self.sqlString, self.placeHolder).await
 
 proc delete*(self: Rdb, id: int, key="id"){.async.} =
   defer: self.cleanUp()
   self.placeHolder.add($id)
   self.sqlString = self.deleteByIdBuilder(id, key).sqlString
   self.log.logger(self.sqlString, self.placeHolder)
-  await self.conn.exec(self.sqlString, self.placeHolder)
+  self.conn.exec(self.driver, self.sqlString, self.placeHolder).await
 
 # ==================== EXEC ====================
 
@@ -370,17 +388,18 @@ proc exec*(self: Rdb){.async.} =
   ## It is only used with raw()
   defer: self.cleanUp()
   self.log.logger(self.sqlString, self.placeHolder)
-  await self.conn.exec(self.sqlString, self.placeHolder)
+  self.conn.exec(self.driver, self.sqlString, self.placeHolder).await
 
 
 # ==================== Aggregates ====================
 
 proc count*(self:Rdb):Future[int]{.async.} =
+  defer: self.cleanUp()
   self.sqlString = self.countBuilder().sqlString
   self.log.logger(self.sqlString, self.placeHolder)
-  let response =  await self.getRow(self.sqlString, self.placeHolder)
+  let response =  self.getRow(self.sqlString, self.placeHolder).await
   if response.isSome:
-    case self.conn.driver
+    case self.driver
     of SQLite3:
       return response.get["aggregate"].getStr().parseInt()
     of MySQL, MariaDB:
@@ -391,9 +410,10 @@ proc count*(self:Rdb):Future[int]{.async.} =
     return 0
 
 proc max*(self:Rdb, column:string):Future[Option[string]]{.async.} =
+  defer: self.cleanUp()
   self.sqlString = self.maxBuilder(column).sqlString
   self.log.logger(self.sqlString, self.placeHolder)
-  let response =  await self.getRow(self.sqlString, self.placeHolder)
+  let response =  self.getRow(self.sqlString, self.placeHolder).await
   if response.isSome:
     case response.get["aggregate"].kind
     of JInt:
@@ -406,6 +426,7 @@ proc max*(self:Rdb, column:string):Future[Option[string]]{.async.} =
     return none(string)
 
 proc min*(self:Rdb, column:string):Future[Option[string]]{.async.} =
+  defer: self.cleanUp()
   self.sqlString = self.minBuilder(column).sqlString
   self.log.logger(self.sqlString, self.placeHolder)
   let response =  await self.getRow(self.sqlString, self.placeHolder)
@@ -421,11 +442,12 @@ proc min*(self:Rdb, column:string):Future[Option[string]]{.async.} =
     return none(string)
 
 proc avg*(self:Rdb, column:string):Future[Option[float]]{.async.} =
+  defer: self.cleanUp()
   self.sqlString = self.avgBuilder(column).sqlString
   self.log.logger(self.sqlString, self.placeHolder)
   let response =  await self.getRow(self.sqlString, self.placeHolder)
   if response.isSome:
-    case self.conn.driver
+    case self.driver
     of SQLite3:
       return response.get["aggregate"].getStr().parseFloat.some
     else:
@@ -434,11 +456,12 @@ proc avg*(self:Rdb, column:string):Future[Option[float]]{.async.} =
     return none(float)
 
 proc sum*(self:Rdb, column:string):Future[Option[float]]{.async.} =
+  defer: self.cleanUp()
   self.sqlString = self.sumBuilder(column).sqlString
   self.log.logger(self.sqlString, self.placeHolder)
   let response = await self.getRow(self.sqlString, self.placeHolder)
   if response.isSome:
-    case self.conn.driver
+    case self.driver
     of SQLite3:
       return response.get["aggregate"].getStr.parseFloat.some
     else:
@@ -449,13 +472,15 @@ proc sum*(self:Rdb, column:string):Future[Option[float]]{.async.} =
 
 # ==================== Paginate ====================
 
-from grammars import where, limit, offset, orderBy, Order
+from grammars import table, where, limit, offset, orderBy, Order
 
 proc paginate*(self:Rdb, display:int, page:int=1):Future[JsonNode]{.async.} =
+  defer: self.cleanUp()
+  let tableName = self.query["table"].getStr()
   if not page > 0: raise newException(Exception, "Arg page should be larger than 0")
-  let total = await self.count()
+  let total = self.table(tableName).count().await
   let offset = (page - 1) * display
-  let currentPage = await self.limit(display).offset(offset).get()
+  let currentPage = self.table(tableName).limit(display).offset(offset).get().await
   let count = currentPage.len()
   let hasMorePages = if page * display < total: true else: false
   let lastPage = int(total / display)
@@ -503,13 +528,14 @@ proc getLastItem(self:Rdb, keyArg:string, order:Order=Asc):Future[int]{.async.} 
 
 
 proc fastPaginate*(self:Rdb, display:int, key="id", order:Order=Asc):Future[JsonNode]{.async.} =
+  defer: self.cleanUp()
   self.sqlString = @[self.selectBuilder().sqlString][0]
   if order == Asc:
     self.sqlString = &"{self.sqlString} ORDER BY {key} ASC LIMIT {display + 1}"
   else:
     self.sqlString = &"{self.sqlString} ORDER BY {key} DESC LIMIT {display + 1}"
   self.log.logger(self.sqlString, self.placeHolder)
-  var currentPage = await self.getAllRows(self.sqlString, self.placeHolder)
+  var currentPage = self.getAllRows(self.sqlString, self.placeHolder).await
   if currentPage.len > 0:
     let newKey = if key.contains("."): key.split(".")[1] else: key
     let nextId = currentPage[currentPage.len-1][newKey].getInt()
@@ -536,6 +562,7 @@ proc fastPaginate*(self:Rdb, display:int, key="id", order:Order=Asc):Future[Json
 
 
 proc fastPaginateNext*(self:Rdb, display, id:int, key="id", order:Order=Asc):Future[JsonNode]{.async.} =
+  defer: self.cleanUp()
   if not id > 0: raise newException(Exception, "Arg id should be larger than 0")
   self.sqlString = @[self.selectBuilder().sqlString][0]
   let firstItem = await getFirstItem(self, key, order)
@@ -599,6 +626,7 @@ SELECT * FROM (
 
 
 proc fastPaginateBack*(self:Rdb, display, id:int, key="id", order:Order=Asc):Future[JsonNode]{.async.} =
+  defer: self.cleanUp()
   if not id > 0: raise newException(Exception, "Arg id should be larger than 0")
   self.sqlString = @[self.selectBuilder().sqlString][0]
   let lastItem = await self.getLastItem(key, order)

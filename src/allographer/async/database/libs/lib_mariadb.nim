@@ -1,4 +1,4 @@
-import asyncdispatch
+# import asyncdispatch
 import ../base
 import ../rdb/mariadb
 
@@ -127,7 +127,7 @@ proc dbFormat*(formatstr: string, args: seq[string]): string =
 
 proc rawExec*(db:PMySQL, query:string, args: seq[string]) =
   var q = dbFormat(query, args)
-  if realQuery(db, q, q.len) != 0'i32: dbError(db)
+  if realQuery(db, q.cstring, q.len) != 0'i32: dbError(db)
 
 iterator instantRows*(db: PMySQL; dbRows: var DbRows; query: string;
                       args: seq[string]): InstantRow =

@@ -31,20 +31,20 @@ Example: Schema Builder
 ## Create table
 ```nim
 import allographer/schema_builder
-from database import rdb
+from ../database import rdb
 
-rdb.schema([
+rdb.create([
   table("auth", [
-    Column().increments("id"),
-    Column().uuid("uuid"),
-    Column().string("name"),
-    Column().timestamps()
+    Column.increments("id"),
+    Column.uuid("uuid"),
+    Column.string("name"),
+    Column.timestamps()
   ]),
   table("users", [
-    Column().increments("id"),
-    Column().string("name"),
-    Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-    Column().strForeign("uuid").reference("uuid").on("auth").onDelete(SET_NULL)
+    Column.increments("id"),
+    Column.string("name"),
+    Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+    Column.strForeign("uuid").reference("uuid").on("auth").onDelete(SET_NULL)
   ])
 ])
 ```
@@ -54,12 +54,12 @@ rdb.schema([
 ```nim
 rdb.alter(
   table("auth", [
-    add().increments("id"),
-    add().string("name"),
+    Column.increments("id").add(),
+    Column.string("name").add(),
   ]),
   table("users",[
-    add().string("email").unique().default(""),
-    add().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+    Column.string("email").unique().default("").add(),
+    Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL).add()
   ])
 )
 ```
@@ -70,7 +70,8 @@ rdb.alter(
 ```nim
 rdb.alter(
   table("users",
-    change("name").char("new_name", 20).unique().default("")
+    Column.renameColumn("name", "new_name"),
+    Column.char("name", 20).unique().default("").cange()
   )
 )
 ```
@@ -84,8 +85,7 @@ rdb.alter(
 ```nim
 rdb.alter(
   table("users",
-    delete().column("name")
-    delete().foreign("auth_id")
+    Column.deleteColumn("name")
   )
 )
 ```
@@ -107,7 +107,7 @@ rdb.alter(
 `>> DROP TABLE users`
 
 ## Migration history
-allographer generate `.migration.json`. It has migration history data which have hash key generated a query.
+allographer generate `_migrations` table in your database. It has migration history data which have hash key generated a query.
 
 
 ```nim
@@ -120,21 +120,22 @@ let rdb = dbopen(SQLite3, "/path/to/db.sqlite")
 
 rdb.schema(
   table("auth", [
-    Column().increments("id"),
-    Column().string("name")
+    Column.increments("id"),
+    Column.string("name")
   ]),
   table("users", [
-    Column().increments("id"),
-    Column().string("name"),
-    Column().foreign("auth_id").reference("id").in("auth").onDelete(SET_NULL)
+    Column.increments("id"),
+    Column.string("name"),
+    Column.foreign("auth_id").reference("id").in("auth").onDelete(SET_NULL)
   ])
 )
 
 seeder rdb, "auth":
-  waitFor rdb.table("auth").insert(@[
+  rdb.table("auth").insert(@[
     %*{"name": "admin"},
     %*{"name": "member"}
   ])
+  .waitFor
 
 seeder rdb, "users":
   var data: seq[JsonNode]
@@ -143,13 +144,13 @@ seeder rdb, "users":
       "name": &"user{i}",
       "auth_id": if i mod 2 == 0: 1 else: 2
     })
-  waitFor rdb.table("users").insert(data)
+  rdb.table("users").insert(data).waitFor
 ```
 
 ```sh
 # first time
 nim c -r migrate
->> run query and generate .migration.json
+>> run query and generate `_migrations` table
 # secound time
 nim c -r migrate
 >> nothing to do
@@ -227,12 +228,12 @@ template seeder*(rdb:Rdb, tableName, column:string, body:untyped):untyped
 ## Foreign Key Constraints
 For example, let's define a `user_id` column on the table that references the `id` column on a `users` table:
 ```nim
-Column().foreign("user_id")
+Column.foreign("user_id")
   .reference("id")
   .on("users")
   .onDelete(SET_NULL)
 
-Column().strForeign("uuid")
+Column.strForeign("uuid")
   .reference("uuid")
   .on("users")
   .onDelete(SET_NULL)

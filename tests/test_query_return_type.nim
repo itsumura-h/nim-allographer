@@ -2,18 +2,25 @@ discard """
   cmd: "nim c -d:reset -r $file"
 """
 
-import unittest, strformat, json, strutils, options, asyncdispatch
-import ../src/allographer/query_builder
-import ../src/allographer/schema_builder
-import connections
+import
+  std/unittest,
+  strformat,
+  std/json,
+  std/strutils,
+  std/options,
+  std/asyncdispatch,
+  ../src/allographer/query_builder,
+  ../src/allographer/schema_builder,
+  ./connections
 
-rdb.schema(
+
+rdb.create(
   table("users", [
-    Column().increments("id"),
-    COlumn().string("name").nullable(),
-    Column().date("birth_date").nullable(),
-    Column().string("null").nullable(),
-    Column().boolean("bool").default(false)
+    Column.increments("id"),
+    Column.string("name").nullable(),
+    Column.date("birth_date").nullable(),
+    Column.string("null").nullable(),
+    Column.boolean("bool").default(false)
   ])
 )
 

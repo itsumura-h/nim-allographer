@@ -22,7 +22,6 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
       createdAt: getTime().toUnix(),
     )
   result = Connections(
-    driver: Driver.MySQL,
     pools: pools,
     timeout: timeout
   )
@@ -30,10 +29,10 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
 proc query*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[(seq[base.Row], DbRows)] {.async.} =
   assert db.ping == 0
   let query = dbFormat(query, args)
-  var status = real_query_nonblocking(db, query, query.len)
+  var status = real_query_nonblocking(db, query.cstring, query.len)
   while status == NET_ASYNC_NOT_READY:
     await sleepAsync(0)
-    status = real_query_nonblocking(db, query, query.len)
+    status = real_query_nonblocking(db, query.cstring, query.len)
   if status == NET_ASYNC_ERROR: dbError(db) # failed
   var res: PRES
   status = store_result_nonblocking(db, res.addr)
@@ -71,10 +70,10 @@ proc query*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[(s
 proc queryPlain*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[seq[base.Row]] {.async.} =
   assert db.ping == 0
   let query = dbFormat(query, args)
-  var status = real_query_nonblocking(db, query, query.len)
+  var status = real_query_nonblocking(db, query.cstring, query.len)
   while status == NET_ASYNC_NOT_READY:
     await sleepAsync(0)
-    status = real_query_nonblocking(db, query, query.len)
+    status = real_query_nonblocking(db, query.cstring, query.len)
   if status == NET_ASYNC_ERROR: dbError(db) # failed
   var res: PRES
   status = store_result_nonblocking(db, res.addr)
@@ -105,8 +104,8 @@ proc queryPlain*(db: PMySQL, query: string, args: seq[string], timeout:int):Futu
 proc exec*(db:PMySQL, query: string, args: seq[string], timeout:int) {.async.} =
   assert db.ping == 0
   let query = dbFormat(query, args)
-  var status = real_query_nonblocking(db, query, query.len)
+  var status = real_query_nonblocking(db, query.cstring, query.len)
   while status == NET_ASYNC_NOT_READY:
     await sleepAsync(0)
-    status = real_query_nonblocking(db, query, query.len)
+    status = real_query_nonblocking(db, query.cstring, query.len)
   if status == NET_ASYNC_ERROR: dbError(db) # failed

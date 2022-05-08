@@ -112,6 +112,11 @@ window.addEventListener('DOMContentLoaded', main);
     title="avg(self: Rdb; column: string): Future[Option[float]]">avg(self: Rdb; column: string): Future[Option[float]]</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">columns
+      <li><a class="reference" href="#columns%2CRdb"
+    title="columns(self: Rdb): Future[seq[string]]">columns(self: Rdb): Future[seq[string]]</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">count
       <li><a class="reference" href="#count%2CRdb"
     title="count(self: Rdb): Future[int]">count(self: Rdb): Future[int]</a></li>
@@ -299,6 +304,16 @@ window.addEventListener('DOMContentLoaded', main);
 
 </dd>
 </div>
+<div id="columns,Rdb">
+<dt><pre><span class="Keyword">proc</span> <a href="#columns%2CRdb"><span class="Identifier">columns</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">TimeEffect</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+get columns sequence from table
+
+</dd>
+</div>
 <div id="count,Rdb">
 <dt><pre><span class="Keyword">proc</span> <a href="#count%2CRdb"><span class="Identifier">count</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
     <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
@@ -480,7 +495,7 @@ It is only used with raw()
     <span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
-
+It is only used with raw()
 
 </dd>
 </div>
@@ -488,7 +503,7 @@ It is only used with raw()
 <dt><pre><span class="Keyword">proc</span> <a href="#getRaw%2CRdb%2Ctypedesc%5BT%5D"><span class="Identifier">getRaw</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">]</span></pre></dt>
 <dd>
 
-
+It is only used with raw()
 
 </dd>
 </div>
@@ -646,7 +661,7 @@ It is only used with raw()
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-02-09 18:53:42 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-05-08 09:11:34 UTC</small>
       </div>
     </div>
   </div>

@@ -121,6 +121,13 @@ window.addEventListener('DOMContentLoaded', main);
     Future[void])</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">getColumns
+      <li><a class="reference" href="#getColumns%2CPSqlite3%2Cstring%2Cseq%5Bstring%5D%2Cint"
+    title="getColumns(db: PSqlite3; query: string; args: seq[string]; timeout: int): Future[
+    seq[string]]">getColumns(db: PSqlite3; query: string; args: seq[string]; timeout: int): Future[
+    seq[string]]</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">prepare
       <li><a class="reference" href="#prepare%2CPSqlite3%2Cstring%2Cint"
     title="prepare(db: PSqlite3; query: string; timeout: int): Future[PStmt]">prepare(db: PSqlite3; query: string; timeout: int): Future[PStmt]</a></li>
@@ -193,6 +200,15 @@ window.addEventListener('DOMContentLoaded', main);
 
 </dd>
 </div>
+<div id="getColumns,PSqlite3,string,seq[string],int">
+<dt><pre><span class="Keyword">proc</span> <a href="#getColumns%2CPSqlite3%2Cstring%2Cseq%5Bstring%5D%2Cint"><span class="Identifier">getColumns</span></a><span class="Other">(</span><span class="Identifier">db</span><span class="Other">:</span> <a href="../rdb/sqlite.html#PSqlite3"><span class="Identifier">PSqlite3</span></a><span class="Other">;</span> <span class="Identifier">query</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">timeout</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span>
+    <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
 <div id="prepare,PSqlite3,string,int">
 <dt><pre><span class="Keyword">proc</span> <a href="#prepare%2CPSqlite3%2Cstring%2Cint"><span class="Identifier">prepare</span></a><span class="Other">(</span><span class="Identifier">db</span><span class="Other">:</span> <a href="../rdb/sqlite.html#PSqlite3"><span class="Identifier">PSqlite3</span></a><span class="Other">;</span> <span class="Identifier">query</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">timeout</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><a href="../rdb/sqlite.html#PStmt"><span class="Identifier">PStmt</span></a><span class="Other">]</span> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">]</span></span>.}</pre></dt>
@@ -251,7 +267,7 @@ window.addEventListener('DOMContentLoaded', main);
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-02-09 18:53:45 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-05-08 09:11:33 UTC</small>
       </div>
     </div>
   </div>

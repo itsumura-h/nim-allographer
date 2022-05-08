@@ -1,7 +1,11 @@
-import asyncdispatch, times, strutils
-import ../base
-import ../rdb/sqlite
-import ../libs/lib_sqlite
+import
+  std/asyncdispatch,
+  std/times,
+  std/strutils,
+  ../base,
+  ../rdb/sqlite,
+  ../libs/lib_sqlite
+
 
 proc dbopen*(database: string = "", user: string = "", password: string = "", host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30): Connections =
   var pools = newSeq[Pool](maxConnections)
@@ -14,7 +18,6 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
       createdAt: getTime().toUnix(),
     )
   result = Connections(
-    driver: SQLite3,
     pools: pools,
     timeout: timeout
   )
@@ -45,7 +48,7 @@ proc exec*(db:PSqlite3, query: string, args: seq[string], timeout:int) {.async.}
   var q = dbFormat(query, args)
   var stmt: PStmt
   var res:bool
-  if prepare_v2(db, q, q.len.cint, stmt, nil) == SQLITE_OK:
+  if prepare_v2(db, q.cstring, q.len.cint, stmt, nil) == SQLITE_OK:
     let x = step(stmt)
     if x in {SQLITE_DONE, SQLITE_ROW}:
       res = finalize(stmt) == SQLITE_OK
@@ -54,6 +57,11 @@ proc exec*(db:PSqlite3, query: string, args: seq[string], timeout:int) {.async.}
       res = false
   if not res:
     dbError(db)
+
+proc getColumns*(db:PSqlite3, query:string, args:seq[string], timeout:int):Future[seq[string]] {.async.} =
+  assert(not db.isNil, "Database not connected.")
+  var dbRows: DbRows
+  return db.getColumns(dbRows, query, args)
 
 proc prepare*(db:PSqlite3, query:string, timeout:int):Future[PStmt] {.async.} =
   if prepare_v2(db, query, query.len.cint, result, nil) != SQLITE_OK:

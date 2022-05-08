@@ -8,14 +8,14 @@ randomize()
 const range1_10000 = 1..10000
 
 proc migrate() {.async.} =
-  rdb.schema(
+  rdb.create(
     table("World", [
-      Column().increments("id"),
-      Column().integer("randomNumber").default(0)
+      Column.increments("id"),
+      Column.integer("randomNumber").default(0)
     ]),
     table("Fortune", [
-      Column().increments("id"),
-      Column().string("message")
+      Column.increments("id"),
+      Column.string("message")
     ])
   )
 

@@ -1,128 +1,107 @@
-import os, json, strutils, asyncdispatch, std/sha1, times
-from strformat import `&`
 import
-  migrates/sqlite_migrate,
-  migrates/mysql_migrate,
-  migrates/postgres_migrate
-import ../utils
-import ../base
-import ../async/async_db
+  std/os, 
+  std/json,
+  std/options,
+  ../base,
+  ../query_builder,
+  ./grammers,
+  ./queries/query_interface,
+  ./queries/sqlite/sqlite_query,
+  ./queries/mysql/mysql_query,
+  ./queries/postgre/postgre_query
 
-import table
 
-
-type MigrationTable* = ref object
-  obj*:Table
-  name*:string
-  shouldRun*:bool
-  query*:string
-  indexQuery*:seq[string]
-  queryHash*:string
-
-type MigrationTables* = ref object
-  recordPath*:string
-  record*:JsonNode
-  tables*:seq[MigrationTable]
-
-proc new*(typ:type MigrationTables):MigrationTables =
-  let self = MigrationTables()
-  self.recordPath = getAppDir() / ".migration.json"
-  self.record =
-    if fileExists(self.recordPath):
-      parseFile(self.recordPath)
-    else:
-      newJObject()
-  return self
-
-proc saveHash(self:MigrationTables, i:int) =
-  let f = open(self.recordPath, FileMode.fmWrite)
-  defer: f.close()
-  self.record[self.tables[i].queryHash] = %*{
-    "status": true,
-    "query": self.tables[i].query & "; " & self.tables[i].indexQuery.join("; "),
-    "run_at": now().format("yyyy-MM-dd HH:mm:ss")
-  }
-  f.write(self.record.pretty())
-
-proc schema*(rdb:Rdb, tables:varargs[Table]) =
+proc create*(rdb:Rdb, tables:varargs[Table]) =
   let cmd = commandLineParams()
   let isReset = defined(reset) or cmd.contains("--reset")
-  let migrationTables = MigrationTables.new()
+  let generator =
+    case rdb.driver
+    of SQLite3:
+      SqliteQuery.new(rdb).toInterface()
+    of MySQL, MariaDB:
+      MysqlQuery.new(rdb).toInterface()
+    of PostgreSQL:
+      PostgreQuery.new(rdb).toInterface()
+
+  # migration table
+  let migrationTable = table("_migrations", [
+    Column.increments("id"),
+    Column.string("name"),
+    Column.text("query"),
+    Column.string("checksum").index(),
+    Column.datetime("created_at"),
+    Column.boolean("status")
+  ])
+  generator.createTableSql(migrationTable)
+  generator.runQuery(migrationTable.query)
+
+  if isReset:
+    # delete table in reverse loop in tables
+    for i in countdown(tables.len-1, 0):
+      let table = tables[i]
+      generator.resetTable(table)
+
   for table in tables:
-    let query =
-      case rdb.conn.driver:
-      of SQLite3:
-        sqlite_migrate.migrate(table)
-      of MySQL:
-        mysql_migrate.migrate(table)
-      of MariaDB:
-        mysql_migrate.migrate(table)
-      of PostgreSQL:
-        postgres_migrate.migrate(table)
-    var indexQuery = newSeq[string]()
-    for column in table.columns:
-      if column.isIndex:
-        let indexQueryRow =
-          case rdb.conn.driver:
-          of SQLite3:
-            sqlite_migrate.createIndex(table.name, column.name)
-          of MySQL:
-            mysql_migrate.createIndex(table.name, column.name)
-          of MariaDB:
-            mysql_migrate.createIndex(table.name, column.name)
-          of PostgreSQL:
-            postgres_migrate.createIndex(table.name, column.name)
-        indexQuery.add(indexQueryRow)
-    let queryHash = $((query & indexQuery.join("; ")).secureHash())
-    let shouldRun =
-      if isReset:
-        true
-      elif migrationTables.record.hasKey(queryHash) and migrationTables.record[queryHash]["status"].getBool:
-        false
-      else:
-        true
+    let history = generator.getHistories(table)
+    # not exists history || reset => create table
+    if history.len == 0 or isReset:
+      generator.createTableSql(table)
+      generator.runQueryThenSaveHistory(table.name, table.query, table.checksum)
 
-    migrationTables.tables.add(
-      MigrationTable(obj:table, name:table.name, shouldRun:shouldRun,
-        query:query, indexQuery:indexQuery, queryHash:queryHash)
-    )
 
-  for i in countdown(migrationTables.tables.len-1, 0): # reverse loop
-    let table = migrationTables.tables[i]
-    if table.shouldRun:
-      try:
-        var tableName = table.name
-        wrapUpper(tableName, rdb.conn.driver)
-        let query =
-          if rdb.conn.driver == SQLite3:
-            &"DROP TABLE IF EXISTS {tableName}"
-          else:
-            &"DROP TABLE IF EXISTS {tableName} CASCADE"
-        rdb.log.logger(query)
-        waitFor rdb.conn.exec(query)
-      except:
-        rdb.log.echoErrorMsg( getCurrentExceptionMsg() )
+proc shouldRunProcess(history:JsonNode, checksum:string, isReset:bool):bool =
+  if isReset:
+    return true
+  if not history.contains(checksum):
+    return true
+  if not history[checksum]["status"].getBool:
+    return true
+  return false
 
-  for i, table in migrationTables.tables:
-    if table.shouldRun:
-      try:
-        rdb.log.logger(table.query)
-        waitFor rdb.conn.exec(table.query)
-        migrationTables.saveHash(i)
-      except:
-        rdb.log.echoErrorMsg( getCurrentExceptionMsg() )
+proc alter*(rdb:Rdb, tables:varargs[Table]) =
+  let cmd = commandLineParams()
+  let isReset = defined(reset) or cmd.contains("--reset")
+  let generator =
+    case rdb.driver
+    of SQLite3:
+      SqliteQuery.new(rdb).toInterface()
+    of MySQL, MariaDB:
+      MysqlQuery.new(rdb).toInterface()
+    of PostgreSQL:
+      PostgreQuery.new(rdb).toInterface()
 
-  # index
-  for table in migrationTables.tables:
-    if table.shouldRun:
-      for row in table.indexQuery:
-        rdb.log.logger(row)
-        try:
-          waitFor rdb.conn.exec(row)
-        except:
-          let err = getCurrentExceptionMsg()
-          if err.contains("already exists"):
-            rdb.log.echoErrorMsg(err)
-            rdb.log.echoWarningMsg(&"Safety skip create table '{table.name}'")
-          else:
-            rdb.log.echoErrorMsg(err)
+  for i, table in tables:
+    # カラム変更
+    case table.migrationType
+    of CreateTable:
+      for column in table.columns:
+        let history = generator.getHistories(table)
+        case column.migrationType
+        of AddColumn:
+          generator.addColumnSql(column, table)
+          if shouldRunProcess(history, column.checksum, isReset):
+            generator.addColumn(column, table)
+        of ChangeColumn:
+          generator.changeColumnSql(column, table)
+          if shouldRunProcess(history, column.checksum, isReset):
+            generator.changeColumn(column, table)
+        of RenameColumn:
+          generator.renameColumnSql(column, table)
+          if shouldRunProcess(history, column.checksum, isReset):
+            generator.renameColumn(column, table)
+        of DeleteColumn:
+          generator.deleteColumnSql(column, table)
+          if shouldRunProcess(history, column.checksum, isReset):
+            generator.deleteColumn(column, table)
+    of RenameTable:
+      generator.renameTableSql(table)
+      let history = generator.getHistories(table)
+      if shouldRunProcess(history, table.checksum, isReset):
+        generator.renameTable(table)
+    of DropTable:
+      generator.dropTableSql(table)
+      let history = generator.getHistories(table)
+      if shouldRunProcess(history, table.checksum, isReset):
+        generator.dropTable(table)
+    else:
+      discard

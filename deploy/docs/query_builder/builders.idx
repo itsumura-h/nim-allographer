@@ -11,3 +11,4 @@ maxBuilder	query_builder/builders.html#maxBuilder,Rdb,string	builders: maxBuilde
 minBuilder	query_builder/builders.html#minBuilder,Rdb,string	builders: minBuilder(self: Rdb; column: string): Rdb	
 avgBuilder	query_builder/builders.html#avgBuilder,Rdb,string	builders: avgBuilder(self: Rdb; column: string): Rdb	
 sumBuilder	query_builder/builders.html#sumBuilder,Rdb,string	builders: sumBuilder(self: Rdb; column: string): Rdb	
+columnBuilder	query_builder/builders.html#columnBuilder,Rdb	builders: columnBuilder(self: Rdb): Rdb	

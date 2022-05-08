@@ -1,18 +1,19 @@
-import os, parsecfg, terminal, logging, macros, strformat, strutils
-# self
-import base
-import async/async_db
+import
+  std/os,
+  std/parsecfg,
+  std/terminal,
+  std/logging,
+  std/macros,
+  std/strformat,
+  std/strutils,
+  ./base
 
-# proc driverTypeError*(driver:string) =
-#   if driver != "sqlite" and driver != "mysql" and driver != "mariadb" and driver != "postgres":
-#     raise newException(OSError, "invalid DB driver type")
 
-
-proc logger*(self:LogSetting, output: any, args:varargs[string]) =
+proc logger*(self:LogSetting, output: auto, args:varargs[string]) =
   # console log
   if self.shouldDisplayLog:
     let logger = newConsoleLogger()
-    logger.log(lvlDebug, $output & $args)
+    logger.log(lvlDebug, $output & " " & $args)
   # file log
   if self.shouldOutputLogFile:
     # info $output & $args
@@ -20,7 +21,7 @@ proc logger*(self:LogSetting, output: any, args:varargs[string]) =
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
     defer: logger.file.close()
-    logger.log(lvlDebug, $output & $args)
+    logger.log(lvlDebug, $output & " " & $args)
     flushFile(logger.file)
 
 
