@@ -113,11 +113,6 @@ proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string
       return await sqlite.getColumns(self.pools[connI].sqliteConn, query, args, self.timeout)
 
 proc prepare*(self: Connections, driver:Driver, query: string, stmtName=""):Future[Prepared] {.async.} =
-  let stmtName =
-    if stmtName.len == 0:
-      randStr(10)
-    else:
-      stmtName
   let connI = await getFreeConn(self)
   if connI == errorConnectionNum:
     return
@@ -133,6 +128,11 @@ proc prepare*(self: Connections, driver:Driver, query: string, stmtName=""):Futu
       # await mariadb.prepare(self.pools[connI].mariadbConn, query, self.timeout)
   of PostgreSQL:
     when isExistsPostgre:
+      let stmtName =
+        if stmtName.len == 0:
+          randStr(10)
+        else:
+          stmtName
       let nArgs = await postgres.prepare(self.pools[connI].postgresConn, query, self.timeout, stmtName)
       result = Prepared(conn:self, nArgs:nArgs, pgStmt:stmtName, connI:connI)
   of SQLite3:
