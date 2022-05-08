@@ -1,0 +1,22 @@
+serialGenerator	schema_builder/queries/sqlite/impl.html#serialGenerator,Column	impl: serialGenerator(column: Column): string	
+intGenerator	schema_builder/queries/sqlite/impl.html#intGenerator,Column	impl: intGenerator(column: Column): string	
+decimalGenerator	schema_builder/queries/sqlite/impl.html#decimalGenerator,Column	impl: decimalGenerator(column: Column): string	
+floatGenerator	schema_builder/queries/sqlite/impl.html#floatGenerator,Column	impl: floatGenerator(column: Column): string	
+charGenerator	schema_builder/queries/sqlite/impl.html#charGenerator,Column	impl: charGenerator(column: Column): string	
+varcharGenerator	schema_builder/queries/sqlite/impl.html#varcharGenerator,Column	impl: varcharGenerator(column: Column): string	
+textGenerator	schema_builder/queries/sqlite/impl.html#textGenerator,Column	impl: textGenerator(column: Column): string	
+dateGenerator	schema_builder/queries/sqlite/impl.html#dateGenerator,Column	impl: dateGenerator(column: Column): string	
+datetimeGenerator	schema_builder/queries/sqlite/impl.html#datetimeGenerator,Column	impl: datetimeGenerator(column: Column): string	
+timeGenerator	schema_builder/queries/sqlite/impl.html#timeGenerator,Column	impl: timeGenerator(column: Column): string	
+timestampGenerator	schema_builder/queries/sqlite/impl.html#timestampGenerator,Column	impl: timestampGenerator(column: Column): string	
+timestampsGenerator	schema_builder/queries/sqlite/impl.html#timestampsGenerator,Column	impl: timestampsGenerator(column: Column): string	
+softDeleteGenerator	schema_builder/queries/sqlite/impl.html#softDeleteGenerator,Column	impl: softDeleteGenerator(column: Column): string	
+blobGenerator	schema_builder/queries/sqlite/impl.html#blobGenerator,Column	impl: blobGenerator(column: Column): string	
+boolGenerator	schema_builder/queries/sqlite/impl.html#boolGenerator,Column	impl: boolGenerator(column: Column): string	
+enumGenerator	schema_builder/queries/sqlite/impl.html#enumGenerator,Column	impl: enumGenerator(column: Column): string	
+jsonGenerator	schema_builder/queries/sqlite/impl.html#jsonGenerator,Column	impl: jsonGenerator(column: Column): string	
+foreignColumnGenerator	schema_builder/queries/sqlite/impl.html#foreignColumnGenerator,Column	impl: foreignColumnGenerator(column: Column): string	
+strForeignColumnGenerator	schema_builder/queries/sqlite/impl.html#strForeignColumnGenerator,Column	impl: strForeignColumnGenerator(column: Column): string	
+foreignGenerator	schema_builder/queries/sqlite/impl.html#foreignGenerator,Column	impl: foreignGenerator(column: Column): string	
+alterAddForeignGenerator	schema_builder/queries/sqlite/impl.html#alterAddForeignGenerator,Column	impl: alterAddForeignGenerator(column: Column): string	
+indexName	schema_builder/queries/sqlite/impl.html#indexName,string,string	impl: indexName(table, column: string): string	

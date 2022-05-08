@@ -1,3 +1,4 @@
+getOsName	async/database/rdb/mariadb.html#getOsName	mariadb: getOsName(): string	
 false	async/database/rdb/mariadb.html#false	my_bool.false	
 true	async/database/rdb/mariadb.html#true	my_bool.true	
 my_bool	async/database/rdb/mariadb.html#my_bool	mariadb: my_bool	

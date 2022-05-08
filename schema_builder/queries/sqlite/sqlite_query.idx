@@ -1,0 +1,4 @@
+SqliteQuery	schema_builder/queries/sqlite/sqlite_query.html#SqliteQuery	sqlite_query: SqliteQuery	
+new	schema_builder/queries/sqlite/sqlite_query.html#new,typeSqliteQuery,Rdb	sqlite_query: new(_: type SqliteQuery; rdb: Rdb): SqliteQuery	
+renameTableSql	schema_builder/queries/sqlite/sqlite_query.html#renameTableSql,SqliteQuery,Table	sqlite_query: renameTableSql(self: SqliteQuery; table: Table)	
+toInterface	schema_builder/queries/sqlite/sqlite_query.html#toInterface,SqliteQuery	sqlite_query: toInterface(self: SqliteQuery): IGenerator	

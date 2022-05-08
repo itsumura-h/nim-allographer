@@ -1,1 +1,0 @@
-exec	schema_builder/alters/sqlite_alter.html#exec,Rdb,Table	sqlite_alter: exec(rdb: Rdb; table: Table)	

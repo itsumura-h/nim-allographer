@@ -1,4 +1,4 @@
 isExistsSqlite	baseEnv.html#isExistsSqlite	baseEnv: isExistsSqlite	
-isExistsPostgres	baseEnv.html#isExistsPostgres	baseEnv: isExistsPostgres	
+isExistsPostgre	baseEnv.html#isExistsPostgre	baseEnv: isExistsPostgre	
 isExistsMysql	baseEnv.html#isExistsMysql	baseEnv: isExistsMysql	
 isExistsMariadb	baseEnv.html#isExistsMariadb	baseEnv: isExistsMariadb	

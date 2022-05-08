@@ -259,6 +259,11 @@ function main() {
     title="sum(self: Rdb; column: string): Future[Option[float]]">sum,<wbr>Rdb,<wbr>string</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">columns
+      <li><a class="reference" href="#columns%2CRdb"
+    title="columns(self: Rdb): Future[seq[string]]">columns,<wbr>Rdb</a></li>
+
+  </ul>
 
   </ul>
 </li>
@@ -292,6 +297,15 @@ function main() {
 
 
 </dd>
+<a id="columns,Rdb"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#columns%2CRdb"><span class="Identifier">columns</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<dd>
+
+get columns sequence from table
+
+</dd>
 <a id="get,Rdb"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#get%2CRdb"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">]</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
     <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
@@ -323,14 +337,14 @@ function main() {
     <span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
-
+It is only used with raw()
 
 </dd>
 <a id="getRaw,Rdb,typedesc[T]"></a>
 <dt><pre><span class="Keyword">proc</span> <a href="#getRaw%2CRdb%2Ctypedesc%5BT%5D"><span class="Identifier">getRaw</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">]</span></pre></dt>
 <dd>
 
-
+It is only used with raw()
 
 </dd>
 <a id="first,Rdb"></a>
@@ -599,7 +613,7 @@ It is only used with raw()
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-02-23 04:17:20 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-05-08 10:52:09 UTC</small>
       </div>
     </div>
   </div>

@@ -1,0 +1,27 @@
+serialGenerator	schema_builder/queries/mysql/impl.html#serialGenerator,Column	impl: serialGenerator(column: Column): string	
+intGenerator	schema_builder/queries/mysql/impl.html#intGenerator,Column	impl: intGenerator(column: Column): string	
+smallIntGenerator	schema_builder/queries/mysql/impl.html#smallIntGenerator,Column	impl: smallIntGenerator(column: Column): string	
+mediumIntGenerator	schema_builder/queries/mysql/impl.html#mediumIntGenerator,Column	impl: mediumIntGenerator(column: Column): string	
+bigIntGenerator	schema_builder/queries/mysql/impl.html#bigIntGenerator,Column	impl: bigIntGenerator(column: Column): string	
+decimalGenerator	schema_builder/queries/mysql/impl.html#decimalGenerator,Column	impl: decimalGenerator(column: Column): string	
+doubleGenerator	schema_builder/queries/mysql/impl.html#doubleGenerator,Column	impl: doubleGenerator(column: Column): string	
+floatGenerator	schema_builder/queries/mysql/impl.html#floatGenerator,Column	impl: floatGenerator(column: Column): string	
+charGenerator	schema_builder/queries/mysql/impl.html#charGenerator,Column	impl: charGenerator(column: Column): string	
+stringGenerator	schema_builder/queries/mysql/impl.html#stringGenerator,Column	impl: stringGenerator(column: Column): string	
+textGenerator	schema_builder/queries/mysql/impl.html#textGenerator,Column	impl: textGenerator(column: Column): string	
+mediumTextGenerator	schema_builder/queries/mysql/impl.html#mediumTextGenerator,Column	impl: mediumTextGenerator(column: Column): string	
+longTextGenerator	schema_builder/queries/mysql/impl.html#longTextGenerator,Column	impl: longTextGenerator(column: Column): string	
+dateGenerator	schema_builder/queries/mysql/impl.html#dateGenerator,Column	impl: dateGenerator(column: Column): string	
+datetimeGenerator	schema_builder/queries/mysql/impl.html#datetimeGenerator,Column	impl: datetimeGenerator(column: Column): string	
+timeGenerator	schema_builder/queries/mysql/impl.html#timeGenerator,Column	impl: timeGenerator(column: Column): string	
+timestampGenerator	schema_builder/queries/mysql/impl.html#timestampGenerator,Column	impl: timestampGenerator(column: Column): string	
+timestampsGenerator	schema_builder/queries/mysql/impl.html#timestampsGenerator,Column	impl: timestampsGenerator(column: Column): string	
+softDeleteGenerator	schema_builder/queries/mysql/impl.html#softDeleteGenerator,Column	impl: softDeleteGenerator(column: Column): string	
+blobGenerator	schema_builder/queries/mysql/impl.html#blobGenerator,Column	impl: blobGenerator(column: Column): string	
+boolGenerator	schema_builder/queries/mysql/impl.html#boolGenerator,Column	impl: boolGenerator(column: Column): string	
+enumGenerator	schema_builder/queries/mysql/impl.html#enumGenerator,Column	impl: enumGenerator(column: Column): string	
+jsonGenerator	schema_builder/queries/mysql/impl.html#jsonGenerator,Column	impl: jsonGenerator(column: Column): string	
+foreignColumnGenerator	schema_builder/queries/mysql/impl.html#foreignColumnGenerator,Column	impl: foreignColumnGenerator(column: Column): string	
+strForeignColumnGenerator	schema_builder/queries/mysql/impl.html#strForeignColumnGenerator,Column	impl: strForeignColumnGenerator(column: Column): string	
+foreignGenerator	schema_builder/queries/mysql/impl.html#foreignGenerator,Column	impl: foreignGenerator(column: Column): string	
+alterAddForeignGenerator	schema_builder/queries/mysql/impl.html#alterAddForeignGenerator,Column,Table	impl: alterAddForeignGenerator(column: Column; table: Table): string	

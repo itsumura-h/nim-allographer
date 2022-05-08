@@ -1,0 +1,1 @@
+notAllowed	schema_builder/queries/generator_utils.html#notAllowed,string,string,string	generator_utils: notAllowed(option, typ, column: string)	

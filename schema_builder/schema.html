@@ -98,35 +98,16 @@ function main() {
   </ul>
 </li>
 <li>
-  <a class="reference reference-toplevel" href="#7" id="57">Types</a>
-  <ul class="simple simple-toc-section">
-      <li><a class="reference" href="#MigrationTable"
-    title="MigrationTable = ref object
-  obj*: Table
-  name*: string
-  shouldRun*: bool
-  query*: string
-  indexQuery*: seq[string]
-  queryHash*: string">MigrationTable</a></li>
-  <li><a class="reference" href="#MigrationTables"
-    title="MigrationTables = ref object
-  recordPath*: string
-  record*: JsonNode
-  tables*: seq[MigrationTable]">MigrationTables</a></li>
-
-  </ul>
-</li>
-<li>
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">new
-      <li><a class="reference" href="#new%2CtypeMigrationTables"
-    title="new(typ: type MigrationTables): MigrationTables">new,<wbr>typeMigrationTables</a></li>
+      <ul class="simple nested-toc-section">create
+      <li><a class="reference" href="#create%2CRdb%2Cvarargs%5BTable%5D"
+    title="create(rdb: Rdb; tables: varargs[Table])">create,<wbr>Rdb,<wbr>varargs[Table]</a></li>
 
   </ul>
-  <ul class="simple nested-toc-section">schema
-      <li><a class="reference" href="#schema%2CRdb%2Cvarargs%5BTable%5D"
-    title="schema(rdb: Rdb; tables: varargs[Table])">schema,<wbr>Rdb,<wbr>varargs[Table]</a></li>
+  <ul class="simple nested-toc-section">alter
+      <li><a class="reference" href="#alter%2CRdb%2Cvarargs%5BTable%5D"
+    title="alter(rdb: Rdb; tables: varargs[Table])">alter,<wbr>Rdb,<wbr>varargs[Table]</a></li>
 
   </ul>
 
@@ -143,54 +124,22 @@ function main() {
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="migrates/sqlite_migrate.html">migrates/sqlite_migrate</a>, <a class="reference external" href="migrates/mysql_migrate.html">migrates/mysql_migrate</a>, <a class="reference external" href="migrates/postgres_migrate.html">migrates/postgres_migrate</a>, <a class="reference external" href="../utils.html">../utils</a>, <a class="reference external" href="../base.html">../base</a>, <a class="reference external" href="../async/async_db.html">../async/async_db</a>, <a class="reference external" href="table.html">table</a>
-</dl></div>
-<div class="section" id="7">
-<h1><a class="toc-backref" href="#7">Types</a></h1>
-<dl class="item">
-<a id="MigrationTable"></a>
-<dt><pre><a href="schema.html#MigrationTable"><span class="Identifier">MigrationTable</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
-  <span class="Identifier">obj</span><span class="Operator">*</span><span class="Other">:</span> <a href="table.html#Table"><span class="Identifier">Table</span></a>
-  <span class="Identifier">name</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
-  <span class="Identifier">shouldRun</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
-  <span class="Identifier">query</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
-  <span class="Identifier">indexQuery</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span>
-  <span class="Identifier">queryHash</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
-</pre></dt>
-<dd>
-
-
-
-</dd>
-<a id="MigrationTables"></a>
-<dt><pre><a href="schema.html#MigrationTables"><span class="Identifier">MigrationTables</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
-  <span class="Identifier">recordPath</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
-  <span class="Identifier">record</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">JsonNode</span>
-  <span class="Identifier">tables</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="schema.html#MigrationTable"><span class="Identifier">MigrationTable</span></a><span class="Other">]</span>
-</pre></dt>
-<dd>
-
-
-
-</dd>
-
+<a class="reference external" href="../base.html">../base</a>, <a class="reference external" href="../query_builder.html">../query_builder</a>, <a class="reference external" href="grammers.html">grammers</a>, <a class="reference external" href="queries/query_interface.html">queries/query_interface</a>, <a class="reference external" href="queries/sqlite/sqlite_query.html">queries/sqlite/sqlite_query</a>, <a class="reference external" href="queries/mysql/mysql_query.html">queries/mysql/mysql_query</a>, <a class="reference external" href="queries/postgre/postgre_query.html">queries/postgre/postgre_query</a>
 </dl></div>
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
-<a id="new,typeMigrationTables"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#new%2CtypeMigrationTables"><span class="Identifier">new</span></a><span class="Other">(</span><span class="Identifier">typ</span><span class="Other">:</span> <span class="Keyword">type</span> <span class="Identifier">MigrationTables</span><span class="Other">)</span><span class="Other">:</span> <a href="schema.html#MigrationTables"><span class="Identifier">MigrationTables</span></a></pre></dt>
+<a id="create,Rdb,varargs[Table]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#create%2CRdb%2Cvarargs%5BTable%5D"><span class="Identifier">create</span></a><span class="Other">(</span><span class="Identifier">rdb</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">tables</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><a href="grammers.html#Table"><span class="Identifier">Table</span></a><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
 
 </dd>
-<a id="schema,Rdb,varargs[Table]"></a>
-<dt><pre><span class="Keyword">proc</span> <a href="#schema%2CRdb%2Cvarargs%5BTable%5D"><span class="Identifier">schema</span></a><span class="Other">(</span><span class="Identifier">rdb</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">tables</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><a href="table.html#Table"><span class="Identifier">Table</span></a><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span>
-    <span class="Identifier">JsonParsingError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">DbError</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span>
-    <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">,</span>
-    <span class="Identifier">IOError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
+<a id="alter,Rdb,varargs[Table]"></a>
+<dt><pre><span class="Keyword">proc</span> <a href="#alter%2CRdb%2Cvarargs%5BTable%5D"><span class="Identifier">alter</span></a><span class="Other">(</span><span class="Identifier">rdb</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">tables</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><a href="grammers.html#Table"><span class="Identifier">Table</span></a><span class="Other">]</span><span class="Other">)</span> <span><span class="Other">{</span><span class="Other pragmadots">...</span><span class="Other">}</span></span><span class="pragmawrap"><span class="Other">{.</span><span class="pragma"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span></span><span class="Other">.}</span></span></pre></dt>
 <dd>
 
 
@@ -206,7 +155,7 @@ function main() {
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-02-23 04:17:22 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-05-08 10:52:09 UTC</small>
       </div>
     </div>
   </div>

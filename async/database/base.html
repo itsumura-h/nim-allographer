@@ -102,9 +102,6 @@ function main() {
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#DbError"
     title="DbError = object of IOError">DbError</a></li>
-  <li><a class="reference" href="#Driver"
-    title="Driver = enum
-  MySQL, MariaDB, PostgreSQL, SQLite3">Driver</a></li>
   <li><a class="reference" href="#Pool"
     title="Pool = ref object
   mysqlConn*: mysql.PMySQL
@@ -115,7 +112,6 @@ function main() {
   createdAt*: int64">Pool</a></li>
   <li><a class="reference" href="#Connections"
     title="Connections = ref object
-  driver*: Driver
   pools*: seq[Pool]
   timeout*: int">Connections</a></li>
   <li><a class="reference" href="#Prepared"
@@ -258,14 +254,6 @@ function main() {
 exception that is raised if a database error occurs
 
 </dd>
-<a id="Driver"></a>
-<dt><pre><a href="base.html#Driver"><span class="Identifier">Driver</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">MySQL</span><span class="Other">,</span> <span class="Identifier">MariaDB</span><span class="Other">,</span> <span class="Identifier">PostgreSQL</span><span class="Other">,</span> <span class="Identifier">SQLite3</span></pre></dt>
-<dd>
-
-
-
-</dd>
 <a id="Pool"></a>
 <dt><pre><a href="base.html#Pool"><span class="Identifier">Pool</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
   <span class="Identifier">mysqlConn</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">mysql</span><span class="Other">.</span><span class="Identifier">PMySQL</span>
@@ -282,7 +270,6 @@ exception that is raised if a database error occurs
 </dd>
 <a id="Connections"></a>
 <dt><pre><a href="base.html#Connections"><span class="Identifier">Connections</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
-  <span class="Identifier">driver</span><span class="Operator">*</span><span class="Other">:</span> <a href="base.html#Driver"><span class="Identifier">Driver</span></a>
   <span class="Identifier">pools</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="base.html#Pool"><span class="Identifier">Pool</span></a><span class="Other">]</span>
   <span class="Identifier">timeout</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
 </pre></dt>
@@ -480,7 +467,7 @@ raises an DbError exception with message <tt class="docutils literal"><span clas
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-02-23 04:17:21 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-05-08 10:52:09 UTC</small>
       </div>
     </div>
   </div>
