@@ -55,6 +55,7 @@ import allographer/query_builder
 echo rdb.table("test")
     .select("id", "float", "char", "datetime", "null", "is_admin")
     .get()
+    .await
 ```
 
 ```nim
@@ -84,9 +85,10 @@ type Typ = ref object
   null: string
   is_admin: bool
 
-var rows = await rdb.table("test")
-            .select("id", "float", "char", "datetime", "null", "is_admin")
-            .get(Typ)
+var rows = rdb.table("test")
+          .select("id", "float", "char", "datetime", "null", "is_admin")
+          .get(Typ)
+          .await
 ```
 
 ```nim
@@ -129,7 +131,7 @@ assert response.isSome == false
 ### get
 Retrieving all row from a table
 ```nim
-let users = await rdb.table("users").get()
+let users = rdb.table("users").get().await
 for user in users:
   echo user["name"]
 ```
@@ -137,10 +139,11 @@ for user in users:
 ### first
 Retrieving a single row from a table. This returns `Option[JsonNode]`
 ```nim
-let user = await rdb
+let user = rdb
           .table("users")
           .where("name", "=", "John")
           .first()
+          .await
 if user.isSome:
   echo user.get["name"]
 ```
@@ -148,117 +151,128 @@ if user.isSome:
 ### find
 Retrieve a single row by its primary key. This returns `Option[JsonNode]`
 ```nim
-let user = await rdb.table("users").find(1)
+let user = rdb.table("users").find(1).await
 if user.isSome:
   echo user.get["name"]
 ```
 
 If the column name of a promary key is not "id", specify this in 2nd arg of `find`
 ```nim
-let user = await rdb.table("users").find(1, "user_id")
+let user = rdb.table("users").find(1, "user_id").await
 if user.isSome:
   echo user.get["name"]
 ```
 
 ### join
 ```nim
-let users = await rdb
-            .table("users")
-            .select("users.id", "contacts.phone", "orders.price")
-            .join("contacts", "users.id", "=", "contacts.user_id")
-            .join("orders", "users.id", "=", "orders.user_id")
-            .get()
+let users = rdb
+          .table("users")
+          .select("users.id", "contacts.phone", "orders.price")
+          .join("contacts", "users.id", "=", "contacts.user_id")
+          .join("orders", "users.id", "=", "orders.user_id")
+          .get()
+          .await
 ```
 
 ### where
 ```nim
-let users = await rdb.table("users").where("age", ">", 25).get()
+let users = rdb.table("users").where("age", ">", 25).get().await
 ```
 
 ### orWhere
 ```nim
-let users = await rdb
-            .table("users")
-            .where("age", ">", 25)
-            .orWhere("name", "=", "John")
-            .get()
+let users = rdb
+          .table("users")
+          .where("age", ">", 25)
+          .orWhere("name", "=", "John")
+          .get()
+          .await
 ```
 
 ### whereBetween
 ```nim
-let users = await rdb
-            .table("users")
-            .whereBetween("age", [25, 35])
-            .get()
+let users = rdb
+          .table("users")
+          .whereBetween("age", [25, 35])
+          .get()
+          .await
 ```
 
 ### whereNotBetween
 ```nim
-let users = await rdb
-            .table("users")
-            .whereNotBetween("age", [25, 35])
-            .get()
+let users = rdb
+          .table("users")
+          .whereNotBetween("age", [25, 35])
+          .get()
+          .await
 ```
 
 ### whereIn
 ```nim
-let users = await rdb
-            .table("users")
-            .whereIn("id", @[1, 2, 3])
-            .get()
+let users = rdb
+          .table("users")
+          .whereIn("id", @[1, 2, 3])
+          .get()
+          .await
 ```
 
 ### whereNotIn
 ```nim
-let users = await rdb
+let users = rdb
             .table("users")
             .whereNotIn("id", @[1, 2, 3])
             .get()
+            .await
 ```
 
 ### whereNull
 ```nim
-let users = await rdb
+let users = rdb
             .table("users")
             .whereNull("updated_at")
             .get()
+            .await
 ```
 
 ### groupBy_having
 ```nim
-let users = await rdb
+let users = rdb
             .table("users")
             .group_by("count")
             .having("count", ">", 100)
             .get()
+            .await
 ```
 
 ### orderBy
 ```nim
-let users = await rdb
+let users = rdb
             .table("users")
             .orderBy("name", Desc)
             .get()
+            .await
 ```
 2nd arg of `orderBy` is Enum. `Desc` or `Asc`
 
 
 ### limit_offset
 ```nim
-let users = await rdb
+let users = rdb
             .table("users")
             .offset(10)
             .limit(5)
             .get()
+            .await
 ```
 
 ### paginate
 ```nim
 rdb.table("users").delete(2)
-let users = await rdb
+let users = rdb
             .table("users")
             .select("id", "name")
             .paginate(3, 1)
+            .await
 ```
 arg1... Numer of items per page  
 arg2... Numer of page(option)(1 is set by default)
@@ -320,7 +334,7 @@ proc fastPaginateBack(this:Rdb, display:int, id:int, key="id", order:Order=Asc):
 - order...Asc or Desc (option). default is `Asc`.
 
 ```nim
-var users = await rdb.table("users").select("id", "name").fastPaginate(3)
+var users = rdb.table("users").select("id", "name").fastPaginate(3).await
 
 >> {
   "previousId":0,
@@ -335,9 +349,10 @@ var users = await rdb.table("users").select("id", "name").fastPaginate(3)
 }
 ```
 ```nim
-users = await rdb.table("users")
+users = rdb.table("users")
         .select("id", "name")
         .fastPaginateNext(3, users["nextId"].getInt)
+        .await
 
 >> {
   "previousId":4,
@@ -352,9 +367,10 @@ users = await rdb.table("users")
 }
 ```
 ```nim
-users = await rdb.table("users")
+users = rdb.table("users")
         .select("id", "name")
         .fastPaginateBack(3, users["previousId"].getInt)
+        .await
 
 >> {
   "previousId":0,
@@ -374,6 +390,7 @@ order Desc
 echo rdb.table("users")
       .select("id", "name")
       .fastPaginateNext(3, 5, order=Desc)
+      .await
 
 >> {
   "previousId":6,
@@ -395,6 +412,7 @@ echo rdb.table("users")
       .join("auth", "auth.id", "=", "users.auth_id")
       .where("auth.id", "=", 2)
       .fastPaginate(3, key="users.id")
+      .await
 
 >> {
   "previousId":0,
@@ -416,12 +434,11 @@ echo rdb.table("users")
 ```nim
 import allographer/query_builder
 
-rdb
-.table("users")
-.insert(%*{
+rdb.table("users").insert(%*{
   "name": "John",
   "email": "John@gmail.com"
 })
+.await
 
 >> INSERT INTO users (name, email) VALUES ("John", "John@gmail.com")
 ```
@@ -435,6 +452,7 @@ rdb.table("users").insert(
     %*{"name": "George", "email": "George@gmail.com", "address": "London"},
   ]
 )
+.await
 
 >> INSERT INTO users (name, email, address) VALUES ("John", "John@gmail.com", "London"), ("Paul", "Paul@gmail.com", "London"), ("George", "George@gmail.com", "London")
 ```
@@ -448,6 +466,7 @@ rdb.table("users").inserts(
     %*{"name": "George", "birth_date": "1943-02-25", "address": "London"},
   ]
 )
+.await
 
 >> INSERT INTO users (name, email, address) VALUES ("John", "John@gmail.com", "London")
 >> INSERT INTO users (name, email, address) VALUES ("Paul", "Paul@gmail.com", "London")
@@ -458,12 +477,11 @@ rdb.table("users").inserts(
 ```nim
 import allographer/query_builder
 
-echo rdb
-.table("users")
-.insertId(%*{
+echo rdb.table("users").insertId(%*{
   "name": "John",
   "email": "John@gmail.com"
 })
+.await
 
 >> INSERT INTO users (name, email) VALUES ("John", "John@gmail.com")
 >> 1 # ID of new row is return
@@ -478,6 +496,7 @@ echo rdb.table("users").insertId(
     %*{"name": "George", "email": "George@gmail.com", "address": "London"},
   ]
 )
+.await
 
 >> INSERT INTO users (name, email, address) VALUES ("John", "John@gmail.com", "London"), ("Paul", "Paul@gmail.com", "London"), ("George", "George@gmail.com", "London")
 >> @[1, 2] # Seq of ID of new row is return
@@ -492,6 +511,7 @@ echo rdb.table("users").insertsID(
     %*{"name": "George", "birth_date": "1943-02-25", "address": "London"},
   ]
 )
+.await
 
 >> INSERT INTO users (name, email, address) VALUES ("John", "John@gmail.com", "London")
 >> INSERT INTO users (name, email, address) VALUES ("Paul", "Paul@gmail.com", "London")
@@ -510,6 +530,7 @@ rdb
 .table("users")
 .where("id", "=", 100)
 .update(%*{"name": "Mick", "address": "NY"})
+.await
 
 >> UPDATE users SET name = "Mick", address = "NY" WHERE id = 100
 ```
@@ -523,6 +544,7 @@ import allographer/query_builder
 rdb
 .table("users")
 .delete(1)
+.await
 
 >> DELETE FROM users WHERE id = 1
 ```
@@ -535,6 +557,7 @@ import allographer/query_builder
 rdb
 .table("users")
 .delete(1, key="user_id")
+.await
 
 >> DELETE FROM users WHERE user_id = 1
 ```
@@ -546,6 +569,7 @@ rdb
 .table("users")
 .where("address", "=", "London")
 .delete()
+.await
 
 >> DELETE FROM users WHERE address = "London"
 ```
@@ -556,14 +580,14 @@ rdb
 `Plain` response doesn't have it's column name but it run faster than `JsonNode` response
 
 ```nim
-echo rdb.table("users").get()
+echo rdb.table("users").get().await
 >> @[
   %*{"id": 1, "name": "user1", "email": "user1@gmail.com"},
   %*{"id": 2, "name": "user2", "email": "user2@gmail.com"},
   %*{"id": 3, "name": "user3", "email": "user3@gmail.com"}
 ]
 
-echo rdb.table("users").getPlain()
+echo rdb.table("users").getPlain().await
 >> @[
   @["1", "user1", "user1@gmail.com"],
   @["2", "user2", "user2@gmail.com"],
@@ -572,18 +596,18 @@ echo rdb.table("users").getPlain()
 ```
 
 ```nim
-echo rdb.table("users").find(1)
+echo rdb.table("users").find(1).await
 >> %*{"id": 1, "name": "user1", "email": "user1@gmail.com"}
 
-echo rdb.table("users").findPlain(1)
+echo rdb.table("users").findPlain(1).await
 >> @["1", "user1", "user1@gmail.com"]
 ```
 
 ```nim
-echo rdb.table("users").first()
+echo rdb.table("users").first().await
 >> %*{"id": 1, "name": "user1", "email": "user1@gmail.com"}
 
-echo rdb.table("users").firstPlain()
+echo rdb.table("users").firstPlain().await
 >> @["1", "user1", "user1@gmail.com"]
 ```
 
@@ -600,11 +624,11 @@ SELECT ProductName
                 FROM OrderItem
                WHERE Quantity > 100)
 """
-echo rdb.raw(sql).getRaw()
+echo rdb.raw(sql).getRaw().await
 ```
 ```nim
 let sql = "UPDATE users SET name='John' where id = ?"
-rdb.raw(sql, "1").exec()
+rdb.raw(sql, "1").exec().await
 ```
 
 ## Aggregates
@@ -618,32 +642,32 @@ import allographer/query_builder
 echo rdb.table("users").count()
 >> 10       # int
 
-let response = await rdb.table("users").max("name")
+let response = await rdb.table("users").max("name").await
 if response.isSome:
   echo response.get
 >> "user9"  # string
 
-let response = await rdb.table("users").max("id")
+let response = await rdb.table("users").max("id").await
 if response.isSome:
   echo response.get
 >> "10"     # string
 
-let response = await rdb.table("users").min("name")
+let response = await rdb.table("users").min("name").await
 if response.isSome:
   echo response.get
 >> "user1"  # string
 
-let response = await rdb.table("users").min("id")
+let response = await rdb.table("users").min("id").await
 if response.isSome:
   echo response.get
 >> "1"      # string
 
-let response = await rdb.table("users").avg("id")
+let response = await rdb.table("users").avg("id").await
 if response.isSome:
   echo response.get
 >> 5.5      # float
 
-let response = await rdb.table("users").sum("id")
+let response = await rdb.table("users").sum("id").await
 if response.isSome:
   echo response.get
 >> 55.0     # float
@@ -654,11 +678,11 @@ if response.isSome:
 
 ```nim
 transaction:
-  var user = await rdb.table("users").select("id").where("name", "=", "user3").first()
+  var user = rdb.table("users").select("id").where("name", "=", "user3").first().await
   if user.isSome:
     var id = user.get["id"].getInt()
     echo id
-  user = await rdb.table("users").select("name", "email").find(id)
+  user = rdb.table("users").select("name", "email").find(id).await
   if user.isSome:
     echo user.get
 ```
