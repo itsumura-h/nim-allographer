@@ -1,8 +1,13 @@
-import asyncdispatch, strutils
-import database/base
-import ../base as a
-import database/impls/mysql, database/impls/mariadb, database/impls/postgres, database/impls/sqlite
-import ../baseEnv
+import
+  std/asyncdispatch,
+  std/strutils,
+  ../baseEnv,
+  ../base as a,
+  ./database/base,
+  ./database/impls/mysql,
+  ./database/impls/mariadb,
+  ./database/impls/postgres,
+  ./database/impls/sqlite
 
 export base
 

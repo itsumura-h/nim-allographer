@@ -1,7 +1,11 @@
-import asyncdispatch, times, strutils
-import ../base
-import ../rdb/sqlite
-import ../libs/lib_sqlite
+import
+  std/asyncdispatch,
+  std/times,
+  std/strutils,
+  ../base,
+  ../rdb/sqlite,
+  ../libs/lib_sqlite
+
 
 proc dbopen*(database: string = "", user: string = "", password: string = "", host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30): Connections =
   var pools = newSeq[Pool](maxConnections)
@@ -14,7 +18,6 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
       createdAt: getTime().toUnix(),
     )
   result = Connections(
-    # driver: SQLite3,
     pools: pools,
     timeout: timeout
   )
