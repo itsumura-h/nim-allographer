@@ -402,13 +402,13 @@ for rdb in dbConnections:
     asyncBlock:
       echo rdb.table("users").get().await
       rdb.table("users").delete(1).await
-      check  await(rdb.table("users").find(1)).isSome == false
+      check  rdb.table("users").find(1).await.isSome == false
 
   block deleteWithWhereTest:
     setup(rdb)
     asyncBlock:
       rdb.table("users").where("name", "=", "user2").delete().await
-      check await(rdb.table("users").find(2)).isSome == false
+      check rdb.table("users").find(2).await.isSome == false
 
   block rawQueryTest:
     setup(rdb)
