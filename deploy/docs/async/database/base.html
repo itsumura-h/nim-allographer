@@ -109,7 +109,6 @@ window.addEventListener('DOMContentLoaded', main);
   <ul class="simple simple-toc-section">
       <li><a class="reference" href="#Connections"
     title="Connections = ref object
-  driver*: Driver
   pools*: seq[Pool]
   timeout*: int">Connections</a></li>
   <li><a class="reference" href="#DbColumn"
@@ -181,9 +180,6 @@ window.addEventListener('DOMContentLoaded', main);
   dbUser3,                  ## user definable datatype 3 (for unknown extensions)
   dbUser4,                  ## user definable datatype 4 (for unknown extensions)
   dbUser5                    ## user definable datatype 5 (for unknown extensions)">DbTypeKind</a></li>
-  <li><a class="reference" href="#Driver"
-    title="Driver = enum
-  MySQL, MariaDB, PostgreSQL, SQLite3">Driver</a></li>
   <li><a class="reference" href="#Pool"
     title="Pool = ref object
   mysqlConn*: mysql.PMySQL
@@ -261,7 +257,6 @@ window.addEventListener('DOMContentLoaded', main);
 <dl class="item">
 <div id="Connections">
 <dt><pre><a href="base.html#Connections"><span class="Identifier">Connections</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
-  <span class="Identifier">driver</span><span class="Operator">*</span><span class="Other">:</span> <a href="base.html#Driver"><span class="Identifier">Driver</span></a>
   <span class="Identifier">pools</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><a href="base.html#Pool"><span class="Identifier">Pool</span></a><span class="Other">]</span>
   <span class="Identifier">timeout</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
 </pre></dt>
@@ -384,15 +379,6 @@ a superset of datatypes that might be supported.
 
 </dd>
 </div>
-<div id="Driver">
-<dt><pre><a href="base.html#Driver"><span class="Identifier">Driver</span></a> <span class="Other">=</span> <span class="Keyword">enum</span>
-  <span class="Identifier">MySQL</span><span class="Other">,</span> <span class="Identifier">MariaDB</span><span class="Other">,</span> <span class="Identifier">PostgreSQL</span><span class="Other">,</span> <span class="Identifier">SQLite3</span></pre></dt>
-<dd>
-
-
-
-</dd>
-</div>
 <div id="Pool">
 <dt><pre><a href="base.html#Pool"><span class="Identifier">Pool</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
   <span class="Identifier">mysqlConn</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">mysql</span><span class="Other">.</span><span class="Identifier">PMySQL</span>
@@ -507,7 +493,7 @@ raises an DbError exception with message <tt class="docutils literal"><span clas
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-02-09 18:53:45 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-05-08 09:11:33 UTC</small>
       </div>
     </div>
   </div>

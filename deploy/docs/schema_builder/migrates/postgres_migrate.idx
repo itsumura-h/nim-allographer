@@ -1,6 +1,0 @@
-generateColumnString	schema_builder/migrates/postgres_migrate.html#generateColumnString,Column,string	postgres_migrate: generateColumnString(column: Column; tableName = &quot;&quot;): string	
-migrate	schema_builder/migrates/postgres_migrate.html#migrate,Table	postgres_migrate: migrate(self: Table): string	
-migrateAlter	schema_builder/migrates/postgres_migrate.html#migrateAlter,string,Column	postgres_migrate: migrateAlter(table: string; column: Column): seq[string]	
-generateAlterDeleteQuery	schema_builder/migrates/postgres_migrate.html#generateAlterDeleteQuery,string,Column	postgres_migrate: generateAlterDeleteQuery(table: string; column: Column): string	
-generateAlterDeleteForeignQueries	schema_builder/migrates/postgres_migrate.html#generateAlterDeleteForeignQueries,string,Column	postgres_migrate: generateAlterDeleteForeignQueries(table: string; column: Column): seq[string]	
-createIndex	schema_builder/migrates/postgres_migrate.html#createIndex,string,string	postgres_migrate: createIndex(table, column: string): string	

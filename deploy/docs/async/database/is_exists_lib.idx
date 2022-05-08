@@ -1,5 +1,0 @@
-getOsName	async/database/is_exists_lib.html#getOsName	is_exists_lib: getOsName(): string	
-isExistsSqlite	async/database/is_exists_lib.html#isExistsSqlite	is_exists_lib: isExistsSqlite(): bool	
-isExistsMysql	async/database/is_exists_lib.html#isExistsMysql	is_exists_lib: isExistsMysql(): bool	
-isExistsMariadb	async/database/is_exists_lib.html#isExistsMariadb	is_exists_lib: isExistsMariadb(): bool	
-isExistsPostgre	async/database/is_exists_lib.html#isExistsPostgre	is_exists_lib: isExistsPostgre(): bool	

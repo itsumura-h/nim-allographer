@@ -1,0 +1,91 @@
+Table	schema_builder/grammers.html#Table	grammers: Table	
+Column	schema_builder/grammers.html#Column	grammers: Column	
+rdbIncrements	schema_builder/grammers.html#rdbIncrements	RdbTypekind.rdbIncrements	
+rdbInteger	schema_builder/grammers.html#rdbInteger	RdbTypekind.rdbInteger	
+rdbSmallInteger	schema_builder/grammers.html#rdbSmallInteger	RdbTypekind.rdbSmallInteger	
+rdbMediumInteger	schema_builder/grammers.html#rdbMediumInteger	RdbTypekind.rdbMediumInteger	
+rdbBigInteger	schema_builder/grammers.html#rdbBigInteger	RdbTypekind.rdbBigInteger	
+rdbDecimal	schema_builder/grammers.html#rdbDecimal	RdbTypekind.rdbDecimal	
+rdbDouble	schema_builder/grammers.html#rdbDouble	RdbTypekind.rdbDouble	
+rdbFloat	schema_builder/grammers.html#rdbFloat	RdbTypekind.rdbFloat	
+rdbUuid	schema_builder/grammers.html#rdbUuid	RdbTypekind.rdbUuid	
+rdbChar	schema_builder/grammers.html#rdbChar	RdbTypekind.rdbChar	
+rdbString	schema_builder/grammers.html#rdbString	RdbTypekind.rdbString	
+rdbText	schema_builder/grammers.html#rdbText	RdbTypekind.rdbText	
+rdbMediumText	schema_builder/grammers.html#rdbMediumText	RdbTypekind.rdbMediumText	
+rdbLongText	schema_builder/grammers.html#rdbLongText	RdbTypekind.rdbLongText	
+rdbDate	schema_builder/grammers.html#rdbDate	RdbTypekind.rdbDate	
+rdbDatetime	schema_builder/grammers.html#rdbDatetime	RdbTypekind.rdbDatetime	
+rdbTime	schema_builder/grammers.html#rdbTime	RdbTypekind.rdbTime	
+rdbTimestamp	schema_builder/grammers.html#rdbTimestamp	RdbTypekind.rdbTimestamp	
+rdbTimestamps	schema_builder/grammers.html#rdbTimestamps	RdbTypekind.rdbTimestamps	
+rdbSoftDelete	schema_builder/grammers.html#rdbSoftDelete	RdbTypekind.rdbSoftDelete	
+rdbBinary	schema_builder/grammers.html#rdbBinary	RdbTypekind.rdbBinary	
+rdbBoolean	schema_builder/grammers.html#rdbBoolean	RdbTypekind.rdbBoolean	
+rdbEnumField	schema_builder/grammers.html#rdbEnumField	RdbTypekind.rdbEnumField	
+rdbJson	schema_builder/grammers.html#rdbJson	RdbTypekind.rdbJson	
+rdbForeign	schema_builder/grammers.html#rdbForeign	RdbTypekind.rdbForeign	
+rdbStrForeign	schema_builder/grammers.html#rdbStrForeign	RdbTypekind.rdbStrForeign	
+RdbTypekind	schema_builder/grammers.html#RdbTypekind	grammers: RdbTypekind	
+RESTRICT	schema_builder/grammers.html#RESTRICT	ForeignOnDelete.RESTRICT	
+CASCADE	schema_builder/grammers.html#CASCADE	ForeignOnDelete.CASCADE	
+SET_NULL	schema_builder/grammers.html#SET_NULL	ForeignOnDelete.SET_NULL	
+NO_ACTION	schema_builder/grammers.html#NO_ACTION	ForeignOnDelete.NO_ACTION	
+ForeignOnDelete	schema_builder/grammers.html#ForeignOnDelete	grammers: ForeignOnDelete	
+CreateTable	schema_builder/grammers.html#CreateTable	TableMigrationType.CreateTable	
+ChangeTable	schema_builder/grammers.html#ChangeTable	TableMigrationType.ChangeTable	
+RenameTable	schema_builder/grammers.html#RenameTable	TableMigrationType.RenameTable	
+DropTable	schema_builder/grammers.html#DropTable	TableMigrationType.DropTable	
+TableMigrationType	schema_builder/grammers.html#TableMigrationType	grammers: TableMigrationType	
+AddColumn	schema_builder/grammers.html#AddColumn	ColumnMigrationType.AddColumn	
+ChangeColumn	schema_builder/grammers.html#ChangeColumn	ColumnMigrationType.ChangeColumn	
+RenameColumn	schema_builder/grammers.html#RenameColumn	ColumnMigrationType.RenameColumn	
+DeleteColumn	schema_builder/grammers.html#DeleteColumn	ColumnMigrationType.DeleteColumn	
+ColumnMigrationType	schema_builder/grammers.html#ColumnMigrationType	grammers: ColumnMigrationType	
+table	schema_builder/grammers.html#table,string,varargs[Column]	grammers: table(name: string; columns: varargs[Column]): Table	
+rename	schema_builder/grammers.html#rename,string,string	grammers: rename(src, dest: string): Table	
+drop	schema_builder/grammers.html#drop,string	grammers: drop(name: string): Table	
+new	schema_builder/grammers.html#new,typeTable,JsonNode	grammers: new(_: type Table; jsonTable: JsonNode): Table	
+increments	schema_builder/grammers.html#increments,typeColumn,string	grammers: increments(_: type Column; name: string): Column	
+integer	schema_builder/grammers.html#integer,typeColumn,string	grammers: integer(_: type Column; name: string): Column	
+smallInteger	schema_builder/grammers.html#smallInteger,typeColumn,string	grammers: smallInteger(_: type Column; name: string): Column	
+mediumInteger	schema_builder/grammers.html#mediumInteger,typeColumn,string	grammers: mediumInteger(_: type Column; name: string): Column	
+bigInteger	schema_builder/grammers.html#bigInteger,typeColumn,string	grammers: bigInteger(_: type Column; name: string): Column	
+decimal	schema_builder/grammers.html#decimal,typeColumn,string,int,int	grammers: decimal(_: type Column; name: string; maximum: int; digit: int): Column	
+double	schema_builder/grammers.html#double,typeColumn,string,int,int	grammers: double(_: type Column; name: string; maximum: int; digit: int): Column	
+float	schema_builder/grammers.html#float,typeColumn,string	grammers: float(_: type Column; name: string): Column	
+char	schema_builder/grammers.html#char,typeColumn,string,int	grammers: char(_: type Column; name: string; maxLength: int): Column	
+string	schema_builder/grammers.html#string,typeColumn,string,int	grammers: string(_: type Column; name: string; length = 255): Column	
+uuid	schema_builder/grammers.html#uuid,typeColumn,string	grammers: uuid(_: type Column; name: string): Column	
+text	schema_builder/grammers.html#text,typeColumn,string	grammers: text(_: type Column; name: string): Column	
+mediumText	schema_builder/grammers.html#mediumText,typeColumn,string	grammers: mediumText(_: type Column; name: string): Column	
+longText	schema_builder/grammers.html#longText,typeColumn,string	grammers: longText(_: type Column; name: string): Column	
+date	schema_builder/grammers.html#date,typeColumn,string	grammers: date(_: type Column; name: string): Column	
+datetime	schema_builder/grammers.html#datetime,typeColumn,string	grammers: datetime(_: type Column; name: string): Column	
+time	schema_builder/grammers.html#time,typeColumn,string	grammers: time(_: type Column; name: string): Column	
+timestamp	schema_builder/grammers.html#timestamp,typeColumn,string	grammers: timestamp(_: type Column; name: string): Column	
+timestamps	schema_builder/grammers.html#timestamps,typeColumn	grammers: timestamps(_: type Column): Column	
+softDelete	schema_builder/grammers.html#softDelete,typeColumn	grammers: softDelete(_: type Column): Column	
+binary	schema_builder/grammers.html#binary,typeColumn,string	grammers: binary(_: type Column; name: string): Column	
+boolean	schema_builder/grammers.html#boolean,typeColumn,string	grammers: boolean(_: type Column; name: string): Column	
+enumField	schema_builder/grammers.html#enumField,typeColumn,string,openArray[string]	grammers: enumField(_: type Column; name: string; options: openArray[string]): Column	
+json	schema_builder/grammers.html#json,typeColumn,string	grammers: json(_: type Column; name: string): Column	
+foreign	schema_builder/grammers.html#foreign,typeColumn,string	grammers: foreign(_: type Column; name: string): Column	
+strForeign	schema_builder/grammers.html#strForeign,typeColumn,string,int	grammers: strForeign(_: type Column; name: string; length = 255): Column	
+reference	schema_builder/grammers.html#reference,Column,string	grammers: reference(self: Column; column: string): Column	
+on	schema_builder/grammers.html#on,Column,string	grammers: on(self: Column; table: string): Column	
+onDelete	schema_builder/grammers.html#onDelete,Column,ForeignOnDelete	grammers: onDelete(self: Column; kind: ForeignOnDelete): Column	
+default	schema_builder/grammers.html#default,Column,bool	grammers: default(c: Column; value: bool): Column	
+default	schema_builder/grammers.html#default,Column,int	grammers: default(c: Column; value: int): Column	
+default	schema_builder/grammers.html#default,Column,float	grammers: default(c: Column; value: float): Column	
+default	schema_builder/grammers.html#default,Column,string	grammers: default(c: Column; value: string): Column	
+default	schema_builder/grammers.html#default,Column,JsonNode	grammers: default(c: Column; value: JsonNode): Column	
+default	schema_builder/grammers.html#default,Column	grammers: default(c: Column): Column	
+index	schema_builder/grammers.html#index,Column	grammers: index(c: Column): Column	
+nullable	schema_builder/grammers.html#nullable,Column	grammers: nullable(c: Column): Column	
+unique	schema_builder/grammers.html#unique,Column	grammers: unique(c: Column): Column	
+unsigned	schema_builder/grammers.html#unsigned,Column	grammers: unsigned(c: Column): Column	
+add	schema_builder/grammers.html#add,Column	grammers: add(c: Column): Column	
+change	schema_builder/grammers.html#change,Column	grammers: change(c: Column): Column	
+renameColumn	schema_builder/grammers.html#renameColumn,typeColumn,string,string	grammers: renameColumn(_: type Column; src, dest: string): Column	
+deleteColumn	schema_builder/grammers.html#deleteColumn,typeColumn,string	grammers: deleteColumn(_: type Column; name: string): Column	

@@ -1,9 +1,4 @@
 DbError	async/database/base.html#DbError	base: DbError	
-MySQL	async/database/base.html#MySQL	Driver.MySQL	
-MariaDB	async/database/base.html#MariaDB	Driver.MariaDB	
-PostgreSQL	async/database/base.html#PostgreSQL	Driver.PostgreSQL	
-SQLite3	async/database/base.html#SQLite3	Driver.SQLite3	
-Driver	async/database/base.html#Driver	base: Driver	
 Pool	async/database/base.html#Pool	base: Pool	
 Connections	async/database/base.html#Connections	base: Connections	
 Prepared	async/database/base.html#Prepared	base: Prepared	
