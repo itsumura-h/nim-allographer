@@ -24,8 +24,8 @@ proc open*(driver:Driver, database:string="", user:string="", password:string=""
       result = sqlite.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
 
 proc query*(self: Connections, driver:Driver, query: string, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
-  await sleepAsync(0)
-  let connI = await getFreeConn(self)
+  sleepAsync(0).await
+  let connI = getFreeConn(self).await
   defer: self.returnConn(connI)
   if connI == errorConnectionNum:
     return
@@ -45,11 +45,11 @@ proc query*(self: Connections, driver:Driver, query: string, args: seq[string] =
       return await sqlite.query(self.pools[connI].sqliteConn, query, args, self.timeout)
 
 proc queryPlain*(self: Connections, driver:Driver, query: string, args: seq[string] = @[]):Future[seq[Row]] {.async.} =
-  let connI = await getFreeConn(self)
+  let connI = getFreeConn(self).await
   defer: self.returnConn(connI)
   if connI == errorConnectionNum:
     return
-  await sleepAsync(0)
+  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -69,11 +69,11 @@ proc queryPlain*(self: Connections, driver:Driver, query: string, args: seq[stri
 
 
 proc exec*(self: Connections, driver:Driver, query: string, args: seq[string] = @[]) {.async.} =
-  let connI = await getFreeConn(self)
+  let connI = getFreeConn(self).await
   defer: self.returnConn(connI)
   if connI == errorConnectionNum:
     return
-  await sleepAsync(0)
+  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -90,8 +90,8 @@ proc exec*(self: Connections, driver:Driver, query: string, args: seq[string] = 
   self.returnConn(connI)
 
 proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string] = @[]):Future[seq[string]] {.async.} =
-  await sleepAsync(0)
-  let connI = await getFreeConn(self)
+  sleepAsync(0).await
+  let connI = getFreeConn(self).await
   defer: self.returnConn(connI)
   if connI == errorConnectionNum:
     return
@@ -99,24 +99,24 @@ proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string
   of MySQL:
     when isExistsMysql:
       discard
-      # return await mysql.query(self.pools[connI].mysqlConn, query, args, self.timeout)
+      # return await mysql.getColumns(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb:
       discard
-      # return await mariadb.query(self.pools[connI].mariadbConn, query, args, self.timeout)
+      # return await mariadb.getColumns(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
     when isExistsPostgre:
       discard
-      # return await postgres.query(self.pools[connI].postgresConn, query, args, self.timeout)
+      # return await postgres.getColumns(self.pools[connI].postgresConn, query, args, self.timeout)
   of SQLite3:
     when isExistsSqlite:
       return await sqlite.getColumns(self.pools[connI].sqliteConn, query, args, self.timeout)
 
 proc prepare*(self: Connections, driver:Driver, query: string, stmtName=""):Future[Prepared] {.async.} =
-  let connI = await getFreeConn(self)
+  let connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
-  await sleepAsync(0)
+  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -141,7 +141,7 @@ proc prepare*(self: Connections, driver:Driver, query: string, stmtName=""):Futu
       result = Prepared(conn:self, sqliteStmt:sqliteStmt, connI:connI)
 
 proc query*(self:Prepared, driver:Driver, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
-  await sleepAsync(0)
+  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -157,7 +157,7 @@ proc query*(self:Prepared, driver:Driver, args: seq[string] = @[]):Future[(seq[R
       return await sqlite.preparedQuery(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)
 
 proc exec*(self:Prepared, driver:Driver, args:seq[string] = @[]) {.async.} =
-  await sleepAsync(0)
+  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:

@@ -6,22 +6,11 @@ import unittest, json, times, os, strutils, asyncdispatch, distros, oids
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
 import ../src/allographer/connection
-
-let maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
-
-var connections = @[
-  dbopen(SQLite3, ":memory:", maxConnections=95, timeout=30, shouldDisplayLog=true),
-  dbopen(PostgreSQL, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("DB_PASSWORD"), getEnv("PG_HOST"), getEnv("PG_PORT").parseInt, maxConnections, 30, shouldDisplayLog=true),
-  dbopen(MariaDB, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("DB_PASSWORD"), getEnv("MARIA_HOST"), getEnv("MY_PORT").parseInt, maxConnections, 30, shouldDisplayLog=true),
-]
-if detectOs(Ubuntu):
-  connections.add(
-    dbopen(MySQL, getEnv("DB_DATABASE"), getEnv("DB_USER"), getEnv("DB_PASSWORD"), getEnv("MY_HOST"), getEnv("MY_PORT").parseInt, maxConnections, 30, shouldDisplayLog=true)
-  )
+import connections
 
 
 block:
-  for rdb in connections:
+  for rdb in dbConnections:
     echo "==== " & rdb.driver.repr
     rdb.create(
       table("foreigh_table", [
@@ -92,7 +81,7 @@ block:
 block:
   waitFor (proc(){.async.}=
     try:
-      for rdb in connections:
+      for rdb in dbConnections:
         let uuid = $genOid()
         rdb.table("foreigh_table").insert(%*{
           "uuid": uuid,

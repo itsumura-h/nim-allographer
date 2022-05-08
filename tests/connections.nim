@@ -1,5 +1,8 @@
-import std/[os, strutils]
-import ../src/allographer/connection
+import
+  std/os,
+  std/strutils,
+  std/distros,
+  ../src/allographer/connection
 
 let
   database = getEnv("DB_DATABASE")
@@ -16,10 +19,12 @@ let
 
 let
   rdb* = dbopen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=true)
-  # rdb* = dbopen(SQLite3, ":memory:", maxConnections=maxConnections)
-  # rdb* = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout)
-  # rdb* = dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout)
-  # rdb* = dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout)
+
+let dbConnections* = @[
+  dbopen(SQLite3, ":memory:", maxConnections=95, timeout=30, shouldDisplayLog=false),
+  dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, 30, shouldDisplayLog=false),
+  dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, 30, shouldDisplayLog=false),
+]
 
 template asyncBlock*(body:untyped) =
   waitFor (proc(){.async.}=

@@ -8,7 +8,7 @@ import ../src/allographer/query_builder
 import connections
 
 
-proc setup() =
+proc setup(rdb:Rdb) =
   rdb.create(
     table("auth", [
       Column.increments("id"),
@@ -45,63 +45,65 @@ proc setup() =
       )
     rdb.table("users").insert(insertData).await
 
-block:
-  setup()
-  asyncBlock:
-    var x = rdb.table("users").where("name", "=", "user1").get().await
-    var y = rdb.table("users").where("name", "=", "user1' AND 'A' = 'A").get().await
-    echo x
-    echo y
-    check x != y
 
-block:
-  setup()
-  asyncBlock:
-    var x = rdb.table("users").where("name", "=", "user1").get().await
-    var y = rdb.table("users").where("name", "=", "user1' AND 'A' = 'B").get().await
-    echo x
-    echo y
-    check x != y
+for rdb in dbConnections:
+  block:
+    setup(rdb)
+    asyncBlock:
+      var x = rdb.table("users").where("name", "=", "user1").get().await
+      var y = rdb.table("users").where("name", "=", "user1' AND 'A' = 'A").get().await
+      echo x
+      echo y
+      check x != y
 
-block:
-  setup()
-  asyncBlock:
-    var x = rdb.table("users").where("name", "=", "user1").get().await
-    var y = rdb.table("users").where("name", "=", "user1' OR 'A' = 'B").get().await
-    echo x
-    echo y
-    check x != y
+  block:
+    setup(rdb)
+    asyncBlock:
+      var x = rdb.table("users").where("name", "=", "user1").get().await
+      var y = rdb.table("users").where("name", "=", "user1' AND 'A' = 'B").get().await
+      echo x
+      echo y
+      check x != y
 
-block:
-  setup()
-  asyncBlock:
-    var x = rdb.table("users").where("id", "=", 1).get().await
-    var y: seq[JsonNode]
-    try:
-      y = rdb.table("users").where("id", "=", "2-1").get().await
-    except Exception:
-      y = @[]
-    echo x
-    echo y
-    check x != y
+  block:
+    setup(rdb)
+    asyncBlock:
+      var x = rdb.table("users").where("name", "=", "user1").get().await
+      var y = rdb.table("users").where("name", "=", "user1' OR 'A' = 'B").get().await
+      echo x
+      echo y
+      check x != y
 
-block:
-  setup()
-  asyncBlock:
-    var x = rdb.table("users").select("name", "email")
-            .join("auth", "auth.id", "=", "users.auth_id")
-            .where("auth.id", "=", 1)
-            .get()
-            .await
-    var y: seq[JsonNode]
-    try:
-      y = rdb.table("users").select("name", "email")
+  block:
+    setup(rdb)
+    asyncBlock:
+      var x = rdb.table("users").where("id", "=", 1).get().await
+      var y: seq[JsonNode]
+      try:
+        y = rdb.table("users").where("id", "=", "2-1").get().await
+      except Exception:
+        y = @[]
+      echo x
+      echo y
+      check x != y
+
+  block:
+    setup(rdb)
+    asyncBlock:
+      var x = rdb.table("users").select("name", "email")
               .join("auth", "auth.id", "=", "users.auth_id")
-              .where("auth.id", "=", "2-1")
+              .where("auth.id", "=", 1)
               .get()
               .await
-    except Exception:
-      y = @[]
-    echo x
-    echo y
-    check x != y
+      var y: seq[JsonNode]
+      try:
+        y = rdb.table("users").select("name", "email")
+                .join("auth", "auth.id", "=", "users.auth_id")
+                .where("auth.id", "=", "2-1")
+                .get()
+                .await
+      except Exception:
+        y = @[]
+      echo x
+      echo y
+      check x != y
