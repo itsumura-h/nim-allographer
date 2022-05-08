@@ -14,8 +14,7 @@ let
   maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
   timeout = getEnv("DB_TIMEOUT").parseInt
 
-let
-  rdb* = dbopen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=true)
+let rdb* = dbopen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=true)
 
 let dbConnections* = @[
   dbopen(SQLite3, ":memory:", maxConnections=95, timeout=timeout, shouldDisplayLog=false),
