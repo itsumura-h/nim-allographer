@@ -415,9 +415,9 @@ proc enumGenerator*(column:Column, table:Table, isAlter=false):string =
 
 proc jsonGenerator*(column:Column, table:Table, isAlter=false):string =
   if isAlter:
-    result = &"\"{column.name}\" TYPE JSON"
+    result = &"\"{column.name}\" TYPE JSONB"
   else:
-    result = &"\"{column.name}\" JSON"
+    result = &"\"{column.name}\" JSONB"
 
   if column.isUnique or not column.isNullable or column.isDefault:
     result.add(&" CONSTRAINT {table.name}_{column.name}")
