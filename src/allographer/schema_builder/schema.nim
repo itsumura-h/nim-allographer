@@ -70,6 +70,18 @@ proc alter*(rdb:Rdb, tables:varargs[Table]) =
     of PostgreSQL:
       PostgreQuery.new(rdb).toInterface()
 
+  # migration table
+  let migrationTable = table("_migrations", [
+    Column.increments("id"),
+    Column.string("name"),
+    Column.text("query"),
+    Column.string("checksum").index(),
+    Column.datetime("created_at"),
+    Column.boolean("status")
+  ])
+  generator.createTableSql(migrationTable)
+  generator.runQuery(migrationTable.query)
+
   for i, table in tables:
     # カラム変更
     case table.migrationType
