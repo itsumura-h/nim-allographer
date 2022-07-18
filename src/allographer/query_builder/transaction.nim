@@ -1,4 +1,4 @@
-import macros, strutils, strformat
+import macros, strutils, strformat, asyncdispatch
 
 
 macro transaction*(rdb:untyped, bodyInput: untyped):untyped =
@@ -7,12 +7,12 @@ macro transaction*(rdb:untyped, bodyInput: untyped):untyped =
   bodyStr = bodyStr.indent(4)
   bodyStr = fmt"""
 block:
+  let connI = {rdb.repr}.begin().await
   try:
-    {rdb.repr}.raw("BEGIN").exec().await
 {bodyStr}
-    {rdb.repr}.raw("COMMIT").exec().await
+    {rdb.repr}.commit(connI).await
   except:
-    {rdb.repr}.raw("ROLLBACK").exec().await
+    {rdb.repr}.rollback(connI).await
 """
   let body = bodyStr.parseStmt()
   return body
