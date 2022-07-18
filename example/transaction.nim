@@ -1,52 +1,49 @@
-import json, asyncdispatch, strformat
+import json, strformat, macros
+import bcrypt
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
-import ./connections
-import ./setup
+
+# schema([
+#   table("auth",[
+#     Column().increments("id"),
+#     Column().string("auth")
+#   ], reset=true),
+#   table("users",[
+#     Column().increments("id"),
+#     Column().string("name").nullable(),
+#     Column().string("email").nullable(),
+#     Column().string("password").nullable(),
+#     Column().string("salt").nullable(),
+#     Column().string("address").nullable(),
+#     Column().date("birth_date").nullable(),
+#     Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+#   ], reset=true)
+# ])
+
+# # シーダー
+# rdb().table("auth").insert([
+#   %*{"auth": "admin"},
+#   %*{"auth": "user"}
+# ])
 
 
-proc main(){.async.} =
-  rdb.create(
-    table("auth",[
-      Column.increments("id"),
-      Column.string("auth")
-    ]),
-    table("users",[
-      Column.increments("id"),
-      Column.string("name").nullable(),
-      Column.string("email").nullable(),
-      Column.string("address").nullable(),
-      Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-    ])
-  )
+# var insertData: seq[JsonNode]
+# for i in 1..30:
+#   let salt = genSalt(10)
+#   let password = hash(&"password{i}", salt)
+#   let authId = if i mod 2 == 0: 1 else: 2
+#   insertData.add(
+#     %*{
+#       "name": &"user{i}",
+#       "email": &"user{i}@gmail.com",
+#       "password": password,
+#       "salt": salt,
+#       "auth_id": authId
+#     }
+#   )
 
-  # seeder
-  seeder rdb, "auth":
-    rdb.table("auth").inserts(@[
-      %*{"auth": "admin"},
-      %*{"auth": "user"}
-    ])
-    .waitFor
+# rdb().table("users").insert(insertData)
 
-  seeder rdb, "users":
-    var users: seq[JsonNode]
-    for i in 1..10:
-      let authId = if i mod 2 == 0: 2 else: 1
-      users.add(
-        %*{
-          "name": &"user{i}",
-          "email": &"user{i}@gmail.com",
-          "auth_id": authId
-        }
-      )
-    rdb.table("users").insert(users).waitFor
-
-
-  transaction rdb:
-    echo rdb.table("users").select("name", "email").where("id", "=", 2).get().await
-
-  transaction rdb:
-    rdb.table("table").insert(%*{"aaa": "bbb"}).await
-    echo rdb.table("aaa").get().await
-
-main().waitFor
+transaction:
+  echo rdb().table("users").select("name", "email").where("id", "=", 2).get()
+  # echo rdb().table("users").select("name", "email").where("id", "=", 3).get()

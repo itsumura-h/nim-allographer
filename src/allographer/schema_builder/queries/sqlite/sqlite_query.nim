@@ -360,7 +360,7 @@ proc renameTable(self:SqliteQuery, table:Table) =
 
 
 proc dropTableSql(self:SqliteQuery, table:Table) =
-  table.query.add &"DROP TABLE IF EXISTS \"{table.name}\""
+  table.query.add &"DROP TABLE \"{table.name}\""
   table.checksum = $table.query.join("; ").secureHash
 
 proc dropTable(self:SqliteQuery, table:Table) =

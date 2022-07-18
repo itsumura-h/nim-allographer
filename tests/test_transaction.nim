@@ -1,9 +1,8 @@
 discard """
-  cmd: "nim c --mm:orc -d:reset -r $file"
+  cmd: "nim c -d:reset -r $file"
 """
 
 import
-  std/os,
   std/unittest,
   std/json,
   std/strformat,
@@ -16,10 +15,6 @@ import
 
 
 proc setup(rdb:Rdb) =
-  rdb.raw("DROP TABLE IF EXISTS _migrations").exec().waitFor
-  rdb.raw("DROP TABLE IF EXISTS users").exec().waitFor
-  rdb.raw("DROP TABLE IF EXISTS auth").exec().waitFor
-
   rdb.create([
     table("auth",[
       Column.increments("id"),
@@ -57,7 +52,7 @@ proc setup(rdb:Rdb) =
     rdb.table("users").insert(users).waitFor
 
 
-for rdb in dbConnectionsTransacion:
+for rdb in dbConnections:
   block:
     setup(rdb)
     asyncBlock:
@@ -71,13 +66,28 @@ for rdb in dbConnectionsTransacion:
       transaction rdb:
         var user = rdb.table("users").select("id").where("name", "=", "user3").first.await.get
         var id = user["id"].getInt()
+        check id == 3
         user = rdb.table("users").select("name", "email").find(id).await.get
         check user == %*{"name":"user3","email":"user3@gmail.com"}
 
   block:
     asyncBlock:
+      try:
+        rdb.raw("BEGIN").exec().await
+        rdb.table("users").insert(%*{"id": 9, "name": "user9", "email": "user9@example.com"}).await
+        rdb.raw("COMMIT").exec().await
+        check false
+      except:
+        echo "=== rollback"
+        echo getCurrentExceptionMsg()
+        rdb.raw("ROLLBACK").exec().await
+        check true
+
+  block:
+    setup(rdb)
+    asyncBlock:
       transaction rdb:
-        rdb.table("table").insert(%*{"aaa": "bbb"}).await
+        rdb.table("users").insert(%*{"id": 9, "name": "user9", "email": "user9@example.com"}).await
         check false
       check true
 
@@ -91,3 +101,17 @@ for rdb in dbConnectionsTransacion:
                   .await
         echo id
       check rdb.table("users").max("id").await.get == $id
+
+  block:
+    setup(rdb)
+    asyncBlock:
+      transaction rdb:
+        discard rdb.table("users").insertsID(
+          @[
+            %*{"name": "John", "email": "John@gmail.com", "address": "London"},
+            %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
+            %*{"name": "George", "birth_date": "1943-02-25", "address": "London"},
+          ]
+        )
+        .await
+      check rdb.table("users").where("id", ">", 10).get().await.len == 0
