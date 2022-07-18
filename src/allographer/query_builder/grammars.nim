@@ -18,7 +18,7 @@ TOP（LIMIT）
 proc table*(self:Rdb, tableArg: string): Rdb =
   if self.query.kind == JNull:
     self.query = newJObject()
-  
+
   self.query["table"] = %tableArg
   return self
 

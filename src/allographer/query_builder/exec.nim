@@ -392,6 +392,24 @@ proc exec*(self: Rdb){.async.} =
   self.conn.exec(self.driver, self.sqlString, self.placeHolder).await
 
 
+# ==================== Transaction ====================
+
+proc begin*(self:Rdb):Future[int] {.async.} =
+  defer: self.cleanUp()
+  self.log.logger("BEGIN")
+  let connI = self.conn.transactionStart(self.driver).await
+  return connI
+
+proc rollback*(self:Rdb, connI:int) {.async.} =
+  defer: self.cleanUp()
+  self.log.logger("ROLLBACK")
+  self.conn.transactionEnd(self.driver, connI, "ROLLBACK").await
+
+proc commit*(self:Rdb, connI:int) {.async.} =
+  defer: self.cleanUp()
+  self.log.logger("COMMIT")
+  self.conn.transactionEnd(self.driver, connI, "COMMIT").await
+
 # ==================== Aggregates ====================
 
 proc count*(self:Rdb):Future[int]{.async.} =

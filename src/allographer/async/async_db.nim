@@ -94,7 +94,46 @@ proc exec*(self: Connections, driver:Driver, query: string, args: seq[string] = 
   of SQLite3:
     when isExistsSqlite:
       await sqlite.exec(self.pools[connI].sqliteConn, query, args, self.timeout)
-  self.returnConn(connI)
+
+
+proc transactionStart*(self: Connections, driver:Driver):Future[int] {.async.} =
+  let connI = getFreeConn(self).await
+  if connI == errorConnectionNum:
+    return
+  sleepAsync(0).await
+  case driver
+  of MySQL:
+    when isExistsMysql:
+      await mysql.exec(self.pools[connI].mysqlConn, "BEGIN", @[], self.timeout)
+  of MariaDB:
+    when isExistsMariadb:
+      await mariadb.exec(self.pools[connI].mariadbConn, "BEGIN", @[], self.timeout)
+  of PostgreSQL:
+    when isExistsPostgres:
+      await postgres.exec(self.pools[connI].postgresConn, "BEGIN", @[], self.timeout)
+  of SQLite3:
+    when isExistsSqlite:
+      await sqlite.exec(self.pools[connI].sqliteConn, "BEGIN", @[], self.timeout)
+  return connI
+
+proc transactionEnd*(self: Connections, driver:Driver, connI:int, query:string) {.async.} =
+  defer: self.returnConn(connI)
+  if connI == errorConnectionNum:
+    return
+  sleepAsync(0).await
+  case driver
+  of MySQL:
+    when isExistsMysql:
+      await mysql.exec(self.pools[connI].mysqlConn, query, @[], self.timeout)
+  of MariaDB:
+    when isExistsMariadb:
+      await mariadb.exec(self.pools[connI].mariadbConn, query, @[], self.timeout)
+  of PostgreSQL:
+    when isExistsPostgres:
+      await postgres.exec(self.pools[connI].postgresConn, query, @[], self.timeout)
+  of SQLite3:
+    when isExistsSqlite:
+      await sqlite.exec(self.pools[connI].sqliteConn, query, @[], self.timeout)
 
 
 proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string] = @[]):Future[seq[string]] {.async.} =
