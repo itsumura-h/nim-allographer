@@ -61,9 +61,9 @@ for rdb in dbConnections:
     rdb.table("table_drop").insert(table_drop_data).await
 
 
-  block addColumnTest:
+  block:
     asyncBlock:
-      check rdb.table("table_alter").select("add_column").first.await.isSome == false
+      check rdb.table("table_alter").select("add_column").first().await.isSome == false
 
       rdb.alter(
         table("table_alter", [
@@ -82,7 +82,7 @@ for rdb in dbConnections:
         .get["add_column"]
         .getStr == "test"
 
-  block addForeignKeyTest:
+  block:
     asyncBlock:
       rdb.alter(
         table("table_alter", [
@@ -99,7 +99,7 @@ for rdb in dbConnections:
       check rdb.table("table_alter").select("add_foreign_column").first.await.isSome == false
 
 
-  block changedColumnTest:
+  block:
     asyncBlock:
       echo rdb
         .table("table_alter")

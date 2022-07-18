@@ -1,5 +1,5 @@
 import json
-import ../grammers
+import ../grammars
 
 type IGenerator* = tuple
   resetTable:proc(table:Table)

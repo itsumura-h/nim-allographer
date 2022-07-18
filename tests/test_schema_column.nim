@@ -5,7 +5,7 @@ discard """
 import
   std/unittest,
   std/json
-include ../src/allographer/schema_builder/grammers
+include ../src/allographer/schema_builder/grammars
 
 
 block:

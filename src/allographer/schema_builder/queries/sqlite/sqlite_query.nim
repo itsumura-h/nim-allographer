@@ -10,7 +10,7 @@ import
   std/sequtils,
   ../../../base,
   ../../../query_builder,
-  ../../grammers,
+  ../../grammars,
   ../query_interface,
   ./impl
 

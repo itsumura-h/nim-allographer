@@ -1,5 +1,5 @@
 import json, strformat
-import ../../grammers
+import ../../grammars
 import ../generator_utils
 
 # =============================================================================

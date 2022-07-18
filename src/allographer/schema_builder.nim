@@ -1,7 +1,7 @@
 import
   ./schema_builder/schema,
-  ./schema_builder/grammers
+  ./schema_builder/grammars
 
 export
   schema,
-  grammers
+  grammars

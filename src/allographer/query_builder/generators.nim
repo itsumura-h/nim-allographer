@@ -378,11 +378,13 @@ proc insertValuesSql*(self: Rdb, rows: openArray[JsonNode]): Rdb =
 # ==================== UPDATE ====================
 
 proc updateSql*(self: Rdb): Rdb =
-  self.sqlString.add("UPDATE")
+  var sqlString = ""
+  sqlString.add("UPDATE")
 
   var table = self.query["table"].getStr()
   wrapUpper(table, self.driver)
-  self.sqlString.add(&" {table} SET ")
+  sqlString.add(&" {table} SET ")
+  self.sqlString = sqlString
   return self
 
 
@@ -404,7 +406,7 @@ proc updateValuesSql*(self: Rdb, items:JsonNode): Rdb =
 # ==================== DELETE ====================
 
 proc deleteSql*(self: Rdb): Rdb =
-  self.sqlString.add("DELETE")
+  self.sqlString = "DELETE"
   return self
 
 

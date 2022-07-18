@@ -1,6 +1,6 @@
 import json, strformat, strutils
 # import ../../../async/database/base
-import ../../grammers
+import ../../grammars
 import ../generator_utils
 
 

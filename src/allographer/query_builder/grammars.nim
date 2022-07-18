@@ -16,16 +16,18 @@ TOP（LIMIT）
 ]#
 
 proc table*(self:Rdb, tableArg: string): Rdb =
-  if self.query.kind == JNull:
-    self.query = newJObject()
+  self.query = newJObject()
 
   self.query["table"] = %tableArg
+  self.sqlString = ""
+  self.placeHolder = @[]
   return self
 
 
 # ============================== Raw query ==============================
 
 proc raw*(self:Rdb, sql:string, arges:varargs[string]): Rdb =
+  self.query = newJObject()
   self.sqlString = sql
   self.placeHolder = @arges
   return self
@@ -34,9 +36,6 @@ proc raw*(self:Rdb, sql:string, arges:varargs[string]): Rdb =
 # ============================== SELECT ==============================
 
 proc select*(self: Rdb, columnsArg: varargs[string]): Rdb =
-  if self.query.kind == JNull:
-    self.query = newJObject()
-
   if columnsArg.len == 0:
     self.query["select"] = %["*"]
   else:

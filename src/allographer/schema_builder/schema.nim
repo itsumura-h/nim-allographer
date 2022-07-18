@@ -4,7 +4,7 @@ import
   std/options,
   ../base,
   ../query_builder,
-  ./grammers,
+  ./grammars,
   ./queries/query_interface,
   ./queries/sqlite/sqlite_query,
   ./queries/mysql/mysql_query,
