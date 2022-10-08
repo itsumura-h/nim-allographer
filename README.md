@@ -187,6 +187,7 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 [base](https://itsumura-h.github.io/nim-allographer/base.html)  
 [grammars](https://itsumura-h.github.io/nim-allographer/query_builder/grammars.html)  
 [exec](https://itsumura-h.github.io/nim-allographer/query_builder/exec.html)  
+[async_db](https://itsumura-h.github.io/nim-allographer/async/async_db.html)  
 
 ### Schema Builder
 [schema](https://itsumura-h.github.io/nim-allographer/schema_builder/schema.html)  
