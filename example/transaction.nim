@@ -43,10 +43,12 @@ proc main(){.async.} =
 
   echo "====="
   transaction rdb:
+    assert rdb.isInTransaction == true
     echo rdb.table("users").select("name", "email").where("id", "=", 2).get().await
 
   echo "====="
   transaction rdb:
+    assert rdb.isInTransaction == true
     rdb.table("table").insert(%*{"aaa": "bbb"}).await
     echo rdb.table("aaa").get().await
 

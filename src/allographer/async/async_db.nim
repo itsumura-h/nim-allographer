@@ -43,7 +43,6 @@ proc query*(
     connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -74,7 +73,6 @@ proc queryPlain*(
     connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -107,7 +105,6 @@ proc exec*(
     connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -127,7 +124,6 @@ proc transactionStart*(self: Connections, driver:Driver):Future[int] {.async.} =
   let connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -147,7 +143,6 @@ proc transactionEnd*(self: Connections, driver:Driver, connI:int, query:string) 
   defer: self.returnConn(connI).await
   if connI == errorConnectionNum:
     return
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -168,7 +163,6 @@ proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string
   defer: self.returnConn(connI).await
   if connI == errorConnectionNum:
     return
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -191,7 +185,6 @@ proc prepare*(self: Connections, driver:Driver, query: string, stmtName=""):Futu
   let connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -217,7 +210,6 @@ proc prepare*(self: Connections, driver:Driver, query: string, stmtName=""):Futu
 
 
 proc query*(self:Prepared, driver:Driver, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -234,7 +226,6 @@ proc query*(self:Prepared, driver:Driver, args: seq[string] = @[]):Future[(seq[R
 
 
 proc exec*(self:Prepared, driver:Driver, args:seq[string] = @[]) {.async.} =
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:

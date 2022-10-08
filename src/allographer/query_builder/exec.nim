@@ -124,9 +124,9 @@ proc orm[T](row:Option[JsonNode], typ:typedesc[T]):Option[T] =
     return none(T)
 
 # proc cleanUp(self:Rdb) =
-#   self.query = newJNull()
+#   self.query = newJObject()
 #   self.sqlString = ""
-#   self.placeHolder = newSeq[string]()
+#   self.placeHolder = @[]
 
 # =============================================================================
 
