@@ -1,6 +1,7 @@
 name: Build and test Nim
 
-on: [push, pull_request]
+# テストはPRだけ
+on: [pull_request]
 
 jobs:
   # WIP でジョブがスキップされてもCIが失敗した扱いにならないようにするため
@@ -55,18 +56,21 @@ jobs:
     - uses: actions/checkout@v1
     - name: Test
       run: docker-compose run app-ubuntu nimble test
-    - name: Test multi-thread
-      run: |
-        echo '' >> tests/config.nims
-        echo 'switch("threads", "on")' >> tests/config.nims
-        docker-compose run app-ubuntu nimble test
+    # マルチスレッドは使わない
+    # - name: Test multi-thread
+    #   run: |
+    #     echo '' >> tests/config.nims
+    #     echo 'switch("threads", "on")' >> tests/config.nims
+    #     docker-compose run app-ubuntu nimble test
 
-  create-tag-draft:
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/master'
-    needs:
-      - test-on-docker
-    steps:
-      - uses: release-drafter/release-drafter@v5.3.1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # アプリケーションの方を使うことにした
+  # https://github.com/marketplace/actions/release-drafter
+  # create-tag-draft:
+  #   runs-on: ubuntu-latest
+  #   if: github.ref == 'refs/heads/master'
+  #   needs:
+  #     - test-on-docker
+  #   steps:
+  #     - uses: release-drafter/release-drafter@v5.3.1
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
