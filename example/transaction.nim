@@ -41,10 +41,11 @@ proc main(){.async.} =
       )
     rdb.table("users").insert(users).waitFor
 
-
+  echo "====="
   transaction rdb:
     echo rdb.table("users").select("name", "email").where("id", "=", 2).get().await
 
+  echo "====="
   transaction rdb:
     rdb.table("table").insert(%*{"aaa": "bbb"}).await
     echo rdb.table("aaa").get().await
