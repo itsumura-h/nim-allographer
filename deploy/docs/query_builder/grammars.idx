@@ -24,3 +24,5 @@ Order	query_builder/grammars.html#Order	grammars: Order
 orderBy	query_builder/grammars.html#orderBy,Rdb,string,Order	grammars: orderBy(self: Rdb; column: string; order: Order): Rdb	
 limit	query_builder/grammars.html#limit,Rdb,int	grammars: limit(self: Rdb; num: int): Rdb	
 offset	query_builder/grammars.html#offset,Rdb,int	grammars: offset(self: Rdb; num: int): Rdb	
+inTransaction	query_builder/grammars.html#inTransaction,Rdb,int	grammars: inTransaction(self: Rdb; connI: int)	
+freeTransactionConn	query_builder/grammars.html#freeTransactionConn,Rdb,int	grammars: freeTransactionConn(self: Rdb; connI: int)	

@@ -53,6 +53,6 @@ ReadDbEffect	async/database/base.html#ReadDbEffect	base: ReadDbEffect
 WriteDbEffect	async/database/base.html#WriteDbEffect	base: WriteDbEffect	
 errorConnectionNum	async/database/base.html#errorConnectionNum	base: errorConnectionNum	
 getFreeConn	async/database/base.html#getFreeConn,Connections	base: getFreeConn(self: Connections): Future[int]	
-returnConn	async/database/base.html#returnConn,Connections,int	base: returnConn(self: Connections; i: int)	
+returnConn	async/database/base.html#returnConn,Connections,int	base: returnConn(self: Connections; i: int): owned(Future[void])	
 dbError	async/database/base.html#dbError,string	base: dbError(msg: string)	
 randStr	async/database/base.html#randStr,int	base: randStr(n: int): string	

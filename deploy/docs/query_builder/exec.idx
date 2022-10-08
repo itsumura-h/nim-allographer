@@ -26,6 +26,9 @@ deleteSql	query_builder/exec.html#deleteSql,Rdb	exec: deleteSql(self: Rdb): stri
 delete	query_builder/exec.html#delete,Rdb	exec: delete(self: Rdb): owned(Future[void])	
 delete	query_builder/exec.html#delete,Rdb,int,string	exec: delete(self: Rdb; id: int; key = &quot;id&quot;): owned(Future[void])	
 exec	query_builder/exec.html#exec,Rdb	exec: exec(self: Rdb): owned(Future[void])	
+begin	query_builder/exec.html#begin,Rdb	exec: begin(self: Rdb): Future[int]	
+rollback	query_builder/exec.html#rollback,Rdb,int	exec: rollback(self: Rdb; connI: int): owned(Future[void])	
+commit	query_builder/exec.html#commit,Rdb,int	exec: commit(self: Rdb; connI: int): owned(Future[void])	
 count	query_builder/exec.html#count,Rdb	exec: count(self: Rdb): Future[int]	
 max	query_builder/exec.html#max,Rdb,string	exec: max(self: Rdb; column: string): Future[Option[string]]	
 min	query_builder/exec.html#min,Rdb,string	exec: min(self: Rdb; column: string): Future[Option[string]]	
