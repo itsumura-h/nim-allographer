@@ -1,32 +1,36 @@
-import strformat, json, progress
+import std/asyncdispatch
+import std/strformat
+import std/json
+import progress
 import bcrypt
-
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
+from ./connections import rdb
 
 
-schema([
+rdb.create([
   table("auth",[
-    Column().increments("id"),
-    Column().string("name")
-  ], reset=true),
+    Column.increments("id"),
+    Column.string("name")
+  ]),
   table("users",[
-    Column().increments("user_id"),
-    Column().string("name").nullable(),
-    Column().string("email").nullable(),
-    Column().string("password").nullable(),
-    Column().string("salt").nullable(),
-    Column().string("address").nullable(),
-    Column().date("birth_date").nullable(),
-    Column().foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-  ], reset=true)
+    Column.increments("user_id"),
+    Column.string("name").nullable(),
+    Column.string("email").nullable(),
+    Column.string("password").nullable(),
+    Column.string("address").nullable(),
+    Column.date("birth_date").nullable(),
+    Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+  ])
 ])
 
 # シーダー
-rdb().table("auth").insert([
-  %*{"name": "admin"},
-  %*{"name": "user"}
-])
+seeder rdb, "auth":
+  rdb.table("auth").insert(@[
+    %*{"name": "admin"},
+    %*{"name": "user"}
+  ])
+  .waitFor
 
 # プログレスバー
 let total = 20
@@ -43,20 +47,19 @@ for i in 1..total:
       "name": &"user{i}",
       "email": &"user{i}@gmail.com",
       "password": password,
-      "salt": salt,
       "auth_id": authId
     }
   )
   pb.increment()
 
 pb.finish()
-rdb().table("users").insert(insertData)
-echo rdb().table("users").get()
+rdb.table("users").insert(insertData).waitFor()
+echo rdb.table("users").get().waitFor()
 
-echo rdb().table("users").find(2, key="user_id")
-echo rdb().table("auth").find(1)
+echo rdb.table("users").find(2, key="user_id").waitFor()
+echo rdb.table("auth").find(1).waitFor()
 
-rdb().table("users").delete(2, key="user_id")
-rdb().table("auth").delete(2)
-echo rdb().table("users").limit(3).get()
-echo rdb().table("auth").limit(3).get()
+rdb.table("users").delete(2, key="user_id").waitFor()
+rdb.table("auth").delete(2).waitFor()
+echo rdb.table("users").limit(3).get().waitFor()
+echo rdb.table("auth").limit(3).get().waitFor()

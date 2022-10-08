@@ -1,4 +1,6 @@
-import macros, strutils, strformat, asyncdispatch
+import std/macros
+import std/strutils
+import std/strformat
 
 
 macro transaction*(rdb:untyped, bodyInput: untyped):untyped =
@@ -8,11 +10,14 @@ macro transaction*(rdb:untyped, bodyInput: untyped):untyped =
   bodyStr = fmt"""
 block:
   let connI = {rdb.repr}.begin().await
+  rdb.inTransaction(connI)
   try:
 {bodyStr}
     {rdb.repr}.commit(connI).await
   except:
     {rdb.repr}.rollback(connI).await
+  finally:
+    {rdb.repr}.freeTransactionConn(connI)
 """
   let body = bodyStr.parseStmt()
   return body

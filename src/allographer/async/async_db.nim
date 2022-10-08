@@ -17,7 +17,8 @@ proc open*(driver:Driver, database:string="", user:string="", password:string=""
   case driver:
   of MySQL:
     when isExistsMysql:
-      result = mysql.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
+      result = mariadb.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
+      # result = mysql.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of MariaDB:
     when isExistsMariadb:
       result = mariadb.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
@@ -29,16 +30,25 @@ proc open*(driver:Driver, database:string="", user:string="", password:string=""
       result = sqlite.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
 
 
-proc query*(self: Connections, driver:Driver, query: string, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
-  sleepAsync(0).await
-  let connI = getFreeConn(self).await
-  defer: self.returnConn(connI)
+proc query*(
+  self: Connections,
+  driver:Driver,
+  query: string,
+  args: seq[string] = @[],
+  specifiedConnI=false,
+  connI=0
+):Future[(seq[Row], DbRows)] {.async.} =
+  var connI = connI
+  if not specifiedConnI:
+    defer: self.returnConn(connI).await
+    connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
   case driver
   of MySQL:
     when isExistsMysql:
-      return await mysql.query(self.pools[connI].mysqlConn, query, args, self.timeout)
+      return await mariadb.query(self.pools[connI].mariadbConn, query, args, self.timeout)
+      # return await mysql.query(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb:
       return await mariadb.query(self.pools[connI].mariadbConn, query, args, self.timeout)
@@ -51,17 +61,26 @@ proc query*(self: Connections, driver:Driver, query: string, args: seq[string] =
       return await sqlite.query(self.pools[connI].sqliteConn, query, args, self.timeout)
 
 
-proc queryPlain*(self: Connections, driver:Driver, query: string, args: seq[string] = @[]):Future[seq[Row]] {.async.} =
-  let connI = getFreeConn(self).await
-  defer: self.returnConn(connI)
+proc queryPlain*(
+  self: Connections,
+  driver:Driver,
+  query: string,
+  args: seq[string] = @[],
+  specifiedConnI=false,
+  connI=0
+):Future[seq[Row]] {.async.} =
+  var connI = connI
+  if not specifiedConnI:
+    defer: self.returnConn(connI).await
+    connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
       discard
-      return await mysql.queryPlain(self.pools[connI].mysqlConn, query, args, self.timeout)
+      return await mariadb.queryPlain(self.pools[connI].mariadbConn, query, args, self.timeout)
+      # return await mysql.queryPlain(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb:
       return await mariadb.queryPlain(self.pools[connI].mariadbConn, query, args, self.timeout)
@@ -75,16 +94,25 @@ proc queryPlain*(self: Connections, driver:Driver, query: string, args: seq[stri
       return await sqlite.queryPlain(self.pools[connI].sqliteConn, query, args, self.timeout)
 
 
-proc exec*(self: Connections, driver:Driver, query: string, args: seq[string] = @[]) {.async.} =
-  let connI = getFreeConn(self).await
-  defer: self.returnConn(connI)
+proc exec*(
+  self: Connections,
+  driver:Driver,
+  query: string,
+  args: seq[string] = @[],
+  specifiedConnI=false,
+  connI=0
+) {.async.} =
+  var connI = connI
+  if not specifiedConnI:
+    defer: self.returnConn(connI).await
+    connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
-      await mysql.exec(self.pools[connI].mysqlConn, query, args, self.timeout)
+      await mariadb.exec(self.pools[connI].mariadbConn, query, args, self.timeout)
+      # await mysql.exec(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb:
       await mariadb.exec(self.pools[connI].mariadbConn, query, args, self.timeout)
@@ -100,11 +128,11 @@ proc transactionStart*(self: Connections, driver:Driver):Future[int] {.async.} =
   let connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
-      await mysql.exec(self.pools[connI].mysqlConn, "BEGIN", @[], self.timeout)
+      await mariadb.exec(self.pools[connI].mariadbConn, "BEGIN", @[], self.timeout)
+      # await mysql.exec(self.pools[connI].mysqlConn, "BEGIN", @[], self.timeout)
   of MariaDB:
     when isExistsMariadb:
       await mariadb.exec(self.pools[connI].mariadbConn, "BEGIN", @[], self.timeout)
@@ -117,14 +145,14 @@ proc transactionStart*(self: Connections, driver:Driver):Future[int] {.async.} =
   return connI
 
 proc transactionEnd*(self: Connections, driver:Driver, connI:int, query:string) {.async.} =
-  defer: self.returnConn(connI)
+  defer: self.returnConn(connI).await
   if connI == errorConnectionNum:
     return
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
-      await mysql.exec(self.pools[connI].mysqlConn, query, @[], self.timeout)
+      await mariadb.exec(self.pools[connI].mariadbConn, query, @[], self.timeout)
+      # await mysql.exec(self.pools[connI].mysqlConn, query, @[], self.timeout)
   of MariaDB:
     when isExistsMariadb:
       await mariadb.exec(self.pools[connI].mariadbConn, query, @[], self.timeout)
@@ -137,9 +165,8 @@ proc transactionEnd*(self: Connections, driver:Driver, connI:int, query:string) 
 
 
 proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string] = @[]):Future[seq[string]] {.async.} =
-  sleepAsync(0).await
   let connI = getFreeConn(self).await
-  defer: self.returnConn(connI)
+  defer: self.returnConn(connI).await
   if connI == errorConnectionNum:
     return
   case driver
@@ -164,7 +191,6 @@ proc prepare*(self: Connections, driver:Driver, query: string, stmtName=""):Futu
   let connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -190,7 +216,6 @@ proc prepare*(self: Connections, driver:Driver, query: string, stmtName=""):Futu
 
 
 proc query*(self:Prepared, driver:Driver, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -207,7 +232,6 @@ proc query*(self:Prepared, driver:Driver, args: seq[string] = @[]):Future[(seq[R
 
 
 proc exec*(self:Prepared, driver:Driver, args:seq[string] = @[]) {.async.} =
-  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -223,5 +247,5 @@ proc exec*(self:Prepared, driver:Driver, args:seq[string] = @[]) {.async.} =
       await sqlite.preparedExec(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)
 
 
-proc close*(self:Prepared) =
-  self.conn.returnConn(self.connI)
+proc close*(self:Prepared) {.async.}=
+  self.conn.returnConn(self.connI).await

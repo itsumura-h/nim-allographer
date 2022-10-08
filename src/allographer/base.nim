@@ -38,3 +38,6 @@ type
     query*: JsonNode
     sqlString*: string
     placeHolder*: seq[string]
+    # for transaction
+    isInTransaction*:bool
+    transactionConn*:int

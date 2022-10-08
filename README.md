@@ -48,7 +48,7 @@ waitFor main()
 import allographer/schema_builder
 
 
-rdb.schema([
+rdb.create([
   table("auth", [
     Column.increments("id"),
     Column.string("name").nullable(),
@@ -76,7 +76,7 @@ rdb.schema([
 rdb.alter(
   table("users", [
     Column.string("email").unique().default("").add(),
-    deleteColumn("name")
+    Column.deleteColumn("name")
   ])
 )
 

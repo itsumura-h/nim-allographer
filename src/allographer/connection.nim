@@ -14,3 +14,4 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
   result.conn = open(driver, database, user, password, host, port, maxConnections, timeout)
   result.log = LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)
   result.query = newJObject()
+  result.isInTransaction = false

@@ -17,7 +17,6 @@ TOP（LIMIT）
 
 proc table*(self:Rdb, tableArg: string): Rdb =
   self.query = newJObject()
-
   self.query["table"] = %tableArg
   self.sqlString = ""
   self.placeHolder = @[]
@@ -363,3 +362,12 @@ proc limit*(self: Rdb, num: int): Rdb =
 proc offset*(self: Rdb, num: int): Rdb =
   self.query["offset"] = %num
   return self
+
+proc inTransaction*(self:Rdb, connI:int) =
+  ## Only used in transation block
+  self.isInTransaction = true
+  self.transactionConn = connI
+
+proc freeTransactionConn*(self:Rdb, connI:int) =
+  ## Only used in transation block
+  self.isInTransaction = false

@@ -22,6 +22,7 @@ let
   # rdb* = dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=true)
 
 template asyncBlock*(body:untyped) =
-  waitFor (proc(){.async.}=
+  (proc(){.async.}=
     body
   )()
+  .waitFor()

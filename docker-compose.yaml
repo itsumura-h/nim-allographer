@@ -1,17 +1,17 @@
 version: '3'
 services:
-  app-alpine:
-    build:
-      context: .
-      dockerfile: ./docker/alpine/Dockerfile
-    tty: true
-    environment:
-      TZ: Asia/Tokyo
-    volumes:
-      - .:/root/project
-    depends_on:
-      - mariadb
-      - postgres
+  # app-alpine:
+  #   build:
+  #     context: .
+  #     dockerfile: ./docker/alpine/Dockerfile
+  #   tty: true
+  #   environment:
+  #     TZ: Asia/Tokyo
+  #   volumes:
+  #     - .:/root/project
+  #   depends_on:
+  #     - mariadb
+  #     - postgres
 
   app-ubuntu:
     build:

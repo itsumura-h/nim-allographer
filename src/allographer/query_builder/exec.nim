@@ -67,17 +67,36 @@ proc toJson(driver:Driver, results:openArray[seq[string]], dbRows:DbRows):seq[Js
   return response_table
 
 proc getAllRows(self:Rdb, sqlString:string, args:seq[string]):Future[seq[JsonNode]] {.async.} =
-  let (rows, dbRows) = self.conn.query(self.driver, sqlString, args).await
+  let (rows, dbRows) = self.conn.query(
+    self.driver,
+    sqlString,
+    args,
+    self.isInTransaction,
+    self.transactionConn
+  ).await
+
   if rows.len == 0:
     self.log.echoErrorMsg(sqlString & $args)
     return newSeq[JsonNode](0)
   return toJson(self.driver, rows, dbRows) # seq[JsonNode]
 
 proc getRowsPlain(self:Rdb, sqlString:string, args:seq[string]):Future[seq[seq[string]]] {.async.} =
-  return self.conn.queryPlain(self.driver, sqlString, args).await
+  return self.conn.queryPlain(
+    self.driver,
+    sqlString,
+    args,
+    self.isInTransaction,
+    self.transactionConn
+  ).await
 
 proc getRow(self:Rdb, sqlString:string, args:seq[string]):Future[Option[JsonNode]] {.async.} =
-  let (rows, dbColumns) = self.conn.query(self.driver, sqlString, args).await
+  let (rows, dbColumns) = self.conn.query(
+    self.driver,
+    sqlString,
+    args,
+    self.isInTransaction,
+    self.transactionConn
+  ).await
   if rows.len == 0:
     self.log.echoErrorMsg(sqlString & $args)
     return none(JsonNode)
@@ -87,7 +106,7 @@ proc getColumn(self:Rdb, sqlString:string, args:seq[string]):Future[seq[string]]
   return self.conn.getColumns(self.driver, sqlString, args).await
 
 proc getRowPlain(self:Connections, driver:Driver, sqlString:string, args:seq[string]):Future[seq[string]] {.async.} =
-  return await(self.queryPlain(driver, sqlString, args))[0]
+  return self.queryPlain(driver, sqlString, args).await[0]
 
 proc orm[T](rows:openArray[JsonNode], typ:typedesc[T]):seq[T] =
   var response = newSeq[T](rows.len)
@@ -105,9 +124,9 @@ proc orm[T](row:Option[JsonNode], typ:typedesc[T]):Option[T] =
     return none(T)
 
 # proc cleanUp(self:Rdb) =
-#   self.query = newJNull()
+#   self.query = newJObject()
 #   self.sqlString = ""
-#   self.placeHolder = newSeq[string]()
+#   self.placeHolder = @[]
 
 # =============================================================================
 
@@ -263,13 +282,13 @@ proc insertSql*(self: Rdb, items: JsonNode):string =
 proc insertId(self:Rdb, sqlString:string, placeHolder:seq[string], key:string):Future[int]{.async.} =
   if self.driver == SQLite3:
     self.log.logger(sqlString, placeHolder)
-    self.conn.exec(self.driver, sqlString, placeHolder).await
-    let (rows, _) = self.conn.query(self.driver, "SELECT last_insert_rowid()").await
+    self.conn.exec(self.driver, sqlString, placeHolder, self.isInTransaction, self.transactionConn).await
+    let (rows, _) = self.conn.query(self.driver, "SELECT last_insert_rowid()", @[], self.isInTransaction, self.transactionConn).await
     return rows[0][0].parseInt
   elif self.driver == MySQL or self.driver == MariaDB:
     self.log.logger(sqlString, placeHolder)
-    self.conn.exec(self.driver, sqlString, placeHolder).await
-    let (rows, _) = self.conn.query(self.driver, "SELECT LAST_INSERT_ID()").await
+    self.conn.exec(self.driver, sqlString, placeHolder, self.isInTransaction, self.transactionConn).await
+    let (rows, _) = self.conn.query(self.driver, "SELECT LAST_INSERT_ID()", @[], self.isInTransaction, self.transactionConn).await
     return rows[0][0].parseInt
   else:
     var key = key
@@ -277,27 +296,27 @@ proc insertId(self:Rdb, sqlString:string, placeHolder:seq[string], key:string):F
     var sqlString = sqlString
     sqlString.add(&" RETURNING {key}")
     self.log.logger(sqlString, placeHolder)
-    let (rows, _) = self.conn.query(self.driver, sqlString, placeHolder).await
+    let (rows, _) = self.conn.query(self.driver, sqlString, placeHolder, self.isInTransaction, self.transactionConn).await
     return rows[0][0].parseInt
 
 proc insert*(self: Rdb, items: JsonNode){.async.} =
   # defer: self.cleanUp()
   let sql = self.insertValueBuilder(items)
   self.log.logger(sql, self.placeHolder)
-  self.conn.exec(self.driver, sql, self.placeHolder).await
+  self.conn.exec(self.driver, sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
 proc insert*(self: Rdb, rows: seq[JsonNode]){.async.} =
   # defer: self.cleanUp()
   let sql = self.insertValuesBuilder(rows)
   self.log.logger(sql, self.placeHolder)
-  self.conn.exec(self.driver, sql, self.placeHolder).await
+  self.conn.exec(self.driver, sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
 proc inserts*(self: Rdb, rows: seq[JsonNode]){.async.} =
   # defer: self.cleanUp()
   for row in rows:
     let sqlString = self.insertValueBuilder(row)
     self.log.logger(sqlString, self.placeHolder)
-    self.conn.exec(self.driver, sqlString, self.placeHolder).await
+    self.conn.exec(self.driver, sqlString, self.placeHolder, self.isInTransaction, self.transactionConn).await
     self.placeHolder = @[]
 
 proc insertId*(self: Rdb, items: JsonNode, key="id"):Future[int] {.async.} =
@@ -362,7 +381,7 @@ proc update*(self: Rdb, items: JsonNode){.async.} =
   let sql = self.updateBuilder(items)
 
   self.log.logger(sql, self.placeHolder)
-  self.conn.exec(self.driver, sql, self.placeHolder).await
+  self.conn.exec(self.driver, sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
 # ==================== DELETE ====================
 
@@ -374,14 +393,14 @@ proc delete*(self: Rdb){.async.} =
   # defer: self.cleanUp()
   let sql = self.deleteBuilder()
   self.log.logger(sql, self.placeHolder)
-  self.conn.exec(self.driver, sql, self.placeHolder).await
+  self.conn.exec(self.driver, sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
 proc delete*(self: Rdb, id: int, key="id"){.async.} =
   # defer: self.cleanUp()
   self.placeHolder.add($id)
   let sql = self.deleteByIdBuilder(id, key)
   self.log.logger(sql, self.placeHolder)
-  self.conn.exec(self.driver, sql, self.placeHolder).await
+  self.conn.exec(self.driver, sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
 # ==================== EXEC ====================
 
@@ -389,7 +408,7 @@ proc exec*(self: Rdb){.async.} =
   ## It is only used with raw()
   # defer: self.cleanUp()
   self.log.logger(self.sqlString, self.placeHolder)
-  self.conn.exec(self.driver, self.sqlString, self.placeHolder).await
+  self.conn.exec(self.driver, self.sqlString, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
 
 # ==================== Transaction ====================
