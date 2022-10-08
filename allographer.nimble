@@ -28,6 +28,7 @@ task docs, "Generate API documents":
     deployDir = "deploy" / "docs"
     pkgDir = srcDir / "allographer"
     srcFiles = @[
+      "connection",
       "query_builder",
       "schema_builder",
     ]

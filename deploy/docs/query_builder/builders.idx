@@ -1,14 +1,14 @@
-selectBuilder	query_builder/builders.html#selectBuilder,Rdb	builders: selectBuilder(self: Rdb): Rdb	
-selectFirstBuilder	query_builder/builders.html#selectFirstBuilder,Rdb	builders: selectFirstBuilder(self: Rdb): Rdb	
-selectFindBuilder	query_builder/builders.html#selectFindBuilder,Rdb,string	builders: selectFindBuilder(self: Rdb; key: string): Rdb	
-insertValueBuilder	query_builder/builders.html#insertValueBuilder,Rdb,JsonNode	builders: insertValueBuilder(self: Rdb; items: JsonNode): Rdb	
-insertValuesBuilder	query_builder/builders.html#insertValuesBuilder,Rdb,openArray[JsonNode]	builders: insertValuesBuilder(self: Rdb; rows: openArray[JsonNode]): Rdb	
-updateBuilder	query_builder/builders.html#updateBuilder,Rdb,JsonNode	builders: updateBuilder(self: Rdb; items: JsonNode): Rdb	
-deleteBuilder	query_builder/builders.html#deleteBuilder,Rdb	builders: deleteBuilder(self: Rdb): Rdb	
-deleteByIdBuilder	query_builder/builders.html#deleteByIdBuilder,Rdb,int,string	builders: deleteByIdBuilder(self: Rdb; id: int; key: string): Rdb	
-countBuilder	query_builder/builders.html#countBuilder,Rdb	builders: countBuilder(self: Rdb): Rdb	
-maxBuilder	query_builder/builders.html#maxBuilder,Rdb,string	builders: maxBuilder(self: Rdb; column: string): Rdb	
-minBuilder	query_builder/builders.html#minBuilder,Rdb,string	builders: minBuilder(self: Rdb; column: string): Rdb	
-avgBuilder	query_builder/builders.html#avgBuilder,Rdb,string	builders: avgBuilder(self: Rdb; column: string): Rdb	
-sumBuilder	query_builder/builders.html#sumBuilder,Rdb,string	builders: sumBuilder(self: Rdb; column: string): Rdb	
-columnBuilder	query_builder/builders.html#columnBuilder,Rdb	builders: columnBuilder(self: Rdb): Rdb	
+selectBuilder	query_builder/builders.html#selectBuilder,Rdb	builders: selectBuilder(self: Rdb): string	
+selectFirstBuilder	query_builder/builders.html#selectFirstBuilder,Rdb	builders: selectFirstBuilder(self: Rdb): string	
+selectFindBuilder	query_builder/builders.html#selectFindBuilder,Rdb,string	builders: selectFindBuilder(self: Rdb; key: string): string	
+insertValueBuilder	query_builder/builders.html#insertValueBuilder,Rdb,JsonNode	builders: insertValueBuilder(self: Rdb; items: JsonNode): string	
+insertValuesBuilder	query_builder/builders.html#insertValuesBuilder,Rdb,openArray[JsonNode]	builders: insertValuesBuilder(self: Rdb; rows: openArray[JsonNode]): string	
+updateBuilder	query_builder/builders.html#updateBuilder,Rdb,JsonNode	builders: updateBuilder(self: Rdb; items: JsonNode): string	
+deleteBuilder	query_builder/builders.html#deleteBuilder,Rdb	builders: deleteBuilder(self: Rdb): string	
+deleteByIdBuilder	query_builder/builders.html#deleteByIdBuilder,Rdb,int,string	builders: deleteByIdBuilder(self: Rdb; id: int; key: string): string	
+countBuilder	query_builder/builders.html#countBuilder,Rdb	builders: countBuilder(self: Rdb): string	
+maxBuilder	query_builder/builders.html#maxBuilder,Rdb,string	builders: maxBuilder(self: Rdb; column: string): string	
+minBuilder	query_builder/builders.html#minBuilder,Rdb,string	builders: minBuilder(self: Rdb; column: string): string	
+avgBuilder	query_builder/builders.html#avgBuilder,Rdb,string	builders: avgBuilder(self: Rdb; column: string): string	
+sumBuilder	query_builder/builders.html#sumBuilder,Rdb,string	builders: sumBuilder(self: Rdb; column: string): string	
+columnBuilder	query_builder/builders.html#columnBuilder,Rdb	builders: columnBuilder(self: Rdb): string	
