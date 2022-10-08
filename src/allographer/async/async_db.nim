@@ -17,7 +17,8 @@ proc open*(driver:Driver, database:string="", user:string="", password:string=""
   case driver:
   of MySQL:
     when isExistsMysql:
-      result = mysql.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
+      result = mariadb.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
+      # result = mysql.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of MariaDB:
     when isExistsMariadb:
       result = mariadb.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
@@ -46,7 +47,8 @@ proc query*(
   case driver
   of MySQL:
     when isExistsMysql:
-      return await mysql.query(self.pools[connI].mysqlConn, query, args, self.timeout)
+      return await mariadb.query(self.pools[connI].mariadbConn, query, args, self.timeout)
+      # return await mysql.query(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb:
       return await mariadb.query(self.pools[connI].mariadbConn, query, args, self.timeout)
@@ -77,7 +79,8 @@ proc queryPlain*(
   of MySQL:
     when isExistsMysql:
       discard
-      return await mysql.queryPlain(self.pools[connI].mysqlConn, query, args, self.timeout)
+      return await mariadb.queryPlain(self.pools[connI].mariadbConn, query, args, self.timeout)
+      # return await mysql.queryPlain(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb:
       return await mariadb.queryPlain(self.pools[connI].mariadbConn, query, args, self.timeout)
@@ -108,7 +111,8 @@ proc exec*(
   case driver
   of MySQL:
     when isExistsMysql:
-      await mysql.exec(self.pools[connI].mysqlConn, query, args, self.timeout)
+      await mariadb.exec(self.pools[connI].mariadbConn, query, args, self.timeout)
+      # await mysql.exec(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb:
       await mariadb.exec(self.pools[connI].mariadbConn, query, args, self.timeout)
@@ -127,7 +131,8 @@ proc transactionStart*(self: Connections, driver:Driver):Future[int] {.async.} =
   case driver
   of MySQL:
     when isExistsMysql:
-      await mysql.exec(self.pools[connI].mysqlConn, "BEGIN", @[], self.timeout)
+      await mariadb.exec(self.pools[connI].mariadbConn, "BEGIN", @[], self.timeout)
+      # await mysql.exec(self.pools[connI].mysqlConn, "BEGIN", @[], self.timeout)
   of MariaDB:
     when isExistsMariadb:
       await mariadb.exec(self.pools[connI].mariadbConn, "BEGIN", @[], self.timeout)
@@ -146,7 +151,8 @@ proc transactionEnd*(self: Connections, driver:Driver, connI:int, query:string) 
   case driver
   of MySQL:
     when isExistsMysql:
-      await mysql.exec(self.pools[connI].mysqlConn, query, @[], self.timeout)
+      await mariadb.exec(self.pools[connI].mariadbConn, query, @[], self.timeout)
+      # await mysql.exec(self.pools[connI].mysqlConn, query, @[], self.timeout)
   of MariaDB:
     when isExistsMariadb:
       await mariadb.exec(self.pools[connI].mariadbConn, query, @[], self.timeout)
