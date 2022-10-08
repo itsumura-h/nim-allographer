@@ -1,7 +1,7 @@
 import strutils
 
 func getOsName*():string =
-  when defined(maxosx) or defined(linux) or defined(bsd):
+  when defined(macosx) or defined(linux) or defined(bsd):
     const f = staticRead("/etc/os-release")
     for row in f.split("\n"):
       let kv = row.split("=")

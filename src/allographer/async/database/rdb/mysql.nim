@@ -8,7 +8,8 @@ when defined(unix):
       lib = "libmysqlclient(|.21|.20|.19|.18|.17|.16|.15).dylib"
   else:
     const
-      lib = "libmysqlclient.so(|.21|.20|.19|.18|.17|.16|.15)"
+      # lib = "libmysqlclient.so(|.21|.20|.19|.18|.17|.16|.15)"
+      lib = "libmariadbclient.so(|.21|.20|.19|.18|.17|.16|.15)"
 when defined(windows):
   const
     lib = "libmysql.dll"
