@@ -37,15 +37,13 @@ proc query*(
   specifiedConnI=false,
   connI=0
 ):Future[(seq[Row], DbRows)] {.async.} =
-  sleepAsync(0).await
-  let connI =
-    if specifiedConnI:
-      connI
-    else:
-      defer: self.returnConn(connI)
-      getFreeConn(self).await
+  var connI = connI
+  if not specifiedConnI:
+    defer: self.returnConn(connI).await
+    connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
+  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -70,12 +68,10 @@ proc queryPlain*(
   specifiedConnI=false,
   connI=0
 ):Future[seq[Row]] {.async.} =
-  let connI =
-    if specifiedConnI:
-      connI
-    else:
-      defer: self.returnConn(connI)
-      getFreeConn(self).await
+  var connI = connI
+  if not specifiedConnI:
+    defer: self.returnConn(connI).await
+    connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
   sleepAsync(0).await
@@ -105,12 +101,10 @@ proc exec*(
   specifiedConnI=false,
   connI=0
 ) {.async.} =
-  let connI =
-    if specifiedConnI:
-      connI
-    else:
-      defer: self.returnConn(connI)
-      getFreeConn(self).await
+  var connI = connI
+  if not specifiedConnI:
+    defer: self.returnConn(connI).await
+    connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
   sleepAsync(0).await
@@ -150,7 +144,7 @@ proc transactionStart*(self: Connections, driver:Driver):Future[int] {.async.} =
   return connI
 
 proc transactionEnd*(self: Connections, driver:Driver, connI:int, query:string) {.async.} =
-  defer: self.returnConn(connI)
+  defer: self.returnConn(connI).await
   if connI == errorConnectionNum:
     return
   sleepAsync(0).await
@@ -170,11 +164,11 @@ proc transactionEnd*(self: Connections, driver:Driver, connI:int, query:string) 
 
 
 proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string] = @[]):Future[seq[string]] {.async.} =
-  sleepAsync(0).await
   let connI = getFreeConn(self).await
-  defer: self.returnConn(connI)
+  defer: self.returnConn(connI).await
   if connI == errorConnectionNum:
     return
+  sleepAsync(0).await
   case driver
   of MySQL:
     when isExistsMysql:
@@ -256,5 +250,5 @@ proc exec*(self:Prepared, driver:Driver, args:seq[string] = @[]) {.async.} =
       await sqlite.preparedExec(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)
 
 
-proc close*(self:Prepared) =
-  self.conn.returnConn(self.connI)
+proc close*(self:Prepared) {.async.}=
+  self.conn.returnConn(self.connI).await

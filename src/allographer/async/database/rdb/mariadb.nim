@@ -24,7 +24,8 @@ when defined(unix):
     when osName == "alpine":
       const lib = "libmariadb.so(|.3)"
     else:
-      const lib = "libmysqlclient.so(|.21|.20|.19|.18|.17|.16|.15)"
+      # const lib = "libmysqlclient.so(|.21|.20|.19|.18|.17|.16|.15)"
+      const lib = "libmariadbclient.so(|.21|.20|.19|.18|.17|.16|.15)"
 when defined(windows):
   const lib = "libmariadb.dll"
 

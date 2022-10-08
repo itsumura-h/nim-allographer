@@ -17,7 +17,6 @@ TOP（LIMIT）
 
 proc table*(self:Rdb, tableArg: string): Rdb =
   self.query = newJObject()
-
   self.query["table"] = %tableArg
   self.sqlString = ""
   self.placeHolder = @[]
