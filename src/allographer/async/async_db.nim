@@ -29,10 +29,21 @@ proc open*(driver:Driver, database:string="", user:string="", password:string=""
       result = sqlite.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
 
 
-proc query*(self: Connections, driver:Driver, query: string, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
+proc query*(
+  self: Connections,
+  driver:Driver,
+  query: string,
+  args: seq[string] = @[],
+  specifiedConnI=false,
+  connI=0
+):Future[(seq[Row], DbRows)] {.async.} =
   sleepAsync(0).await
-  let connI = getFreeConn(self).await
-  defer: self.returnConn(connI)
+  let connI =
+    if specifiedConnI:
+      connI
+    else:
+      defer: self.returnConn(connI)
+      getFreeConn(self).await
   if connI == errorConnectionNum:
     return
   case driver
@@ -51,9 +62,20 @@ proc query*(self: Connections, driver:Driver, query: string, args: seq[string] =
       return await sqlite.query(self.pools[connI].sqliteConn, query, args, self.timeout)
 
 
-proc queryPlain*(self: Connections, driver:Driver, query: string, args: seq[string] = @[]):Future[seq[Row]] {.async.} =
-  let connI = getFreeConn(self).await
-  defer: self.returnConn(connI)
+proc queryPlain*(
+  self: Connections,
+  driver:Driver,
+  query: string,
+  args: seq[string] = @[],
+  specifiedConnI=false,
+  connI=0
+):Future[seq[Row]] {.async.} =
+  let connI =
+    if specifiedConnI:
+      connI
+    else:
+      defer: self.returnConn(connI)
+      getFreeConn(self).await
   if connI == errorConnectionNum:
     return
   sleepAsync(0).await
@@ -75,9 +97,20 @@ proc queryPlain*(self: Connections, driver:Driver, query: string, args: seq[stri
       return await sqlite.queryPlain(self.pools[connI].sqliteConn, query, args, self.timeout)
 
 
-proc exec*(self: Connections, driver:Driver, query: string, args: seq[string] = @[]) {.async.} =
-  let connI = getFreeConn(self).await
-  defer: self.returnConn(connI)
+proc exec*(
+  self: Connections,
+  driver:Driver,
+  query: string,
+  args: seq[string] = @[],
+  specifiedConnI=false,
+  connI=0
+) {.async.} =
+  let connI =
+    if specifiedConnI:
+      connI
+    else:
+      defer: self.returnConn(connI)
+      getFreeConn(self).await
   if connI == errorConnectionNum:
     return
   sleepAsync(0).await

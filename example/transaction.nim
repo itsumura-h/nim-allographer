@@ -50,4 +50,6 @@ proc main(){.async.} =
     rdb.table("table").insert(%*{"aaa": "bbb"}).await
     echo rdb.table("aaa").get().await
 
+  assert rdb.isInTransaction == false
+
 main().waitFor
