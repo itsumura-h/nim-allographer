@@ -25,8 +25,7 @@ task test, "run testament test":
 
 task docs, "Generate API documents":
   let
-    # deployDir = "deploy" / "docs"
-    deployDir = ".github" / "workflows" / "docs"
+    deployDir = "docs"
     pkgDir = srcDir / "allographer"
     srcFiles = @[
       "connection",
