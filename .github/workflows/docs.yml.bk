@@ -1,0 +1,33 @@
+name: Deploy API documents
+
+on:
+  push:
+    branches:
+    - main
+
+jobs:
+  build-docs-deploy:
+    env:
+      NIM_VERSION: 1.4.4
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - name: Cache choosenim
+      id: cache-choosenim
+      uses: actions/cache@v1
+      with:
+        path: ~/.choosenim
+        key: ${{ runner.os }}-choosenim-${{ env.NIM_VERSION }}
+    - uses: jiro4989/setup-nim-action@v1
+      with:
+        nim-version: ${{ env.NIM_VERSION }}
+    - name: Build
+      run: nimble install -Y
+    - name: Generate documents
+      run: nimble docs
+    - name: Deploy
+      uses: peaceiris/actions-gh-pages@v2.4.0
+      env:
+        ACTIONS_DEPLOY_KEY: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        PUBLISH_BRANCH: gh-pages
+        PUBLISH_DIR: ./deploy/docs
