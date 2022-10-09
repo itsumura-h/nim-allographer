@@ -191,7 +191,7 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 
 ### Schema Builder
 [schema](https://itsumura-h.github.io/nim-allographer/schema_builder/schema.html)  
-[grammers](https://itsumura-h.github.io/nim-allographer/schema_builder/grammers.html)  
+[grammar](https://itsumura-h.github.io/nim-allographer/schema_builder/grammars.html)  
 
 
 ## Development
