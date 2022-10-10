@@ -1,13 +1,13 @@
-import
-  std/asyncdispatch,
-  std/strutils,
-  ../baseEnv,
-  ../base as a,
-  ./database/base,
-  ./database/impls/mysql,
-  ./database/impls/mariadb,
-  ./database/impls/postgres,
-  ./database/impls/sqlite
+import std/asyncdispatch
+import std/strutils
+import std/strformat
+import ../baseEnv
+import ../base as a
+import ./database/base
+import ./database/impls/mysql
+import ./database/impls/mariadb
+import ./database/impls/postgres
+import ./database/impls/sqlite
 
 export base
 
@@ -40,8 +40,10 @@ proc query*(
 ):Future[(seq[Row], DbRows)] {.async.} =
   var connI = connI
   if not specifiedConnI:
-    defer: self.returnConn(connI).await
     connI = getFreeConn(self).await
+  defer:
+    if not specifiedConnI:
+      self.returnConn(connI).await
   if connI == errorConnectionNum:
     return
   case driver
@@ -54,7 +56,6 @@ proc query*(
       return await mariadb.query(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
     when isExistsPostgres:
-      discard
       return await postgres.query(self.pools[connI].postgresConn, query, args, self.timeout)
   of SQLite3:
     when isExistsSqlite:
@@ -71,8 +72,10 @@ proc queryPlain*(
 ):Future[seq[Row]] {.async.} =
   var connI = connI
   if not specifiedConnI:
-    defer: self.returnConn(connI).await
     connI = getFreeConn(self).await
+  defer:
+    if not specifiedConnI:
+      self.returnConn(connI).await
   if connI == errorConnectionNum:
     return
   case driver
@@ -86,11 +89,9 @@ proc queryPlain*(
       return await mariadb.queryPlain(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
     when isExistsPostgres:
-      discard
       return await postgres.queryPlain(self.pools[connI].postgresConn, query, args, self.timeout)
   of SQLite3:
     when isExistsSqlite:
-      discard
       return await sqlite.queryPlain(self.pools[connI].sqliteConn, query, args, self.timeout)
 
 
@@ -104,8 +105,10 @@ proc exec*(
 ) {.async.} =
   var connI = connI
   if not specifiedConnI:
-    defer: self.returnConn(connI).await
     connI = getFreeConn(self).await
+  defer:
+    if not specifiedConnI:
+      self.returnConn(connI).await
   if connI == errorConnectionNum:
     return
   case driver

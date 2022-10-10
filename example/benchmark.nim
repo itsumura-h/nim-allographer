@@ -1,10 +1,16 @@
-import json, random, asyncdispatch, times
-
+import std/asyncdispatch
+import std/json
+import std/random
+import std/strutils
+import std/sequtils
+import std/times
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
 from connections import rdb
 
+
 randomize()
+
 const range1_10000 = 1..10000
 
 proc migrate() {.async.} =
@@ -45,16 +51,13 @@ proc migrate() {.async.} =
     await rdb.table("Fortune").insert(data)
 
 
-proc main() {.async.} =
+proc update() {.async.} =
   const countNum = 500
   var response = newSeq[JsonNode](countNum)
-  # var getFutures = newSeq[Future[seq[string]]](countNum)
   var updateFutures = newSeq[Future[void]](countNum)
   for i in 1..countNum:
     let index = rand(range1_10000)
     let number = rand(range1_10000)
-    # getFutures[i-1] = rdb.table("World").select("id", "randomNumber").findPlain(index)
-    # updateFutures[i-1] = rdb.table("World").where("id", "=", index).update(%*{"randomNumber": number})
     updateFutures[i-1] = (
       proc() {.async.} =
         discard rdb.table("World").select("id", "randomNumber").findPlain(index)
@@ -62,15 +65,32 @@ proc main() {.async.} =
         response[i-1] = %*{"id":index, "randomNumber": number}
     )()
     response[i-1] = %*{"id":index, "randomNumber": number}
-
-  # discard await all(getFutures)
   await all(updateFutures)
-  # discard await all(@[getFutures, updateFutures])
 
-waitFor migrate()
-# waitFor main()
-let start = cpuTime()
-for i in 1..10:
-  waitFor main()
-  echo "===== ", i
-echo cpuTime() - start
+
+proc query() {.async.} =
+  const countNum = 100
+  var futures = newSeq[Future[seq[string]]](countNum)
+  for i in 1..countNum:
+    let n = rand(1..10000)
+    futures[i-1] = rdb.table("World").findPlain(n)
+  let resp = all(futures).await
+  let response = resp.map(
+    proc(x:seq[string]):JsonNode =
+      if x.len > 0: %*{"id": x[0].parseInt, "randomnumber": x[1]}
+      else: newJObject()
+  )
+  echo response
+
+
+proc main() {.async.} =
+  migrate().waitFor
+  # waitFor main()
+  let start = cpuTime()
+  for i in 1..20:
+    update().await
+    query().await
+    echo "===== ", i
+  echo cpuTime() - start
+
+main().waitFor

@@ -94,6 +94,7 @@ proc getFreeConn*(self:Connections):Future[int] {.async.} =
     for i in 0..<self.pools.len:
       if not self.pools[i].isBusy:
         self.pools[i].isBusy = true
+        # echo "=== getFreeConn ", i
         return i
         break
     await sleepAsync(10)
@@ -103,6 +104,7 @@ proc getFreeConn*(self:Connections):Future[int] {.async.} =
 proc returnConn*(self: Connections, i: int) {.async.} =
   if i != errorConnectionNum:
     self.pools[i].isBusy = false
+  # echo "=== returnConn ", i
 
 proc dbError*(msg: string) {.noreturn, noinline.} =
   ## raises an DbError exception with message `msg`.
