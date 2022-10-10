@@ -27,8 +27,8 @@ proc query*(db:PPGconn, query: string, args: seq[string], timeout:int):Future[(s
   var dbRows: DbRows
   var rows = newSeq[Row]()
   let calledAt = getTime().toUnix()
+  # await sleepAsync(0)
   while true:
-    await sleepAsync(0)
     let success = pqconsumeInput(db)
     if success != 1: dbError(db) # never seen to fail when async
     if pqisBusy(db) == 1:
@@ -65,8 +65,8 @@ proc queryPlain*(db:PPGconn, query: string, args: seq[string], timeout:int):Futu
   if status != 1: dbError(db) # never seen to fail when async
   var rows = newSeq[Row]()
   let calledAt = getTime().toUnix()
+  # await sleepAsync(0)
   while true:
-    await sleepAsync(0)
     let success = pqconsumeInput(db)
     if success != 1: dbError(db) # never seen to fail when async
     if pqisBusy(db) == 1:
@@ -101,7 +101,7 @@ proc exec*(db:PPGconn, query: string, args: seq[string], timeout:int) {.async.} 
   let success = pqsendQuery(db, dbFormat(query, args).cstring)
   if success != 1: dbError(db)
   let calledAt = getTime().toUnix()
-  await sleepAsync(0)
+  # await sleepAsync(0)
   while true:
     let success = pqconsumeInput(db)
     if success != 1: dbError(db) # never seen to fail when async
