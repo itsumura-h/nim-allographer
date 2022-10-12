@@ -113,13 +113,6 @@ rdb.alter(
 nimble install allographer
 ```
 
-## Set up
-First of all, add nim binary path
-```sh
-export PATH=$PATH:~/.nimble/bin
-```
-After install allographer, "dbtool" command is going to be available.
-
 If you get `SIGSEGV: Illegal storage access. (Attempt to read from nil?)` when trying to use the database you likely have a problem with the library path. On OS X the default is to check for the `brew --prefix` of the chosen driver, if that doesn't work it will look in `/usr/lib` or an environment variable `DYLD_xxx_PATH` where `xxx` if your driver: `SQLITE`, `MARIADB`, `MYSQL` or `POSTGRES`.
 
 ## Configuation
