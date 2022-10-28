@@ -66,7 +66,7 @@ proc toJson(driver:Driver, results:openArray[seq[string]], dbRows:DbRows):seq[Js
     response_table[index] = response_row
   return response_table
 
-proc getAllRows(self:Rdb, sqlString:string, args:seq[string]):Future[seq[JsonNode]] {.async.} =
+proc getAllRows(self:Rdb | RawQueryRdb, sqlString:string, args:seq[string]):Future[seq[JsonNode]] {.async.} =
   let (rows, dbRows) = self.conn.query(
     self.driver,
     sqlString,
@@ -80,7 +80,7 @@ proc getAllRows(self:Rdb, sqlString:string, args:seq[string]):Future[seq[JsonNod
     return newSeq[JsonNode](0)
   return toJson(self.driver, rows, dbRows) # seq[JsonNode]
 
-proc getRowsPlain(self:Rdb, sqlString:string, args:seq[string]):Future[seq[seq[string]]] {.async.} =
+proc getRowsPlain(self:Rdb | RawQueryRdb, sqlString:string, args:seq[string]):Future[seq[seq[string]]] {.async.} =
   return self.conn.queryPlain(
     self.driver,
     sqlString,
@@ -89,7 +89,7 @@ proc getRowsPlain(self:Rdb, sqlString:string, args:seq[string]):Future[seq[seq[s
     self.transactionConn
   ).await
 
-proc getRow(self:Rdb, sqlString:string, args:seq[string]):Future[Option[JsonNode]] {.async.} =
+proc getRow(self:Rdb | RawQueryRdb, sqlString:string, args:seq[string]):Future[Option[JsonNode]] {.async.} =
   let (rows, dbColumns) = self.conn.query(
     self.driver,
     sqlString,
@@ -101,6 +101,7 @@ proc getRow(self:Rdb, sqlString:string, args:seq[string]):Future[Option[JsonNode
     self.log.echoErrorMsg(sqlString & $args)
     return none(JsonNode)
   return toJson(self.driver, rows, dbColumns)[0].some
+
 
 proc getColumn(self:Rdb, sqlString:string, args:seq[string]):Future[seq[string]] {.async.} =
   return self.conn.getColumns(self.driver, sqlString, args).await
@@ -178,7 +179,7 @@ proc getPlain*(self:Rdb):Future[seq[seq[string]]] {.async.} =
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return newSeq[seq[string]](0)
 
-proc getRaw*(self: Rdb):Future[seq[JsonNode]]{.async.} =
+proc get*(self: RawQueryRdb):Future[seq[JsonNode]]{.async.} =
   ## It is only used with raw()
   # defer: self.cleanUp()
   try:
@@ -189,7 +190,17 @@ proc getRaw*(self: Rdb):Future[seq[JsonNode]]{.async.} =
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return newSeq[JsonNode](0)
 
-proc getRaw*[T](self: Rdb, typ: typedesc[T]):Future[seq[T]]{.async.} =
+proc getPlain*(self:RawQueryRdb):Future[seq[seq[string]]] {.async.} =
+  # defer: self.cleanUp()
+  try:
+    self.log.logger(self.sqlString, self.placeHolder)
+    return getRowsPlain(self, self.sqlString, self.placeHolder).await
+  except Exception:
+    self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    return newSeq[seq[string]](0)
+
+proc get*[T](self: RawQueryRdb, typ: typedesc[T]):Future[seq[T]]{.async.} =
   ## It is only used with raw()
   # defer: self.cleanUp()
   try:
@@ -208,6 +219,16 @@ proc first*(self: Rdb):Future[Option[JsonNode]] {.async.} =
     return getRow(self, sql, self.placeHolder).await
   except Exception:
     self.log.echoErrorMsg(sql & $self.placeHolder)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    return none(JsonNode)
+
+proc first*(self: RawQueryRdb):Future[Option[JsonNode]] {.async.} =
+  # defer: self.cleanUp()
+  try:
+    self.log.logger(self.sqlString, self.placeHolder)
+    return getRow(self, self.sqlString, self.placeHolder).await
+  except Exception:
+    self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return none(JsonNode)
 
@@ -230,6 +251,16 @@ proc firstPlain*(self: Rdb):Future[seq[string]]{.async.} =
     return getRowPlain(self.conn, self.driver, sql, self.placeHolder).await
   except Exception:
     self.log.echoErrorMsg(sql & $self.placeHolder)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    return newSeq[string](0)
+
+proc firstPlain*(self: RawQueryRdb):Future[seq[string]]{.async.} =
+  # defer: self.cleanUp()
+  try:
+    self.log.logger(self.sqlString, self.placeHolder)
+    return getRowPlain(self.conn, self.driver, self.sqlString, self.placeHolder).await
+  except Exception:
+    self.log.echoErrorMsg(self.sqlString & $self.placeHolder)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return newSeq[string](0)
 
@@ -404,7 +435,7 @@ proc delete*(self: Rdb, id: int, key="id"){.async.} =
 
 # ==================== EXEC ====================
 
-proc exec*(self: Rdb){.async.} =
+proc exec*(self: RawQueryRdb){.async.} =
   ## It is only used with raw()
   # defer: self.cleanUp()
   self.log.logger(self.sqlString, self.placeHolder)

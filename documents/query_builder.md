@@ -624,11 +624,14 @@ SELECT ProductName
                 FROM OrderItem
                WHERE Quantity > 100)
 """
-echo rdb.raw(sql).getRaw().await
+echo rdb.raw(sql).get().await
+echo rdb.raw(sql).getPlain().await
+echo rdb.raw(sql).first().await
+echo rdb.raw(sql).firstPlain().await
 ```
 ```nim
-let sql = "UPDATE users SET name='John' where id = ?"
-rdb.raw(sql, "1").exec().await
+let sql = "UPDATE users SET name = ? where id = ?"
+rdb.raw(sql, "John", "1").exec().await
 ```
 
 ## Aggregates

@@ -25,11 +25,18 @@ proc table*(self:Rdb, tableArg: string): Rdb =
 
 # ============================== Raw query ==============================
 
-proc raw*(self:Rdb, sql:string, arges:varargs[string]): Rdb =
-  self.query = newJObject()
-  self.sqlString = sql
-  self.placeHolder = @arges
-  return self
+proc raw*(self:Rdb, sql:string, arges:varargs[string]): RawQueryRdb =
+  let rawQueryRdb = RawQueryRdb(
+    driver:self.driver,
+    conn:self.conn,
+    log: self.log,
+    query: newJObject(),
+    sqlString: sql,
+    placeHolder: @arges,
+    isInTransaction:self.isInTransaction,
+    transactionConn:self.transactionConn
+  )
+  return rawQueryRdb
 
 
 # ============================== SELECT ==============================

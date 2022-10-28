@@ -190,7 +190,7 @@ proc deleteColumnSql(self:MysqlQuery, column:Column, table:Table) =
   column.checksum = $column.query.join("; ").secureHash()
 
 proc deleteColumn(self:MysqlQuery, column:Column, table:Table) =
-  let res = self.rdb.raw(&"SHOW CREATE TABLE `{table.name}`").getRaw().waitFor
+  let res = self.rdb.raw(&"SHOW CREATE TABLE `{table.name}`").get().waitFor
   var keyName = ""
   var hasIndex = false
   let query = res[0]["Create Table"].getStr

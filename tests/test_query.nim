@@ -414,8 +414,34 @@ for rdb in dbConnections:
     setup(rdb)
     asyncBlock:
       let sql = "SELECT * FROM users WHERE id = ?"
-      var res = rdb.raw(sql, "1").getRaw().await
+      var res = rdb.raw(sql, "1").get().await
       echo res
       check res[0]["name"].getStr == "user1"
+
+    asyncBlock:
+      let sql = "SELECT * FROM users WHERE id = ?"
+      var res = rdb.raw(sql, "1").getPlain().await
+      echo res
+      check res[0][1] == "user1"
+
+    asyncBlock:
+      let sql = "SELECT * FROM users WHERE id = ?"
+      var res = rdb.raw(sql, "1").first().await
+      echo res.get()
+      check res.get()["name"].getStr == "user1"
+
+    asyncBlock:
+      let sql = "SELECT * FROM users WHERE id = ?"
+      var res = rdb.raw(sql, "1").firstPlain().await
+      echo res
+      check res[1] == "user1"
+
+    asyncBlock:
+      var sql = "UPDATE users SET name = ? WHERE id = ?"
+      rdb.raw(sql, "updated user1", "1").exec().await
+      sql = "SELECT * FROM users WHERE id = ?"
+      var res = rdb.raw(sql, "1").firstPlain().await
+      echo res
+      check res[1] == "updated user1"
 
   echo &"=== {rdb.driver} {cpuTime() - start}"

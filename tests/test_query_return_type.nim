@@ -65,7 +65,7 @@ block:
 block:
   asyncBlock:
     var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = await(rdb.raw("select * from users").getRaw(Typ))[0]
+    var r = await(rdb.raw("select * from users").get(Typ))[0]
     checkTest(t, r)
 block:
   asyncBlock:
@@ -83,7 +83,7 @@ block:
       var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
       var rArr = @[
         await(rdb.table("users").get(Typ))[0],
-        await(rdb.raw("select * from users").getRaw(Typ))[0],
+        await(rdb.raw("select * from users").get(Typ))[0],
       ]
       for r in rArr:
         checkTest(t, r)
@@ -101,7 +101,7 @@ block:
     check r == newSeq[Typ](0)
 block:
   asyncBlock:
-    var r = await(rdb.raw("select * from users where id > ?", "10").getRaw(Typ))
+    var r = await(rdb.raw("select * from users where id > ?", "10").get(Typ))
     check r.len == 0
     check r == newSeq[Typ](0)
 block:
