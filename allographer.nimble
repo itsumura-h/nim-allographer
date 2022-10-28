@@ -33,7 +33,7 @@ task docs, "Generate API documents":
       "schema_builder",
     ]
 
-  if existsDir(deployDir):
+  if dirExists(deployDir):
     rmDir deployDir
   for f in srcFiles:
     let srcFile = pkgDir / f & ".nim"
