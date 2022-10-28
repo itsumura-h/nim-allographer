@@ -1,19 +1,22 @@
 import std/asyncdispatch
 import std/json
 import std/random
+import std/os
 import std/strutils
+import std/strformat
 import std/sequtils
 import std/times
+import ../src/allographer/connection
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
-from connections import rdb
 
 
 randomize()
-
+let rdb = dbOpen(PostgreSQL, "allographer", "user", "Password!", "postgres", 5432, 95, 30, shouldDisplayLog=false)
 const range1_10000 = 1..10000
 
 proc migrate() {.async.} =
+  echo "=== start migration"
   rdb.create(
     table("World", [
       Column.increments("id"),
@@ -49,9 +52,25 @@ proc migrate() {.async.} =
       %*{"id": 12, "message": "フレームワークのベンチマーク"},
     ]
     await rdb.table("Fortune").insert(data)
+  echo "=== finish migration"
 
 
-proc update() {.async.} =
+proc query():Future[seq[JsonNode]] {.async.} =
+  const countNum = 500
+  var futures = newSeq[Future[seq[string]]](countNum)
+  for i in 1..countNum:
+    let n = rand(range1_10000)
+    futures[i-1] = rdb.table("World").findPlain(n)
+  let resp = all(futures).await
+  let response = resp.map(
+    proc(x:seq[string]):JsonNode =
+      if x.len > 0: %*{"id": x[0].parseInt, "randomnumber": x[1]}
+      else: newJObject()
+  )
+  return response
+
+
+proc update():Future[seq[JsonNode]] {.async.} =
   const countNum = 500
   var response = newSeq[JsonNode](countNum)
   var updateFutures = newSeq[Future[void]](countNum)
@@ -66,31 +85,49 @@ proc update() {.async.} =
     )()
     response[i-1] = %*{"id":index, "randomNumber": number}
   await all(updateFutures)
-
-
-proc query() {.async.} =
-  const countNum = 100
-  var futures = newSeq[Future[seq[string]]](countNum)
-  for i in 1..countNum:
-    let n = rand(1..10000)
-    futures[i-1] = rdb.table("World").findPlain(n)
-  let resp = all(futures).await
-  let response = resp.map(
-    proc(x:seq[string]):JsonNode =
-      if x.len > 0: %*{"id": x[0].parseInt, "randomnumber": x[1]}
-      else: newJObject()
-  )
-  echo response
+  return response
 
 
 proc main() {.async.} =
   migrate().waitFor
-  # waitFor main()
-  let start = cpuTime()
-  for i in 1..20:
-    update().await
-    query().await
-    echo "===== ", i
-  echo cpuTime() - start
+  var queryResult = ""
+  var queryTime = 0.0
+  var updateResult = ""
+  var updateTime = 0.0
+
+  for i in 1..5:
+    # ===== qeury
+    sleep(500)
+    var start = cpuTime()
+    for _ in 1..20:
+      discard query().await
+    var time = cpuTime() - start
+    queryTime += time
+    if i > 1: queryResult.add("\c\L")
+    queryResult.add(&"|{i}|{time}|")
+    
+    # ===== update
+    sleep(500)
+    start = cpuTime()
+    for _ in 1..20:
+      discard update().await
+    time = cpuTime() - start
+    updateTime += time
+    if i > 1: updateResult.add("\c\L")
+    updateResult.add(&"|{i}|{time}|")
+    
+
+  echo "query"
+  echo "|num|time|"
+  echo "|---|---|"
+  echo queryResult
+  echo fmt"|Avg|{queryTime / 5}|"
+  echo ""
+  echo "update"
+  echo "|num|time|"
+  echo "|---|---|"
+  echo updateResult
+  echo fmt"|Avg|{updateTime / 5}|"
+
 
 main().waitFor
