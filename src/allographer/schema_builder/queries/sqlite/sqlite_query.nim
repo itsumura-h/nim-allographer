@@ -180,7 +180,7 @@ proc changeColumn(self:SqliteQuery, column:Column, table:Table) =
   # create tmp table with new column difinition
   #   get existing table schema
   let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '{table.name}'"
-  var rows = self.rdb.raw(tableDifinitionSql).getRaw.waitFor
+  var rows = self.rdb.raw(tableDifinitionSql).get.waitFor
   let schema = replace(rows[0]["sql"].getStr, re"\)$", ",)")
   let columnRegex = &"'{column.name}'.*?,"
   var columnString = generateColumnString(column) & ","
@@ -229,7 +229,7 @@ proc renameColumn(self:SqliteQuery, column:Column, table:Table) =
   ##
   ## rename tmp table to existing table
   let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '{table.name}'"
-  var rows = self.rdb.raw(tableDifinitionSql).getRaw.waitFor
+  var rows = self.rdb.raw(tableDifinitionSql).get.waitFor
   let schema = replace(rows[0]["sql"].getStr, re"\)$", ",)")
   let columnRegex = &"'{column.previousName}'.*?,"
 
@@ -292,7 +292,7 @@ proc deleteColumn(self:SqliteQuery, column:Column, table:Table) =
   ##
   ## rename tmp table to existing table
   let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '{table.name}'"
-  var rows = self.rdb.raw(tableDifinitionSql).getRaw.waitFor
+  var rows = self.rdb.raw(tableDifinitionSql).get.waitFor
   var query = replace(rows[0]["sql"].getStr, re"\)$", ", )")
   
   var columnString = query.findAll(re(&"'{column.name}'.*?,\\s"))[0]
