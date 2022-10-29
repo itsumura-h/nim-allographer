@@ -1605,7 +1605,7 @@ window.addEventListener('DOMContentLoaded', main);
      errmsg: var cstring): int32" href="async/database/rdb/sqlite.html#exec%2CPSqlite3%2Ccstring%2CCallback%2Cpointer%2Ccstring">sqlite: exec(para1: PSqlite3; sql: cstring; para3: Callback; para4: pointer;
      errmsg: var cstring): int32</a></li>
           <li><a class="reference external"
-          data-doc-search-tag="exec: exec(self: Rdb): owned(Future[void])" href="query_builder/exec.html#exec%2CRdb">exec: exec(self: Rdb): owned(Future[void])</a></li>
+          data-doc-search-tag="exec: exec(self: RawQueryRdb): owned(Future[void])" href="query_builder/exec.html#exec%2CRawQueryRdb">exec: exec(self: RawQueryRdb): owned(Future[void])</a></li>
           </ul></dd>
 <dt><a name="ExecStatusType" href="#ExecStatusType"><span>ExecStatusType:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -1893,12 +1893,16 @@ window.addEventListener('DOMContentLoaded', main);
           </ul></dd>
 <dt><a name="first" href="#first"><span>first:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="exec: first(self: RawQueryRdb): Future[Option[JsonNode]]" href="query_builder/exec.html#first%2CRawQueryRdb">exec: first(self: RawQueryRdb): Future[Option[JsonNode]]</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="exec: first(self: Rdb): Future[Option[JsonNode]]" href="query_builder/exec.html#first%2CRdb">exec: first(self: Rdb): Future[Option[JsonNode]]</a></li>
           <li><a class="reference external"
           data-doc-search-tag="exec: first[T](self: Rdb; typ: typedesc[T]): Future[Option[T]]" href="query_builder/exec.html#first%2CRdb%2Ctypedesc%5BT%5D">exec: first[T](self: Rdb; typ: typedesc[T]): Future[Option[T]]</a></li>
           </ul></dd>
 <dt><a name="firstPlain" href="#firstPlain"><span>firstPlain:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="exec: firstPlain(self: RawQueryRdb): Future[seq[string]]" href="query_builder/exec.html#firstPlain%2CRawQueryRdb">exec: firstPlain(self: RawQueryRdb): Future[seq[string]]</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="exec: firstPlain(self: Rdb): Future[seq[string]]" href="query_builder/exec.html#firstPlain%2CRdb">exec: firstPlain(self: Rdb): Future[seq[string]]</a></li>
           </ul></dd>
 <dt><a name="float" href="#float"><span>float:</span></a></dt><dd><ul class="simple">
@@ -1967,6 +1971,10 @@ window.addEventListener('DOMContentLoaded', main);
           </ul></dd>
 <dt><a name="get" href="#get"><span>get:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="exec: get(self: RawQueryRdb): Future[seq[JsonNode]]" href="query_builder/exec.html#get%2CRawQueryRdb">exec: get(self: RawQueryRdb): Future[seq[JsonNode]]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="exec: get[T](self: RawQueryRdb; typ: typedesc[T]): Future[seq[T]]" href="query_builder/exec.html#get%2CRawQueryRdb%2Ctypedesc%5BT%5D">exec: get[T](self: RawQueryRdb; typ: typedesc[T]): Future[seq[T]]</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="exec: get(self: Rdb): Future[seq[JsonNode]]" href="query_builder/exec.html#get%2CRdb">exec: get(self: Rdb): Future[seq[JsonNode]]</a></li>
           <li><a class="reference external"
           data-doc-search-tag="exec: get[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]" href="query_builder/exec.html#get%2CRdb%2Ctypedesc%5BT%5D">exec: get[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]</a></li>
@@ -2029,6 +2037,8 @@ window.addEventListener('DOMContentLoaded', main);
           </ul></dd>
 <dt><a name="getPlain" href="#getPlain"><span>getPlain:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
+          data-doc-search-tag="exec: getPlain(self: RawQueryRdb): Future[seq[seq[string]]]" href="query_builder/exec.html#getPlain%2CRawQueryRdb">exec: getPlain(self: RawQueryRdb): Future[seq[seq[string]]]</a></li>
+          <li><a class="reference external"
           data-doc-search-tag="exec: getPlain(self: Rdb): Future[seq[seq[string]]]" href="query_builder/exec.html#getPlain%2CRdb">exec: getPlain(self: Rdb): Future[seq[seq[string]]]</a></li>
           </ul></dd>
 <dt><a name="get_proto_info" href="#get_proto_info"><span>get_proto_info:</span></a></dt><dd><ul class="simple">
@@ -2036,12 +2046,6 @@ window.addEventListener('DOMContentLoaded', main);
           data-doc-search-tag="mariadb: get_proto_info(MySQL: PMySQL): cuint" href="async/database/rdb/mariadb.html#get_proto_info%2CPMySQL">mariadb: get_proto_info(MySQL: PMySQL): cuint</a></li>
           <li><a class="reference external"
           data-doc-search-tag="mysql: get_proto_info(MySQL: PMySQL): cuint" href="async/database/rdb/mysql.html#get_proto_info%2CPMySQL">mysql: get_proto_info(MySQL: PMySQL): cuint</a></li>
-          </ul></dd>
-<dt><a name="getRaw" href="#getRaw"><span>getRaw:</span></a></dt><dd><ul class="simple">
-<li><a class="reference external"
-          data-doc-search-tag="exec: getRaw(self: Rdb): Future[seq[JsonNode]]" href="query_builder/exec.html#getRaw%2CRdb">exec: getRaw(self: Rdb): Future[seq[JsonNode]]</a></li>
-          <li><a class="reference external"
-          data-doc-search-tag="exec: getRaw[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]" href="query_builder/exec.html#getRaw%2CRdb%2Ctypedesc%5BT%5D">exec: getRaw[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]</a></li>
           </ul></dd>
 <dt><a name="get_salt_from_password" href="#get_salt_from_password"><span>get_salt_from_password:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -4419,11 +4423,15 @@ window.addEventListener('DOMContentLoaded', main);
           </ul></dd>
 <dt><a name="raw" href="#raw"><span>raw:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="grammars: raw(self: Rdb; sql: string; arges: varargs[string]): Rdb" href="query_builder/grammars.html#raw%2CRdb%2Cstring%2Cvarargs%5Bstring%5D">grammars: raw(self: Rdb; sql: string; arges: varargs[string]): Rdb</a></li>
+          data-doc-search-tag="grammars: raw(self: Rdb; sql: string; arges: varargs[string]): RawQueryRdb" href="query_builder/grammars.html#raw%2CRdb%2Cstring%2Cvarargs%5Bstring%5D">grammars: raw(self: Rdb; sql: string; arges: varargs[string]): RawQueryRdb</a></li>
           </ul></dd>
 <dt><a name="rawExec" href="#rawExec"><span>rawExec:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="lib_mariadb: rawExec(db: PMySQL; query: string; args: seq[string])" href="async/database/libs/lib_mariadb.html#rawExec%2CPMySQL%2Cstring%2Cseq%5Bstring%5D">lib_mariadb: rawExec(db: PMySQL; query: string; args: seq[string])</a></li>
+          </ul></dd>
+<dt><a name="RawQueryRdb" href="#RawQueryRdb"><span>RawQueryRdb:</span></a></dt><dd><ul class="simple">
+<li><a class="reference external"
+          data-doc-search-tag="base: RawQueryRdb" href="base.html#RawQueryRdb">base: RawQueryRdb</a></li>
           </ul></dd>
 <dt><a name="Rdb" href="#Rdb"><span>Rdb:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -6562,7 +6570,7 @@ window.addEventListener('DOMContentLoaded', main);
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-10-09 00:49:56 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-10-29 01:21:40 UTC</small>
       </div>
     </div>
   </div>
