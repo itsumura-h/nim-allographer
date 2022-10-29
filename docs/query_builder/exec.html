@@ -145,8 +145,8 @@ window.addEventListener('DOMContentLoaded', main);
 
   </ul>
   <ul class="simple nested-toc-section">exec
-      <li><a class="reference" href="#exec%2CRdb"
-    title="exec(self: Rdb): owned(Future[void])">exec(self: Rdb): owned(Future[void])</a></li>
+      <li><a class="reference" href="#exec%2CRawQueryRdb"
+    title="exec(self: RawQueryRdb): owned(Future[void])">exec(self: RawQueryRdb): owned(Future[void])</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">fastPaginate
@@ -185,34 +185,37 @@ window.addEventListener('DOMContentLoaded', main);
 
   </ul>
   <ul class="simple nested-toc-section">first
-      <li><a class="reference" href="#first%2CRdb"
+      <li><a class="reference" href="#first%2CRawQueryRdb"
+    title="first(self: RawQueryRdb): Future[Option[JsonNode]]">first(self: RawQueryRdb): Future[Option[JsonNode]]</a></li>
+  <li><a class="reference" href="#first%2CRdb"
     title="first(self: Rdb): Future[Option[JsonNode]]">first(self: Rdb): Future[Option[JsonNode]]</a></li>
   <li><a class="reference" href="#first%2CRdb%2Ctypedesc%5BT%5D"
     title="first[T](self: Rdb; typ: typedesc[T]): Future[Option[T]]">first[T](self: Rdb; typ: typedesc[T]): Future[Option[T]]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">firstPlain
-      <li><a class="reference" href="#firstPlain%2CRdb"
+      <li><a class="reference" href="#firstPlain%2CRawQueryRdb"
+    title="firstPlain(self: RawQueryRdb): Future[seq[string]]">firstPlain(self: RawQueryRdb): Future[seq[string]]</a></li>
+  <li><a class="reference" href="#firstPlain%2CRdb"
     title="firstPlain(self: Rdb): Future[seq[string]]">firstPlain(self: Rdb): Future[seq[string]]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">get
-      <li><a class="reference" href="#get%2CRdb"
+      <li><a class="reference" href="#get%2CRawQueryRdb"
+    title="get(self: RawQueryRdb): Future[seq[JsonNode]]">get(self: RawQueryRdb): Future[seq[JsonNode]]</a></li>
+  <li><a class="reference" href="#get%2CRdb"
     title="get(self: Rdb): Future[seq[JsonNode]]">get(self: Rdb): Future[seq[JsonNode]]</a></li>
+  <li><a class="reference" href="#get%2CRawQueryRdb%2Ctypedesc%5BT%5D"
+    title="get[T](self: RawQueryRdb; typ: typedesc[T]): Future[seq[T]]">get[T](self: RawQueryRdb; typ: typedesc[T]): Future[seq[T]]</a></li>
   <li><a class="reference" href="#get%2CRdb%2Ctypedesc%5BT%5D"
     title="get[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]">get[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">getPlain
-      <li><a class="reference" href="#getPlain%2CRdb"
+      <li><a class="reference" href="#getPlain%2CRawQueryRdb"
+    title="getPlain(self: RawQueryRdb): Future[seq[seq[string]]]">getPlain(self: RawQueryRdb): Future[seq[seq[string]]]</a></li>
+  <li><a class="reference" href="#getPlain%2CRdb"
     title="getPlain(self: Rdb): Future[seq[seq[string]]]">getPlain(self: Rdb): Future[seq[seq[string]]]</a></li>
-
-  </ul>
-  <ul class="simple nested-toc-section">getRaw
-      <li><a class="reference" href="#getRaw%2CRdb"
-    title="getRaw(self: Rdb): Future[seq[JsonNode]]">getRaw(self: Rdb): Future[seq[JsonNode]]</a></li>
-  <li><a class="reference" href="#getRaw%2CRdb%2Ctypedesc%5BT%5D"
-    title="getRaw[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]">getRaw[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">insert
@@ -341,7 +344,8 @@ get columns sequence from table
 </div>
 <div id="commit,Rdb,int">
 <dt><pre><span class="Keyword">proc</span> <a href="#commit%2CRdb%2Cint"><span class="Identifier">commit</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">connI</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span>.}</pre></dt>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">TimeEffect</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
@@ -386,8 +390,8 @@ get columns sequence from table
 
 </dd>
 </div>
-<div id="exec,Rdb">
-<dt><pre><span class="Keyword">proc</span> <a href="#exec%2CRdb"><span class="Identifier">exec</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+<div id="exec,RawQueryRdb">
+<dt><pre><span class="Keyword">proc</span> <a href="#exec%2CRawQueryRdb"><span class="Identifier">exec</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#RawQueryRdb"><span class="Identifier">RawQueryRdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
     <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
     <span class="Identifier">TimeEffect</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
@@ -410,7 +414,7 @@ It is only used with raw()
 <div id="fastPaginateBack,Rdb,int,int,string,Order">
 <dt><pre><span class="Keyword">proc</span> <a href="#fastPaginateBack%2CRdb%2Cint%2Cint%2Cstring%2COrder"><span class="Identifier">fastPaginateBack</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">display</span><span class="Other">,</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">;</span>
                       <span class="Identifier">order</span><span class="Other">:</span> <a href="grammars.html#Order"><span class="Identifier">Order</span></a> <span class="Other">=</span> <span class="Identifier">Asc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">,</span>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span>
     <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
@@ -421,7 +425,7 @@ It is only used with raw()
 <div id="fastPaginateNext,Rdb,int,int,string,Order">
 <dt><pre><span class="Keyword">proc</span> <a href="#fastPaginateNext%2CRdb%2Cint%2Cint%2Cstring%2COrder"><span class="Identifier">fastPaginateNext</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">display</span><span class="Other">,</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">;</span>
                       <span class="Identifier">order</span><span class="Other">:</span> <a href="grammars.html#Order"><span class="Identifier">Order</span></a> <span class="Other">=</span> <span class="Identifier">Asc</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">,</span>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span>
     <span class="Identifier">ReadDbEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
@@ -467,6 +471,16 @@ It is only used with raw()
 
 </dd>
 </div>
+<div id="first,RawQueryRdb">
+<dt><pre><span class="Keyword">proc</span> <a href="#first%2CRawQueryRdb"><span class="Identifier">first</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#RawQueryRdb"><span class="Identifier">RawQueryRdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">]</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
+    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
 <div id="first,Rdb">
 <dt><pre><span class="Keyword">proc</span> <a href="#first%2CRdb"><span class="Identifier">first</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">]</span> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
@@ -485,6 +499,16 @@ It is only used with raw()
 
 </dd>
 </div>
+<div id="firstPlain,RawQueryRdb">
+<dt><pre><span class="Keyword">proc</span> <a href="#firstPlain%2CRawQueryRdb"><span class="Identifier">firstPlain</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#RawQueryRdb"><span class="Identifier">RawQueryRdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
+    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
 <div id="firstPlain,Rdb">
 <dt><pre><span class="Keyword">proc</span> <a href="#firstPlain%2CRdb"><span class="Identifier">firstPlain</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
@@ -492,6 +516,16 @@ It is only used with raw()
 <dd>
 
 
+
+</dd>
+</div>
+<div id="get,RawQueryRdb">
+<dt><pre><span class="Keyword">proc</span> <a href="#get%2CRawQueryRdb"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#RawQueryRdb"><span class="Identifier">RawQueryRdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">]</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
+    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+It is only used with raw()
 
 </dd>
 </div>
@@ -505,8 +539,26 @@ It is only used with raw()
 
 </dd>
 </div>
+<div id="get,RawQueryRdb,typedesc[T]">
+<dt><pre><span class="Keyword">proc</span> <a href="#get%2CRawQueryRdb%2Ctypedesc%5BT%5D"><span class="Identifier">get</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#RawQueryRdb"><span class="Identifier">RawQueryRdb</span></a><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">]</span></pre></dt>
+<dd>
+
+It is only used with raw()
+
+</dd>
+</div>
 <div id="get,Rdb,typedesc[T]">
 <dt><pre><span class="Keyword">proc</span> <a href="#get%2CRdb%2Ctypedesc%5BT%5D"><span class="Identifier">get</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">]</span></pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="getPlain,RawQueryRdb">
+<dt><pre><span class="Keyword">proc</span> <a href="#getPlain%2CRawQueryRdb"><span class="Identifier">getPlain</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#RawQueryRdb"><span class="Identifier">RawQueryRdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span><span class="Other">]</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
+    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
@@ -520,24 +572,6 @@ It is only used with raw()
 <dd>
 
 
-
-</dd>
-</div>
-<div id="getRaw,Rdb">
-<dt><pre><span class="Keyword">proc</span> <a href="#getRaw%2CRdb"><span class="Identifier">getRaw</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
-    <span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">ReadDbEffect</span><span class="Other">]</span></span>.}</pre></dt>
-<dd>
-
-It is only used with raw()
-
-</dd>
-</div>
-<div id="getRaw,Rdb,typedesc[T]">
-<dt><pre><span class="Keyword">proc</span> <a href="#getRaw%2CRdb%2Ctypedesc%5BT%5D"><span class="Identifier">getRaw</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">]</span></pre></dt>
-<dd>
-
-It is only used with raw()
 
 </dd>
 </div>
@@ -642,7 +676,8 @@ It is only used with raw()
 </div>
 <div id="rollback,Rdb,int">
 <dt><pre><span class="Keyword">proc</span> <a href="#rollback%2CRdb%2Cint"><span class="Identifier">rollback</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../base.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">connI</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span>.}</pre></dt>
+    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
+    <span class="Identifier">TimeEffect</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
@@ -704,7 +739,7 @@ It is only used with raw()
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-10-09 00:49:55 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-10-29 01:21:39 UTC</small>
       </div>
     </div>
   </div>

@@ -1,5 +1,5 @@
 table	query_builder/grammars.html#table,Rdb,string	grammars: table(self: Rdb; tableArg: string): Rdb	
-raw	query_builder/grammars.html#raw,Rdb,string,varargs[string]	grammars: raw(self: Rdb; sql: string; arges: varargs[string]): Rdb	
+raw	query_builder/grammars.html#raw,Rdb,string,varargs[string]	grammars: raw(self: Rdb; sql: string; arges: varargs[string]): RawQueryRdb	
 select	query_builder/grammars.html#select,Rdb,varargs[string]	grammars: select(self: Rdb; columnsArg: varargs[string]): Rdb	
 `distinct`	query_builder/grammars.html#distinct,Rdb	grammars: `distinct`(self: Rdb): Rdb	
 join	query_builder/grammars.html#join,Rdb,string,string,string,string	grammars: join(self: Rdb; table: string; column1: string; symbol: string; column2: string): Rdb	

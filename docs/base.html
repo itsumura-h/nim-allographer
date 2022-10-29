@@ -115,6 +115,16 @@ window.addEventListener('DOMContentLoaded', main);
   shouldDisplayLog*: bool
   shouldOutputLogFile*: bool
   logDir*: string">LogSetting</a></li>
+  <li><a class="reference" href="#RawQueryRdb"
+    title="RawQueryRdb = ref object
+  driver*: Driver
+  conn*: Connections
+  log*: LogSetting
+  query*: JsonNode
+  sqlString*: string
+  placeHolder*: seq[string]
+  isInTransaction*: bool
+  transactionConn*: int">RawQueryRdb</a></li>
   <li><a class="reference" href="#Rdb"
     title="Rdb = ref object
   driver*: Driver
@@ -166,6 +176,23 @@ window.addEventListener('DOMContentLoaded', main);
 
 </dd>
 </div>
+<div id="RawQueryRdb">
+<dt><pre><a href="base.html#RawQueryRdb"><span class="Identifier">RawQueryRdb</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
+  <span class="Identifier">driver</span><span class="Operator">*</span><span class="Other">:</span> <a href="base.html#Driver"><span class="Identifier">Driver</span></a>
+  <span class="Identifier">conn</span><span class="Operator">*</span><span class="Other">:</span> <a href="async/database/base.html#Connections"><span class="Identifier">Connections</span></a>
+  <span class="Identifier">log</span><span class="Operator">*</span><span class="Other">:</span> <a href="base.html#LogSetting"><span class="Identifier">LogSetting</span></a>
+  <span class="Identifier">query</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">JsonNode</span>
+  <span class="Identifier">sqlString</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">string</span>
+  <span class="Identifier">placeHolder</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span>
+  <span class="Identifier">isInTransaction</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">bool</span>
+  <span class="Identifier">transactionConn</span><span class="Operator">*</span><span class="Other">:</span> <span class="Identifier">int</span>
+</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
 <div id="Rdb">
 <dt><pre><a href="base.html#Rdb"><span class="Identifier">Rdb</span></a> <span class="Other">=</span> <span class="Keyword">ref</span> <span class="Keyword">object</span>
   <span class="Identifier">driver</span><span class="Operator">*</span><span class="Other">:</span> <a href="base.html#Driver"><span class="Identifier">Driver</span></a>
@@ -193,7 +220,7 @@ window.addEventListener('DOMContentLoaded', main);
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2022-10-09 00:49:55 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2022-10-29 01:21:39 UTC</small>
       </div>
     </div>
   </div>

@@ -5,3 +5,4 @@ PostgreSQL	base.html#PostgreSQL	Driver.PostgreSQL
 SQLite3	base.html#SQLite3	Driver.SQLite3	
 Driver	base.html#Driver	base: Driver	
 Rdb	base.html#Rdb	base: Rdb	
+RawQueryRdb	base.html#RawQueryRdb	base: RawQueryRdb	
