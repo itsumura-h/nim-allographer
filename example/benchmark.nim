@@ -57,6 +57,9 @@ proc migrate() {.async.} =
   echo "=== finish migration"
 
 
+let getFirstPrepare = stdRdb.prepare("getFirst", sql""" SELECT * FROM "World" WHERE id = $1 LIMIT 1 """, 1)
+let updatePrepare = stdRdb.prepare("updatePrepare", sql""" UPDATE "World" SET "randomNumber" = $1 WHERE id = $2 """, 2)
+
 proc query():Future[seq[JsonNode]] {.async.} =
   const countNum = 500
   var futures = newSeq[Future[seq[string]]](countNum)
@@ -70,6 +73,7 @@ proc query():Future[seq[JsonNode]] {.async.} =
       else: newJObject()
   )
   return response
+
 
 proc queryRaw():Future[seq[JsonNode]] {.async.} =
   const countNum = 500
@@ -86,8 +90,6 @@ proc queryRaw():Future[seq[JsonNode]] {.async.} =
   return response
 
 
-let getFirstPrepare = stdRdb.prepare("getFirst", sql""" SELECT * FROM "World" WHERE id = $1 LIMIT 1 """, 1)
-
 proc queryStd():Future[seq[JsonNode]] {.async.} =
   const countNum = 500
   var resp:seq[Row]
@@ -98,6 +100,7 @@ proc queryStd():Future[seq[JsonNode]] {.async.} =
       %*{"id": x[0].parseInt, "randomNumber": x[1]}
     )
   return response
+
 
 proc update():Future[seq[JsonNode]] {.async.} =
   const countNum = 500
@@ -114,6 +117,7 @@ proc update():Future[seq[JsonNode]] {.async.} =
   await all(futures)
   return response
 
+
 proc updateRaw():Future[seq[JsonNode]] {.async.} =
   const countNum = 500
   var response = newSeq[JsonNode](countNum)
@@ -121,13 +125,30 @@ proc updateRaw():Future[seq[JsonNode]] {.async.} =
   for i in 1..countNum:
     let index = rand(range1_10000)
     let number = rand(range1_10000)
-    futures[i-1] = (proc() {.async.} =
-        discard rdb.raw(""" SELECT id, randomNumber FROM "World" WHERE id = ? LIMIT 1 """, $index).firstPlain()
-        discard rdb.raw(""" UPDATE "World" SET "randomNumber" = ? WHERE id = ? """, $number, $index).exec()
+    futures[i-1] = (proc():Future[void] =
+      discard rdb.raw(""" SELECT FROM "World" WHERE id = ? LIMIT 1 """, $index).firstPlain()
+      rdb.raw(""" UPDATE "World" SET "randomNumber" = ? WHERE id = ? """, $number, $index).exec()
     )()
     response[i-1] = %*{"id":index, "randomNumber": number}
   await all(futures)
   return response
+
+
+proc updateRawStd():Future[seq[JsonNode]] {.async.} =
+  const countNum = 500
+  var response = newSeq[JsonNode](countNum)
+  var futures = newSeq[Future[void]](countNum)
+  for i in 1..countNum:
+    let index = rand(range1_10000)
+    let number = rand(range1_10000)
+    futures[i-1] = (proc():Future[void] =
+      discard stdRdb.getRow(getFirstPrepare, $index)
+      rdb.raw(""" UPDATE "World" SET "randomNumber" = ? WHERE id = ? """, $number, $index).exec()
+    )()
+    response[i-1] = %*{"id":index, "randomNumber": number}
+  await all(futures)
+  return response
+
 
 proc timeProcess[T](name:string, cb:proc():Future[T]) {.async.}=
   var start = 0.0
@@ -160,6 +181,7 @@ proc main() =
   timeProcess("queryStd", queryStd).waitFor
   timeProcess("update", update).waitFor
   timeProcess("updateRaw", updateRaw).waitFor
+  timeProcess("updateRawStd", updateRawStd).waitFor
 
 
 main()
