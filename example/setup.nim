@@ -20,11 +20,10 @@ proc setup*() =
       Column.increments("id"),
       Column.string("auth")
     ]),
-    table("users",[
+    table("user",[
       Column.increments("id"),
       Column.string("name").nullable(),
       Column.string("email").nullable(),
-      Column.string("address").nullable(),
       Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
     ])
   )
@@ -37,16 +36,16 @@ proc setup*() =
     ])
     .waitFor
 
-  seeder rdb, "users":
-    var users: seq[JsonNode]
+  seeder rdb, "user":
+    var user: seq[JsonNode]
     for i in 1..10:
       let authId = if i mod 2 == 0: 2 else: 1
-      users.add(
+      user.add(
         %*{
           "name": &"user{i}",
-          "email": &"user{i}@gmail.com",
+          "email": &"user{i}@mail.com",
           "auth_id": authId
         }
       )
 
-    rdb.table("users").insert(users).waitFor
+    rdb.table("user").insert(user).waitFor

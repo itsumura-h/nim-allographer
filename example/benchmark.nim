@@ -3,6 +3,7 @@ import std/db_postgres
 import std/json
 import std/random
 import std/os
+import std/options
 import std/strutils
 import std/strformat
 import std/sequtils
@@ -13,8 +14,8 @@ import ../src/allographer/query_builder
 
 
 randomize()
-let rdb = dbOpen(PostgreSQL, "allographer", "user", "Password!", "postgres", 5432, 95, 30, shouldDisplayLog=false)
-let stdRdb = open("postgres:5432", "user", "Password!", "allographer")
+let rdb = dbOpen(PostgreSQL, "database", "user", "pass", "postgres", 5432, 95, 30, shouldDisplayLog=false)
+let stdRdb = open("postgres:5432", "user", "pass", "database")
 const range1_10000 = 1..10000
 
 proc migrate() {.async.} =
@@ -73,7 +74,6 @@ proc query():Future[seq[JsonNode]] {.async.} =
       else: newJObject()
   )
   return response
-
 
 proc queryRaw():Future[seq[JsonNode]] {.async.} =
   const countNum = 500
@@ -154,9 +154,10 @@ proc timeProcess[T](name:string, cb:proc():Future[T]) {.async.}=
   var start = 0.0
   var eachTime = 0.0
   var sumTime = 0.0
+  const times = 5
   var resultStr = ""
 
-  for i in 1..5:
+  for i in 1..times:
     sleep(500)
     start = cpuTime()
     for _ in 1..20:
@@ -170,13 +171,14 @@ proc timeProcess[T](name:string, cb:proc():Future[T]) {.async.}=
   echo "|num|time|"
   echo "|---|---|"
   echo resultStr
-  echo fmt"|Avg|{sumTime / 5}|"
+  echo fmt"|Avg|{sumTime / times}|"
   echo ""
 
 proc main() =
   migrate().waitFor
 
   timeProcess("query", query).waitFor
+  timeProcess("queryTime", queryTime).waitFor
   timeProcess("queryRaw", queryRaw).waitFor
   timeProcess("queryStd", queryStd).waitFor
   timeProcess("update", update).waitFor

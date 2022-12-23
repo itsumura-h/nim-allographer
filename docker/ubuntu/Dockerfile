@@ -19,7 +19,7 @@ RUN apt install -y --fix-missing \
         libpq-dev \
         libmariadb-dev
 
-ARG VERSION="1.6.6"
+ARG VERSION="1.6.10"
 WORKDIR /root
 RUN wget --inet4-only https://nim-lang.org/download/nim-${VERSION}-linux_x64.tar.xz && \
     tar -Jxf nim-${VERSION}-linux_x64.tar.xz && \
