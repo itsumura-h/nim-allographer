@@ -1,19 +1,18 @@
-import
-  std/os, 
-  std/json,
-  std/options,
-  ../base,
-  ../query_builder,
-  ./grammars,
-  ./queries/query_interface,
-  ./queries/sqlite/sqlite_query,
-  ./queries/mysql/mysql_query,
-  ./queries/postgre/postgre_query
+import std/os
+import std/json
+import std/options
+import ../base
+import ../query_builder
+import ./grammars
+import ./queries/query_interface
+import ./queries/sqlite/sqlite_query
+import ./queries/mysql/mysql_query
+import ./queries/postgre/postgre_query
 
 
 proc create*(rdb:Rdb, tables:varargs[Table]) =
   let cmd = commandLineParams()
-  let isReset = defined(reset) or cmd.contains("--reset")
+  let isReset = defined(reset) or cmd.contains("--reset") 
   let generator =
     case rdb.driver
     of SQLite3:

@@ -1,7 +1,13 @@
-import json, strutils, strformat, algorithm, options, asyncdispatch
-import ../base, builders
-import ../utils
+import std/algorithm
+import std/asyncdispatch
+import std/json
+import std/options
+import std/strformat
+import std/strutils
 import ../async/async_db
+import ../base
+import ../utils
+import ./builders
 
 
 proc selectSql*(self: Rdb):string =
@@ -323,7 +329,7 @@ proc insertId(self:Rdb, sqlString:string, placeHolder:seq[string], key:string):F
     return rows[0][0].parseInt
   else:
     var key = key
-    wrapUpper(key, self.driver)
+    quote(key, self.driver)
     var sqlString = sqlString
     sqlString.add(&" RETURNING {key}")
     self.log.logger(sqlString, placeHolder)
@@ -570,10 +576,12 @@ proc paginate*(self:Rdb, display:int, page:int=1):Future[JsonNode]{.async.} =
 
 proc getFirstItem(self:Rdb, keyArg:string, order:Order=Asc):Future[int]{.async.} =
   var sqlString = self.sqlString
+  var quoteKey = keyArg
+  quote(quoteKey, self.driver)
   if order == Asc:
-    sqlString = &"{sqlString} ORDER BY {keyArg} ASC LIMIT 1"
+    sqlString = &"{sqlString} ORDER BY {quoteKey} ASC LIMIT 1"
   else:
-    sqlString = &"{sqlString} ORDER BY {keyArg} DESC LIMIT 1"
+    sqlString = &"{sqlString} ORDER BY {quoteKey} DESC LIMIT 1"
   let row = await self.getRow(sqlString, self.placeHolder)
   let key = if keyArg.contains("."): keyArg.split(".")[1] else: keyArg
   if row.isSome:
@@ -584,10 +592,12 @@ proc getFirstItem(self:Rdb, keyArg:string, order:Order=Asc):Future[int]{.async.}
 
 proc getLastItem(self:Rdb, keyArg:string, order:Order=Asc):Future[int]{.async.} =
   var sqlString = self.sqlString
+  var quoteKey = keyArg
+  quote(quoteKey, self.driver)
   if order == Asc:
-    sqlString = &"{sqlString} ORDER BY {keyArg} DESC LIMIT 1"
+    sqlString = &"{sqlString} ORDER BY {quoteKey} DESC LIMIT 1"
   else:
-    sqlString = &"{sqlString} ORDER BY {keyArg} ASC LIMIT 1"
+    sqlString = &"{sqlString} ORDER BY {quoteKey} ASC LIMIT 1"
   let row = await self.getRow(sqlString, self.placeHolder)
   let key = if keyArg.contains("."): keyArg.split(".")[1] else: keyArg
   if row.isSome:
@@ -599,10 +609,12 @@ proc getLastItem(self:Rdb, keyArg:string, order:Order=Asc):Future[int]{.async.} 
 proc fastPaginate*(self:Rdb, display:int, key="id", order:Order=Asc):Future[JsonNode]{.async.} =
   # defer: self.cleanUp()
   var sql = self.selectBuilder()
+  var quoteKey = key
+  quote(quoteKey, self.driver)
   if order == Asc:
-    sql = &"{sql} ORDER BY {key} ASC LIMIT {display + 1}"
+    sql = &"{sql} ORDER BY {quoteKey} ASC LIMIT {display + 1}"
   else:
-    sql = &"{sql} ORDER BY {key} DESC LIMIT {display + 1}"
+    sql = &"{sql} ORDER BY {quoteKey} DESC LIMIT {display + 1}"
   self.log.logger(sql, self.placeHolder)
   var currentPage = self.getAllRows(sql, self.placeHolder).await
   if currentPage.len > 0:
@@ -635,26 +647,28 @@ proc fastPaginateNext*(self:Rdb, display, id:int, key="id", order:Order=Asc):Fut
   if not id > 0: raise newException(Exception, "Arg id should be larger than 0")
   var sql = @[self.selectBuilder()][0]
   let firstItem = await getFirstItem(self, key, order)
+  var quoteKey = key
+  quote(quoteKey, self.driver)
 
   let where = if sql.contains("WHERE"): "AND" else: "WHERE"
   if order == Asc:
     sql = &"""
 SELECT * FROM (
-  {sql} {where} {key} < {id} ORDER BY {key} DESC LIMIT 1
+  {sql} {where} {quoteKey} < {id} ORDER BY {quoteKey} DESC LIMIT 1
 ) x
 UNION ALL
 SELECT * FROM (
-  {sql} {where} {key} >= {id} ORDER BY {key} ASC LIMIT {display+1}
+  {sql} {where} {quoteKey} >= {id} ORDER BY {quoteKey} ASC LIMIT {display+1}
 ) x
 """
   else:
     sql = &"""
 SELECT * FROM (
-  {sql} {where} {key} > {id} ORDER BY {key} ASC LIMIT 1
+  {sql} {where} {quoteKey} > {id} ORDER BY {quoteKey} ASC LIMIT 1
 ) x
 UNION ALL
 SELECT * FROM (
-  {sql} {where} {key} <= {id} ORDER BY {key} DESC LIMIT {display+1}
+  {sql} {where} {quoteKey} <= {id} ORDER BY {quoteKey} DESC LIMIT {display+1}
 ) x
 """
   self.placeHolder &= self.placeHolder
@@ -699,26 +713,28 @@ proc fastPaginateBack*(self:Rdb, display, id:int, key="id", order:Order=Asc):Fut
   if not id > 0: raise newException(Exception, "Arg id should be larger than 0")
   var sql = @[self.selectBuilder()][0]
   let lastItem = await self.getLastItem(key, order)
+  var quoteKey = key
+  quote(quoteKey, self.driver)
 
   let where = if sql.contains("WHERE"): "AND" else: "WHERE"
   if order == Asc:
     sql = &"""
 SELECT * FROM (
-  {sql} {where} {key} > {id} ORDER BY {key} ASC LIMIT 1
+  {sql} {where} {quoteKey} > {id} ORDER BY {quoteKey} ASC LIMIT 1
 ) x
 UNION ALL
 SELECT * FROM (
-  {sql} {where} {key} <= {id} ORDER BY {key} DESC LIMIT {display+1}
+  {sql} {where} {quoteKey} <= {id} ORDER BY {quoteKey} DESC LIMIT {display+1}
 ) x
 """
   else:
     sql = &"""
 SELECT * FROM (
-  {sql} {where} {key} < {id} ORDER BY {key} DESC LIMIT 1
+  {sql} {where} {quoteKey} < {id} ORDER BY {quoteKey} DESC LIMIT 1
 ) x
 UNION ALL
 SELECT * FROM (
-  {sql} {where} {key} >= {id} ORDER BY {key} ASC LIMIT {display+1}
+  {sql} {where} {quoteKey} >= {id} ORDER BY {quoteKey} ASC LIMIT {display+1}
 ) x
 """
   self.placeHolder &= self.placeHolder
