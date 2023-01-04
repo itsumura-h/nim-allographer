@@ -2,23 +2,22 @@ discard """
   cmd: "nim c -d:reset -r $file"
 """
 
-import
-  std/unittest,
-  std/json,
-  std/strformat,
-  std/asyncdispatch,
-  ../src/allographer/schema_builder,
-  ../src/allographer/query_builder,
-  ./connections
+import std/unittest
+import std/json
+import std/strformat
+import std/asyncdispatch
+import ../src/allographer/schema_builder
+import ../src/allographer/query_builder
+import ./connections
 
 
-proc setup(rdb:Rdb) =
+proc setUp(rdb:Rdb) =
   rdb.create(
     table("auth", [
       Column.increments("id"),
       Column.string("auth")
     ]),
-    table("users",[
+    table("user",[
       Column.increments("id"),
       Column.string("name").nullable(),
       Column.string("email").nullable(),
@@ -47,67 +46,66 @@ proc setup(rdb:Rdb) =
           "auth_id": authId
         }
       )
-    rdb.table("users").insert(insertData).await
+    rdb.table("user").insert(insertData).await
 
 
 for rdb in dbConnections:
-  block:
-    setup(rdb)
-    asyncBlock:
-      var x = rdb.table("users").where("name", "=", "user1").get().await
-      var y = rdb.table("users").where("name", "=", "user1' AND 'A' = 'A").get().await
-      echo x
-      echo y
-      check x != y
+  suite("sql injection"):
+    setup:
+      setUp(rdb)
+    
+    test("test1"):
+      asyncBlock:
+        var x = rdb.table("user").where("name", "=", "user1").get().await
+        var y = rdb.table("user").where("name", "=", "user1' AND 'A' = 'A").get().await
+        echo x
+        echo y
+        check x != y
 
-  block:
-    setup(rdb)
-    asyncBlock:
-      var x = rdb.table("users").where("name", "=", "user1").get().await
-      var y = rdb.table("users").where("name", "=", "user1' AND 'A' = 'B").get().await
-      echo x
-      echo y
-      check x != y
+    test("test2"):
+      asyncBlock:
+        var x = rdb.table("user").where("name", "=", "user1").get().await
+        var y = rdb.table("user").where("name", "=", "user1' AND 'A' = 'B").get().await
+        echo x
+        echo y
+        check x != y
 
-  block:
-    setup(rdb)
-    asyncBlock:
-      var x = rdb.table("users").where("name", "=", "user1").get().await
-      var y = rdb.table("users").where("name", "=", "user1' OR 'A' = 'B").get().await
-      echo x
-      echo y
-      check x != y
+    test("test3"):
+      asyncBlock:
+        var x = rdb.table("user").where("name", "=", "user1").get().await
+        var y = rdb.table("user").where("name", "=", "user1' OR 'A' = 'B").get().await
+        echo x
+        echo y
+        check x != y
 
-  block:
-    setup(rdb)
-    asyncBlock:
-      var x = rdb.table("users").where("id", "=", 1).get().await
-      var y: seq[JsonNode]
-      try:
-        y = rdb.table("users").where("id", "=", "2-1").get().await
-      except Exception:
-        y = @[]
-      echo x
-      echo y
-      check x != y
+    test("test4"):
+      asyncBlock:
+        var x = rdb.table("user").where("id", "=", 1).get().await
+        var y: seq[JsonNode]
+        try:
+          y = rdb.table("user").where("id", "=", "2-1").get().await
+        except Exception:
+          y = @[]
+        echo x
+        echo y
+        check x != y
 
-  block:
-    setup(rdb)
-    asyncBlock:
-      var x = rdb.table("users").select("name", "email")
-              .join("auth", "auth.id", "=", "users.auth_id")
-              .where("auth.id", "=", 1)
-              .get()
-              .await
-      var y: seq[JsonNode]
-      try:
-        y = rdb.table("users").select("name", "email")
-                .join("auth", "auth.id", "=", "users.auth_id")
-                .where("auth.id", "=", "2-1")
+    test("test5"):
+      asyncBlock:
+        var x = rdb.table("user").select("name", "email")
+                .join("auth", "auth.id", "=", "user.auth_id")
+                .where("auth.id", "=", 1)
                 .get()
                 .await
-      except Exception:
-        y = @[]
-      echo x
-      echo y
-      check x != y
+        var y: seq[JsonNode]
+        try:
+          y = rdb.table("user").select("name", "email")
+                  .join("auth", "auth.id", "=", "user.auth_id")
+                  .where("auth.id", "=", "2-1")
+                  .get()
+                  .await
+        except Exception:
+          y = @[]
+        echo x
+        echo y
+        check x != y

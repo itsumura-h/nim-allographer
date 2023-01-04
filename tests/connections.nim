@@ -18,7 +18,7 @@ let
 let rdb* = dbopen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=true)
 
 let dbConnections* = @[
-  dbopen(SQLite3, ":memory:", maxConnections=95, timeout=timeout, shouldDisplayLog=true),
+  dbopen(SQLite3, ":memory:", maxConnections=95, timeout=timeout, shouldDisplayLog=false),
   dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=false),
   dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=false),
 ]
@@ -30,6 +30,7 @@ let dbConnectionsTransacion* = @[
 ]
 
 template asyncBlock*(body:untyped) =
-  waitFor (proc(){.async.}=
+  (proc(){.async.}=
     body
   )()
+  .waitFor()

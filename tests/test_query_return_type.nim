@@ -2,38 +2,39 @@ discard """
   cmd: "nim c -d:reset -r $file"
 """
 
-import
-  std/unittest,
-  strformat,
-  std/json,
-  std/strutils,
-  std/options,
-  std/asyncdispatch,
-  ../src/allographer/query_builder,
-  ../src/allographer/schema_builder,
-  ./connections
+import std/unittest
+import strformat
+import std/json
+import std/strutils
+import std/options
+import std/asyncdispatch
+import ../src/allographer/query_builder
+import ../src/allographer/schema_builder
+import ./connections
+import ../src/allographer/utils
 
 
-rdb.create(
-  table("users", [
-    Column.increments("id"),
-    Column.string("name").nullable(),
-    Column.date("birth_date").nullable(),
-    Column.string("null").nullable(),
-    Column.boolean("bool").default(false)
-  ])
-)
-
-var users: seq[JsonNode]
-for i in 1..5:
-  users.add(
-    %*{
-      "name": &"user{i}",
-      "birth_date": &"1990-01-0{i}"
-    }
+proc setUp(rdb:Rdb) =
+  rdb.create(
+    table("user", [
+      Column.increments("id"),
+      Column.string("name").nullable(),
+      Column.date("birth_date").nullable(),
+      Column.string("null").nullable(),
+      Column.boolean("bool").default(false)
+    ])
   )
-asyncBlock:
-  await rdb.table("users").insert(users)
+
+  var users: seq[JsonNode]
+  for i in 1..5:
+    users.add(
+      %*{
+        "name": &"user{i}",
+        "birth_date": &"1990-01-0{i}"
+      }
+    )
+  asyncBlock:
+    await rdb.table("user").insert(users)
 
 
 type Typ = ref object
@@ -57,62 +58,77 @@ proc checkTestOptions(t:Typ, r:Option[Typ]) =
   check t.null == r.get.null
   check t.bool == r.get.bool
 
-block:
-  asyncBlock:
-    var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = await(rdb.table("users").get(Typ))[0]
-    checkTest(t, r)
-block:
-  asyncBlock:
-    var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = await(rdb.raw("select * from users").get(Typ))[0]
-    checkTest(t, r)
-block:
-  asyncBlock:
-    var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = await rdb.table("users").first(Typ)
-    checkTestOptions(t, r)
-block:
-  asyncBlock:
-    var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-    var r = await(rdb.table("users").find(1, Typ))
-    checkTestOptions(t, r)
-block:
-  asyncBlock:
-    transaction rdb:
-      var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
-      var rArr = @[
-        await(rdb.table("users").get(Typ))[0],
-        await(rdb.raw("select * from users").get(Typ))[0],
-      ]
-      for r in rArr:
+for rdb in dbConnections:
+  suite("query return type"):
+    setup:
+      setUp(rdb)
+
+    test("test1"):
+      asyncBlock:
+        var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
+        var r = await(rdb.table("user").get(Typ))[0]
         checkTest(t, r)
-      var rArr2 = @[
-        await(rdb.table("users").first(Typ)),
-        await(rdb.table("users").find(1, Typ))
-      ]
-      for r in rArr2:
+    
+    test("test2"):
+      asyncBlock:
+        var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
+        var table = "user"
+        quote(table, rdb.driver)
+        var r = rdb.raw(&"SELECT * FROM {table}").get(Typ).await()[0]
+        checkTest(t, r)
+
+    test("test3"):
+      asyncBlock:
+        var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
+        var r = await rdb.table("user").first(Typ)
         checkTestOptions(t, r)
 
-block:
-  asyncBlock:
-    var r = await(rdb.table("users").where("id", ">", 10).get(Typ))
-    check r.len == 0
-    check r == newSeq[Typ](0)
-block:
-  asyncBlock:
-    var r = await(rdb.raw("select * from users where id > ?", "10").get(Typ))
-    check r.len == 0
-    check r == newSeq[Typ](0)
-block:
-  asyncBlock:
-    var r = await(rdb.table("users").where("id", ">", 10).first(Typ))
-    check r.isSome() == false
-block:
-  asyncBlock:
-    var r = await(rdb.table("users").find(10, Typ))
-    check r.isSome() == false
+    test("test4"):
+      asyncBlock:
+        var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
+        var r = await(rdb.table("user").find(1, Typ))
+        checkTestOptions(t, r)
+    
+    test("test5"):
+      asyncBlock:
+        transaction rdb:
+          var t = Typ(id:1, name:"user1", birth_date:"1990-01-01", null:"")
+          var table = "user"
+          quote(table, rdb.driver)
+          var rArr = @[
+            await(rdb.table("user").get(Typ))[0],
+            await(rdb.raw(&"SELECT * FROM {table}").get(Typ))[0],
+          ]
+          for r in rArr:
+            checkTest(t, r)
+          var rArr2 = @[
+            await(rdb.table("user").first(Typ)),
+            await(rdb.table("user").find(1, Typ))
+          ]
+          for r in rArr2:
+            checkTestOptions(t, r)
 
-rdb.alter(
-  drop("users")
-)
+    test("test6"):
+      asyncBlock:
+        var r = await(rdb.table("user").where("id", ">", 10).get(Typ))
+        check r.len == 0
+        check r == newSeq[Typ](0)
+    
+    test("test6"):
+      asyncBlock:
+        var r = await(rdb.raw("SELECT * FROM user WHERE id > ?", "10").get(Typ))
+        check r.len == 0
+        check r == newSeq[Typ](0)
+    test("test7"):
+      asyncBlock:
+        var r = await(rdb.table("user").where("id", ">", 10).first(Typ))
+        check r.isSome() == false
+    
+    test("test8"):
+      asyncBlock:
+        var r = await(rdb.table("user").find(10, Typ))
+        check r.isSome() == false
+
+  rdb.alter(
+    drop("user")
+  )
