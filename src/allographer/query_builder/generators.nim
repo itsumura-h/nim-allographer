@@ -20,7 +20,7 @@ proc selectSql*(self: Rdb): Rdb =
     for i, item in self.query["select"].getElems():
       if i > 0: queryString.add(",")
       var column = item.getStr()
-      wrapUpper(column, self.driver)
+      quote(column, self.driver)
       queryString.add(&" {column}")
   else:
     queryString.add(" *")
@@ -31,7 +31,7 @@ proc selectSql*(self: Rdb): Rdb =
 
 proc fromSql*(self: Rdb): Rdb =
   var table = self.query["table"].getStr()
-  wrapUpper(table, self.driver)
+  quote(table, self.driver)
   self.sqlString.add(&" FROM {table}")
   return self
 
@@ -43,7 +43,7 @@ proc selectFirstSql*(self:Rdb): Rdb =
 
 proc selectByIdSql*(self:Rdb, key:string): Rdb =
   var key = key
-  wrapUpper(key, self.driver)
+  quote(key, self.driver)
   if self.sqlString.contains("WHERE"):
     self.sqlString.add(&" AND {key} = ? LIMIT 1")
   else:
@@ -55,12 +55,12 @@ proc joinSql*(self: Rdb): Rdb =
   if self.query.hasKey("join"):
     for row in self.query["join"]:
       var table = row["table"].getStr()
-      wrapUpper(table, self.driver)
+      quote(table, self.driver)
       var column1 = row["column1"].getStr()
-      wrapUpper(column1, self.driver)
+      quote(column1, self.driver)
       var symbol = row["symbol"].getStr()
       var column2 = row["column2"].getStr()
-      wrapUpper(column2, self.driver)
+      quote(column2, self.driver)
 
       self.sqlString.add(&" INNER JOIN {table} ON {column1} {symbol} {column2}")
   return self
@@ -70,12 +70,12 @@ proc leftJoinSql*(self: Rdb): Rdb =
   if self.query.hasKey("left_join"):
     for row in self.query["left_join"]:
       var table = row["table"].getStr()
-      wrapUpper(table, self.driver)
+      quote(table, self.driver)
       var column1 = row["column1"].getStr()
-      wrapUpper(column1, self.driver)
+      quote(column1, self.driver)
       var symbol = row["symbol"].getStr()
       var column2 = row["column2"].getStr()
-      wrapUpper(column2, self.driver)
+      quote(column2, self.driver)
 
       self.sqlString.add(&" LEFT JOIN {table} ON {column1} {symbol} {column2}")
   return self
@@ -85,7 +85,7 @@ proc whereSql*(self: Rdb): Rdb =
   if self.query.hasKey("where"):
     for i, row in self.query["where"].getElems():
       var column = row["column"].getStr()
-      wrapUpper(column, self.driver)
+      quote(column, self.driver)
       var symbol = row["symbol"].getStr()
       var value = row["value"].getStr()
 
@@ -100,7 +100,7 @@ proc orWhereSql*(self: Rdb): Rdb =
   if self.query.hasKey("or_where"):
     for row in self.query["or_where"]:
       var column = row["column"].getStr()
-      wrapUpper(column, self.driver)
+      quote(column, self.driver)
       var symbol = row["symbol"].getStr()
       var value = row["value"].getStr()
 
@@ -115,7 +115,7 @@ proc whereBetweenSql*(self:Rdb): Rdb =
   if self.query.hasKey("where_between"):
     for row in self.query["where_between"]:
       var column = row["column"].getStr()
-      wrapUpper(column, self.driver)
+      quote(column, self.driver)
       var start = row["width"][0].getFloat()
       var stop = row["width"][1].getFloat()
 
@@ -130,7 +130,7 @@ proc whereBetweenStringSql*(self:Rdb): Rdb =
   if self.query.hasKey("where_between_string"):
     for row in self.query["where_between_string"]:
       var column = row["column"].getStr()
-      wrapUpper(column, self.driver)
+      quote(column, self.driver)
       var start = row["width"][0].getStr
       var stop = row["width"][1].getStr
 
@@ -145,7 +145,7 @@ proc whereNotBetweenSql*(self:Rdb): Rdb =
   if self.query.hasKey("where_not_between"):
     for row in self.query["where_not_between"]:
       var column = row["column"].getStr()
-      wrapUpper(column, self.driver)
+      quote(column, self.driver)
       var start = row["width"][0].getFloat()
       var stop = row["width"][1].getFloat()
 
@@ -160,7 +160,7 @@ proc whereNotBetweenStringSql*(self:Rdb): Rdb =
   if self.query.hasKey("where_not_between_string"):
     for row in self.query["where_not_between_string"]:
       var column = row["column"].getStr()
-      wrapUpper(column, self.driver)
+      quote(column, self.driver)
       var start = row["width"][0].getStr
       var stop = row["width"][1].getStr
 
@@ -176,7 +176,7 @@ proc whereInSql*(self:Rdb): Rdb =
     var widthString = ""
     for row in self.query["where_in"]:
       var column = row["column"].getStr()
-      wrapUpper(column, self.driver)
+      quote(column, self.driver)
       for i, val in row["width"].getElems():
         if i > 0: widthString.add(", ")
         if val.kind == JInt:
@@ -196,7 +196,7 @@ proc whereNotInSql*(self:Rdb): Rdb =
     var widthString = ""
     for row in self.query["where_not_in"]:
       var column = row["column"].getStr()
-      wrapUpper(column, self.driver)
+      quote(column, self.driver)
       for i, val in row["width"].getElems():
         if i > 0: widthString.add(", ")
         if val.kind == JInt:
@@ -215,7 +215,7 @@ proc whereNullSql*(self:Rdb): Rdb =
   if self.query.hasKey("where_null"):
     for row in self.query["where_null"]:
       var column = row["column"].getStr()
-      wrapUpper(column, self.driver)
+      quote(column, self.driver)
       if self.sqlString.contains("WHERE"):
         self.sqlString.add(&" AND {column} is null")
       else:
@@ -227,7 +227,7 @@ proc groupBySql*(self:Rdb): Rdb =
   if self.query.hasKey("group_by"):
     for row in self.query["group_by"]:
       var column = row["column"].getStr()
-      wrapUpper(column, self.driver)
+      quote(column, self.driver)
       if self.sqlString.contains("GROUP BY"):
         self.sqlString.add(&", {column}")
       else:
@@ -239,7 +239,7 @@ proc havingSql*(self:Rdb): Rdb =
   if self.query.hasKey("having"):
     for i, row in self.query["having"].getElems():
       var column = row["column"].getStr()
-      wrapUpper(column, self.driver)
+      quote(column, self.driver)
       var symbol = row["symbol"].getStr()
       var value = row["value"].getStr()
 
@@ -255,7 +255,7 @@ proc orderBySql*(self:Rdb): Rdb =
   if self.query.hasKey("order_by"):
     for row in self.query["order_by"]:
       var column = row["column"].getStr()
-      wrapUpper(column, self.driver)
+      quote(column, self.driver)
       var order = row["order"].getStr()
 
       if self.sqlString.contains("ORDER BY"):
@@ -285,7 +285,7 @@ proc offsetSql*(self: Rdb): Rdb =
 
 proc insertSql*(self: Rdb): Rdb =
   var table = self.query["table"].getStr()
-  wrapUpper(table, self.driver)
+  quote(table, self.driver)
   self.sqlString = &"INSERT INTO {table}"
   return self
 
@@ -302,7 +302,7 @@ proc insertValueSql*(self: Rdb, items: JsonNode): Rdb =
     i += 1
     # If column name contains Upper letter, column name is covered by double quote
     var key = key
-    wrapUpper(key, self.driver)
+    quote(key, self.driver)
     columns.add(key)
 
     if val.kind == JInt:
@@ -337,7 +337,7 @@ proc insertValuesSql*(self: Rdb, rows: openArray[JsonNode]): Rdb =
     i += 1
     # If column name contains Upper letter, column name is covered by double quote
     var key = key
-    wrapUpper(key, self.driver)
+    quote(key, self.driver)
     columns.add(key)
 
   var values = ""
@@ -382,7 +382,7 @@ proc updateSql*(self: Rdb): Rdb =
   sqlString.add("UPDATE")
 
   var table = self.query["table"].getStr()
-  wrapUpper(table, self.driver)
+  quote(table, self.driver)
   sqlString.add(&" {table} SET ")
   self.sqlString = sqlString
   return self
@@ -396,7 +396,7 @@ proc updateValuesSql*(self: Rdb, items:JsonNode): Rdb =
     if i > 0: value.add(", ")
     i += 1
     var key = key
-    wrapUpper(key, self.driver)
+    quote(key, self.driver)
     value.add(&"{key} = ?")
 
   self.sqlString.add(value)
@@ -412,7 +412,7 @@ proc deleteSql*(self: Rdb): Rdb =
 
 proc deleteByIdSql*(self: Rdb, id: int, key: string): Rdb =
   var key = key
-  wrapUpper(key, self.driver)
+  quote(key, self.driver)
   self.sqlString.add(&" WHERE {key} = ?")
   return self
 
@@ -422,7 +422,7 @@ proc selectCountSql*(self: Rdb): Rdb =
   var queryString =
     if self.query.hasKey("select"):
       var column = self.query["select"][0].getStr
-      wrapUpper(column, self.driver)
+      quote(column, self.driver)
       &"{column}"
     else:
       "*"
@@ -432,27 +432,27 @@ proc selectCountSql*(self: Rdb): Rdb =
 
 proc selectMaxSql*(self:Rdb, column:string): Rdb =
   var column = column
-  wrapUpper(column, self.driver)
+  quote(column, self.driver)
   self.sqlString = &"SELECT max({column}) as aggregate"
   return self
 
 
 proc selectMinSql*(self:Rdb, column:string): Rdb =
   var column = column
-  wrapUpper(column, self.driver)
+  quote(column, self.driver)
   self.sqlString = &"SELECT min({column}) as aggregate"
   return self
 
 
 proc selectAvgSql*(self:Rdb, column:string): Rdb =
   var column = column
-  wrapUpper(column, self.driver)
+  quote(column, self.driver)
   self.sqlString = &"SELECT avg({column}) as aggregate"
   return self
 
 
 proc selectSumSql*(self:Rdb, column:string): Rdb =
   var column = column
-  wrapUpper(column, self.driver)
+  quote(column, self.driver)
   self.sqlString = &"SELECT sum({column}) as aggregate"
   return self

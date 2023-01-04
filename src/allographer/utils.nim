@@ -1,12 +1,11 @@
-import
-  std/os,
-  std/parsecfg,
-  std/terminal,
-  std/logging,
-  std/macros,
-  std/strformat,
-  std/strutils,
-  ./base
+import std/os
+import std/parsecfg
+import std/terminal
+import std/logging
+import std/macros
+import std/strformat
+import std/strutils
+import ./base
 
 
 proc logger*(self:LogSetting, output: auto, args:varargs[string]) =
@@ -52,38 +51,90 @@ proc echoWarningMsg*(self:LogSetting, msg:string) =
     flushFile(logger.file)
   
 
-proc liteWrapUpper*(input:var string) =
+# var isUpper = false
+# for c in input:
+#   if c.isUpperAscii():
+#     isUpper = true
+#     break
+# if isUpper:
+#   input = &"\"{input}\""
+
+proc liteQuoteSchema*(input:var string) =
+  input = &"`{input}`"
+
+proc myQuoteSchema*(input:var string) =
+  input = &"`{input}`"
+
+proc pgQuoteSchema*(input:var string) =
+  input = &"\"{input}\""
+
+proc quoteSchema*(input:var string, driver:Driver) =
   var isUpper = false
   for c in input:
     if c.isUpperAscii():
       isUpper = true
       break
   if isUpper:
-    input = &"\"{input}\""
+    case driver:
+    of SQLite3:
+      liteQuoteSchema(input)
+    of MySQL, MariaDB:
+      myQuoteSchema(input)
+    of PostgreSQL:
+      pgQuoteSchema(input)
 
-proc myWrapUpper*(input:var string) =
-  var isUpper = false
-  for c in input:
-    if c.isUpperAscii():
-      isUpper = true
-      break
-  if isUpper:
-    input = &"`{input}`"
 
-proc pgWrapUpper*(input:var string) =
-  var isUpper = false
-  for c in input:
-    if c.isUpperAscii():
-      isUpper = true
-      break
-  if isUpper:
-    input = &"\"{input}\""
+proc liteQuoteColumn*(input:var string) =
+  var tmp = newSeq[string]()
+  for row in input.split("."):
+    if row.contains(" as "):
+      let c = row.split(" as ")
+      tmp.add(&"`{c[0]}` as `{c[1]}`")
+    else:
+      tmp.add(&"`{row}`")
+  input = tmp.join(".")
 
-proc wrapUpper*(input:var string, driver:Driver) =
+proc myQuoteColumn*(input:var string) =
+  var tmp = newSeq[string]()
+  for row in input.split("."):
+    if row.contains(" as "):
+      let c = row.split(" as ")
+      tmp.add(&"`{c[0]}` as `{c[1]}`")
+    else:
+      tmp.add(&"`{row}`")
+  input = tmp.join(".")
+
+proc pgQuoteColumn*(input:var string) =
+  var tmp = newSeq[string]()
+  for row in input.split("."):
+    if row.contains(" as "):
+      let c = row.split(" as ")
+      tmp.add(&"\"{c[0]}\" as \"{c[1]}\"")
+    else:
+      tmp.add(&"\"{row}\"")
+  if tmp.len > 1:
+    input = tmp.join(".")
+  else:
+    input = tmp[0]
+
+proc quote*(input:var string, driver:Driver) =
+  # var isUpper = false
+  # for c in input:
+  #   if c.isUpperAscii():
+  #     isUpper = true
+  #     break
+  # if isUpper:
+  #   case driver:
+  #   of SQLite3:
+  #     liteQuoteColumn(input)
+  #   of MySQL, MariaDB:
+  #     myQuoteColumn(input)
+  #   of PostgreSQL:
+  #     pgQuoteColumn(input)
   case driver:
   of SQLite3:
-    liteWrapUpper(input)
+    liteQuoteColumn(input)
   of MySQL, MariaDB:
-    myWrapUpper(input)
+    myQuoteColumn(input)
   of PostgreSQL:
-    pgWrapUpper(input)
+    pgQuoteColumn(input)

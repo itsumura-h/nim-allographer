@@ -33,9 +33,9 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: allographer
+      MYSQL_DATABASE: database
       MYSQL_USER: user
-      MYSQL_PASSWORD: Password!
+      MYSQL_PASSWORD: pass
       TZ: Asia/Tokyo
 
   mariadb:
@@ -44,16 +44,26 @@ services:
     command: --default-authentication-plugin=mysql_native_password
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: allographer
+      MYSQL_DATABASE: database
       MYSQL_USER: user
-      MYSQL_PASSWORD: Password!
+      MYSQL_PASSWORD: pass
       TZ: Asia/Tokyo
 
   postgres:
     image: postgres:alpine
     tty: true
     environment:
-      POSTGRES_DB: allographer
+      POSTGRES_DB: database
       POSTGRES_USER: user
-      POSTGRES_PASSWORD: Password!
+      POSTGRES_PASSWORD: pass
       TZ: Asia/Tokyo
+
+  adminer:
+    image: adminer:4.8.1-standalone
+    tty: true
+    ports:
+      - 9002:8080
+    depends_on:
+      - mysql
+      - mariadb
+      - postgres
