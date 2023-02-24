@@ -246,7 +246,7 @@ proc whereNotBetween*(self:Rdb, column:string, width:array[2, string]): Rdb =
     })
   return self
 
-proc whereIn*(self:Rdb, column:string, width:seq[int|float]): Rdb =
+proc whereIn*(self:Rdb, column:string, width:seq[int|float|string]): Rdb =
   if self.query.hasKey("where_in") == false:
     self.query["where_in"] = %*[{
       "column": column,
@@ -260,7 +260,7 @@ proc whereIn*(self:Rdb, column:string, width:seq[int|float]): Rdb =
   return self
 
 
-proc whereNotIn*(self:Rdb, column:string, width:seq[int|float]): Rdb =
+proc whereNotIn*(self:Rdb, column:string, width:seq[int|float|string]): Rdb =
   if self.query.hasKey("where_not_in") == false:
     self.query["where_not_in"] = %*[{
       "column": column,
