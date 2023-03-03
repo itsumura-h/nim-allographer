@@ -317,6 +317,15 @@ for rdb in dbConnections:
                 .await
         echo t
         check t[0]["name"].getStr() == "user5"
+        
+        t = rdb
+                .table("user")
+                .select("id", "name")
+                .whereBetween("id", [4, 10])
+                .whereIn("name", @["user5", "user6", "user7"])
+                .get()
+                .await
+        check t[0]["name"].getStr() == "user5"
         rdb.raw("ROLLBACK").exec().await
 
     test("whereNotInTest"):
@@ -327,6 +336,21 @@ for rdb in dbConnections:
                 .select("id", "name")
                 .whereBetween("id", [4, 10])
                 .whereNotIn("id", @[5, 6, 7])
+                .get()
+                .await
+        echo t
+        check t == @[
+          %*{"id":4, "name": "user4"},
+          %*{"id":8, "name": "user8"},
+          %*{"id":9, "name": "user9"},
+          %*{"id":10, "name": "user10"},
+        ]
+        
+        t = rdb
+                .table("user")
+                .select("id", "name")
+                .whereBetween("id", [4, 10])
+                .whereNotIn("name", @["user5", "user6", "user7"])
                 .get()
                 .await
         echo t

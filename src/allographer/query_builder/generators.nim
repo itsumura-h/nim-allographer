@@ -183,6 +183,8 @@ proc whereInSql*(self:Rdb): Rdb =
           widthString.add($(val.getInt()))
         elif val.kind == JFloat:
           widthString.add($(val.getFloat()))
+        elif val.kind == JString:
+          widthString.add(&"'{val.getStr()}'")
 
       if self.sqlString.contains("WHERE"):
         self.sqlString.add(&" AND {column} IN ({widthString})")
@@ -203,6 +205,8 @@ proc whereNotInSql*(self:Rdb): Rdb =
           widthString.add($(val.getInt()))
         elif val.kind == JFloat:
           widthString.add($(val.getFloat()))
+        elif val.kind == JString:
+          widthString.add(&"'{val.getStr()}'")
 
       if self.sqlString.contains("WHERE"):
         self.sqlString.add(&" AND {column} NOT IN ({widthString})")
