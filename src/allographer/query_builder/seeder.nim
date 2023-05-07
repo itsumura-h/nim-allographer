@@ -1,7 +1,7 @@
 import std/asyncdispatch
 import std/macros
 import std/strutils
-import ../base
+import ../types
 
 
 template seeder*(rdb:Rdb, tableName:string, body:untyped):untyped =

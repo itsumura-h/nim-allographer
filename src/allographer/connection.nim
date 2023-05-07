@@ -1,6 +1,5 @@
-import
-  std/json,
-  ./base
+import std/json
+import ./types
 from async/async_db import open
 
 export

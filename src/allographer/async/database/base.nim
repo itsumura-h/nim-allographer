@@ -1,5 +1,14 @@
-import asyncdispatch, times, strutils, random
-import rdb/mysql, rdb/mariadb, rdb/postgres, rdb/sqlite
+import std/asyncdispatch
+import std/httpclient
+import std/random
+import std/strutils
+import std/times
+import rdb/sqlite
+import rdb/postgres
+import rdb/mysql
+import rdb/mariadb
+import rdb/surreal
+
 
 type
   DbError* = object of IOError ## exception that is raised if a database error occurs
@@ -8,6 +17,7 @@ type
     mariadbConn*: mariadb.PMySQL
     postgresConn*: PPGconn
     sqliteConn*: PSqlite3
+    surrealConn*: SurrealConn
     isBusy*: bool
     createdAt*: int64
   Connections* = ref object

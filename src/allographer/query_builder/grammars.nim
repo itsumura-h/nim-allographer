@@ -1,6 +1,6 @@
 import json
 import ../async/async_db
-import ../base
+import ../types
 
 #[
 FROM

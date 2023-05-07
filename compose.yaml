@@ -36,7 +36,6 @@ services:
       MYSQL_DATABASE: database
       MYSQL_USER: user
       MYSQL_PASSWORD: pass
-      TZ: Asia/Tokyo
 
   mariadb:
     image: mariadb
@@ -47,7 +46,6 @@ services:
       MYSQL_DATABASE: database
       MYSQL_USER: user
       MYSQL_PASSWORD: pass
-      TZ: Asia/Tokyo
 
   postgres:
     image: postgres:alpine
@@ -56,7 +54,11 @@ services:
       POSTGRES_DB: database
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
-      TZ: Asia/Tokyo
+
+  surreal:
+    image: surrealdb/surrealdb:1.0.0-beta.8
+    tty: true
+    command: start --user user --pass pass
 
   adminer:
     image: adminer:4.8.1-standalone
@@ -67,3 +69,4 @@ services:
       - mysql
       - mariadb
       - postgres
+      - surreal

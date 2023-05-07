@@ -1,13 +1,14 @@
 import std/os
 import std/json
 import std/options
-import ../base
+import ../types
 import ../query_builder
 import ./grammars
 import ./queries/query_interface
 import ./queries/sqlite/sqlite_query
 import ./queries/mysql/mysql_query
 import ./queries/postgre/postgre_query
+import ./queries/surreal/surreal_query
 
 
 proc create*(rdb:Rdb, tables:varargs[Table]) =
@@ -21,6 +22,8 @@ proc create*(rdb:Rdb, tables:varargs[Table]) =
       MysqlQuery.new(rdb).toInterface()
     of PostgreSQL:
       PostgreQuery.new(rdb).toInterface()
+    of SurrealDB:
+      SurrealQuery.new(rdb).toInterface()
 
   # migration table
   let migrationTable = table("_migrations", [
@@ -68,6 +71,8 @@ proc alter*(rdb:Rdb, tables:varargs[Table]) =
       MysqlQuery.new(rdb).toInterface()
     of PostgreSQL:
       PostgreQuery.new(rdb).toInterface()
+    of SurrealDB:
+      SurrealQuery.new(rdb).toInterface()
 
   # migration table
   let migrationTable = table("_migrations", [

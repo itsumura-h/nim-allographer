@@ -5,7 +5,7 @@ import std/options
 import std/strformat
 import std/strutils
 import ../async/async_db
-import ../base
+import ../types
 import ../utils
 import ./builders
 
@@ -15,6 +15,18 @@ proc selectSql*(self: Rdb):string =
   echo result
 
 proc toJson(driver:Driver, results:openArray[seq[string]], dbRows:DbRows):seq[JsonNode] =
+  if driver == SurrealDB:
+    let res = results[0][0].parseJson()["result"]
+    if res.kind == JArray:
+      var resp = newSeq[JsonNode](res.len)
+      var i = 0
+      for row in res:
+        resp[i] = row
+        i.inc()
+      return resp
+    else:
+      return @[res]
+ 
   var response_table = newSeq[JsonNode](results.len)
   for index, rows in results.pairs:
     var response_row = newJObject()
@@ -68,6 +80,8 @@ proc toJson(driver:Driver, results:openArray[seq[string]], dbRows:DbRows):seq[Js
           response_row[key] = row.parseJson
         else:
           response_row[key] = newJString(row)
+      else:
+        discard
 
     response_table[index] = response_row
   return response_table
@@ -481,6 +495,8 @@ proc count*(self:Rdb):Future[int]{.async.} =
       return response.get["aggregate"].getInt()
     of PostgreSQL:
       return response.get["aggregate"].getInt()
+    else:
+      discard
   else:
     return 0
 

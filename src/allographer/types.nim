@@ -1,10 +1,9 @@
-import
-  std/os,
-  std/strutils,
-  std/json,
-  std/streams,
-  std/parsecfg,
-  ./async/database/base
+import std/os
+import std/strutils
+import std/json
+import std/streams
+import std/parsecfg
+import ./async/database/base
 
 
 for f in walkDir(getCurrentDir()):
@@ -32,6 +31,7 @@ type
     MariaDB
     PostgreSQL
     SQLite3
+    SurrealDB
 
   Rdb* = ref object
     driver*: Driver
