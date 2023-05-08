@@ -4,7 +4,7 @@ import std/json
 import std/options
 import std/strformat
 import std/strutils
-import ../async/async_db
+import ../databases/database
 import ../types
 import ../utils
 import ./builders

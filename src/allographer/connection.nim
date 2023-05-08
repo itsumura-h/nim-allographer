@@ -1,6 +1,6 @@
 import std/json
 import ./types
-from async/async_db import open
+from databases/database import open
 
 export
   Driver

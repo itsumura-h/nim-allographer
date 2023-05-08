@@ -3,7 +3,7 @@ import std/strutils
 import std/json
 import std/streams
 import std/parsecfg
-import ./async/database/base
+import ./databases/database/base
 
 
 for f in walkDir(getCurrentDir()):
