@@ -1,5 +1,6 @@
-import ../base
+import ../database_types
 import ../rdb/mysql
+
 
 proc dbError*(db: PMySQL) {.noreturn.} =
   ## raises a DbError exception.
@@ -80,7 +81,7 @@ proc setColumnInfo*(res: PRES; dbRows: var DbRows;  line, cols: int) =
     columns[i].primaryKey = (fp.flags and PRI_KEY_FLAG) != 0
   dbRows.add(columns)
 
-proc newRow*(L: int): base.Row =
+proc newRow*(L: int): database_types.Row =
   newSeq(result, L)
   for i in 0..L-1: result[i] = ""
 

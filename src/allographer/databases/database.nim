@@ -3,14 +3,14 @@ import std/strutils
 import std/strformat
 import ../env
 import ../types
-import ./database/base
+import ./database/database_types
 import ./database/impls/mysql
 import ./database/impls/mariadb
 import ./database/impls/postgres
 import ./database/impls/sqlite
 import ./database/impls/surreal
 
-export base
+export database_types
 
 
 proc open*(driver:Driver, database:string="", user:string="", password:string="",

@@ -57,8 +57,9 @@ delete() -> sqlite.exec() / surreal.get()
 
 - [x] base.nim -> types.nim
 - [x] baseEnv.nim -> env.nim
-- [ ] async/async_db.nim -> databases/database.nim
-- [ ] async/database/base.nim -> databases/database_types.nim
+- [x] async/async_db.nim -> databases/database.nim
+- [x] async/database/base.nim -> databases/database_types.nim
+- [ ] databases/database/impls / libs / rdb -> databases/impls / libs / rdb
 
 
 ## Surreal

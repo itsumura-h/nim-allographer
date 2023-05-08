@@ -1,7 +1,7 @@
 import std/asyncdispatch
 import std/times
 import std/strutils
-import ../base
+import ../database_types
 import ../rdb/sqlite
 import ../libs/lib_sqlite
 

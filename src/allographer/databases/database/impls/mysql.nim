@@ -1,5 +1,5 @@
 import asyncdispatch, strutils, times
-import ../base
+import ../database_types
 import ../rdb/mysql
 import ../libs/lib_mysql
 
@@ -26,7 +26,7 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
     timeout: timeout
   )
 
-proc query*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[(seq[base.Row], DbRows)] {.async.} =
+proc query*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[(seq[database_types.Row], DbRows)] {.async.} =
   assert db.ping == 0
   let query = dbFormat(query, args)
   var status = real_query_nonblocking(db, query.cstring, query.len)
@@ -42,7 +42,7 @@ proc query*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[(s
   if status == NET_ASYNC_ERROR: dbError(db)
   if res == nil: dbError(db)
   let cols = num_fields(res)
-  var rows = newSeq[base.Row]()
+  var rows = newSeq[database_types.Row]()
   let calledAt = getTime().toUnix()
   var dbRows: DbRows
   var lines = 0
@@ -67,7 +67,7 @@ proc query*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[(s
   free_result(res)
   return (rows, dbRows)
 
-proc queryPlain*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[seq[base.Row]] {.async.} =
+proc queryPlain*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[seq[database_types.Row]] {.async.} =
   assert db.ping == 0
   let query = dbFormat(query, args)
   var status = real_query_nonblocking(db, query.cstring, query.len)
@@ -83,7 +83,7 @@ proc queryPlain*(db: PMySQL, query: string, args: seq[string], timeout:int):Futu
   if status == NET_ASYNC_ERROR: dbError(db)
   if res == nil: dbError(db)
   let cols = num_fields(res)
-  var rows = newSeq[base.Row]()
+  var rows = newSeq[database_types.Row]()
   let calledAt = getTime().toUnix()
   var lines = 0
   while true:

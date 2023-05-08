@@ -1,6 +1,6 @@
-# import asyncdispatch
-import ../base
+import ../database_types
 import ../rdb/mariadb
+
 
 type InstantRow* = object ## a handle that can be used to get a row's
                        ## column text on demand
@@ -84,7 +84,7 @@ proc setColumnInfo*(columns: var DbColumns; res: PRES; L: int) =
     columns[i].tableName = $fp.table
     columns[i].primaryKey = (fp.flags and PRI_KEY_FLAG) != 0
 
-proc newRow*(L: int): base.Row =
+proc newRow*(L: int): database_types.Row =
   newSeq(result, L)
   for i in 0..L-1: result[i] = ""
 

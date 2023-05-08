@@ -3,7 +3,7 @@ import std/strutils
 import std/json
 import std/streams
 import std/parsecfg
-import ./databases/database/base
+import ./databases/database/database_types
 
 
 for f in walkDir(getCurrentDir()):

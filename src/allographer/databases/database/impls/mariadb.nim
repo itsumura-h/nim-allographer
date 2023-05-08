@@ -1,5 +1,5 @@
 import times, asyncdispatch
-import ../base
+import ../database_types
 import ../rdb/mariadb
 import ../libs/lib_mariadb
 
@@ -24,7 +24,7 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
     timeout: timeout
   )
 
-proc query*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[(seq[base.Row], DbRows)] {.async.} =
+proc query*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[(seq[database_types.Row], DbRows)] {.async.} =
   assert db.ping == 0
   var dbRows: DbRows
   var rows = newSeq[seq[string]]()
@@ -54,7 +54,7 @@ proc query*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[(se
   free_result(sqlres)
   return (rows, dbRows)
 
-proc queryPlain*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[seq[base.Row]] {.async.} =
+proc queryPlain*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[seq[database_types.Row]] {.async.} =
   assert db.ping == 0
   rawExec(db, query, args)
   var rows = newSeq[seq[string]]()

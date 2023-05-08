@@ -1,6 +1,7 @@
-import macros
-import ../base
+import std/macros
+import ../database_types
 import ../rdb/sqlite
+
 
 proc dbQuote(s: string): string =
   ## Escapes the `'` (single quote) char to `''`.

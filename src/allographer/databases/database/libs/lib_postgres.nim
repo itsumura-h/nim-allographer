@@ -1,6 +1,7 @@
-import strutils
-import ../base
+import std/strutils
+import ../database_types
 import ../rdb/postgres
+
 
 proc dbError*(db: PPGconn) {.noreturn.} =
   ## raises a DbError exception.

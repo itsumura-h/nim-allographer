@@ -5,7 +5,7 @@ import std/strformat
 import std/base64
 import std/strutils
 import std/json
-import ../base
+import ../database_types
 import ../rdb/surreal
 
 
