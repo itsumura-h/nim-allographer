@@ -3,12 +3,12 @@ import std/strutils
 import std/strformat
 import ../env
 import ../types
-import ./database/database_types
-import ./database/impls/mysql
-import ./database/impls/mariadb
-import ./database/impls/postgres
-import ./database/impls/sqlite
-import ./database/impls/surreal
+import ./database_types
+import ./impls/mysql
+import ./impls/mariadb
+import ./impls/postgres
+import ./impls/sqlite
+import ./impls/surreal
 
 export database_types
 
