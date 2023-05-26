@@ -1,4 +1,5 @@
 import std/json
+import ./query_builder/log
 import ./query_builder/rdb/rdb_types
 import ./query_builder/rdb/query/exec
 

@@ -1,5 +1,4 @@
 import std/asyncdispatch
-import std/httpclient
 import std/random
 import std/strutils
 import std/times

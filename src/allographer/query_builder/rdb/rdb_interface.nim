@@ -4,6 +4,7 @@ import std/json
 import std/options
 import std/strformat
 import std/strutils
+import ../log
 import ./databases/database_types
 import ./rdb_types
 import ./rdb_utils
