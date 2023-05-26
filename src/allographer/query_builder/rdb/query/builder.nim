@@ -25,7 +25,7 @@ proc selectBuilder*(self: Rdb): string =
     .orderBySql()
     .limitSql()
     .offsetSql()
-    .sqlString
+    .queryString
 
 proc selectFirstBuilder*(self: Rdb): string =
   return self
@@ -47,7 +47,7 @@ proc selectFirstBuilder*(self: Rdb): string =
     .orderBySql()
     .selectFirstSql()
     .offsetSql()
-    .sqlString
+    .queryString
 
 proc selectFindBuilder*(self: Rdb, key: string): string =
   return self
@@ -65,7 +65,7 @@ proc selectFindBuilder*(self: Rdb, key: string): string =
     .whereNotInSql()
     .whereNullSql()
     .selectByIdSql(key)
-    .sqlString
+    .queryString
 
 
 # ==================== INSERT ====================
@@ -74,13 +74,13 @@ proc insertValueBuilder*(self: Rdb, items: JsonNode): string =
   return self
     .insertSql()
     .insertValueSql(items)
-    .sqlString
+    .queryString
 
 proc insertValuesBuilder*(self: Rdb, rows: openArray[JsonNode]): string =
   return self
     .insertSql()
     .insertValuesSql(rows)
-    .sqlString
+    .queryString
 
 
 # ==================== UPDATE ====================
@@ -93,7 +93,7 @@ proc updateBuilder*(self: Rdb, items: JsonNode): string =
     .orWhereSql()
     .limitSql()
     .offsetSql()
-    .sqlString
+    .queryString
 
 
 # ==================== DELETE ====================
@@ -108,14 +108,14 @@ proc deleteBuilder*(self: Rdb): string =
     .orWhereSql()
     .limitSql()
     .offsetSql()
-    .sqlString
+    .queryString
 
 proc deleteByIdBuilder*(self: Rdb, id: int, key: string): string =
   return self
     .deleteSql()
     .fromSql()
     .deleteByIdSql(id, key)
-    .sqlString
+    .queryString
 
 
 # ==================== Aggregates ====================
@@ -138,7 +138,7 @@ proc countBuilder*(self:Rdb): string =
     .orderBySql()
     .limitSql()
     .offsetSql()
-    .sqlString
+    .queryString
 
 proc maxBuilder*(self:Rdb, column:string): string =
   return self
@@ -158,7 +158,7 @@ proc maxBuilder*(self:Rdb, column:string): string =
     .orderBySql()
     .limitSql()
     .offsetSql()
-    .sqlString
+    .queryString
 
 proc minBuilder*(self:Rdb, column:string): string =
   return self
@@ -178,7 +178,7 @@ proc minBuilder*(self:Rdb, column:string): string =
     .orderBySql()
     .limitSql()
     .offsetSql()
-    .sqlString
+    .queryString
 
 proc avgBuilder*(self:Rdb, column:string): string =
   return self
@@ -198,7 +198,7 @@ proc avgBuilder*(self:Rdb, column:string): string =
     .orderBySql()
     .limitSql()
     .offsetSql()
-    .sqlString
+    .queryString
 
 proc sumBuilder*(self:Rdb, column:string): string =
   return self
@@ -218,11 +218,11 @@ proc sumBuilder*(self:Rdb, column:string): string =
     .orderBySql()
     .limitSql()
     .offsetSql()
-    .sqlString
+    .queryString
 
 proc columnBuilder*(self:Rdb): string =
   return self
     .selectSql()
     .fromSql()
     .selectFirstSql()
-    .sqlString
+    .queryString

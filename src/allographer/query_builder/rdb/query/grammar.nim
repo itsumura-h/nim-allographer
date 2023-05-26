@@ -17,7 +17,7 @@ TOP（LIMIT）
 proc table*(self:Rdb, tableArg: string): Rdb =
   self.query = newJObject()
   self.query["table"] = %tableArg
-  self.sqlString = ""
+  self.queryString = ""
   self.placeHolder = @[]
   return self
 
@@ -30,7 +30,7 @@ proc raw*(self:Rdb, sql:string, arges:varargs[string]): RawQueryRdb =
     conn:self.conn,
     log: self.log,
     query: newJObject(),
-    sqlString: sql,
+    queryString: sql,
     placeHolder: @arges,
     isInTransaction:self.isInTransaction,
     transactionConn:self.transactionConn

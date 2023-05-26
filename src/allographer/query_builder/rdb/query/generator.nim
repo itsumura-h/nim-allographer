@@ -24,29 +24,29 @@ proc selectSql*(self: Rdb): Rdb =
   else:
     queryString.add(" *")
 
-  self.sqlString = queryString
+  self.queryString = queryString
   return self
 
 
 proc fromSql*(self: Rdb): Rdb =
   var table = self.query["table"].getStr()
   quote(table, self.driver)
-  self.sqlString.add(&" FROM {table}")
+  self.queryString.add(&" FROM {table}")
   return self
 
 
 proc selectFirstSql*(self:Rdb): Rdb =
-  self.sqlString.add(" LIMIT 1")
+  self.queryString.add(" LIMIT 1")
   return self
 
 
 proc selectByIdSql*(self:Rdb, key:string): Rdb =
   var key = key
   quote(key, self.driver)
-  if self.sqlString.contains("WHERE"):
-    self.sqlString.add(&" AND {key} = ? LIMIT 1")
+  if self.queryString.contains("WHERE"):
+    self.queryString.add(&" AND {key} = ? LIMIT 1")
   else:
-    self.sqlString.add(&" WHERE {key} = ? LIMIT 1")
+    self.queryString.add(&" WHERE {key} = ? LIMIT 1")
   return self
 
 
@@ -61,7 +61,7 @@ proc joinSql*(self: Rdb): Rdb =
       var column2 = row["column2"].getStr()
       quote(column2, self.driver)
 
-      self.sqlString.add(&" INNER JOIN {table} ON {column1} {symbol} {column2}")
+      self.queryString.add(&" INNER JOIN {table} ON {column1} {symbol} {column2}")
   return self
 
 
@@ -76,7 +76,7 @@ proc leftJoinSql*(self: Rdb): Rdb =
       var column2 = row["column2"].getStr()
       quote(column2, self.driver)
 
-      self.sqlString.add(&" LEFT JOIN {table} ON {column1} {symbol} {column2}")
+      self.queryString.add(&" LEFT JOIN {table} ON {column1} {symbol} {column2}")
   return self
 
 
@@ -89,9 +89,9 @@ proc whereSql*(self: Rdb): Rdb =
       var value = row["value"].getStr()
 
       if i == 0:
-        self.sqlString.add(&" WHERE {column} {symbol} {value}")
+        self.queryString.add(&" WHERE {column} {symbol} {value}")
       else:
-        self.sqlString.add(&" AND {column} {symbol} {value}")
+        self.queryString.add(&" AND {column} {symbol} {value}")
   return self
 
 
@@ -103,10 +103,10 @@ proc orWhereSql*(self: Rdb): Rdb =
       var symbol = row["symbol"].getStr()
       var value = row["value"].getStr()
 
-      if self.sqlString.contains("WHERE"):
-        self.sqlString.add(&" OR {column} {symbol} {value}")
+      if self.queryString.contains("WHERE"):
+        self.queryString.add(&" OR {column} {symbol} {value}")
       else:
-        self.sqlString.add(&" WHERE {column} {symbol} {value}")
+        self.queryString.add(&" WHERE {column} {symbol} {value}")
   return self
 
 
@@ -118,10 +118,10 @@ proc whereBetweenSql*(self:Rdb): Rdb =
       var start = row["width"][0].getFloat()
       var stop = row["width"][1].getFloat()
 
-      if self.sqlString.contains("WHERE"):
-        self.sqlString.add(&" AND {column} BETWEEN {start} AND {stop}")
+      if self.queryString.contains("WHERE"):
+        self.queryString.add(&" AND {column} BETWEEN {start} AND {stop}")
       else:
-        self.sqlString.add(&" WHERE {column} BETWEEN {start} AND {stop}")
+        self.queryString.add(&" WHERE {column} BETWEEN {start} AND {stop}")
   return self
 
 
@@ -133,10 +133,10 @@ proc whereBetweenStringSql*(self:Rdb): Rdb =
       var start = row["width"][0].getStr
       var stop = row["width"][1].getStr
 
-      if self.sqlString.contains("WHERE"):
-        self.sqlString.add(&" AND {column} BETWEEN '{start}' AND '{stop}'")
+      if self.queryString.contains("WHERE"):
+        self.queryString.add(&" AND {column} BETWEEN '{start}' AND '{stop}'")
       else:
-        self.sqlString.add(&" WHERE {column} BETWEEN '{start}' AND '{stop}'")
+        self.queryString.add(&" WHERE {column} BETWEEN '{start}' AND '{stop}'")
   return self
 
 
@@ -148,10 +148,10 @@ proc whereNotBetweenSql*(self:Rdb): Rdb =
       var start = row["width"][0].getFloat()
       var stop = row["width"][1].getFloat()
 
-      if self.sqlString.contains("WHERE"):
-        self.sqlString.add(&" AND {column} NOT BETWEEN {start} AND {stop}")
+      if self.queryString.contains("WHERE"):
+        self.queryString.add(&" AND {column} NOT BETWEEN {start} AND {stop}")
       else:
-        self.sqlString.add(&" WHERE {column} NOT BETWEEN {start} AND {stop}")
+        self.queryString.add(&" WHERE {column} NOT BETWEEN {start} AND {stop}")
   return self
 
 
@@ -163,10 +163,10 @@ proc whereNotBetweenStringSql*(self:Rdb): Rdb =
       var start = row["width"][0].getStr
       var stop = row["width"][1].getStr
 
-      if self.sqlString.contains("WHERE"):
-        self.sqlString.add(&" AND {column} NOT BETWEEN '{start}' AND '{stop}'")
+      if self.queryString.contains("WHERE"):
+        self.queryString.add(&" AND {column} NOT BETWEEN '{start}' AND '{stop}'")
       else:
-        self.sqlString.add(&" WHERE {column} NOT BETWEEN '{start}' AND '{stop}'")
+        self.queryString.add(&" WHERE {column} NOT BETWEEN '{start}' AND '{stop}'")
   return self
 
 
@@ -185,10 +185,10 @@ proc whereInSql*(self:Rdb): Rdb =
         elif val.kind == JString:
           widthString.add(&"'{val.getStr()}'")
 
-      if self.sqlString.contains("WHERE"):
-        self.sqlString.add(&" AND {column} IN ({widthString})")
+      if self.queryString.contains("WHERE"):
+        self.queryString.add(&" AND {column} IN ({widthString})")
       else:
-        self.sqlString.add(&" WHERE {column} IN ({widthString})")
+        self.queryString.add(&" WHERE {column} IN ({widthString})")
   return self
 
 
@@ -207,10 +207,10 @@ proc whereNotInSql*(self:Rdb): Rdb =
         elif val.kind == JString:
           widthString.add(&"'{val.getStr()}'")
 
-      if self.sqlString.contains("WHERE"):
-        self.sqlString.add(&" AND {column} NOT IN ({widthString})")
+      if self.queryString.contains("WHERE"):
+        self.queryString.add(&" AND {column} NOT IN ({widthString})")
       else:
-        self.sqlString.add(&" WHERE {column} NOT IN ({widthString})")
+        self.queryString.add(&" WHERE {column} NOT IN ({widthString})")
   return self
 
 
@@ -219,10 +219,10 @@ proc whereNullSql*(self:Rdb): Rdb =
     for row in self.query["where_null"]:
       var column = row["column"].getStr()
       quote(column, self.driver)
-      if self.sqlString.contains("WHERE"):
-        self.sqlString.add(&" AND {column} is null")
+      if self.queryString.contains("WHERE"):
+        self.queryString.add(&" AND {column} is null")
       else:
-        self.sqlString.add(&" WHERE {column} is null")
+        self.queryString.add(&" WHERE {column} is null")
   return self
 
 
@@ -231,10 +231,10 @@ proc groupBySql*(self:Rdb): Rdb =
     for row in self.query["group_by"]:
       var column = row["column"].getStr()
       quote(column, self.driver)
-      if self.sqlString.contains("GROUP BY"):
-        self.sqlString.add(&", {column}")
+      if self.queryString.contains("GROUP BY"):
+        self.queryString.add(&", {column}")
       else:
-        self.sqlString.add(&" GROUP BY {column}")
+        self.queryString.add(&" GROUP BY {column}")
   return self
 
 
@@ -247,9 +247,9 @@ proc havingSql*(self:Rdb): Rdb =
       var value = row["value"].getStr()
 
       if i == 0:
-        self.sqlString.add(&" HAVING {column} {symbol} {value}")
+        self.queryString.add(&" HAVING {column} {symbol} {value}")
       else:
-        self.sqlString.add(&" AND {column} {symbol} {value}")
+        self.queryString.add(&" AND {column} {symbol} {value}")
 
   return self
 
@@ -261,17 +261,17 @@ proc orderBySql*(self:Rdb): Rdb =
       quote(column, self.driver)
       var order = row["order"].getStr()
 
-      if self.sqlString.contains("ORDER BY"):
-        self.sqlString.add(&", {column} {order}")
+      if self.queryString.contains("ORDER BY"):
+        self.queryString.add(&", {column} {order}")
       else:
-        self.sqlString.add(&" ORDER BY {column} {order}")
+        self.queryString.add(&" ORDER BY {column} {order}")
   return self
 
 
 proc limitSql*(self: Rdb): Rdb =
   if self.query.hasKey("limit"):
     var num = self.query["limit"].getInt()
-    self.sqlString.add(&" LIMIT {num}")
+    self.queryString.add(&" LIMIT {num}")
 
   return self
 
@@ -279,7 +279,7 @@ proc limitSql*(self: Rdb): Rdb =
 proc offsetSql*(self: Rdb): Rdb =
   if self.query.hasKey("offset"):
     var num = self.query["offset"].getInt()
-    self.sqlString.add(&" OFFSET {num}")
+    self.queryString.add(&" OFFSET {num}")
 
   return self
 
@@ -289,7 +289,7 @@ proc offsetSql*(self: Rdb): Rdb =
 proc insertSql*(self: Rdb): Rdb =
   var table = self.query["table"].getStr()
   quote(table, self.driver)
-  self.sqlString = &"INSERT INTO {table}"
+  self.queryString = &"INSERT INTO {table}"
   return self
 
 
@@ -327,7 +327,7 @@ proc insertValueSql*(self: Rdb, items: JsonNode): Rdb =
       self.placeHolder.add(val.getStr())
     values.add("?")
 
-  self.sqlString.add(&" ({columns}) VALUES ({values})")
+  self.queryString.add(&" ({columns}) VALUES ({values})")
   return self
 
 
@@ -374,20 +374,20 @@ proc insertValuesSql*(self: Rdb, rows: openArray[JsonNode]): Rdb =
     valuesCount += 1
     values.add(&"({value})")
 
-  self.sqlString.add(&" ({columns}) VALUES {values}")
+  self.queryString.add(&" ({columns}) VALUES {values}")
   return self
 
 
 # ==================== UPDATE ====================
 
 proc updateSql*(self: Rdb): Rdb =
-  var sqlString = ""
-  sqlString.add("UPDATE")
+  var queryString = ""
+  queryString.add("UPDATE")
 
   var table = self.query["table"].getStr()
   quote(table, self.driver)
-  sqlString.add(&" {table} SET ")
-  self.sqlString = sqlString
+  queryString.add(&" {table} SET ")
+  self.queryString = queryString
   return self
 
 
@@ -402,21 +402,21 @@ proc updateValuesSql*(self: Rdb, items:JsonNode): Rdb =
     quote(key, self.driver)
     value.add(&"{key} = ?")
 
-  self.sqlString.add(value)
+  self.queryString.add(value)
   return self
 
 
 # ==================== DELETE ====================
 
 proc deleteSql*(self: Rdb): Rdb =
-  self.sqlString = "DELETE"
+  self.queryString = "DELETE"
   return self
 
 
 proc deleteByIdSql*(self: Rdb, id: int, key: string): Rdb =
   var key = key
   quote(key, self.driver)
-  self.sqlString.add(&" WHERE {key} = ?")
+  self.queryString.add(&" WHERE {key} = ?")
   return self
 
 # ==================== Aggregates ====================
@@ -429,33 +429,33 @@ proc selectCountSql*(self: Rdb): Rdb =
       &"{column}"
     else:
       "*"
-  self.sqlString = &"SELECT count({queryString}) as aggregate"
+  self.queryString = &"SELECT count({queryString}) as aggregate"
   return self
 
 
 proc selectMaxSql*(self:Rdb, column:string): Rdb =
   var column = column
   quote(column, self.driver)
-  self.sqlString = &"SELECT max({column}) as aggregate"
+  self.queryString = &"SELECT max({column}) as aggregate"
   return self
 
 
 proc selectMinSql*(self:Rdb, column:string): Rdb =
   var column = column
   quote(column, self.driver)
-  self.sqlString = &"SELECT min({column}) as aggregate"
+  self.queryString = &"SELECT min({column}) as aggregate"
   return self
 
 
 proc selectAvgSql*(self:Rdb, column:string): Rdb =
   var column = column
   quote(column, self.driver)
-  self.sqlString = &"SELECT avg({column}) as aggregate"
+  self.queryString = &"SELECT avg({column}) as aggregate"
   return self
 
 
 proc selectSumSql*(self:Rdb, column:string): Rdb =
   var column = column
   quote(column, self.driver)
-  self.sqlString = &"SELECT sum({column}) as aggregate"
+  self.queryString = &"SELECT sum({column}) as aggregate"
   return self

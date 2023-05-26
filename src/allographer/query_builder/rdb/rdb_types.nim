@@ -15,7 +15,7 @@ type
     conn*: Connections
     log*: LogSetting
     query*: JsonNode
-    sqlString*: string
+    queryString*: string
     placeHolder*: seq[string]
     # for transaction
     isInTransaction*:bool
@@ -26,7 +26,7 @@ type
     conn*: Connections
     log*: LogSetting
     query*: JsonNode
-    sqlString*: string
+    queryString*: string
     placeHolder*: seq[string]
     # for transaction
     isInTransaction*:bool
