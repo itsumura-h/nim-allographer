@@ -1,6 +1,6 @@
 import std/json
-import ../types
-import ./generators
+import ../rdb_types
+import ./generator
 
 
 # ==================== SELECT ====================

@@ -5,7 +5,6 @@ import std/asyncdispatch
 import std/sha1
 import std/times
 import std/strutils
-import ../../../types
 import ../../../query_builder
 import ../../grammars
 import ../query_interface

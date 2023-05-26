@@ -33,7 +33,7 @@ exec() -> sqlite.exec()
 
 ↓
 
-query_builder/exec
+- [ ] query_builder/exec
 ```
 get() -> database.get()
 first() -> database.first()
@@ -44,7 +44,7 @@ delete() -> database.delete()
 ```
 - コネクションの選択、レスポンスの整形
 
-databases/database
+- [ ] databases/database
 ```
 get() -> sqlite.query() / surreal.get()
 first() -> sqlite.query() / surreal.get()

@@ -1,6 +1,5 @@
 import std/json
-import ../databases/database
-import ../types
+import ../rdb_types
 
 #[
 FROM

@@ -1,6 +1,6 @@
 import std/strutils
 import ../database_types
-import ../rdb/postgres
+import ./postgre_rdb
 
 
 proc dbError*(db: PPGconn) {.noreturn.} =

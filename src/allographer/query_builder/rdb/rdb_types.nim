@@ -31,7 +31,6 @@ type
     MariaDB
     PostgreSQL
     SQLite3
-    SurrealDB
 
   Rdb* = ref object
     driver*: Driver

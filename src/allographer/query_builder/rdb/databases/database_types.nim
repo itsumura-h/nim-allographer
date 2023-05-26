@@ -3,21 +3,19 @@ import std/httpclient
 import std/random
 import std/strutils
 import std/times
-import rdb/sqlite
-import rdb/postgres
-import rdb/mysql
-import rdb/mariadb
-import rdb/surreal
+import ./sqlite/sqlite_rdb
+import ./postgre/postgre_rdb
+import ./mysql/mysql_rdb
+import ./mariadb/mariadb_rdb
 
 
 type
   DbError* = object of IOError ## exception that is raised if a database error occurs
   Pool* = ref object
-    mysqlConn*: mysql.PMySQL
-    mariadbConn*: mariadb.PMySQL
+    mysqlConn*: mysql_rdb.PMySQL
+    mariadbConn*: mariadb_rdb.PMySQL
     postgresConn*: PPGconn
     sqliteConn*: PSqlite3
-    surrealConn*: SurrealConn
     isBusy*: bool
     createdAt*: int64
   Connections* = ref object
@@ -28,7 +26,7 @@ type
     connI*:int
     nArgs*: int
     pgStmt*: string
-    sqliteStmt*: sqlite.PStmt
+    sqliteStmt*: sqlite_rdb.PStmt
   Row* = seq[string]
   DbTypeKind* = enum ## a superset of datatypes that might be supported.
     dbUnknown,       ## unknown datatype

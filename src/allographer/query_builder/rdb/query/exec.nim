@@ -1,16 +1,13 @@
 import std/asyncdispatch
 import std/strutils
-import std/strformat
-import ../env
-import ../types
-import ./database_types
-import ./impls/mysql
-import ./impls/mariadb
-import ./impls/postgres
-import ./impls/sqlite
-import ./impls/surreal
-
-export database_types
+# import std/strformat
+import ../../../env
+import ../rdb_types
+import ../databases/database_types; export database_types
+import ../databases/sqlite/sqlite_impl
+import ../databases/postgre/postgre_impl
+import ../databases/mysql/mysql_impl
+import ../databases/mariadb/mariadb_impl
 
 
 proc open*(driver:Driver, database:string="", user:string="", password:string="",
@@ -18,20 +15,17 @@ proc open*(driver:Driver, database:string="", user:string="", password:string=""
   case driver
   of SQLite3:
     when isExistsSqlite:
-      result = sqlite.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
+      result = sqlite_impl.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of PostgreSQL:
-    when isExistsPostgres:
-      result = postgres.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
+    when isExistsPostgre:
+      result = postgre_impl.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of MySQL:
     when isExistsMysql:
-      result = mariadb.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
+      result = mariadb_impl.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
       # result = mysql.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of MariaDB:
     when isExistsMariadb:
-      result = mariadb.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
-  of SurrealDB:
-    when isExistsSurrealdb:
-      result = surreal.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
+      result = mariadb_impl.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
 
 
 proc query*(
@@ -53,20 +47,17 @@ proc query*(
   case driver
   of SQLite3:
     when isExistsSqlite:
-      return await sqlite.query(self.pools[connI].sqliteConn, query, args, self.timeout)
+      return await sqlite_impl.query(self.pools[connI].sqliteConn, query, args, self.timeout)
   of PostgreSQL:
-    when isExistsPostgres:
-      return await postgres.query(self.pools[connI].postgresConn, query, args, self.timeout)
+    when isExistsPostgre:
+      return await postgre_impl.query(self.pools[connI].postgresConn, query, args, self.timeout)
   of MySQL:
     when isExistsMysql:
-      return await mariadb.query(self.pools[connI].mariadbConn, query, args, self.timeout)
+      return await mariadb_impl.query(self.pools[connI].mariadbConn, query, args, self.timeout)
       # return await mysql.query(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb:
-      return await mariadb.query(self.pools[connI].mariadbConn, query, args, self.timeout)
-  of SurrealDB:
-    when isExistsSurrealdb:
-      return await surreal.query(self.pools[connI].surrealConn, query, args, self.timeout)
+      return await mariadb_impl.query(self.pools[connI].mariadbConn, query, args, self.timeout)
 
 
 proc queryPlain*(
@@ -88,20 +79,17 @@ proc queryPlain*(
   case driver
   of SQLite3:
     when isExistsSqlite:
-      return await sqlite.queryPlain(self.pools[connI].sqliteConn, query, args, self.timeout)
+      return await sqlite_impl.queryPlain(self.pools[connI].sqliteConn, query, args, self.timeout)
   of PostgreSQL:
-    when isExistsPostgres:
-      return await postgres.queryPlain(self.pools[connI].postgresConn, query, args, self.timeout)
+    when isExistsPostgre:
+      return await postgre_impl.queryPlain(self.pools[connI].postgresConn, query, args, self.timeout)
   of MySQL:
     when isExistsMysql:
-      return await mariadb.queryPlain(self.pools[connI].mariadbConn, query, args, self.timeout)
+      return await mariadb_impl.queryPlain(self.pools[connI].mariadbConn, query, args, self.timeout)
       # return await mysql.queryPlain(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb:
-      return await mariadb.queryPlain(self.pools[connI].mariadbConn, query, args, self.timeout)
-  of SurrealDB:
-    when isExistsSurrealdb:
-      discard
+      return await mariadb_impl.queryPlain(self.pools[connI].mariadbConn, query, args, self.timeout)
 
 
 proc exec*(
@@ -123,20 +111,17 @@ proc exec*(
   case driver
   of SQLite3:
     when isExistsSqlite:
-      await sqlite.exec(self.pools[connI].sqliteConn, query, args, self.timeout)
+      await sqlite_impl.exec(self.pools[connI].sqliteConn, query, args, self.timeout)
   of PostgreSQL:
-    when isExistsPostgres:
-      await postgres.exec(self.pools[connI].postgresConn, query, args, self.timeout)
+    when isExistsPostgre:
+      await postgre_impl.exec(self.pools[connI].postgresConn, query, args, self.timeout)
   of MySQL:
     when isExistsMysql:
-      await mariadb.exec(self.pools[connI].mariadbConn, query, args, self.timeout)
+      await mariadb_impl.exec(self.pools[connI].mariadbConn, query, args, self.timeout)
       # await mysql.exec(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb:
-      await mariadb.exec(self.pools[connI].mariadbConn, query, args, self.timeout)
-  of SurrealDB:
-    when isExistsSurrealdb:
-      await surreal.exec(self.pools[connI].surrealConn, query, args, self.timeout)
+      await mariadb_impl.exec(self.pools[connI].mariadbConn, query, args, self.timeout)
 
 
 proc transactionStart*(self: Connections, driver:Driver):Future[int] {.async.} =
@@ -146,20 +131,17 @@ proc transactionStart*(self: Connections, driver:Driver):Future[int] {.async.} =
   case driver
   of MySQL:
     when isExistsMysql:
-      await mariadb.exec(self.pools[connI].mariadbConn, "BEGIN", @[], self.timeout)
+      await mariadb_impl.exec(self.pools[connI].mariadbConn, "BEGIN", @[], self.timeout)
       # await mysql.exec(self.pools[connI].mysqlConn, "BEGIN", @[], self.timeout)
   of MariaDB:
     when isExistsMariadb:
-      await mariadb.exec(self.pools[connI].mariadbConn, "BEGIN", @[], self.timeout)
+      await mariadb_impl.exec(self.pools[connI].mariadbConn, "BEGIN", @[], self.timeout)
   of PostgreSQL:
-    when isExistsPostgres:
-      await postgres.exec(self.pools[connI].postgresConn, "BEGIN", @[], self.timeout)
+    when isExistsPostgre:
+      await postgre_impl.exec(self.pools[connI].postgresConn, "BEGIN", @[], self.timeout)
   of SQLite3:
     when isExistsSqlite:
-      await sqlite.exec(self.pools[connI].sqliteConn, "BEGIN", @[], self.timeout)
-  of SurrealDB:
-    when isExistsSurrealdb:
-      discard
+      await sqlite_impl.exec(self.pools[connI].sqliteConn, "BEGIN", @[], self.timeout)
 
   return connI
 
@@ -171,20 +153,17 @@ proc transactionEnd*(self: Connections, driver:Driver, connI:int, query:string) 
   case driver
   of MySQL:
     when isExistsMysql:
-      await mariadb.exec(self.pools[connI].mariadbConn, query, @[], self.timeout)
+      await mariadb_impl.exec(self.pools[connI].mariadbConn, query, @[], self.timeout)
       # await mysql.exec(self.pools[connI].mysqlConn, query, @[], self.timeout)
   of MariaDB:
     when isExistsMariadb:
-      await mariadb.exec(self.pools[connI].mariadbConn, query, @[], self.timeout)
+      await mariadb_impl.exec(self.pools[connI].mariadbConn, query, @[], self.timeout)
   of PostgreSQL:
-    when isExistsPostgres:
-      await postgres.exec(self.pools[connI].postgresConn, query, @[], self.timeout)
+    when isExistsPostgre:
+      await postgre_impl.exec(self.pools[connI].postgresConn, query, @[], self.timeout)
   of SQLite3:
     when isExistsSqlite:
-      await sqlite.exec(self.pools[connI].sqliteConn, query, @[], self.timeout)
-  of SurrealDB:
-    when isExistsSurrealdb:
-      discard
+      await sqlite_impl.exec(self.pools[connI].sqliteConn, query, @[], self.timeout)
 
 
 proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string] = @[]):Future[seq[string]] {.async.} =
@@ -202,15 +181,12 @@ proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string
       discard
       # return await mariadb.getColumns(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
-    when isExistsPostgres:
+    when isExistsPostgre:
       discard
       # return await postgres.getColumns(self.pools[connI].postgresConn, query, args, self.timeout)
   of SQLite3:
     when isExistsSqlite:
-      return await sqlite.getColumns(self.pools[connI].sqliteConn, query, args, self.timeout)
-  of SurrealDB:
-    when isExistsSurrealdb:
-      discard
+      return await sqlite_impl.getColumns(self.pools[connI].sqliteConn, query, args, self.timeout)
 
 
 proc prepare*(self: Connections, driver:Driver, query: string, stmtName=""):Future[Prepared] {.async.} =
@@ -227,21 +203,18 @@ proc prepare*(self: Connections, driver:Driver, query: string, stmtName=""):Futu
       discard
       # await mariadb.prepare(self.pools[connI].mariadbConn, query, self.timeout)
   of PostgreSQL:
-    when isExistsPostgres:
+    when isExistsPostgre:
       let stmtName =
         if stmtName.len == 0:
           randStr(10)
         else:
           stmtName
-      let nArgs = await postgres.prepare(self.pools[connI].postgresConn, query, self.timeout, stmtName)
+      let nArgs = await postgre_impl.prepare(self.pools[connI].postgresConn, query, self.timeout, stmtName)
       result = Prepared(conn:self, nArgs:nArgs, pgStmt:stmtName, connI:connI)
   of SQLite3:
     when isExistsSqlite:
-      let sqliteStmt = await sqlite.prepare(self.pools[connI].sqliteConn, query, self.timeout)
+      let sqliteStmt = await sqlite_impl.prepare(self.pools[connI].sqliteConn, query, self.timeout)
       result = Prepared(conn:self, sqliteStmt:sqliteStmt, connI:connI)
-  of SurrealDB:
-    when isExistsSurrealdb:
-      discard
 
 
 proc query*(self:Prepared, driver:Driver, args: seq[string] = @[]):Future[(seq[Row], DbRows)] {.async.} =
@@ -253,14 +226,11 @@ proc query*(self:Prepared, driver:Driver, args: seq[string] = @[]):Future[(seq[R
     when isExistsMariadb:
       discard
   of PostgreSQL:
-    when isExistsPostgres:
-      return await postgres.preparedQuery(self.conn.pools[self.connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
+    when isExistsPostgre:
+      return await postgre_impl.preparedQuery(self.conn.pools[self.connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
   of SQLite3:
     when isExistsSqlite:
-      return await sqlite.preparedQuery(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)
-  of SurrealDB:
-    when isExistsSurrealdb:
-      discard
+      return await sqlite_impl.preparedQuery(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)
 
 
 proc exec*(self:Prepared, driver:Driver, args:seq[string] = @[]) {.async.} =
@@ -272,14 +242,11 @@ proc exec*(self:Prepared, driver:Driver, args:seq[string] = @[]) {.async.} =
     when isExistsMariadb:
       discard
   of PostgreSQL:
-    when isExistsPostgres:
-      await postgres.preparedExec(self.conn.pools[self.connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
+    when isExistsPostgre:
+      await postgre_impl.preparedExec(self.conn.pools[self.connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
   of SQLite3:
     when isExistsSqlite:
-      await sqlite.preparedExec(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)
-  of SurrealDB:
-    when isExistsSurrealdb:
-      discard
+      await sqlite_impl.preparedExec(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)
 
 
 proc close*(self:Prepared) {.async.}=

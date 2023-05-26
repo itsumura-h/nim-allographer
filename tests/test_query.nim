@@ -12,7 +12,7 @@ import std/times
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
 import ../src/allographer/connection
-import ../src/allographer/utils
+import ../src/allographer/query_builder/rdb/rdb_utils
 import ./connections
 
 

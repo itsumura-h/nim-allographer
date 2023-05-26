@@ -5,7 +5,7 @@ import std/logging
 import std/macros
 import std/strformat
 import std/strutils
-import ./types
+import ./rdb_types
 
 
 proc logger*(self:LogSetting, output: auto, args:varargs[string]) =
@@ -82,8 +82,8 @@ proc quoteSchema*(input:var string, driver:Driver) =
       myQuoteSchema(input)
     of PostgreSQL:
       pgQuoteSchema(input)
-    of SurrealDB:
-      pgQuoteSchema(input)
+    # of SurrealDB:
+    #   pgQuoteSchema(input)
 
 
 proc liteQuoteColumn*(input:var string) =
@@ -140,5 +140,5 @@ proc quote*(input:var string, driver:Driver) =
     myQuoteColumn(input)
   of PostgreSQL:
     pgQuoteColumn(input)
-  of SurrealDB:
-    pgQuoteColumn(input)
+  # of SurrealDB:
+  #   pgQuoteColumn(input)

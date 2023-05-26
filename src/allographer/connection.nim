@@ -1,6 +1,6 @@
 import std/json
-import ./types
-from databases/database import open
+import ./query_builder/rdb/rdb_types
+import ./query_builder/rdb/query/exec
 
 export
   Driver

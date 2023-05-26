@@ -1,17 +1,12 @@
 import ../database_types
-import ../rdb/mariadb
+import ./mysql_rdb
 
-
-type InstantRow* = object ## a handle that can be used to get a row's
-                       ## column text on demand
-  row*: cstringArray
-  len: int
 
 proc dbError*(db: PMySQL) {.noreturn.} =
   ## raises a DbError exception.
   var e: ref DbError
   new(e)
-  e.msg = $db.error
+  e.msg = $db.error & "\n" & $db.errno
   raise e
 
 proc checkError*(db: PMySQL) =
@@ -71,18 +66,20 @@ proc setTypeName(t: var DbType; f: PFIELD) =
   of TYPE_ENUM: t.kind = dbEnum
   of TYPE_SET: t.kind = dbSet
   of TYPE_TINY_BLOB, TYPE_MEDIUM_BLOB, TYPE_LONG_BLOB,
-     TYPE_BLOB: t.kind = dbBlob
+    TYPE_BLOB: t.kind = dbBlob
   of TYPE_GEOMETRY:
     t.kind = dbGeometry
 
-proc setColumnInfo*(columns: var DbColumns; res: PRES; L: int) =
-  setLen(columns, L)
-  for i in 0..<L:
+proc setColumnInfo*(res: PRES; dbRows: var DbRows;  line, cols: int) =
+  var columns: DbColumns
+  setLen(columns, cols)
+  for i in 0..<cols:
     let fp = fetch_field_direct(res, cint(i))
     setTypeName(columns[i].typ, fp)
     columns[i].name = $fp.name
     columns[i].tableName = $fp.table
     columns[i].primaryKey = (fp.flags and PRI_KEY_FLAG) != 0
+  dbRows.add(columns)
 
 proc newRow*(L: int): database_types.Row =
   newSeq(result, L)
@@ -115,47 +112,12 @@ proc dbQuote(s: string): string =
     else: result.add c
   add(result, '\'')
 
-proc dbFormat*(formatstr: string, args: seq[string]): string =
+proc dbFormat*(formatstr: string, args: varargs[string, `$`]): string =
   result = ""
-  var a = 0
+  var count = 0
   for c in items(formatstr):
     if c == '?':
-      add(result, dbQuote(args[a]))
-      inc(a)
+      add(result, dbQuote(args[count]))
+      inc(count)
     else:
       add(result, c)
-
-proc rawExec*(db:PMySQL, query:string, args: seq[string]) =
-  var q = dbFormat(query, args)
-  if realQuery(db, q.cstring, q.len) != 0'i32: dbError(db)
-
-iterator instantRows*(db: PMySQL; dbRows: var DbRows; query: string;
-                      args: seq[string]): InstantRow =
-  ## Same as fastRows but returns a handle that can be used to get column text
-  ## on demand using []. Returned handle is valid only within the iterator body.
-  rawExec(db, query, args)
-  var sqlres = mariadb.useResult(db)
-  var dbColumns: DbColumns
-  if sqlres != nil:
-    let L = int(mariadb.numFields(sqlres))
-    var row: cstringArray
-    while true:
-      setColumnInfo(dbColumns, sqlres, L)
-      dbRows.add(dbColumns)
-      for i in 0..L:
-        row = mariadb.fetchRow(sqlres)
-      if row == nil: break
-      yield InstantRow(row: row, len: L)
-    properFreeResult(sqlres, row)
-
-proc `[]`*(row: InstantRow, col: int): string {.inline.} =
-  ## Returns text for given column of the row.
-  $row.row[col]
-
-proc unsafeColumnAt*(row: InstantRow, index: int): cstring {.inline.} =
-  ## Return cstring of given column of the row
-  row.row[index]
-
-proc len*(row: InstantRow): int {.inline.} =
-  ## Returns number of columns in the row.
-  row.len

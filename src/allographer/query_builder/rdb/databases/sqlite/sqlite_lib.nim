@@ -1,6 +1,6 @@
 import std/macros
 import ../database_types
-import ../rdb/sqlite
+import ./sqlite_rdb
 
 
 proc dbQuote(s: string): string =

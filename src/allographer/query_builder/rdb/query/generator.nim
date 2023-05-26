@@ -1,8 +1,8 @@
 import std/json
 import std/strformat
 import std/strutils
-import ../types
-import ../utils
+import ../rdb_types
+import ../rdb_utils
 
 
 # ==================== SELECT ====================

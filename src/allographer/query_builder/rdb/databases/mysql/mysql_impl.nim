@@ -1,14 +1,14 @@
 import asyncdispatch, strutils, times
 import ../database_types
-import ../rdb/mysql
-import ../libs/lib_mysql
+import ./mysql_rdb
+import ./mysql_lib
 
 # https://dev.mysql.com/doc/c-api/8.0/en/c-api-asynchronous-interface-usage.html
 
 proc dbopen*(database: string = "", user: string = "", password: string = "", host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30): Connections =
   var pools = newSeq[Pool](maxConnections)
   for i in 0..<maxConnections:
-    var mysql = mysql.init(nil)
+    var mysql = mysql_rdb.init(nil)
     if mysql == nil:
       dbError("could not open database connection")
     var status = real_connect_nonblocking(mysql, host, user, password, database, port, nil, 0)
@@ -50,7 +50,7 @@ proc query*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[(s
     if getTime().toUnix() >= calledAt + timeout:
       return
     await sleepAsync(0)
-    var row: mysql.Row
+    var row: mysql_rdb.Row
     status = fetch_row_nonblocking(res, row.addr)
     while status != NET_ASYNC_COMPLETE:
       await sleepAsync(0)
@@ -90,7 +90,7 @@ proc queryPlain*(db: PMySQL, query: string, args: seq[string], timeout:int):Futu
     if getTime().toUnix() >= calledAt + timeout:
       dbError(db)
     await sleepAsync(0)
-    var row: mysql.Row
+    var row: mysql_rdb.Row
     status = fetch_row_nonblocking(res, row.addr)
     while status != NET_ASYNC_COMPLETE:
       await sleepAsync(0)

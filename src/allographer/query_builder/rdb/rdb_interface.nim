@@ -4,10 +4,11 @@ import std/json
 import std/options
 import std/strformat
 import std/strutils
-import ../databases/database
-import ../types
-import ../utils
-import ./builders
+import ./databases/database_types
+import ./rdb_types
+import ./rdb_utils
+import ./query/builder
+import ./query/exec
 
 
 proc selectSql*(self: Rdb):string =
@@ -15,18 +16,6 @@ proc selectSql*(self: Rdb):string =
   echo result
 
 proc toJson(driver:Driver, results:openArray[seq[string]], dbRows:DbRows):seq[JsonNode] =
-  if driver == SurrealDB:
-    let res = results[0][0].parseJson()["result"]
-    if res.kind == JArray:
-      var resp = newSeq[JsonNode](res.len)
-      var i = 0
-      for row in res:
-        resp[i] = row
-        i.inc()
-      return resp
-    else:
-      return @[res]
- 
   var response_table = newSeq[JsonNode](results.len)
   for index, rows in results.pairs:
     var response_row = newJObject()
@@ -563,7 +552,7 @@ proc sum*(self:Rdb, column:string):Future[Option[float]]{.async.} =
 
 # ==================== Paginate ====================
 
-from grammars import table, where, limit, offset, orderBy, Order
+from ./query/grammar import table, where, limit, offset, orderBy, Order
 
 proc paginate*(self:Rdb, display:int, page:int=1):Future[JsonNode]{.async.} =
   # defer: self.cleanUp()

@@ -5,12 +5,11 @@ import std/strformat
 import std/base64
 import std/strutils
 import std/json
-import ../database_types
-import ../rdb/surreal
+import ./surreal_rdb
 
 
-proc dbopen*(database: string = "", user: string = "", password: string = "", host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30): Connections =
-  var pools = newSeq[Pool](maxConnections)
+proc dbopen*(database: string = "", user: string = "", password: string = "", host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30): SurrealConnections =
+  var pools = newSeq[SurrealConn](maxConnections)
   for i in 0..<maxConnections:
     let client = newAsyncHttpClient()
     var headers = newHttpHeaders(true)
@@ -20,12 +19,14 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
     headers["Authorization"] = "Basic " & base64.encode(user & ":" & password)
     client.headers = headers
 
-    pools[i] = Pool(
-      surrealConn: SurrealConn(conn: client, host:host, port:port),
+    pools[i] = SurrealConn(
+      conn: client,
+      host:host,
+      port:port,
       isBusy: false,
       createdAt: getTime().toUnix(),
     )
-  result = Connections(
+  result = SurrealConnections(
     pools: pools,
     timeout: timeout
   )
