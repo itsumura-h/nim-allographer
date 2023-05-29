@@ -1,4 +1,5 @@
 import asyncdispatch, strutils, times
+import ../../../error
 import ../database_types
 import ./mysql_rdb
 import ./mysql_lib

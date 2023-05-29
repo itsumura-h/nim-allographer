@@ -1,4 +1,5 @@
 import std/macros
+import ../../../error
 import ../database_types
 import ./sqlite_rdb
 

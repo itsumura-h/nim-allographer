@@ -1,3 +1,4 @@
+import ../../../error
 import ../database_types
 import ./mysql_rdb
 

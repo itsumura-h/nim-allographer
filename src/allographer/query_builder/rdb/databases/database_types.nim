@@ -9,7 +9,6 @@ import ./mariadb/mariadb_rdb
 
 
 type
-  DbError* = object of IOError ## exception that is raised if a database error occurs
   Pool* = ref object
     mysqlConn*: mysql_rdb.PMySQL
     mariadbConn*: mariadb_rdb.PMySQL
@@ -108,17 +107,12 @@ proc getFreeConn*(self:Connections):Future[int] {.async.} =
     if getTime().toUnix() >= calledAt + self.timeout:
       return errorConnectionNum
 
+
 proc returnConn*(self: Connections, i: int) {.async.} =
   if i != errorConnectionNum:
     self.pools[i].isBusy = false
   # echo "=== returnConn ", i
 
-proc dbError*(msg: string) {.noreturn, noinline.} =
-  ## raises an DbError exception with message `msg`.
-  var e: ref DbError
-  new(e)
-  e.msg = msg
-  raise e
 
 proc randStr*(n:int):string =
   randomize()

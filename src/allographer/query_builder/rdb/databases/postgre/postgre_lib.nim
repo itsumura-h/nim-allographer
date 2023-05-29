@@ -1,4 +1,5 @@
 import std/strutils
+import ../../../error
 import ../database_types
 import ./postgre_rdb
 

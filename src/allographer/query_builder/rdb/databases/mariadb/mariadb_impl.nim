@@ -1,4 +1,5 @@
 import times, asyncdispatch
+import ../../../error
 import ../database_types
 import ./mariadb_rdb
 import ./mariadb_lib

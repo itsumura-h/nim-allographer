@@ -1,4 +1,5 @@
 import times, asyncdispatch, strutils
+import ../../../error
 import ../database_types
 import ./postgre_rdb
 import ./postgre_lib
