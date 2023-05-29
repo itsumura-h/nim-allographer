@@ -76,3 +76,37 @@ proc where(self:QueryObject, col:string, ):QueryObject
 
 proc get(self:QueryObject):seq[Row] {.async.}
 ```
+
+
+rdb_interface
+```nim
+proc get*(self: Rdb):Future[seq[JsonNode]]
+  # クエリ生成
+  # ログ出力
+  # getAllRowsを呼び出し
+  # エラーハンドリング
+
+proc getAllRows(self:Rdb | RawQueryRdb, queryString:string, args:seq[string]):Future[seq[JsonNode]]
+  # クエリ実行
+  # JSON化して返す
+```
+
+query/exec
+```nim
+proc query*(
+  self: Connections,
+  driver:Driver,
+  query: string,
+  args: seq[string] = @[],
+  specifiedConnI=false,
+  connI=0
+):Future[(seq[Row], DbRows)]
+  # コネクションを取得
+  # 各DBに処理を振り分け
+```
+
+databases/sqlite/sqlite_impl
+```nim
+proc query*(db:PSqlite3, query:string, args:seq[string], timeout:int):Future[(seq[Row], DbRows)]
+  # Sqlite固有の処理
+```

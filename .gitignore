@@ -17,6 +17,7 @@ coverage
 lcov.info
 
 *.sqlite3
+*.srqlnb
 .migration.json
 *logs/*
 *.log

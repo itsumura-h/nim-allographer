@@ -58,7 +58,7 @@ services:
   surreal:
     image: surrealdb/surrealdb:1.0.0-beta.8
     tty: true
-    command: start --user user --pass pass
+    command: start --user user --pass pass file://root/project/surreal.db
 
   adminer:
     image: adminer:4.8.1-standalone
