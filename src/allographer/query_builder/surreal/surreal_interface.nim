@@ -72,6 +72,20 @@ proc find*(self: SurrealDb, id: string, key="id"):Future[Option[JsonNode]]{.asyn
     return none(JsonNode)
 
 
+# ==================== INSERT ====================
+
+proc insert*(self: SurrealDb, items: JsonNode){.async.} =
+  let sql = self.insertValueBuilder(items)
+  self.log.logger(sql, self.placeHolder)
+  self.conn.exec(sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
+
+
+proc insert*(self: SurrealDb, rows: seq[JsonNode]){.async.} =
+  let sql = self.insertValuesBuilder(rows)
+  self.log.logger(sql, self.placeHolder)
+  self.conn.exec(sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
+
+
 # ==================== RawQuery ====================
 proc get*(self: RawQuerySurrealDb):Future[seq[JsonNode]]{.async.} =
   ## It is only used with raw()

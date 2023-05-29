@@ -1,7 +1,7 @@
 import std/json
 import std/strformat
 import std/strutils
-import ../databases/surreal_lib
+# import ../databases/surreal_lib
 import ../surreal_types
 import ../surreal_utils
 
@@ -131,3 +131,74 @@ proc parallelSql*(self:SurrealDb):SurrealDb =
   if self.query.hasKey("parallel") and self.query["parallel"].getBool():
     self.queryString.add(" PARALLEL")
   return self
+
+
+# ==================== INSERT ====================
+
+proc insertSql*(self: SurrealDb): SurrealDb =
+  var table = self.query["table"].getStr()
+  quoteTable(table)
+  self.queryString = &"INSERT INTO {table}"
+  return self
+
+
+proc insertValueSql*(self: SurrealDb, items: JsonNode): SurrealDb =
+  self.queryString.add(" " & items.pretty())
+  return self
+
+
+proc insertValuesSql*(self: SurrealDb, rows: openArray[JsonNode]): SurrealDb =
+  var query = " ["
+  for i, row in rows:
+    if i > 0: query.add(", ")
+    query.add(" " & row.pretty())
+  query.add("]")
+  self.queryString.add(query)
+  return self
+
+
+# proc insertValuesSql*(self: SurrealDb, rows: openArray[JsonNode]): SurrealDb =
+#   var columns = ""
+
+#   var i = 0
+#   for key, value in rows[0]:
+#     if i > 0: columns.add(", ")
+#     i += 1
+#     # If column name contains Upper letter, column name is covered by double quote
+#     var key = key
+#     quoteColumn(key)
+#     columns.add(key)
+
+#   var values = ""
+#   var valuesCount = 0
+#   for items in rows:
+#     var valueCount = 0
+#     var value = ""
+#     for key, val in items.pairs:
+#       if valueCount > 0: value.add(", ")
+#       valueCount += 1
+#       if val.kind == JInt:
+#         self.placeHolder.add($(val.getInt()))
+#       elif val.kind == JFloat:
+#         self.placeHolder.add($(val.getFloat()))
+#       elif val.kind == JBool:
+#         let val =
+#           if val.getBool():
+#             1
+#           else:
+#             0
+#         self.placeHolder.add($val)
+#       elif val.kind == JObject:
+#         self.placeHolder.add($val)
+#       elif val.kind == JNull:
+#         self.placeHolder.add("null")
+#       else:
+#         self.placeHolder.add(val.getStr())
+#       value.add("?")
+
+#     if valuesCount > 0: values.add(", ")
+#     valuesCount += 1
+#     values.add(&"({value})")
+
+#   self.queryString.add(&" ({columns}) VALUES {values}")
+#   return self

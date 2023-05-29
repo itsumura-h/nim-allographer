@@ -1,3 +1,4 @@
+import std/json
 import ../surreal_types
 import ./generator
 
@@ -66,4 +67,19 @@ proc selectFindBuilder*(self: SurrealDb, key: string): string =
     .selectByIdSql(key) # LIMIT
     .fetchSql()
     .parallelSql()
+    .queryString
+
+
+# ==================== INSERT ====================
+
+proc insertValueBuilder*(self: SurrealDb, items: JsonNode): string =
+  return self
+    .insertSql()
+    .insertValueSql(items)
+    .queryString
+
+proc insertValuesBuilder*(self: SurrealDb, rows: openArray[JsonNode]): string =
+  return self
+    .insertSql()
+    .insertValuesSql(rows)
     .queryString
