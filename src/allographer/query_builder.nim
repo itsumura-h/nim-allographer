@@ -1,3 +1,5 @@
+import ./query_builder/enums; export enums
+
 import ./query_builder/rdb/rdb_types; export rdb_types
 import ./query_builder/rdb/rdb_interface; export rdb_interface
 import ./query_builder/rdb/query/grammar as rdb_grammar; export rdb_grammar

@@ -56,7 +56,7 @@ services:
       POSTGRES_PASSWORD: pass
 
   surreal:
-    image: surrealdb/surrealdb:1.0.0-beta.8
+    image: surrealdb/surrealdb:1.0.0-beta.9
     tty: true
     command: start --user user --pass pass file://root/project/surreal.db
 

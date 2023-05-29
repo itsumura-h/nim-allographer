@@ -76,6 +76,7 @@ proc toJson(driver:Driver, results:openArray[seq[string]], dbRows:DbRows):seq[Js
     response_table[index] = response_row
   return response_table
 
+
 proc getAllRows(self:Rdb | RawQueryRdb, queryString:string, args:seq[string]):Future[seq[JsonNode]] {.async.} =
   let (rows, dbRows) = self.conn.query(
     self.driver,
@@ -90,6 +91,7 @@ proc getAllRows(self:Rdb | RawQueryRdb, queryString:string, args:seq[string]):Fu
     return newSeq[JsonNode](0)
   return toJson(self.driver, rows, dbRows) # seq[JsonNode]
 
+
 proc getRowsPlain(self:Rdb | RawQueryRdb, queryString:string, args:seq[string]):Future[seq[seq[string]]] {.async.} =
   return self.conn.queryPlain(
     self.driver,
@@ -98,6 +100,7 @@ proc getRowsPlain(self:Rdb | RawQueryRdb, queryString:string, args:seq[string]):
     self.isInTransaction,
     self.transactionConn
   ).await
+
 
 proc getRow(self:Rdb | RawQueryRdb, queryString:string, args:seq[string]):Future[Option[JsonNode]] {.async.} =
   let (rows, dbColumns) = self.conn.query(
@@ -553,7 +556,8 @@ proc sum*(self:Rdb, column:string):Future[Option[float]]{.async.} =
 
 # ==================== Paginate ====================
 
-from ./query/grammar import table, where, limit, offset, orderBy, Order
+from ./query/grammar import table, where, limit, offset, orderBy
+from ../enums import Order
 
 proc paginate*(self:Rdb, display:int, page:int=1):Future[JsonNode]{.async.} =
   # defer: self.cleanUp()

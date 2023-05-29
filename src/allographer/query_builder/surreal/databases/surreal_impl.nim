@@ -8,6 +8,7 @@ import std/json
 import ../../error
 import ../surreal_types
 import ./surreal_rdb
+import ./surreal_lib
 
 type SurrealImpl* = ref object
 
@@ -46,6 +47,7 @@ proc open*(_:type SurrealImpl, namespace="", database="",user="", password="",
 proc query*(db:SurrealConn, query: string, args: seq[string], timeout:int):Future[JsonNode] {.async.} =
   ## return JArray
   assert(not db.conn.isNil, "Database not connected.")
+  let query = dbFormat(query, args)
   let resp = db.conn.post(&"{db.host}:{db.port}/sql", query).await
   let body = resp.body().await.parseJson()
   if body.kind == JObject and body["code"].getInt() == 400:
@@ -55,6 +57,7 @@ proc query*(db:SurrealConn, query: string, args: seq[string], timeout:int):Futur
 
 proc exec*(db:SurrealConn, query: string, args: seq[string], timeout:int) {.async.} =
   assert(not db.conn.isNil, "Database not connected.")
+  let query = dbFormat(query, args)
   let resp = db.conn.post(&"{db.host}:{db.port}/sql", query).await
   let body = resp.body().await.parseJson()
   if body.kind == JObject and body["code"].getInt() == 400:

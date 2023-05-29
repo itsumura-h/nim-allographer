@@ -1,4 +1,5 @@
 import std/json
+import ../../enums
 import ../rdb_types
 
 #[
@@ -342,9 +343,6 @@ proc having*(self: Rdb, column: string, symbol: string, value: nil.type): Rdb =
     )
   return self
 
-type Order* = enum
-  Asc = "ASC"
-  Desc = "DESC"
 
 proc orderBy*(self:Rdb, column:string, order:Order): Rdb =
   if self.query.hasKey("order_by") == false:
