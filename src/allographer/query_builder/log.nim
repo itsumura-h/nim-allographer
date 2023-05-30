@@ -13,10 +13,11 @@ type
     logDir*: string
 
 proc logger*(self:LogSetting, output: auto, args:varargs[string]) =
+  let msg = $output & " " & $args
   # console log
   if self.shouldDisplayLog:
     let logger = newConsoleLogger()
-    logger.log(lvlDebug, $output & " " & $args)
+    logger.log(lvlDebug, msg)
   # file log
   if self.shouldOutputLogFile:
     # info $output & $args
@@ -24,11 +25,12 @@ proc logger*(self:LogSetting, output: auto, args:varargs[string]) =
     createDir(parentDir(path))
     let logger = newRollingFileLogger(path, mode=fmAppend, fmtStr=verboseFmtStr)
     defer: logger.file.close()
-    logger.log(lvlDebug, $output & " " & $args)
+    logger.log(lvlDebug, msg)
     flushFile(logger.file)
 
 
-proc echoErrorMsg*(self:LogSetting, msg:string) =
+proc echoErrorMsg*(self:LogSetting, msg:string, args:seq[string] = @[]) =
+  let msg = msg & " " & $args
   # console log
   if self.shouldDisplayLog:
     styledWriteLine(stdout, fgRed, bgDefault, msg, resetStyle)

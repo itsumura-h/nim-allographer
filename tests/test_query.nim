@@ -202,11 +202,11 @@ for rdb in dbConnections:
         check t["name"].getStr() == "John"
         rdb.raw("ROLLBACK").exec().await
 
-    test("insertsIDTest"):
+    test("insertsIdTest"):
       asyncBlock:
         rdb.raw("BEGIN").exec().await
         echo rdb.table("user").orderBy("id", Desc).first().await
-        var ids = rdb.table("user").insertsID(@[
+        var ids = rdb.table("user").insertsId(@[
           %*{"name": "John"},
           %*{"email": "Paul@gmail.com"},
         ])

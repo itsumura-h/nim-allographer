@@ -1,5 +1,6 @@
 import std/asyncdispatch
 import std/json
+import ../../../env
 import ../surreal_types
 import ../databases/surreal_rdb
 import ../databases/surreal_impl
@@ -12,15 +13,16 @@ proc query*(
   specifiedConnI=false,
   connI=0
 ):Future[JsonNode] {.async.} =
-  var connI = connI
-  if not specifiedConnI:
-    connI = getFreeConn(self).await
-  defer:
+  when isExistsSurrealdb:
+    var connI = connI
     if not specifiedConnI:
-      self.returnConn(connI).await
-  if connI == errorConnectionNum:
-    return
-  return await query(self.pools[connI], query, args, self.timeout)
+      connI = getFreeConn(self).await
+    defer:
+      if not specifiedConnI:
+        self.returnConn(connI).await
+    if connI == errorConnectionNum:
+      return
+    return await query(self.pools[connI], query, args, self.timeout)
 
 
 proc exec*(
@@ -30,12 +32,13 @@ proc exec*(
   specifiedConnI=false,
   connI=0
 ) {.async.} =
-  var connI = connI
-  if not specifiedConnI:
-    connI = getFreeConn(self).await
-  defer:
+  when isExistsSurrealdb:
+    var connI = connI
     if not specifiedConnI:
-      self.returnConn(connI).await
-  if connI == errorConnectionNum:
-    return
-  await exec(self.pools[connI], query, args, self.timeout)
+      connI = getFreeConn(self).await
+    defer:
+      if not specifiedConnI:
+        self.returnConn(connI).await
+    if connI == errorConnectionNum:
+      return
+    await exec(self.pools[connI], query, args, self.timeout)

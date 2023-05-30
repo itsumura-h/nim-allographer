@@ -6,7 +6,6 @@ import std/base64
 import std/strutils
 import std/json
 import ../../error
-import ../surreal_types
 import ./surreal_rdb
 import ./surreal_lib
 

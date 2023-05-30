@@ -143,7 +143,7 @@ proc insertSql*(self: SurrealDb): SurrealDb =
 
 
 proc insertValueSql*(self: SurrealDb, items: JsonNode): SurrealDb =
-  self.queryString.add(" " & items.pretty())
+  self.queryString.add(" " & $items)
   return self
 
 
@@ -151,7 +151,7 @@ proc insertValuesSql*(self: SurrealDb, rows: openArray[JsonNode]): SurrealDb =
   var query = " ["
   for i, row in rows:
     if i > 0: query.add(", ")
-    query.add(" " & row.pretty())
+    query.add($row)
   query.add("]")
   self.queryString.add(query)
   return self
