@@ -1,0 +1,2 @@
+query	query_builder/surreal/query/exec.html#query,SurrealConnections,string,seq[string],int	exec: query(self: SurrealConnections; query: string; args: seq[string] = @[];\n      specifiedConnI = false; connI = 0): Future[JsonNode]	
+exec	query_builder/surreal/query/exec.html#exec,SurrealConnections,string,seq[string],int	exec: exec(self: SurrealConnections; query: string; args: seq[string] = @[];\n     specifiedConnI = false; connI = 0): owned(Future[void])	

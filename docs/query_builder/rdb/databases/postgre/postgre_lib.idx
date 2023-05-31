@@ -1,0 +1,6 @@
+dbError	query_builder/rdb/databases/postgre/postgre_lib.html#dbError,PPGconn	postgre_lib: dbError(db: PPGconn)	
+checkError	query_builder/rdb/databases/postgre/postgre_lib.html#checkError,PPGconn	postgre_lib: checkError(db: PPGconn)	
+setColumnInfo	query_builder/rdb/databases/postgre/postgre_lib.html#setColumnInfo,PPGresult,DbRows,int32,int32	postgre_lib: setColumnInfo(res: PPGresult; dbRows: var DbRows; line, cols: int32)	
+newRow	query_builder/rdb/databases/postgre/postgre_lib.html#newRow,int	postgre_lib: newRow(L: int): Row	
+setRow	query_builder/rdb/databases/postgre/postgre_lib.html#setRow,PPGresult,Row,int32,int32	postgre_lib: setRow(res: PPGresult; r: var Row; line, cols: int32)	
+dbFormat	query_builder/rdb/databases/postgre/postgre_lib.html#dbFormat,string,varargs[string]	postgre_lib: dbFormat(formatstr: string; args: varargs[string]): string	

@@ -1,7 +1,0 @@
-logger	utils.html#logger,LogSetting,auto,varargs[string]	utils: logger(self: LogSetting; output: auto; args: varargs[string])	
-echoErrorMsg	utils.html#echoErrorMsg,LogSetting,string	utils: echoErrorMsg(self: LogSetting; msg: string)	
-echoWarningMsg	utils.html#echoWarningMsg,LogSetting,string	utils: echoWarningMsg(self: LogSetting; msg: string)	
-liteWrapUpper	utils.html#liteWrapUpper,string	utils: liteWrapUpper(input: var string)	
-myWrapUpper	utils.html#myWrapUpper,string	utils: myWrapUpper(input: var string)	
-pgWrapUpper	utils.html#pgWrapUpper,string	utils: pgWrapUpper(input: var string)	
-wrapUpper	utils.html#wrapUpper,string,Driver	utils: wrapUpper(input: var string; driver: Driver)	

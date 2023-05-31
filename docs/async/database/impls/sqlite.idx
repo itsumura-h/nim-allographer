@@ -1,8 +1,0 @@
-dbopen	async/database/impls/sqlite.html#dbopen,string,string,string,string,int32,int,int	sqlite: dbopen(database: string = &quot;&quot;; user: string = &quot;&quot;; password: string = &quot;&quot;;\n       host: string = &quot;&quot;; port: int32 = 0; maxConnections: int = 1; timeout = 30): Connections	
-query	async/database/impls/sqlite.html#query,PSqlite3,string,seq[string],int	sqlite: query(db: PSqlite3; query: string; args: seq[string]; timeout: int): Future[\n    (seq[Row], DbRows)]	
-queryPlain	async/database/impls/sqlite.html#queryPlain,PSqlite3,string,seq[string],int	sqlite: queryPlain(db: PSqlite3; query: string; args: seq[string]; timeout: int): Future[\n    seq[Row]]	
-exec	async/database/impls/sqlite.html#exec,PSqlite3,string,seq[string],int	sqlite: exec(db: PSqlite3; query: string; args: seq[string]; timeout: int): owned(\n    Future[void])	
-getColumns	async/database/impls/sqlite.html#getColumns,PSqlite3,string,seq[string],int	sqlite: getColumns(db: PSqlite3; query: string; args: seq[string]; timeout: int): Future[\n    seq[string]]	
-prepare	async/database/impls/sqlite.html#prepare,PSqlite3,string,int	sqlite: prepare(db: PSqlite3; query: string; timeout: int): Future[PStmt]	
-preparedQuery	async/database/impls/sqlite.html#preparedQuery,PSqlite3,seq[string],PStmt	sqlite: preparedQuery(db: PSqlite3; args: seq[string] = @[]; sqliteStmt: PStmt): Future[\n    (seq[Row], DbRows)]	
-preparedExec	async/database/impls/sqlite.html#preparedExec,PSqlite3,seq[string],PStmt	sqlite: preparedExec(db: PSqlite3; args: seq[string] = @[]; sqliteStmt: PStmt): owned(\n    Future[void])	

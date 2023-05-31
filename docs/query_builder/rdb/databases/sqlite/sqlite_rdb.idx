@@ -1,0 +1,192 @@
+SQLITE_INTEGER	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_INTEGER	sqlite_rdb: SQLITE_INTEGER	
+SQLITE_FLOAT	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_FLOAT	sqlite_rdb: SQLITE_FLOAT	
+SQLITE_BLOB	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_BLOB	sqlite_rdb: SQLITE_BLOB	
+SQLITE_NULL	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_NULL	sqlite_rdb: SQLITE_NULL	
+SQLITE_TEXT	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_TEXT	sqlite_rdb: SQLITE_TEXT	
+SQLITE_UTF8	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_UTF8	sqlite_rdb: SQLITE_UTF8	
+SQLITE_UTF16LE	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_UTF16LE	sqlite_rdb: SQLITE_UTF16LE	
+SQLITE_UTF16BE	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_UTF16BE	sqlite_rdb: SQLITE_UTF16BE	
+SQLITE_UTF16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_UTF16	sqlite_rdb: SQLITE_UTF16	
+SQLITE_ANY	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_ANY	sqlite_rdb: SQLITE_ANY	
+SQLITE_OK	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_OK	sqlite_rdb: SQLITE_OK	
+SQLITE_ERROR	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_ERROR	sqlite_rdb: SQLITE_ERROR	
+SQLITE_INTERNAL	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_INTERNAL	sqlite_rdb: SQLITE_INTERNAL	
+SQLITE_PERM	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_PERM	sqlite_rdb: SQLITE_PERM	
+SQLITE_ABORT	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_ABORT	sqlite_rdb: SQLITE_ABORT	
+SQLITE_BUSY	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_BUSY	sqlite_rdb: SQLITE_BUSY	
+SQLITE_LOCKED	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_LOCKED	sqlite_rdb: SQLITE_LOCKED	
+SQLITE_NOMEM	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_NOMEM	sqlite_rdb: SQLITE_NOMEM	
+SQLITE_READONLY	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_READONLY	sqlite_rdb: SQLITE_READONLY	
+SQLITE_INTERRUPT	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_INTERRUPT	sqlite_rdb: SQLITE_INTERRUPT	
+SQLITE_IOERR	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_IOERR	sqlite_rdb: SQLITE_IOERR	
+SQLITE_CORRUPT	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_CORRUPT	sqlite_rdb: SQLITE_CORRUPT	
+SQLITE_NOTFOUND	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_NOTFOUND	sqlite_rdb: SQLITE_NOTFOUND	
+SQLITE_FULL	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_FULL	sqlite_rdb: SQLITE_FULL	
+SQLITE_CANTOPEN	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_CANTOPEN	sqlite_rdb: SQLITE_CANTOPEN	
+SQLITE_PROTOCOL	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_PROTOCOL	sqlite_rdb: SQLITE_PROTOCOL	
+SQLITE_EMPTY	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_EMPTY	sqlite_rdb: SQLITE_EMPTY	
+SQLITE_SCHEMA	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_SCHEMA	sqlite_rdb: SQLITE_SCHEMA	
+SQLITE_TOOBIG	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_TOOBIG	sqlite_rdb: SQLITE_TOOBIG	
+SQLITE_CONSTRAINT	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_CONSTRAINT	sqlite_rdb: SQLITE_CONSTRAINT	
+SQLITE_MISMATCH	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_MISMATCH	sqlite_rdb: SQLITE_MISMATCH	
+SQLITE_MISUSE	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_MISUSE	sqlite_rdb: SQLITE_MISUSE	
+SQLITE_NOLFS	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_NOLFS	sqlite_rdb: SQLITE_NOLFS	
+SQLITE_AUTH	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_AUTH	sqlite_rdb: SQLITE_AUTH	
+SQLITE_FORMAT	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_FORMAT	sqlite_rdb: SQLITE_FORMAT	
+SQLITE_RANGE	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_RANGE	sqlite_rdb: SQLITE_RANGE	
+SQLITE_NOTADB	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_NOTADB	sqlite_rdb: SQLITE_NOTADB	
+SQLITE_ROW	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_ROW	sqlite_rdb: SQLITE_ROW	
+SQLITE_DONE	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_DONE	sqlite_rdb: SQLITE_DONE	
+SQLITE_COPY	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_COPY	sqlite_rdb: SQLITE_COPY	
+SQLITE_CREATE_INDEX	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_CREATE_INDEX	sqlite_rdb: SQLITE_CREATE_INDEX	
+SQLITE_CREATE_TABLE	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_CREATE_TABLE	sqlite_rdb: SQLITE_CREATE_TABLE	
+SQLITE_CREATE_TEMP_INDEX	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_CREATE_TEMP_INDEX	sqlite_rdb: SQLITE_CREATE_TEMP_INDEX	
+SQLITE_CREATE_TEMP_TABLE	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_CREATE_TEMP_TABLE	sqlite_rdb: SQLITE_CREATE_TEMP_TABLE	
+SQLITE_CREATE_TEMP_TRIGGER	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_CREATE_TEMP_TRIGGER	sqlite_rdb: SQLITE_CREATE_TEMP_TRIGGER	
+SQLITE_CREATE_TEMP_VIEW	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_CREATE_TEMP_VIEW	sqlite_rdb: SQLITE_CREATE_TEMP_VIEW	
+SQLITE_CREATE_TRIGGER	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_CREATE_TRIGGER	sqlite_rdb: SQLITE_CREATE_TRIGGER	
+SQLITE_CREATE_VIEW	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_CREATE_VIEW	sqlite_rdb: SQLITE_CREATE_VIEW	
+SQLITE_DELETE	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_DELETE	sqlite_rdb: SQLITE_DELETE	
+SQLITE_DROP_INDEX	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_DROP_INDEX	sqlite_rdb: SQLITE_DROP_INDEX	
+SQLITE_DROP_TABLE	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_DROP_TABLE	sqlite_rdb: SQLITE_DROP_TABLE	
+SQLITE_DROP_TEMP_INDEX	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_DROP_TEMP_INDEX	sqlite_rdb: SQLITE_DROP_TEMP_INDEX	
+SQLITE_DROP_TEMP_TABLE	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_DROP_TEMP_TABLE	sqlite_rdb: SQLITE_DROP_TEMP_TABLE	
+SQLITE_DROP_TEMP_TRIGGER	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_DROP_TEMP_TRIGGER	sqlite_rdb: SQLITE_DROP_TEMP_TRIGGER	
+SQLITE_DROP_TEMP_VIEW	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_DROP_TEMP_VIEW	sqlite_rdb: SQLITE_DROP_TEMP_VIEW	
+SQLITE_DROP_TRIGGER	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_DROP_TRIGGER	sqlite_rdb: SQLITE_DROP_TRIGGER	
+SQLITE_DROP_VIEW	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_DROP_VIEW	sqlite_rdb: SQLITE_DROP_VIEW	
+SQLITE_INSERT	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_INSERT	sqlite_rdb: SQLITE_INSERT	
+SQLITE_PRAGMA	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_PRAGMA	sqlite_rdb: SQLITE_PRAGMA	
+SQLITE_READ	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_READ	sqlite_rdb: SQLITE_READ	
+SQLITE_SELECT	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_SELECT	sqlite_rdb: SQLITE_SELECT	
+SQLITE_TRANSACTION	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_TRANSACTION	sqlite_rdb: SQLITE_TRANSACTION	
+SQLITE_UPDATE	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_UPDATE	sqlite_rdb: SQLITE_UPDATE	
+SQLITE_ATTACH	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_ATTACH	sqlite_rdb: SQLITE_ATTACH	
+SQLITE_DETACH	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_DETACH	sqlite_rdb: SQLITE_DETACH	
+SQLITE_ALTER_TABLE	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_ALTER_TABLE	sqlite_rdb: SQLITE_ALTER_TABLE	
+SQLITE_REINDEX	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_REINDEX	sqlite_rdb: SQLITE_REINDEX	
+SQLITE_DENY	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_DENY	sqlite_rdb: SQLITE_DENY	
+SQLITE_IGNORE	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_IGNORE	sqlite_rdb: SQLITE_IGNORE	
+SQLITE_DETERMINISTIC	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_DETERMINISTIC	sqlite_rdb: SQLITE_DETERMINISTIC	
+PSqlite3	query_builder/rdb/databases/sqlite/sqlite_rdb.html#PSqlite3	sqlite_rdb: PSqlite3	
+PPSqlite3	query_builder/rdb/databases/sqlite/sqlite_rdb.html#PPSqlite3	sqlite_rdb: PPSqlite3	
+PSqlite3_Backup	query_builder/rdb/databases/sqlite/sqlite_rdb.html#PSqlite3_Backup	sqlite_rdb: PSqlite3_Backup	
+PPSqlite3_Backup	query_builder/rdb/databases/sqlite/sqlite_rdb.html#PPSqlite3_Backup	sqlite_rdb: PPSqlite3_Backup	
+Pcontext	query_builder/rdb/databases/sqlite/sqlite_rdb.html#Pcontext	sqlite_rdb: Pcontext	
+PStmt	query_builder/rdb/databases/sqlite/sqlite_rdb.html#PStmt	sqlite_rdb: PStmt	
+InstantRow	query_builder/rdb/databases/sqlite/sqlite_rdb.html#InstantRow	sqlite_rdb: InstantRow	
+PValue	query_builder/rdb/databases/sqlite/sqlite_rdb.html#PValue	sqlite_rdb: PValue	
+PValueArg	query_builder/rdb/databases/sqlite/sqlite_rdb.html#PValueArg	sqlite_rdb: PValueArg	
+Callback	query_builder/rdb/databases/sqlite/sqlite_rdb.html#Callback	sqlite_rdb: Callback	
+Tbind_destructor_func	query_builder/rdb/databases/sqlite/sqlite_rdb.html#Tbind_destructor_func	sqlite_rdb: Tbind_destructor_func	
+Create_function_step_func	query_builder/rdb/databases/sqlite/sqlite_rdb.html#Create_function_step_func	sqlite_rdb: Create_function_step_func	
+Create_function_func_func	query_builder/rdb/databases/sqlite/sqlite_rdb.html#Create_function_func_func	sqlite_rdb: Create_function_func_func	
+Create_function_final_func	query_builder/rdb/databases/sqlite/sqlite_rdb.html#Create_function_final_func	sqlite_rdb: Create_function_final_func	
+Result_func	query_builder/rdb/databases/sqlite/sqlite_rdb.html#Result_func	sqlite_rdb: Result_func	
+Create_collation_func	query_builder/rdb/databases/sqlite/sqlite_rdb.html#Create_collation_func	sqlite_rdb: Create_collation_func	
+Collation_needed_func	query_builder/rdb/databases/sqlite/sqlite_rdb.html#Collation_needed_func	sqlite_rdb: Collation_needed_func	
+SQLITE_STATIC	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_STATIC	sqlite_rdb: SQLITE_STATIC	
+SQLITE_TRANSIENT	query_builder/rdb/databases/sqlite/sqlite_rdb.html#SQLITE_TRANSIENT	sqlite_rdb: SQLITE_TRANSIENT	
+close	query_builder/rdb/databases/sqlite/sqlite_rdb.html#close,PSqlite3	sqlite_rdb: close(para1: PSqlite3): int32	
+exec	query_builder/rdb/databases/sqlite/sqlite_rdb.html#exec,PSqlite3,cstring,Callback,pointer,cstring	sqlite_rdb: exec(para1: PSqlite3; sql: cstring; para3: Callback; para4: pointer;\n     errmsg: var cstring): int32	
+last_insert_rowid	query_builder/rdb/databases/sqlite/sqlite_rdb.html#last_insert_rowid,PSqlite3	sqlite_rdb: last_insert_rowid(para1: PSqlite3): int64	
+changes	query_builder/rdb/databases/sqlite/sqlite_rdb.html#changes,PSqlite3	sqlite_rdb: changes(para1: PSqlite3): int32	
+total_changes	query_builder/rdb/databases/sqlite/sqlite_rdb.html#total_changes,PSqlite3	sqlite_rdb: total_changes(para1: PSqlite3): int32	
+interrupt	query_builder/rdb/databases/sqlite/sqlite_rdb.html#interrupt,PSqlite3	sqlite_rdb: interrupt(para1: PSqlite3)	
+complete	query_builder/rdb/databases/sqlite/sqlite_rdb.html#complete,cstring	sqlite_rdb: complete(sql: cstring): int32	
+complete16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#complete16,pointer	sqlite_rdb: complete16(sql: pointer): int32	
+busy_handler	query_builder/rdb/databases/sqlite/sqlite_rdb.html#busy_handler,PSqlite3,proc(pointer,int32),pointer	sqlite_rdb: busy_handler(para1: PSqlite3;\n             para2: proc (para1: pointer; para2: int32): int32 {.cdecl.};\n             para3: pointer): int32	
+busy_timeout	query_builder/rdb/databases/sqlite/sqlite_rdb.html#busy_timeout,PSqlite3,int32	sqlite_rdb: busy_timeout(para1: PSqlite3; ms: int32): int32	
+get_table	query_builder/rdb/databases/sqlite/sqlite_rdb.html#get_table,PSqlite3,cstring,cstringArray,cint,cint,ptr.cstring	sqlite_rdb: get_table(para1: PSqlite3; sql: cstring; resultp: var cstringArray;\n          nrow, ncolumn: var cint; errmsg: ptr cstring): int32	
+free_table	query_builder/rdb/databases/sqlite/sqlite_rdb.html#free_table,cstringArray	sqlite_rdb: free_table(result: cstringArray)	
+mprintf	query_builder/rdb/databases/sqlite/sqlite_rdb.html#mprintf,cstring	sqlite_rdb: mprintf(para1: cstring): cstring	
+free	query_builder/rdb/databases/sqlite/sqlite_rdb.html#free,cstring	sqlite_rdb: free(z: cstring)	
+snprintf	query_builder/rdb/databases/sqlite/sqlite_rdb.html#snprintf,int32,cstring,cstring	sqlite_rdb: snprintf(para1: int32; para2: cstring; para3: cstring): cstring	
+set_authorizer	query_builder/rdb/databases/sqlite/sqlite_rdb.html#set_authorizer,PSqlite3,proc(pointer,int32,cstring,cstring,cstring,cstring),pointer	sqlite_rdb: set_authorizer(para1: PSqlite3; xAuth: proc (para1: pointer; para2: int32;\n    para3: cstring; para4: cstring; para5: cstring; para6: cstring): int32 {.\n    cdecl.}; pUserData: pointer): int32	
+trace	query_builder/rdb/databases/sqlite/sqlite_rdb.html#trace,PSqlite3,proc(pointer,cstring),pointer	sqlite_rdb: trace(para1: PSqlite3; xTrace: proc (para1: pointer; para2: cstring) {.cdecl.};\n      para3: pointer): pointer	
+progress_handler	query_builder/rdb/databases/sqlite/sqlite_rdb.html#progress_handler,PSqlite3,int32,proc(pointer),pointer	sqlite_rdb: progress_handler(para1: PSqlite3; para2: int32;\n                 para3: proc (para1: pointer): int32 {.cdecl.}; para4: pointer)	
+commit_hook	query_builder/rdb/databases/sqlite/sqlite_rdb.html#commit_hook,PSqlite3,proc(pointer),pointer	sqlite_rdb: commit_hook(para1: PSqlite3; para2: proc (para1: pointer): int32 {.cdecl.};\n            para3: pointer): pointer	
+open	query_builder/rdb/databases/sqlite/sqlite_rdb.html#open,cstring,PSqlite3	sqlite_rdb: open(filename: cstring; ppDb: var PSqlite3): int32	
+open16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#open16,pointer,PSqlite3	sqlite_rdb: open16(filename: pointer; ppDb: var PSqlite3): int32	
+errcode	query_builder/rdb/databases/sqlite/sqlite_rdb.html#errcode,PSqlite3	sqlite_rdb: errcode(db: PSqlite3): int32	
+errmsg	query_builder/rdb/databases/sqlite/sqlite_rdb.html#errmsg,PSqlite3	sqlite_rdb: errmsg(para1: PSqlite3): cstring	
+errmsg16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#errmsg16,PSqlite3	sqlite_rdb: errmsg16(para1: PSqlite3): pointer	
+prepare	query_builder/rdb/databases/sqlite/sqlite_rdb.html#prepare,PSqlite3,cstring,int32,PStmt,ptr.cstring	sqlite_rdb: prepare(db: PSqlite3; zSql: cstring; nBytes: int32; ppStmt: var PStmt;\n        pzTail: ptr cstring): int32	
+prepare_v2	query_builder/rdb/databases/sqlite/sqlite_rdb.html#prepare_v2,PSqlite3,cstring,cint,PStmt,ptr.cstring	sqlite_rdb: prepare_v2(db: PSqlite3; zSql: cstring; nByte: cint; ppStmt: var PStmt;\n           pzTail: ptr cstring): cint	
+prepare16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#prepare16,PSqlite3,pointer,int32,PStmt,pointer	sqlite_rdb: prepare16(db: PSqlite3; zSql: pointer; nBytes: int32; ppStmt: var PStmt;\n          pzTail: var pointer): int32	
+bind_blob	query_builder/rdb/databases/sqlite/sqlite_rdb.html#bind_blob,PStmt,int32,pointer,int32,Tbind_destructor_func	sqlite_rdb: bind_blob(para1: PStmt; para2: int32; para3: pointer; n: int32;\n          para5: Tbind_destructor_func): int32	
+bind_double	query_builder/rdb/databases/sqlite/sqlite_rdb.html#bind_double,PStmt,int32,float64	sqlite_rdb: bind_double(para1: PStmt; para2: int32; para3: float64): int32	
+bind_int	query_builder/rdb/databases/sqlite/sqlite_rdb.html#bind_int,PStmt,int32,int32	sqlite_rdb: bind_int(para1: PStmt; para2: int32; para3: int32): int32	
+bind_int64	query_builder/rdb/databases/sqlite/sqlite_rdb.html#bind_int64,PStmt,int32,int64	sqlite_rdb: bind_int64(para1: PStmt; para2: int32; para3: int64): int32	
+bind_null	query_builder/rdb/databases/sqlite/sqlite_rdb.html#bind_null,PStmt,int32	sqlite_rdb: bind_null(para1: PStmt; para2: int32): int32	
+bind_text	query_builder/rdb/databases/sqlite/sqlite_rdb.html#bind_text,PStmt,int32,cstring,int32,Tbind_destructor_func	sqlite_rdb: bind_text(para1: PStmt; para2: int32; para3: cstring; n: int32;\n          para5: Tbind_destructor_func): int32	
+bind_text16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#bind_text16,PStmt,int32,pointer,int32,Tbind_destructor_func	sqlite_rdb: bind_text16(para1: PStmt; para2: int32; para3: pointer; para4: int32;\n            para5: Tbind_destructor_func): int32	
+bind_blob	query_builder/rdb/databases/sqlite/sqlite_rdb.html#bind_blob,PStmt,int32,pointer,int32,int32	sqlite_rdb: bind_blob(para1: PStmt; para2: int32; para3: pointer; n: int32; para5: int32): int32	
+bind_text	query_builder/rdb/databases/sqlite/sqlite_rdb.html#bind_text,PStmt,int32,cstring,int32,int32	sqlite_rdb: bind_text(para1: PStmt; para2: int32; para3: cstring; n: int32; para5: int32): int32	
+bind_text16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#bind_text16,PStmt,int32,pointer,int32,int32	sqlite_rdb: bind_text16(para1: PStmt; para2: int32; para3: pointer; para4: int32;\n            para5: int32): int32	
+bind_parameter_count	query_builder/rdb/databases/sqlite/sqlite_rdb.html#bind_parameter_count,PStmt	sqlite_rdb: bind_parameter_count(para1: PStmt): int32	
+bind_parameter_name	query_builder/rdb/databases/sqlite/sqlite_rdb.html#bind_parameter_name,PStmt,int32	sqlite_rdb: bind_parameter_name(para1: PStmt; para2: int32): cstring	
+bind_parameter_index	query_builder/rdb/databases/sqlite/sqlite_rdb.html#bind_parameter_index,PStmt,cstring	sqlite_rdb: bind_parameter_index(para1: PStmt; zName: cstring): int32	
+clear_bindings	query_builder/rdb/databases/sqlite/sqlite_rdb.html#clear_bindings,PStmt	sqlite_rdb: clear_bindings(para1: PStmt): int32	
+column_count	query_builder/rdb/databases/sqlite/sqlite_rdb.html#column_count,PStmt	sqlite_rdb: column_count(PStmt: PStmt): int32	
+column_name	query_builder/rdb/databases/sqlite/sqlite_rdb.html#column_name,PStmt,int32	sqlite_rdb: column_name(para1: PStmt; para2: int32): cstring	
+column_table_name	query_builder/rdb/databases/sqlite/sqlite_rdb.html#column_table_name,PStmt,int32	sqlite_rdb: column_table_name(para1: PStmt; para2: int32): cstring	
+column_name16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#column_name16,PStmt,int32	sqlite_rdb: column_name16(para1: PStmt; para2: int32): pointer	
+column_decltype	query_builder/rdb/databases/sqlite/sqlite_rdb.html#column_decltype,PStmt,int32	sqlite_rdb: column_decltype(para1: PStmt; i: int32): cstring	
+column_decltype16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#column_decltype16,PStmt,int32	sqlite_rdb: column_decltype16(para1: PStmt; para2: int32): pointer	
+step	query_builder/rdb/databases/sqlite/sqlite_rdb.html#step,PStmt	sqlite_rdb: step(para1: PStmt): int32	
+data_count	query_builder/rdb/databases/sqlite/sqlite_rdb.html#data_count,PStmt	sqlite_rdb: data_count(PStmt: PStmt): int32	
+column_blob	query_builder/rdb/databases/sqlite/sqlite_rdb.html#column_blob,PStmt,int32	sqlite_rdb: column_blob(para1: PStmt; iCol: int32): pointer	
+column_bytes	query_builder/rdb/databases/sqlite/sqlite_rdb.html#column_bytes,PStmt,int32	sqlite_rdb: column_bytes(para1: PStmt; iCol: int32): int32	
+column_bytes16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#column_bytes16,PStmt,int32	sqlite_rdb: column_bytes16(para1: PStmt; iCol: int32): int32	
+column_double	query_builder/rdb/databases/sqlite/sqlite_rdb.html#column_double,PStmt,int32	sqlite_rdb: column_double(para1: PStmt; iCol: int32): float64	
+column_int	query_builder/rdb/databases/sqlite/sqlite_rdb.html#column_int,PStmt,int32	sqlite_rdb: column_int(para1: PStmt; iCol: int32): int32	
+column_int64	query_builder/rdb/databases/sqlite/sqlite_rdb.html#column_int64,PStmt,int32	sqlite_rdb: column_int64(para1: PStmt; iCol: int32): int64	
+column_text	query_builder/rdb/databases/sqlite/sqlite_rdb.html#column_text,PStmt,int32	sqlite_rdb: column_text(para1: PStmt; iCol: int32): cstring	
+column_text16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#column_text16,PStmt,int32	sqlite_rdb: column_text16(para1: PStmt; iCol: int32): pointer	
+column_type	query_builder/rdb/databases/sqlite/sqlite_rdb.html#column_type,PStmt,int32	sqlite_rdb: column_type(para1: PStmt; iCol: int32): int32	
+finalize	query_builder/rdb/databases/sqlite/sqlite_rdb.html#finalize,PStmt	sqlite_rdb: finalize(PStmt: PStmt): int32	
+reset	query_builder/rdb/databases/sqlite/sqlite_rdb.html#reset,PStmt	sqlite_rdb: reset(PStmt: PStmt): int32	
+create_function	query_builder/rdb/databases/sqlite/sqlite_rdb.html#create_function,PSqlite3,cstring,int32,int32,pointer,Create_function_func_func,Create_function_step_func,Create_function_final_func	sqlite_rdb: create_function(para1: PSqlite3; zFunctionName: cstring; nArg: int32;\n                eTextRep: int32; para5: pointer;\n                xFunc: Create_function_func_func;\n                xStep: Create_function_step_func;\n                xFinal: Create_function_final_func): int32	
+create_function16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#create_function16,PSqlite3,pointer,int32,int32,pointer,Create_function_func_func,Create_function_step_func,Create_function_final_func	sqlite_rdb: create_function16(para1: PSqlite3; zFunctionName: pointer; nArg: int32;\n                  eTextRep: int32; para5: pointer;\n                  xFunc: Create_function_func_func;\n                  xStep: Create_function_step_func;\n                  xFinal: Create_function_final_func): int32	
+aggregate_count	query_builder/rdb/databases/sqlite/sqlite_rdb.html#aggregate_count,Pcontext	sqlite_rdb: aggregate_count(para1: Pcontext): int32	
+value_blob	query_builder/rdb/databases/sqlite/sqlite_rdb.html#value_blob,PValue	sqlite_rdb: value_blob(para1: PValue): pointer	
+value_bytes	query_builder/rdb/databases/sqlite/sqlite_rdb.html#value_bytes,PValue	sqlite_rdb: value_bytes(para1: PValue): int32	
+value_bytes16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#value_bytes16,PValue	sqlite_rdb: value_bytes16(para1: PValue): int32	
+value_double	query_builder/rdb/databases/sqlite/sqlite_rdb.html#value_double,PValue	sqlite_rdb: value_double(para1: PValue): float64	
+value_int	query_builder/rdb/databases/sqlite/sqlite_rdb.html#value_int,PValue	sqlite_rdb: value_int(para1: PValue): int32	
+value_int64	query_builder/rdb/databases/sqlite/sqlite_rdb.html#value_int64,PValue	sqlite_rdb: value_int64(para1: PValue): int64	
+value_text	query_builder/rdb/databases/sqlite/sqlite_rdb.html#value_text,PValue	sqlite_rdb: value_text(para1: PValue): cstring	
+value_text16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#value_text16,PValue	sqlite_rdb: value_text16(para1: PValue): pointer	
+value_text16le	query_builder/rdb/databases/sqlite/sqlite_rdb.html#value_text16le,PValue	sqlite_rdb: value_text16le(para1: PValue): pointer	
+value_text16be	query_builder/rdb/databases/sqlite/sqlite_rdb.html#value_text16be,PValue	sqlite_rdb: value_text16be(para1: PValue): pointer	
+value_type	query_builder/rdb/databases/sqlite/sqlite_rdb.html#value_type,PValue	sqlite_rdb: value_type(para1: PValue): int32	
+aggregate_context	query_builder/rdb/databases/sqlite/sqlite_rdb.html#aggregate_context,Pcontext,int32	sqlite_rdb: aggregate_context(para1: Pcontext; nBytes: int32): pointer	
+user_data	query_builder/rdb/databases/sqlite/sqlite_rdb.html#user_data,Pcontext	sqlite_rdb: user_data(para1: Pcontext): pointer	
+get_auxdata	query_builder/rdb/databases/sqlite/sqlite_rdb.html#get_auxdata,Pcontext,int32	sqlite_rdb: get_auxdata(para1: Pcontext; para2: int32): pointer	
+set_auxdata	query_builder/rdb/databases/sqlite/sqlite_rdb.html#set_auxdata,Pcontext,int32,pointer,proc(pointer)	sqlite_rdb: set_auxdata(para1: Pcontext; para2: int32; para3: pointer;\n            para4: proc (para1: pointer) {.cdecl.})	
+result_blob	query_builder/rdb/databases/sqlite/sqlite_rdb.html#result_blob,Pcontext,pointer,int32,Result_func	sqlite_rdb: result_blob(para1: Pcontext; para2: pointer; para3: int32; para4: Result_func)	
+result_double	query_builder/rdb/databases/sqlite/sqlite_rdb.html#result_double,Pcontext,float64	sqlite_rdb: result_double(para1: Pcontext; para2: float64)	
+result_error	query_builder/rdb/databases/sqlite/sqlite_rdb.html#result_error,Pcontext,cstring,int32	sqlite_rdb: result_error(para1: Pcontext; para2: cstring; para3: int32)	
+result_error16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#result_error16,Pcontext,pointer,int32	sqlite_rdb: result_error16(para1: Pcontext; para2: pointer; para3: int32)	
+result_int	query_builder/rdb/databases/sqlite/sqlite_rdb.html#result_int,Pcontext,int32	sqlite_rdb: result_int(para1: Pcontext; para2: int32)	
+result_int64	query_builder/rdb/databases/sqlite/sqlite_rdb.html#result_int64,Pcontext,int64	sqlite_rdb: result_int64(para1: Pcontext; para2: int64)	
+result_null	query_builder/rdb/databases/sqlite/sqlite_rdb.html#result_null,Pcontext	sqlite_rdb: result_null(para1: Pcontext)	
+result_text	query_builder/rdb/databases/sqlite/sqlite_rdb.html#result_text,Pcontext,cstring,int32,Result_func	sqlite_rdb: result_text(para1: Pcontext; para2: cstring; para3: int32; para4: Result_func)	
+result_text16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#result_text16,Pcontext,pointer,int32,Result_func	sqlite_rdb: result_text16(para1: Pcontext; para2: pointer; para3: int32; para4: Result_func)	
+result_text16le	query_builder/rdb/databases/sqlite/sqlite_rdb.html#result_text16le,Pcontext,pointer,int32,Result_func	sqlite_rdb: result_text16le(para1: Pcontext; para2: pointer; para3: int32;\n                para4: Result_func)	
+result_text16be	query_builder/rdb/databases/sqlite/sqlite_rdb.html#result_text16be,Pcontext,pointer,int32,Result_func	sqlite_rdb: result_text16be(para1: Pcontext; para2: pointer; para3: int32;\n                para4: Result_func)	
+result_value	query_builder/rdb/databases/sqlite/sqlite_rdb.html#result_value,Pcontext,PValue	sqlite_rdb: result_value(para1: Pcontext; para2: PValue)	
+create_collation	query_builder/rdb/databases/sqlite/sqlite_rdb.html#create_collation,PSqlite3,cstring,int32,pointer,Create_collation_func	sqlite_rdb: create_collation(para1: PSqlite3; zName: cstring; eTextRep: int32;\n                 para4: pointer; xCompare: Create_collation_func): int32	
+create_collation16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#create_collation16,PSqlite3,cstring,int32,pointer,Create_collation_func	sqlite_rdb: create_collation16(para1: PSqlite3; zName: cstring; eTextRep: int32;\n                   para4: pointer; xCompare: Create_collation_func): int32	
+collation_needed	query_builder/rdb/databases/sqlite/sqlite_rdb.html#collation_needed,PSqlite3,pointer,Collation_needed_func	sqlite_rdb: collation_needed(para1: PSqlite3; para2: pointer; para3: Collation_needed_func): int32	
+collation_needed16	query_builder/rdb/databases/sqlite/sqlite_rdb.html#collation_needed16,PSqlite3,pointer,Collation_needed_func	sqlite_rdb: collation_needed16(para1: PSqlite3; para2: pointer; para3: Collation_needed_func): int32	
+libversion	query_builder/rdb/databases/sqlite/sqlite_rdb.html#libversion	sqlite_rdb: libversion(): cstring	
+version	query_builder/rdb/databases/sqlite/sqlite_rdb.html#version	sqlite_rdb: version(): cstring	
+libversion_number	query_builder/rdb/databases/sqlite/sqlite_rdb.html#libversion_number	sqlite_rdb: libversion_number(): int32	
+backup_init	query_builder/rdb/databases/sqlite/sqlite_rdb.html#backup_init,PSqlite3,cstring,PSqlite3,cstring	sqlite_rdb: backup_init(pDest: PSqlite3; zDestName: cstring; pSource: PSqlite3;\n            zSourceName: cstring): PSqlite3_Backup	
+backup_step	query_builder/rdb/databases/sqlite/sqlite_rdb.html#backup_step,PSqlite3_Backup,int32	sqlite_rdb: backup_step(pBackup: PSqlite3_Backup; nPage: int32): int32	
+backup_finish	query_builder/rdb/databases/sqlite/sqlite_rdb.html#backup_finish,PSqlite3_Backup	sqlite_rdb: backup_finish(pBackup: PSqlite3_Backup): int32	
+backup_pagecount	query_builder/rdb/databases/sqlite/sqlite_rdb.html#backup_pagecount,PSqlite3_Backup	sqlite_rdb: backup_pagecount(pBackup: PSqlite3_Backup): int32	
+backup_remaining	query_builder/rdb/databases/sqlite/sqlite_rdb.html#backup_remaining,PSqlite3_Backup	sqlite_rdb: backup_remaining(pBackup: PSqlite3_Backup): int32	
+sqlite3_sleep	query_builder/rdb/databases/sqlite/sqlite_rdb.html#sqlite3_sleep,int64	sqlite_rdb: sqlite3_sleep(t: int64): int64	

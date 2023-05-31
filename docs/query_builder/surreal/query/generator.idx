@@ -1,0 +1,20 @@
+selectSql	query_builder/surreal/query/generator.html#selectSql,SurrealDb	generator: selectSql(self: SurrealDb): SurrealDb	
+fromSql	query_builder/surreal/query/generator.html#fromSql,SurrealDb	generator: fromSql(self: SurrealDb): SurrealDb	
+selectFirstSql	query_builder/surreal/query/generator.html#selectFirstSql,SurrealDb	generator: selectFirstSql(self: SurrealDb): SurrealDb	
+selectByIdSql	query_builder/surreal/query/generator.html#selectByIdSql,SurrealDb,string	generator: selectByIdSql(self: SurrealDb; key: string): SurrealDb	
+whereSql	query_builder/surreal/query/generator.html#whereSql,SurrealDb	generator: whereSql(self: SurrealDb): SurrealDb	
+orWhereSql	query_builder/surreal/query/generator.html#orWhereSql,SurrealDb	generator: orWhereSql(self: SurrealDb): SurrealDb	
+groupBySql	query_builder/surreal/query/generator.html#groupBySql,SurrealDb	generator: groupBySql(self: SurrealDb): SurrealDb	
+orderBySql	query_builder/surreal/query/generator.html#orderBySql,SurrealDb	generator: orderBySql(self: SurrealDb): SurrealDb	
+limitSql	query_builder/surreal/query/generator.html#limitSql,SurrealDb	generator: limitSql(self: SurrealDb): SurrealDb	
+startSql	query_builder/surreal/query/generator.html#startSql,SurrealDb	generator: startSql(self: SurrealDb): SurrealDb	
+fetchSql	query_builder/surreal/query/generator.html#fetchSql,SurrealDb	generator: fetchSql(self: SurrealDb): SurrealDb	
+parallelSql	query_builder/surreal/query/generator.html#parallelSql,SurrealDb	generator: parallelSql(self: SurrealDb): SurrealDb	
+insertSql	query_builder/surreal/query/generator.html#insertSql,SurrealDb	generator: insertSql(self: SurrealDb): SurrealDb	
+insertValueSql	query_builder/surreal/query/generator.html#insertValueSql,SurrealDb,JsonNode	generator: insertValueSql(self: SurrealDb; items: JsonNode): SurrealDb	
+insertValuesSql	query_builder/surreal/query/generator.html#insertValuesSql,SurrealDb,openArray[JsonNode]	generator: insertValuesSql(self: SurrealDb; rows: openArray[JsonNode]): SurrealDb	
+updateSql	query_builder/surreal/query/generator.html#updateSql,SurrealDb	generator: updateSql(self: SurrealDb): SurrealDb	
+updateValuesSql	query_builder/surreal/query/generator.html#updateValuesSql,SurrealDb,JsonNode	generator: updateValuesSql(self: SurrealDb; items: JsonNode): SurrealDb	
+updateMergeSql	query_builder/surreal/query/generator.html#updateMergeSql,SurrealDb,string,JsonNode	generator: updateMergeSql(self: SurrealDb; id: string; items: JsonNode): SurrealDb	
+deleteSql	query_builder/surreal/query/generator.html#deleteSql,SurrealDb	generator: deleteSql(self: SurrealDb): SurrealDb	
+deleteByIdSql	query_builder/surreal/query/generator.html#deleteByIdSql,SurrealDb,string	generator: deleteByIdSql(self: SurrealDb; id: string): SurrealDb	

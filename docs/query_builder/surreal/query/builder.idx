@@ -1,0 +1,9 @@
+selectBuilder	query_builder/surreal/query/builder.html#selectBuilder,SurrealDb	builder: selectBuilder(self: SurrealDb): string	
+selectFirstBuilder	query_builder/surreal/query/builder.html#selectFirstBuilder,SurrealDb	builder: selectFirstBuilder(self: SurrealDb): string	
+selectFindBuilder	query_builder/surreal/query/builder.html#selectFindBuilder,SurrealDb,string	builder: selectFindBuilder(self: SurrealDb; key: string): string	
+insertValueBuilder	query_builder/surreal/query/builder.html#insertValueBuilder,SurrealDb,JsonNode	builder: insertValueBuilder(self: SurrealDb; items: JsonNode): string	
+insertValuesBuilder	query_builder/surreal/query/builder.html#insertValuesBuilder,SurrealDb,openArray[JsonNode]	builder: insertValuesBuilder(self: SurrealDb; items: openArray[JsonNode]): string	
+updateBuilder	query_builder/surreal/query/builder.html#updateBuilder,SurrealDb,JsonNode	builder: updateBuilder(self: SurrealDb; items: JsonNode): string	
+updateMergeBuilder	query_builder/surreal/query/builder.html#updateMergeBuilder,SurrealDb,string,JsonNode	builder: updateMergeBuilder(self: SurrealDb; id: string; items: JsonNode): string	
+deleteBuilder	query_builder/surreal/query/builder.html#deleteBuilder,SurrealDb	builder: deleteBuilder(self: SurrealDb): string	
+deleteByIdBuilder	query_builder/surreal/query/builder.html#deleteByIdBuilder,SurrealDb,string	builder: deleteByIdBuilder(self: SurrealDb; id: string): string	

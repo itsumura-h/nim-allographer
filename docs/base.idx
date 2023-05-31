@@ -1,8 +1,0 @@
-LogSetting	base.html#LogSetting	base: LogSetting	
-MySQL	base.html#MySQL	Driver.MySQL	
-MariaDB	base.html#MariaDB	Driver.MariaDB	
-PostgreSQL	base.html#PostgreSQL	Driver.PostgreSQL	
-SQLite3	base.html#SQLite3	Driver.SQLite3	
-Driver	base.html#Driver	base: Driver	
-Rdb	base.html#Rdb	base: Rdb	
-RawQueryRdb	base.html#RawQueryRdb	base: RawQueryRdb	

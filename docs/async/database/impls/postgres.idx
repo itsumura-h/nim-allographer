@@ -1,7 +1,0 @@
-dbopen	async/database/impls/postgres.html#dbopen,string,string,string,string,int32,int,int	postgres: dbopen(database: string = &quot;&quot;; user: string = &quot;&quot;; password: string = &quot;&quot;;\n       host: string = &quot;&quot;; port: int32 = 0; maxConnections: int = 1; timeout = 30): Connections	
-query	async/database/impls/postgres.html#query,PPGconn,string,seq[string],int	postgres: query(db: PPGconn; query: string; args: seq[string]; timeout: int): Future[\n    (seq[Row], DbRows)]	
-queryPlain	async/database/impls/postgres.html#queryPlain,PPGconn,string,seq[string],int	postgres: queryPlain(db: PPGconn; query: string; args: seq[string]; timeout: int): Future[\n    seq[Row]]	
-exec	async/database/impls/postgres.html#exec,PPGconn,string,seq[string],int	postgres: exec(db: PPGconn; query: string; args: seq[string]; timeout: int): owned(\n    Future[void])	
-prepare	async/database/impls/postgres.html#prepare,PPGconn,string,int,string	postgres: prepare(db: PPGconn; query: string; timeout: int; stmtName: string): Future[int]	
-preparedQuery	async/database/impls/postgres.html#preparedQuery,PPGconn,seq[string],int,int,string	postgres: preparedQuery(db: PPGconn; args: seq[string]; nArgs: int; timeout: int;\n              stmtName: string): Future[(seq[Row], DbRows)]	
-preparedExec	async/database/impls/postgres.html#preparedExec,PPGconn,seq[string],int,int,string	postgres: preparedExec(db: PPGconn; args: seq[string]; nArgs: int; timeout: int;\n             stmtName: string): owned(Future[void])	

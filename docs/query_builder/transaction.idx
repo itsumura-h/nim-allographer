@@ -1,1 +1,0 @@
-transaction	query_builder/transaction.html#transaction.m,untyped,untyped	transaction: transaction(rdb: untyped; bodyInput: untyped): untyped	
