@@ -29,21 +29,20 @@ type
 
 
 type SurrealId* = object
-  table:string
-  id:string
+  table*:string
+  id*:string
 
 proc new*(_:type SurrealId):SurrealId =
   ## create empty surreal id
   return SurrealId(table:"", id:"")
 
 proc new*(_:type SurrealId, table, id:string):SurrealId =
-  ## rawId == "user:z7cr4mz474h4ab7rcd6d"
-  ## 
-  ## table == "user"
-  ## 
-  ## id == "z7cr4mz474h4ab7rcd6d"
-  ## 
-  ## let surrealId = SureealId.new(table, id)
+  ## .. code-block:: Nim
+  ##  let rawId = "user:z7cr4mz474h4ab7rcd6d"
+  ##  let table = "user"
+  ##  let id = "z7cr4mz474h4ab7rcd6d"
+  ##  let surrealId = SureealId.new(table, id)
+
   if table.len == 0:
     dbError("table cannot be empty")
   if id.len == 0:
@@ -51,9 +50,10 @@ proc new*(_:type SurrealId, table, id:string):SurrealId =
   return SurrealId(table:table, id:id)
 
 proc new*(_:type SurrealId, rawId:string):SurrealId =
-  ## rawId == "user:z7cr4mz474h4ab7rcd6d"
-  ## 
-  ## let surrealId = SureealId.new(rawId)
+  ## .. code-block:: Nim
+  ##  let rawId = "user:z7cr4mz474h4ab7rcd6d"
+  ##  let surrealId = SureealId.new(rawId)
+
   if rawId.len == 0:
     dbError("rawId cannot be empty")
   let split = rawId.split(":")
@@ -61,28 +61,12 @@ proc new*(_:type SurrealId, rawId:string):SurrealId =
   let id = split[1]
   return SurrealId(table:table, id:id)
 
-proc table*(self:SurrealId):string =
-  ## rawId == "user:z7cr4mz474h4ab7rcd6d"
-  ## 
-  ## let surrealId = SureealId.new(rawId)
-  ## 
-  ## surrealId.table() == "user"
-  return self.table
-
-proc id*(self:SurrealId):string =
-  ## rawId == "user:z7cr4mz474h4ab7rcd6d"
-  ## 
-  ## let surrealId = SureealId.new(rawId)
-  ## 
-  ## surrealId.id() == "z7cr4mz474h4ab7rcd6d"
-  return self.id
-
 proc rawId*(self:SurrealId):string =
-  ## rawId == "user:z7cr4mz474h4ab7rcd6d"
-  ## 
-  ## let surrealId = SureealId.new(rawId)
-  ## 
-  ## surrealId.rawId() == "user:z7cr4mz474h4ab7rcd6d"
+  ## .. code-block:: Nim
+  ##  let rawId = "user:z7cr4mz474h4ab7rcd6d"
+  ##  let surrealId = SureealId.new(rawId) 
+  ##  surrealId.rawId() = "user:z7cr4mz474h4ab7rcd6d"
+
   return self.table & ":" & self.id
 
 

@@ -7,16 +7,36 @@ import std/asyncdispatch
 import std/json
 import std/options
 import std/strformat
+import std/strutils
 import ../src/allographer/connection
 import ../src/allographer/query_builder
 
 let setupConn = dbOpen(SurrealDb, "test", "test", "user", "pass", "http://surreal", 8000, 1, 30, false, false).waitFor()
 let surreal = dbOpen(SurrealDb, "test", "test", "user", "pass", "http://surreal", 8000, 10, 30, true, false).waitFor()
 
-suite("surreal"):
+suite("surreal type"):
+  test("SurrealId"):
+    let aliceId = surreal.table("user").insertId(%*{"name": "alice"}).waitFor()
+    let alice = surreal.table("user").where("name", "=", "alice").first().waitFor().get()
+    check aliceId.rawId() == alice["id"].getStr()
+    check aliceId.table == alice["id"].getStr().split(":")[0]
+    check aliceId.id == alice["id"].getStr().split(":")[1]
+
+    let alice2 = SurrealId.new(aliceId.rawId())
+    check alice2.rawId() == alice["id"].getStr()
+    check alice2.table == alice["id"].getStr().split(":")[0]
+    check alice2.id == alice["id"].getStr().split(":")[1]
+
+    let alice3 = SurrealId.new(aliceId.table, aliceId.id)
+    check alice3.rawId() == alice["id"].getStr()
+    check alice3.table == alice["id"].getStr().split(":")[0]
+    check alice3.id == alice["id"].getStr().split(":")[1]
+
+
+suite("surreal query"):
   setup:
-    setupConn.raw(""" DELETE `auth` """).exec().waitFor()
-    setupConn.raw(""" DELETE `user` """).exec().waitFor()
+    setupConn.table("auth").delete().waitFor()
+    setupConn.table("user").delete().waitFor()
     
     var userData = newSeq[JsonNode]()
     var i = 0
