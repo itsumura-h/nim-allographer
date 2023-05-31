@@ -1,6 +1,8 @@
 import std/asyncdispatch
 import std/json
 import std/times
+import std/strutils
+import ../error
 import ../log
 import ./databases/surreal_rdb
 
@@ -24,6 +26,65 @@ type
     # for transaction
     isInTransaction*:bool
     transactionConn*:int
+
+
+type SurrealId* = object
+  table:string
+  id:string
+
+proc new*(_:type SurrealId):SurrealId =
+  ## create empty surreal id
+  return SurrealId(table:"", id:"")
+
+proc new*(_:type SurrealId, table, id:string):SurrealId =
+  ## rawId == "user:z7cr4mz474h4ab7rcd6d"
+  ## 
+  ## table == "user"
+  ## 
+  ## id == "z7cr4mz474h4ab7rcd6d"
+  ## 
+  ## let surrealId = SureealId.new(table, id)
+  if table.len == 0:
+    dbError("table cannot be empty")
+  if id.len == 0:
+    dbError("id cannot be empty")
+  return SurrealId(table:table, id:id)
+
+proc new*(_:type SurrealId, rawId:string):SurrealId =
+  ## rawId == "user:z7cr4mz474h4ab7rcd6d"
+  ## 
+  ## let surrealId = SureealId.new(rawId)
+  if rawId.len == 0:
+    dbError("rawId cannot be empty")
+  let split = rawId.split(":")
+  let table = split[0]
+  let id = split[1]
+  return SurrealId(table:table, id:id)
+
+proc table*(self:SurrealId):string =
+  ## rawId == "user:z7cr4mz474h4ab7rcd6d"
+  ## 
+  ## let surrealId = SureealId.new(rawId)
+  ## 
+  ## surrealId.table() == "user"
+  return self.table
+
+proc id*(self:SurrealId):string =
+  ## rawId == "user:z7cr4mz474h4ab7rcd6d"
+  ## 
+  ## let surrealId = SureealId.new(rawId)
+  ## 
+  ## surrealId.id() == "z7cr4mz474h4ab7rcd6d"
+  return self.id
+
+proc rawId*(self:SurrealId):string =
+  ## rawId == "user:z7cr4mz474h4ab7rcd6d"
+  ## 
+  ## let surrealId = SureealId.new(rawId)
+  ## 
+  ## surrealId.rawId() == "user:z7cr4mz474h4ab7rcd6d"
+  return self.table & ":" & self.id
+
 
 const errorConnectionNum* = 99999
 

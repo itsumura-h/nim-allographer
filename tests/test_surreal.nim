@@ -23,7 +23,7 @@ suite("surreal"):
     for auth in ["admin", "editor", "viewer"]:
       let authId = setupConn.table("auth").insertId(%*{"name": auth}).waitFor()
       for j in 1..3:
-        userData.add(%*{"name": &"user{i+j}", "email": &"user{i+j}@example.com", "index":i+j, "auth":authId})
+        userData.add(%*{"name": &"user{i+j}", "email": &"user{i+j}@example.com", "index":i+j, "auth":authId.rawId})
       i += 3
     setupConn.table("user").insert(userData).waitFor()
 
@@ -59,7 +59,8 @@ suite("surreal"):
     var dbRes = surreal.table("user").find(aliceId).waitFor()
     check dbRes.isSome()
     var res = dbRes.get()
-    dbRes = surreal.table("user").find(res["id"].getStr).waitFor()
+    let id = SurrealId.new(res["id"].getStr)
+    dbRes = surreal.table("user").find(id).waitFor()
     res = dbRes.get()
     check res["name"].getStr() == "alice"
     check res["email"].getStr() == "alice@example.com"
@@ -211,7 +212,7 @@ suite("surreal"):
 
   test("insert id"):
     let id = surreal.table("user").insertId(%*{"name":"user1", "email":"user1@example.com"}).waitFor()
-    check id.len > 0
+    check id.rawId.len > 0
 
   test("insert values id"):
     var users = newSeq[JsonNode]()
@@ -222,14 +223,26 @@ suite("surreal"):
 
   test("update"):
     let aliceId = surreal.table("user").insertId(%*{"name": "alice", "email": "alice@example.com"}).waitFor()
-    surreal.table("user").where("id", "=", aliceId).update(%*{"name": "updated"}).waitFor()
+    surreal.table("user").where("id", "=", aliceId.rawId).update(%*{"name": "updated"}).waitFor()
     let alice = surreal.table("user").where("email", "=", "alice@example.com").first().waitFor().get()
     echo alice
     check alice["name"].getStr() == "updated"
 
   test("update merge"):
     let aliceId = surreal.table("user").insertId(%*{"name": "alice", "email": "alice@example.com"}).waitFor()
-    surreal.updateMerge(aliceId, %*{"name": "updated"}).waitFor()
+    surreal.update(aliceId, %*{"name": "updated"}).waitFor()
     let alice = surreal.table("user").find(aliceId).waitFor().get()
     echo alice
     check alice["name"].getStr() == "updated"
+
+  test("delete"):
+    let aliceId = surreal.table("user").insertId(%*{"name": "alice", "email": "alice@example.com"}).waitFor()
+    surreal.table("user").where("name", "=", "alice").delete().waitFor()
+    let alice = surreal.table("user").find(aliceId).waitFor()
+    check not alice.isSome
+  
+  test("delete by id"):
+    let aliceId = surreal.table("user").insertId(%*{"name": "alice", "email": "alice@example.com"}).waitFor()
+    surreal.delete(aliceId).waitFor()
+    let alice = surreal.table("user").find(aliceId).waitFor()
+    check not alice.isSome

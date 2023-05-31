@@ -50,7 +50,6 @@ proc get*(self: SurrealDb):Future[seq[JsonNode]] {.async.} =
 
 
 proc first*(self: SurrealDb):Future[Option[JsonNode]] {.async.} =
-  # defer: self.cleanUp()
   let sql = self.selectFirstBuilder()
   try:
     self.log.logger(sql, self.placeHolder)
@@ -61,9 +60,8 @@ proc first*(self: SurrealDb):Future[Option[JsonNode]] {.async.} =
     return none(JsonNode)
 
 
-proc find*(self: SurrealDb, id: string, key="id"):Future[Option[JsonNode]]{.async.} =
-  # defer: self.cleanUp()
-  self.placeHolder.add(id)
+proc find*(self: SurrealDb, id:SurrealId, key="id"):Future[Option[JsonNode]]{.async.} =
+  self.placeHolder.add(id.rawId)
   let sql = self.selectFindBuilder(key)
   try:
     self.log.logger(sql, self.placeHolder)
@@ -88,27 +86,28 @@ proc insert*(self: SurrealDb, items: seq[JsonNode]){.async.} =
   self.conn.exec(sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
 
-proc insertId*(self: SurrealDb, items: JsonNode, key="id"):Future[string] {.async.} =
+proc insertId*(self: SurrealDb, items: JsonNode, key="id"):Future[SurrealId] {.async.} =
   let sql = self.insertValueBuilder(items)
   self.log.logger(sql, self.placeHolder)
   let res = getRow(self, sql, self.placeHolder).await
   if res.isSome():
-    return res.get()[key].getStr()
+    return SurrealId.new(res.get()[key].getStr())
   else:
-    return ""
+    return SurrealId.new()
 
 
-proc insertId*(self: SurrealDb, items: seq[JsonNode], key="id"):Future[seq[string]] {.async.} =
+proc insertId*(self: SurrealDb, items: seq[JsonNode], key="id"):Future[seq[SurrealId]] {.async.} =
   let sql = self.insertValuesBuilder(items)
   self.log.logger(sql, self.placeHolder)
   let resp = getAllRows(self, sql, self.placeHolder).await
   return resp.map(
-    proc(row:JsonNode):string =
-      return row[key].getStr()
+    proc(row:JsonNode):SurrealId =
+      return SurrealId.new(row[key].getStr())
   )
 
 
 # ==================== UPDATE ====================
+
 proc update*(self:SurrealDb, items:JsonNode) {.async.} =
   var updatePlaceHolder: seq[string]
   for item in items.pairs:
@@ -130,8 +129,21 @@ proc update*(self:SurrealDb, items:JsonNode) {.async.} =
   self.conn.exec(sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
 
-proc updateMerge*(self:SurrealDb, id:string, items:JsonNode) {.async.} =
-  let sql = self.updateMergeBuilder(id, items)
+proc update*(self:SurrealDb, id:SurrealId, items:JsonNode) {.async.} =
+  let sql = self.updateMergeBuilder(id.rawid, items)
+  self.log.logger(sql, self.placeHolder)
+  self.conn.exec(sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
+
+
+# ==================== DELETE ====================
+
+proc delete*(self: SurrealDb){.async.} =
+  let sql = self.deleteBuilder()
+  self.log.logger(sql, self.placeHolder)
+  self.conn.exec(sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
+
+proc delete*(self: SurrealDb, id: SurrealId){.async.} =
+  let sql = self.deleteByIdBuilder(id.rawId)
   self.log.logger(sql, self.placeHolder)
   self.conn.exec(sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
@@ -149,7 +161,6 @@ proc get*(self: RawQuerySurrealDb):Future[seq[JsonNode]]{.async.} =
 
 
 proc first*(self: RawQuerySurrealDb):Future[Option[JsonNode]] {.async.} =
-  # defer: self.cleanUp()
   try:
     self.log.logger(self.queryString, self.placeHolder)
     return getRow(self, self.queryString, self.placeHolder).await

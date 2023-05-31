@@ -110,3 +110,22 @@ proc updateMergeBuilder*(self:SurrealDb, id:string, items:JsonNode):string =
     # .startSql()
     .parallelSql()
     .queryString
+
+
+# ==================== DELETE ====================
+
+proc deleteBuilder*(self: SurrealDb): string =
+  return self
+    .deleteSql()
+    .fromSql()
+    .whereSql()
+    .orWhereSql()
+    .limitSql()
+    .startSql()
+    .queryString
+
+proc deleteByIdBuilder*(self: SurrealDb, id: string): string =
+  return self
+    .deleteSql()
+    .deleteByIdSql(id)
+    .queryString

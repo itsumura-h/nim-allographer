@@ -188,3 +188,15 @@ proc updateValuesSql*(self: SurrealDb, items:JsonNode): SurrealDb =
 proc updateMergeSql*(self: SurrealDb, id:string, items:JsonNode):SurrealDb =
   self.queryString = &"UPDATE {id} MERGE {items}"
   return self
+
+
+# ==================== DELETE ====================
+
+proc deleteSql*(self: SurrealDb): SurrealDb =
+  self.queryString = "DELETE"
+  return self
+
+
+proc deleteByIdSql*(self: SurrealDb, id: string): SurrealDb =
+  self.queryString.add(&" {id}")
+  return self
