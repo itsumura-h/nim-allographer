@@ -219,3 +219,17 @@ suite("surreal"):
       users.add(%*{"name": &"user{i}", "email": &"user{i}@example.com"})
     let ids = surreal.table("user").insertId(users).waitFor()
     check ids.len == 10
+
+  test("update"):
+    let aliceId = surreal.table("user").insertId(%*{"name": "alice", "email": "alice@example.com"}).waitFor()
+    surreal.table("user").where("id", "=", aliceId).update(%*{"name": "updated"}).waitFor()
+    let alice = surreal.table("user").where("email", "=", "alice@example.com").first().waitFor().get()
+    echo alice
+    check alice["name"].getStr() == "updated"
+
+  test("update merge"):
+    let aliceId = surreal.table("user").insertId(%*{"name": "alice", "email": "alice@example.com"}).waitFor()
+    surreal.updateMerge(aliceId, %*{"name": "updated"}).waitFor()
+    let alice = surreal.table("user").find(aliceId).waitFor().get()
+    echo alice
+    check alice["name"].getStr() == "updated"

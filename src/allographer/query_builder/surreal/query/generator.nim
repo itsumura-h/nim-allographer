@@ -157,48 +157,34 @@ proc insertValuesSql*(self: SurrealDb, rows: openArray[JsonNode]): SurrealDb =
   return self
 
 
-# proc insertValuesSql*(self: SurrealDb, rows: openArray[JsonNode]): SurrealDb =
-#   var columns = ""
+# ==================== UPDATE ====================
 
-#   var i = 0
-#   for key, value in rows[0]:
-#     if i > 0: columns.add(", ")
-#     i += 1
-#     # If column name contains Upper letter, column name is covered by double quote
-#     var key = key
-#     quoteColumn(key)
-#     columns.add(key)
+proc updateSql*(self: SurrealDb): SurrealDb =
+  var queryString = ""
+  queryString.add("UPDATE")
 
-#   var values = ""
-#   var valuesCount = 0
-#   for items in rows:
-#     var valueCount = 0
-#     var value = ""
-#     for key, val in items.pairs:
-#       if valueCount > 0: value.add(", ")
-#       valueCount += 1
-#       if val.kind == JInt:
-#         self.placeHolder.add($(val.getInt()))
-#       elif val.kind == JFloat:
-#         self.placeHolder.add($(val.getFloat()))
-#       elif val.kind == JBool:
-#         let val =
-#           if val.getBool():
-#             1
-#           else:
-#             0
-#         self.placeHolder.add($val)
-#       elif val.kind == JObject:
-#         self.placeHolder.add($val)
-#       elif val.kind == JNull:
-#         self.placeHolder.add("null")
-#       else:
-#         self.placeHolder.add(val.getStr())
-#       value.add("?")
+  var table = self.query["table"].getStr()
+  quoteTable(table)
+  queryString.add(&" {table} SET ")
+  self.queryString = queryString
+  return self
 
-#     if valuesCount > 0: values.add(", ")
-#     valuesCount += 1
-#     values.add(&"({value})")
 
-#   self.queryString.add(&" ({columns}) VALUES {values}")
-#   return self
+proc updateValuesSql*(self: SurrealDb, items:JsonNode): SurrealDb =
+  var value = ""
+
+  var i = 0
+  for key, val in items.pairs:
+    if i > 0: value.add(", ")
+    i += 1
+    var key = key
+    quoteColumn(key)
+    value.add(&"{key} = ?")
+
+  self.queryString.add(value)
+  return self
+
+
+proc updateMergeSql*(self: SurrealDb, id:string, items:JsonNode):SurrealDb =
+  self.queryString = &"UPDATE {id} MERGE {items}"
+  return self

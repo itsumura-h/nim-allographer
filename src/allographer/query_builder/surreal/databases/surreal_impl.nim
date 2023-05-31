@@ -1,5 +1,6 @@
 import std/asyncdispatch
 import std/httpclient
+import std/httpcore
 import std/times
 import std/strformat
 import std/base64
@@ -12,7 +13,7 @@ import ./surreal_lib
 type SurrealImpl* = ref object
 
 proc open*(_:type SurrealImpl, namespace="", database="",user="", password="",
-            host: string = "", port: int32 = 0,maxConnections=1,timeout=30):Future[SurrealConnections] {.async.} =
+            host="", port:int32 = 0, maxConnections=1, timeout=30):Future[SurrealConnections] {.async.} =
   var pools = newSeq[SurrealConn](maxConnections)
   for i in 0..<maxConnections:
     let client = newAsyncHttpClient()

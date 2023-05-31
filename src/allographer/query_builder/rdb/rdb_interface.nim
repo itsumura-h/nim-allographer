@@ -349,15 +349,15 @@ proc insert*(self: Rdb, items: JsonNode){.async.} =
   self.log.logger(sql, self.placeHolder)
   self.conn.exec(self.driver, sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
-proc insert*(self: Rdb, rows: seq[JsonNode]){.async.} =
+proc insert*(self: Rdb, items: seq[JsonNode]){.async.} =
   # defer: self.cleanUp()
-  let sql = self.insertValuesBuilder(rows)
+  let sql = self.insertValuesBuilder(items)
   self.log.logger(sql, self.placeHolder)
   self.conn.exec(self.driver, sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
-proc inserts*(self: Rdb, rows: seq[JsonNode]){.async.} =
+proc inserts*(self: Rdb, items: seq[JsonNode]){.async.} =
   # defer: self.cleanUp()
-  for row in rows:
+  for row in items:
     let queryString = self.insertValueBuilder(row)
     self.log.logger(queryString, self.placeHolder)
     self.conn.exec(self.driver, queryString, self.placeHolder, self.isInTransaction, self.transactionConn).await
@@ -368,16 +368,16 @@ proc insertId*(self: Rdb, items: JsonNode, key="id"):Future[int] {.async.} =
   let sql = self.insertValueBuilder(items)
   return self.insertId(sql, self.placeHolder, key).await
 
-proc insertId*(self: Rdb, rows: seq[JsonNode], key="id"):Future[int] {.async.} =
+proc insertId*(self: Rdb, items: seq[JsonNode], key="id"):Future[int] {.async.} =
   # defer: self.cleanUp()
-  let sql = self.insertValuesBuilder(rows)
+  let sql = self.insertValuesBuilder(items)
   result = self.insertId(sql, self.placeHolder, key).await
   self.placeHolder = @[]
 
-proc insertsId*(self: Rdb, rows: seq[JsonNode], key="id"):Future[seq[int]]{.async.} =
+proc insertsId*(self: Rdb, items: seq[JsonNode], key="id"):Future[seq[int]]{.async.} =
   # defer: self.cleanUp()
-  var response = newSeq[int](rows.len)
-  for i, row in rows:
+  var response = newSeq[int](items.len)
+  for i, row in items:
     let queryString = self.insertValueBuilder(row)
     response[i] = self.insertId(queryString, self.placeHolder, key).await
     self.placeHolder = @[]

@@ -76,10 +76,37 @@ proc insertValueBuilder*(self: SurrealDb, items: JsonNode): string =
   return self
     .insertSql()
     .insertValueSql(items)
+    .parallelSql()
     .queryString
 
-proc insertValuesBuilder*(self: SurrealDb, rows: openArray[JsonNode]): string =
+proc insertValuesBuilder*(self: SurrealDb, items: openArray[JsonNode]): string =
   return self
     .insertSql()
-    .insertValuesSql(rows)
+    .insertValuesSql(items)
+    .parallelSql()
+    .queryString
+
+
+# ==================== UPDATE ====================
+
+proc updateBuilder*(self:SurrealDb, items:JsonNode):string =
+  return self
+    .updateSql()
+    .updateValuesSql(items)
+    .whereSql()
+    .orWhereSql()
+    .limitSql()
+    .startSql()
+    .parallelSql()
+    .queryString
+
+
+proc updateMergeBuilder*(self:SurrealDb, id:string, items:JsonNode):string =
+  return self
+    .updateMergeSql(id, items)
+    # .whereSql()
+    # .orWhereSql()
+    # .limitSql()
+    # .startSql()
+    .parallelSql()
     .queryString
