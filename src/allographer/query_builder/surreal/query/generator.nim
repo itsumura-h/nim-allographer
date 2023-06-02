@@ -200,3 +200,24 @@ proc deleteSql*(self: SurrealDb): SurrealDb =
 proc deleteByIdSql*(self: SurrealDb, id: string): SurrealDb =
   self.queryString.add(&" {id}")
   return self
+
+
+# ==================== Aggregates ====================
+
+proc selectCountSql*(self: SurrealDb): SurrealDb =
+  var queryString =
+    if self.query.hasKey("select"):
+      var column = self.query["select"][0].getStr
+      quoteColumn(column)
+      &"{column}"
+    else:
+      ""
+  self.queryString = &"SELECT count({queryString}) AS total"
+  return self
+
+
+proc selectMaxSql*(self:SurrealDb, column:string): SurrealDb =
+  var column = column
+  quoteColumn(column)
+  self.queryString = &"SELECT max({column}) as aggregate"
+  return self

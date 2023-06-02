@@ -11,6 +11,7 @@ import std/strutils
 import ../src/allographer/connection
 import ../src/allographer/query_builder
 
+
 let setupConn = dbOpen(SurrealDb, "test", "test", "user", "pass", "http://surreal", 8000, 1, 30, false, false).waitFor()
 let surreal = dbOpen(SurrealDb, "test", "test", "user", "pass", "http://surreal", 8000, 10, 30, true, false).waitFor()
 
@@ -85,6 +86,9 @@ suite("surreal query"):
     check res["name"].getStr() == "alice"
     check res["email"].getStr() == "alice@example.com"
 
+
+  # ==================== SELECT ====================
+  
   test("select"):
     let aliceId = surreal.insertId(%*{"name": "alice", "email":"alice@example.com"}).waitFor()
     let dbRes = surreal.table("user").select("name", "email").find(aliceId).waitFor()
@@ -206,6 +210,39 @@ suite("surreal query"):
     let res = surreal.table("user").where("auth.name", "=", "admin").fetch("auth").parallel().get().waitFor()
     check res.len == 900
 
+
+  # ==================== AGGREGATE ====================
+
+  test("count"):
+    let users = surreal.table("user").get().waitFor()
+    let count = surreal.table("user").count().waitFor()
+    echo count
+    check users.len == count
+
+
+  test("max"):
+    surreal.table("data").delete().waitFor()
+    var data = newSeq[JsonNode]()
+    for i in 1..5:
+      data.add(%*{"index": i})
+    surreal.table("data").insert(data).waitFor()
+
+    let max = surreal.table("data").max("index").waitFor()
+    check max == 5
+
+  test("min"):
+    surreal.table("data").delete().waitFor()
+    var data = newSeq[JsonNode]()
+    for i in 1..5:
+      data.add(%*{"index": i})
+    surreal.table("data").insert(data).waitFor()
+
+    let min = surreal.table("data").min("index").waitFor()
+    check min == 1
+
+
+  # ==================== INSERT ====================
+
   test("insert"):
     surreal.table("user").insert(%*{"name":"user1", "email":"user1@example.com"}).waitFor()
     let dbRes = surreal.table("user").where("name", "=", "user1").first().waitFor()
@@ -241,6 +278,9 @@ suite("surreal query"):
     let ids = surreal.table("user").insertId(users).waitFor()
     check ids.len == 10
 
+
+  # ==================== UPDATE ====================
+
   test("update"):
     let aliceId = surreal.table("user").insertId(%*{"name": "alice", "email": "alice@example.com"}).waitFor()
     surreal.table("user").where("id", "=", aliceId.rawId).update(%*{"name": "updated"}).waitFor()
@@ -254,6 +294,9 @@ suite("surreal query"):
     let alice = surreal.table("user").find(aliceId).waitFor().get()
     echo alice
     check alice["name"].getStr() == "updated"
+
+
+  # ==================== DELETE ====================
 
   test("delete"):
     let aliceId = surreal.table("user").insertId(%*{"name": "alice", "email": "alice@example.com"}).waitFor()

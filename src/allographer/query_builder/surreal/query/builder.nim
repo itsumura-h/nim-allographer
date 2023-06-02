@@ -129,3 +129,26 @@ proc deleteByIdBuilder*(self: SurrealDb, id: string): string =
     .deleteSql()
     .deleteByIdSql(id)
     .queryString
+
+
+# ==================== Aggregates ====================
+
+proc countBuilder*(self:SurrealDb): string =
+  return self
+    .selectCountSql()
+    .fromSql()
+    .whereSql()
+    .orWhereSql()
+    # .whereBetweenSql()
+    # .whereNotBetweenSql()
+    # .whereInSql()
+    # .whereNotInSql()
+    # .whereNullSql()
+    # .groupBySql()
+    # .havingSql()
+    .orderBySql()
+    .limitSql()
+    .startSql()
+    .fetchSql()
+    .parallelSql()
+    .queryString

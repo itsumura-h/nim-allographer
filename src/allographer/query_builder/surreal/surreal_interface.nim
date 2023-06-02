@@ -3,8 +3,10 @@ import std/json
 import std/options
 import std/sequtils
 import ../log
+import ../enums
 import ./surreal_types
 import ./query/builder
+import ./query/grammar
 import ./query/exec
 
 
@@ -142,6 +144,7 @@ proc delete*(self: SurrealDb){.async.} =
   self.log.logger(sql, self.placeHolder)
   self.conn.exec(sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
+
 proc delete*(self: SurrealDb, id: SurrealId){.async.} =
   let sql = self.deleteByIdBuilder(id.rawId)
   self.log.logger(sql, self.placeHolder)
@@ -149,6 +152,7 @@ proc delete*(self: SurrealDb, id: SurrealId){.async.} =
 
 
 # ==================== RawQuery ====================
+
 proc get*(self: RawQuerySurrealDb):Future[seq[JsonNode]]{.async.} =
   ## It is only used with raw()
   try:
@@ -178,3 +182,50 @@ proc exec*(self: RawQuerySurrealDb){.async.} =
   except Exception:
     self.log.echoErrorMsg(self.queryString, self.placeHolder)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
+
+
+proc info*(self: RawQuerySurrealDb):Future[JsonNode] {.async.} =
+  ## Get all response.
+  try:
+    self.log.logger(self.queryString, self.placeHolder)
+    return self.conn.info(self.queryString, self.placeHolder).await
+  except Exception:
+    self.log.echoErrorMsg(self.queryString, self.placeHolder)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+
+
+# ==================== Aggregates ====================
+
+proc count*(self:SurrealDb):Future[int]{.async.} =
+  var sql = self.countBuilder()
+  sql = sql & " GROUP BY total"
+  self.log.logger(sql, self.placeHolder)
+  let response =  self.getRow(sql, self.placeHolder).await
+  if response.isSome:
+    return response.get["total"].getInt()
+  else:
+    return 0
+
+
+proc max*(self:SurrealDb, column:string):Future[int]{.async.} =
+  ## = ORDER BY {column} DESC LIMIT 1
+  let self = self.orderBy(column, Desc).limit(1)
+  let sql = self.selectFirstBuilder()
+  self.log.logger(sql, self.placeHolder)
+  let response =  self.getRow(sql, self.placeHolder).await
+  if response.isSome:
+    return response.get[column].getInt()
+  else:
+    return 0
+
+
+proc min*(self:SurrealDb, column:string):Future[int]{.async.} =
+  ## = ORDER BY {column} ASC LIMIT 1
+  let self = self.orderBy(column, Asc).limit(1)
+  let sql = self.selectFirstBuilder()
+  self.log.logger(sql, self.placeHolder)
+  let response =  self.getRow(sql, self.placeHolder).await
+  if response.isSome:
+    return response.get[column].getInt()
+  else:
+    return 0

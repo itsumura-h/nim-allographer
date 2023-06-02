@@ -52,6 +52,8 @@ proc query*(db:SurrealConn, query: string, args: seq[string], timeout:int):Futur
   let body = resp.body().await.parseJson()
   if body.kind == JObject and body["code"].getInt() == 400:
     dbError(body["information"].getStr())
+  if body[0].hasKey("detail") and not body[0].hasKey("result"):
+    dbError(body[0]["detail"].getStr())
   return body[0]["result"]
 
 
@@ -62,3 +64,10 @@ proc exec*(db:SurrealConn, query: string, args: seq[string], timeout:int) {.asyn
   let body = resp.body().await.parseJson()
   if body.kind == JObject and body["code"].getInt() == 400:
     dbError(body["information"].getStr())
+
+
+proc info*(db:SurrealConn, query: string, args: seq[string], timeout:int):Future[JsonNode] {.async.} =
+  assert(not db.conn.isNil, "Database not connected.")
+  let query = dbFormat(query, args)
+  let resp = db.conn.post(&"{db.host}:{db.port}/sql", query).await
+  return resp.body().await.parseJson()
