@@ -1,6 +1,6 @@
-Example: Query Builder
+Example: Query Builder for RDB
 ===
-[back](../README.md)
+[back](../../README.md)
 
 ## index
 <!--ts-->
@@ -38,6 +38,20 @@ Example: Query Builder
 
 <!--te-->
 ---
+
+## Create Connection
+```nim
+import allographer/connection
+
+let maxConnections = 95
+let timeout = 30
+let rdb = dbOpen(PostgreSql, "database", "user", "password" "localhost", 5432, maxConnections, timeout)
+
+# also available
+# let rdb = dbOpen(Sqlite3, "/path/to/db/sqlite3.db", maxConnections=maxConnections, timeout=timeout)
+# let rdb = dbOpen(MySQL, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
+# let rdb = dbOpen(MariaDB, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
+```
 
 ## SELECT
 [to index](#index)
