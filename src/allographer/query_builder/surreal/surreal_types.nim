@@ -65,7 +65,7 @@ proc rawId*(self:SurrealId):string =
   ## .. code-block:: Nim
   ##  let rawId = "user:z7cr4mz474h4ab7rcd6d"
   ##  let surrealId = SureealId.new(rawId) 
-  ##  surrealId.rawId() = "user:z7cr4mz474h4ab7rcd6d"
+  ##  surrealId.rawId() == "user:z7cr4mz474h4ab7rcd6d"
 
   return self.table & ":" & self.id
 

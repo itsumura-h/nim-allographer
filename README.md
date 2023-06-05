@@ -193,7 +193,7 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 ### Query Builder for SurrealDB
 [surreal_types](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/surreal_types.html)  
 [surreal_interface](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/surreal_interface.html)  
-[grammars](https://itsumura-h.github.io/nim-allographer/query_builder/rdb/query/grammar.html)  
+[grammars](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/query/grammar.html)  
 
 
 ## Development
