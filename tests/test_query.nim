@@ -12,7 +12,7 @@ import std/times
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
 import ../src/allographer/connection
-import ../src/allographer/utils
+import ../src/allographer/query_builder/rdb/rdb_utils
 import ./connections
 
 
@@ -202,11 +202,11 @@ for rdb in dbConnections:
         check t["name"].getStr() == "John"
         rdb.raw("ROLLBACK").exec().await
 
-    test("insertsIDTest"):
+    test("insertsIdTest"):
       asyncBlock:
         rdb.raw("BEGIN").exec().await
         echo rdb.table("user").orderBy("id", Desc).first().await
-        var ids = rdb.table("user").insertsID(@[
+        var ids = rdb.table("user").insertsId(@[
           %*{"name": "John"},
           %*{"email": "Paul@gmail.com"},
         ])

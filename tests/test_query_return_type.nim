@@ -11,7 +11,8 @@ import std/asyncdispatch
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
 import ./connections
-import ../src/allographer/utils
+import ../src/allographer/query_builder/rdb/rdb_utils
+# import ../src/allographer/utils
 
 
 proc setUp(rdb:Rdb) =

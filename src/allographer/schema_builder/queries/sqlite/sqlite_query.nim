@@ -1,18 +1,17 @@
-import
-  std/json,
-  std/options,
-  std/strformat,
-  std/re,
-  std/asyncdispatch,
-  std/sha1,
-  std/times,
-  std/strutils,
-  std/sequtils,
-  ../../../base,
-  ../../../query_builder,
-  ../../grammars,
-  ../query_interface,
-  ./impl
+import std/json
+import std/options
+import std/strformat
+import std/re
+import std/asyncdispatch
+import std/sha1
+import std/times
+import std/strutils
+import std/sequtils
+import ../../../query_builder
+import ../../grammars
+import ../query_interface
+import ./impl
+
 
 type SqliteQuery* = ref object
   rdb:Rdb

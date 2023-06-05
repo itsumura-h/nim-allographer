@@ -1,0 +1,43 @@
+selectSql	query_builder/rdb/rdb_interface.html#selectSql,Rdb	rdb_interface: selectSql(self: Rdb): string	
+toSql	query_builder/rdb/rdb_interface.html#toSql,Rdb	rdb_interface: toSql(self: Rdb): string	
+columns	query_builder/rdb/rdb_interface.html#columns,Rdb	rdb_interface: columns(self: Rdb): Future[seq[string]]	
+get	query_builder/rdb/rdb_interface.html#get,Rdb	rdb_interface: get(self: Rdb): Future[seq[JsonNode]]	
+get	query_builder/rdb/rdb_interface.html#get,Rdb,typedesc[T]	rdb_interface: get[T](self: Rdb; typ: typedesc[T]): Future[seq[T]]	
+getPlain	query_builder/rdb/rdb_interface.html#getPlain,Rdb	rdb_interface: getPlain(self: Rdb): Future[seq[seq[string]]]	
+get	query_builder/rdb/rdb_interface.html#get,RawQueryRdb	rdb_interface: get(self: RawQueryRdb): Future[seq[JsonNode]]	
+getPlain	query_builder/rdb/rdb_interface.html#getPlain,RawQueryRdb	rdb_interface: getPlain(self: RawQueryRdb): Future[seq[seq[string]]]	
+get	query_builder/rdb/rdb_interface.html#get,RawQueryRdb,typedesc[T]	rdb_interface: get[T](self: RawQueryRdb; typ: typedesc[T]): Future[seq[T]]	
+first	query_builder/rdb/rdb_interface.html#first,Rdb	rdb_interface: first(self: Rdb): Future[Option[JsonNode]]	
+first	query_builder/rdb/rdb_interface.html#first,RawQueryRdb	rdb_interface: first(self: RawQueryRdb): Future[Option[JsonNode]]	
+first	query_builder/rdb/rdb_interface.html#first,Rdb,typedesc[T]	rdb_interface: first[T](self: Rdb; typ: typedesc[T]): Future[Option[T]]	
+firstPlain	query_builder/rdb/rdb_interface.html#firstPlain,Rdb	rdb_interface: firstPlain(self: Rdb): Future[seq[string]]	
+firstPlain	query_builder/rdb/rdb_interface.html#firstPlain,RawQueryRdb	rdb_interface: firstPlain(self: RawQueryRdb): Future[seq[string]]	
+find	query_builder/rdb/rdb_interface.html#find,Rdb,string,string	rdb_interface: find(self: Rdb; id: string; key = &quot;id&quot;): Future[Option[JsonNode]]	
+find	query_builder/rdb/rdb_interface.html#find,Rdb,int,string	rdb_interface: find(self: Rdb; id: int; key = &quot;id&quot;): Future[Option[JsonNode]]	
+find	query_builder/rdb/rdb_interface.html#find,Rdb,int,typedesc[T],string	rdb_interface: find[T](self: Rdb; id: int; typ: typedesc[T]; key = &quot;id&quot;): Future[Option[T]]	
+findPlain	query_builder/rdb/rdb_interface.html#findPlain,Rdb,int,string	rdb_interface: findPlain(self: Rdb; id: int; key = &quot;id&quot;): Future[seq[string]]	
+insertSql	query_builder/rdb/rdb_interface.html#insertSql,Rdb,JsonNode	rdb_interface: insertSql(self: Rdb; items: JsonNode): string	
+insert	query_builder/rdb/rdb_interface.html#insert,Rdb,JsonNode	rdb_interface: insert(self: Rdb; items: JsonNode): owned(Future[void])	
+insert	query_builder/rdb/rdb_interface.html#insert,Rdb,seq[JsonNode]	rdb_interface: insert(self: Rdb; items: seq[JsonNode]): owned(Future[void])	
+inserts	query_builder/rdb/rdb_interface.html#inserts,Rdb,seq[JsonNode]	rdb_interface: inserts(self: Rdb; items: seq[JsonNode]): owned(Future[void])	
+insertId	query_builder/rdb/rdb_interface.html#insertId,Rdb,JsonNode,string	rdb_interface: insertId(self: Rdb; items: JsonNode; key = &quot;id&quot;): Future[int]	
+insertId	query_builder/rdb/rdb_interface.html#insertId,Rdb,seq[JsonNode],string	rdb_interface: insertId(self: Rdb; items: seq[JsonNode]; key = &quot;id&quot;): Future[int]	
+insertsId	query_builder/rdb/rdb_interface.html#insertsId,Rdb,seq[JsonNode],string	rdb_interface: insertsId(self: Rdb; items: seq[JsonNode]; key = &quot;id&quot;): Future[seq[int]]	
+updateSql	query_builder/rdb/rdb_interface.html#updateSql,Rdb,JsonNode	rdb_interface: updateSql(self: Rdb; items: JsonNode): string	
+update	query_builder/rdb/rdb_interface.html#update,Rdb,JsonNode	rdb_interface: update(self: Rdb; items: JsonNode): owned(Future[void])	
+deleteSql	query_builder/rdb/rdb_interface.html#deleteSql,Rdb	rdb_interface: deleteSql(self: Rdb): string	
+delete	query_builder/rdb/rdb_interface.html#delete,Rdb	rdb_interface: delete(self: Rdb): owned(Future[void])	
+delete	query_builder/rdb/rdb_interface.html#delete,Rdb,int,string	rdb_interface: delete(self: Rdb; id: int; key = &quot;id&quot;): owned(Future[void])	
+exec	query_builder/rdb/rdb_interface.html#exec,RawQueryRdb	rdb_interface: exec(self: RawQueryRdb): owned(Future[void])	
+begin	query_builder/rdb/rdb_interface.html#begin,Rdb	rdb_interface: begin(self: Rdb): Future[int]	
+rollback	query_builder/rdb/rdb_interface.html#rollback,Rdb,int	rdb_interface: rollback(self: Rdb; connI: int): owned(Future[void])	
+commit	query_builder/rdb/rdb_interface.html#commit,Rdb,int	rdb_interface: commit(self: Rdb; connI: int): owned(Future[void])	
+count	query_builder/rdb/rdb_interface.html#count,Rdb	rdb_interface: count(self: Rdb): Future[int]	
+max	query_builder/rdb/rdb_interface.html#max,Rdb,string	rdb_interface: max(self: Rdb; column: string): Future[Option[string]]	
+min	query_builder/rdb/rdb_interface.html#min,Rdb,string	rdb_interface: min(self: Rdb; column: string): Future[Option[string]]	
+avg	query_builder/rdb/rdb_interface.html#avg,Rdb,string	rdb_interface: avg(self: Rdb; column: string): Future[Option[float]]	
+sum	query_builder/rdb/rdb_interface.html#sum,Rdb,string	rdb_interface: sum(self: Rdb; column: string): Future[Option[float]]	
+paginate	query_builder/rdb/rdb_interface.html#paginate,Rdb,int,int	rdb_interface: paginate(self: Rdb; display: int; page: int = 1): Future[JsonNode]	
+fastPaginate	query_builder/rdb/rdb_interface.html#fastPaginate,Rdb,int,string,Order	rdb_interface: fastPaginate(self: Rdb; display: int; key = &quot;id&quot;; order: Order = Asc): Future[\n    JsonNode]	
+fastPaginateNext	query_builder/rdb/rdb_interface.html#fastPaginateNext,Rdb,int,int,string,Order	rdb_interface: fastPaginateNext(self: Rdb; display, id: int; key = &quot;id&quot;; order: Order = Asc): Future[\n    JsonNode]	
+fastPaginateBack	query_builder/rdb/rdb_interface.html#fastPaginateBack,Rdb,int,int,string,Order	rdb_interface: fastPaginateBack(self: Rdb; display, id: int; key = &quot;id&quot;; order: Order = Asc): Future[\n    JsonNode]	

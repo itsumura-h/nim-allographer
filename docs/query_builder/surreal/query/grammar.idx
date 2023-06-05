@@ -1,0 +1,14 @@
+table	query_builder/surreal/query/grammar.html#table,SurrealDb,string	grammar: table(self: SurrealDb; tableArg: string): SurrealDb	
+raw	query_builder/surreal/query/grammar.html#raw,SurrealDb,string,varargs[string]	grammar: raw(self: SurrealDb; sql: string; arges: varargs[string]): RawQuerySurrealDb	
+select	query_builder/surreal/query/grammar.html#select,SurrealDb,varargs[string]	grammar: select(self: SurrealDb; columnsArg: varargs[string]): SurrealDb	
+where	query_builder/surreal/query/grammar.html#where,SurrealDb,string,string,	grammar: where(self: SurrealDb; column: string; symbol: string;\n      value: string | int | float | bool): SurrealDb	
+where	query_builder/surreal/query/grammar.html#where,SurrealDb,string,string,_2	grammar: where(self: SurrealDb; column: string; symbol: string; value: nil.type): SurrealDb	
+orWhere	query_builder/surreal/query/grammar.html#orWhere,SurrealDb,string,string,	grammar: orWhere(self: SurrealDb; column: string; symbol: string;\n        value: string | int | float | bool): SurrealDb	
+orWhere	query_builder/surreal/query/grammar.html#orWhere,SurrealDb,string,string,_2	grammar: orWhere(self: SurrealDb; column: string; symbol: string; value: nil.type): SurrealDb	
+fetch	query_builder/surreal/query/grammar.html#fetch,SurrealDb,varargs[string]	grammar: fetch(self: SurrealDb; columnsArg: varargs[string]): SurrealDb	
+groupBy	query_builder/surreal/query/grammar.html#groupBy,SurrealDb,string	grammar: groupBy(self: SurrealDb; column: string): SurrealDb	
+orderBy	query_builder/surreal/query/grammar.html#orderBy,SurrealDb,string,Order	grammar: orderBy(self: SurrealDb; column: string; order: Order): SurrealDb	
+orderBy	query_builder/surreal/query/grammar.html#orderBy,SurrealDb,string,Collation,Order	grammar: orderBy(self: SurrealDb; column: string; collation: Collation; order: Order): SurrealDb	
+limit	query_builder/surreal/query/grammar.html#limit,SurrealDb,int	grammar: limit(self: SurrealDb; num: int): SurrealDb	
+start	query_builder/surreal/query/grammar.html#start,SurrealDb,int	grammar: start(self: SurrealDb; num: int): SurrealDb	
+parallel	query_builder/surreal/query/grammar.html#parallel,SurrealDb	grammar: parallel(self: SurrealDb): SurrealDb	

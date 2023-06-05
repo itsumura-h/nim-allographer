@@ -1,16 +1,15 @@
-import
-  std/json,
-  std/options,
-  std/strformat,
-  std/asyncdispatch,
-  std/sha1,
-  std/times,
-  std/strutils,
-  ../../../base,
-  ../../../query_builder,
-  ../../grammars,
-  ../query_interface,
-  ./impl
+import std/json
+import std/options
+import std/strformat
+import std/asyncdispatch
+import std/sha1
+import std/times
+import std/strutils
+import ../../../query_builder
+import ../../grammars
+import ../query_interface
+import ./impl
+
 
 type PostgreQuery* = ref object
   rdb:Rdb

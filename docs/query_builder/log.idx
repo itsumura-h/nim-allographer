@@ -1,0 +1,4 @@
+LogSetting	query_builder/log.html#LogSetting	log: LogSetting	
+logger	query_builder/log.html#logger,LogSetting,auto,varargs[string]	log: logger(self: LogSetting; output: auto; args: varargs[string])	
+echoErrorMsg	query_builder/log.html#echoErrorMsg,LogSetting,string,seq[string]	log: echoErrorMsg(self: LogSetting; msg: string; args: seq[string] = @[])	
+echoWarningMsg	query_builder/log.html#echoWarningMsg,LogSetting,string	log: echoWarningMsg(self: LogSetting; msg: string)	

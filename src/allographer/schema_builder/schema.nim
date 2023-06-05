@@ -1,8 +1,8 @@
 import std/os
 import std/json
 import std/options
-import ../base
-import ../query_builder
+# import ../query_builder
+import ../query_builder/rdb/rdb_types
 import ./grammars
 import ./queries/query_interface
 import ./queries/sqlite/sqlite_query

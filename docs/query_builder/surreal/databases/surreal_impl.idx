@@ -1,0 +1,5 @@
+SurrealImpl	query_builder/surreal/databases/surreal_impl.html#SurrealImpl	surreal_impl: SurrealImpl	
+open	query_builder/surreal/databases/surreal_impl.html#open,typeSurrealImpl,string,string,string,string,string,int32,int,int	surreal_impl: open(_: type SurrealImpl; namespace = &quot;&quot;; database = &quot;&quot;; user = &quot;&quot;;\n     password = &quot;&quot;; host = &quot;&quot;; port: int32 = 0; maxConnections = 1; timeout = 30): Future[\n    SurrealConnections]	
+query	query_builder/surreal/databases/surreal_impl.html#query,SurrealConn,string,seq[string],int	surreal_impl: query(db: SurrealConn; query: string; args: seq[string]; timeout: int): Future[\n    JsonNode]	
+exec	query_builder/surreal/databases/surreal_impl.html#exec,SurrealConn,string,seq[string],int	surreal_impl: exec(db: SurrealConn; query: string; args: seq[string]; timeout: int): owned(\n    Future[void])	
+info	query_builder/surreal/databases/surreal_impl.html#info,SurrealConn,string,seq[string],int	surreal_impl: info(db: SurrealConn; query: string; args: seq[string]; timeout: int): Future[\n    JsonNode]	

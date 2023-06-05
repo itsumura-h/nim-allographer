@@ -1,0 +1,12 @@
+InstantRow	query_builder/rdb/databases/mariadb/mariadb_lib.html#InstantRow	mariadb_lib: InstantRow	
+dbError	query_builder/rdb/databases/mariadb/mariadb_lib.html#dbError,PMySQL	mariadb_lib: dbError(db: PMySQL)	
+checkError	query_builder/rdb/databases/mariadb/mariadb_lib.html#checkError,PMySQL	mariadb_lib: checkError(db: PMySQL)	
+setColumnInfo	query_builder/rdb/databases/mariadb/mariadb_lib.html#setColumnInfo,DbColumns,PRES,int	mariadb_lib: setColumnInfo(columns: var DbColumns; res: PRES; L: int)	
+newRow	query_builder/rdb/databases/mariadb/mariadb_lib.html#newRow,int	mariadb_lib: newRow(L: int): database_types.Row	
+properFreeResult	query_builder/rdb/databases/mariadb/mariadb_lib.html#properFreeResult,PRES,cstringArray	mariadb_lib: properFreeResult(sqlres: PRES; row: cstringArray)	
+dbFormat	query_builder/rdb/databases/mariadb/mariadb_lib.html#dbFormat,string,seq[string]	mariadb_lib: dbFormat(formatstr: string; args: seq[string]): string	
+rawExec	query_builder/rdb/databases/mariadb/mariadb_lib.html#rawExec,PMySQL,string,seq[string]	mariadb_lib: rawExec(db: PMySQL; query: string; args: seq[string])	
+instantRows	query_builder/rdb/databases/mariadb/mariadb_lib.html#instantRows.i,PMySQL,DbRows,string,seq[string]	mariadb_lib: instantRows(db: PMySQL; dbRows: var DbRows; query: string; args: seq[string]): InstantRow	
+`[]`	query_builder/rdb/databases/mariadb/mariadb_lib.html#[],InstantRow,int	mariadb_lib: `[]`(row: InstantRow; col: int): string	
+unsafeColumnAt	query_builder/rdb/databases/mariadb/mariadb_lib.html#unsafeColumnAt,InstantRow,int	mariadb_lib: unsafeColumnAt(row: InstantRow; index: int): cstring	
+len	query_builder/rdb/databases/mariadb/mariadb_lib.html#len,InstantRow	mariadb_lib: len(row: InstantRow): int	
