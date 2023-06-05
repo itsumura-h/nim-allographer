@@ -207,9 +207,9 @@ proc count*(self:SurrealDb):Future[int]{.async.} =
     return 0
 
 
-proc max*(self:SurrealDb, column:string):Future[int]{.async.} =
-  ## = ORDER BY {column} DESC LIMIT 1
-  let self = self.orderBy(column, Desc).limit(1)
+proc max*(self:SurrealDb, column:string, collaction:Collation=None):Future[int]{.async.} =
+  ## = ORDER BY {column} {collaction} DESC LIMIT 1
+  let self = self.orderBy(column, collaction, Desc).limit(1)
   let sql = self.selectFirstBuilder()
   self.log.logger(sql, self.placeHolder)
   let response =  self.getRow(sql, self.placeHolder).await
@@ -219,9 +219,9 @@ proc max*(self:SurrealDb, column:string):Future[int]{.async.} =
     return 0
 
 
-proc min*(self:SurrealDb, column:string):Future[int]{.async.} =
-  ## = ORDER BY {column} ASC LIMIT 1
-  let self = self.orderBy(column, Asc).limit(1)
+proc min*(self:SurrealDb, column:string, collaction:Collation=None):Future[int]{.async.} =
+  ## = ORDER BY {column} {collaction} ASC LIMIT 1
+  let self = self.orderBy(column, collaction, Asc).limit(1)
   let sql = self.selectFirstBuilder()
   self.log.logger(sql, self.placeHolder)
   let response =  self.getRow(sql, self.placeHolder).await
