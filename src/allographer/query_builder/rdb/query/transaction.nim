@@ -1,16 +1,17 @@
 import std/macros
 import std/strutils
 import std/strformat
+import ../rdb_types
 
 
-macro transaction*(rdb:untyped, callback: untyped):untyped =
+macro rdbTransaction(rdb:Rdb, callback: untyped):untyped =
   var callbackStr = callback.repr
   callbackStr.removePrefix
   callbackStr = callbackStr.indent(4)
   callbackStr = fmt"""
 block:
   let connI = {rdb.repr}.begin().await
-  rdb.inTransaction(connI)
+  {rdb.repr}.inTransaction(connI)
   try:
 {callbackStr}
     {rdb.repr}.commit(connI).await
@@ -21,3 +22,6 @@ block:
 """
   let body = callbackStr.parseStmt()
   return body
+
+template transaction*(rdb:Rdb, callback: untyped) =
+  rdbTransaction(rdb, callback)
