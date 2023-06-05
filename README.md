@@ -88,24 +88,25 @@ rdb.alter(
 
 ## Index
 <!--ts-->
-   * [allographer](#allographer)
-      * [Easy to access Rdb](#easy-to-access-rdb)
-         * [Query Builder](#query-builder)
-         * [Schema Builder](#schema-builder)
-      * [Index](#index)
-      * [Install](#install)
-      * [Set up](#set-up)
-      * [Configuation](#configuation)
-      * [Createing connection](#createing-connection)
-      * [Logging](#logging)
-      * [Documents](#documents)
-      * [Nim API Documents](#nim-api-documents)
-         * [Query Builder](#query-builder-1)
-         * [Schema Builder](#schema-builder-1)
-      * [Development](#development)
-         * [Branch naming rule](#branch-naming-rule)
+* [allographer](#allographer)
+   * [Easy to access Rdb](#easy-to-access-rdb)
+      * [Query Builder](#query-builder)
+      * [Schema Builder](#schema-builder)
+   * [Index](#index)
+   * [Install](#install)
+   * [Configuation](#configuation)
+   * [Createing connection](#createing-connection)
+   * [Logging](#logging)
+   * [Documents](#documents)
+   * [Nim API Documents](#nim-api-documents)
+      * [Query Builder for RDB](#query-builder-for-rdb)
+      * [Schema Builder for RDB](#schema-builder-for-rdb)
+      * [Query Builder for SurrealDB](#query-builder-for-surrealdb)
+   * [Development](#development)
+      * [Branch naming rule](#branch-naming-rule)
 
-<!-- Added by: root, at: Tue Feb 22 03:11:48 UTC 2022 -->
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
+<!-- Added by: root, at: Mon Jun  5 14:15:02 UTC 2023 -->
 
 <!--te-->
 ---
@@ -191,9 +192,9 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 [grammar](https://itsumura-h.github.io/nim-allographer/schema_builder/grammars.html)  
 
 ### Query Builder for SurrealDB
-[rdb_types](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/surreal_types.html)  
-[rdb_interface](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/surreal_interface.html)  
-[grammars](https://itsumura-h.github.io/nim-allographer/query_builder/rdb/query/grammar.html)  
+[surreal_types](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/surreal_types.html)  
+[surreal_interface](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/surreal_interface.html)  
+[grammars](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/query/grammar.html)  
 
 
 ## Development

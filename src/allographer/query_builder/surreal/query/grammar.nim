@@ -56,7 +56,7 @@ const whereSymbols = ["is", "is not", "=", "!=", "<", "<=", ">=", ">", "<>", "LI
 const whereSymbolsError = """Arg position 3 is only allowed of ["is", "is not", "=", "!=", "<", "<=", ">=", ">", "<>", "LIKE","%LIKE","LIKE%","%LIKE%"]"""
 
 proc where*(self: SurrealDb, column: string, symbol: string,
-            value: string|int|float|bool): SurrealDb =
+            value: string|int|float|bool|SurrealId): SurrealDb =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -107,7 +107,7 @@ proc where*(self: SurrealDb, column: string, symbol: string, value: nil.type): S
 
 
 proc orWhere*(self: SurrealDb, column: string, symbol: string,
-              value: string|int|float|bool): SurrealDb =
+              value: string|int|float|bool|SurrealId): SurrealDb =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,

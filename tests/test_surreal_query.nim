@@ -16,6 +16,9 @@ let setupConn = dbOpen(SurrealDb, "test", "test", "user", "pass", "http://surrea
 let surreal = dbOpen(SurrealDb, "test", "test", "user", "pass", "http://surreal", 8000, 10, 30, true, false).waitFor()
 
 suite("surreal type"):
+  setup:
+    setupConn.table("user").delete().waitFor()
+
   test("SurrealId"):
     let aliceId = surreal.table("user").insertId(%*{"name": "alice"}).waitFor()
     let alice = surreal.table("user").where("name", "=", "alice").first().waitFor().get()

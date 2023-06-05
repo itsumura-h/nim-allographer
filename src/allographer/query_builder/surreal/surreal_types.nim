@@ -65,9 +65,15 @@ proc rawId*(self:SurrealId):string =
   ## .. code-block:: Nim
   ##  let rawId = "user:z7cr4mz474h4ab7rcd6d"
   ##  let surrealId = SureealId.new(rawId) 
-  ##  surrealId.rawId() = "user:z7cr4mz474h4ab7rcd6d"
+  ##  surrealId.rawId() == "user:z7cr4mz474h4ab7rcd6d"
 
   return self.table & ":" & self.id
+
+proc `$`*(self:SurrealId):string =
+  return self.id
+
+proc `%`*(self:SurrealId):JsonNode =
+  return %(self.rawId())
 
 
 const errorConnectionNum* = 99999
