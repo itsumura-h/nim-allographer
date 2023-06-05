@@ -69,6 +69,12 @@ proc rawId*(self:SurrealId):string =
 
   return self.table & ":" & self.id
 
+proc `$`*(self:SurrealId):string =
+  return self.id
+
+proc `%`*(self:SurrealId):JsonNode =
+  return %(self.rawId())
+
 
 const errorConnectionNum* = 99999
 
