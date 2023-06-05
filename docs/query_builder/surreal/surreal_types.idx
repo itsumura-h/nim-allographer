@@ -5,6 +5,8 @@ new	query_builder/surreal/surreal_types.html#new,typeSurrealId	surreal_types: ne
 new	query_builder/surreal/surreal_types.html#new,typeSurrealId,string,string	surreal_types: new(_: type SurrealId; table, id: string): SurrealId	
 new	query_builder/surreal/surreal_types.html#new,typeSurrealId,string	surreal_types: new(_: type SurrealId; rawId: string): SurrealId	
 rawId	query_builder/surreal/surreal_types.html#rawId,SurrealId	surreal_types: rawId(self: SurrealId): string	
+`$`	query_builder/surreal/surreal_types.html#$,SurrealId	surreal_types: `$`(self: SurrealId): string	
+`%`	query_builder/surreal/surreal_types.html#%,SurrealId	surreal_types: `%`(self: SurrealId): JsonNode	
 errorConnectionNum	query_builder/surreal/surreal_types.html#errorConnectionNum	surreal_types: errorConnectionNum	
 getFreeConn	query_builder/surreal/surreal_types.html#getFreeConn,SurrealConnections	surreal_types: getFreeConn(self: SurrealConnections): Future[int]	
 returnConn	query_builder/surreal/surreal_types.html#returnConn,SurrealConnections,int	surreal_types: returnConn(self: SurrealConnections; i: int): owned(Future[void])	

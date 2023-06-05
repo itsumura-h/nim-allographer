@@ -41,6 +41,7 @@ proc getRow(self:SurrealDb | RawQuerySurrealDb, queryString:string, args:seq[str
 # ==================== Public ====================
 
 proc get*(self: SurrealDb):Future[seq[JsonNode]] {.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/select
   let sql = self.selectBuilder()
   try:
     self.log.logger(sql, self.placeHolder)
@@ -52,6 +53,7 @@ proc get*(self: SurrealDb):Future[seq[JsonNode]] {.async.} =
 
 
 proc first*(self: SurrealDb):Future[Option[JsonNode]] {.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/select
   let sql = self.selectFirstBuilder()
   try:
     self.log.logger(sql, self.placeHolder)
@@ -63,6 +65,7 @@ proc first*(self: SurrealDb):Future[Option[JsonNode]] {.async.} =
 
 
 proc find*(self: SurrealDb, id:SurrealId, key="id"):Future[Option[JsonNode]]{.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/select
   self.placeHolder.add(id.rawId)
   let sql = self.selectFindBuilder(key)
   try:
@@ -77,18 +80,21 @@ proc find*(self: SurrealDb, id:SurrealId, key="id"):Future[Option[JsonNode]]{.as
 # ==================== INSERT ====================
 
 proc insert*(self: SurrealDb, items: JsonNode){.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/insert
   let sql = self.insertValueBuilder(items)
   self.log.logger(sql, self.placeHolder)
   self.conn.exec(sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
 
 proc insert*(self: SurrealDb, items: seq[JsonNode]){.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/insert
   let sql = self.insertValuesBuilder(items)
   self.log.logger(sql, self.placeHolder)
   self.conn.exec(sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
 
 proc insertId*(self: SurrealDb, items: JsonNode, key="id"):Future[SurrealId] {.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/insert
   let sql = self.insertValueBuilder(items)
   self.log.logger(sql, self.placeHolder)
   let res = getRow(self, sql, self.placeHolder).await
@@ -99,6 +105,7 @@ proc insertId*(self: SurrealDb, items: JsonNode, key="id"):Future[SurrealId] {.a
 
 
 proc insertId*(self: SurrealDb, items: seq[JsonNode], key="id"):Future[seq[SurrealId]] {.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/insert
   let sql = self.insertValuesBuilder(items)
   self.log.logger(sql, self.placeHolder)
   let resp = getAllRows(self, sql, self.placeHolder).await
@@ -111,6 +118,7 @@ proc insertId*(self: SurrealDb, items: seq[JsonNode], key="id"):Future[seq[Surre
 # ==================== UPDATE ====================
 
 proc update*(self:SurrealDb, items:JsonNode) {.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/update
   var updatePlaceHolder: seq[string]
   for item in items.pairs:
     if item.val.kind == JInt:
@@ -132,6 +140,7 @@ proc update*(self:SurrealDb, items:JsonNode) {.async.} =
 
 
 proc update*(self:SurrealDb, id:SurrealId, items:JsonNode) {.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/update
   let sql = self.updateMergeBuilder(id.rawid, items)
   self.log.logger(sql, self.placeHolder)
   self.conn.exec(sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
@@ -140,12 +149,14 @@ proc update*(self:SurrealDb, id:SurrealId, items:JsonNode) {.async.} =
 # ==================== DELETE ====================
 
 proc delete*(self: SurrealDb){.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/delete
   let sql = self.deleteBuilder()
   self.log.logger(sql, self.placeHolder)
   self.conn.exec(sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
 
 proc delete*(self: SurrealDb, id: SurrealId){.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/delete
   let sql = self.deleteByIdBuilder(id.rawId)
   self.log.logger(sql, self.placeHolder)
   self.conn.exec(sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
@@ -155,6 +166,8 @@ proc delete*(self: SurrealDb, id: SurrealId){.async.} =
 
 proc get*(self: RawQuerySurrealDb):Future[seq[JsonNode]]{.async.} =
   ## It is only used with raw()
+  ## https://surrealdb.com/docs/integration/http#sql
+  ## https://surrealdb.com/docs/surrealql
   try:
     self.log.logger(self.queryString, self.placeHolder)
     return getAllRows(self, self.queryString, self.placeHolder).await
@@ -165,6 +178,8 @@ proc get*(self: RawQuerySurrealDb):Future[seq[JsonNode]]{.async.} =
 
 
 proc first*(self: RawQuerySurrealDb):Future[Option[JsonNode]] {.async.} =
+  ## https://surrealdb.com/docs/integration/http#sql
+  ## https://surrealdb.com/docs/surrealql
   try:
     self.log.logger(self.queryString, self.placeHolder)
     return getRow(self, self.queryString, self.placeHolder).await
@@ -176,6 +191,8 @@ proc first*(self: RawQuerySurrealDb):Future[Option[JsonNode]] {.async.} =
 
 proc exec*(self: RawQuerySurrealDb){.async.} =
   ## It is only used with raw()
+  ## https://surrealdb.com/docs/integration/http#sql
+  ## https://surrealdb.com/docs/surrealql
   try:
     self.log.logger(self.queryString, self.placeHolder)
     self.conn.exec(self.queryString, self.placeHolder).await
@@ -186,6 +203,8 @@ proc exec*(self: RawQuerySurrealDb){.async.} =
 
 proc info*(self: RawQuerySurrealDb):Future[JsonNode] {.async.} =
   ## Get all response.
+  ## https://surrealdb.com/docs/integration/http#sql
+  ## https://surrealdb.com/docs/surrealql
   try:
     self.log.logger(self.queryString, self.placeHolder)
     return self.conn.info(self.queryString, self.placeHolder).await
@@ -208,7 +227,7 @@ proc count*(self:SurrealDb):Future[int]{.async.} =
 
 
 proc max*(self:SurrealDb, column:string, collaction:Collation=None):Future[int]{.async.} =
-  ## = ORDER BY {column} {collaction} DESC LIMIT 1
+  ## = `ORDER BY {column} {collaction} DESC LIMIT 1`
   let self = self.orderBy(column, collaction, Desc).limit(1)
   let sql = self.selectFirstBuilder()
   self.log.logger(sql, self.placeHolder)
@@ -220,7 +239,7 @@ proc max*(self:SurrealDb, column:string, collaction:Collation=None):Future[int]{
 
 
 proc min*(self:SurrealDb, column:string, collaction:Collation=None):Future[int]{.async.} =
-  ## = ORDER BY {column} {collaction} ASC LIMIT 1
+  ## = `ORDER BY {column} {collaction} ASC LIMIT 1`
   let self = self.orderBy(column, collaction, Asc).limit(1)
   let sql = self.selectFirstBuilder()
   self.log.logger(sql, self.placeHolder)
