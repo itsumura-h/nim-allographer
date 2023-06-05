@@ -1,1 +1,1 @@
-transaction	query_builder/rdb/query/transaction.html#transaction.m,untyped,untyped	transaction: transaction(rdb: untyped; callback: untyped): untyped	
+transaction	query_builder/rdb/query/transaction.html#transaction.t,Rdb,untyped	transaction: transaction(rdb: Rdb; callback: untyped)	

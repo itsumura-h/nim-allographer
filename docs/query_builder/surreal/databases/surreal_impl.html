@@ -122,6 +122,13 @@ window.addEventListener('DOMContentLoaded', main);
     Future[void])</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">info
+      <li><a class="reference" href="#info%2CSurrealConn%2Cstring%2Cseq%5Bstring%5D%2Cint"
+    title="info(db: SurrealConn; query: string; args: seq[string]; timeout: int): Future[
+    JsonNode]">info(db: SurrealConn; query: string; args: seq[string]; timeout: int): Future[
+    JsonNode]</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">open
       <li><a class="reference" href="#open%2CtypeSurrealImpl%2Cstring%2Cstring%2Cstring%2Cstring%2Cstring%2Cint32%2Cint%2Cint"
     title="open(_: type SurrealImpl; namespace = &quot;&quot;; database = &quot;&quot;; user = &quot;&quot;;
@@ -181,6 +188,16 @@ window.addEventListener('DOMContentLoaded', main);
 
 </dd>
 </div>
+<div id="info,SurrealConn,string,seq[string],int">
+<dt><pre><span class="Keyword">proc</span> <a href="#info%2CSurrealConn%2Cstring%2Cseq%5Bstring%5D%2Cint"><span class="Identifier">info</span></a><span class="Other">(</span><span class="Identifier">db</span><span class="Other">:</span> <a href="surreal_rdb.html#SurrealConn"><span class="Identifier">SurrealConn</span></a><span class="Other">;</span> <span class="Identifier">query</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">timeout</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span>
+    <span class="Identifier">JsonNode</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+                <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
 <div id="open,typeSurrealImpl,string,string,string,string,string,int32,int,int">
 <dt><pre><span class="Keyword">proc</span> <a href="#open%2CtypeSurrealImpl%2Cstring%2Cstring%2Cstring%2Cstring%2Cstring%2Cint32%2Cint%2Cint"><span class="Identifier">open</span></a><span class="Other">(</span><span class="Operator">_</span><span class="Other">:</span> <span class="Keyword">type</span> <span class="Identifier">SurrealImpl</span><span class="Other">;</span> <span class="Identifier">namespace</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> <span class="Identifier">database</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> <span class="Identifier">user</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span>
           <span class="Identifier">password</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> <span class="Identifier">host</span> <span class="Other">=</span> <span class="StringLit">&quot;&quot;</span><span class="Other">;</span> <span class="Identifier">port</span><span class="Other">:</span> <span class="Identifier">int32</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">;</span> <span class="Identifier">maxConnections</span> <span class="Other">=</span> <span class="DecNumber">1</span><span class="Other">;</span>
@@ -211,7 +228,7 @@ return JArray
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-05-31 09:16:02 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-06-05 05:44:02 UTC</small>
       </div>
     </div>
   </div>

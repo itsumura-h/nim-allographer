@@ -926,10 +926,14 @@ window.addEventListener('DOMContentLoaded', main);
 <dt><a name="count" href="#count"><span>count:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="rdb_interface: count(self: Rdb): Future[int]" href="query_builder/rdb/rdb_interface.html#count%2CRdb">rdb_interface: count(self: Rdb): Future[int]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="surreal_interface: count(self: SurrealDb): Future[int]" href="query_builder/surreal/surreal_interface.html#count%2CSurrealDb">surreal_interface: count(self: SurrealDb): Future[int]</a></li>
           </ul></dd>
 <dt><a name="countBuilder" href="#countBuilder"><span>countBuilder:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="builder: countBuilder(self: Rdb): string" href="query_builder/rdb/query/builder.html#countBuilder%2CRdb">builder: countBuilder(self: Rdb): string</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="builder: countBuilder(self: SurrealDb): string" href="query_builder/surreal/query/builder.html#countBuilder%2CSurrealDb">builder: countBuilder(self: SurrealDb): string</a></li>
           </ul></dd>
 <dt><a name="COUNT_ERROR" href="#COUNT_ERROR"><span>COUNT_ERROR:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -2228,6 +2232,16 @@ window.addEventListener('DOMContentLoaded', main);
           data-doc-search-tag="mariadb_rdb: info(MySQL: PMySQL): cstring" href="query_builder/rdb/databases/mariadb/mariadb_rdb.html#info%2CPMySQL">mariadb_rdb: info(MySQL: PMySQL): cstring</a></li>
           <li><a class="reference external"
           data-doc-search-tag="mysql_rdb: info(MySQL: PMySQL): cstring" href="query_builder/rdb/databases/mysql/mysql_rdb.html#info%2CPMySQL">mysql_rdb: info(MySQL: PMySQL): cstring</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="surreal_impl: info(db: SurrealConn; query: string; args: seq[string]; timeout: int): Future[
+    JsonNode]" href="query_builder/surreal/databases/surreal_impl.html#info%2CSurrealConn%2Cstring%2Cseq%5Bstring%5D%2Cint">surreal_impl: info(db: SurrealConn; query: string; args: seq[string]; timeout: int): Future[
+    JsonNode]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="exec: info(self: SurrealConnections; query: string; args: seq[string] = @[];
+     specifiedConnI = false; connI = 0): Future[JsonNode]" href="query_builder/surreal/query/exec.html#info%2CSurrealConnections%2Cstring%2Cseq%5Bstring%5D%2Cint">exec: info(self: SurrealConnections; query: string; args: seq[string] = @[];
+     specifiedConnI = false; connI = 0): Future[JsonNode]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="surreal_interface: info(self: RawQuerySurrealDb): Future[JsonNode]" href="query_builder/surreal/surreal_interface.html#info%2CRawQuerySurrealDb">surreal_interface: info(self: RawQuerySurrealDb): Future[JsonNode]</a></li>
           </ul></dd>
 <dt><a name="init" href="#init"><span>init:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -2740,6 +2754,8 @@ window.addEventListener('DOMContentLoaded', main);
 <dt><a name="max" href="#max"><span>max:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="rdb_interface: max(self: Rdb; column: string): Future[Option[string]]" href="query_builder/rdb/rdb_interface.html#max%2CRdb%2Cstring">rdb_interface: max(self: Rdb; column: string): Future[Option[string]]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="surreal_interface: max(self: SurrealDb; column: string; collaction: Collation = None): Future[int]" href="query_builder/surreal/surreal_interface.html#max%2CSurrealDb%2Cstring%2CCollation">surreal_interface: max(self: SurrealDb; column: string; collaction: Collation = None): Future[int]</a></li>
           </ul></dd>
 <dt><a name="MAX_BIGINT_WIDTH" href="#MAX_BIGINT_WIDTH"><span>MAX_BIGINT_WIDTH:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -2832,6 +2848,8 @@ window.addEventListener('DOMContentLoaded', main);
 <dt><a name="min" href="#min"><span>min:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="rdb_interface: min(self: Rdb; column: string): Future[Option[string]]" href="query_builder/rdb/rdb_interface.html#min%2CRdb%2Cstring">rdb_interface: min(self: Rdb; column: string): Future[Option[string]]</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="surreal_interface: min(self: SurrealDb; column: string; collaction: Collation = None): Future[int]" href="query_builder/surreal/surreal_interface.html#min%2CSurrealDb%2Cstring%2CCollation">surreal_interface: min(self: SurrealDb; column: string; collaction: Collation = None): Future[int]</a></li>
           </ul></dd>
 <dt><a name="minBuilder" href="#minBuilder"><span>minBuilder:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -5176,6 +5194,8 @@ window.addEventListener('DOMContentLoaded', main);
 <dt><a name="selectCountSql" href="#selectCountSql"><span>selectCountSql:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="generator: selectCountSql(self: Rdb): Rdb" href="query_builder/rdb/query/generator.html#selectCountSql%2CRdb">generator: selectCountSql(self: Rdb): Rdb</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="generator: selectCountSql(self: SurrealDb): SurrealDb" href="query_builder/surreal/query/generator.html#selectCountSql%2CSurrealDb">generator: selectCountSql(self: SurrealDb): SurrealDb</a></li>
           </ul></dd>
 <dt><a name="select_db" href="#select_db"><span>select_db:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -5204,6 +5224,8 @@ window.addEventListener('DOMContentLoaded', main);
 <dt><a name="selectMaxSql" href="#selectMaxSql"><span>selectMaxSql:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
           data-doc-search-tag="generator: selectMaxSql(self: Rdb; column: string): Rdb" href="query_builder/rdb/query/generator.html#selectMaxSql%2CRdb%2Cstring">generator: selectMaxSql(self: Rdb; column: string): Rdb</a></li>
+          <li><a class="reference external"
+          data-doc-search-tag="generator: selectMaxSql(self: SurrealDb; column: string): SurrealDb" href="query_builder/surreal/query/generator.html#selectMaxSql%2CSurrealDb%2Cstring">generator: selectMaxSql(self: SurrealDb; column: string): SurrealDb</a></li>
           </ul></dd>
 <dt><a name="selectMinSql" href="#selectMinSql"><span>selectMinSql:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -6395,7 +6417,7 @@ window.addEventListener('DOMContentLoaded', main);
           </ul></dd>
 <dt><a name="transaction" href="#transaction"><span>transaction:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
-          data-doc-search-tag="transaction: transaction(rdb: untyped; callback: untyped): untyped" href="query_builder/rdb/query/transaction.html#transaction.m%2Cuntyped%2Cuntyped">transaction: transaction(rdb: untyped; callback: untyped): untyped</a></li>
+          data-doc-search-tag="transaction: transaction(rdb: Rdb; callback: untyped)" href="query_builder/rdb/query/transaction.html#transaction.t%2CRdb%2Cuntyped">transaction: transaction(rdb: Rdb; callback: untyped)</a></li>
           </ul></dd>
 <dt><a name="transactionEnd" href="#transactionEnd"><span>transactionEnd:</span></a></dt><dd><ul class="simple">
 <li><a class="reference external"
@@ -6824,7 +6846,7 @@ window.addEventListener('DOMContentLoaded', main);
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-05-31 09:16:03 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-06-05 05:44:02 UTC</small>
       </div>
     </div>
   </div>

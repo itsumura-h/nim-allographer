@@ -18,3 +18,5 @@ updateValuesSql	query_builder/surreal/query/generator.html#updateValuesSql,Surre
 updateMergeSql	query_builder/surreal/query/generator.html#updateMergeSql,SurrealDb,string,JsonNode	generator: updateMergeSql(self: SurrealDb; id: string; items: JsonNode): SurrealDb	
 deleteSql	query_builder/surreal/query/generator.html#deleteSql,SurrealDb	generator: deleteSql(self: SurrealDb): SurrealDb	
 deleteByIdSql	query_builder/surreal/query/generator.html#deleteByIdSql,SurrealDb,string	generator: deleteByIdSql(self: SurrealDb; id: string): SurrealDb	
+selectCountSql	query_builder/surreal/query/generator.html#selectCountSql,SurrealDb	generator: selectCountSql(self: SurrealDb): SurrealDb	
+selectMaxSql	query_builder/surreal/query/generator.html#selectMaxSql,SurrealDb,string	generator: selectMaxSql(self: SurrealDb; column: string): SurrealDb	

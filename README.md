@@ -5,7 +5,8 @@ allographer
 ![Build Status](https://github.com/itsumura-h/nim-allographer/workflows/Build%20and%20test%20Nim/badge.svg)
 
 
-An asynchronous query builder library inspired by [Laravel/PHP](https://readouble.com/laravel/6.0/en/queries.html) and [Orator/Python](https://orator-orm.com) for Nim
+An asynchronous query builder library inspired by [Laravel/PHP](https://readouble.com/laravel/6.0/en/queries.html) and [Orator/Python](https://orator-orm.com) for Nim.  
+Supported Databases are [Sqlite3](https://www.sqlite.org/index.html), [PostgreSQL](https://www.postgresql.org/), [MySQL](https://www.mysql.com/), [MariaDB](https://mariadb.org/) and [SurrealDB](https://surrealdb.com/).
 
 ## Easy to access Rdb
 ### Query Builder
@@ -21,6 +22,7 @@ let rdb = dbOpen(PostgreSql, "database", "user", "password" "localhost", 5432, m
 # let rdb = dbOpen(Sqlite3, "/path/to/db/sqlite3.db", maxConnections=maxConnections, timeout=timeout)
 # let rdb = dbOpen(MySQL, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
 # let rdb = dbOpen(MariaDB, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
+# let surreal = dbOpen(SurrealDb, "test_ns" "test_db", "user", "password" "http://localhost", 8000, maxConnections, timeout)
 
 proc main(){.async.} =
   let result = await rdb
@@ -116,7 +118,7 @@ nimble install allographer
 If you get `SIGSEGV: Illegal storage access. (Attempt to read from nil?)` when trying to use the database you likely have a problem with the library path. On OS X the default is to check for the `brew --prefix` of the chosen driver, if that doesn't work it will look in `/usr/lib` or an environment variable `DYLD_xxx_PATH` where `xxx` if your driver: `SQLITE`, `MARIADB`, `MYSQL` or `POSTGRES`.
 
 ## Configuation
-Allographer loads emvironment variables of `DB_SQLITE`, `DB_POSTGRES`, `DB_MYSQL` and `DB_MARIADB` to define which process should be **compiled**.<br>
+Allographer loads emvironment variables of `DB_SQLITE`, `DB_POSTGRES`, `DB_MYSQL` `DB_MARIADB` and `DB_SURREAL` to define which process should be **compiled**.<br>
 These environment variables have to be set at compile time, so they have to be written in `config.nims` not in `.env`.
 
 config.nims
@@ -141,6 +143,7 @@ let rdb* = dbOpen(PostgreSql, "database", "user", "password" "localhost", 5432, 
 let sqliteRdb* = dbOpen(Sqlite3, "/path/to/db/sqlite3.db", maxConnections=maxConnections, timeout=timeout)
 let mysqlRdb* = dbOpen(MySQL, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
 let mariaRdb* = dbOpen(MariaDB, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
+let surrealDb* = dbOpen(SurrealDb, "test_ns" "test_db", "user", "password" "http://localhost", 8000, maxConnections, timeout)
 ```
 
 Then, call connection when you run query.
@@ -170,21 +173,27 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 
 
 ## Documents
-[Query Builder](./documents/query_builder.md)  
-[Schema Builder](./documents/schema_builder.md)  
+[Query Builder for RDB](./documents/rdb/query_builder.md)  
+[Schema Builder for RDB](./documents/rdb/schema_builder.md)  
+[Query Builder for SurrealDB](./documents/surrealdb/query_builder.md)  
 
 ## Nim API Documents
 [connection](https://itsumura-h.github.io/nim-allographer/connection.html)  
 
-### Query Builder
-[base](https://itsumura-h.github.io/nim-allographer/base.html)  
-[grammars](https://itsumura-h.github.io/nim-allographer/query_builder/grammars.html)  
-[exec](https://itsumura-h.github.io/nim-allographer/query_builder/exec.html)  
-[async_db](https://itsumura-h.github.io/nim-allographer/async/async_db.html)  
+### Query Builder for RDB
+[rdb_types](https://itsumura-h.github.io/nim-allographer/query_builder/rdb/rdb_types.html)  
+[rdb_interface](https://itsumura-h.github.io/nim-allographer/query_builder/rdb/rdb_interface.html)  
+[grammars](https://itsumura-h.github.io/nim-allographer/query_builder/rdb/query/grammar.html)  
+[exec](https://itsumura-h.github.io/nim-allographer/query_builder/rdb/exec.html)  
 
-### Schema Builder
+### Schema Builder for RDB
 [schema](https://itsumura-h.github.io/nim-allographer/schema_builder/schema.html)  
 [grammar](https://itsumura-h.github.io/nim-allographer/schema_builder/grammars.html)  
+
+### Query Builder for SurrealDB
+[rdb_types](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/surreal_types.html)  
+[rdb_interface](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/surreal_interface.html)  
+[grammars](https://itsumura-h.github.io/nim-allographer/query_builder/rdb/query/grammar.html)  
 
 
 ## Development

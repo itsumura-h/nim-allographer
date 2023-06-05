@@ -114,6 +114,13 @@ window.addEventListener('DOMContentLoaded', main);
      specifiedConnI = false; connI = 0): owned(Future[void])</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">info
+      <li><a class="reference" href="#info%2CSurrealConnections%2Cstring%2Cseq%5Bstring%5D%2Cint"
+    title="info(self: SurrealConnections; query: string; args: seq[string] = @[];
+     specifiedConnI = false; connI = 0): Future[JsonNode]">info(self: SurrealConnections; query: string; args: seq[string] = @[];
+     specifiedConnI = false; connI = 0): Future[JsonNode]</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">query
       <li><a class="reference" href="#query%2CSurrealConnections%2Cstring%2Cseq%5Bstring%5D%2Cint"
     title="query(self: SurrealConnections; query: string; args: seq[string] = @[];
@@ -152,6 +159,17 @@ window.addEventListener('DOMContentLoaded', main);
 
 </dd>
 </div>
+<div id="info,SurrealConnections,string,seq[string],int">
+<dt><pre><span class="Keyword">proc</span> <a href="#info%2CSurrealConnections%2Cstring%2Cseq%5Bstring%5D%2Cint"><span class="Identifier">info</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../databases/surreal_rdb.html#SurrealConnections"><span class="Identifier">SurrealConnections</span></a><span class="Other">;</span> <span class="Identifier">query</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span> <span class="Other">=</span> <span class="Operator">@</span><span class="Other">[</span><span class="Other">]</span><span class="Other">;</span>
+          <span class="Identifier">specifiedConnI</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">;</span> <span class="Identifier">connI</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
 <div id="query,SurrealConnections,string,seq[string],int">
 <dt><pre><span class="Keyword">proc</span> <a href="#query%2CSurrealConnections%2Cstring%2Cseq%5Bstring%5D%2Cint"><span class="Identifier">query</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../databases/surreal_rdb.html#SurrealConnections"><span class="Identifier">SurrealConnections</span></a><span class="Other">;</span> <span class="Identifier">query</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span> <span class="Other">=</span> <span class="Operator">@</span><span class="Other">[</span><span class="Other">]</span><span class="Other">;</span>
            <span class="Identifier">specifiedConnI</span> <span class="Other">=</span> <span class="Identifier">false</span><span class="Other">;</span> <span class="Identifier">connI</span> <span class="Other">=</span> <span class="DecNumber">0</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span> {.
@@ -173,7 +191,7 @@ window.addEventListener('DOMContentLoaded', main);
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-05-31 09:16:02 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-06-05 05:44:02 UTC</small>
       </div>
     </div>
   </div>

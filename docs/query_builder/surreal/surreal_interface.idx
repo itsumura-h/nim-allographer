@@ -12,3 +12,7 @@ delete	query_builder/surreal/surreal_interface.html#delete,SurrealDb,SurrealId	s
 get	query_builder/surreal/surreal_interface.html#get,RawQuerySurrealDb	surreal_interface: get(self: RawQuerySurrealDb): Future[seq[JsonNode]]	
 first	query_builder/surreal/surreal_interface.html#first,RawQuerySurrealDb	surreal_interface: first(self: RawQuerySurrealDb): Future[Option[JsonNode]]	
 exec	query_builder/surreal/surreal_interface.html#exec,RawQuerySurrealDb	surreal_interface: exec(self: RawQuerySurrealDb): owned(Future[void])	
+info	query_builder/surreal/surreal_interface.html#info,RawQuerySurrealDb	surreal_interface: info(self: RawQuerySurrealDb): Future[JsonNode]	
+count	query_builder/surreal/surreal_interface.html#count,SurrealDb	surreal_interface: count(self: SurrealDb): Future[int]	
+max	query_builder/surreal/surreal_interface.html#max,SurrealDb,string,Collation	surreal_interface: max(self: SurrealDb; column: string; collaction: Collation = None): Future[int]	
+min	query_builder/surreal/surreal_interface.html#min,SurrealDb,string,Collation	surreal_interface: min(self: SurrealDb; column: string; collaction: Collation = None): Future[int]	

@@ -172,9 +172,19 @@ window.addEventListener('DOMContentLoaded', main);
     title="selectByIdSql(self: SurrealDb; key: string): SurrealDb">selectByIdSql(self: SurrealDb; key: string): SurrealDb</a></li>
 
   </ul>
+  <ul class="simple nested-toc-section">selectCountSql
+      <li><a class="reference" href="#selectCountSql%2CSurrealDb"
+    title="selectCountSql(self: SurrealDb): SurrealDb">selectCountSql(self: SurrealDb): SurrealDb</a></li>
+
+  </ul>
   <ul class="simple nested-toc-section">selectFirstSql
       <li><a class="reference" href="#selectFirstSql%2CSurrealDb"
     title="selectFirstSql(self: SurrealDb): SurrealDb">selectFirstSql(self: SurrealDb): SurrealDb</a></li>
+
+  </ul>
+  <ul class="simple nested-toc-section">selectMaxSql
+      <li><a class="reference" href="#selectMaxSql%2CSurrealDb%2Cstring"
+    title="selectMaxSql(self: SurrealDb; column: string): SurrealDb">selectMaxSql(self: SurrealDb; column: string): SurrealDb</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">selectSql
@@ -342,8 +352,26 @@ window.addEventListener('DOMContentLoaded', main);
 
 </dd>
 </div>
+<div id="selectCountSql,SurrealDb">
+<dt><pre><span class="Keyword">proc</span> <a href="#selectCountSql%2CSurrealDb"><span class="Identifier">selectCountSql</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../surreal_types.html#SurrealDb"><span class="Identifier">SurrealDb</span></a><span class="Other">)</span><span class="Other">:</span> <a href="../surreal_types.html#SurrealDb"><span class="Identifier">SurrealDb</span></a> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">KeyError</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
 <div id="selectFirstSql,SurrealDb">
 <dt><pre><span class="Keyword">proc</span> <a href="#selectFirstSql%2CSurrealDb"><span class="Identifier">selectFirstSql</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../surreal_types.html#SurrealDb"><span class="Identifier">SurrealDb</span></a><span class="Other">)</span><span class="Other">:</span> <a href="../surreal_types.html#SurrealDb"><span class="Identifier">SurrealDb</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="selectMaxSql,SurrealDb,string">
+<dt><pre><span class="Keyword">proc</span> <a href="#selectMaxSql%2CSurrealDb%2Cstring"><span class="Identifier">selectMaxSql</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../surreal_types.html#SurrealDb"><span class="Identifier">SurrealDb</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="../surreal_types.html#SurrealDb"><span class="Identifier">SurrealDb</span></a> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
@@ -414,7 +442,7 @@ window.addEventListener('DOMContentLoaded', main);
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-05-31 09:16:02 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-06-05 05:44:02 UTC</small>
       </div>
     </div>
   </div>
