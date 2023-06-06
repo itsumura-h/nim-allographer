@@ -1,12 +1,13 @@
 
 ## index
 <!--ts-->
-      * [index](#index)
-      * [JInt](#jint)
-      * [JFloat](#jfloat)
-      * [JBool](#jbool)
+   * [index](#index)
+   * [JInt](#jint)
+   * [JFloat](#jfloat)
+   * [JBool](#jbool)
 
-<!-- Added by: root, at: Tue Feb 22 03:12:01 UTC 2022 -->
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
+<!-- Added by: root, at: Tue Jun  6 05:22:52 UTC 2023 -->
 
 <!--te-->
 ---

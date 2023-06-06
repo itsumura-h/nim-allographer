@@ -24,17 +24,17 @@ suite("surreal type"):
     let alice = surreal.table("user").where("name", "=", "alice").first().waitFor().get()
     check aliceId.rawId() == alice["id"].getStr()
     check aliceId.table == alice["id"].getStr().split(":")[0]
-    check aliceId.id == alice["id"].getStr().split(":")[1]
+    check $aliceId == alice["id"].getStr().split(":")[1]
 
     let alice2 = SurrealId.new(aliceId.rawId())
     check alice2.rawId() == alice["id"].getStr()
     check alice2.table == alice["id"].getStr().split(":")[0]
-    check alice2.id == alice["id"].getStr().split(":")[1]
+    check $alice2 == alice["id"].getStr().split(":")[1]
 
-    let alice3 = SurrealId.new(aliceId.table, aliceId.id)
+    let alice3 = SurrealId.new(aliceId.table, $aliceId)
     check alice3.rawId() == alice["id"].getStr()
     check alice3.table == alice["id"].getStr().split(":")[0]
-    check alice3.id == alice["id"].getStr().split(":")[1]
+    check $alice3 == alice["id"].getStr().split(":")[1]
 
 
 suite("surreal query"):

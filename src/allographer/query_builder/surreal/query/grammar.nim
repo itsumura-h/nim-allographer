@@ -63,7 +63,10 @@ proc where*(self: SurrealDb, column: string, symbol: string,
       whereSymbolsError
     )
 
-  self.placeHolder.add($value)
+  when value.type is SurrealId:
+    self.placeHolder.add(value.rawId())
+  else:
+    self.placeHolder.add($value)
 
   if self.query.hasKey("where") == false:
     self.query["where"] = %*[{
@@ -114,7 +117,10 @@ proc orWhere*(self: SurrealDb, column: string, symbol: string,
       whereSymbolsError
     )
 
-  self.placeHolder.add($value)
+  when value.type is SurrealId:
+    self.placeHolder.add(value.rawId())
+  else:
+    self.placeHolder.add($value)
 
   if self.query.hasKey("or_where") == false:
     self.query["or_where"] = %*[{

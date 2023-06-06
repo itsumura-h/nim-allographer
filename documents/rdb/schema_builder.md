@@ -4,26 +4,27 @@ Example: Schema Builder
 
 ## index
 <!--ts-->
-   * [Example: Schema Builder](#example-schema-builder)
-      * [index](#index)
-      * [Create table](#create-table)
-      * [Alter Table](#alter-table)
-         * [add column](#add-column)
-         * [change column](#change-column)
-         * [delete column](#delete-column)
-         * [rename table](#rename-table)
-         * [drop table](#drop-table)
-      * [Migration history](#migration-history)
-         * [seeder template](#seeder-template)
-      * [integer](#integer)
-      * [float](#float)
-      * [char](#char)
-      * [date](#date)
-      * [others](#others)
-      * [options](#options)
-      * [Foreign Key Constraints](#foreign-key-constraints)
+* [Example: Schema Builder](#example-schema-builder)
+   * [index](#index)
+   * [Create table](#create-table)
+   * [Alter Table](#alter-table)
+      * [add column](#add-column)
+      * [change column](#change-column)
+      * [delete column](#delete-column)
+      * [rename table](#rename-table)
+      * [drop table](#drop-table)
+   * [Migration history](#migration-history)
+      * [seeder template](#seeder-template)
+   * [integer](#integer)
+   * [float](#float)
+   * [char](#char)
+   * [date](#date)
+   * [others](#others)
+   * [options](#options)
+   * [Foreign Key Constraints](#foreign-key-constraints)
 
-<!-- Added by: root, at: Tue Feb 22 03:11:52 UTC 2022 -->
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
+<!-- Added by: root, at: Tue Jun  6 05:22:48 UTC 2023 -->
 
 <!--te-->
 ---
