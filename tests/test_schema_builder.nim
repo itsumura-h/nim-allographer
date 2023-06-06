@@ -101,9 +101,9 @@ for rdb in dbConnections:
 
         rdb.table("schema_builder").insert(%*{
           "increments_column": 1,
-          "integer_column": 1,
-          "smallInteger_column": 1,
-          "mediumInteger_column": 1,
+          "integer_column": 0,
+          "smallInteger_column": 0,
+          "mediumInteger_column": 0,
           "bigInteger_column": 1,
           "decimal_column": 111.11,
           "double_column": 111.11,
