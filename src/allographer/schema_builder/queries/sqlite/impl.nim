@@ -23,7 +23,7 @@ proc intGenerator*(column:Column):string =
     result.add(&" DEFAULT {column.defaultInt}")
 
   if column.isUnsigned:
-    result.add(&" CHECK ({column.name} > 0)")
+    result.add(&" CHECK ({column.name} >= 0)")
 
 # =============================================================================
 # float
