@@ -106,7 +106,7 @@ rdb.alter(
       * [Branch naming rule](#branch-naming-rule)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
-<!-- Added by: root, at: Mon Jun  5 14:15:02 UTC 2023 -->
+<!-- Added by: root, at: Tue Jun  6 05:22:34 UTC 2023 -->
 
 <!--te-->
 ---

@@ -4,6 +4,33 @@ Example: Query Builder for SurrealDB
 
 ## index
 <!--ts-->
+* [Example: Query Builder for SurrealDB](#example-query-builder-for-surrealdb)
+   * [index](#index)
+   * [About SurrealDB](#about-surrealdb)
+   * [Create Connection](#create-connection)
+   * [SELECT](#select)
+      * [get](#get)
+      * [first](#first)
+      * [find](#find)
+      * [where](#where)
+      * [fetch](#fetch)
+   * [INSERT](#insert)
+      * [insert single row](#insert-single-row)
+      * [insert rows](#insert-rows)
+      * [insertId](#insertid)
+   * [UPDATE](#update)
+   * [DELETE](#delete)
+   * [delete all](#delete-all)
+   * [delete row](#delete-row)
+   * [Raw Query](#raw-query)
+   * [Aggregates](#aggregates)
+      * [count](#count)
+      * [max](#max)
+      * [min](#min)
+
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
+<!-- Added by: root, at: Tue Jun  6 05:22:57 UTC 2023 -->
+
 <!--te-->
 
 ---
@@ -28,6 +55,8 @@ let surreal = dbOpen(SurrealDb, "test", "test", "user", "pass", "http://surreal"
 
 ## SELECT
 [to index](#index)
+
+https://surrealdb.com/docs/surrealql/statements/select
 
 When it returns following table
 
@@ -179,6 +208,8 @@ if alice.isSome():
 ## INSERT
 [to index](#index)
 
+https://surrealdb.com/docs/surrealql/statements/insert
+
 ### insert single row
 ```nim
 surreal.table("type").insert(%*{
@@ -233,6 +264,8 @@ type:9nxye3dons0juyelv5if
 ## UPDATE
 [to index](#index)
 
+https://surrealdb.com/docs/surrealql/statements/update
+
 ```nim
 let id = surreal.table("type").insertId(%*{
   "bool":true,
@@ -263,6 +296,7 @@ if res.isSome():
 ## DELETE
 [to index](#index)
 
+https://surrealdb.com/docs/surrealql/statements/delete
 
 ## delete all
 ```nim
@@ -323,7 +357,7 @@ echo surreal.table("type").get().await
 ]
 ```
 
-## Raw_SQL
+## Raw Query
 [to index](#INDEX)
 
 `raw()` returns `RawQuerySurrealDb` type.  

@@ -4,37 +4,39 @@ Example: Query Builder for RDB
 
 ## index
 <!--ts-->
-   * [Example: Query Builder](#example-query-builder)
-      * [index](#index)
-      * [SELECT](#select)
-         * [return JsonNode](#return-jsonnode)
-         * [return Object](#return-object)
-         * [get](#get)
-         * [first](#first)
-         * [find](#find)
-         * [join](#join)
-         * [where](#where)
-         * [orWhere](#orwhere)
-         * [whereBetween](#wherebetween)
-         * [whereNotBetween](#wherenotbetween)
-         * [whereIn](#wherein)
-         * [whereNotIn](#wherenotin)
-         * [whereNull](#wherenull)
-         * [groupBy_having](#groupby_having)
-         * [orderBy](#orderby)
-         * [limit_offset](#limit_offset)
-         * [paginate](#paginate)
-         * [fastPaginate](#fastpaginate)
-      * [INSERT](#insert)
-         * [Return ID Insert](#return-id-insert)
-      * [UPDATE](#update)
-      * [DELETE](#delete)
-      * [Plain Response](#plain-response)
-      * [Raw_SQL](#raw_sql)
-      * [Aggregates](#aggregates)
-      * [Transaction](#transaction)
+* [Example: Query Builder for RDB](#example-query-builder-for-rdb)
+   * [index](#index)
+   * [Create Connection](#create-connection)
+   * [SELECT](#select)
+      * [return JsonNode](#return-jsonnode)
+      * [return Object](#return-object)
+      * [get](#get)
+      * [first](#first)
+      * [find](#find)
+      * [join](#join)
+      * [where](#where)
+      * [orWhere](#orwhere)
+      * [whereBetween](#wherebetween)
+      * [whereNotBetween](#wherenotbetween)
+      * [whereIn](#wherein)
+      * [whereNotIn](#wherenotin)
+      * [whereNull](#wherenull)
+      * [groupBy_having](#groupby_having)
+      * [orderBy](#orderby)
+      * [limit_offset](#limit_offset)
+      * [paginate](#paginate)
+      * [fastPaginate](#fastpaginate)
+   * [INSERT](#insert)
+      * [Return ID Insert](#return-id-insert)
+   * [UPDATE](#update)
+   * [DELETE](#delete)
+   * [Plain Response](#plain-response)
+   * [Raw SQL](#raw-sql)
+   * [Aggregates](#aggregates)
+   * [Transaction](#transaction)
 
-<!-- Added by: root, at: Tue Feb 22 03:11:57 UTC 2022 -->
+<!-- Created by https://github.com/ekalinin/github-markdown-toc -->
+<!-- Added by: root, at: Tue Jun  6 05:22:39 UTC 2023 -->
 
 <!--te-->
 ---
@@ -625,7 +627,7 @@ echo rdb.table("users").firstPlain().await
 >> @["1", "user1", "user1@gmail.com"]
 ```
 
-## Raw_SQL
+## Raw SQL
 [to index](#INDEX)
 
 ```nim
