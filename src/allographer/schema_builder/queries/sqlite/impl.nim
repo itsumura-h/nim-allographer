@@ -41,7 +41,7 @@ proc decimalGenerator*(column:Column):string =
     result.add(&" DEFAULT {column.defaultFloat}")
 
   if column.isUnsigned:
-    result.add(&" CHECK ({column.name} > 0)")
+    result.add(&" CHECK ({column.name} >= 0)")
 
 proc floatGenerator*(column:Column):string =
   result = &"'{column.name}' REAL"
@@ -56,7 +56,7 @@ proc floatGenerator*(column:Column):string =
     result.add(&" DEFAULT {column.defaultFloat}")
 
   if column.isUnsigned:
-    result.add(&" CHECK ({column.name} > 0)")
+    result.add(&" CHECK ({column.name} >= 0)")
 
 # =============================================================================
 # char

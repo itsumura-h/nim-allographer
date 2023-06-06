@@ -119,7 +119,7 @@ proc decimalGenerator*(column:Column, table:Table, isAlter=false):string =
     result.add(&" DEFAULT {column.defaultFloat}")
 
   if column.isUnsigned:
-    result.add(&" CHECK (\"{column.name}\" > 0)")
+    result.add(&" CHECK (\"{column.name}\" >= 0)")
 
 proc doubleGenerator*(column:Column, table:Table, isAlter=false):string =
   let maximum = column.info["maximum"].getInt
@@ -142,7 +142,7 @@ proc doubleGenerator*(column:Column, table:Table, isAlter=false):string =
     result.add(&" DEFAULT {column.defaultFloat}")
 
   if column.isUnsigned:
-    result.add(&" CHECK (\"{column.name}\" > 0)")
+    result.add(&" CHECK (\"{column.name}\" >= 0)")
 
 proc floatGenerator*(column:Column, table:Table, isAlter=false):string =
   if isAlter:
@@ -163,7 +163,7 @@ proc floatGenerator*(column:Column, table:Table, isAlter=false):string =
     result.add(&" DEFAULT {column.defaultFloat}")
 
   if column.isUnsigned:
-    result.add(&" CHECK (\"{column.name}\" > 0)")
+    result.add(&" CHECK (\"{column.name}\" >= 0)")
 
 # =============================================================================
 # char
