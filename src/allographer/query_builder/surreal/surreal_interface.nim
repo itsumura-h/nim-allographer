@@ -166,7 +166,9 @@ proc delete*(self: SurrealDb, id: SurrealId){.async.} =
 
 proc get*(self: RawQuerySurrealDb):Future[seq[JsonNode]]{.async.} =
   ## It is only used with raw()
+  ## 
   ## https://surrealdb.com/docs/integration/http#sql
+  ## 
   ## https://surrealdb.com/docs/surrealql
   try:
     self.log.logger(self.queryString, self.placeHolder)
@@ -179,6 +181,7 @@ proc get*(self: RawQuerySurrealDb):Future[seq[JsonNode]]{.async.} =
 
 proc first*(self: RawQuerySurrealDb):Future[Option[JsonNode]] {.async.} =
   ## https://surrealdb.com/docs/integration/http#sql
+  ## 
   ## https://surrealdb.com/docs/surrealql
   try:
     self.log.logger(self.queryString, self.placeHolder)
@@ -191,7 +194,9 @@ proc first*(self: RawQuerySurrealDb):Future[Option[JsonNode]] {.async.} =
 
 proc exec*(self: RawQuerySurrealDb){.async.} =
   ## It is only used with raw()
+  ## 
   ## https://surrealdb.com/docs/integration/http#sql
+  ## 
   ## https://surrealdb.com/docs/surrealql
   try:
     self.log.logger(self.queryString, self.placeHolder)
@@ -203,7 +208,9 @@ proc exec*(self: RawQuerySurrealDb){.async.} =
 
 proc info*(self: RawQuerySurrealDb):Future[JsonNode] {.async.} =
   ## Get all response.
+  ## 
   ## https://surrealdb.com/docs/integration/http#sql
+  ## 
   ## https://surrealdb.com/docs/surrealql
   try:
     self.log.logger(self.queryString, self.placeHolder)

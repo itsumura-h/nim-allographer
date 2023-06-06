@@ -8,6 +8,7 @@ Example: Query Builder for SurrealDB
    * [index](#index)
    * [About SurrealDB](#about-surrealdb)
    * [Create Connection](#create-connection)
+   * [SurrealId type](#surrealid-type)
    * [SELECT](#select)
       * [get](#get)
       * [first](#first)
@@ -29,7 +30,7 @@ Example: Query Builder for SurrealDB
       * [min](#min)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
-<!-- Added by: root, at: Tue Jun  6 05:22:57 UTC 2023 -->
+<!-- Added by: root, at: Tue Jun  6 05:52:22 UTC 2023 -->
 
 <!--te-->
 
@@ -51,6 +52,33 @@ import allographer/connection
 let maxConnections = 95
 let timeout = 30
 let surreal = dbOpen(SurrealDb, "test", "test", "user", "pass", "http://surreal", 8000, maxConnections, timeout, true, true).await()
+```
+
+## SurrealId type
+
+The `SurrealId` type is used to handle SurrealDB Record IDs. It has the `table name` and `id` data.  
+`insertId` returns `SurrealId` response and can be used as an argument to the `where` and `find` clauses.  
+
+[Nim API document](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/surreal_types.html#SurrealId)  
+[SurrealDB Official document](https://surrealdb.com/docs/surrealql/datamodel/ids)
+
+```nim
+let aliceId = surreal.table("user").insertId(%*{"name": "alice"}).await
+let aliceOpt = surreal.table("user").where("name", "=", "alice").first().await
+let alice = aliceOpt.get()
+check aliceId.rawId() == alice["id"].getStr()
+check aliceId.table == alice["id"].getStr().split(":")[0]
+check $aliceId == alice["id"].getStr().split(":")[1]
+
+let alice2 = SurrealId.new(aliceId.rawId())
+check alice2.rawId() == alice["id"].getStr()
+check alice2.table == alice["id"].getStr().split(":")[0]
+check $alice2 == alice["id"].getStr().split(":")[1]
+
+let alice3 = SurrealId.new(aliceId.table, $aliceId)
+check alice3.rawId() == alice["id"].getStr()
+check alice3.table == alice["id"].getStr().split(":")[0]
+check $alice3 == alice["id"].getStr().split(":")[1]
 ```
 
 ## SELECT
@@ -79,7 +107,7 @@ Retrieving all row from a table
 ```nim
 import allographer/query_builder
 
-echo surreal.table("user").get()
+echo surreal.table("user").get().await
 ```
 
 ```nim
@@ -361,8 +389,9 @@ echo surreal.table("type").get().await
 [to index](#INDEX)
 
 `raw()` returns `RawQuerySurrealDb` type.  
-You can use `get()`, `exec()` and `info()` for raw query.  
+You can use `get()`, `first()`, `exec()` and `info()` for raw query.  
 `get()` returns all rows of result.  
+`first()` returns first row of result.  
 `exec()` executes query and not return any variables.  
 `info()` executes query and returns all data of response.
 
