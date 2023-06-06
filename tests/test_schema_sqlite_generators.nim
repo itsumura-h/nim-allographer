@@ -30,10 +30,10 @@ suite("schema sqlite generator"):
 
   test("unsigned"):
     check Column.integer("int").nullable().unsigned().intGenerator() ==
-      "'int' INTEGER CHECK (int > 0)"
+      "'int' INTEGER CHECK (int >= 0)"
 
     check Column.integer("int").unsigned().intGenerator() ==
-      "'int' INTEGER NOT NULL CHECK (int > 0)"
+      "'int' INTEGER NOT NULL CHECK (int >= 0)"
 
   test("decimal"):
     check Column.decimal("decimal", 5, 3).decimalGenerator() ==
@@ -49,10 +49,10 @@ suite("schema sqlite generator"):
 
   test("unsigned unique"):
     check Column.decimal("decimal", 5, 3).nullable().unsigned().decimalGenerator() ==
-      "'decimal' NUMERIC CHECK (decimal > 0)"
+      "'decimal' NUMERIC CHECK (decimal >= 0)"
 
     check Column.decimal("decimal", 5, 3).unsigned().decimalGenerator() ==
-      "'decimal' NUMERIC NOT NULL CHECK (decimal > 0)"
+      "'decimal' NUMERIC NOT NULL CHECK (decimal >= 0)"
 
   test("float"):
     check Column.float("decimal").floatGenerator() ==
@@ -72,7 +72,7 @@ suite("schema sqlite generator"):
 
   test("float unsigned"):
     check Column.float("decimal").nullable().unsigned().floatGenerator() ==
-      "'decimal' REAL CHECK (decimal > 0)"
+      "'decimal' REAL CHECK (decimal >= 0)"
 
   test("char"):
     check Column.char("char", 255).charGenerator() ==
