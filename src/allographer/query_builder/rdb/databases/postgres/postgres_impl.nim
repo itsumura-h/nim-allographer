@@ -1,15 +1,15 @@
 import times, asyncdispatch, strutils
 import ../../../error
 import ../database_types
-import ./postgre_rdb
-import ./postgre_lib
+import ./postgres_rdb
+import ./postgres_lib
 
 # https://www.postgresql.jp/document/12/html/libpq-async.html
 
 proc dbopen*(database: string = "", user: string = "", password: string = "", host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30): Connections =
   var pools = newSeq[Pool](maxConnections)
   for i in 0..<maxConnections:
-    let conn = postgre_rdb.pqsetdbLogin(host, port.`$`.cstring, nil, nil, database, user, password)
+    let conn = postgres_rdb.pqsetdbLogin(host, port.`$`.cstring, nil, nil, database, user, password)
     if pqStatus(conn) != CONNECTION_OK: dbError(conn)
     pools[i] = Pool(
       postgresConn: conn,
