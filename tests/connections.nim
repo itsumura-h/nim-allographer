@@ -18,10 +18,10 @@ let
 # let rdb* = dbopen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=true)
 # let rdb* = dbopen(SQLite3, getCurrentDir() / "db.sqlite3" , maxConnections=maxConnections, shouldDisplayLog=true)
 # let rdb* = dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=true)
-let rdb* = dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=true)
+# let rdb* = dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=true)
 
 let dbConnections* = @[
-  dbopen(SQLite3, ":memory:", maxConnections=95, timeout=timeout, shouldDisplayLog=false),
+  dbopen(SQLite3, ":memory:", maxConnections=maxConnections, timeout=timeout, shouldDisplayLog=false),
   dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=false),
   dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=false),
 ]

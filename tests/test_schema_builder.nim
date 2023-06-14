@@ -138,14 +138,15 @@ import ./connections
 #         check true
 
 suite("schema builder"):
-  test("sqlite schema builder"):
-    rdb.create(
-      table("Auth", [
-        Column.increments("id"),
-      ]),
-      table("User", [
-        Column.increments("id"),
-        Column.string("string").index(),
-        Column.foreign("auth_id").reference("id").on("Auth").onDelete(SET_NULL)
-      ])
-    )
+  for rdb in dbConnections:
+    test($rdb.driver & " schema builder"):
+      rdb.create(
+        table("Auth", [
+          Column.increments("id"),
+        ]),
+        table("User", [
+          Column.increments("id"),
+          Column.string("string").index(),
+          Column.foreign("auth_id").reference("id").on("Auth").onDelete(SET_NULL)
+        ])
+      )
