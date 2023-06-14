@@ -2,14 +2,14 @@ import ../../../query_builder/rdb/rdb_types
 import ../query_interface
 
 
-type MysqlQuery* = ref object
+type PostgresQuery* = ref object
   rdb:Rdb
 
-proc new*(_:type MysqlQuery, rdb:Rdb):MysqlQuery =
-  return MysqlQuery(rdb:rdb)
+proc new*(_:type PostgresQuery, rdb:Rdb):PostgresQuery =
+  return PostgresQuery(rdb:rdb)
 
 
-proc toInterface*(self:MysqlQuery):IGenerator =
+proc toInterface*(self:PostgresQuery):IGenerator =
   return ()
   # return (
   #   resetTable:proc(table:Table) = self.resetTable(table),

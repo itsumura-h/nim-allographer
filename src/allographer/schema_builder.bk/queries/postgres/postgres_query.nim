@@ -11,11 +11,11 @@ import ../query_interface
 import ./impl
 
 
-type PostgreQuery* = ref object
+type PostgresQuery* = ref object
   rdb:Rdb
 
-proc new*(_:type PostgreQuery, rdb:Rdb):PostgreQuery =
-  return PostgreQuery(rdb:rdb)
+proc new*(_:type PostgresQuery, rdb:Rdb):PostgresQuery =
+  return PostgresQuery(rdb:rdb)
 
 # ==================== private ====================
 proc generateColumnString(column:Column, table:Table, isAlter=false):string =
@@ -87,11 +87,11 @@ proc generateAlterAddForeignString(column:Column, table:Table):string =
   return column.alterAddForeignGenerator(table)
 
 # ==================== public ====================
-proc resetTable(self:PostgreQuery, table:Table) =
+proc resetTable(self:PostgresQuery, table:Table) =
   self.rdb.raw(&"DROP TABLE IF EXISTS \"{table.name}\"").exec.waitFor
 
 
-proc getHistories(self:PostgreQuery, table:Table):JsonNode =
+proc getHistories(self:PostgresQuery, table:Table):JsonNode =
   let tables = self.rdb.table("_migrations")
             .where("name", "=", table.name)
             .orderBy("created_at", Desc)
@@ -103,12 +103,12 @@ proc getHistories(self:PostgreQuery, table:Table):JsonNode =
     result[table["checksum"].getStr] = table
 
 
-proc runQuery(self:PostgreQuery, query:seq[string]) =
+proc runQuery(self:PostgresQuery, query:seq[string]) =
   for row in query:
     self.rdb.raw(row).exec.waitFor
 
 
-proc runQueryThenSaveHistory(self:PostgreQuery, tableName:string, query:seq[string], checksum:string) =
+proc runQueryThenSaveHistory(self:PostgresQuery, tableName:string, query:seq[string], checksum:string) =
   var isSuccess = false
   try:
     for row in query:
@@ -127,7 +127,7 @@ proc runQueryThenSaveHistory(self:PostgreQuery, tableName:string, query:seq[stri
   .waitFor
 
 
-proc createTableSql(self:PostgreQuery, table:Table) =
+proc createTableSql(self:PostgresQuery, table:Table) =
   var columnString = ""
   var foreignString = ""
   for i, column in table.columns:
@@ -147,7 +147,7 @@ proc createTableSql(self:PostgreQuery, table:Table) =
   table.checksum = $table.query.join("; ").secureHash()
 
 
-proc addColumnSql(self:PostgreQuery, column:Column, table:Table) =
+proc addColumnSql(self:PostgresQuery, column:Column, table:Table) =
   let columnString = generateColumnString(column, table)
   column.query.add &"ALTER TABLE \"{table.name}\" ADD COLUMN {columnString}"
 
@@ -157,53 +157,53 @@ proc addColumnSql(self:PostgreQuery, column:Column, table:Table) =
   
   column.checksum = $column.query.join("; ").secureHash()
 
-proc addColumn(self:PostgreQuery, column:Column, table:Table) =
+proc addColumn(self:PostgresQuery, column:Column, table:Table) =
   self.runQueryThenSaveHistory(table.name, column.query, column.checksum)
 
 
-proc changeColumnSql(self:PostgreQuery, column:Column, table:Table) =
+proc changeColumnSql(self:PostgresQuery, column:Column, table:Table) =
   let columnString = generateColumnString(column, table, true)
   let query = &"ALTER TABLE \"{table.name}\" ALTER COLUMN {columnString}"
   column.query.add(query)
   column.checksum = $column.query.join("; ").secureHash()
 
-proc changeColumn(self:PostgreQuery, column:Column, table:Table) =
+proc changeColumn(self:PostgresQuery, column:Column, table:Table) =
   self.runQueryThenSaveHistory(table.name, column.query, column.checksum)
 
 
-proc renameColumnSql(self:PostgreQuery, column:Column, table:Table) =
+proc renameColumnSql(self:PostgresQuery, column:Column, table:Table) =
   column.query.add &"ALTER TABLE \"{table.name}\" RENAME COLUMN {column.previousName} TO {column.name}"
   column.checksum = $column.query.join("; ").secureHash()
 
-proc renameColumn(self:PostgreQuery, column:Column, table:Table) =
+proc renameColumn(self:PostgresQuery, column:Column, table:Table) =
   self.runQueryThenSaveHistory(table.name, column.query, column.checksum)
 
 
-proc deleteColumnSql(self:PostgreQuery, column:Column, table:Table) =
+proc deleteColumnSql(self:PostgresQuery, column:Column, table:Table) =
   column.query.add &"ALTER TABLE \"{table.name}\" DROP COLUMN {column.name}"
   column.checksum = $column.query.join("; ").secureHash()
 
-proc deleteColumn(self:PostgreQuery, column:Column, table:Table) =
+proc deleteColumn(self:PostgresQuery, column:Column, table:Table) =
   self.runQueryThenSaveHistory(table.name, column.query, column.checksum)
 
 
-proc renameTableSql*(self:PostgreQuery, table:Table) =
+proc renameTableSql*(self:PostgresQuery, table:Table) =
   table.query.add &"ALTER TABLE \"{table.previousName}\" RENAME TO \"{table.name}\""
   table.checksum = $table.query.join("; ").secureHash
 
-proc renameTable(self:PostgreQuery, table:Table) =
+proc renameTable(self:PostgresQuery, table:Table) =
   self.runQueryThenSaveHistory(table.name, table.query, table.checksum)
 
 
-proc dropTableSql(self:PostgreQuery, table:Table) =
+proc dropTableSql(self:PostgresQuery, table:Table) =
   table.query.add &"DROP TABLE IF EXISTS \"{table.name}\" CASCADE"
   table.checksum = $table.query.join("; ").secureHash
 
-proc dropTable(self:PostgreQuery, table:Table) =
+proc dropTable(self:PostgresQuery, table:Table) =
   self.runQueryThenSaveHistory(table.name, table.query, table.checksum)
 
 
-proc toInterface*(self:PostgreQuery):IGenerator =
+proc toInterface*(self:PostgresQuery):IGenerator =
   return (
     resetTable:proc(table:Table) = self.resetTable(table),
     getHistories:proc(table:Table):JsonNode = self.getHistories(table),

@@ -7,7 +7,7 @@ import ./grammars
 import ./queries/query_interface
 import ./queries/sqlite/sqlite_query
 import ./queries/mysql/mysql_query
-import ./queries/postgre/postgre_query
+import ./queries/postgres/postgres_query
 
 
 proc create*(rdb:Rdb, tables:varargs[Table]) =
@@ -20,9 +20,9 @@ proc create*(rdb:Rdb, tables:varargs[Table]) =
     of MySQL, MariaDB:
       MysqlQuery.new(rdb).toInterface()
     of PostgreSQL:
-      PostgreQuery.new(rdb).toInterface()
+      PostgresQuery.new(rdb).toInterface()
 
-  # migration table
+  # create migration table
   let migrationTable = table("_migrations", [
     Column.increments("id"),
     Column.string("name"),
@@ -67,7 +67,7 @@ proc alter*(rdb:Rdb, tables:varargs[Table]) =
     of MySQL, MariaDB:
       MysqlQuery.new(rdb).toInterface()
     of PostgreSQL:
-      PostgreQuery.new(rdb).toInterface()
+      PostgresQuery.new(rdb).toInterface()
 
   # migration table
   let migrationTable = table("_migrations", [
