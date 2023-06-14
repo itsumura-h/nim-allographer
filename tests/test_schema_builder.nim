@@ -139,7 +139,7 @@ import ./connections
 
 suite("schema builder"):
   for rdb in dbConnections:
-    test($rdb.driver & " schema builder"):
+    test($rdb.driver & " create table"):
       rdb.create(
         table("Auth", [
           Column.increments("id"),
