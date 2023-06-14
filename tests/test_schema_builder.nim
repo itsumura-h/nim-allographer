@@ -140,12 +140,12 @@ import ./connections
 suite("schema builder"):
   test("sqlite schema builder"):
     rdb.create(
-      table("auth", [
+      table("Auth", [
         Column.increments("id"),
       ]),
-      table("user", [
+      table("User", [
         Column.increments("id"),
         Column.string("string").index(),
-        Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+        Column.foreign("auth_id").reference("id").on("Auth").onDelete(SET_NULL)
       ])
     )

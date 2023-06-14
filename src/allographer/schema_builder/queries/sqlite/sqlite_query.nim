@@ -23,6 +23,7 @@ proc new*(_:type SqliteQuery, rdb:Rdb):SqliteQuery =
 
 
 # ==================== private ====================
+
 proc generateColumnString(column:Column) =
   case column.typ:
     # int
@@ -86,14 +87,13 @@ proc generateColumnString(column:Column) =
     column.query = column.strForeignColumnGenerator()
 
 
-
 proc generateForeignString(column:Column) =
   if column.typ == rdbForeign or column.typ == rdbStrForeign:
     column.foreignQuery = column.foreignGenerator()
 
 proc generateIndexString(table:Table, column:Column) =
   if column.isIndex:
-    column.indexQuery = &"CREATE INDEX IF NOT EXISTS {table.name}_{column.name}_index ON {table.name}({column.name})"
+    column.indexQuery = column.indexGenerater(table)
 
 
 # ==================== public ====================
@@ -174,8 +174,8 @@ proc execThenSaveHistory(self:SqliteQuery, table:Table) =
   })
   .waitFor
 
+
 proc toInterface*(self:SqliteQuery):IGenerator =
-  # return ()
   return (
     resetMigrationTable:proc(table:Table) = self.resetMigrationTable(table),
     resetTable:proc(table:Table) = self.resetTable(table),

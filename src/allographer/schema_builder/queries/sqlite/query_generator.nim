@@ -1,6 +1,8 @@
-import json, strformat, strutils
-# import ../../../async/database/base
+import std/json
+import std/strformat
+import std/strutils
 import ../../enums
+import ../../models/table
 import ../../models/column
 import ../query_util
 
@@ -10,6 +12,7 @@ import ../query_util
 # =============================================================================
 proc serialGenerator*(column:Column):string =
   result = &"'{column.name}' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"
+
 
 proc intGenerator*(column:Column):string =
   result = &"'{column.name}' INTEGER"
@@ -25,6 +28,7 @@ proc intGenerator*(column:Column):string =
 
   if column.isUnsigned:
     result.add(&" CHECK ({column.name} >= 0)")
+
 
 # =============================================================================
 # float
@@ -44,6 +48,7 @@ proc decimalGenerator*(column:Column):string =
   if column.isUnsigned:
     result.add(&" CHECK ({column.name} >= 0)")
 
+
 proc floatGenerator*(column:Column):string =
   result = &"'{column.name}' REAL"
 
@@ -58,6 +63,7 @@ proc floatGenerator*(column:Column):string =
 
   if column.isUnsigned:
     result.add(&" CHECK ({column.name} >= 0)")
+
 
 # =============================================================================
 # char
@@ -80,6 +86,7 @@ proc charGenerator*(column:Column):string =
   if column.isUnsigned:
     notAllowed("unsigned", "char", column.name)
 
+
 proc varcharGenerator*(column:Column):string =
   result = &"'{column.name}' VARCHAR"
 
@@ -98,6 +105,7 @@ proc varcharGenerator*(column:Column):string =
   if column.isUnsigned:
     notAllowed("unsigned", "varchar", column.name)
 
+
 proc textGenerator*(column:Column):string =
   result = &"'{column.name}' TEXT"
 
@@ -112,6 +120,7 @@ proc textGenerator*(column:Column):string =
 
   if column.isUnsigned:
     notAllowed("unsigned", "text", column.name)
+
 
 # =============================================================================
 # date
@@ -131,6 +140,7 @@ proc dateGenerator*(column:Column):string =
   if column.isUnsigned:
     notAllowed("unsigned", "date", column.name)
 
+
 proc datetimeGenerator*(column:Column):string =
   result = &"'{column.name}' DATETIME"
 
@@ -145,6 +155,7 @@ proc datetimeGenerator*(column:Column):string =
 
   if column.isUnsigned:
     notAllowed("unsigned", "datetime", column.name)
+
 
 proc timeGenerator*(column:Column):string =
   result = &"'{column.name}' TIME"
@@ -161,6 +172,7 @@ proc timeGenerator*(column:Column):string =
   if column.isUnsigned:
     notAllowed("unsigned", "time", column.name)
 
+
 proc timestampGenerator*(column:Column):string =
   result = &"'{column.name}' DATETIME"
 
@@ -176,12 +188,15 @@ proc timestampGenerator*(column:Column):string =
   if column.isUnsigned:
     notAllowed("unsigned", "timestamp", column.name)
 
+
 proc timestampsGenerator*(column:Column):string =
   result = "'created_at' DATETIME DEFAULT CURRENT_TIMESTAMP, "
   result.add("'updated_at' DATETIME DEFAULT CURRENT_TIMESTAMP")
 
+
 proc softDeleteGenerator*(column:Column):string =
   result = "'deleted_at' DATETIME"
+
 
 # =============================================================================
 # others
@@ -201,6 +216,7 @@ proc blobGenerator*(column:Column):string =
   if column.isUnsigned:
     notAllowed("unsigned", "blob", column.name)
 
+
 proc boolGenerator*(column:Column):string =
   result = &"'{column.name}' TINYINT"
 
@@ -216,6 +232,7 @@ proc boolGenerator*(column:Column):string =
   if column.isUnsigned:
     notAllowed("unsigned", "bool", column.name)
 
+
 proc enumOptionsGenerator(name:string, options:seq[string]):string =
   var optionsString = ""
   for i, option in options:
@@ -225,6 +242,7 @@ proc enumOptionsGenerator(name:string, options:seq[string]):string =
     )
 
   return optionsString
+
 
 proc enumGenerator*(column:Column):string =
   result = &"'{column.name}' VARCHAR"
@@ -248,6 +266,7 @@ proc enumGenerator*(column:Column):string =
   if column.isUnsigned:
     notAllowed("unsigned", "enum", column.name)
 
+
 proc jsonGenerator*(column:Column):string =
   result = &"'{column.name}' TEXT"
 
@@ -263,6 +282,7 @@ proc jsonGenerator*(column:Column):string =
   if column.isUnsigned:
     notAllowed("unsigned", "json", column.name)
 
+
 # =============================================================================
 # foreign key
 # =============================================================================
@@ -271,10 +291,12 @@ proc foreignColumnGenerator*(column:Column):string =
   if column.isDefault:
     result.add(&" DEFAULT {column.defaultInt}")
 
+
 proc strForeignColumnGenerator*(column:Column):string =
   result = &"'{column.name}' VARCHAR"
   if column.isDefault:
     result.add(&" DEFAULT {column.defaultString}")
+
 
 proc foreignGenerator*(column:Column):string =
   var onDeleteString = "RESTRICT"
@@ -288,6 +310,7 @@ proc foreignGenerator*(column:Column):string =
   let tableName = column.info["table"].getStr
   let columnnName = column.info["column"].getStr
   return &"FOREIGN KEY('{column.name}') REFERENCES {tableName}({columnnName}) ON DELETE {onDeleteString}"
+
 
 proc alterAddForeignGenerator*(column:Column):string =
   var onDeleteString = "RESTRICT"
@@ -307,3 +330,9 @@ proc alterAddForeignGenerator*(column:Column):string =
 proc indexName*(table, column:string):string =
   let smallTable = table.toLowerAscii()
   return &"{smallTable}_{column}_index"
+
+
+proc indexGenerater*(column:Column, table:Table):string =
+  let table = table.name
+  let smallTable = table.toLowerAscii()
+  return &"CREATE INDEX IF NOT EXISTS \"{smallTable}_{column.name}_index\" ON \"{table}\"(\"{column.name}\")"

@@ -6,9 +6,9 @@ import ../../query_builder/rdb/rdb_types
 import ../models/table
 import ../models/column
 import ../../query_builder # TODO: delete after
-import ../queries/sqlite/sqlite_query
+# import ../queries/sqlite/sqlite_query
 # import ../queries/mysql/mysql_query
-# import ../queries/postgres/postgres_query
+import ../queries/postgres/postgres_query
 import ../queries/query_interface
 
 
@@ -24,7 +24,9 @@ proc create*(rdb:Rdb, tables:varargs[Table]) =
   #     MysqlQuery.new(rdb).toInterface()
   #   of PostgreSQL:
   #     PostgresQuery.new(rdb).toInterface()
-  let generator = SqliteQuery.new(rdb).toInterface()
+  # let generator = SqliteQuery.new(rdb).toInterface()
+  # let generator = MysqlQuery.new(rdb).toInterface()
+  let generator = PostgresQuery.new(rdb).toInterface()
 
   # echo generator.repr
 
