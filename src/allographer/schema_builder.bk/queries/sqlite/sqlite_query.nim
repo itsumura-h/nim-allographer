@@ -164,7 +164,7 @@ proc addColumn(self:SqliteQuery, column:Column, table:Table) =
 
 
 proc changeColumnSql(self:SqliteQuery, column:Column, table:Table) =
-  column.query.add generateColumnString(column)
+  column.query = @[generateColumnString(column)]
   column.checksum = $column.query.join("; ").secureHash()
 
 proc changeColumn(self:SqliteQuery, column:Column, table:Table) =
@@ -216,7 +216,7 @@ proc changeColumn(self:SqliteQuery, column:Column, table:Table) =
 
 
 proc renameColumnSql(self:SqliteQuery, column:Column, table:Table) =
-  column.query.add &"rename {column.previousName} to {column.name} in {table.name}"
+  column.query = @[&"rename {column.previousName} to {column.name} in {table.name}"]
   column.checksum = $column.query.join("; ").secureHash()
 
 proc renameColumn(self:SqliteQuery, column:Column, table:Table) =

@@ -156,20 +156,20 @@ proc exec*(self:PostgresQuery, table:Table) =
     self.rdb.raw(row).exec.waitFor
 
 
-proc execThenSaveHistory(self:PostgresQuery, table:Table) =
+proc execThenSaveHistory(self:PostgresQuery, tableName:string, queries:seq[string], checksum:string) =
   var isSuccess = false
   try:
-    for query in table.query:
+    for query in queries:
       self.rdb.raw(query).exec.waitFor
     isSuccess = true
   except:
     echo getCurrentExceptionMsg()
   
-  let tableQuery = table.query.join("; ")
+  let tableQuery = queries.join("; ")
   self.rdb.table("_migrations").insert(%*{
-    "name": table.name,
+    "name": tableName,
     "query": tableQuery,
-    "checksum": table.checksum,
+    "checksum": checksum,
     "created_at": $now().utc,
     "status": isSuccess
   })
@@ -182,7 +182,7 @@ proc toInterface*(self:PostgresQuery):IGenerator =
     resetTable:proc(table:Table) = self.resetTable(table),
     getHistories:proc(table:Table):JsonNode = self.getHistories(table),
     exec:proc(table:Table) = self.exec(table),
-    execThenSaveHistory:proc(table:Table) = self.execThenSaveHistory(table),
+    execThenSaveHistory:proc(tableName:string, queries:seq[string], checksum:string) = self.execThenSaveHistory(tableName, queries, checksum),
     createTableSql:proc(table:Table) = self.createTableSql(table),
     # addColumnSql:proc(column:Column, table:Table) = self.addColumnSql(table, column,),
     # addColumn:proc(column:Column, table:Table) = self.addColumn(table, column,),

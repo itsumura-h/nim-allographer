@@ -150,3 +150,36 @@ suite("schema builder"):
           Column.foreign("auth_id").reference("id").on("Auth").onDelete(SET_NULL)
         ])
       )
+
+    suite($rdb.driver & " alter table"):
+      test("add columns"):
+        rdb.alter(
+          table("Auth", [
+            Column.string("name").add() 
+          ]),
+          table("User", [
+            Column.string("name").index().add(),
+            Column.string("email").add(),
+          ])
+        )
+
+      test("change column"):
+        rdb.alter(
+          table("User", [
+            Column.string("email").unique().change(),
+          ])
+        )
+
+      test("rename column"):
+        rdb.alter(
+          table("User", [
+            Column.renameColumn("email", "mail_address")
+          ])
+        )
+
+      test("delete column"):
+        rdb.alter(
+          table("User", [
+            Column.deleteColumn("mail_address")
+          ])
+        )
