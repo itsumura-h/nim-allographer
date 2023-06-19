@@ -94,7 +94,7 @@ proc generateForeignString(column:Column) =
 proc generateIndexString(table:Table, column:Column) =
   if column.isIndex:
     # column.indexQuery = &"CREATE INDEX IF NOT EXISTS {table.name}_{column.name}_index ON {table.name}({column.name})"
-    column.indexQuery = column.indexGenerater(table)
+    column.indexQuery = column.indexGenerator(table)
 
 
 # ==================== public ====================
@@ -104,7 +104,7 @@ proc resetMigrationTable(self:MysqlQuery, table:Table) =
 
 
 proc resetTable(self:MysqlQuery, table:Table) =
-  self.rdb.raw("DROP TABLE IF EXISTS `?` CASCADE", [table.name]).exec.waitFor
+  self.rdb.raw(&"DROP TABLE IF EXISTS `{table.name}` CASCADE").exec.waitFor
 
 
 proc getHistories(self:MysqlQuery, table:Table):JsonNode =
@@ -118,6 +118,33 @@ proc getHistories(self:MysqlQuery, table:Table):JsonNode =
   for table in tables:
     result[table["checksum"].getStr] = table
 
+
+proc exec*(self:MysqlQuery, table:Table) =
+  for row in table.query:
+    self.rdb.raw(row).exec.waitFor
+
+
+proc execThenSaveHistory(self:MysqlQuery, tableName:string, queries:seq[string], checksum:string) =
+  var isSuccess = false
+  try:
+    for query in queries:
+      self.rdb.raw(query).exec.waitFor
+    isSuccess = true
+  except:
+    echo getCurrentExceptionMsg()
+  
+  let tableQuery = queries.join("; ")
+  self.rdb.table("_migrations").insert(%*{
+    "name": tableName,
+    "query": tableQuery,
+    "checksum": checksum,
+    "created_at": now().format("yyyy-MM-dd HH:mm:ss"),
+    "status": isSuccess
+  })
+  .waitFor
+
+
+# ==================== create table ====================
 
 proc createTableSql(self:MysqlQuery, table:Table) =
   for i, column in table.columns:
@@ -152,33 +179,39 @@ proc createTableSql(self:MysqlQuery, table:Table) =
   table.checksum = $table.query.join("; ").secureHash()
 
 
-proc exec*(self:MysqlQuery, table:Table) =
-  for row in table.query:
-    self.rdb.raw(row).exec.waitFor
+# ==================== add Column ====================
 
+proc addColumnSql(self:MysqlQuery, table:Table, column:Column) =
+  generateColumnString(column)
+  generateForeignString(column)
+  generateIndexString(table, column)
 
-proc execThenSaveHistory(self:MysqlQuery, tableName:string, queries:seq[string], checksum:string) =
-  var isSuccess = false
-  try:
-    for query in queries:
-      self.rdb.raw(query).exec.waitFor
-    isSuccess = true
-  except:
-    echo getCurrentExceptionMsg()
+  if column.typ == rdbForeign or column.typ == rdbStrForeign:
+    column.queries.add(&"ALTER TABLE `{table.name}` ADD {column.foreignQuery}")
+  else:
+    column.queries.add(&"ALTER TABLE `{table.name}` ADD COLUMN {column.query}")
   
-  let tableQuery = queries.join("; ")
-  self.rdb.table("_migrations").insert(%*{
-    "name": tableName,
-    "query": tableQuery,
-    "checksum": checksum,
-    "created_at": now().format("yyyy-MM-dd HH:mm:ss"),
-    "status": isSuccess
-  })
-  .waitFor
+  if column.isIndex:
+    column.queries.add(column.indexQuery)
+
+  column.checksum = $column.queries.join("; ").secureHash()
+
+
+proc addColumn(self:MysqlQuery, table:Table, column:Column) =
+  self.execThenSaveHistory(table.name, column.queries, column.checksum)
+
+
+# ==================== change column ====================
+
+proc changeColumnSql(self:MysqlQuery, table:Table, column:Column) =
+  discard
+
+
+proc changeColumn(self:MysqlQuery, table:Table, column:Column) =
+  discard
 
 
 proc toInterface*(self:MysqlQuery):IGenerator =
-  # return ()
   return (
     resetMigrationTable:proc(table:Table) = self.resetMigrationTable(table),
     resetTable:proc(table:Table) = self.resetTable(table),
@@ -186,10 +219,10 @@ proc toInterface*(self:MysqlQuery):IGenerator =
     exec:proc(table:Table) = self.exec(table),
     execThenSaveHistory:proc(tableName:string, queries:seq[string], checksum:string) = self.execThenSaveHistory(tableName, queries, checksum),
     createTableSql:proc(table:Table) = self.createTableSql(table),
-    # addColumnSql:proc(column:Column, table:Table) = self.addColumnSql(column, table),
-  #   addColumn:proc(column:Column, table:Table) = self.addColumn(column, table),
-  #   changeColumnSql:proc(column:Column, table:Table) = self.changeColumnSql(column, table),
-  #   changeColumn:proc(column:Column, table:Table) = self.changeColumn(column, table),
+    addColumnSql:proc(table:Table, column:Column) = self.addColumnSql(table, column),
+    addColumn:proc(table:Table, column:Column) = self.addColumn(table, column),
+    changeColumnSql:proc(table:Table, column:Column) = self.changeColumnSql(table, column),
+    changeColumn:proc(table:Table, column:Column) = self.changeColumn(table, column),
   #   renameColumnSql:proc(column:Column, table:Table) = self.renameColumnSql(column, table),
   #   renameColumn:proc(column:Column, table:Table) = self.renameColumn(column, table),
   #   deleteColumnSql:proc(column:Column, table:Table) = self.deleteColumnSql(column, table),

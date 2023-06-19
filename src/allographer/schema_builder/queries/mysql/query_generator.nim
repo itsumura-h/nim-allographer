@@ -438,7 +438,7 @@ proc alterAddForeignGenerator*(column:Column, table:Table):string =
 #   var constraintName = &"{tableName}_{column.name}"
 #   return &"ALTER TABLE `{table.name}` DROP FOREIGN KEY `{constraintName}`"
 
-proc indexGenerater*(column:Column, table:Table):string =
+proc indexGenerator*(column:Column, table:Table):string =
   let table = table.name
   let smallTable = table.toLowerAscii()
   return &"CREATE INDEX IF NOT EXISTS `{smallTable}_{column.name}_index` ON `{table}`(`{column.name}`)"

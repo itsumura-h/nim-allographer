@@ -178,12 +178,21 @@ proc setRow*(res: PPGresult, r: var Row,  line, cols: int32) =
       add(r[col], x)
 
 proc dbQuote(s: string): string =
+  # ## DB quotes the string.
+  # if s == "null":
+  #   return "NULL"
+  # result = "'"
+  # for c in items(s):
+  #   if c == '\'': add(result, "''")
+  #   else: add(result, c)
+  # add(result, '\'')
+
   ## DB quotes the string.
-  if s == "null":
-    return "NULL"
   result = "'"
   for c in items(s):
-    if c == '\'': add(result, "''")
+    case c
+    of '\'': add(result, "''")
+    of '\0': add(result, "\\0")
     else: add(result, c)
   add(result, '\'')
 

@@ -332,7 +332,7 @@ proc indexName*(table, column:string):string =
   return &"{smallTable}_{column}_index"
 
 
-proc indexGenerater*(column:Column, table:Table):string =
+proc indexGenerator*(column:Column, table:Table):string =
   let table = table.name
   let smallTable = table.toLowerAscii()
   return &"CREATE INDEX IF NOT EXISTS \"{smallTable}_{column.name}_index\" ON \"{table}\"(\"{column.name}\")"

@@ -13,6 +13,7 @@ import ../../models/table
 import ../../models/column
 import ../query_interface
 import ./query_generator
+import ./change_column_generator
 
 
 type PostgresQuery* = ref object
@@ -23,67 +24,67 @@ proc new*(_:type PostgresQuery, rdb:Rdb):PostgresQuery =
 
 
 # ==================== private ====================
-proc generateColumnString(table:Table, column:Column, isAlter=false) =
+proc generateColumnString(table:Table, column:Column) =
   case column.typ:
     # int
   of rdbIncrements:
-    column.query = column.serialGenerator(table, isAlter)
+    column.query = column.serialGenerator(table)
   of rdbInteger:
-    column.query = column.intGenerator(table, isAlter)
+    column.query = column.intGenerator(table)
   of rdbSmallInteger:
-    column.query = column.intGenerator(table, isAlter)
+    column.query = column.intGenerator(table)
   of rdbMediumInteger:
-    column.query = column.intGenerator(table, isAlter)
+    column.query = column.intGenerator(table)
   of rdbBigInteger:
-    column.query = column.intGenerator(table, isAlter)
+    column.query = column.intGenerator(table)
     # float
   of rdbDecimal:
-    column.query = column.decimalGenerator(table, isAlter)
+    column.query = column.decimalGenerator(table)
   of rdbDouble:
     column.query = column.decimalGenerator(table)
   of rdbFloat:
-    column.query = column.floatGenerator(table, isAlter)
+    column.query = column.floatGenerator(table)
     # char
   of rdbUuid:
-    column.query = column.stringGenerator(table, isAlter)
+    column.query = column.stringGenerator(table)
   of rdbChar:
-    column.query = column.charGenerator(table, isAlter)
+    column.query = column.charGenerator(table)
   of rdbString:
-    column.query = column.stringGenerator(table, isAlter)
+    column.query = column.stringGenerator(table)
     # text
   of rdbText:
-    column.query = column.textGenerator(table, isAlter)
+    column.query = column.textGenerator(table)
   of rdbMediumText:
-    column.query = column.textGenerator(table, isAlter)
+    column.query = column.textGenerator(table)
   of rdbLongText:
-    column.query = column.textGenerator(table, isAlter)
+    column.query = column.textGenerator(table)
     # date
   of rdbDate:
-    column.query = column.dateGenerator(table, isAlter)
+    column.query = column.dateGenerator(table)
   of rdbDatetime:
-    column.query = column.datetimeGenerator(table, isAlter)
+    column.query = column.datetimeGenerator(table)
   of rdbTime:
-    column.query = column.timeGenerator(table, isAlter)
+    column.query = column.timeGenerator(table)
   of rdbTimestamp:
-    column.query = column.timestampGenerator(table, isAlter)
+    column.query = column.timestampGenerator(table)
   of rdbTimestamps:
     column.query = column.timestampsGenerator(table)
   of rdbSoftDelete:
-    column.query = column.softDeleteGenerator(table, isAlter)
+    column.query = column.softDeleteGenerator(table)
     # others
   of rdbBinary:
-    column.query = column.blobGenerator(table, isAlter)
+    column.query = column.blobGenerator(table)
   of rdbBoolean:
-    column.query = column.boolGenerator(table, isAlter)
+    column.query = column.boolGenerator(table)
   of rdbEnumField:
-    column.query = column.enumGenerator(table, isAlter)
+    column.query = column.enumGenerator(table)
   of rdbJson:
-    column.query = column.jsonGenerator(table, isAlter)
+    column.query = column.jsonGenerator(table)
   # foreign
   of rdbForeign:
-    column.query = column.foreignColumnGenerator(table, isAlter)
+    column.query = column.foreignColumnGenerator(table)
   of rdbStrForeign:
-    column.query = column.strForeignColumnGenerator(table, isAlter)
+    column.query = column.strForeignColumnGenerator(table)
 
 
 proc generateForeignString(table:Table, column:Column) =
@@ -93,7 +94,72 @@ proc generateForeignString(table:Table, column:Column) =
 
 proc generateIndexString(table:Table, column:Column) =
   if column.isIndex:
-    column.indexQuery = column.indexGenerater(table)
+    column.indexQuery = column.indexGenerator(table)
+
+
+proc generateChangeColumnString(table:Table, column:Column) =
+  case column.typ:
+    # int
+  of rdbIncrements:
+    column.queries = column.serialChangeGenerator(table)
+  of rdbInteger:
+    column.queries = column.intChangeGenerator(table)
+  of rdbSmallInteger:
+    column.queries = column.smallIntChangeGenerator(table)
+  of rdbMediumInteger:
+    column.queries = column.mediumIntChangeGenerator(table)
+  of rdbBigInteger:
+    column.queries = column.bigIntChangeGenerator(table)
+  # float
+  of rdbDecimal:
+    column.queries = column.decimalChangeGenerator(table)
+  of rdbDouble:
+    column.queries = column.decimalChangeGenerator(table)
+  of rdbFloat:
+    column.queries = column.floatChangeGenerator(table)
+    # char
+  of rdbChar:
+    column.queries = column.charChangeGenerator(table)
+  of rdbString:
+    column.queries = column.stringChangeGenerator(table)
+  of rdbUuid:
+    column.queries = column.stringChangeGenerator(table)
+    # text
+  of rdbText:
+    column.queries = column.textChangeGenerator(table)
+  of rdbMediumText:
+    column.queries = column.textChangeGenerator(table)
+  of rdbLongText:
+    column.queries = column.textChangeGenerator(table)
+    # date
+  of rdbDate:
+    column.queries = column.dateChangeGenerator(table)
+  of rdbDatetime:
+    column.queries = column.datetimeChangeGenerator(table)
+  of rdbTime:
+    column.queries = column.timeChangeGenerator(table)
+  of rdbTimestamp:
+    column.queries = column.timestampChangeGenerator(table)
+  # of rdbTimestamps:
+  #   column.queries = column.timestampsChangeGenerator(table)
+  # of rdbSoftDelete:
+  #   column.queries = column.softDeleteChangeGenerator(table)
+    # others
+  of rdbBinary:
+    column.queries = column.blobChangeGenerator(table)
+  of rdbBoolean:
+    column.queries = column.boolChangeGenerator(table)
+  of rdbEnumField:
+    column.queries = column.enumChangeGenerator(table)
+  of rdbJson:
+    column.queries = column.jsonChangeGenerator(table)
+  # # foreign
+  # of rdbForeign:
+  #   column.queries = column.foreignColumnChangeGenerator(table, isAlter)
+  # of rdbStrForeign:
+  #   column.queries = column.strForeignColumnChangeGenerator(table, isAlter)
+  else:
+    discard
 
 
 # ==================== public ====================
@@ -103,7 +169,7 @@ proc resetMigrationTable(self:PostgresQuery, table:Table) =
 
 
 proc resetTable(self:PostgresQuery, table:Table) =
-  self.rdb.raw("DROP TABLE IF EXISTS \"?\"", [table.name]).exec.waitFor
+  self.rdb.raw(&"DROP TABLE IF EXISTS \"{table.name}\"").exec.waitFor
 
 
 proc getHistories(self:PostgresQuery, table:Table):JsonNode =
@@ -117,6 +183,33 @@ proc getHistories(self:PostgresQuery, table:Table):JsonNode =
   for table in tables:
     result[table["checksum"].getStr] = table
 
+
+proc exec*(self:PostgresQuery, table:Table) =
+  for row in table.query:
+    self.rdb.raw(row).exec.waitFor
+
+
+proc execThenSaveHistory(self:PostgresQuery, tableName:string, queries:seq[string], checksum:string) =
+  var isSuccess = false
+  try:
+    for query in queries:
+      self.rdb.raw(query).exec.waitFor
+    isSuccess = true
+  except:
+    echo getCurrentExceptionMsg()
+  
+  let tableQuery = queries.join("; ")
+  self.rdb.table("_migrations").insert(%*{
+    "name": tableName,
+    "query": tableQuery,
+    "checksum": checksum,
+    "created_at": $now().utc,
+    "status": isSuccess
+  })
+  .waitFor
+
+
+# ==================== create table ====================
 
 proc createTableSql(self:PostgresQuery, table:Table) =
   for i, column in table.columns:
@@ -151,29 +244,42 @@ proc createTableSql(self:PostgresQuery, table:Table) =
   table.checksum = $table.query.join("; ").secureHash()
 
 
-proc exec*(self:PostgresQuery, table:Table) =
-  for row in table.query:
-    self.rdb.raw(row).exec.waitFor
+# ==================== add Column ====================
 
+proc addColumnSql(self:PostgresQuery, table:Table, column:Column) =
+  generateColumnString(table, column)
+  generateForeignString(table, column)
+  generateIndexString(table, column)
 
-proc execThenSaveHistory(self:PostgresQuery, tableName:string, queries:seq[string], checksum:string) =
-  var isSuccess = false
-  try:
-    for query in queries:
-      self.rdb.raw(query).exec.waitFor
-    isSuccess = true
-  except:
-    echo getCurrentExceptionMsg()
+  if column.typ == rdbForeign or column.typ == rdbStrForeign:
+    column.queries.add(&"ALTER TABLE \"{table.name}\" ADD COLUMN {column.query} {column.foreignQuery}")
+  else:
+    column.queries.add(&"ALTER TABLE \"{table.name}\" ADD COLUMN {column.query}")
   
-  let tableQuery = queries.join("; ")
-  self.rdb.table("_migrations").insert(%*{
-    "name": tableName,
-    "query": tableQuery,
-    "checksum": checksum,
-    "created_at": $now().utc,
-    "status": isSuccess
-  })
-  .waitFor
+  if column.isIndex:
+    column.queries.add(column.indexQuery)
+
+  column.checksum = $column.queries.join("; ").secureHash()
+
+
+proc addColumn(self:PostgresQuery, table:Table, column:Column) =
+  self.execThenSaveHistory(table.name, column.queries, column.checksum)
+
+
+# ==================== change column ====================
+
+proc changeColumnSql(self:PostgresQuery, table:Table, column:Column) =
+  generateChangeColumnString(table, column)
+  
+  if column.isIndex:
+    generateIndexString(table, column)
+    column.queries.add(column.indexQuery)
+
+  column.checksum = $column.queries.join("; ").secureHash()
+
+
+proc changeColumn(self:PostgresQuery, table:Table, column:Column) =
+  self.execThenSaveHistory(table.name, column.queries, column.checksum)
 
 
 proc toInterface*(self:PostgresQuery):IGenerator =
@@ -184,10 +290,10 @@ proc toInterface*(self:PostgresQuery):IGenerator =
     exec:proc(table:Table) = self.exec(table),
     execThenSaveHistory:proc(tableName:string, queries:seq[string], checksum:string) = self.execThenSaveHistory(tableName, queries, checksum),
     createTableSql:proc(table:Table) = self.createTableSql(table),
-    # addColumnSql:proc(column:Column, table:Table) = self.addColumnSql(table, column,),
-    # addColumn:proc(column:Column, table:Table) = self.addColumn(table, column,),
-    # changeColumnSql:proc(column:Column, table:Table) = self.changeColumnSql(table, column,),
-    # changeColumn:proc(column:Column, table:Table) = self.changeColumn(table, column,),
+    addColumnSql:proc(table:Table, column:Column) = self.addColumnSql(table, column),
+    addColumn:proc(table:Table, column:Column) = self.addColumn(table, column),
+    changeColumnSql:proc(table:Table, column:Column) = self.changeColumnSql(table, column),
+    changeColumn:proc(table:Table, column:Column) = self.changeColumn(table, column),
     # renameColumnSql:proc(column:Column, table:Table) = self.renameColumnSql(table, column,),
     # renameColumn:proc(column:Column, table:Table) = self.renameColumn(table, column,),
     # deleteColumnSql:proc(column:Column, table:Table) = self.deleteColumnSql(table, column,),

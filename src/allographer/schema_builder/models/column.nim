@@ -20,6 +20,7 @@ type Column* = ref object
   query*: string
   foreignQuery*: string
   indexQuery*: string
+  queries*: seq[string] # used in alter table
   checksum*:string
   schema*:JsonNode
   # alter table
@@ -31,6 +32,7 @@ proc new(_:type Column):Column =
   return Column(
     defaultJson: newJNull(),
     info: newJNull(),
+    queries: newSeq[string](),
     schema: newJNull()
   )
 
