@@ -16,6 +16,8 @@ srcDir        = "src"
 requires "nim >= 1.2.0"
 
 import strformat, os
+when (NimMajor, NimMinor) > (1, 6):
+  requires "db_connector"
 
 task test, "run testament test":
   exec "testament p 'tests/test_*.nim'"
