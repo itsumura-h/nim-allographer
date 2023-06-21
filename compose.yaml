@@ -62,13 +62,21 @@ services:
     command: start --user user --pass pass file://root/.surrealdb
 
   adminer:
-    build: ./docker/adminer
+    image: adminer:4.8.1-standalone
     tty: true
     ports:
       - 9002:8080
-    volumes:
-      - ./:/app
     depends_on:
       - mysql
       - mariadb
       - postgres
+
+  adminer-sqlite:
+    build: ./docker/adminer
+    tty: true
+    ports:
+      - 9003:8080
+    volumes:
+      - ./:/app
+    depends_on:
+      - app-ubuntu
