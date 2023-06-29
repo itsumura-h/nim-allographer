@@ -26,7 +26,7 @@ proc exec(rdb:Rdb, queries:seq[string]) =
     echo getCurrentExceptionMsg()
 
 
-proc createMigrationTable*(self: PostgresService) =
+proc createMigrationTable*(self: PostgresQuery) =
   for i, column in self.table.columns:
     createColumnString(self.table, column)
     createForeignString(self.table, column)
@@ -59,4 +59,6 @@ proc createMigrationTable*(self: PostgresService) =
   if indexQuery.len > 0:
     queries.add(indexQuery)
 
+  for row in queries:
+    echo row
   exec(self.rdb, queries)

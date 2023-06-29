@@ -21,21 +21,6 @@ proc shouldRun(rdb:Rdb, table:Table, checksum:string, isReset:bool):bool =
   if isReset:
     return true
 
-  # let tables = rdb.table("_migrations")
-  #           .where("name", "=", table.name)
-  #           .orderBy("created_at", Desc)
-  #           .get()
-  #           .waitFor
-
-  # var histories = newJObject()
-  # for table in tables:
-  #   histories[table["checksum"].getStr] = table
-
-  # if not histories.hasKey(checksum):
-  #   return true
-
-  # return not histories[checksum]["status"].getBool
-
   let history = rdb.table("_migrations")
                   .where("checksum", "=", checksum)
                   .first()
@@ -61,6 +46,7 @@ proc execThenSaveHistory(rdb:Rdb, tableName:string, queries:seq[string], checksu
     "status": isSuccess
   })
   .waitFor
+
 
 proc createTable*(self: SqliteQuery, isReset:bool) =
   for i, column in self.table.columns:

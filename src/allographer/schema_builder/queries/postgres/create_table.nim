@@ -4,6 +4,7 @@ import std/strutils
 import std/times
 import std/sha1
 import std/json
+import std/options
 import ../../../query_builder/enums as query_builder_enums
 import ../../../query_builder/rdb/rdb_types
 import ../../../query_builder/rdb/rdb_interface
@@ -16,7 +17,38 @@ import ./postgres_query_type
 import ./sub/create_column
 
 
-proc createTable*(self: PostgresService, isReset:bool) =
+proc shouldRun(rdb:Rdb, table:Table, checksum:string, isReset:bool):bool =
+  if isReset:
+    return true
+
+  let history = rdb.table("_migrations")
+                  .where("checksum", "=", checksum)
+                  .first()
+                  .waitFor
+  return not history.isSome() or not history.get()["status"].getBool
+
+
+proc execThenSaveHistory(rdb:Rdb, tableName:string, queries:seq[string], checksum:string) =
+  var isSuccess = false
+  try:
+    for query in queries:
+      rdb.raw(query).exec.waitFor
+    isSuccess = true
+  except:
+    echo getCurrentExceptionMsg()
+
+  let tableQuery = queries.join("; ")
+  rdb.table("_migrations").insert(%*{
+    "name": tableName,
+    "query": tableQuery,
+    "checksum": checksum,
+    "created_at": $now().utc,
+    "status": isSuccess
+  })
+  .waitFor
+
+
+proc createTable*(self: PostgresQuery, isReset:bool) =
   for i, column in self.table.columns:
     createColumnString(self.table, column)
     createForeignString(self.table, column)
@@ -48,3 +80,9 @@ proc createTable*(self: PostgresService, isReset:bool) =
 
   if indexQuery.len > 0:
     queries.add(indexQuery)
+
+  let schema = $self.table.toSchema()
+  let checksum = $schema.secureHash()
+
+  if shouldRun(self.rdb, self.table, checksum, isReset):
+    execThenSaveHistory(self.rdb, self.table.name, queries, checksum)

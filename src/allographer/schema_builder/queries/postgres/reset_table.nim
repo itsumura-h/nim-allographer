@@ -6,8 +6,8 @@ import ../../../query_builder/rdb/query/grammar
 import ../../models/table
 import ./postgres_query_type
 
-proc resetMigrationTable*(self:PostgresService) =
+proc resetMigrationTable*(self:PostgresQuery) =
   self.rdb.table("_migrations").where("name", "=", self.table.name).delete.waitFor
 
-proc resetTable*(self:PostgresService) =
+proc resetTable*(self:PostgresQuery) =
   self.rdb.raw(&"DROP TABLE IF EXISTS \"{self.table.name}\"").exec.waitFor

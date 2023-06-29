@@ -8,9 +8,29 @@ import ../models/column
 import ../queries/query_interface
 import ../queries/sqlite/sqlite_query_type
 import ../queries/sqlite/sqlite_query_impl
-# import ../queries/postgres/postgres_query_type
-# import ../queries/postgres/postgres_query_impl
+import ../queries/postgres/postgres_query_type
+import ../queries/postgres/postgres_query_impl
 import ../enums
+
+
+proc createQuery(rdb:Rdb, table:Table):IQuery =
+  case rdb.driver
+  of SQLite3:
+    return SqliteQuery.new(rdb, table).toInterface()
+  of PostgreSQL:
+    return PostgresQuery.new(rdb, table).toInterface()
+  else:
+    return SqliteQuery.new(rdb, table).toInterface()
+
+
+proc createQuery(rdb:Rdb, table:Table, column:Column):IQuery =
+  case rdb.driver
+  of SQLite3:
+    return SqliteQuery.new(rdb, table, column).toInterface()
+  of PostgreSQL:
+    return PostgresQuery.new(rdb, table, column).toInterface()
+  else:
+    return SqliteQuery.new(rdb, table, column).toInterface()
 
 
 proc alter*(rdb:Rdb, tables:varargs[Table]) =
@@ -26,8 +46,7 @@ proc alter*(rdb:Rdb, tables:varargs[Table]) =
     Column.boolean("status")
   ])
 
-  var query = SqliteQuery.new(rdb, migrationTable).toInterface()
-  # var query = PostgresQuery.new(rdb, migrationTable).toInterface()
+  var query = createQuery(rdb, migrationTable)
   query.createMigrationTable()
 
   for i, table in tables:
@@ -38,21 +57,21 @@ proc alter*(rdb:Rdb, tables:varargs[Table]) =
         column.usecaseType = Alter 
         case column.migrationType
         of AddColumn:
-          query = SqliteQuery.new(rdb, table, column).toInterface()
+          query = createQuery(rdb, table, column)
           query.addColumn(isReset)
         of ChangeColumn:
-          query = SqliteQuery.new(rdb, table, column).toInterface()
+          query = createQuery(rdb, table, column)
           query.changeColumn(isReset)
         of RenameColumn:
-          query = SqliteQuery.new(rdb, table, column).toInterface()
+          query = createQuery(rdb, table, column)
           query.renameColumn(isReset)
         of DeleteColumn:
-          query = SqliteQuery.new(rdb, table, column).toInterface()
+          query = createQuery(rdb, table, column)
           query.deleteColumn(isReset)
     of ChangeTable:
       discard
     of RenameTable:
       discard
     of DropTable:
-      query = SqliteQuery.new(rdb, table).toInterface()
+      query = createQuery(rdb, table)
       query.dropTable(isReset)

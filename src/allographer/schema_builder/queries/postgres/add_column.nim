@@ -1,4 +1,4 @@
 import ./postgres_query_type
 
-proc addColumn*(self:PostgresService, isReset:bool) =
+proc addColumn*(self:PostgresQuery, isReset:bool) =
   discard
