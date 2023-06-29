@@ -24,6 +24,7 @@
 |float|DOUBLE|DOUBLE|NUMERIC|JFloat
 |char|VARCHAR|CHAR|CHAR|JString
 |string|VARCHAR|VARCHAR|VARCHAR|JString
+|uuid|VARCHAR|VARCHAR|VARCHAR|JString
 |text|TEXT|TEXT|TEXT|JString
 |mediumText|TEXT|MEDIUMTEXT|TEXT|JString
 |longText|TEXT|LONGTEXT|TEXT|JString
@@ -38,6 +39,7 @@
 |enumField|VARCHAR|ENUM|CHARACTER|JString
 |json|TEXT|JSON|JSON|JString
 |foreign|INTEGER|INT|INT|JInt
+|strForeign|VARCHAR|VARCHAR|VARCHAR|JString
 
 
 ## JInt

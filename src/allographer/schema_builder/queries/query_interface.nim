@@ -1,24 +1,15 @@
 import std/json
+import ../../query_builder/rdb/rdb_types
 import ../models/column
 import ../models/table
 
-
-type IGenerator* = tuple
-  resetMigrationTable:proc(table:Table)
-  resetTable:proc(table:Table)
-  getHistories:proc(table:Table):JsonNode
-  exec:proc(table:Table)
-  execThenSaveHistory:proc(tableName:string, query:seq[string], checksum:string)
-  createTableSql:proc(table:Table)
-  addColumnSql:proc(table:Table, column:Column)
-  addColumn:proc(table:Table, column:Column)
-  changeColumnSql:proc(table:Table, column:Column)
-  changeColumn:proc(table:Table, column:Column)
-  # renameColumnSql:proc(column:Column, table:Table)
-  # renameColumn:proc(column:Column, table:Table)
-  # deleteColumnSql:proc(column:Column, table:Table)
-  # deleteColumn:proc(column:Column, table:Table)
-  # renameTableSql:proc(table:Table)
-  # renameTable:proc(table:Table)
-  # dropTableSql:proc(table:Table)
-  # dropTable:proc(table:Table)
+type IQuery* = tuple
+  createMigrationTable:proc()
+  createTable:proc(isReset:bool)
+  resetMigrationTable:proc()
+  resetTable:proc()
+  addColumn:proc(isReset:bool)
+  changeColumn:proc(isReset:bool)
+  renameColumn:proc(isReset:bool)
+  deleteColumn:proc(isReset:bool)
+  dropTable:proc(isReset:bool)

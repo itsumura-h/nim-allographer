@@ -5,79 +5,54 @@ import std/sha1
 import ../../query_builder/rdb/rdb_types
 import ../models/table
 import ../models/column
-import ../queries/sqlite/sqlite_query
-import ../queries/postgres/postgres_query
-import ../queries/mysql/mysql_query
-import ../enums
 import ../queries/query_interface
-
-
-proc shouldRunProcess(history:JsonNode, checksum:string, isReset:bool):bool =
-  if isReset:
-    return true
-  if not history.contains(checksum):
-    return true
-  if not history[checksum]["status"].getBool:
-    return true
-  return false
+import ../queries/sqlite/sqlite_query_type
+import ../queries/sqlite/sqlite_query_impl
+# import ../queries/postgres/postgres_query_type
+# import ../queries/postgres/postgres_query_impl
+import ../enums
 
 
 proc alter*(rdb:Rdb, tables:varargs[Table]) =
   let cmd = commandLineParams()
   let isReset = defined(reset) or cmd.contains("--reset")
 
-  let generator =
-    case rdb.driver
-    of SQLite3:
-      SqliteQuery.new(rdb).toInterface()
-    of PostgreSQL:
-      PostgresQuery.new(rdb).toInterface()
-    of MySQL, MariaDB:
-      MysqlQuery.new(rdb).toInterface()
-
-  # let generator = SqliteQuery.new(rdb).toInterface()
-  # let generator = PostgresQuery.new(rdb).toInterface()
-
   # create migration table
   let migrationTable = table("_migrations", [
     Column.string("name"),
     Column.text("query"),
     Column.string("checksum").index(),
-    Column.datetime("created_at"),
+    Column.datetime("created_at").index(),
     Column.boolean("status")
   ])
-  # create table
-  generator.createTableSql(migrationTable)
-  generator.exec(migrationTable)
+
+  var query = SqliteQuery.new(rdb, migrationTable).toInterface()
+  # var query = PostgresQuery.new(rdb, migrationTable).toInterface()
+  query.createMigrationTable()
 
   for i, table in tables:
-    let history = generator.getHistories(table)
+    table.usecaseType = Alter
     case table.migrationType
     of CreateTable:
       for column in table.columns:
+        column.usecaseType = Alter 
         case column.migrationType
         of AddColumn:
-          generator.addColumnSql(table, column)
-          if shouldRunProcess(history, column.checksum, isReset):
-            generator.addColumn(table, column)
+          query = SqliteQuery.new(rdb, table, column).toInterface()
+          query.addColumn(isReset)
         of ChangeColumn:
-          generator.changeColumnSql(table, column)
-          if shouldRunProcess(history, column.checksum, isReset):
-            generator.changeColumn(table, column)
-          discard
+          query = SqliteQuery.new(rdb, table, column).toInterface()
+          query.changeColumn(isReset)
         of RenameColumn:
-          # generator.renameColumnSql(column, table)
-          # if shouldRunProcess(history, column.checksum, isReset):
-          #   generator.renameColumn(column, table)
-          discard
+          query = SqliteQuery.new(rdb, table, column).toInterface()
+          query.renameColumn(isReset)
         of DeleteColumn:
-          # generator.deleteColumnSql(column, table)
-          # if shouldRunProcess(history, column.checksum, isReset):
-          #   generator.deleteColumn(column, table)
-          discard
+          query = SqliteQuery.new(rdb, table, column).toInterface()
+          query.deleteColumn(isReset)
     of ChangeTable:
       discard
     of RenameTable:
       discard
     of DropTable:
-      discard
+      query = SqliteQuery.new(rdb, table).toInterface()
+      query.dropTable(isReset)

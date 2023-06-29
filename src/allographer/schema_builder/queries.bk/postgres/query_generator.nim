@@ -17,11 +17,8 @@ proc serialGenerator*(column:Column, table:Table):string =
 proc intGenerator*(column:Column, table:Table):string =
   result = &"\"{column.name}\" INTEGER"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -36,11 +33,8 @@ proc intGenerator*(column:Column, table:Table):string =
 proc smallIntGenerator*(column:Column, table:Table):string =
   result = &"\"{column.name}\" SMALLINT"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -55,11 +49,8 @@ proc smallIntGenerator*(column:Column, table:Table):string =
 proc mediumIntGenerator*(column:Column, table:Table):string =
   result = &"\"{column.name}\" INTEGER"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -74,11 +65,8 @@ proc mediumIntGenerator*(column:Column, table:Table):string =
 proc bigIntGenerator*(column:Column, table:Table):string =
   result = &"\"{column.name}\" BIGINT"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -98,11 +86,8 @@ proc decimalGenerator*(column:Column, table:Table):string =
   let digit = column.info["digit"].getInt
   result = &"\"{column.name}\" NUMERIC({maximum}, {digit})"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -119,11 +104,8 @@ proc doubleGenerator*(column:Column, table:Table):string =
   let digit = column.info["digit"].getInt
   result = &"\"{column.name}\" NUMERIC({maximum}, {digit})"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -138,11 +120,8 @@ proc doubleGenerator*(column:Column, table:Table):string =
 proc floatGenerator*(column:Column, table:Table):string =
   result = &"\"{column.name}\" NUMERIC"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -161,11 +140,8 @@ proc charGenerator*(column:Column, table:Table):string =
   let maxLength = column.info["maxLength"].getInt
   result = &"\"{column.name}\" CHAR({maxLength})"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -181,11 +157,8 @@ proc stringGenerator*(column:Column, table:Table):string =
   let maxLength = column.info["maxLength"].getInt
   result = &"\"{column.name}\" VARCHAR({maxLength})"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -200,11 +173,8 @@ proc stringGenerator*(column:Column, table:Table):string =
 proc textGenerator*(column:Column, table:Table):string =
   result = &"\"{column.name}\" TEXT"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -222,11 +192,8 @@ proc textGenerator*(column:Column, table:Table):string =
 proc dateGenerator*(column:Column, table:Table):string =
   result = &"\"{column.name}\" DATE"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -241,11 +208,8 @@ proc dateGenerator*(column:Column, table:Table):string =
 proc datetimeGenerator*(column:Column, table:Table):string =
   result = &"\"{column.name}\" TIMESTAMP"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -260,11 +224,8 @@ proc datetimeGenerator*(column:Column, table:Table):string =
 proc timeGenerator*(column:Column, table:Table):string =
   result = &"\"{column.name}\" TIME"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -279,11 +240,8 @@ proc timeGenerator*(column:Column, table:Table):string =
 proc timestampGenerator*(column:Column, table:Table):string =
   result = &"\"{column.name}\" TIMESTAMP"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -310,11 +268,8 @@ proc softDeleteGenerator*(column:Column, table:Table):string =
 proc blobGenerator*(column:Column, table:Table):string =
   result = &"\"{column.name}\" BYTEA"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -329,11 +284,8 @@ proc blobGenerator*(column:Column, table:Table):string =
 proc boolGenerator*(column:Column, table:Table):string =
   result = &"\"{column.name}\" BOOLEAN"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -359,11 +311,8 @@ proc enumOptionsGenerator(name:string, options:seq[string]):string =
 proc enumGenerator*(column:Column, table:Table):string =
   result = &"\"{column.name}\" CHARACTER"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
   if column.isUnique:
-    result.add(" UNIQUE")
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -385,11 +334,8 @@ proc enumGenerator*(column:Column, table:Table):string =
 proc jsonGenerator*(column:Column, table:Table):string =
   result = &"\"{column.name}\" JSONB"
 
-  if column.isUnique or not column.isNullable or column.isDefault:
-    result.add(&" CONSTRAINT {table.name}_{column.name}")
-
-  if not column.isNullable:
-    result.add(" NOT NULL")
+  if column.isUnique:
+    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
 
   if column.isDefault:
     result.add(&" DEFAULT '{column.defaultJson.pretty}'")

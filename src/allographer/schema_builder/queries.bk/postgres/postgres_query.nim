@@ -93,7 +93,7 @@ proc generateForeignString(table:Table, column:Column) =
 
 
 proc generateIndexString(table:Table, column:Column) =
-  if column.isIndex:
+  if column.isIndex and column.typ != rdbIncrements:
     column.indexQuery = column.indexGenerator(table)
 
 
@@ -214,8 +214,6 @@ proc execThenSaveHistory(self:PostgresQuery, tableName:string, queries:seq[strin
 proc createTableSql(self:PostgresQuery, table:Table) =
   for i, column in table.columns:
     generateColumnString(table, column)
-    generateForeignString(table, column)
-    generateIndexString(table, column)
 
   var query = ""
   var foreignQuery = ""
@@ -225,10 +223,12 @@ proc createTableSql(self:PostgresQuery, table:Table) =
     query.add(column.query)
 
     if column.typ == rdbForeign or column.typ == rdbStrForeign:
+      generateForeignString(table, column)
       if foreignQuery.len > 0:  foreignQuery.add(", ")
       foreignQuery.add(column.foreignQuery)
     
-    if column.isIndex:
+    if not column.isUnique and column.isIndex:
+      generateIndexString(table, column)
       indexQuery.add(column.indexQuery)
 
   if foreignQuery.len > 0:
@@ -248,15 +248,15 @@ proc createTableSql(self:PostgresQuery, table:Table) =
 
 proc addColumnSql(self:PostgresQuery, table:Table, column:Column) =
   generateColumnString(table, column)
-  generateForeignString(table, column)
-  generateIndexString(table, column)
 
   if column.typ == rdbForeign or column.typ == rdbStrForeign:
+    generateForeignString(table, column)
     column.queries.add(&"ALTER TABLE \"{table.name}\" ADD COLUMN {column.query} {column.foreignQuery}")
   else:
     column.queries.add(&"ALTER TABLE \"{table.name}\" ADD COLUMN {column.query}")
   
-  if column.isIndex:
+  if not column.isUnique and column.isIndex:
+    generateIndexString(table, column)
     column.queries.add(column.indexQuery)
 
   column.checksum = $column.queries.join("; ").secureHash()
@@ -271,7 +271,7 @@ proc addColumn(self:PostgresQuery, table:Table, column:Column) =
 proc changeColumnSql(self:PostgresQuery, table:Table, column:Column) =
   generateChangeColumnString(table, column)
   
-  if column.isIndex:
+  if not column.isUnique and column.isIndex:
     generateIndexString(table, column)
     column.queries.add(column.indexQuery)
 

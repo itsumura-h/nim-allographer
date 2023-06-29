@@ -1,3 +1,5 @@
+## https://www.postgresql.org/docs/current/sql-altertable.html
+
 import std/json
 import std/strformat
 import std/strutils
@@ -11,7 +13,9 @@ import ../query_util
 # int
 # =============================================================================
 proc serialChangeGenerator*(column:Column, table:Table):seq[string] =
-  notAllowed("serial", "ALTER COLUMN", column.name)
+  result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" TYPE BIGINT")
+  result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+  result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
 
 proc intChangeGenerator*(column:Column, table:Table):seq[string] =
@@ -24,7 +28,7 @@ proc intChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT {column.defaultInt}")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -41,7 +45,7 @@ proc smallIntChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT {column.defaultInt}")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -58,7 +62,7 @@ proc mediumIntChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT {column.defaultInt}")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -66,7 +70,7 @@ proc mediumIntChangeGenerator*(column:Column, table:Table):seq[string] =
 
 
 proc bigIntChangeGenerator*(column:Column, table:Table):seq[string] =
-  result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" TYPE BIGINT	")
+  result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" TYPE BIGINT")
 
   if not column.isNullable:
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET NOT NULL")
@@ -75,7 +79,7 @@ proc bigIntChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT {column.defaultInt}")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -98,7 +102,7 @@ proc decimalChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT {column.defaultFloat}")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -115,7 +119,7 @@ proc floatChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT {column.defaultFloat}")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -136,7 +140,7 @@ proc charChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT '{column.defaultString}'")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -154,7 +158,7 @@ proc stringChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT '{column.defaultString}'")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -171,7 +175,7 @@ proc textChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT '{column.defaultString}'")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -191,7 +195,7 @@ proc dateChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT (NOW())")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -208,7 +212,7 @@ proc datetimeChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT (NOW())")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -225,7 +229,7 @@ proc timeChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT (NOW())")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -242,7 +246,7 @@ proc timestampChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT (NOW())")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -271,7 +275,7 @@ proc blobChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT '{column.defaultString}'")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -288,7 +292,7 @@ proc boolChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT '{column.defaultBool}'")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -316,7 +320,7 @@ proc enumChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT '{column.defaultString}'")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:
@@ -340,7 +344,7 @@ proc jsonChangeGenerator*(column:Column, table:Table):seq[string] =
     result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT '{column.defaultJson.pretty}'")
 
   if column.isUnique:
-    result.add(&"CREATE UNIQUE INDEX {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
+    result.add(&"CREATE UNIQUE INDEX IF NOT EXISTS {table.name}_{column.name}_unique ON \"{table.name}\"(\"{column.name}\")")
     result.add(&"ALTER TABLE \"{table.name}\" ADD UNIQUE USING INDEX {table.name}_{column.name}_unique")
 
   if column.isUnsigned:

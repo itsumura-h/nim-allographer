@@ -92,8 +92,7 @@ proc generateForeignString(column:Column) =
 
 
 proc generateIndexString(table:Table, column:Column) =
-  if column.isIndex:
-    # column.indexQuery = &"CREATE INDEX IF NOT EXISTS {table.name}_{column.name}_index ON {table.name}({column.name})"
+  if column.isIndex and column.typ != rdbIncrements:
     column.indexQuery = column.indexGenerator(table)
 
 
@@ -183,15 +182,15 @@ proc createTableSql(self:MysqlQuery, table:Table) =
 
 proc addColumnSql(self:MysqlQuery, table:Table, column:Column) =
   generateColumnString(column)
-  generateForeignString(column)
-  generateIndexString(table, column)
 
   if column.typ == rdbForeign or column.typ == rdbStrForeign:
+    generateForeignString(column)
     column.queries.add(&"ALTER TABLE `{table.name}` ADD {column.foreignQuery}")
   else:
     column.queries.add(&"ALTER TABLE `{table.name}` ADD COLUMN {column.query}")
   
-  if column.isIndex:
+  if not column.isUnique and column.isIndex:
+    generateIndexString(table, column)
     column.queries.add(column.indexQuery)
 
   column.checksum = $column.queries.join("; ").secureHash()

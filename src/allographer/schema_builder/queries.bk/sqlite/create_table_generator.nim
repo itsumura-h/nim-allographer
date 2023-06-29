@@ -1,3 +1,5 @@
+## https://www.sqlite.org/lang_createtable.html#constraints
+
 import std/json
 import std/strformat
 import std/strutils
@@ -10,11 +12,11 @@ import ../query_util
 # =============================================================================
 # int
 # =============================================================================
-proc serialGenerator*(column:Column):string =
+proc createSerialColumn*(column:Column):string =
   result = &"'{column.name}' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT"
 
 
-proc intGenerator*(column:Column):string =
+proc createIntColumn*(column:Column):string =
   result = &"'{column.name}' INTEGER"
 
   if column.isUnique:
@@ -33,7 +35,7 @@ proc intGenerator*(column:Column):string =
 # =============================================================================
 # float
 # =============================================================================
-proc decimalGenerator*(column:Column):string =
+proc createDecimalColumn*(column:Column):string =
   result = &"'{column.name}' NUMERIC"
 
   if column.isUnique:
@@ -49,7 +51,7 @@ proc decimalGenerator*(column:Column):string =
     result.add(&" CHECK ({column.name} >= 0)")
 
 
-proc floatGenerator*(column:Column):string =
+proc createFloatColumn*(column:Column):string =
   result = &"'{column.name}' REAL"
 
   if column.isUnique:
@@ -68,7 +70,23 @@ proc floatGenerator*(column:Column):string =
 # =============================================================================
 # char
 # =============================================================================
-proc charGenerator*(column:Column):string =
+proc createUuidColumn*(column:Column):string =
+  result = &"'{column.name}' VARCHAR"
+
+  if not column.isNullable:
+    result.add(" NOT NULL")
+
+  if column.isDefault:
+    result.add(&" DEFAULT '{column.defaultString}'")
+
+  let maxLength = column.info["maxLength"].getInt
+  result.add(&" CHECK (length('{column.name}') <= {maxLength})")
+
+  if column.isUnsigned:
+    notAllowed("unsigned", "varchar", column.name)
+
+
+proc createCharColumn*(column:Column):string =
   result = &"'{column.name}' VARCHAR"
 
   if column.isUnique:
@@ -87,7 +105,7 @@ proc charGenerator*(column:Column):string =
     notAllowed("unsigned", "char", column.name)
 
 
-proc varcharGenerator*(column:Column):string =
+proc createVarcharColumn*(column:Column):string =
   result = &"'{column.name}' VARCHAR"
 
   if column.isUnique:
@@ -106,7 +124,7 @@ proc varcharGenerator*(column:Column):string =
     notAllowed("unsigned", "varchar", column.name)
 
 
-proc textGenerator*(column:Column):string =
+proc createTextColumn*(column:Column):string =
   result = &"'{column.name}' TEXT"
 
   if column.isUnique:
@@ -125,7 +143,7 @@ proc textGenerator*(column:Column):string =
 # =============================================================================
 # date
 # =============================================================================
-proc dateGenerator*(column:Column):string =
+proc createDateColumn*(column:Column):string =
   result = &"'{column.name}' DATE"
 
   if column.isUnique:
@@ -141,7 +159,7 @@ proc dateGenerator*(column:Column):string =
     notAllowed("unsigned", "date", column.name)
 
 
-proc datetimeGenerator*(column:Column):string =
+proc createDatetimeColumn*(column:Column):string =
   result = &"'{column.name}' DATETIME"
 
   if column.isUnique:
@@ -157,7 +175,7 @@ proc datetimeGenerator*(column:Column):string =
     notAllowed("unsigned", "datetime", column.name)
 
 
-proc timeGenerator*(column:Column):string =
+proc createTimeColumn*(column:Column):string =
   result = &"'{column.name}' TIME"
 
   if column.isUnique:
@@ -173,7 +191,7 @@ proc timeGenerator*(column:Column):string =
     notAllowed("unsigned", "time", column.name)
 
 
-proc timestampGenerator*(column:Column):string =
+proc createTimestampColumn*(column:Column):string =
   result = &"'{column.name}' DATETIME"
 
   if column.isUnique:
@@ -189,19 +207,19 @@ proc timestampGenerator*(column:Column):string =
     notAllowed("unsigned", "timestamp", column.name)
 
 
-proc timestampsGenerator*(column:Column):string =
+proc createTimestampsColumn*(column:Column):string =
   result = "'created_at' DATETIME DEFAULT CURRENT_TIMESTAMP, "
   result.add("'updated_at' DATETIME DEFAULT CURRENT_TIMESTAMP")
 
 
-proc softDeleteGenerator*(column:Column):string =
+proc createSoftDeleteColumn*(column:Column):string =
   result = "'deleted_at' DATETIME"
 
 
 # =============================================================================
 # others
 # =============================================================================
-proc blobGenerator*(column:Column):string =
+proc createBlobColumn*(column:Column):string =
   result = &"'{column.name}' BLOB"
 
   if column.isUnique:
@@ -217,7 +235,7 @@ proc blobGenerator*(column:Column):string =
     notAllowed("unsigned", "blob", column.name)
 
 
-proc boolGenerator*(column:Column):string =
+proc createBoolColumn*(column:Column):string =
   result = &"'{column.name}' TINYINT"
 
   if column.isUnique:
@@ -233,7 +251,7 @@ proc boolGenerator*(column:Column):string =
     notAllowed("unsigned", "bool", column.name)
 
 
-proc enumOptionsGenerator(name:string, options:seq[string]):string =
+proc enumOptionsColumn(name:string, options:seq[string]):string =
   var optionsString = ""
   for i, option in options:
     if i > 0: optionsString.add(" OR ")
@@ -244,7 +262,7 @@ proc enumOptionsGenerator(name:string, options:seq[string]):string =
   return optionsString
 
 
-proc enumGenerator*(column:Column):string =
+proc createEnumColumn*(column:Column):string =
   result = &"'{column.name}' VARCHAR"
 
   if column.isUnique:
@@ -260,14 +278,14 @@ proc enumGenerator*(column:Column):string =
   for row in column.info["options"].items:
     options.add(row.getStr)
 
-  let optionsString = enumOptionsGenerator(column.name, options)
+  let optionsString = enumOptionsColumn(column.name, options)
   result.add(&" CHECK ({optionsString})")
 
   if column.isUnsigned:
     notAllowed("unsigned", "enum", column.name)
 
 
-proc jsonGenerator*(column:Column):string =
+proc createJsonColumn*(column:Column):string =
   result = &"'{column.name}' TEXT"
 
   if column.isUnique:
@@ -286,19 +304,19 @@ proc jsonGenerator*(column:Column):string =
 # =============================================================================
 # foreign key
 # =============================================================================
-proc foreignColumnGenerator*(column:Column):string =
+proc createForeignColumn*(column:Column):string =
   result = &"'{column.name}' INTEGER"
   if column.isDefault:
     result.add(&" DEFAULT {column.defaultInt}")
 
 
-proc strForeignColumnGenerator*(column:Column):string =
+proc createStrForeignColumn*(column:Column):string =
   result = &"'{column.name}' VARCHAR"
   if column.isDefault:
     result.add(&" DEFAULT {column.defaultString}")
 
 
-proc foreignGenerator*(column:Column):string =
+proc createForeignKey*(column:Column):string =
   var onDeleteString = "RESTRICT"
   if column.foreignOnDelete == CASCADE:
     onDeleteString = "CASCADE"
@@ -309,30 +327,15 @@ proc foreignGenerator*(column:Column):string =
 
   let tableName = column.info["table"].getStr
   let columnnName = column.info["column"].getStr
-  return &"FOREIGN KEY('{column.name}') REFERENCES {tableName}({columnnName}) ON DELETE {onDeleteString}"
+  return &"FOREIGN KEY('{column.name}') REFERENCES \"{tableName}\"('{columnnName}') ON DELETE {onDeleteString}"
 
 
-proc alterAddForeignGenerator*(column:Column):string =
-  var onDeleteString = "RESTRICT"
-  if column.foreignOnDelete == CASCADE:
-    onDeleteString = "CASCADE"
-  elif column.foreignOnDelete == SET_NULL:
-    onDeleteString = "SET NULL"
-  elif column.foreignOnDelete == NO_ACTION:
-    onDeleteString = "NO ACTION"
-
-  let tableName = column.info["table"].getStr
-  let columnName = column.info["column"].getStr
-
-  return &"REFERENCES {tableName}({columnName}) ON DELETE {onDeleteString}"
+# proc indexName*(table, column:string):string =
+#   let smallTable = table.toLowerAscii()
+#   return &"{smallTable}_{column}_index"
 
 
-proc indexName*(table, column:string):string =
-  let smallTable = table.toLowerAscii()
-  return &"{smallTable}_{column}_index"
-
-
-proc indexGenerator*(column:Column, table:Table):string =
+proc createIndexColumn*(column:Column, table:Table):string =
   let table = table.name
   let smallTable = table.toLowerAscii()
   return &"CREATE INDEX IF NOT EXISTS \"{smallTable}_{column.name}_index\" ON \"{table}\"(\"{column.name}\")"

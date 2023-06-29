@@ -38,6 +38,11 @@ type ForeignOnDelete* = enum
   SET_NULL
   NO_ACTION
 
+type UsecaseType* = enum
+  Create
+  Alter
+  Drop
+
 type TableMigrationType* = enum
     CreateTable
     ChangeTable

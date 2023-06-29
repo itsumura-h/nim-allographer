@@ -22,20 +22,38 @@ type Column* = ref object
   indexQuery*: string
   queries*: seq[string] # used in alter table
   checksum*:string
-  schema*:JsonNode
   # alter table
-  migrationType*:ColumnMigrationType
   previousName*:string
-
+  migrationType*:ColumnMigrationType
+  usecaseType*:UsecaseType
 
 proc new(_:type Column):Column =
   return Column(
     defaultJson: newJNull(),
     info: newJNull(),
     queries: newSeq[string](),
-    schema: newJNull()
   )
 
+proc toSchema*(self:Column):JsonNode =
+  return %*{
+    "name": self.name,
+    "typ": self.typ,
+    "isIndex": self.isIndex,
+    "isNullable": self.isNullable,
+    "isUnsigned": self.isUnsigned,
+    "isUnique": self.isUnique,
+    "isDefault": self.isDefault,
+    "defaultBool": self.defaultBool,
+    "defaultInt": self.defaultInt,
+    "defaultFloat": self.defaultFloat,
+    "defaultString": self.defaultString,
+    "defaultJson": self.defaultJson,
+    "foreignOnDelete": self.foreignOnDelete,
+    "info": self.info,
+    "previousName":self.previousName,
+    "migrationType":self.migrationType,
+    "usecaseType": self.usecaseType
+  }
 
 # =============================================================================
 # int
@@ -44,7 +62,7 @@ proc increments*(_:type Column, name:string): Column =
   let column = Column.new()
   column.name = name
   column.typ = rdbIncrements
-  column.isIndex = true
+  # column.isIndex = true
   return column
 
 
@@ -134,7 +152,6 @@ proc uuid*(_:type Column, name:string):Column =
   column.name = name
   column.typ = rdbUuid
   column.isUnique = true
-  column.isIndex = true
   column.info = %*{"maxLength": 255}
   return column
 
@@ -245,7 +262,7 @@ proc foreign*(_:type Column, name:string):Column =
   column.name = name
   column.previousName = name
   column.typ = rdbForeign
-  column.isIndex = true
+  column.isIndex = false
   return column
 
 
@@ -254,7 +271,7 @@ proc strForeign*(_:type Column, name:string, length=255):Column =
   column.name = name
   column.previousName = name
   column.typ = rdbStrForeign
-  column.isIndex = true
+  column.isIndex = false
   column.info = %*{"maxLength": length}
   return column
 
