@@ -8,31 +8,15 @@ import std/sha1
 import std/json
 import std/times
 import ../../../query_builder
-import ../../enums
 import ../../models/table
 import ../../models/column
 import ./sqlite_query_type
-import ./sub/add_column_query
 
 
 proc shouldRun(rdb:Rdb, table:Table, checksum:string, isReset:bool):bool =
   if isReset:
     return true
 
-  # let tables = rdb.table("_migrations")
-  #           .where("name", "=", table.name)
-  #           .orderBy("created_at", Desc)
-  #           .get()
-  #           .waitFor
-
-  # var histories = newJObject()
-  # for table in tables:
-  #   histories[table["checksum"].getStr] = table
-
-  # if not histories.hasKey(checksum):
-  #   return true
-
-  # return not histories[checksum]["status"].getBool
   let history = rdb.table("_migrations")
                   .where("checksum", "=", checksum)
                   .first()

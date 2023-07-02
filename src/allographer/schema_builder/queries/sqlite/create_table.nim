@@ -5,11 +5,9 @@ import std/times
 import std/sha1
 import std/options
 import std/json
-import ../../../query_builder/enums as query_builder_enums
 import ../../../query_builder/rdb/rdb_types
 import ../../../query_builder/rdb/rdb_interface
 import ../../../query_builder/rdb/query/grammar
-import ../../../query_builder/error
 import ../../enums
 import ../../models/table
 import ../../models/column

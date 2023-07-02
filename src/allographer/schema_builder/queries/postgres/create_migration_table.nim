@@ -1,19 +1,13 @@
 import std/asyncdispatch
 import std/strformat
-import std/strutils
-import std/times
-import std/sha1
-import std/json
-import ../../../query_builder/enums as query_builder_enums
 import ../../../query_builder/rdb/rdb_types
 import ../../../query_builder/rdb/rdb_interface
 import ../../../query_builder/rdb/query/grammar
-import ../../../query_builder/error
 import ../../enums
 import ../../models/table
 import ../../models/column
 import ./postgres_query_type
-import ./sub/create_column
+import ./sub/create_column_query
 
 
 proc exec(rdb:Rdb, queries:seq[string]) =

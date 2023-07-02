@@ -5,16 +5,14 @@ import std/times
 import std/sha1
 import std/json
 import std/options
-import ../../../query_builder/enums as query_builder_enums
 import ../../../query_builder/rdb/rdb_types
 import ../../../query_builder/rdb/rdb_interface
 import ../../../query_builder/rdb/query/grammar
-import ../../../query_builder/error
 import ../../enums
 import ../../models/table
 import ../../models/column
 import ./postgres_query_type
-import ./sub/create_column
+import ./sub/create_column_query
 
 
 proc shouldRun(rdb:Rdb, table:Table, checksum:string, isReset:bool):bool =

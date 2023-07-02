@@ -4,9 +4,7 @@ import std/options
 import std/strutils
 import std/sha1
 import std/times
-import std/json
 import ../../../query_builder
-import ../../enums
 import ../../models/table
 import ../../models/column
 import ./sqlite_query_type
@@ -17,24 +15,6 @@ proc shouldRun(rdb:Rdb, table:Table, column:Column, checksum:string, isReset:boo
   if isReset:
     return true
 
-  # if column.typ == rdbIncrements:
-  #   let columns = rdb.table(table.name).columns().waitFor
-  #   return not columns.contains(column.name)
-  # else:
-  #   let tables = rdb.table("_migrations")
-  #                   .where("name", "=", table.name)
-  #                   .orderBy("created_at", Desc)
-  #                   .get()
-  #                   .waitFor
-
-  #   var histories = newJObject()
-  #   for table in tables:
-  #     histories[table["checksum"].getStr] = table
-
-  #   if not histories.hasKey(checksum):
-  #     return true
-
-  #   return not histories[checksum]["status"].getBool
   let history = rdb.table("_migrations")
                   .where("checksum", "=", checksum)
                   .first()

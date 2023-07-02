@@ -1,8 +1,3 @@
-import std/json
-import ../../query_builder/rdb/rdb_types
-import ../models/column
-import ../models/table
-
 type IQuery* = tuple
   createMigrationTable:proc()
   createTable:proc(isReset:bool)

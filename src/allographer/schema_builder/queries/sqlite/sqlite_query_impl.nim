@@ -1,6 +1,3 @@
-import ../../../query_builder/rdb/rdb_types
-import ../../models/table
-import ../../models/column
 import ../query_interface
 import ./sqlite_query_type
 import ./create_migration_table
