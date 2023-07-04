@@ -1,6 +1,5 @@
 import std/asyncdispatch
 import std/strformat
-import ../../../query_builder/rdb/rdb_types
 import ../../../query_builder/rdb/rdb_interface
 import ../../../query_builder/rdb/query/grammar
 import ../../models/table

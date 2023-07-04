@@ -1,4 +1,5 @@
 import std/json
+import std/strutils
 import std/sequtils
 import ../enums
 from ./column import Column, toSchema
@@ -14,6 +15,16 @@ type Table* = ref object
   usecaseType*:UsecaseType
 
 
+proc table*(name:string, columns:varargs[Column]):Table =
+  # let jsonColumns = createTable(name, columns)
+  return Table(
+    name: name,
+    columns: @columns,
+    query: newSeq[string](),
+    migrationType: CreateTable
+  )
+
+
 proc toSchema*(self:Table):JsonNode =
   let columns = self.columns.map(
     proc(column:Column):JsonNode =
@@ -27,34 +38,6 @@ proc toSchema*(self:Table):JsonNode =
     "usecaseType": self.usecaseType
   }
 
-# proc createTable(name:string, columns:varargs[Column]):JsonNode =
-#   for column in columns:
-#     let jsonSchema = %*{
-#       "name": column.name,
-#       "typ": column.typ,
-#       "isIndex": column.isIndex,
-#       "isNullable": column.isNullable,
-#       "isUnsigned": column.isUnsigned,
-#       "isUnique": column.isUnique,
-#       "isDefault": column.isDefault,
-#       "defaultBool": column.defaultBool,
-#       "defaultInt": column.defaultInt,
-#       "defaultFloat": column.defaultFloat,
-#       "defaultString": column.defaultString,
-#       "defaultJson": column.defaultJson,
-#       "foreignOnDelete": column.foreignOnDelete,
-#       "info": column.info
-#     }
-#     column.schema = jsonSchema
-#     jsonColumns.add(jsonSchema)
-#   return jsonColumns
-
-
-proc table*(name:string, columns:varargs[Column]):Table =
-  # let jsonColumns = createTable(name, columns)
-  return Table(
-    name: name,
-    columns: @columns,
-    query: newSeq[string](),
-    migrationType: CreateTable
-  )
+proc smallName*(self:Table):string =
+  ## TableName -> tablename
+  return self.name.toLowerAscii()

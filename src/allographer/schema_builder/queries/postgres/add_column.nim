@@ -1,16 +1,13 @@
 import std/asyncdispatch
 import std/strutils
-import std/strformat
 import std/sha1
 import std/options
 import std/json
 import std/times
 import ../../../query_builder
-import ../../enums
 import ../../models/table
 import ../../models/column
 import ./postgres_query_type
-# import ./sub/create_column_query
 import ./sub/add_column_query
 
 
@@ -46,8 +43,8 @@ proc execThenSaveHistory(rdb:Rdb, tableName:string, queries:seq[string], checksu
 
 
 proc addColumn*(self:PostgresQuery, isReset:bool) =
-  createColumnString(self.table, self.column)
-
+  addColumnString(self.table, self.column)
+  
   let schema = $self.column.toSchema()
   let checksum = $schema.secureHash()
 

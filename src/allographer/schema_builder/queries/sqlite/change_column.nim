@@ -6,10 +6,11 @@ import std/sha1
 import std/options
 import std/json
 import std/times
-import ../../../query_builder
 import ../../enums
+import ../../../query_builder
 import ../../models/table
 import ../../models/column
+import ../query_util
 import ./sqlite_query_type
 import ./sub/create_column_query
 
@@ -50,6 +51,14 @@ proc changeColumn*(self:SqliteQuery, isReset:bool) =
   ## - copy data from old table to tmp table
   ## - delete old table
   ## - rename tmp table name to old table name
+
+  if self.column.typ == rdbIncrements:
+    notAllowedType("increments", "Sqlite3")
+  elif self.column.typ == rdbTimestamps:
+    notAllowedType("timestamps", "Sqlite3")
+  elif self.column.typ == rdbSoftDelete:
+    notAllowedType("softDelete", "Sqlite3")
+
   let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '{self.table.name}'"
   var rows = self.rdb.raw(tableDifinitionSql).get.waitFor
   let schema = replace(rows[0]["sql"].getStr, re"\)$", ",)")

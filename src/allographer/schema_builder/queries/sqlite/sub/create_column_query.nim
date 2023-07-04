@@ -83,7 +83,7 @@ proc createUuidColumn(column:Column):string =
   result.add(&" CHECK (length('{column.name}') <= {maxLength})")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "varchar", column.name)
+    notAllowedOption("unsigned", "varchar", column.name)
 
 
 proc createCharColumn(column:Column):string =
@@ -102,7 +102,7 @@ proc createCharColumn(column:Column):string =
   result.add(&" CHECK (length('{column.name}') <= {maxLength})")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "char", column.name)
+    notAllowedOption("unsigned", "char", column.name)
 
 
 proc createVarcharColumn(column:Column):string =
@@ -121,7 +121,7 @@ proc createVarcharColumn(column:Column):string =
   result.add(&" CHECK (length('{column.name}') <= {maxLength})")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "varchar", column.name)
+    notAllowedOption("unsigned", "varchar", column.name)
 
 
 proc createTextColumn(column:Column):string =
@@ -137,7 +137,7 @@ proc createTextColumn(column:Column):string =
     result.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "text", column.name)
+    notAllowedOption("unsigned", "text", column.name)
 
 
 # =============================================================================
@@ -156,7 +156,7 @@ proc createDateColumn(column:Column):string =
     result.add(&" DEFAULT CURRENT_TIMESTAMP")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "date", column.name)
+    notAllowedOption("unsigned", "date", column.name)
 
 
 proc createDatetimeColumn(column:Column):string =
@@ -172,7 +172,7 @@ proc createDatetimeColumn(column:Column):string =
     result.add(&" DEFAULT CURRENT_TIMESTAMP")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "datetime", column.name)
+    notAllowedOption("unsigned", "datetime", column.name)
 
 
 proc createTimeColumn(column:Column):string =
@@ -188,7 +188,7 @@ proc createTimeColumn(column:Column):string =
     result.add(&" DEFAULT CURRENT_TIMESTAMP")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "time", column.name)
+    notAllowedOption("unsigned", "time", column.name)
 
 
 proc createTimestampColumn(column:Column):string =
@@ -204,7 +204,7 @@ proc createTimestampColumn(column:Column):string =
     result.add(&" DEFAULT CURRENT_TIMESTAMP")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "timestamp", column.name)
+    notAllowedOption("unsigned", "timestamp", column.name)
 
 
 proc createTimestampsColumn(column:Column):string =
@@ -232,7 +232,7 @@ proc createBlobColumn(column:Column):string =
     result.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "blob", column.name)
+    notAllowedOption("unsigned", "blob", column.name)
 
 
 proc createBoolColumn(column:Column):string =
@@ -248,7 +248,7 @@ proc createBoolColumn(column:Column):string =
     result.add(&" DEFAULT {column.defaultBool}")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "bool", column.name)
+    notAllowedOption("unsigned", "bool", column.name)
 
 
 proc enumOptionsColumn(name:string, options:seq[string]):string =
@@ -282,11 +282,11 @@ proc createEnumColumn(column:Column):string =
   result.add(&" CHECK ({optionsString})")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "enum", column.name)
+    notAllowedOption("unsigned", "enum", column.name)
 
 
 proc createJsonColumn(column:Column):string =
-  result = &"'{column.name}' TEXT"
+  result = &"'{column.name}' JSON"
 
   if column.isUnique:
     result.add(" UNIQUE")
@@ -298,7 +298,7 @@ proc createJsonColumn(column:Column):string =
     result.add(&" DEFAULT '{column.defaultJson.pretty}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "json", column.name)
+    notAllowedOption("unsigned", "json", column.name)
 
 
 # =============================================================================
@@ -331,9 +331,7 @@ proc createForeignKey(column:Column):string =
 
 
 proc createIndexColumn(column:Column, table:Table):string =
-  let table = table.name
-  let smallTable = table.toLowerAscii()
-  return &"CREATE INDEX IF NOT EXISTS \"{smallTable}_{column.name}_index\" ON \"{table}\"('{column.name}')"
+  return &"CREATE INDEX IF NOT EXISTS \"{table.name}_{column.name}_index\" ON \"{table.name}\"('{column.name}')"
 
 
 proc createColumnString*(column:Column) =

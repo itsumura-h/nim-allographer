@@ -9,7 +9,7 @@ import ../../../query_builder
 import ../../models/table
 import ../../models/column
 import ./postgres_query_type
-import ./sub/create_column_query
+import ./sub/change_column_query
 
 
 proc shouldRun(rdb:Rdb, table:Table, checksum:string, isReset:bool):bool =
@@ -44,21 +44,11 @@ proc execThenSaveHistory(rdb:Rdb, tableName:string, queries:seq[string], checksu
 
 
 proc changeColumn*(self:PostgresQuery, isReset:bool) =
-  echo "=== changeColumn"
-  createColumnString(self.table, self.column)
-  createForeignString(self.table, self.column)
-  createIndexString(self.table, self.column)
-
-  echo self.column.query
-  echo self.column.foreignQuery
-  echo self.column.indexQuery
-
-  let query = &"ALTER TABLE \"{self.table.name}\" ALTER COLUMN {self.column.query}"
-  echo "=== query"
-  echo query
+  changeColumnString(self.table, self.column)
+  changeIndexString(self.table, self.column)
 
   let schema = $self.column.toSchema()
   let checksum = $schema.secureHash()
 
   if shouldRun(self.rdb, self.table, checksum, isReset):
-    execThenSaveHistory(self.rdb, self.table.name, @[query], checksum)
+    execThenSaveHistory(self.rdb, self.table.name, self.column.queries, checksum)

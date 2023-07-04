@@ -103,7 +103,7 @@ proc addUuidColumn(table:Table, column:Column):seq[string] =
   query.add(&" CHECK (length('{column.name}') <= {maxLength})")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "varchar", column.name)
+    notAllowedOption("unsigned", "varchar", column.name)
 
   return @[query]
 
@@ -121,7 +121,7 @@ proc addCharColumn(table:Table, column:Column):seq[string] =
   query.add(&" CHECK (length('{column.name}') <= {maxLength})")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "char", column.name)
+    notAllowedOption("unsigned", "char", column.name)
 
   return @[query]
 
@@ -139,7 +139,7 @@ proc addVarcharColumn(table:Table, column:Column):seq[string] =
   query.add(&" CHECK (length('{column.name}') <= {maxLength})")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "varchar", column.name)
+    notAllowedOption("unsigned", "varchar", column.name)
 
   return @[query]
 
@@ -154,7 +154,7 @@ proc addTextColumn(table:Table, column:Column):seq[string] =
     query.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "text", column.name)
+    notAllowedOption("unsigned", "text", column.name)
 
   return @[query]
 
@@ -172,7 +172,7 @@ proc addDateColumn(table:Table, column:Column):seq[string] =
     query.add(&" DEFAULT CURRENT_TIMESTAMP")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "date", column.name)
+    notAllowedOption("unsigned", "date", column.name)
 
   return @[query]
 
@@ -187,7 +187,7 @@ proc addDatetimeColumn(table:Table, column:Column):seq[string] =
     query.add(&" DEFAULT CURRENT_TIMESTAMP")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "datetime", column.name)
+    notAllowedOption("unsigned", "datetime", column.name)
 
   return @[query]
 
@@ -202,7 +202,7 @@ proc addTimeColumn(table:Table, column:Column):seq[string] =
     query.add(&" DEFAULT CURRENT_TIMESTAMP")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "time", column.name)
+    notAllowedOption("unsigned", "time", column.name)
 
   return @[query]
 
@@ -217,7 +217,7 @@ proc addTimestampColumn(table:Table, column:Column):seq[string] =
     query.add(&" DEFAULT CURRENT_TIMESTAMP")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "timestamp", column.name)
+    notAllowedOption("unsigned", "timestamp", column.name)
 
   return @[query]
 
@@ -244,7 +244,7 @@ proc addBlobColumn(table:Table, column:Column):seq[string] =
     query.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "blob", column.name)
+    notAllowedOption("unsigned", "blob", column.name)
 
   return @[query]
 
@@ -259,7 +259,7 @@ proc addBoolColumn(table:Table, column:Column):seq[string] =
     query.add(&" DEFAULT {column.defaultBool}")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "bool", column.name)
+    notAllowedOption("unsigned", "bool", column.name)
 
   return @[query]
 
@@ -292,13 +292,13 @@ proc addEnumColumn(table:Table, column:Column):seq[string] =
   query.add(&" CHECK ({optionsString})")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "enum", column.name)
+    notAllowedOption("unsigned", "enum", column.name)
 
   return @[query]
 
 
 proc addJsonColumn(table:Table, column:Column):seq[string] =
-  var query = &"ALTER TABLE \"{table.name}\" ADD COLUMN '{column.name}' TEXT"
+  var query = &"ALTER TABLE \"{table.name}\" ADD COLUMN '{column.name}' JSON"
 
   if not column.isNullable:
     query.add(" NOT NULL")
@@ -307,7 +307,7 @@ proc addJsonColumn(table:Table, column:Column):seq[string] =
     query.add(&" DEFAULT '{column.defaultJson.pretty}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "json", column.name)
+    notAllowedOption("unsigned", "json", column.name)
 
   return @[query]
 
@@ -351,15 +351,11 @@ proc addStrForeignColumn(table:Table, column:Column):seq[string] =
 
 
 proc addUniqueColumn(column:Column, table:Table):string =
-  let table = table.name
-  let smallTable = table.toLowerAscii()
-  return &"CREATE UNIQUE INDEX IF NOT EXISTS \"{smallTable}_{column.name}_unique\" ON \"{table}\"('{column.name}')"
+  return &"CREATE UNIQUE INDEX IF NOT EXISTS \"{table.name}_{column.name}_unique\" ON \"{table.name}\"('{column.name}')"
 
 
 proc addIndexColumn(column:Column, table:Table):string =
-  let table = table.name
-  let smallTable = table.toLowerAscii()
-  return &"CREATE INDEX IF NOT EXISTS \"{smallTable}_{column.name}_index\" ON \"{table}\"('{column.name}')"
+  return &"CREATE INDEX IF NOT EXISTS \"{table.name}_{column.name}_index\" ON \"{table.name}\"('{column.name}')"
 
 
 proc addColumnString*(rdb:Rdb, table:Table, column:Column) =

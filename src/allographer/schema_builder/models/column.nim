@@ -333,7 +333,8 @@ proc default*(c: Column):Column =
 
 
 proc index*(c: Column):Column =
-  c.isIndex = true
+  if not c.isUnique:
+    c.isIndex = true
   return c
 
 
@@ -344,6 +345,7 @@ proc nullable*(c: Column): Column =
 
 proc unique*(c: Column): Column =
   c.isUnique = true
+  c.isIndex = false
   return c
 
 

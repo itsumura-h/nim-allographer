@@ -145,7 +145,7 @@ proc createCharColumn(column:Column, table:Table):seq[string] =
     query.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "char", column.name)
+    notAllowedOption("unsigned", "char", column.name)
 
   return @[query]
 
@@ -164,7 +164,7 @@ proc createStringColumn(column:Column, table:Table):seq[string] =
     query.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "string", column.name)
+    notAllowedOption("unsigned", "string", column.name)
 
   return @[query]
 
@@ -182,7 +182,7 @@ proc createTextColumn(column:Column, table:Table):seq[string] =
     query.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "text", column.name)
+    notAllowedOption("unsigned", "text", column.name)
 
   return @[query]
 
@@ -203,7 +203,7 @@ proc createDateColumn(column:Column, table:Table):seq[string] =
     query.add(&" DEFAULT (NOW())")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "date", column.name)
+    notAllowedOption("unsigned", "date", column.name)
 
   return @[query]
 
@@ -221,7 +221,7 @@ proc createDatetimeColumn(column:Column, table:Table):seq[string] =
     query.add(&" DEFAULT (NOW())")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "date", column.name)
+    notAllowedOption("unsigned", "date", column.name)
 
   return @[query]
 
@@ -239,7 +239,7 @@ proc createTimeColumn(column:Column, table:Table):seq[string] =
     query.add(&" DEFAULT (NOW())")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "date", column.name)
+    notAllowedOption("unsigned", "date", column.name)
 
   return @[query]
 
@@ -257,7 +257,7 @@ proc createTimestampColumn(column:Column, table:Table):seq[string] =
     query.add(&" DEFAULT (NOW())")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "date", column.name)
+    notAllowedOption("unsigned", "date", column.name)
 
   return @[query]
 
@@ -292,7 +292,7 @@ proc createBlobColumn(column:Column, table:Table):seq[string] =
     query.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "blob", column.name)
+    notAllowedOption("unsigned", "blob", column.name)
 
   return @[query]
 
@@ -310,7 +310,7 @@ proc createBoolColumn(column:Column, table:Table):seq[string] =
     query.add(&" DEFAULT {column.defaultBool}")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "bool", column.name)
+    notAllowedOption("unsigned", "bool", column.name)
 
   return @[query]
 
@@ -340,7 +340,7 @@ proc createEnumColumn(column:Column, table:Table):seq[string] =
     query.add(&" DEFAULT '{column.defaultString}'")
     
   if column.isUnsigned:
-    notAllowed("unsigned", "text", column.name)
+    notAllowedOption("unsigned", "text", column.name)
 
   var options:seq[string]
   for row in column.info["options"].items:
@@ -363,12 +363,12 @@ proc createJsonColumn(column:Column, table:Table):seq[string] =
     query.add(&" DEFAULT '{column.defaultJson.pretty}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "json", column.name)
+    notAllowedOption("unsigned", "json", column.name)
 
   return @[query]
 
 
-proc createForeignColumn(column:Column, table:Table):seq[string] =
+proc addForeignColumn(column:Column, table:Table):seq[string] =
   var query = &"ALTER TABLE \"{table.name}\" ADD COLUMN \"{column.name}\" INT"
   
   if column.isDefault:
@@ -377,7 +377,7 @@ proc createForeignColumn(column:Column, table:Table):seq[string] =
   return @[query]
 
 
-proc createStrForeignColumn(column:Column, table:Table):seq[string] =
+proc addStrForeignColumn(column:Column, table:Table):seq[string] =
   let maxLength = column.info["maxLength"].getInt
   var query = &"ALTER TABLE \"{table.name}\" ADD COLUMN \"{column.name}\" VARCHAR({maxLength})"
 
@@ -387,7 +387,7 @@ proc createStrForeignColumn(column:Column, table:Table):seq[string] =
   return @[query]
 
 
-proc createForeignKey(column:Column, table:Table):string =
+proc addForeignKey(column:Column, table:Table):string =
   var onDeleteString = "RESTRICT"
   if column.foreignOnDelete == CASCADE:
     onDeleteString = "CASCADE"
@@ -401,12 +401,11 @@ proc createForeignKey(column:Column, table:Table):string =
   return &"ALTER TABLE \"{table.name}\" ADD FOREIGN KEY (\"{column.name}\") REFERENCES \"{refTable}\"(\"{refColumn}\") ON DELETE {onDeleteString}"
 
 
-proc indexColumn(column:Column, table:Table):string =
-  let smallTable = table.name.toLowerAscii()
-  return &"CREATE INDEX IF NOT EXISTS \"{smallTable}_{column.name}_index\" ON \"{table.name}\"(\"{column.name}\")"
+proc addIndexColumn(column:Column, table:Table):string =
+  return &"CREATE INDEX IF NOT EXISTS \"{table.name}_{column.name}_index\" ON \"{table.name}\"(\"{column.name}\")"
 
 
-proc createColumnString*(table:Table, column:Column) =
+proc addColumnString*(table:Table, column:Column) =
   case column.typ:
     # int
   of rdbIncrements:
@@ -464,16 +463,11 @@ proc createColumnString*(table:Table, column:Column) =
     column.queries = column.createJsonColumn(table)
   # foreign
   of rdbForeign:
-    column.queries = column.createForeignColumn(table)
-    column.foreignQuery = column.createForeignKey(table)
+    column.queries = column.addForeignColumn(table)
+    column.queries.add(column.addForeignKey(table))
   of rdbStrForeign:
-    column.queries = column.createStrForeignColumn(table)
-    column.foreignQuery = column.createForeignKey(table)
+    column.queries = column.addStrForeignColumn(table)
+    column.queries.add(column.addForeignKey(table))
 
-  if column.foreignQuery.len > 0:
-    column.queries.add(column.foreignQuery)
-
-  if not column.isUnique and column.isIndex:
-    column.queries.add(
-      column.indexColumn(table)
-    )
+  if column.isIndex:
+    column.queries.add(column.addIndexColumn(table))

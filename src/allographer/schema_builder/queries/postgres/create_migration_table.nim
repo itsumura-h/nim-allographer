@@ -53,6 +53,4 @@ proc createMigrationTable*(self: PostgresQuery) =
   if indexQuery.len > 0:
     queries.add(indexQuery)
 
-  for row in queries:
-    echo row
   exec(self.rdb, queries)

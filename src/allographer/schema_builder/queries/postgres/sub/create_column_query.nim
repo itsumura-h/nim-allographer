@@ -18,7 +18,7 @@ proc createIntColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" INTEGER"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -34,7 +34,7 @@ proc createSmallIntColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" SMALLINT"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -50,7 +50,7 @@ proc createMediumIntColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" INTEGER"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -66,7 +66,7 @@ proc createBigIntColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" BIGINT"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -87,25 +87,7 @@ proc createDecimalColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" NUMERIC({maximum}, {digit})"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
-
-  if not column.isNullable:
-    result.add(" NOT NULL")
-
-  if column.isDefault:
-    result.add(&" DEFAULT {column.defaultFloat}")
-
-  if column.isUnsigned:
-    result.add(&" CHECK (\"{column.name}\" >= 0)")
-
-
-proc createDoubleColumn(column:Column, table:Table):string =
-  let maximum = column.info["maximum"].getInt
-  let digit = column.info["digit"].getInt
-  result = &"\"{column.name}\" NUMERIC({maximum}, {digit})"
-
-  if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -121,7 +103,7 @@ proc createFloatColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" NUMERIC"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -141,7 +123,7 @@ proc createCharColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" CHAR({maxLength})"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -150,7 +132,7 @@ proc createCharColumn(column:Column, table:Table):string =
     result.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "char", column.name)
+    notAllowedOption("unsigned", "char", column.name)
 
 
 proc createStringColumn(column:Column, table:Table):string =
@@ -158,7 +140,7 @@ proc createStringColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" VARCHAR({maxLength})"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -167,14 +149,14 @@ proc createStringColumn(column:Column, table:Table):string =
     result.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "string", column.name)
+    notAllowedOption("unsigned", "string", column.name)
 
 
 proc createTextColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" TEXT"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -183,7 +165,7 @@ proc createTextColumn(column:Column, table:Table):string =
     result.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "text", column.name)
+    notAllowedOption("unsigned", "text", column.name)
 
 
 # =============================================================================
@@ -193,7 +175,7 @@ proc createDateColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" DATE"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -202,14 +184,14 @@ proc createDateColumn(column:Column, table:Table):string =
     result.add(&" DEFAULT (NOW())")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "date", column.name)
+    notAllowedOption("unsigned", "date", column.name)
 
 
 proc createDatetimeColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" TIMESTAMP"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -218,14 +200,14 @@ proc createDatetimeColumn(column:Column, table:Table):string =
     result.add(&" DEFAULT (NOW())")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "date", column.name)
+    notAllowedOption("unsigned", "date", column.name)
 
 
 proc createTimeColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" TIME"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -234,14 +216,14 @@ proc createTimeColumn(column:Column, table:Table):string =
     result.add(&" DEFAULT (NOW())")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "date", column.name)
+    notAllowedOption("unsigned", "date", column.name)
 
 
 proc createTimestampColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" TIMESTAMP"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -250,7 +232,7 @@ proc createTimestampColumn(column:Column, table:Table):string =
     result.add(&" DEFAULT (NOW())")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "date", column.name)
+    notAllowedOption("unsigned", "date", column.name)
 
 
 proc createTimestampsColumn(column:Column, table:Table):string =
@@ -269,7 +251,7 @@ proc createBlobColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" BYTEA"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -278,14 +260,14 @@ proc createBlobColumn(column:Column, table:Table):string =
     result.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "blob", column.name)
+    notAllowedOption("unsigned", "blob", column.name)
 
 
 proc createBoolColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" BOOLEAN"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -294,7 +276,7 @@ proc createBoolColumn(column:Column, table:Table):string =
     result.add(&" DEFAULT {column.defaultBool}")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "bool", column.name)
+    notAllowedOption("unsigned", "bool", column.name)
 
 
 proc enumOptionsGenerator(name:string, options:seq[string]):string =
@@ -312,7 +294,7 @@ proc createEnumColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" CHARACTER"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -321,7 +303,7 @@ proc createEnumColumn(column:Column, table:Table):string =
     result.add(&" DEFAULT '{column.defaultString}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "text", column.name)
+    notAllowedOption("unsigned", "text", column.name)
 
   var options:seq[string]
   for row in column.info["options"].items:
@@ -335,23 +317,23 @@ proc createJsonColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" JSONB"
 
   if column.isUnique:
-    result.add(&" CONSTRAINT {table.name}_{column.name}_unique UNIQUE")
+    result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
   if column.isDefault:
     result.add(&" DEFAULT '{column.defaultJson.pretty}'")
 
   if column.isUnsigned:
-    notAllowed("unsigned", "json", column.name)
+    notAllowedOption("unsigned", "json", column.name)
 
 
-proc createForeignColumnColumn(column:Column, table:Table):string =
+proc createForeignColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" INT"
   
   if column.isDefault:
     result.add(&" DEFAULT {column.defaultInt}")
 
 
-proc createStrForeignColumnColumn(column:Column, table:Table):string =
+proc createStrForeignColumn(column:Column, table:Table):string =
   let maxLength = column.info["maxLength"].getInt
   result = &"\"{column.name}\" VARCHAR({maxLength})"
 
@@ -359,7 +341,7 @@ proc createStrForeignColumnColumn(column:Column, table:Table):string =
     result.add(&" DEFAULT {column.defaultString}")
 
 
-proc createForeignColumn(column:Column, table:Table):string =
+proc createForeignKey(column:Column, table:Table):string =
   var onDeleteString = "RESTRICT"
   if column.foreignOnDelete == CASCADE:
     onDeleteString = "CASCADE"
@@ -374,8 +356,7 @@ proc createForeignColumn(column:Column, table:Table):string =
 
 
 proc indexColumn(column:Column, table:Table):string =
-  let smallTable = table.name.toLowerAscii()
-  return &"CREATE INDEX IF NOT EXISTS \"{smallTable}_{column.name}_index\" ON \"{table.name}\"(\"{column.name}\")"
+  return &"CREATE INDEX IF NOT EXISTS \"{table.name}_{column.name}_index\" ON \"{table.name}\"(\"{column.name}\")"
 
 
 proc createColumnString*(table:Table, column:Column) =
@@ -386,11 +367,11 @@ proc createColumnString*(table:Table, column:Column) =
   of rdbInteger:
     column.query = column.createIntColumn(table)
   of rdbSmallInteger:
-    column.query = column.createIntColumn(table)
+    column.query = column.createSmallIntColumn(table)
   of rdbMediumInteger:
-    column.query = column.createIntColumn(table)
+    column.query = column.createMediumIntColumn(table)
   of rdbBigInteger:
-    column.query = column.createIntColumn(table)
+    column.query = column.createBigIntColumn(table)
     # float
   of rdbDecimal:
     column.query = column.createDecimalColumn(table)
@@ -436,14 +417,14 @@ proc createColumnString*(table:Table, column:Column) =
     column.query = column.createJsonColumn(table)
   # foreign
   of rdbForeign:
-    column.query = column.createForeignColumnColumn(table)
+    column.query = column.createForeignColumn(table)
   of rdbStrForeign:
-    column.query = column.createStrForeignColumnColumn(table)
+    column.query = column.createStrForeignColumn(table)
 
 
 proc createForeignString*(table:Table, column:Column) =
   if column.typ == rdbForeign or column.typ == rdbStrForeign:
-    column.foreignQuery = column.createForeignColumn(table)
+    column.foreignQuery = column.createForeignKey(table)
 
 
 proc createIndexString*(table:Table, column:Column) =
