@@ -8,6 +8,7 @@ import ../queries/sqlite/sqlite_query_impl
 import ../queries/postgres/postgres_query_type
 import ../queries/postgres/postgres_query_impl
 import ../enums
+import ./sub/migration_table_def
 
 
 proc createQuery(rdb:Rdb, table:Table):IQuery =
@@ -35,14 +36,6 @@ proc alter*(rdb:Rdb, tables:varargs[Table]) =
   let isReset = defined(reset) or cmd.contains("--reset")
 
   # create migration table
-  let migrationTable = table("_migrations", [
-    Column.string("name"),
-    Column.text("query"),
-    Column.string("checksum").index(),
-    Column.datetime("created_at").index(),
-    Column.boolean("status")
-  ])
-
   var query = createQuery(rdb, migrationTable)
   query.createMigrationTable()
 

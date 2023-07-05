@@ -12,6 +12,17 @@ import ../queries/postgres/postgres_query_type
 import ../queries/postgres/postgres_query_impl
 # import ../queries/mysql/mysql_query
 # import ../queries/query_interface
+import ./sub/migration_table_def
+
+
+proc createQuery(rdb:Rdb, table:Table):IQuery =
+  case rdb.driver
+  of SQLite3:
+    return SqliteQuery.new(rdb, table).toInterface()
+  of PostgreSQL:
+    return PostgresQuery.new(rdb, table).toInterface()
+  else:
+    return SqliteQuery.new(rdb, table).toInterface()
 
 
 proc create*(rdb:Rdb, tables:varargs[Table]) =
@@ -19,48 +30,18 @@ proc create*(rdb:Rdb, tables:varargs[Table]) =
   let isReset = defined(reset) or cmd.contains("--reset")
 
   # create migration table
-  let migrationTable = table("_migrations", [
-    Column.string("name"),
-    Column.text("query"),
-    Column.string("checksum").index(),
-    Column.datetime("created_at").index(),
-    Column.boolean("status")
-  ])
-  # create table
-  var query =
-    case rdb.driver
-    of SQLite3:
-      SqliteQuery.new(rdb, migrationTable).toInterface()
-    of PostgreSQL:
-      PostgresQuery.new(rdb, migrationTable).toInterface()
-    else:
-      SqliteQuery.new(rdb, migrationTable).toInterface()
-
+  var query = createQuery(rdb, migrationTable)
   query.createMigrationTable()
 
   if isReset:
     # delete table in reverse loop in tables
     for i in countdown(tables.len-1, 0):
       let table = tables[i]
-      query =
-        case rdb.driver
-        of SQLite3:
-          SqliteQuery.new(rdb, table).toInterface()
-        of PostgreSQL:
-          PostgresQuery.new(rdb, table).toInterface()
-        else:
-          SqliteQuery.new(rdb, table).toInterface()
+      query = createQuery(rdb, table)
       query.resetMigrationTable()
       query.resetTable()
 
   for table in tables:
     table.usecaseType = Create
-    query =
-      case rdb.driver
-      of SQLite3:
-        SqliteQuery.new(rdb, table).toInterface()
-      of PostgreSQL:
-        PostgresQuery.new(rdb, table).toInterface()
-      else:
-        SqliteQuery.new(rdb, table).toInterface()
+    query = createQuery(rdb, table)
     query.createTable(isReset)

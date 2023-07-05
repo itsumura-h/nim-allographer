@@ -5,7 +5,20 @@ import ../models/column
 import ../queries/query_interface
 import ../queries/sqlite/sqlite_query_type
 import ../queries/sqlite/sqlite_query_impl
+import ../queries/postgres/postgres_query_type
+import ../queries/postgres/postgres_query_impl
 import ../enums
+import ./sub/migration_table_def
+
+
+proc createQuery(rdb:Rdb, table:Table):IQuery =
+  case rdb.driver
+  of SQLite3:
+    return SqliteQuery.new(rdb, table).toInterface()
+  of PostgreSQL:
+    return PostgresQuery.new(rdb, table).toInterface()
+  else:
+    return SqliteQuery.new(rdb, table).toInterface()
 
 
 proc drop*(rdb:Rdb, tables:varargs[Table]) =
@@ -13,17 +26,10 @@ proc drop*(rdb:Rdb, tables:varargs[Table]) =
   let isReset = defined(reset) or cmd.contains("--reset")
 
   # create migration table
-  let migrationTable = table("_migrations", [
-    Column.string("name"),
-    Column.text("query"),
-    Column.string("checksum").index(),
-    Column.datetime("created_at").index(),
-    Column.boolean("status")
-  ])
-  var query = SqliteQuery.new(rdb, migrationTable).toInterface()
+  var query = createQuery(rdb, migrationTable)
   query.createMigrationTable()
 
   for table in tables:
     table.usecaseType = Drop
-    query = SqliteQuery.new(rdb, table).toInterface()
+    query = createQuery(rdb, table)
     query.dropTable(isReset)
