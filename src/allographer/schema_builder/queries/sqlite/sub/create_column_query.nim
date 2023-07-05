@@ -71,7 +71,7 @@ proc createFloatColumn(column:Column):string =
 # char
 # =============================================================================
 proc createUuidColumn(column:Column):string =
-  result = &"'{column.name}' VARCHAR"
+  result = &"'{column.name}' VARCHAR UNIQUE"
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -403,5 +403,5 @@ proc createForeignString*(column:Column) =
 
 
 proc createIndexString*(table:Table, column:Column) =
-  if not column.isUnique and column.isIndex:
-      column.indexQuery = column.createIndexColumn(table)
+  if column.isIndex:
+    column.indexQuery = column.createIndexColumn(table)

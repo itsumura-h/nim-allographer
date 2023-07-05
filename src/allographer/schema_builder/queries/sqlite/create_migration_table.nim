@@ -14,9 +14,9 @@ proc exec(rdb:Rdb, queries:seq[string]) =
   var isSuccess = false
   let logDisplay = rdb.log.shouldDisplayLog
   let logFile = rdb.log.shouldOutputLogFile
-
   rdb.log.shouldDisplayLog = false
   rdb.log.shouldOutputLogFile = false
+
   try:
     for query in queries:
       rdb.raw(query).exec.waitFor
