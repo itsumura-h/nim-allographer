@@ -53,4 +53,4 @@ type ColumnMigrationType* = enum
     AddColumn
     ChangeColumn
     RenameColumn
-    DeleteColumn
+    DropColumn

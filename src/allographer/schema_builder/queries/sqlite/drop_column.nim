@@ -44,7 +44,7 @@ proc execThenSaveHistory(rdb:Rdb, tableName:string, queries:seq[string], checksu
   .waitFor
 
 
-proc deleteColumn*(self:SqliteQuery, isReset:bool) =
+proc dropColumn*(self:SqliteQuery, isReset:bool) =
   ## - create tmp table with new column difinition
   ## - copy data from old table to tmp table
   ## - delete old table

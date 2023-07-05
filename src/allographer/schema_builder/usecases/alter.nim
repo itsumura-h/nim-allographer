@@ -55,9 +55,9 @@ proc alter*(rdb:Rdb, tables:varargs[Table]) =
         of RenameColumn:
           query = createQuery(rdb, table, column)
           query.renameColumn(isReset)
-        of DeleteColumn:
+        of DropColumn:
           query = createQuery(rdb, table, column)
-          query.deleteColumn(isReset)
+          query.dropColumn(isReset)
     of ChangeTable:
       discard
     of RenameTable:

@@ -212,30 +212,30 @@ for rdb in dbConnections:
     #   )
 
 
-    test("rename column"):
+    # test("rename column"):
+    #   rdb.alter(
+    #     table("TypeIndex", [
+    #       Column.renameColumn("num", "num2"),
+    #       Column.renameColumn("str", "str2"),
+    #     ])
+    #   )
+
+    #   let columns = rdb.table("TypeIndex").columns().waitFor
+    #   check not columns.contains("num")
+    #   check columns.contains("num2")
+    #   check not columns.contains("str")
+    #   check columns.contains("str2")
+
+
+    test("delete column"):
       rdb.alter(
         table("TypeIndex", [
-          Column.renameColumn("num", "num2"),
-          Column.renameColumn("str", "str2"),
+          Column.dropColumn("str")
         ])
       )
 
       let columns = rdb.table("TypeIndex").columns().waitFor
-      check not columns.contains("num")
-      check columns.contains("num2")
       check not columns.contains("str")
-      check columns.contains("str2")
-
-
-  #   test("delete column"):
-  #     rdb.alter(
-  #       table("TypeIndex", [
-  #         Column.deleteColumn("str")
-  #       ])
-  #     )
-
-  #     let columns = rdb.table("TypeIndex").columns().waitFor
-  #     check not columns.contains("str")
 
 
   #   test("drop table"):

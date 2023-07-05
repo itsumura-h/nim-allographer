@@ -372,8 +372,8 @@ proc renameColumn*(_:type Column, src, dest:string): Column =
   column.migrationType = RenameColumn
   return column
 
-proc deleteColumn*(_:type Column, name:string): Column =
+proc dropColumn*(_:type Column, name:string): Column =
   let column = Column.new()
   column.name = name
-  column.migrationType = DeleteColumn
+  column.migrationType = DropColumn
   return column

@@ -6,7 +6,7 @@ import ./reset_table
 import ./add_column
 import ./change_column
 import ./rename_column
-import ./delete_column
+import ./drop_column
 import ./drop_table
 
 
@@ -19,6 +19,6 @@ proc toInterface*(self:SqliteQuery):IQuery =
     addColumn:proc(isReset:bool) = self.addColumn(isReset),
     changeColumn:proc(isReset:bool) = self.changeColumn(isReset),
     renameColumn:proc(isReset:bool) = self.renameColumn(isReset),
-    deleteColumn:proc(isReset:bool) = self.deleteColumn(isReset),
+    dropColumn:proc(isReset:bool) = self.dropColumn(isReset),
     dropTable:proc(isReset:bool) = self.dropTable(isReset)
   )

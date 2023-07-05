@@ -23,7 +23,7 @@ for rdb in dbConnections:
         Column.increments("id"),
         Column.string("changed_column").unique().default(""),
         Column.integer("changed_int").unique().default(0).unsigned(),
-        Column.string("delete_column").nullable(),
+        Column.string("drop_column").nullable(),
       ]),
       table("table_rename", [
         Column.increments("id"),
@@ -46,7 +46,7 @@ for rdb in dbConnections:
         "id": i,
         "changed_column": &"change{i}",
         "changed_int": i,
-        "delete_column": &"delete{i}"
+        "drop_column": &"delete{i}"
       }
       table_rename_data[i-1] = %*{
         "id": i
@@ -144,20 +144,20 @@ for rdb in dbConnections:
       asyncBlock:
         check rdb
           .table("table_alter")
-          .select("delete_column")
+          .select("drop_column")
           .orderBy("id", Asc)
           .first.await
-          .get["delete_column"].getStr == "delete1"
+          .get["drop_column"].getStr == "delete1"
 
         rdb.alter(
           table("table_alter", [
-            Column.deleteColumn("delete_column")
+            Column.deleteColumn("drop_column")
           ])
         )
 
         check rdb
           .table("table_alter")
-          .select("delete_column")
+          .select("drop_column")
           .orderBy("id", Asc)
           .first
           .await
