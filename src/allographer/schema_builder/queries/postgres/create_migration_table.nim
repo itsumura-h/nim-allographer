@@ -12,12 +12,20 @@ import ./sub/create_column_query
 
 proc exec(rdb:Rdb, queries:seq[string]) =
   var isSuccess = false
+  let logDisplay = rdb.log.shouldDisplayLog
+  let logFile = rdb.log.shouldOutputLogFile
+  rdb.log.shouldDisplayLog = false
+  rdb.log.shouldOutputLogFile = false
+
   try:
     for query in queries:
       rdb.raw(query).exec.waitFor
     isSuccess = true
   except:
     echo getCurrentExceptionMsg()
+
+  rdb.log.shouldDisplayLog = logDisplay
+  rdb.log.shouldOutputLogFile = logFile
 
 
 proc createMigrationTable*(self: PostgresQuery) =

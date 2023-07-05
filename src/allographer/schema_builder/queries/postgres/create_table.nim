@@ -64,7 +64,7 @@ proc createTable*(self: PostgresQuery, isReset:bool) =
       if foreignQuery.len > 0:  foreignQuery.add(", ")
       foreignQuery.add(column.foreignQuery)
     
-    if column.isUnique or column.isIndex:
+    if column.indexQuery.len > 0:
       indexQuery.add(column.indexQuery)
 
   if foreignQuery.len > 0:
