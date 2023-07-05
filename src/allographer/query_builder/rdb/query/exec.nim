@@ -181,8 +181,7 @@ proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string
       # return await mariadb.getColumns(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
     when isExistsPostgre:
-      discard
-      # return await postgres.getColumns(self.pools[connI].postgresConn, query, args, self.timeout)
+      return await postgres_impl.getColumns(self.pools[connI].postgresConn, query, args, self.timeout)
   of SQLite3:
     when isExistsSqlite:
       return await sqlite_impl.getColumns(self.pools[connI].sqliteConn, query, args, self.timeout)

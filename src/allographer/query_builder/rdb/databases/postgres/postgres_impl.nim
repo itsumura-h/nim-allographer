@@ -123,6 +123,42 @@ proc exec*(db:PPGconn, query: string, args: seq[string], timeout:int) {.async.} 
       break
     pqclear(pqresult)
 
+proc getColumns*(db:PPGconn, query: string, args: seq[string], timeout:int):Future[seq[string]] {.async.} =
+  assert db.status == CONNECTION_OK
+  let status = pqsendQuery(db, dbFormat(query, args).cstring)
+  if status != 1: dbError(db) # never seen to fail when async
+  var dbRows: DbRows
+  let calledAt = getTime().toUnix()
+  # await sleepAsync(0)
+  while true:
+    let success = pqconsumeInput(db)
+    if success != 1: dbError(db) # never seen to fail when async
+    if pqisBusy(db) == 1:
+      if getTime().toUnix() >= calledAt + timeout:
+        # exec cancel
+        # https://www.postgresql.jp/document/12.0/html/libpq-cancel.html
+        let cancel = pqGetCancel(db)
+        var err = ""
+        let res = pqCancel(cancel, err.cstring, 0)
+        if res == 0:
+          raise newException(DbError, err)
+        return
+      await sleepAsync(10)
+      continue
+    var pqresult = pqgetResult(db)
+    if pqresult == nil:
+      # Check if its a real error or just end of results
+      db.checkError()
+      break
+
+    var cols = pqnfields(pqresult)
+    setColumnInfo(pqresult, dbRows, 0, cols)
+    pqclear(pqresult)
+
+  for column in dbRows[0]:
+    result.add(column.name)
+
+
 proc prepare*(db:PPGconn, query: string, timeout:int, stmtName:string):Future[int] {.async.} =
   assert db.status == CONNECTION_OK
   let nArgs = query.count('$')
