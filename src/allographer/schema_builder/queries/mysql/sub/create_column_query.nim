@@ -9,10 +9,10 @@ import ../../query_util
 # =============================================================================
 # int
 # =============================================================================
-proc createSerialColumn*(column:Column):string =
+proc createSerialColumn(column:Column):string =
   result = &"`{column.name}` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT"
 
-proc createIntColumn*(column:Column):string =
+proc createIntColumn(column:Column):string =
   result = &"`{column.name}` INT"
 
   if column.isUnsigned:
@@ -28,7 +28,7 @@ proc createIntColumn*(column:Column):string =
     result.add(" NOT NULL")
 
 
-proc createSmallIntColumn*(column:Column):string =
+proc createSmallIntColumn(column:Column):string =
     result = &"`{column.name}` SMALLINT"
 
     if column.isUnsigned:
@@ -44,7 +44,7 @@ proc createSmallIntColumn*(column:Column):string =
       result.add(" NOT NULL")
 
 
-proc createMediumIntColumn*(column:Column):string =
+proc createMediumIntColumn(column:Column):string =
     result = &"`{column.name}` MEDIUMINT"
 
     if column.isUnsigned:
@@ -60,7 +60,7 @@ proc createMediumIntColumn*(column:Column):string =
       result.add(" NOT NULL")
 
 
-proc createBigIntColumn*(column:Column):string =
+proc createBigIntColumn(column:Column):string =
     result = &"`{column.name}` BIGINT"
 
     if column.isUnsigned:
@@ -79,7 +79,7 @@ proc createBigIntColumn*(column:Column):string =
 # =============================================================================
 # float
 # =============================================================================
-proc createDecimalColumn*(column:Column):string =
+proc createDecimalColumn(column:Column):string =
   let maximum = column.info["maximum"].getInt
   let digit = column.info["digit"].getInt
   result = &"`{column.name}` DECIMAL({maximum}, {digit})"
@@ -97,7 +97,7 @@ proc createDecimalColumn*(column:Column):string =
     result.add(" NOT NULL")
 
 
-proc createDoubleColumn*(column:Column):string =
+proc createDoubleColumn(column:Column):string =
   let maximum = column.info["maximum"].getInt
   let digit = column.info["digit"].getInt
   result = &"`{column.name}` DOUBLE({maximum}, {digit})"
@@ -115,7 +115,7 @@ proc createDoubleColumn*(column:Column):string =
     result.add(" NOT NULL")
 
 
-proc createFloatColumn*(column:Column):string =
+proc createFloatColumn(column:Column):string =
   result = &"`{column.name}` DOUBLE"
 
   if column.isUnsigned:
@@ -134,7 +134,7 @@ proc createFloatColumn*(column:Column):string =
 # =============================================================================
 # char
 # =============================================================================
-proc createCharColumn*(column:Column):string =
+proc createCharColumn(column:Column):string =
   let maxLength = column.info["maxLength"].getInt
   result = &"`{column.name}` CHAR({maxLength})"
 
@@ -151,7 +151,7 @@ proc createCharColumn*(column:Column):string =
     result.add(" NOT NULL")
 
 
-proc createStringColumn*(column:Column):string =
+proc createStringColumn(column:Column):string =
   let maxLength = column.info["maxLength"].getInt
   result = &"`{column.name}` VARCHAR({maxLength})"
 
@@ -168,7 +168,7 @@ proc createStringColumn*(column:Column):string =
     result.add(" NOT NULL")
 
 
-proc createTextColumn*(column:Column):string =
+proc createTextColumn(column:Column):string =
   result = &"`{column.name}` TEXT"
 
   if column.isUnsigned:
@@ -185,7 +185,7 @@ proc createTextColumn*(column:Column):string =
     result.add(" NOT NULL")
 
 
-proc createMediumTextColumn*(column:Column):string =
+proc createMediumTextColumn(column:Column):string =
   result = &"`{column.name}` MEDIUMTEXT"
 
   if column.isUnsigned:
@@ -202,7 +202,7 @@ proc createMediumTextColumn*(column:Column):string =
     result.add(" NOT NULL")
 
 
-proc createLongTextColumn*(column:Column):string =
+proc createLongTextColumn(column:Column):string =
   result = &"`{column.name}` LONGTEXT"
 
   if column.isUnsigned:
@@ -222,7 +222,7 @@ proc createLongTextColumn*(column:Column):string =
 # =============================================================================
 # date
 # =============================================================================
-proc createDateColumn*(column:Column):string =
+proc createDateColumn(column:Column):string =
   result = &"`{column.name}` DATE"
 
   if column.isUnsigned:
@@ -238,7 +238,7 @@ proc createDateColumn*(column:Column):string =
     result.add(&" DEFAULT (NOW())")
 
 
-proc createDatetimeColumn*(column:Column):string =
+proc createDatetimeColumn(column:Column):string =
   result = &"`{column.name}` DATETIME(3)"
 
   if column.isUnsigned:
@@ -254,7 +254,7 @@ proc createDatetimeColumn*(column:Column):string =
     result.add(" NOT NULL")
 
 
-proc createTimeColumn*(column:Column):string =
+proc createTimeColumn(column:Column):string =
   result = &"`{column.name}` TIME"
 
   if column.isUnsigned:
@@ -270,7 +270,7 @@ proc createTimeColumn*(column:Column):string =
     result.add(" NOT NULL")
 
 
-proc createTimestampColumn*(column:Column):string =
+proc createTimestampColumn(column:Column):string =
   result = &"`{column.name}` DATETIME(3)"
 
   if column.isUnsigned:
@@ -286,18 +286,18 @@ proc createTimestampColumn*(column:Column):string =
       result.add(" NOT NULL")
 
 
-proc createTimestampsColumn*(column:Column):string =
+proc createTimestampsColumn(column:Column):string =
   result = "`created_at` DATETIME(3), "
   result.add("`updated_at` DATETIME(3) DEFAULT (NOW())")
 
-proc createSoftDeleteColumn*(column:Column):string =
+proc createSoftDeleteColumn(column:Column):string =
   result = "`deleted_at` DATETIME(3)"
 
 
 # =============================================================================
 # others
 # =============================================================================
-proc createBlobColumn*(column:Column):string =
+proc createBlobColumn(column:Column):string =
   result = &"`{column.name}` BLOB"
 
   if column.isUnsigned:
@@ -314,7 +314,7 @@ proc createBlobColumn*(column:Column):string =
       result.add(" NOT NULL")
 
 
-proc createBoolColumn*(column:Column):string =
+proc createBoolColumn(column:Column):string =
   result = &"`{column.name}` BOOLEAN"
 
   if column.isUnsigned:
@@ -341,7 +341,7 @@ proc createEnumOptions(name:string, options:seq[string]):string =
 
   return optionsString
 
-proc createEnumColumn*(column:Column):string =
+proc createEnumColumn(column:Column):string =
   var options:seq[string]
   for row in column.info["options"].items:
     options.add(row.getStr)
@@ -362,7 +362,7 @@ proc createEnumColumn*(column:Column):string =
     result.add(&" DEFAULT '{column.defaultString}'")
 
 
-proc createJsonColumn*(column:Column):string =
+proc createJsonColumn(column:Column):string =
   result = &"`{column.name}` JSON"
 
   if column.isUnsigned:
@@ -383,18 +383,18 @@ proc createJsonColumn*(column:Column):string =
 # =============================================================================
 # foreign key
 # =============================================================================
-proc createForeignColumn*(column:Column):string =
+proc createForeignColumn(column:Column):string =
   result = &"`{column.name}` BIGINT"
   if column.isDefault:
     result.add(&" DEFAULT {column.defaultInt}")
 
-proc createStrForeignColumn*(column:Column):string =
+proc createStrForeignColumn(column:Column):string =
   let maxLength = column.info["maxLength"].getInt
   result = &"`{column.name}` VARCHAR({maxLength})"
   if column.isDefault:
     result.add(&" DEFAULT {column.defaultString}")
 
-proc createForeignKey*(column:Column):string =
+proc createForeignKey(column:Column):string =
   let onDeleteString =
     case column.foreignOnDelete
     of RESTRICT:

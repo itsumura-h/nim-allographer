@@ -27,7 +27,6 @@ proc shouldRun(rdb:Rdb, table:Table, checksum:string, isReset:bool):bool =
 
 
 proc execThenSaveHistory(rdb:Rdb, tableName:string, queries:seq[string], checksum:string) =
-  echo "=== execThenSaveHistory"
   var isSuccess = false
   try:
     for query in queries:

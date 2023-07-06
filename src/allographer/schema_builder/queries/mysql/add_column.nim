@@ -1,5 +1,6 @@
 import std/asyncdispatch
 import std/strutils
+import std/strformat
 import std/sha1
 import std/options
 import std/json
@@ -8,6 +9,7 @@ import ../../../query_builder
 import ../../models/table
 import ../../models/column
 import ./mysql_query_type
+import ./sub/add_column_query
 
 
 proc shouldRun(rdb:Rdb, table:Table, column:Column, checksum:string, isReset:bool):bool =
@@ -35,18 +37,17 @@ proc execThenSaveHistory(rdb:Rdb, tableName:string, queries:seq[string], checksu
     "name": tableName,
     "query": tableQuery,
     "checksum": checksum,
-    "created_at": $now().utc,
+    "created_at": $now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff"),
     "status": isSuccess
   })
   .waitFor
 
 
 proc addColumn*(self:MysqlQuery, isReset:bool) =
-  discard
-  # addColumnString(self.table, self.column)
+  addColumnString(self.table, self.column)
   
-  # let schema = $self.column.toSchema()
-  # let checksum = $schema.secureHash()
+  let schema = $self.column.toSchema()
+  let checksum = $schema.secureHash()
 
-  # if shouldRun(self.rdb, self.table, self.column, checksum, isReset):
-  #   execThenSaveHistory(self.rdb, self.table.name, self.column.queries, checksum)
+  if shouldRun(self.rdb, self.table, self.column, checksum, isReset):
+    execThenSaveHistory(self.rdb, self.table.name, self.column.queries, checksum)

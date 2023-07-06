@@ -29,6 +29,6 @@ proc createQuery*(rdb:Rdb, table:Table, column:Column):IQuery =
   of PostgreSQL:
     return PostgresQuery.new(rdb, table, column).toInterface()
   of MySQL, MariaDB:
-    return MysqlQuery.new(rdb, table).toInterface()
+    return MysqlQuery.new(rdb, table, column).toInterface()
   else:
     return SqliteQuery.new(rdb, table, column).toInterface()

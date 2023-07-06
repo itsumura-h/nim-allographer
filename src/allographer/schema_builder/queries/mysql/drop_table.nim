@@ -34,7 +34,7 @@ proc execThenSaveHistory(rdb:Rdb, tableName:string, query:string, checksum:strin
     "name": tableName,
     "query": query,
     "checksum": checksum,
-    "created_at": $now().utc,
+    "created_at": $now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff"),
     "status": isSuccess
   })
   .waitFor
