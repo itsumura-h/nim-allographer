@@ -1,5 +1,4 @@
 import std/strformat
-import ../../query_builder/rdb/rdb_types
 from std/db_common import DbError
 
 proc notAllowedOption*(option, typ, column:string) =
