@@ -1,5 +1,4 @@
 import std/asyncdispatch
-import std/strutils
 import std/strformat
 import std/sha1
 import std/options
@@ -9,7 +8,6 @@ import ../../../query_builder
 import ../../models/table
 import ../../models/column
 import ./postgres_query_type
-import ./sub/add_column_query
 
 
 proc shouldRun(rdb:Rdb, table:Table, column:Column, checksum:string, isReset:bool):bool =

@@ -1,6 +1,5 @@
 import std/asyncdispatch
 import std/strutils
-import std/strformat
 import std/sha1
 import std/options
 import std/json

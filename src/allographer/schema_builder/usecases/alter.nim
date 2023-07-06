@@ -3,32 +3,9 @@ import ../../query_builder/rdb/rdb_types
 import ../models/table
 import ../models/column
 import ../queries/query_interface
-import ../queries/sqlite/sqlite_query_type
-import ../queries/sqlite/sqlite_query_impl
-import ../queries/postgres/postgres_query_type
-import ../queries/postgres/postgres_query_impl
 import ../enums
 import ./sub/migration_table_def
-
-
-proc createQuery(rdb:Rdb, table:Table):IQuery =
-  case rdb.driver
-  of SQLite3:
-    return SqliteQuery.new(rdb, table).toInterface()
-  of PostgreSQL:
-    return PostgresQuery.new(rdb, table).toInterface()
-  else:
-    return SqliteQuery.new(rdb, table).toInterface()
-
-
-proc createQuery(rdb:Rdb, table:Table, column:Column):IQuery =
-  case rdb.driver
-  of SQLite3:
-    return SqliteQuery.new(rdb, table, column).toInterface()
-  of PostgreSQL:
-    return PostgresQuery.new(rdb, table, column).toInterface()
-  else:
-    return SqliteQuery.new(rdb, table, column).toInterface()
+import ./sub/create_query_def
 
 
 proc alter*(rdb:Rdb, tables:varargs[Table]) =
