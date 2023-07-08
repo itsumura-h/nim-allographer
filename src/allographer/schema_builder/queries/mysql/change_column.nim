@@ -8,8 +8,9 @@ import std/times
 import ../../../query_builder
 import ../../models/table
 import ../../models/column
+import ../../enums
 import ./mysql_query_type
-# import ./sub/change_column_query
+import ./sub/change_column_query
 
 
 proc shouldRun(rdb:Rdb, table:Table, checksum:string, isReset:bool):bool =
@@ -32,10 +33,10 @@ proc execThenSaveHistory(rdb:Rdb, tableName:string, queries:seq[string], checksu
   except:
     echo getCurrentExceptionMsg()
 
-  let tableQuery = queries.join("; ")
+  let query = queries.join("; ")
   rdb.table("_migrations").insert(%*{
     "name": tableName,
-    "query": tableQuery,
+    "query": query,
     "checksum": checksum,
     "created_at": $now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff"),
     "status": isSuccess
@@ -44,12 +45,28 @@ proc execThenSaveHistory(rdb:Rdb, tableName:string, queries:seq[string], checksu
 
 
 proc changeColumn*(self:MysqlQuery, isReset:bool) =
-  discard
-  # changeColumnString(self.table, self.column)
-  # changeIndexString(self.table, self.column)
+  ## add tmp column with new definition
+  ## move data from old column to tmp colun
+  ## change tmp column name to new column name
 
-  # let schema = $self.column.toSchema()
-  # let checksum = $schema.secureHash()
+  let schema = $self.column.toSchema()
+  let checksum = $schema.secureHash()
 
-  # if shouldRun(self.rdb, self.table, checksum, isReset):
-  #   execThenSaveHistory(self.rdb, self.table.name, self.column.queries, checksum)
+  let columnName = self.column.name
+  self.column.name = "alter_tmp_column"
+  changeColumnString(self.table, self.column)
+  self.column.name = columnName
+  var queries = self.column.queries
+  queries.add(&"INSERT INTO `{self.table.name}`(`alter_tmp_column`) SELECT `{columnName}` FROM `{self.table.name}`")
+  queries.add(&"ALTER TABLE `{self.table.name}` DROP CONSTRAINT IF EXISTS `{self.table.name}_{columnName}_fkey`")
+  queries.add(&"ALTER TABLE `{self.table.name}` DROP COLUMN `{columnName}`")
+  queries.add(&"ALTER TABLE `{self.table.name}` RENAME COLUMN `alter_tmp_column` TO `{columnName}`")
+  if self.column.typ == rdbForeign or self.column.typ == rdbStrForeign:
+    let foreignQuery = changeForeignKey(self.column, self.table)
+    queries.add(foreignQuery)
+  if self.column.isIndex:
+    let indexQuery = addIndexString(self.column, self.table)
+    queries.add(indexQuery)
+
+  if shouldRun(self.rdb, self.table, checksum, isReset):
+    execThenSaveHistory(self.rdb, self.table.name, queries, checksum)

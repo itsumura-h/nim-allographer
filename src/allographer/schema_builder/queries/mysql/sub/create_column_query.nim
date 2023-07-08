@@ -394,7 +394,7 @@ proc createStrForeignColumn(column:Column):string =
   if column.isDefault:
     result.add(&" DEFAULT {column.defaultString}")
 
-proc createForeignKey(column:Column):string =
+proc createForeignKey(column:Column, table:Table):string =
   let onDeleteString =
     case column.foreignOnDelete
     of RESTRICT:
@@ -408,7 +408,7 @@ proc createForeignKey(column:Column):string =
   
   let refColumn = column.info["column"].getStr
   let refTable = column.info["table"].getStr
-  return &"FOREIGN KEY(`{column.name}`) REFERENCES `{refTable}`(`{refColumn}`) ON DELETE {onDeleteString}"
+  return &"FOREIGN KEY `{table.name}_{column.name}_fkey` (`{column.name}`) REFERENCES `{refTable}`(`{refColumn}`) ON DELETE {onDeleteString}"
 
 proc alterAddForeignKey*(column:Column, table:Table):string =
   let onDeleteString =
@@ -500,10 +500,10 @@ proc createColumnString*(table:Table, column:Column) =
   # foreign
   of rdbForeign:
     column.query = column.createForeignColumn()
-    column.foreignQuery = column.createForeignKey()
+    column.foreignQuery = column.createForeignKey(table)
   of rdbStrForeign:
     column.query = column.createStrForeignColumn()
-    column.foreignQuery = column.createForeignKey()
+    column.foreignQuery = column.createForeignKey(table)
 
   if column.isIndex:
     column.indexQuery = column.createIndexString(table)
