@@ -174,11 +174,11 @@ proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string
   of MySQL:
     when isExistsMysql:
       discard
-      # return await mysql.getColumns(self.pools[connI].mysqlConn, query, args, self.timeout)
+      # return await mysql_impl.getColumns(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb:
       discard
-      # return await mariadb.getColumns(self.pools[connI].mariadbConn, query, args, self.timeout)
+      return await mariadb_impl.getColumns(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
     when isExistsPostgre:
       return await postgres_impl.getColumns(self.pools[connI].postgresConn, query, args, self.timeout)

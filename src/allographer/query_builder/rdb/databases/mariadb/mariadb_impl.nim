@@ -80,3 +80,29 @@ proc exec*(db:PMySQL, query: string, args: seq[string], timeout:int) {.async.} =
   var q = dbFormat(query, args)
   await sleepAsync(0)
   if realQuery(db, q.cstring, q.len) != 0'i32: dbError(db)
+
+
+proc getColumns*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[seq[string]] {.async.} =
+  assert db.ping == 0
+  # var dbRows: DbRows
+  var columns:seq[string]
+  # var rows = newSeq[seq[string]]()
+  # var lines = 0
+
+  rawExec(db, query, args)
+  var sqlres = mariadb_rdb.useResult(db)
+  let calledAt = getTime().toUnix()
+  var dbColumns: DbColumns
+  let cols = int(mariadb_rdb.numFields(sqlres))
+  while true:
+    if getTime().toUnix() >= calledAt + timeout:
+      return
+    await sleepAsync(0)
+    var row: mariadb_rdb.Row
+    setColumnInfo(dbColumns, sqlres, cols)
+    for column in dbColumns:
+      columns.add(column.name)
+    row = mariadb_rdb.fetchRow(sqlres)
+    if row == nil: break
+  free_result(sqlres)
+  return columns

@@ -40,7 +40,7 @@ proc execThenSaveHistory(rdb:Rdb, tableName:string, query:string, checksum:strin
 
 
 proc renameColumn*(self:MysqlQuery, isReset:bool) =
-  let query = &"ALTER TABLE \"{self.table.name}\" RENAME COLUMN \"{self.column.previousName}\" TO \"{self.column.name}\""
+  let query = &"ALTER TABLE `{self.table.name}` RENAME COLUMN `{self.column.previousName}` TO `{self.column.name}`"
   let schema = $self.column.toSchema()
   let checksum = $schema.secureHash()
   if shouldRun(self.rdb, self.table, self.column, checksum, isReset):

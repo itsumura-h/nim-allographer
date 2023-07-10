@@ -1,4 +1,5 @@
 import std/json
+import std/strformat
 import ../rdb_types
 import ./generator
 

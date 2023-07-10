@@ -8,7 +8,6 @@ import std/times
 import ../../../query_builder
 import ../../models/table
 import ../../models/column
-import ../../enums
 import ./mysql_query_type
 import ./sub/change_column_query
 
