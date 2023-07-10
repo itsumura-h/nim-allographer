@@ -45,25 +45,15 @@ proc execThenSaveHistory(rdb:Rdb, tableName:string, queries:seq[string], checksu
 
 
 proc changeColumn*(self:MysqlQuery, isReset:bool) =
-  ## add tmp column with new definition
-  ## move data from old column to tmp colun
-  ## change tmp column name to new column name
-
   let schema = $self.column.toSchema()
   let checksum = $schema.secureHash()
 
-  let columnName = self.column.name
-  self.column.name = "alter_tmp_column"
+  var queries:seq[string]
+  queries.add(&"ALTER TABLE `{self.table.name}` DROP INDEX IF EXISTS `{self.column.name}`") # unique
+  queries.add(&"ALTER TABLE `{self.table.name}` DROP INDEX IF EXISTS `{self.table.name}_{self.column.name}_index`")
   changeColumnString(self.table, self.column)
-  self.column.name = columnName
-  var queries = self.column.queries
-  queries.add(&"INSERT INTO `{self.table.name}`(`alter_tmp_column`) SELECT `{columnName}` FROM `{self.table.name}`")
-  queries.add(&"ALTER TABLE `{self.table.name}` DROP CONSTRAINT IF EXISTS `{self.table.name}_{columnName}_fkey`")
-  queries.add(&"ALTER TABLE `{self.table.name}` DROP COLUMN `{columnName}`")
-  queries.add(&"ALTER TABLE `{self.table.name}` RENAME COLUMN `alter_tmp_column` TO `{columnName}`")
-  if self.column.typ == rdbForeign or self.column.typ == rdbStrForeign:
-    let foreignQuery = changeForeignKey(self.column, self.table)
-    queries.add(foreignQuery)
+  queries.add(self.column.queries)
+
   if self.column.isIndex:
     let indexQuery = addIndexString(self.column, self.table)
     queries.add(indexQuery)

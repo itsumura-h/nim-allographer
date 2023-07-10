@@ -10,12 +10,12 @@ import ../../query_util
 # int
 # =============================================================================
 proc addSerialColumn(column:Column, table:Table):seq[string] =
-  let query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT"
+  let query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT"
   return @[query]
 
 
 proc addIntColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` INT"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` INT"
 
   if column.isUnsigned:
     query.add(" UNSIGNED")
@@ -33,7 +33,7 @@ proc addIntColumn(column:Column, table:Table):seq[string] =
 
 
 proc addSmallIntColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` SMALLINT"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` SMALLINT"
 
   if column.isUnsigned:
     query.add(" UNSIGNED")
@@ -51,7 +51,7 @@ proc addSmallIntColumn(column:Column, table:Table):seq[string] =
 
 
 proc addMediumIntColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` MEDIUMINT"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` MEDIUMINT"
 
   if column.isUnsigned:
     query.add(" UNSIGNED")
@@ -69,7 +69,7 @@ proc addMediumIntColumn(column:Column, table:Table):seq[string] =
 
 
 proc addBigIntColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` BIGINT"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` BIGINT"
 
   if column.isUnsigned:
     query.add(" UNSIGNED")
@@ -92,7 +92,7 @@ proc addBigIntColumn(column:Column, table:Table):seq[string] =
 proc addDecimalColumn(column:Column, table:Table):seq[string] =
   let maximum = column.info["maximum"].getInt
   let digit = column.info["digit"].getInt
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` DECIMAL({maximum}, {digit})"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` DECIMAL({maximum}, {digit})"
 
   if column.isUnsigned:
     query.add(" UNSIGNED")
@@ -112,7 +112,7 @@ proc addDecimalColumn(column:Column, table:Table):seq[string] =
 proc addDoubleColumn(column:Column, table:Table):seq[string] =
   let maximum = column.info["maximum"].getInt
   let digit = column.info["digit"].getInt
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` DOUBLE({maximum}, {digit})"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` DOUBLE({maximum}, {digit})"
 
   if column.isUnsigned:
     query.add(" UNSIGNED")
@@ -130,7 +130,7 @@ proc addDoubleColumn(column:Column, table:Table):seq[string] =
 
 
 proc addFloatColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` DOUBLE"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` DOUBLE"
 
   if column.isUnsigned:
     query.add(" UNSIGNED")
@@ -152,7 +152,7 @@ proc addFloatColumn(column:Column, table:Table):seq[string] =
 # =============================================================================
 proc addCharColumn(column:Column, table:Table):seq[string] =
   let maxLength = column.info["maxLength"].getInt
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` CHAR({maxLength})"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` CHAR({maxLength})"
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "char", column.name)
@@ -171,7 +171,7 @@ proc addCharColumn(column:Column, table:Table):seq[string] =
 
 proc addStringColumn(column:Column, table:Table):seq[string] =
   let maxLength = column.info["maxLength"].getInt
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` VARCHAR({maxLength})"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` VARCHAR({maxLength})"
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "string", column.name)
@@ -189,7 +189,7 @@ proc addStringColumn(column:Column, table:Table):seq[string] =
 
 
 proc addTextColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` TEXT"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` TEXT"
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "text", column.name)
@@ -207,7 +207,7 @@ proc addTextColumn(column:Column, table:Table):seq[string] =
 
 
 proc addMediumTextColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` MEDIUMTEXT"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` MEDIUMTEXT"
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "medium text", column.name)
@@ -225,7 +225,7 @@ proc addMediumTextColumn(column:Column, table:Table):seq[string] =
 
 
 proc addLongTextColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` LONGTEXT"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` LONGTEXT"
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "long text", column.name)
@@ -246,7 +246,7 @@ proc addLongTextColumn(column:Column, table:Table):seq[string] =
 # date
 # =============================================================================
 proc addDateColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` DATE"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` DATE"
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "date", column.name)
@@ -264,7 +264,7 @@ proc addDateColumn(column:Column, table:Table):seq[string] =
 
 
 proc addDatetimeColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` DATETIME(3)"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` DATETIME(3)"
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "datetime", column.name)
@@ -282,7 +282,7 @@ proc addDatetimeColumn(column:Column, table:Table):seq[string] =
 
 
 proc addTimeColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` TIME"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` TIME"
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "time", column.name)
@@ -300,7 +300,7 @@ proc addTimeColumn(column:Column, table:Table):seq[string] =
 
 
 proc addTimestampColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` DATETIME(3)"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` DATETIME(3)"
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "timestamp", column.name)
@@ -318,11 +318,11 @@ proc addTimestampColumn(column:Column, table:Table):seq[string] =
 
 
 proc addTimestampsColumn(column:Column, table:Table):seq[string] =
-  result.add(&"ALTER TABLE `{table.name}` ADD COLUMN `addd_at` DATETIME(3)")
-  result.add(&"ALTER TABLE `{table.name}` ADD COLUMN `updated_at` DATETIME(3) DEFAULT (NOW())")
+  result.add(&"ALTER TABLE `{table.name}` MODIFY COLUMN `addd_at` DATETIME(3)")
+  result.add(&"ALTER TABLE `{table.name}` MODIFY COLUMN `updated_at` DATETIME(3) DEFAULT (NOW())")
 
 proc addSoftDeleteColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN deleted_at DATETIME(3)"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN deleted_at DATETIME(3)"
   return @[query]
 
 
@@ -330,7 +330,7 @@ proc addSoftDeleteColumn(column:Column, table:Table):seq[string] =
 # others
 # =============================================================================
 proc addBlobColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` BLOB"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` BLOB"
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "blob", column.name)
@@ -348,7 +348,7 @@ proc addBlobColumn(column:Column, table:Table):seq[string] =
 
 
 proc addBoolColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` BOOLEAN"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` BOOLEAN"
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "bool", column.name)
@@ -383,7 +383,7 @@ proc addEnumColumn(column:Column, table:Table):seq[string] =
     options.add(row.getStr)
 
   let optionsString = addEnumOptions(column.name, options)
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` ENUM({optionsString})"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` ENUM({optionsString})"
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "enum", column.name)
@@ -401,7 +401,7 @@ proc addEnumColumn(column:Column, table:Table):seq[string] =
 
 
 proc addJsonColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` JSON"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` JSON"
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "json", column.name)
@@ -422,7 +422,7 @@ proc addJsonColumn(column:Column, table:Table):seq[string] =
 # foreign key
 # =============================================================================
 proc addForeignColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` BIGINT"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` BIGINT"
   if column.isDefault:
     query.add(&" DEFAULT {column.defaultInt}")
 
@@ -430,7 +430,7 @@ proc addForeignColumn(column:Column, table:Table):seq[string] =
 
 proc addStrForeignColumn(column:Column, table:Table):seq[string] =
   let maxLength = column.info["maxLength"].getInt
-  var query = &"ALTER TABLE `{table.name}` ADD COLUMN `{column.name}` VARCHAR({maxLength})"
+  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` VARCHAR({maxLength})"
   if column.isDefault:
     query.add(&" DEFAULT {column.defaultString}")
 
@@ -516,11 +516,8 @@ proc changeColumnString*(table:Table, column:Column) =
     column.queries = column.addJsonColumn(table)
   # foreign
   of rdbForeign:
-    column.queries = column.addForeignColumn(table)
-    # column.queries.add(column.addForeignKey(table))
+    notAllowedTypeInChange("foreign")
+    # column.queries = column.addForeignColumn(table)
   of rdbStrForeign:
-    column.queries = column.addStrForeignColumn(table)
-    # column.queries.add(column.addForeignKey(table))
-  
-  # if column.isIndex:
-  #   column.queries.add(column.addIndexString(table))
+    notAllowedTypeInChange("strForeign")
+    # column.queries = column.addStrForeignColumn(table)

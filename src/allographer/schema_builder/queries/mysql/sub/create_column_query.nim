@@ -472,9 +472,9 @@ proc createColumnString*(table:Table, column:Column) =
   of rdbText:
     column.query = column.createTextColumn()
   of rdbMediumText:
-    column.query = column.createTextColumn()
+    column.query = column.createMediumTextColumn()
   of rdbLongText:
-    column.query = column.createTextColumn()
+    column.query = column.createLongTextColumn()
     # date
   of rdbDate:
     column.query = column.createDateColumn()
