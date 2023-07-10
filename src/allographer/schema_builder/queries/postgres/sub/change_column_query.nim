@@ -412,7 +412,7 @@ proc changeColumnString*(table:Table, column:Column) =
   case column.typ:
     # int
   of rdbIncrements:
-    notAllowedType("serial", "Postgres")
+    notAllowedTypeInChange("increments")
   of rdbInteger:
     column.queries = column.changeIntColumn(table)
   of rdbSmallInteger:
@@ -452,9 +452,9 @@ proc changeColumnString*(table:Table, column:Column) =
   of rdbTimestamp:
     column.queries = column.changeTimestampColumn(table)
   of rdbTimestamps:
-    notAllowedType("timestamps", "Postgres")
+    notAllowedTypeInChange("timestamps")
   of rdbSoftDelete:
-    notAllowedType("softDelete", "Postgres")
+    notAllowedTypeInChange("softDelete")
     # others
   of rdbBinary:
     column.queries = column.changeBlobColumn(table)
@@ -466,9 +466,11 @@ proc changeColumnString*(table:Table, column:Column) =
     column.queries = column.changeJsonColumn(table)
   # foreign
   of rdbForeign:
-    column.queries = column.changeForeignColumn(table)
+    notAllowedTypeInChange("foreign")
+    # column.queries = column.changeForeignColumn(table)
   of rdbStrForeign:
-    column.queries = column.changeStrForeignColumn(table)
+    notAllowedTypeInChange("strForeign")
+    # column.queries = column.changeStrForeignColumn(table)
 
 
 proc changeIndexString*(table:Table, column:Column) =

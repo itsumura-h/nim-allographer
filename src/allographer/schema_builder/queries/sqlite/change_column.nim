@@ -52,12 +52,20 @@ proc changeColumn*(self:SqliteQuery, isReset:bool) =
   ## - delete old table
   ## - rename tmp table name to old table name
 
-  if self.column.typ == rdbIncrements:
-    notAllowedType("increments", "Sqlite3")
-  elif self.column.typ == rdbTimestamps:
-    notAllowedType("timestamps", "Sqlite3")
-  elif self.column.typ == rdbSoftDelete:
-    notAllowedType("softDelete", "Sqlite3")
+  # TODO: How can I raise error in compire time?
+  case self.column.typ
+  of rdbIncrements:
+    notAllowedTypeInChange("increments")
+  of rdbTimestamps:
+    notAllowedTypeInChange("timestamps")
+  of rdbSoftDelete:
+    notAllowedTypeInChange("softDelete")
+  of rdbForeign:
+    notAllowedTypeInChange("foreign")
+  of rdbStrForeign:
+    notAllowedTypeInChange("strForeign")
+  else:
+    discard
 
   let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND tbl_name = '{self.table.name}'"
   var rows = self.rdb.raw(tableDifinitionSql).get.waitFor
