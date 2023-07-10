@@ -225,27 +225,27 @@ for rdb in dbConnections:
     #   check columns.contains("str2")
 
 
-    test("drop column"):
-      rdb.alter(
-        table("TypeIndex", [
-          Column.dropColumn("str")
-        ])
-      )
-
-      let columns = rdb.table("TypeIndex").columns().waitFor
-      check not columns.contains("str")
-
-
-    # test("drop table"):
-    #   rdb.create(
+    # test("drop column"):
+    #   rdb.alter(
     #     table("TypeIndex", [
-    #       Column.integer("num")
+    #       Column.dropColumn("str")
     #     ])
     #   )
 
-    #   rdb.drop(
-    #     table("TypeIndex")
-    #   )
+    #   let columns = rdb.table("TypeIndex").columns().waitFor
+    #   check not columns.contains("str")
+
+
+    test("drop table"):
+      rdb.create(
+        table("TypeIndex", [
+          Column.integer("num")
+        ])
+      )
+
+      rdb.drop(
+        table("TypeIndex")
+      )
       
-    #   let res = rdb.table("TypeIndex").first().waitFor
-    #   check not res.isSome
+      let res = rdb.table("TypeIndex").first().waitFor
+      check not res.isSome
