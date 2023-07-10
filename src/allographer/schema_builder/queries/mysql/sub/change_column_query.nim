@@ -9,9 +9,9 @@ import ../../query_util
 # =============================================================================
 # int
 # =============================================================================
-proc addSerialColumn(column:Column, table:Table):seq[string] =
-  let query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT"
-  return @[query]
+# proc addSerialColumn(column:Column, table:Table):seq[string] =
+#   let query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT"
+#   return @[query]
 
 
 proc addIntColumn(column:Column, table:Table):seq[string] =
@@ -317,13 +317,13 @@ proc addTimestampColumn(column:Column, table:Table):seq[string] =
   return @[query]
 
 
-proc addTimestampsColumn(column:Column, table:Table):seq[string] =
-  result.add(&"ALTER TABLE `{table.name}` MODIFY COLUMN `addd_at` DATETIME(3)")
-  result.add(&"ALTER TABLE `{table.name}` MODIFY COLUMN `updated_at` DATETIME(3) DEFAULT (NOW())")
+# proc addTimestampsColumn(column:Column, table:Table):seq[string] =
+#   result.add(&"ALTER TABLE `{table.name}` MODIFY COLUMN `addd_at` DATETIME(3)")
+#   result.add(&"ALTER TABLE `{table.name}` MODIFY COLUMN `updated_at` DATETIME(3) DEFAULT (NOW())")
 
-proc addSoftDeleteColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN deleted_at DATETIME(3)"
-  return @[query]
+# proc addSoftDeleteColumn(column:Column, table:Table):seq[string] =
+#   var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN deleted_at DATETIME(3)"
+#   return @[query]
 
 
 # =============================================================================
@@ -421,20 +421,20 @@ proc addJsonColumn(column:Column, table:Table):seq[string] =
 # =============================================================================
 # foreign key
 # =============================================================================
-proc addForeignColumn(column:Column, table:Table):seq[string] =
-  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` BIGINT"
-  if column.isDefault:
-    query.add(&" DEFAULT {column.defaultInt}")
+# proc addForeignColumn(column:Column, table:Table):seq[string] =
+#   var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` BIGINT"
+#   if column.isDefault:
+#     query.add(&" DEFAULT {column.defaultInt}")
 
-  return @[query]
+#   return @[query]
 
-proc addStrForeignColumn(column:Column, table:Table):seq[string] =
-  let maxLength = column.info["maxLength"].getInt
-  var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` VARCHAR({maxLength})"
-  if column.isDefault:
-    query.add(&" DEFAULT {column.defaultString}")
+# proc addStrForeignColumn(column:Column, table:Table):seq[string] =
+#   let maxLength = column.info["maxLength"].getInt
+#   var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` VARCHAR({maxLength})"
+#   if column.isDefault:
+#     query.add(&" DEFAULT {column.defaultString}")
 
-  return @[query]
+#   return @[query]
 
 
 proc changeForeignKey*(column:Column, table:Table):string =
@@ -462,7 +462,8 @@ proc changeColumnString*(table:Table, column:Column) =
   case column.typ:
     # int
   of rdbIncrements:
-    column.queries = column.addSerialColumn(table)
+    notAllowedTypeInChange("increments")
+    # column.queries = column.addSerialColumn(table)
   of rdbInteger:
     column.queries = column.addIntColumn(table)
   of rdbSmallInteger:
@@ -502,9 +503,11 @@ proc changeColumnString*(table:Table, column:Column) =
   of rdbTimestamp:
     column.queries = column.addTimestampColumn(table)
   of rdbTimestamps:
-    column.queries = column.addTimestampsColumn(table)
+    notAllowedTypeInChange("timestamps")
+    # column.queries = column.addTimestampsColumn(table)
   of rdbSoftDelete:
-    column.queries = column.addSoftDeleteColumn(table)
+    notAllowedTypeInChange("softDelete")
+    # column.queries = column.addSoftDeleteColumn(table)
     # others
   of rdbBinary:
     column.queries = column.addBlobColumn(table)
@@ -517,7 +520,5 @@ proc changeColumnString*(table:Table, column:Column) =
   # foreign
   of rdbForeign:
     notAllowedTypeInChange("foreign")
-    # column.queries = column.addForeignColumn(table)
   of rdbStrForeign:
     notAllowedTypeInChange("strForeign")
-    # column.queries = column.addStrForeignColumn(table)

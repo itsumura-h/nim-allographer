@@ -18,8 +18,6 @@ proc createQuery*(rdb:Rdb, table:Table):IQuery =
     return PostgresQuery.new(rdb, table).toInterface()
   of MySQL, MariaDB:
     return MysqlQuery.new(rdb, table).toInterface()
-  else:
-    return SqliteQuery.new(rdb, table).toInterface()
 
 
 proc createQuery*(rdb:Rdb, table:Table, column:Column):IQuery =
@@ -30,5 +28,3 @@ proc createQuery*(rdb:Rdb, table:Table, column:Column):IQuery =
     return PostgresQuery.new(rdb, table, column).toInterface()
   of MySQL, MariaDB:
     return MysqlQuery.new(rdb, table, column).toInterface()
-  else:
-    return SqliteQuery.new(rdb, table, column).toInterface()

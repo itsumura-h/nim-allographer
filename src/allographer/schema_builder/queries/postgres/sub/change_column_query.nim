@@ -18,13 +18,6 @@ proc commonSetup(column:Column, table:Table):seq[string] =
 # =============================================================================
 # int
 # =============================================================================
-# proc changeSerialColumn(column:Column, table:Table):seq[string] =
-#   result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" TYPE INTEGER")
-#   result.add(&"ALTER TABLE \"{table.name}\" ADD PRIMARY KEY (\"{column.name}\")")
-#   result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET NOT NULL")
-#   result.add(&"ALTER TABLE \"{table.name}\" ADD CONSTRAINT \"{column.name}\" CHECK(\"{column.name}\" >= 0)")
-
-
 proc changeIntColumn(column:Column, table:Table):seq[string] =
   result = commonSetup(column, table)
   result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" TYPE INTEGER")
@@ -350,60 +343,6 @@ proc changeJsonColumn(column:Column, table:Table):seq[string] =
     notAllowedOption("unsigned", "bool", column.name)
 
 
-proc changeForeignKey(column:Column, table:Table):string =
-  var onDeleteString = "RESTRICT"
-  if column.foreignOnDelete == CASCADE:
-    onDeleteString = "CASCADE"
-  elif column.foreignOnDelete == SET_NULL:
-    onDeleteString = "SET NULL"
-  elif column.foreignOnDelete == NO_ACTION:
-    onDeleteString = "NO ACTION"
-
-  let refColumn = column.info["column"].getStr
-  let refTable = column.info["table"].getStr
-  return &"ALTER TABLE \"{table.name}\" ADD CONSTRAINT \"{table.name}_{column.name}_fkey\" FOREIGN KEY(\"{column.name}\") REFERENCES \"{refTable}\"(\"{refColumn}\") ON DELETE {onDeleteString}"
-
-
-proc changeForeignColumn(column:Column, table:Table):seq[string] =
-  result = commonSetup(column, table)
-  result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" TYPE INTEGER")
-
-  if column.isDefault:
-    result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT {column.defaultInt}")
-
-  if column.isUnique:
-    result.add(&"ALTER TABLE \"{table.name}\" ADD CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE (\"{column.name}\")")
-
-  if not column.isNullable:
-    result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET NOT NULL")
-
-  if column.isUnsigned:
-    result.add(&"ALTER TABLE \"{table.name}\" ADD CONSTRAINT \"{column.name}\" CHECK (\"{column.name}\" >= 0)")
-
-  result.add(changeForeignKey(column, table))
-
-
-proc changeStrForeignColumn(column:Column, table:Table):seq[string] =
-  result = commonSetup(column, table)
-
-  let maxLength = column.info["maxLength"].getInt
-  result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" TYPE VARCHAR({maxLength})")
-
-  if column.isDefault:
-    result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET DEFAULT '{column.defaultString}'")
-
-  if column.isUnique:
-    result.add(&"ALTER TABLE \"{table.name}\" ADD CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE (\"{column.name}\")")
-
-  if not column.isNullable:
-    result.add(&"ALTER TABLE \"{table.name}\" ALTER COLUMN \"{column.name}\" SET NOT NULL")
-
-  if column.isUnsigned:
-    notAllowedOption("unsigned", "string", column.name)
-
-  result.add(changeForeignKey(column, table))
-
-
 proc indexColumn(column:Column, table:Table):string =
   return &"CREATE INDEX IF NOT EXISTS \"{table.name}_{column.name}_index\" ON \"{table.name}\"(\"{column.name}\")"
 
@@ -467,10 +406,8 @@ proc changeColumnString*(table:Table, column:Column) =
   # foreign
   of rdbForeign:
     notAllowedTypeInChange("foreign")
-    # column.queries = column.changeForeignColumn(table)
   of rdbStrForeign:
     notAllowedTypeInChange("strForeign")
-    # column.queries = column.changeStrForeignColumn(table)
 
 
 proc changeIndexString*(table:Table, column:Column) =

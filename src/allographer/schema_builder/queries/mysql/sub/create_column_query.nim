@@ -458,7 +458,8 @@ proc createColumnString*(table:Table, column:Column) =
   of rdbDecimal:
     column.query = column.createDecimalColumn()
   of rdbDouble:
-    column.query = column.createDecimalColumn()
+    # column.query = column.createDecimalColumn()
+    column.query = column.createDoubleColumn()
   of rdbFloat:
     column.query = column.createFloatColumn()
     # char
