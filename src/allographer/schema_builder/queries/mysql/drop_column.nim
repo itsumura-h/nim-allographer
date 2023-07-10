@@ -41,7 +41,7 @@ proc execThenSaveHistory(rdb:Rdb, tableName:string, query:string, checksum:strin
 
 
 proc dropColumn*(self:MysqlQuery, isReset:bool) =
-  let query = &"ALTER TABLE \"{self.table.name}\" DROP COLUMN \"{self.column.name}\""
+  let query = &"ALTER TABLE `{self.table.name}` DROP COLUMN `{self.column.name}`"
   let schema = $self.column.toSchema()
   let checksum = $schema.secureHash()
   if shouldRun(self.rdb, self.table, self.column, checksum, isReset):
