@@ -3,7 +3,7 @@ import std/strformat
 import ../../../enums
 import ../../../models/table
 import ../../../models/column
-import ../../query_util
+import ../../query_utils
 
 
 proc commonSetup(column:Column, table:Table):seq[string] =
@@ -347,62 +347,62 @@ proc indexColumn(column:Column, table:Table):string =
   return &"CREATE INDEX IF NOT EXISTS \"{table.name}_{column.name}_index\" ON \"{table.name}\"(\"{column.name}\")"
 
 
-proc changeColumnString*(table:Table, column:Column) =
+proc changeColumnString*(table:Table, column:Column):seq[string] =
   case column.typ:
     # int
   of rdbIncrements:
     notAllowedTypeInChange("increments")
   of rdbInteger:
-    column.queries = column.changeIntColumn(table)
+    return column.changeIntColumn(table)
   of rdbSmallInteger:
-    column.queries = column.changeSmallIntColumn(table)
+    return column.changeSmallIntColumn(table)
   of rdbMediumInteger:
-    column.queries = column.changeMediumIntColumn(table)
+    return column.changeMediumIntColumn(table)
   of rdbBigInteger:
-    column.queries = column.changeBigIntColumn(table)
+    return column.changeBigIntColumn(table)
     # float
   of rdbDecimal:
-    column.queries = column.changeDecimalColumn(table)
+    return column.changeDecimalColumn(table)
   of rdbDouble:
-    column.queries = column.changeDecimalColumn(table)
+    return column.changeDecimalColumn(table)
   of rdbFloat:
-    column.queries = column.changeFloatColumn(table)
+    return column.changeFloatColumn(table)
     # char
   of rdbUuid:
-    column.queries = column.changeStringColumn(table)
+    return column.changeStringColumn(table)
   of rdbChar:
-    column.queries = column.changeCharColumn(table)
+    return column.changeCharColumn(table)
   of rdbString:
-    column.queries = column.changeStringColumn(table)
+    return column.changeStringColumn(table)
     # text
   of rdbText:
-    column.queries = column.changeTextColumn(table)
+    return column.changeTextColumn(table)
   of rdbMediumText:
-    column.queries = column.changeTextColumn(table)
+    return column.changeTextColumn(table)
   of rdbLongText:
-    column.queries = column.changeTextColumn(table)
+    return column.changeTextColumn(table)
     # date
   of rdbDate:
-    column.queries = column.changeDateColumn(table)
+    return column.changeDateColumn(table)
   of rdbDatetime:
-    column.queries = column.changeDatetimeColumn(table)
+    return column.changeDatetimeColumn(table)
   of rdbTime:
-    column.queries = column.changeTimeColumn(table)
+    return column.changeTimeColumn(table)
   of rdbTimestamp:
-    column.queries = column.changeTimestampColumn(table)
+    return column.changeTimestampColumn(table)
   of rdbTimestamps:
     notAllowedTypeInChange("timestamps")
   of rdbSoftDelete:
     notAllowedTypeInChange("softDelete")
     # others
   of rdbBinary:
-    column.queries = column.changeBlobColumn(table)
+    return column.changeBlobColumn(table)
   of rdbBoolean:
-    column.queries = column.changeBoolColumn(table)
+    return column.changeBoolColumn(table)
   of rdbEnumField:
-    column.queries = column.changeEnumColumn(table)
+    return column.changeEnumColumn(table)
   of rdbJson:
-    column.queries = column.changeJsonColumn(table)
+    return column.changeJsonColumn(table)
   # foreign
   of rdbForeign:
     notAllowedTypeInChange("foreign")
@@ -410,6 +410,5 @@ proc changeColumnString*(table:Table, column:Column) =
     notAllowedTypeInChange("strForeign")
 
 
-proc changeIndexString*(table:Table, column:Column) =
-  if column.isIndex and column.typ != rdbIncrements:
-    column.queries.add(column.indexColumn(table))
+proc changeIndexString*(table:Table, column:Column):string =
+  return column.indexColumn(table)

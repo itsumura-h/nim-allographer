@@ -3,7 +3,7 @@ import std/strformat
 import ../../../enums
 import ../../../models/table
 import ../../../models/column
-import ../../query_util
+import ../../query_utils
 
 
 # =============================================================================
@@ -404,69 +404,72 @@ proc addIndexColumn(column:Column, table:Table):string =
   return &"CREATE INDEX IF NOT EXISTS \"{table.name}_{column.name}_index\" ON \"{table.name}\"(\"{column.name}\")"
 
 
-proc addColumnString*(table:Table, column:Column) =
+proc addColumnString*(table:Table, column:Column):seq[string] =
+  var queries:seq[string]
   case column.typ:
     # int
   of rdbIncrements:
-    column.queries = column.createSerialColumn(table)
+    queries = column.createSerialColumn(table)
   of rdbInteger:
-    column.queries = column.createIntColumn(table)
+    queries = column.createIntColumn(table)
   of rdbSmallInteger:
-    column.queries = column.createSmallIntColumn(table)
+    queries = column.createSmallIntColumn(table)
   of rdbMediumInteger:
-    column.queries = column.createMediumIntColumn(table)
+    queries = column.createMediumIntColumn(table)
   of rdbBigInteger:
-    column.queries = column.createBigIntColumn(table)
+    queries = column.createBigIntColumn(table)
     # float
   of rdbDecimal:
-    column.queries = column.createDecimalColumn(table)
+    queries = column.createDecimalColumn(table)
   of rdbDouble:
-    column.queries = column.createDecimalColumn(table)
+    queries = column.createDecimalColumn(table)
   of rdbFloat:
-    column.queries = column.createFloatColumn(table)
+    queries = column.createFloatColumn(table)
     # char
   of rdbUuid:
-    column.queries = column.createStringColumn(table)
+    queries = column.createStringColumn(table)
   of rdbChar:
-    column.queries = column.createCharColumn(table)
+    queries = column.createCharColumn(table)
   of rdbString:
-    column.queries = column.createStringColumn(table)
+    queries = column.createStringColumn(table)
     # text
   of rdbText:
-    column.queries = column.createTextColumn(table)
+    queries = column.createTextColumn(table)
   of rdbMediumText:
-    column.queries = column.createTextColumn(table)
+    queries = column.createTextColumn(table)
   of rdbLongText:
-    column.queries = column.createTextColumn(table)
+    queries = column.createTextColumn(table)
     # date
   of rdbDate:
-    column.queries = column.createDateColumn(table)
+    queries = column.createDateColumn(table)
   of rdbDatetime:
-    column.queries = column.createDatetimeColumn(table)
+    queries = column.createDatetimeColumn(table)
   of rdbTime:
-    column.queries = column.createTimeColumn(table)
+    queries = column.createTimeColumn(table)
   of rdbTimestamp:
-    column.queries = column.createTimestampColumn(table)
+    queries = column.createTimestampColumn(table)
   of rdbTimestamps:
-    column.queries = column.createTimestampsColumn(table)
+    queries = column.createTimestampsColumn(table)
   of rdbSoftDelete:
-    column.queries = column.createSoftDeleteColumn(table)
+    queries = column.createSoftDeleteColumn(table)
     # others
   of rdbBinary:
-    column.queries = column.createBlobColumn(table)
+    queries = column.createBlobColumn(table)
   of rdbBoolean:
-    column.queries = column.createBoolColumn(table)
+    queries = column.createBoolColumn(table)
   of rdbEnumField:
-    column.queries = column.createEnumColumn(table)
+    queries = column.createEnumColumn(table)
   of rdbJson:
-    column.queries = column.createJsonColumn(table)
+    queries = column.createJsonColumn(table)
   # foreign
   of rdbForeign:
-    column.queries = column.addForeignColumn(table)
-    column.queries.add(column.addForeignKey(table))
+    queries = column.addForeignColumn(table)
+    queries.add(column.addForeignKey(table))
   of rdbStrForeign:
-    column.queries = column.addStrForeignColumn(table)
-    column.queries.add(column.addForeignKey(table))
+    queries = column.addStrForeignColumn(table)
+    queries.add(column.addForeignKey(table))
 
   if column.isIndex:
-    column.queries.add(column.addIndexColumn(table))
+    queries.add(column.addIndexColumn(table))
+
+  return queries

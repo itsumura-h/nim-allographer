@@ -3,7 +3,7 @@ import std/strformat
 import ../../../enums
 import ../../../models/table
 import ../../../models/column
-import ../../query_util
+import ../../query_utils
 
 
 # =============================================================================
@@ -358,74 +358,72 @@ proc indexColumn(column:Column, table:Table):string =
   return &"CREATE INDEX IF NOT EXISTS \"{table.name}_{column.name}_index\" ON \"{table.name}\"(\"{column.name}\")"
 
 
-proc createColumnString*(table:Table, column:Column) =
+proc createColumnString*(table:Table, column:Column):string =
   case column.typ:
     # int
   of rdbIncrements:
-    column.query = column.createSerialColumn(table)
+    return column.createSerialColumn(table)
   of rdbInteger:
-    column.query = column.createIntColumn(table)
+    return column.createIntColumn(table)
   of rdbSmallInteger:
-    column.query = column.createSmallIntColumn(table)
+    return column.createSmallIntColumn(table)
   of rdbMediumInteger:
-    column.query = column.createMediumIntColumn(table)
+    return column.createMediumIntColumn(table)
   of rdbBigInteger:
-    column.query = column.createBigIntColumn(table)
+    return column.createBigIntColumn(table)
     # float
   of rdbDecimal:
-    column.query = column.createDecimalColumn(table)
+    return column.createDecimalColumn(table)
   of rdbDouble:
-    column.query = column.createDecimalColumn(table)
+    return column.createDecimalColumn(table)
   of rdbFloat:
-    column.query = column.createFloatColumn(table)
+    return column.createFloatColumn(table)
     # char
   of rdbUuid:
-    column.query = column.createStringColumn(table)
+    return column.createStringColumn(table)
   of rdbChar:
-    column.query = column.createCharColumn(table)
+    return column.createCharColumn(table)
   of rdbString:
-    column.query = column.createStringColumn(table)
+    return column.createStringColumn(table)
     # text
   of rdbText:
-    column.query = column.createTextColumn(table)
+    return column.createTextColumn(table)
   of rdbMediumText:
-    column.query = column.createTextColumn(table)
+    return column.createTextColumn(table)
   of rdbLongText:
-    column.query = column.createTextColumn(table)
+    return column.createTextColumn(table)
     # date
   of rdbDate:
-    column.query = column.createDateColumn(table)
+    return column.createDateColumn(table)
   of rdbDatetime:
-    column.query = column.createDatetimeColumn(table)
+    return column.createDatetimeColumn(table)
   of rdbTime:
-    column.query = column.createTimeColumn(table)
+    return column.createTimeColumn(table)
   of rdbTimestamp:
-    column.query = column.createTimestampColumn(table)
+    return column.createTimestampColumn(table)
   of rdbTimestamps:
-    column.query = column.createTimestampsColumn(table)
+    return column.createTimestampsColumn(table)
   of rdbSoftDelete:
-    column.query = column.createSoftDeleteColumn(table)
+    return column.createSoftDeleteColumn(table)
     # others
   of rdbBinary:
-    column.query = column.createBlobColumn(table)
+    return column.createBlobColumn(table)
   of rdbBoolean:
-    column.query = column.createBoolColumn(table)
+    return column.createBoolColumn(table)
   of rdbEnumField:
-    column.query = column.createEnumColumn(table)
+    return column.createEnumColumn(table)
   of rdbJson:
-    column.query = column.createJsonColumn(table)
+    return column.createJsonColumn(table)
   # foreign
   of rdbForeign:
-    column.query = column.createForeignColumn(table)
+    return column.createForeignColumn(table)
   of rdbStrForeign:
-    column.query = column.createStrForeignColumn(table)
+    return column.createStrForeignColumn(table)
 
 
-proc createForeignString*(table:Table, column:Column) =
-  if column.typ == rdbForeign or column.typ == rdbStrForeign:
-    column.foreignQuery = column.createForeignKey(table)
+proc createForeignString*(table:Table, column:Column):string =
+  return column.createForeignKey(table)
 
 
-proc createIndexString*(table:Table, column:Column) =
-  if column.isIndex and column.typ != rdbIncrements:
-    column.indexQuery = column.indexColumn(table)
+proc createIndexString*(table:Table, column:Column):string =
+  return column.indexColumn(table)
