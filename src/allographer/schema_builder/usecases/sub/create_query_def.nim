@@ -11,6 +11,7 @@ import ../../models/column
 
 
 proc createQuery*(rdb:Rdb, table:Table):IQuery =
+  # return MysqlQuery.new(rdb, table).toInterface()
   case rdb.driver
   of SQLite3:
     return SqliteQuery.new(rdb, table).toInterface()
@@ -21,6 +22,7 @@ proc createQuery*(rdb:Rdb, table:Table):IQuery =
 
 
 proc createQuery*(rdb:Rdb, table:Table, column:Column):IQuery =
+  # return MysqlQuery.new(rdb, table, column).toInterface()
   case rdb.driver
   of SQLite3:
     return SqliteQuery.new(rdb, table, column).toInterface()

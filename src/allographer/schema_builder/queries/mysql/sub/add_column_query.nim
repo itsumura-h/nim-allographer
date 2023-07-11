@@ -458,69 +458,72 @@ proc addIndexString(column:Column, table:Table):string =
   return &"CREATE INDEX IF NOT EXISTS `{table.name}_{column.name}_index` ON `{table.name}`(`{column.name}`)"
 
 
-proc addColumnString*(table:Table, column:Column) =
+proc addColumnString*(table:Table, column:Column):seq[string] =
+  var queries:seq[string]
   case column.typ:
     # int
   of rdbIncrements:
-    column.queries = column.addSerialColumn(table)
+    queries = column.addSerialColumn(table)
   of rdbInteger:
-    column.queries = column.addIntColumn(table)
+    queries = column.addIntColumn(table)
   of rdbSmallInteger:
-    column.queries = column.addSmallIntColumn(table)
+    queries = column.addSmallIntColumn(table)
   of rdbMediumInteger:
-    column.queries = column.addMediumIntColumn(table)
+    queries = column.addMediumIntColumn(table)
   of rdbBigInteger:
-    column.queries = column.addBigIntColumn(table)
+    queries = column.addBigIntColumn(table)
     # float
   of rdbDecimal:
-    column.queries = column.addDecimalColumn(table)
+    queries = column.addDecimalColumn(table)
   of rdbDouble:
-    column.queries = column.addDoubleColumn(table)
+    queries = column.addDoubleColumn(table)
   of rdbFloat:
-    column.queries = column.addFloatColumn(table)
+    queries = column.addFloatColumn(table)
     # char
   of rdbUuid:
-    column.queries = column.addStringColumn(table)
+    queries = column.addStringColumn(table)
   of rdbChar:
-    column.queries = column.addCharColumn(table)
+    queries = column.addCharColumn(table)
   of rdbString:
-    column.queries = column.addStringColumn(table)
+    queries = column.addStringColumn(table)
     # text
   of rdbText:
-    column.queries = column.addTextColumn(table)
+    queries = column.addTextColumn(table)
   of rdbMediumText:
-    column.queries = column.addMediumTextColumn(table)
+    queries = column.addMediumTextColumn(table)
   of rdbLongText:
-    column.queries = column.addLongTextColumn(table)
+    queries = column.addLongTextColumn(table)
     # date
   of rdbDate:
-    column.queries = column.addDateColumn(table)
+    queries = column.addDateColumn(table)
   of rdbDatetime:
-    column.queries = column.addDatetimeColumn(table)
+    queries = column.addDatetimeColumn(table)
   of rdbTime:
-    column.queries = column.addTimeColumn(table)
+    queries = column.addTimeColumn(table)
   of rdbTimestamp:
-    column.queries = column.addTimestampColumn(table)
+    queries = column.addTimestampColumn(table)
   of rdbTimestamps:
-    column.queries = column.addTimestampsColumn(table)
+    queries = column.addTimestampsColumn(table)
   of rdbSoftDelete:
-    column.queries = column.addSoftDeleteColumn(table)
+    queries = column.addSoftDeleteColumn(table)
     # others
   of rdbBinary:
-    column.queries = column.addBlobColumn(table)
+    queries = column.addBlobColumn(table)
   of rdbBoolean:
-    column.queries = column.addBoolColumn(table)
+    queries = column.addBoolColumn(table)
   of rdbEnumField:
-    column.queries = column.addEnumColumn(table)
+    queries = column.addEnumColumn(table)
   of rdbJson:
-    column.queries = column.addJsonColumn(table)
+    queries = column.addJsonColumn(table)
   # foreign
   of rdbForeign:
-    column.queries = column.addForeignColumn(table)
-    column.queries.add(column.addForeignKey(table))
+    queries = column.addForeignColumn(table)
+    queries.add(column.addForeignKey(table))
   of rdbStrForeign:
-    column.queries = column.addStrForeignColumn(table)
-    column.queries.add(column.addForeignKey(table))
+    queries = column.addStrForeignColumn(table)
+    queries.add(column.addForeignKey(table))
   
   if column.isIndex:
-    column.queries.add(column.addIndexString(table))
+    queries.add(column.addIndexString(table))
+
+  return queries

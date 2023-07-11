@@ -394,7 +394,7 @@ proc createStrForeignColumn(column:Column):string =
   if column.isDefault:
     result.add(&" DEFAULT {column.defaultString}")
 
-proc createForeignKey(column:Column, table:Table):string =
+proc createForeignKey*(table:Table, column:Column):string =
   let onDeleteString =
     case column.foreignOnDelete
     of RESTRICT:
@@ -437,74 +437,69 @@ proc alterAddForeignKey*(column:Column, table:Table):string =
 #   var constraintName = &"{tableName}_{column.name}"
 #   return &"ALTER TABLE `{table.name}` DROP FOREIGN KEY `{constraintName}`"
 
-proc createIndexString(column:Column, table:Table):string =
+proc createIndexString*(table:Table, column:Column):string =
   return &"CREATE INDEX IF NOT EXISTS `{table.name}_{column.name}_index` ON `{table.name}`(`{column.name}`)"
 
 
-proc createColumnString*(table:Table, column:Column) =
+proc createColumnString*(table:Table, column:Column):string =
   case column.typ:
     # int
   of rdbIncrements:
-    column.query = column.createSerialColumn()
+    return column.createSerialColumn()
   of rdbInteger:
-    column.query = column.createIntColumn()
+    return column.createIntColumn()
   of rdbSmallInteger:
-    column.query = column.createSmallIntColumn()
+    return column.createSmallIntColumn()
   of rdbMediumInteger:
-    column.query = column.createMediumIntColumn()
+    return column.createMediumIntColumn()
   of rdbBigInteger:
-    column.query = column.createBigIntColumn()
+    return column.createBigIntColumn()
     # float
   of rdbDecimal:
-    column.query = column.createDecimalColumn()
+    return column.createDecimalColumn()
   of rdbDouble:
-    # column.query = column.createDecimalColumn()
-    column.query = column.createDoubleColumn()
+    # return column.createDecimalColumn()
+    return column.createDoubleColumn()
   of rdbFloat:
-    column.query = column.createFloatColumn()
+    return column.createFloatColumn()
     # char
   of rdbUuid:
-    column.query = column.createStringColumn()
+    return column.createStringColumn()
   of rdbChar:
-    column.query = column.createCharColumn()
+    return column.createCharColumn()
   of rdbString:
-    column.query = column.createStringColumn()
+    return column.createStringColumn()
     # text
   of rdbText:
-    column.query = column.createTextColumn()
+    return column.createTextColumn()
   of rdbMediumText:
-    column.query = column.createMediumTextColumn()
+    return column.createMediumTextColumn()
   of rdbLongText:
-    column.query = column.createLongTextColumn()
+    return column.createLongTextColumn()
     # date
   of rdbDate:
-    column.query = column.createDateColumn()
+    return column.createDateColumn()
   of rdbDatetime:
-    column.query = column.createDatetimeColumn()
+    return column.createDatetimeColumn()
   of rdbTime:
-    column.query = column.createTimeColumn()
+    return column.createTimeColumn()
   of rdbTimestamp:
-    column.query = column.createTimestampColumn()
+    return column.createTimestampColumn()
   of rdbTimestamps:
-    column.query = column.createTimestampsColumn()
+    return column.createTimestampsColumn()
   of rdbSoftDelete:
-    column.query = column.createSoftDeleteColumn()
+    return column.createSoftDeleteColumn()
     # others
   of rdbBinary:
-    column.query = column.createBlobColumn()
+    return column.createBlobColumn()
   of rdbBoolean:
-    column.query = column.createBoolColumn()
+    return column.createBoolColumn()
   of rdbEnumField:
-    column.query = column.createEnumColumn()
+    return column.createEnumColumn()
   of rdbJson:
-    column.query = column.createJsonColumn()
+    return column.createJsonColumn()
   # foreign
   of rdbForeign:
-    column.query = column.createForeignColumn()
-    column.foreignQuery = column.createForeignKey(table)
+    return column.createForeignColumn()
   of rdbStrForeign:
-    column.query = column.createStrForeignColumn()
-    column.foreignQuery = column.createForeignKey(table)
-
-  if column.isIndex:
-    column.indexQuery = column.createIndexString(table)
+    return column.createStrForeignColumn()

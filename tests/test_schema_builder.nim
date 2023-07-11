@@ -12,6 +12,7 @@ import ./connections
 
 
 for rdb in dbConnections:
+
   suite($rdb.driver & " create table"):
     test("create table"):
       rdb.create(

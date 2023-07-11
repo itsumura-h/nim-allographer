@@ -5,7 +5,7 @@ import ../rdb_types
 import ../databases/database_types; export database_types
 import ../databases/sqlite/sqlite_impl
 import ../databases/postgres/postgres_impl
-# import ../databases/mysql/mysql_impl
+import ../databases/mysql/mysql_impl
 import ../databases/mariadb/mariadb_impl
 
 
@@ -174,7 +174,7 @@ proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string
   of MySQL:
     when isExistsMysql:
       discard
-      # return await mysql_impl.getColumns(self.pools[connI].mysqlConn, query, args, self.timeout)
+      return await mysql_impl.getColumns(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb:
       discard

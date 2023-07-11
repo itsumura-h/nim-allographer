@@ -458,65 +458,62 @@ proc addIndexString*(column:Column, table:Table):string =
   return &"CREATE INDEX IF NOT EXISTS `{table.name}_{column.name}_index` ON `{table.name}`(`{column.name}`)"
 
 
-proc changeColumnString*(table:Table, column:Column) =
+proc changeColumnString*(table:Table, column:Column):seq[string] =
   case column.typ:
     # int
   of rdbIncrements:
     notAllowedTypeInChange("increments")
-    # column.queries = column.addSerialColumn(table)
   of rdbInteger:
-    column.queries = column.addIntColumn(table)
+    return column.addIntColumn(table)
   of rdbSmallInteger:
-    column.queries = column.addSmallIntColumn(table)
+    return column.addSmallIntColumn(table)
   of rdbMediumInteger:
-    column.queries = column.addMediumIntColumn(table)
+    return column.addMediumIntColumn(table)
   of rdbBigInteger:
-    column.queries = column.addBigIntColumn(table)
+    return column.addBigIntColumn(table)
     # float
   of rdbDecimal:
-    column.queries = column.addDecimalColumn(table)
+    return column.addDecimalColumn(table)
   of rdbDouble:
-    column.queries = column.addDoubleColumn(table)
+    return column.addDoubleColumn(table)
   of rdbFloat:
-    column.queries = column.addFloatColumn(table)
+    return column.addFloatColumn(table)
     # char
   of rdbUuid:
-    column.queries = column.addStringColumn(table)
+    return column.addStringColumn(table)
   of rdbChar:
-    column.queries = column.addCharColumn(table)
+    return column.addCharColumn(table)
   of rdbString:
-    column.queries = column.addStringColumn(table)
+    return column.addStringColumn(table)
     # text
   of rdbText:
-    column.queries = column.addTextColumn(table)
+    return column.addTextColumn(table)
   of rdbMediumText:
-    column.queries = column.addMediumTextColumn(table)
+    return column.addMediumTextColumn(table)
   of rdbLongText:
-    column.queries = column.addLongTextColumn(table)
+    return column.addLongTextColumn(table)
     # date
   of rdbDate:
-    column.queries = column.addDateColumn(table)
+    return column.addDateColumn(table)
   of rdbDatetime:
-    column.queries = column.addDatetimeColumn(table)
+    return column.addDatetimeColumn(table)
   of rdbTime:
-    column.queries = column.addTimeColumn(table)
+    return column.addTimeColumn(table)
   of rdbTimestamp:
-    column.queries = column.addTimestampColumn(table)
+    return column.addTimestampColumn(table)
   of rdbTimestamps:
     notAllowedTypeInChange("timestamps")
-    # column.queries = column.addTimestampsColumn(table)
   of rdbSoftDelete:
     notAllowedTypeInChange("softDelete")
-    # column.queries = column.addSoftDeleteColumn(table)
     # others
   of rdbBinary:
-    column.queries = column.addBlobColumn(table)
+    return column.addBlobColumn(table)
   of rdbBoolean:
-    column.queries = column.addBoolColumn(table)
+    return column.addBoolColumn(table)
   of rdbEnumField:
-    column.queries = column.addEnumColumn(table)
+    return column.addEnumColumn(table)
   of rdbJson:
-    column.queries = column.addJsonColumn(table)
+    return column.addJsonColumn(table)
   # foreign
   of rdbForeign:
     notAllowedTypeInChange("foreign")

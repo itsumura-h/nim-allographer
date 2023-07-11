@@ -1,7 +1,7 @@
-import
-  std/os,
-  std/strutils,
-  ../src/allographer/connection
+import std/os
+import std/strutils
+import ../src/allographer/connection
+
 
 let
   database = getEnv("DB_DATABASE")
@@ -27,11 +27,11 @@ let dbConnections* = @[
   dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=true),
 ]
 
-let dbConnectionsTransacion* = @[
-  dbopen(SQLite3, sqliteHost, maxConnections=95, timeout=timeout, shouldDisplayLog=false),
-  dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=false),
-  dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=false),
-]
+# let dbConnectionsTransacion* = @[
+#   dbopen(SQLite3, sqliteHost, maxConnections=95, timeout=timeout, shouldDisplayLog=false),
+#   dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=false),
+#   dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=false),
+# ]
 
 template asyncBlock*(body:untyped) =
   (proc(){.async.}=

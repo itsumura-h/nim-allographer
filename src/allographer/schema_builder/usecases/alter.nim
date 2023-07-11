@@ -24,15 +24,19 @@ proc alter*(rdb:Rdb, tables:varargs[Table]) =
         column.usecaseType = Alter 
         case column.migrationType
         of AddColumn:
+          discard
           query = createQuery(rdb, table, column)
           query.addColumn(isReset)
         of ChangeColumn:
+          discard
           query = createQuery(rdb, table, column)
           query.changeColumn(isReset)
         of RenameColumn:
+          discard
           query = createQuery(rdb, table, column)
           query.renameColumn(isReset)
         of DropColumn:
+          discard
           query = createQuery(rdb, table, column)
           query.dropColumn(isReset)
     of ChangeTable:
@@ -40,5 +44,6 @@ proc alter*(rdb:Rdb, tables:varargs[Table]) =
     of RenameTable:
       discard
     of DropTable:
+      discard
       query = createQuery(rdb, table)
       query.dropTable(isReset)

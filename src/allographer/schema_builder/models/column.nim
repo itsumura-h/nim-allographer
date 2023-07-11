@@ -17,9 +17,9 @@ type Column* = ref object
   defaultJson*: JsonNode
   foreignOnDelete*: ForeignOnDelete
   info*: JsonNode
-  query*: string
-  foreignQuery*: string
-  indexQuery*: string
+  # query*: string
+  # foreignQuery*: string
+  # indexQuery*: string
   queries*: seq[string] # used in alter table
   checksum*:string
   # alter table
