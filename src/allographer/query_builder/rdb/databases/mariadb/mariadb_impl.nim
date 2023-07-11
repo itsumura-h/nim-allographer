@@ -84,11 +84,8 @@ proc exec*(db:PMySQL, query: string, args: seq[string], timeout:int) {.async.} =
 
 proc getColumns*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[seq[string]] {.async.} =
   assert db.ping == 0
-  # var dbRows: DbRows
   var columns:seq[string]
-  # var rows = newSeq[seq[string]]()
-  # var lines = 0
-
+  
   rawExec(db, query, args)
   var sqlres = mariadb_rdb.useResult(db)
   let calledAt = getTime().toUnix()

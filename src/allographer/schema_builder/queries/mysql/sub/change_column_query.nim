@@ -3,7 +3,7 @@ import std/strformat
 import ../../../enums
 import ../../../models/table
 import ../../../models/column
-import ../../query_util
+import ../../query_utils
 
 
 # =============================================================================

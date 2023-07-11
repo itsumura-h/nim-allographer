@@ -27,6 +27,7 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
     timeout: timeout
   )
 
+
 proc query*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[(seq[database_types.Row], DbRows)] {.async.} =
   assert db.ping == 0
   let query = dbFormat(query, args)
@@ -68,6 +69,7 @@ proc query*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[(s
   free_result(res)
   return (rows, dbRows)
 
+
 proc queryPlain*(db: PMySQL, query: string, args: seq[string], timeout:int):Future[seq[database_types.Row]] {.async.} =
   assert db.ping == 0
   let query = dbFormat(query, args)
@@ -102,6 +104,7 @@ proc queryPlain*(db: PMySQL, query: string, args: seq[string], timeout:int):Futu
   free_result(res)
   return rows
 
+
 proc exec*(db:PMySQL, query: string, args: seq[string], timeout:int) {.async.} =
   assert db.ping == 0
   let query = dbFormat(query, args)
@@ -110,3 +113,49 @@ proc exec*(db:PMySQL, query: string, args: seq[string], timeout:int) {.async.} =
     await sleepAsync(0)
     status = real_query_nonblocking(db, query.cstring, query.len)
   if status == NET_ASYNC_ERROR: dbError(db) # failed
+
+
+proc getColumns*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[seq[string]] {.async.} =
+  assert db.ping == 0
+  let query = dbFormat(query, args)
+  var status = real_query_nonblocking(db, query.cstring, query.len)
+  while status == NET_ASYNC_NOT_READY:
+    await sleepAsync(0)
+    status = real_query_nonblocking(db, query.cstring, query.len)
+  if status == NET_ASYNC_ERROR: dbError(db) # failed
+  var res: PRES
+  status = store_result_nonblocking(db, res.addr)
+  while status == NET_ASYNC_NOT_READY:
+    await sleepAsync(0)
+    status = store_result_nonblocking(db, res.addr)
+  if status == NET_ASYNC_ERROR: dbError(db)
+  if res == nil: dbError(db)
+  let cols = num_fields(res)
+  var rows = newSeq[database_types.Row]()
+  let calledAt = getTime().toUnix()
+  var dbRows: DbRows
+  var lines = 0
+  var columns:seq[string]
+  while true:
+    if getTime().toUnix() >= calledAt + timeout:
+      return
+    await sleepAsync(0)
+    var row: mysql_rdb.Row
+    status = fetch_row_nonblocking(res, row.addr)
+    while status != NET_ASYNC_COMPLETE:
+      await sleepAsync(0)
+      status = fetch_row_nonblocking(res, row.addr)
+    if row == nil: break
+    var baseRow = newSeq[string](cols)
+    setColumnInfo(res, dbRows, lines, cols)
+    for column in dbRows[0]:
+      columns.add(column.name)
+    # for i in 0..<cols:
+    #   if row[i].isNil:
+    #     dbRows[lines][i].typ.kind = dbNull
+    #   baseRow[i] = $row[i]
+    rows.add(baseRow)
+    lines.inc()
+  free_result(res)
+  # return (rows, dbRows)
+  return columns
