@@ -5,7 +5,7 @@ import std/strformat
 import ../../../enums
 import ../../../models/table
 import ../../../models/column
-import ../../query_util
+import ../../query_utils
 
 
 # =============================================================================
@@ -333,74 +333,74 @@ proc createIndexColumn(column:Column, table:Table):string =
   return &"CREATE INDEX IF NOT EXISTS \"{table.name}_{column.name}_index\" ON \"{table.name}\"('{column.name}')"
 
 
-proc createColumnString*(column:Column) =
+proc createColumnString*(column:Column):string =
   case column.typ:
     # int
   of rdbIncrements:
-    column.query = column.createSerialColumn()
+    return column.createSerialColumn()
   of rdbInteger:
-    column.query = column.createIntColumn()
+    return column.createIntColumn()
   of rdbSmallInteger:
-    column.query = column.createIntColumn()
+    return column.createIntColumn()
   of rdbMediumInteger:
-    column.query = column.createIntColumn()
+    return column.createIntColumn()
   of rdbBigInteger:
-    column.query = column.createIntColumn()
+    return column.createIntColumn()
     # float
   of rdbDecimal:
-    column.query = column.createDecimalColumn()
+    return column.createDecimalColumn()
   of rdbDouble:
-    column.query = column.createDecimalColumn()
+    return column.createDecimalColumn()
   of rdbFloat:
-    column.query = column.createFloatColumn()
+    return column.createFloatColumn()
     # char
   of rdbUuid:
-    column.query = column.createUuidColumn()
+    return column.createUuidColumn()
   of rdbChar:
-    column.query = column.createCharColumn()
+    return column.createCharColumn()
   of rdbString:
-    column.query = column.createVarcharColumn()
+    return column.createVarcharColumn()
     # text
   of rdbText:
-    column.query = column.createTextColumn()
+    return column.createTextColumn()
   of rdbMediumText:
-    column.query = column.createTextColumn()
+    return column.createTextColumn()
   of rdbLongText:
-    column.query = column.createTextColumn()
+    return column.createTextColumn()
     # date
   of rdbDate:
-    column.query = column.createDateColumn()
+    return column.createDateColumn()
   of rdbDatetime:
-    column.query = column.createDatetimeColumn()
+    return column.createDatetimeColumn()
   of rdbTime:
-    column.query = column.createTimeColumn()
+    return column.createTimeColumn()
   of rdbTimestamp:
-    column.query = column.createTimestampColumn()
+    return column.createTimestampColumn()
   of rdbTimestamps:
-    column.query = column.createTimestampsColumn()
+    return column.createTimestampsColumn()
   of rdbSoftDelete:
-    column.query = column.createSoftDeleteColumn()
+    return column.createSoftDeleteColumn()
     # others
   of rdbBinary:
-    column.query = column.createBlobColumn()
+    return column.createBlobColumn()
   of rdbBoolean:
-    column.query = column.createBoolColumn()
+    return column.createBoolColumn()
   of rdbEnumField:
-    column.query = column.createEnumColumn()
+    return column.createEnumColumn()
   of rdbJson:
-    column.query = column.createJsonColumn()
+    return column.createJsonColumn()
   # foreign
   of rdbForeign:
-    column.query = column.createForeignColumn()
+    return column.createForeignColumn()
   of rdbStrForeign:
-    column.query = column.createStrForeignColumn()
+    return column.createStrForeignColumn()
 
 
-proc createForeignString*(column:Column) =
-  if column.typ == rdbForeign or column.typ == rdbStrForeign:
-    column.foreignQuery = column.createForeignKey()
+proc createForeignString*(column:Column):string =
+  # if column.typ == rdbForeign or column.typ == rdbStrForeign:
+  return column.createForeignKey()
 
 
-proc createIndexString*(table:Table, column:Column) =
-  if column.isIndex:
-    column.indexQuery = column.createIndexColumn(table)
+proc createIndexString*(table:Table, column:Column):string =
+  # if column.isIndex:
+  return column.createIndexColumn(table)

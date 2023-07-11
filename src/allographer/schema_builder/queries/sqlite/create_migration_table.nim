@@ -1,53 +1,27 @@
-import std/asyncdispatch
 import std/strformat
-import ../../../query_builder/rdb/rdb_types
-import ../../../query_builder/rdb/rdb_interface
-import ../../../query_builder/rdb/query/grammar
 import ../../enums
 import ../../models/table
 import ../../models/column
 import ./sqlite_query_type
 import ./sub/create_column_query
-
-
-proc exec(rdb:Rdb, queries:seq[string]) =
-  var isSuccess = false
-  let logDisplay = rdb.log.shouldDisplayLog
-  let logFile = rdb.log.shouldOutputLogFile
-  rdb.log.shouldDisplayLog = false
-  rdb.log.shouldOutputLogFile = false
-
-  try:
-    for query in queries:
-      rdb.raw(query).exec.waitFor
-    isSuccess = true
-  except:
-    echo getCurrentExceptionMsg()
-
-  rdb.log.shouldDisplayLog = logDisplay
-  rdb.log.shouldOutputLogFile = logFile
+import ../query_utils
 
 
 proc createMigrationTable*(self: SqliteQuery) =
-  for i, column in self.table.columns:
-    createColumnString(column)
-    createForeignString(column)
-    createIndexString(self.table, column)
-
   var queries:seq[string] = @[]
   var query = ""
   var foreignQuery = ""
   var indexQuery:seq[string] = @[]
   for i, column in self.table.columns:
     if query.len > 0: query.add(", ")
-    query.add(column.query)
-
+    query.add(createColumnString(column))
+    
     if column.typ == rdbForeign or column.typ == rdbStrForeign:
       if foreignQuery.len > 0:  foreignQuery.add(", ")
-      foreignQuery.add(column.foreignQuery)
+      foreignQuery.add(createForeignString(column))
     
-    if column.isUnique or column.isIndex:
-      indexQuery.add(column.indexQuery)
+    if column.isIndex:
+      indexQuery.add(createIndexString(self.table, column))
 
   if foreignQuery.len > 0:
     queries.add(

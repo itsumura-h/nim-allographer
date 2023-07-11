@@ -1,49 +1,15 @@
 import std/asyncdispatch
-import std/strutils
 import std/strformat
 import std/re
 import std/sha1
-import std/options
 import std/json
-import std/times
 import ../../enums
 import ../../../query_builder
 import ../../models/table
 import ../../models/column
-import ../query_util
+import ../query_utils
 import ./sqlite_query_type
 import ./sub/create_column_query
-
-
-proc shouldRun(rdb:Rdb, table:Table, checksum:string, isReset:bool):bool =
-  if isReset:
-    return true
-
-  let history = rdb.table("_migrations")
-                  .where("checksum", "=", checksum)
-                  .first()
-                  .waitFor
-  return not history.isSome() or not history.get()["status"].getBool
-
-
-proc execThenSaveHistory(rdb:Rdb, tableName:string, queries:seq[string], checksum:string) =
-  var isSuccess = false
-  try:
-    for query in queries:
-      rdb.raw(query).exec.waitFor
-    isSuccess = true
-  except:
-    echo getCurrentExceptionMsg()
-
-  let tableQuery = queries.join("; ")
-  rdb.table("_migrations").insert(%*{
-    "name": tableName,
-    "query": tableQuery,
-    "checksum": checksum,
-    "created_at": $now().utc,
-    "status": isSuccess
-  })
-  .waitFor
 
 
 proc changeColumn*(self:SqliteQuery, isReset:bool) =
@@ -70,8 +36,7 @@ proc changeColumn*(self:SqliteQuery, isReset:bool) =
   let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND tbl_name = '{self.table.name}'"
   var rows = self.rdb.raw(tableDifinitionSql).get.waitFor
   var schema = replace(rows[0]["sql"].getStr, re"\)$", ",)")
-  createColumnString(self.column)
-  createForeignString(self.column)
+  let columnQuery = createColumnString(self.column)
 
   # delete existing foreign key
   var regex = &"\\sFOREIGN KEY\\('{self.column.name}'\\).+?\\,"
@@ -80,9 +45,10 @@ proc changeColumn*(self:SqliteQuery, isReset:bool) =
   # replace new column definition
   var queries:seq[string] = @[]
   regex = &"'{self.column.name}'\\s+.*?,"
-  var query = schema.replace(re(regex), self.column.query & ",")
-  if self.column.foreignQuery.len > 0:
-    query = query.replace(re",\s*\)", &", {self.column.foreignQuery},)")
+  var query = schema.replace(re(regex), columnQuery & ",")
+  if self.column.typ == rdbForeign or self.column.typ == rdbStrForeign:
+    let foreignQuery = createForeignString(self.column)
+    query = query.replace(re",\s*\)", &", {foreignQuery},)")
   query = query.replace(re",\s*\)$", ")")
   query = query.replace(re("CREATE TABLE \"\\w+\""), &"CREATE TABLE \"alter_{self.table.name}\"")
   queries.add(query)
@@ -98,9 +64,9 @@ proc changeColumn*(self:SqliteQuery, isReset:bool) =
   queries.add(query)
 
   # create index for target column
-  createIndexString(self.table, self.column)
   if self.column.isIndex:
-    queries.add(self.column.indexQuery)
+    query = createIndexString(self.table, self.column)
+    queries.add(query)
   # recreate index
   let indexDinifitionSql = &"SELECT sql, name FROM sqlite_master WHERE type = 'index' AND tbl_name = '{self.table.name}'"
   rows = self.rdb.raw(indexDinifitionSql).get.waitFor

@@ -3,45 +3,13 @@ import std/strutils
 import std/strformat
 import std/sequtils
 import std/re
-import std/options
 import std/sha1
 import std/json
-import std/times
 import ../../../query_builder
 import ../../models/table
 import ../../models/column
+import  ../query_utils
 import ./sqlite_query_type
-
-
-proc shouldRun(rdb:Rdb, table:Table, checksum:string, isReset:bool):bool =
-  if isReset:
-    return true
-
-  let history = rdb.table("_migrations")
-                  .where("checksum", "=", checksum)
-                  .first()
-                  .waitFor
-  return not history.isSome() or not history.get()["status"].getBool
-
-
-proc execThenSaveHistory(rdb:Rdb, tableName:string, queries:seq[string], checksum:string) =
-  var isSuccess = false
-  try:
-    for query in queries:
-      rdb.raw(query).exec.waitFor
-    isSuccess = true
-  except:
-    echo getCurrentExceptionMsg()
-
-  let tableQuery = queries.join("; ")
-  rdb.table("_migrations").insert(%*{
-    "name": tableName,
-    "query": tableQuery,
-    "checksum": checksum,
-    "created_at": $now().utc,
-    "status": isSuccess
-  })
-  .waitFor
 
 
 proc dropColumn*(self:SqliteQuery, isReset:bool) =

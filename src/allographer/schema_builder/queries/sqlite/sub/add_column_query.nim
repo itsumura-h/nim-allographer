@@ -9,18 +9,18 @@ import ../../../../query_builder
 import ../../../enums
 import ../../../models/table
 import ../../../models/column
-import ../../query_util
+import ../../query_utils
 import ./create_column_query
 
 # =============================================================================
 # int
 # =============================================================================
-proc addSerialColumn(rdb:Rdb, table:Table, column:Column):seq[string] =
+proc addSerialColumn(rdb:Rdb, table:Table, column:Column, query:string):seq[string] =
   # get culumn definition
   let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '{table.name}'"
   var rows = rdb.raw(tableDifinitionSql).get.waitFor
   let schema = replace(rows[0]["sql"].getStr, re"\)$", ",)")
-  var query = schema.replace(re",\)", &", {column.query},)")
+  var query = schema.replace(re",\)", &", {query},)")
   query = query.replace(re",\)", ")")
   query = query.replace(re("CREATE TABLE \"\\w+\""), &"CREATE TABLE \"alter_{table.name}\"")
   result.add(query)
@@ -358,72 +358,78 @@ proc addIndexColumn(column:Column, table:Table):string =
   return &"CREATE INDEX IF NOT EXISTS \"{table.name}_{column.name}_index\" ON \"{table.name}\"('{column.name}')"
 
 
-proc addColumnString*(rdb:Rdb, table:Table, column:Column) =
+proc addColumnString*(rdb:Rdb, table:Table, column:Column):seq[string] =
+  var queries:seq[string]
   case column.typ
   of rdbIncrements:
-    createColumnString(column)
-    column.queries = addSerialColumn(rdb, table, column)
+    let query = createColumnString(column)
+    queries.add(addSerialColumn(rdb, table, column, query))
   of rdbInteger:
-    column.queries = addIntColumn(table, column)
+    queries.add(addIntColumn(table, column))
   of rdbSmallInteger:
-    column.queries = addIntColumn(table, column)
+    queries.add(addIntColumn(table, column))
   of rdbMediumInteger:
-    column.queries = addIntColumn(table, column)
+    queries.add(addIntColumn(table, column))
   of rdbBigInteger:
-    column.queries = addIntColumn(table, column)
+    queries.add(addIntColumn(table, column))
     # float
   of rdbDecimal:
-    column.queries = addDecimalColumn(table, column)
+    queries.add(addDecimalColumn(table, column))
   of rdbDouble:
-    column.queries = addDecimalColumn(table, column)
+    queries.add(addDecimalColumn(table, column))
   of rdbFloat:
-    column.queries = addFloatColumn(table, column)
+    queries.add(addFloatColumn(table, column))
     # char
   of rdbUuid:
-    column.queries = addUuidColumn(table, column)
+    queries.add(addUuidColumn(table, column))
   of rdbChar:
-    column.queries = addCharColumn(table, column)
+    queries.add(addCharColumn(table, column))
   of rdbString:
-    column.queries = addVarcharColumn(table, column)
+    queries.add(addVarcharColumn(table, column))
     # text
   of rdbText:
-    column.queries = addTextColumn(table, column)
+    queries.add(addTextColumn(table, column))
   of rdbMediumText:
-    column.queries = addTextColumn(table, column)
+    queries.add(addTextColumn(table, column))
   of rdbLongText:
-    column.queries = addTextColumn(table, column)
+    queries.add(addTextColumn(table, column))
     # date
   of rdbDate:
-    column.queries = addDateColumn(table, column)
+    queries.add(addDateColumn(table, column))
   of rdbDatetime:
-    column.queries = addDatetimeColumn(table, column)
+    queries.add(addDatetimeColumn(table, column))
   of rdbTime:
-    column.queries = addTimeColumn(table, column)
+    queries.add(addTimeColumn(table, column))
   of rdbTimestamp:
-    column.queries = addTimestampColumn(table, column)
+    queries.add(addTimestampColumn(table, column))
   of rdbTimestamps:
-    column.queries = addTimestampsColumn(table, column)
+    queries.add(addTimestampsColumn(table, column))
   of rdbSoftDelete:
-    column.queries = addSoftDeleteColumn(table, column)
+    queries.add(addSoftDeleteColumn(table, column))
     # others
   of rdbBinary:
-    column.queries = addBlobColumn(table, column)
+    queries.add(addBlobColumn(table, column))
   of rdbBoolean:
-    column.queries = addBoolColumn(table, column)
+    queries.add(addBoolColumn(table, column))
   of rdbEnumField:
-    column.queries = addEnumColumn(table, column)
+    queries.add(addEnumColumn(table, column))
   of rdbJson:
-    column.queries = addJsonColumn(table, column)
+    queries.add(addJsonColumn(table, column))
   # foreign
   of rdbForeign:
-    column.queries = addForeignColumn(table, column)
+    queries.add(addForeignColumn(table, column))
   of rdbStrForeign:
-    column.queries = addStrForeignColumn(table, column)
+    queries.add(addStrForeignColumn(table, column))
 
-  if column.isUnique:
-    column.indexQuery = column.addUniqueColumn(table)
-  elif column.isIndex:
-    column.indexQuery = column.addIndexColumn(table)
+  let indexQuery = 
+    if column.isUnique:
+      column.addUniqueColumn(table)
+    elif column.isIndex:
+      column.addIndexColumn(table)
+    else:
+      ""
 
-  if column.indexQuery.len > 0:
-    column.queries.add(column.indexQuery)
+  if indexQuery.len > 0:
+    queries.add(indexQuery)
+
+  return queries
