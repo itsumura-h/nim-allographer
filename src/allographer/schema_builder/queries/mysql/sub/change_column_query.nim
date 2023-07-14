@@ -462,7 +462,7 @@ proc changeColumnString*(table:Table, column:Column):seq[string] =
   case column.typ:
     # int
   of rdbIncrements:
-    notAllowedTypeInChange("increments")
+    notAllowedType("increments")
   of rdbInteger:
     return column.addIntColumn(table)
   of rdbSmallInteger:
@@ -502,9 +502,9 @@ proc changeColumnString*(table:Table, column:Column):seq[string] =
   of rdbTimestamp:
     return column.addTimestampColumn(table)
   of rdbTimestamps:
-    notAllowedTypeInChange("timestamps")
+    notAllowedType("timestamps")
   of rdbSoftDelete:
-    notAllowedTypeInChange("softDelete")
+    notAllowedType("softDelete")
     # others
   of rdbBinary:
     return column.addBlobColumn(table)
@@ -516,6 +516,6 @@ proc changeColumnString*(table:Table, column:Column):seq[string] =
     return column.addJsonColumn(table)
   # foreign
   of rdbForeign:
-    notAllowedTypeInChange("foreign")
+    notAllowedType("foreign")
   of rdbStrForeign:
-    notAllowedTypeInChange("strForeign")
+    notAllowedType("strForeign")

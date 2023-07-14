@@ -8,6 +8,9 @@ from std/db_common import DbError
 import ../../query_builder/rdb/rdb_types
 import ../../query_builder/rdb/rdb_interface
 import ../../query_builder/rdb/query/grammar
+import ../../query_builder/surreal/surreal_types
+import ../../query_builder/surreal/surreal_interface
+import ../../query_builder/surreal/query/grammar as surreal_grammar
 import ../models/table
 
 
@@ -15,9 +18,9 @@ proc notAllowedOption*(option, typ, column:string) =
   ## {option} is not allowed in {typ} column {column}
   raise newException(DbError, &"{option} is not allowed in {typ} column {column}")
 
-proc notAllowedTypeInChange*(typ:string) =
+proc notAllowedType*(typ:string) =
   ## Change to {typ} type is not allowed
-  raise newException(DbError, &"Change to {typ} type is not allowed")
+  raise newException(DbError, &"type {typ} is not allowed")
 
 
 proc shouldRun*(rdb:Rdb, table:Table, checksum:string, isReset:bool):bool =
@@ -90,6 +93,85 @@ proc execThenSaveHistory*(rdb:Rdb, tableName:string, query:string, checksum:stri
     elif rdb.driver == MariaDB or rdb.driver == MySQL:
       return now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
   )()
+
+  rdb.table("_migrations").insert(%*{
+    "name": tableName,
+    "query": query,
+    "checksum": checksum,
+    "created_at": createdAt,
+    "status": isSuccess
+  })
+  .waitFor
+
+
+proc exec*(rdb:SurrealDb, queries:seq[string]) =
+  var isSuccess = false
+  let logDisplay = rdb.log.shouldDisplayLog
+  let logFile = rdb.log.shouldOutputLogFile
+  rdb.log.shouldDisplayLog = false
+  rdb.log.shouldOutputLogFile = false
+
+  try:
+    for query in queries:
+      rdb.raw(query).exec.waitFor
+    isSuccess = true
+  except:
+    echo getCurrentExceptionMsg()
+
+  rdb.log.shouldDisplayLog = logDisplay
+  rdb.log.shouldOutputLogFile = logFile
+
+
+proc execThenSaveHistory*(rdb:SurrealDb, tableName:string, queries:seq[string], checksum:string) =
+  var isSuccess = false
+  try:
+    for query in queries:
+      let resp = rdb.raw(query).info().waitFor
+      for row in resp:
+        if row["status"].getStr != "OK":
+          raise newException(DbError, row["detail"].getStr)
+    isSuccess = true
+  except:
+    echo getCurrentExceptionMsg()
+
+  let tableQuery = queries.join("; ")
+  
+  let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
+  # let createdAt = (proc():string =
+  #   if rdb.driver == SQLite3 or rdb.driver == PostgreSQL:
+  #     return $now().utc
+  #   elif rdb.driver == MariaDB or rdb.driver == MySQL:
+  #     return now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
+  # )()
+
+  rdb.table("_migrations").insert(%*{
+    "name": tableName,
+    "query": tableQuery,
+    "checksum": checksum,
+    "created_at": createdAt,
+    "status": isSuccess
+  })
+  .waitFor
+
+
+proc execThenSaveHistory*(rdb:SurrealDb, tableName:string, query:string, checksum:string) =
+  var isSuccess = false
+  try:
+    let resp = rdb.raw(query).info().waitFor
+    for row in resp:
+      if row["status"].getStr != "OK":
+        raise newException(DbError, row["detail"].getStr)
+    isSuccess = true
+  except:
+    echo getCurrentExceptionMsg()
+
+  let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
+  # let createdAt = (proc():string =
+  #   if rdb.driver == SQLite3 or rdb.driver == PostgreSQL:
+  #     return $now().utc
+  #   elif rdb.driver == MariaDB or rdb.driver == MySQL:
+  #     return now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
+  # )()
 
   rdb.table("_migrations").insert(%*{
     "name": tableName,

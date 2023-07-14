@@ -9,6 +9,7 @@ type Column* = ref object
   isNullable*: bool
   isUnsigned*: bool
   isUnique*: bool
+  isAutoIncrement*:bool
   isDefault*: bool
   defaultBool*: bool
   defaultInt*: int
@@ -17,10 +18,6 @@ type Column* = ref object
   defaultJson*: JsonNode
   foreignOnDelete*: ForeignOnDelete
   info*: JsonNode
-  # query*: string
-  # foreignQuery*: string
-  # indexQuery*: string
-  queries*: seq[string] # used in alter table
   checksum*:string
   # alter table
   previousName*:string
@@ -31,7 +28,6 @@ proc new(_:type Column):Column =
   return Column(
     defaultJson: newJNull(),
     info: newJNull(),
-    queries: newSeq[string](),
   )
 
 proc toSchema*(self:Column):JsonNode =
@@ -62,7 +58,6 @@ proc increments*(_:type Column, name:string): Column =
   let column = Column.new()
   column.name = name
   column.typ = rdbIncrements
-  # column.isIndex = true
   return column
 
 
@@ -353,6 +348,10 @@ proc unsigned*(c: Column): Column =
   c.isUnsigned = true
   return c
 
+
+proc autoIncrements*(c: Column): Column =
+  c.isAutoIncrement = true
+  return c
 
 # =============================================================================
 # alter table

@@ -1,18 +1,19 @@
 import std/os
 import ../enums
 import ../../query_builder/rdb/rdb_types
+import ../../query_builder/surreal/surreal_types
 import ../models/table
 import ../queries/query_interface
 import ./sub/migration_table_def
 import ./sub/create_query_def
 
 
-proc create*(rdb:Rdb, tables:varargs[Table]) =
+proc create*(rdb:SurrealDb, tables:varargs[Table]) =
   let cmd = commandLineParams()
   let isReset = defined(reset) or cmd.contains("--reset")
 
   # create migration table
-  var query = createQuery(rdb, migrationTable)
+  var query = createQuery(rdb, surrealMigrationTable)
   query.createMigrationTable()
 
   if isReset:

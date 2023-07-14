@@ -21,15 +21,15 @@ proc changeColumn*(self:SqliteQuery, isReset:bool) =
   # TODO: How can I raise error in compire time?
   case self.column.typ
   of rdbIncrements:
-    notAllowedTypeInChange("increments")
+    notAllowedType("increments")
   of rdbTimestamps:
-    notAllowedTypeInChange("timestamps")
+    notAllowedType("timestamps")
   of rdbSoftDelete:
-    notAllowedTypeInChange("softDelete")
+    notAllowedType("softDelete")
   of rdbForeign:
-    notAllowedTypeInChange("foreign")
+    notAllowedType("foreign")
   of rdbStrForeign:
-    notAllowedTypeInChange("strForeign")
+    notAllowedType("strForeign")
   else:
     discard
 

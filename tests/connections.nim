@@ -1,3 +1,4 @@
+import std/asyncdispatch
 import std/os
 import std/strutils
 import ../src/allographer/connection
@@ -12,6 +13,8 @@ let
   mysqlPort = getEnv("MY_PORT").parseInt
   pgHost = getEnv("PG_HOST")
   pgPort = getEnv("PG_PORT").parseInt
+  surrealHost = getEnv("SURREAL_HOST")
+  surrealPort = getEnv("SURREAL_PORT").parseInt
   maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
   timeout = getEnv("DB_TIMEOUT").parseInt
 
