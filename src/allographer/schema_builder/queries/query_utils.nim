@@ -104,6 +104,17 @@ proc execThenSaveHistory*(rdb:Rdb, tableName:string, query:string, checksum:stri
   .waitFor
 
 
+proc shouldRun*(rdb:SurrealDb, table:Table, checksum:string, isReset:bool):bool =
+  if isReset:
+    return true
+
+  let history = rdb.table("_migrations")
+                  .where("checksum", "=", checksum)
+                  .first()
+                  .waitFor
+  return not history.isSome() or not history.get()["status"].getBool
+
+
 proc exec*(rdb:SurrealDb, queries:seq[string]) =
   var isSuccess = false
   let logDisplay = rdb.log.shouldDisplayLog
@@ -124,6 +135,7 @@ proc exec*(rdb:SurrealDb, queries:seq[string]) =
 
 proc execThenSaveHistory*(rdb:SurrealDb, tableName:string, queries:seq[string], checksum:string) =
   var isSuccess = false
+
   try:
     for query in queries:
       let resp = rdb.raw(query).info().waitFor
@@ -134,16 +146,13 @@ proc execThenSaveHistory*(rdb:SurrealDb, tableName:string, queries:seq[string], 
   except:
     echo getCurrentExceptionMsg()
 
-  let tableQuery = queries.join("; ")
-  
-  let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
-  # let createdAt = (proc():string =
-  #   if rdb.driver == SQLite3 or rdb.driver == PostgreSQL:
-  #     return $now().utc
-  #   elif rdb.driver == MariaDB or rdb.driver == MySQL:
-  #     return now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
-  # )()
+  let logDisplay = rdb.log.shouldDisplayLog
+  let logFile = rdb.log.shouldOutputLogFile
+  rdb.log.shouldDisplayLog = false
+  rdb.log.shouldOutputLogFile = false
 
+  let tableQuery = queries.join("; ")
+  let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
   rdb.table("_migrations").insert(%*{
     "name": tableName,
     "query": tableQuery,
@@ -152,6 +161,9 @@ proc execThenSaveHistory*(rdb:SurrealDb, tableName:string, queries:seq[string], 
     "status": isSuccess
   })
   .waitFor
+
+  rdb.log.shouldDisplayLog = logDisplay
+  rdb.log.shouldOutputLogFile = logFile
 
 
 proc execThenSaveHistory*(rdb:SurrealDb, tableName:string, query:string, checksum:string) =
@@ -165,14 +177,12 @@ proc execThenSaveHistory*(rdb:SurrealDb, tableName:string, query:string, checksu
   except:
     echo getCurrentExceptionMsg()
 
-  let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
-  # let createdAt = (proc():string =
-  #   if rdb.driver == SQLite3 or rdb.driver == PostgreSQL:
-  #     return $now().utc
-  #   elif rdb.driver == MariaDB or rdb.driver == MySQL:
-  #     return now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
-  # )()
+  let logDisplay = rdb.log.shouldDisplayLog
+  let logFile = rdb.log.shouldOutputLogFile
+  rdb.log.shouldDisplayLog = false
+  rdb.log.shouldOutputLogFile = false
 
+  let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
   rdb.table("_migrations").insert(%*{
     "name": tableName,
     "query": query,
@@ -181,3 +191,6 @@ proc execThenSaveHistory*(rdb:SurrealDb, tableName:string, query:string, checksu
     "status": isSuccess
   })
   .waitFor
+
+  rdb.log.shouldDisplayLog = logDisplay
+  rdb.log.shouldOutputLogFile = logFile

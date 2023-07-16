@@ -38,6 +38,7 @@ proc toSchema*(self:Column):JsonNode =
     "isNullable": self.isNullable,
     "isUnsigned": self.isUnsigned,
     "isUnique": self.isUnique,
+    "isAutoIncrement": self.isAutoIncrement,
     "isDefault": self.isDefault,
     "defaultBool": self.defaultBool,
     "defaultInt": self.defaultInt,
@@ -292,38 +293,50 @@ proc onDelete*(self:Column, kind:ForeignOnDelete):Column =
 # =============================================================================
 # options
 # =============================================================================
+proc autoIncrement*(c: Column): Column =
+  c.isAutoIncrement = true
+  c.isDefault = false
+  return c
+
+
 proc default*(c: Column, value:bool): Column =
-  c.isDefault = true
-  c.defaultBool = value
+  if not c.isAutoIncrement:
+    c.isDefault = true
+    c.defaultBool = value
   return c
 
 
 proc default*(c: Column, value:int): Column =
-  c.isDefault = true
-  c.defaultInt = value
+  if not c.isAutoIncrement:
+    c.isDefault = true
+    c.defaultInt = value
   return c
 
 
 proc default*(c: Column, value:float): Column =
-  c.isDefault = true
-  c.defaultFloat = value
+  if not c.isAutoIncrement:
+    c.isDefault = true
+    c.defaultFloat = value
   return c
 
 
 proc default*(c: Column, value:string): Column =
-  c.isDefault = true
-  c.defaultString = value
+  if not c.isAutoIncrement:
+    c.isDefault = true
+    c.defaultString = value
   return c
 
 
 proc default*(c: Column, value:JsonNode): Column =
-  c.isDefault = true
-  c.defaultJson = value
+  if not c.isAutoIncrement:
+    c.isDefault = true
+    c.defaultJson = value
   return c
 
 
 proc default*(c: Column):Column =
-  c.isDefault = true
+  if not c.isAutoIncrement:
+    c.isDefault = true
   return c
 
 
@@ -348,10 +361,6 @@ proc unsigned*(c: Column): Column =
   c.isUnsigned = true
   return c
 
-
-proc autoIncrements*(c: Column): Column =
-  c.isAutoIncrement = true
-  return c
 
 # =============================================================================
 # alter table

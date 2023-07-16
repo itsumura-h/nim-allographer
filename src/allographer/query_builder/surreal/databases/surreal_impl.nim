@@ -65,9 +65,13 @@ proc exec*(db:SurrealConn, query: string, args: seq[string], timeout:int) {.asyn
   let query = dbFormat(query, args)
   let resp = db.conn.post(&"{db.host}:{db.port}/sql", query).await
   let body = resp.body().await.parseJson()
-  echo body
   if body.kind == JObject and body["code"].getInt() == 400:
     dbError(body["information"].getStr())
+  if body.kind == JArray:
+    for row in body:
+      if row.kind == JObject:
+        if row["status"].getStr() == "ERR":
+          dbError(row["detail"].getStr())
 
 
 proc info*(db:SurrealConn, query: string, args: seq[string], timeout:int):Future[JsonNode] {.async.} =
