@@ -3,137 +3,289 @@ discard """
 """
 
 import std/unittest
-import std/json
-import std/times
-import std/os
-import std/strutils
 import std/asyncdispatch
-import std/distros
-import std/oids
+import std/json
+import std/options
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
-import ../src/allographer/connection
 import ./connections
 
 
-proc setUp(rdb:Rdb) =
-  rdb.create(
-    table("foreigh_table", [
-      Column.increments("id"),
-      Column.uuid("uuid"),
-      Column.string("name"),
-    ]),
-    table("DependSource", [
-      Column.string("string"),
-      Column.foreign("foreign_id").reference("id").on("foreigh_table").onDelete(SET_NULL),
-      Column.strForeign("foreign_uuid").reference("uuid").on("foreigh_table").onDelete(SET_NULL),
-    ]),
-    table("schema_builder", [
-      Column.increments("increments_column"),
-      Column.integer("integer_column").unique().default(1).unsigned().index(),
-      Column.smallInteger("smallInteger_column").unique().default(1).unsigned().index(),
-      Column.mediumInteger("mediumInteger_column").unique().default(1).unsigned().index(),
-      Column.bigInteger("bigInteger_column").unique().default(1).unsigned().index(),
-
-      Column.decimal("decimal_column", 5, 2).unique().default(1).unsigned().index(),
-      Column.double("double_column", 5, 2).unique().default(1).unsigned().index(),
-      Column.float("float_column").unique().default(1).unsigned().index(),
-
-      Column.uuid("uuid_column"),
-      Column.char("char_column", 100).unique().default("").index(),
-      Column.string("string_column").unique().default("").index(),
-      Column.text("text_column").index(),
-      Column.mediumText("mediumText_column").index(),
-      Column.longText("longText_column").index(),
-
-      Column.date("date_column").unique().default().index(),
-      Column.datetime("datetime_column").unique().default().index(),
-      Column.time("time_column").unique().default().index(),
-      Column.timestamp("timestamp_column").unique().default().index(),
-      Column.timestamps(),
-      Column.softDelete(),
-
-      Column.binary("binary_column").index(),
-      Column.boolean("boolean_column").unique().default().index(),
-      Column.enumField("enumField_column", ["a", "b"]).unique().default("a").index(),
-      Column.json("json_column").index(),
-
-      Column.foreign("foreign_id").reference("id").on("foreigh_table").onDelete(SET_NULL),
-      Column.strForeign("foreign_uuid").reference("uuid").on("foreigh_table").onDelete(SET_NULL),
-    ])
-  )
-  rdb.alter(
-    table("DependSource", [
-      # add column
-      Column.string("aaa").default("").add(),
-      Column.foreign("ccc").reference("id").on("foreigh_table").onDelete(SET_NULL).add(),
-      # change column definition
-      Column.string("aaa").nullable().change(),
-      # change column name
-      Column.renameColumn("aaa", "bbb"),
-      # delete column
-      Column.deleteColumn("bbb"),
-      Column.deleteColumn("ccc"),
-      Column.deleteColumn("foreign_id"),
-      Column.deleteColumn("foreign_uuid"),
-    ]),
-      # change table name
-    rename("DependSource", "DependSourceRenamed"),
-    # drop table
-    drop("DependSourceRenamed"),
-  )
-
-
 for rdb in dbConnections:
-  echo "==== " & rdb.driver.repr
-  suite("schema builder"):
-    setup:
-      setUp(rdb)
 
-    test("test1"):
-      asyncBlock:
-        let uuid = $genOid()
-        rdb.table("foreigh_table").insert(%*{
-          "uuid": uuid,
-          "name": "a"
-        })
-        .await
+  # suite($rdb.driver & " create table"):
+  #   test("create table"):
+  #     rdb.create(
+  #       table("IntRelation", [
+  #         Column.increments("id")
+  #       ]),
+  #       table("StrRelation", [
+  #         Column.uuid("uuid")
+  #       ]),
+  #       table("TypeIndex", [
+  #         Column.increments("id"),
+  #         Column.integer("integer").unsigned().index().default(1),
+  #         Column.smallInteger("smallInteger").unsigned().index().default(1),
+  #         Column.mediumInteger("mediumInteger").unsigned().index().default(1),
+  #         Column.bigInteger("bigInteger").unsigned().index().default(1),
+  #         Column.decimal("decimal", 10, 3).unsigned().index().default(1.1),
+  #         Column.double("double", 10, 3).unsigned().index().default(1.1),
+  #         Column.float("float").unsigned().index().default(1.1),
+  #         Column.uuid("uuid").index().default("A"),
+  #         Column.char("char", 255).index().default("A"),
+  #         Column.string("string").index().default("A"),
+  #         Column.text("text").index().default("A"),
+  #         Column.mediumText("mediumText").index().default("A"),
+  #         Column.longText("longText").index().default("A"),
+  #         Column.date("date").index().default(),
+  #         Column.datetime("datetime").index().default(),
+  #         Column.time("time").index().default(),
+  #         Column.timestamp("timestamp").index().default(),
+  #         Column.timestamps(),
+  #         Column.softDelete(),
+  #         Column.binary("binary").index().default("A"),
+  #         Column.boolean("boolean").index().default(true),
+  #         Column.enumField("enumField", ["A", "B", "C"]).index().default("A"),
+  #         Column.json("json").index().default(%*{"key":"value"}),
+  #         Column.foreign("int_relation_id").reference("id").on("IntRelation").onDelete(SET_NULL),
+  #         Column.strForeign("str_relation_id").reference("uuid").on("StrRelation").onDelete(SET_NULL)
+  #       ]),
+  #       table("TypeUnique", [
+  #         Column.increments("id"),
+  #         Column.integer("index").unsigned().unique().autoIncrement(),
+  #         Column.integer("integer").unsigned().unique().index().default(1),
+  #         Column.smallInteger("smallInteger").unsigned().unique().index().default(1),
+  #         Column.mediumInteger("mediumInteger").unsigned().unique().index().default(1),
+  #         Column.bigInteger("bigInteger").unsigned().unique().index().default(1),
+  #         Column.decimal("decimal", 10, 3).unsigned().unique().index().default(1.1),
+  #         Column.double("double", 10, 3).unsigned().unique().index().default(1.1),
+  #         Column.float("float").unsigned().unique().index().default(1.1),
+  #         Column.uuid("uuid").unique().index().default("A"),
+  #         Column.char("char", 255).unique().index().default("A"),
+  #         Column.string("string").unique().index().default("A"),
+  #         Column.text("text").unique().index().default("A"),
+  #         Column.mediumText("mediumText").unique().index().default("A"),
+  #         Column.longText("longText").unique().index().default("A"),
+  #         Column.date("date").unique().index().default(),
+  #         Column.datetime("datetime").unique().index().default(),
+  #         Column.time("time").unique().index().default(),
+  #         Column.timestamp("timestamp").unique().index().default(),
+  #         Column.timestamps(),
+  #         Column.softDelete(),
+  #         Column.binary("binary").unique().index().default("A"),
+  #         Column.boolean("boolean").unique().index().default(true),
+  #         Column.enumField("enumField", ["A", "B", "C"]).unique().index().default("A"),
+  #         Column.json("json").unique().index().default(%*{"key":"value"}),
+  #         Column.foreign("int_relation_id").reference("id").on("IntRelation").onDelete(SET_NULL),
+  #         Column.strForeign("str_relation_id").reference("uuid").on("StrRelation").onDelete(SET_NULL)
+  #       ])
+  #     )
 
-        rdb.table("schema_builder").insert(%*{
-          "increments_column": 1,
-          "integer_column": 0,
-          "smallInteger_column": 0,
-          "mediumInteger_column": 0,
-          "bigInteger_column": 1,
-          "decimal_column": 111.11,
-          "double_column": 111.11,
-          "float_column": 111.11,
-          "uuid_column": $genOid(),
-          "char_column": "a",
-          "string_column": "a",
-          "text_column": "a",
-          "mediumText_column": "a",
-          "longText_column": "a",
-          "date_column": now().format("yyyy-MM-dd"),
-          "datetime_column": now().format("yyyy-MM-dd HH:MM:ss"),
-          "time_column": now().format("HH:MM:ss"),
-          "timestamp_column": now().format("yyyy-MM-dd HH:MM:ss"),
-          "foreign_id": 1,
-          "foreign_uuid": uuid,
-          "binary_column": "a",
-          "boolean_column": true,
-          "enumField_column": "a",
-          "json_column": {"key": "value"}
-        })
-        .await
-        echo rdb.table("schema_builder")
-              .select("schema_builder.foreign_id", "schema_builder.foreign_uuid")
-              .join("foreigh_table", "foreigh_table.uuid", "=", "schema_builder.foreign_uuid")
-              .where("foreigh_table.id", "=", 1)
-              .get()
-              .await
-        rdb.alter(
-          drop("schema_builder"),
-          drop("foreigh_table")
+
+  #   test("change columns"):
+  #     rdb.alter(
+  #       table("TypeIndex", [
+  #         Column.integer("integer").unsigned().index().default(1).change(),
+  #         Column.smallInteger("smallInteger").unsigned().index().default(1).change(),
+  #         Column.mediumInteger("mediumInteger").unsigned().index().default(1).change(),
+  #         Column.bigInteger("bigInteger").unsigned().index().default(1).change(),
+  #         Column.decimal("decimal", 10, 3).unsigned().index().default(1.1).change(),
+  #         Column.double("double", 10, 3).unsigned().index().default(1.1).change(),
+  #         Column.float("float").unsigned().index().default(1.1).change(),
+  #         Column.uuid("uuid").index().default("A").change(),
+  #         Column.char("char", 255).index().default("A").change(),
+  #         Column.string("string").index().default("A").change(),
+  #         Column.text("text").index().default("A").change(),
+  #         Column.mediumText("mediumText").index().default("A").change(),
+  #         Column.longText("longText").index().default("A").change(),
+  #         Column.date("date").index().default().change(),
+  #         Column.datetime("datetime").index().default().change(),
+  #         Column.time("time").index().default().change(),
+  #         Column.timestamp("timestamp").index().default().change(),
+  #         Column.binary("binary").index().default("A").change(),
+  #         Column.boolean("boolean").index().default(true).change(),
+  #         Column.enumField("enumField", ["A", "B", "C"]).index().default("A").change(),
+  #         Column.json("json").index().default(%*{"key":"value"}).change(),
+  #       ]),
+  #       table("TypeUnique", [
+  #         Column.integer("integer").unsigned().unique().index().default(1).change(),
+  #         Column.smallInteger("smallInteger").unsigned().unique().index().default(1).change(),
+  #         Column.mediumInteger("mediumInteger").unsigned().unique().index().default(1).change(),
+  #         Column.bigInteger("bigInteger").unsigned().unique().index().default(1).change(),
+  #         Column.decimal("decimal", 10, 3).unsigned().unique().index().default(1.1).change(),
+  #         Column.double("double", 10, 3).unsigned().unique().index().default(1.1).change(),
+  #         Column.float("float").unsigned().unique().index().default(1.1).change(),
+  #         Column.uuid("uuid").unique().index().default("A").change(),
+  #         Column.char("char", 255).unique().index().default("A").change(),
+  #         Column.string("string").unique().index().default("A").change(),
+  #         Column.text("text").unique().index().default("A").change(),
+  #         Column.mediumText("mediumText").unique().index().default("A").change(),
+  #         Column.longText("longText").unique().index().default("A").change(),
+  #         Column.date("date").unique().index().default().change(),
+  #         Column.datetime("datetime").unique().index().default().change(),
+  #         Column.time("time").unique().index().default().change(),
+  #         Column.timestamp("timestamp").unique().index().default().change(),
+  #         Column.binary("binary").unique().index().default("A").change(),
+  #         Column.boolean("boolean").unique().index().default(true).change(),
+  #         Column.enumField("enumField", ["A", "B", "C"]).unique().index().default("A").change(),
+  #         Column.json("json").unique().index().default(%*{"key":"value"}).change(),
+  #       ])
+  #     )
+
+
+  # suite($rdb.driver & " alter table"):
+  #   setup:
+  #     rdb.create(
+  #       table("IntRelation", [
+  #         Column.increments("id"),
+  #       ]),
+  #       table("StrRelation", [
+  #         Column.uuid("uuid"),
+  #       ]),
+  #       table("TypeUnique", [
+  #         Column.integer("num"),
+  #         Column.string("str"),
+  #       ]),
+  #       table("TypeIndex", [
+  #         Column.integer("num"),
+  #         Column.string("str"),
+  #       ])
+  #     )
+
+
+  #   test("add columns"):
+  #     rdb.alter(
+  #       table("TypeIndex", [
+  #         Column.increments("id").add(),
+  #         Column.integer("integer").unsigned().index().default(1).add(),
+  #         Column.smallInteger("smallInteger").unsigned().index().default(1).add(),
+  #         Column.mediumInteger("mediumInteger").unsigned().index().default(1).add(),
+  #         Column.bigInteger("bigInteger").unsigned().index().default(1).add(),
+  #         Column.decimal("decimal", 10, 3).unsigned().index().default(1.1).add(),
+  #         Column.double("double", 10, 3).unsigned().index().default(1.1).add(),
+  #         Column.float("float").unsigned().index().default(1.1).add(),
+  #         Column.uuid("uuid").index().default("A").add(),
+  #         Column.char("char", 255).index().default("A").add(),
+  #         Column.string("string").index().default("A").add(),
+  #         Column.text("text").index().default("A").add(),
+  #         Column.mediumText("mediumText").index().default("A").add(),
+  #         Column.longText("longText").index().default("A").add(),
+  #         Column.date("date").index().default().add(),
+  #         Column.datetime("datetime").index().default(),
+  #         Column.time("time").index().default().add(),
+  #         Column.timestamp("timestamp").index().default().add(),
+  #         Column.timestamps().add(),
+  #         Column.softDelete().add(),
+  #         Column.binary("binary").index().default("A").add(),
+  #         Column.boolean("boolean").index().default(true).add(),
+  #         Column.enumField("enumField", ["A", "B", "C"]).index().default("A").add(),
+  #         Column.json("json").index().default(%*{"key":"value"}).add(),
+  #         Column.foreign("int_relation_id").reference("id").on("IntRelation").onDelete(SET_NULL).add(),
+  #         Column.strForeign("str_relation_id").reference("uuid").on("StrRelation").onDelete(SET_NULL).add()
+  #       ]),
+  #       table("TypeUnique", [
+  #         Column.increments("id").add(),
+  #         Column.integer("integer").unsigned().unique().index().default(1).add(),
+  #         Column.smallInteger("smallInteger").unsigned().unique().index().default(1).add(),
+  #         Column.mediumInteger("mediumInteger").unsigned().unique().index().default(1).add(),
+  #         Column.bigInteger("bigInteger").unsigned().unique().index().default(1).add(),
+  #         Column.decimal("decimal", 10, 3).unsigned().unique().index().default(1.1).add(),
+  #         Column.double("double", 10, 3).unsigned().unique().index().default(1.1).add(),
+  #         Column.float("float").unsigned().unique().index().default(1.1).add(),
+  #         Column.uuid("uuid").unique().index().default("A").add(),
+  #         Column.char("char", 255).unique().index().default("A").add(),
+  #         Column.string("string").unique().index().default("A").add(),
+  #         Column.text("text").unique().index().default("A").add(),
+  #         Column.mediumText("mediumText").unique().index().default("A").add(),
+  #         Column.longText("longText").unique().index().default("A").add(),
+  #         Column.date("date").unique().index().default().add(),
+  #         Column.datetime("datetime").unique().index().default().add(),
+  #         Column.time("time").unique().index().default().add(),
+  #         Column.timestamp("timestamp").unique().index().default().add(),
+  #         Column.timestamps().add(),
+  #         Column.softDelete().add(),
+  #         Column.binary("binary").unique().index().default("A").add(),
+  #         Column.boolean("boolean").unique().index().default(true).add(),
+  #         Column.enumField("enumField", ["A", "B", "C"]).unique().index().default("A").add(),
+  #         Column.json("json").unique().index().default(%*{"key":"value"}).add()
+  #       ])
+  #     )
+
+
+  #   test("rename column"):
+  #     rdb.alter(
+  #       table("TypeIndex", [
+  #         Column.renameColumn("num", "num2"),
+  #         Column.renameColumn("str", "str2"),
+  #       ])
+  #     )
+
+  #     let columns = rdb.table("TypeIndex").columns().waitFor
+  #     check not columns.contains("num")
+  #     check columns.contains("num2")
+  #     check not columns.contains("str")
+  #     check columns.contains("str2")
+
+
+  #   test("drop column"):
+  #     rdb.alter(
+  #       table("TypeIndex", [
+  #         Column.dropColumn("str")
+  #       ])
+  #     )
+
+  #     let columns = rdb.table("TypeIndex").columns().waitFor
+  #     check not columns.contains("str")
+
+
+  #   test("rename table"):
+  #     rdb.drop(
+  #       table("TypeIndex_renamed")
+  #     )
+  #     rdb.table("TypeIndex").insert(%*{"num":1, "str": "a"}).waitFor
+
+  #     rdb.alter(
+  #       table("TypeIndex").renameTo("TypeIndex_renamed")
+  #     )
+
+  #     var res = rdb.table("TypeIndex").first().waitFor
+  #     check not res.isSome
+
+  #     res = rdb.table("TypeIndex_renamed").first().waitFor
+  #     check res.isSome
+
+
+  #   test("drop table"):
+  #     rdb.create(
+  #       table("TypeIndex", [
+  #         Column.integer("num")
+  #       ])
+  #     )
+
+  #     rdb.drop(
+  #       table("TypeIndex")
+  #     )
+      
+  #     let res = rdb.table("TypeIndex").first().waitFor
+  #     check not res.isSome
+
+
+  if [PostgreSQL, MySQL, MariaDB].contains(rdb.driver):
+    suite($rdb.driver & " autoincrement"):
+      test("autoincrement"):
+        rdb.create(
+          table("TypeIndex", [
+            Column.integer("index").autoIncrement(),
+            Column.string("string")
+          ])
         )
-        check true
+
+        rdb.table("TypeIndex").insert(@[
+          %*{"string": "a"},
+          %*{"string": "b"},
+          %*{"string": "c"},
+        ]).waitFor
+
+        let res = rdb.table("TypeIndex").orderBy("index", Asc).get().waitFor
+        for i, row in res:
+          check row["index"].getInt == i+1

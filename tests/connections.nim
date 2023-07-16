@@ -1,7 +1,8 @@
-import
-  std/os,
-  std/strutils,
-  ../src/allographer/connection
+import std/asyncdispatch
+import std/os
+import std/strutils
+import ../src/allographer/connection
+
 
 let
   database = getEnv("DB_DATABASE")
@@ -12,13 +13,21 @@ let
   mysqlPort = getEnv("MY_PORT").parseInt
   pgHost = getEnv("PG_HOST")
   pgPort = getEnv("PG_PORT").parseInt
+  surrealHost = getEnv("SURREAL_HOST")
+  surrealPort = getEnv("SURREAL_PORT").parseInt
   maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
   timeout = getEnv("DB_TIMEOUT").parseInt
 
-let rdb* = dbopen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=true)
+# let rdb* = dbopen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=true)
+# let rdb* = dbopen(SQLite3, getCurrentDir() / "db.sqlite3" , maxConnections=maxConnections, shouldDisplayLog=true)
+# let rdb* = dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=true)
+# let rdb* = dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=true)
+
+let surreal* = dbOpen(SurrealDb, "test", "test", "user", "pass", surrealHost, surrealPort, 5, 30, false, false).waitFor()
 
 let dbConnections* = @[
-  dbopen(SQLite3, ":memory:", maxConnections=95, timeout=timeout, shouldDisplayLog=false),
+  # dbopen(SQLite3, getCurrentDir() / "db.sqlite3", maxConnections=maxConnections, timeout=timeout, shouldDisplayLog=true),
+  dbopen(SQLite3, ":memory:", maxConnections=maxConnections, timeout=timeout, shouldDisplayLog=false),
   dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=false),
   dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=false),
 ]

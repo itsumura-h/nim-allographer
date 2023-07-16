@@ -31,7 +31,7 @@ RUN rm -rf /var/lib/apt/lists/*
 ENV PATH $PATH:/root/.nimble/bin
 WORKDIR /root/project
 COPY ./allographer.nimble .
-RUN nimble install -y
+RUN nimble install -y -d
 RUN nimble install -y \
            bcrypt \
            progress

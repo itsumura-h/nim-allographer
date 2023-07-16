@@ -4,8 +4,8 @@ import ../../../env
 import ../rdb_types
 import ../databases/database_types; export database_types
 import ../databases/sqlite/sqlite_impl
-import ../databases/postgre/postgre_impl
-import ../databases/mysql/mysql_impl
+import ../databases/postgres/postgres_impl
+# import ../databases/mysql/mysql_impl
 import ../databases/mariadb/mariadb_impl
 
 
@@ -17,7 +17,7 @@ proc open*(driver:Driver, database:string="", user:string="", password:string=""
       result = sqlite_impl.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of PostgreSQL:
     when isExistsPostgre:
-      result = postgre_impl.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
+      result = postgres_impl.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
   of MySQL:
     when isExistsMysql:
       result = mariadb_impl.dbopen(database, user, password, host, port.int32, maxConnections, timeout)
@@ -49,7 +49,7 @@ proc query*(
       return await sqlite_impl.query(self.pools[connI].sqliteConn, query, args, self.timeout)
   of PostgreSQL:
     when isExistsPostgre:
-      return await postgre_impl.query(self.pools[connI].postgresConn, query, args, self.timeout)
+      return await postgres_impl.query(self.pools[connI].postgresConn, query, args, self.timeout)
   of MySQL:
     when isExistsMysql:
       return await mariadb_impl.query(self.pools[connI].mariadbConn, query, args, self.timeout)
@@ -81,7 +81,7 @@ proc queryPlain*(
       return await sqlite_impl.queryPlain(self.pools[connI].sqliteConn, query, args, self.timeout)
   of PostgreSQL:
     when isExistsPostgre:
-      return await postgre_impl.queryPlain(self.pools[connI].postgresConn, query, args, self.timeout)
+      return await postgres_impl.queryPlain(self.pools[connI].postgresConn, query, args, self.timeout)
   of MySQL:
     when isExistsMysql:
       return await mariadb_impl.queryPlain(self.pools[connI].mariadbConn, query, args, self.timeout)
@@ -113,7 +113,7 @@ proc exec*(
       await sqlite_impl.exec(self.pools[connI].sqliteConn, query, args, self.timeout)
   of PostgreSQL:
     when isExistsPostgre:
-      await postgre_impl.exec(self.pools[connI].postgresConn, query, args, self.timeout)
+      await postgres_impl.exec(self.pools[connI].postgresConn, query, args, self.timeout)
   of MySQL:
     when isExistsMysql:
       await mariadb_impl.exec(self.pools[connI].mariadbConn, query, args, self.timeout)
@@ -137,7 +137,7 @@ proc transactionStart*(self: Connections, driver:Driver):Future[int] {.async.} =
       await mariadb_impl.exec(self.pools[connI].mariadbConn, "BEGIN", @[], self.timeout)
   of PostgreSQL:
     when isExistsPostgre:
-      await postgre_impl.exec(self.pools[connI].postgresConn, "BEGIN", @[], self.timeout)
+      await postgres_impl.exec(self.pools[connI].postgresConn, "BEGIN", @[], self.timeout)
   of SQLite3:
     when isExistsSqlite:
       await sqlite_impl.exec(self.pools[connI].sqliteConn, "BEGIN", @[], self.timeout)
@@ -159,7 +159,7 @@ proc transactionEnd*(self: Connections, driver:Driver, connI:int, query:string) 
       await mariadb_impl.exec(self.pools[connI].mariadbConn, query, @[], self.timeout)
   of PostgreSQL:
     when isExistsPostgre:
-      await postgre_impl.exec(self.pools[connI].postgresConn, query, @[], self.timeout)
+      await postgres_impl.exec(self.pools[connI].postgresConn, query, @[], self.timeout)
   of SQLite3:
     when isExistsSqlite:
       await sqlite_impl.exec(self.pools[connI].sqliteConn, query, @[], self.timeout)
@@ -174,15 +174,13 @@ proc getColumns*(self:Connections, driver:Driver, query:string, args: seq[string
   of MySQL:
     when isExistsMysql:
       discard
-      # return await mysql.getColumns(self.pools[connI].mysqlConn, query, args, self.timeout)
+      # return await mysql_impl.getColumns(self.pools[connI].mysqlConn, query, args, self.timeout)
   of MariaDB:
     when isExistsMariadb:
-      discard
-      # return await mariadb.getColumns(self.pools[connI].mariadbConn, query, args, self.timeout)
+      return await mariadb_impl.getColumns(self.pools[connI].mariadbConn, query, args, self.timeout)
   of PostgreSQL:
     when isExistsPostgre:
-      discard
-      # return await postgres.getColumns(self.pools[connI].postgresConn, query, args, self.timeout)
+      return await postgres_impl.getColumns(self.pools[connI].postgresConn, query, args, self.timeout)
   of SQLite3:
     when isExistsSqlite:
       return await sqlite_impl.getColumns(self.pools[connI].sqliteConn, query, args, self.timeout)
@@ -208,7 +206,7 @@ proc prepare*(self: Connections, driver:Driver, query: string, stmtName=""):Futu
           randStr(10)
         else:
           stmtName
-      let nArgs = await postgre_impl.prepare(self.pools[connI].postgresConn, query, self.timeout, stmtName)
+      let nArgs = await postgres_impl.prepare(self.pools[connI].postgresConn, query, self.timeout, stmtName)
       result = Prepared(conn:self, nArgs:nArgs, pgStmt:stmtName, connI:connI)
   of SQLite3:
     when isExistsSqlite:
@@ -226,7 +224,7 @@ proc query*(self:Prepared, driver:Driver, args: seq[string] = @[]):Future[(seq[R
       discard
   of PostgreSQL:
     when isExistsPostgre:
-      return await postgre_impl.preparedQuery(self.conn.pools[self.connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
+      return await postgres_impl.preparedQuery(self.conn.pools[self.connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
   of SQLite3:
     when isExistsSqlite:
       return await sqlite_impl.preparedQuery(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)
@@ -242,7 +240,7 @@ proc exec*(self:Prepared, driver:Driver, args:seq[string] = @[]) {.async.} =
       discard
   of PostgreSQL:
     when isExistsPostgre:
-      await postgre_impl.preparedExec(self.conn.pools[self.connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
+      await postgres_impl.preparedExec(self.conn.pools[self.connI].postgresConn, args, self.nArgs, self.conn.timeout, self.pgStmt)
   of SQLite3:
     when isExistsSqlite:
       await sqlite_impl.preparedExec(self.conn.pools[self.connI].sqliteConn, args, self.sqliteStmt)

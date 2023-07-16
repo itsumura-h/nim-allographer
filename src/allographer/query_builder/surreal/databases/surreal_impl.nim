@@ -24,12 +24,15 @@ proc open*(_:type SurrealImpl, namespace="", database="",user="", password="",
     headers["Authorization"] = "Basic " & base64.encode(user & ":" & password)
     client.headers = headers
 
-    let url = &"{host}:{port}/status"
-    let resp = client.get(url).await
-
+    var url = &"{host}:{port}/status"
+    var resp = client.get(url).await
     if(resp.status != $Http200):
       dbError(&"Cannot connect to SurrealDb {host}:{port}")
-      break
+
+    url = &"{host}:{port}/sql"
+    resp = client.post(url, &"DEFINE NAMESPACE `{namespace}`; USE NS `{namespace}`; DEFINE DATABASE `{database}`").await
+    if(resp.status != $Http200):
+      dbError(&"Cannot connect to SurrealDb {host}:{port}")
 
     pools[i] = SurrealConn(
       conn: client,
@@ -64,6 +67,11 @@ proc exec*(db:SurrealConn, query: string, args: seq[string], timeout:int) {.asyn
   let body = resp.body().await.parseJson()
   if body.kind == JObject and body["code"].getInt() == 400:
     dbError(body["information"].getStr())
+  if body.kind == JArray:
+    for row in body:
+      if row.kind == JObject:
+        if row["status"].getStr() == "ERR":
+          dbError(row["detail"].getStr())
 
 
 proc info*(db:SurrealConn, query: string, args: seq[string], timeout:int):Future[JsonNode] {.async.} =

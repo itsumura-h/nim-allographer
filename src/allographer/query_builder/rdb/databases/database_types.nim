@@ -3,7 +3,7 @@ import std/random
 import std/strutils
 import std/times
 import ./sqlite/sqlite_rdb
-import ./postgre/postgre_rdb
+import ./postgres/postgres_rdb
 import ./mysql/mysql_rdb
 import ./mariadb/mariadb_rdb
 
