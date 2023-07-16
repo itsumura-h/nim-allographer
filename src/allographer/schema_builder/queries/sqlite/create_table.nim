@@ -1,5 +1,7 @@
 import std/strformat
+import std/strutils
 import std/sha1
+import std/sequtils
 import std/json
 import ../../enums
 import ../../models/table
@@ -25,6 +27,14 @@ proc createTable*(self: SqliteQuery, isReset:bool) =
     
     if column.isIndex:
       indexQuery.add(createIndexString(self.table, column))
+
+  if self.table.primary.len > 0:
+    let primary = self.table.primary.map(
+        proc(row:string):string =
+          return &"\"{row}\""
+      )
+      .join(", ")
+    query.add(&", PRIMARY KEY({primary})")
 
   if foreignQuery.len > 0:
     queries.add(

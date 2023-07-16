@@ -8,6 +8,7 @@ from ./column import Column, toSchema
 type Table* = ref object
   name*: string
   columns*: seq[Column]
+  primary*: seq[string]
   query*:seq[string]
   checksum*:string
   previousName*:string
@@ -16,10 +17,18 @@ type Table* = ref object
 
 
 proc table*(name:string, columns:varargs[Column]):Table =
-  # let jsonColumns = createTable(name, columns)
   return Table(
     name: name,
     columns: @columns,
+    query: newSeq[string](),
+    migrationType: CreateTable
+  )
+
+proc table*(name:string, columns:seq[Column], primary:seq[string] = @[]):Table =
+  return Table(
+    name: name,
+    columns: @columns,
+    primary: @primary,
     query: newSeq[string](),
     migrationType: CreateTable
   )
@@ -33,6 +42,7 @@ proc toSchema*(self:Table):JsonNode =
   return %*{
     "name":self.name,
     "columns": columns,
+    "primary": self.primary,
     "previousName": self.previousName,
     "migrationType": self.migrationType,
     "usecaseType": self.usecaseType
