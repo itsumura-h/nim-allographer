@@ -237,6 +237,23 @@ for rdb in dbConnections:
       check not columns.contains("str")
 
 
+    test("rename table"):
+      rdb.drop(
+        table("TypeIndex_renamed")
+      )
+      rdb.table("TypeIndex").insert(%*{"num":1, "str": "a"}).waitFor
+
+      rdb.alter(
+        table("TypeIndex").renameTo("TypeIndex_renamed")
+      )
+
+      var res = rdb.table("TypeIndex").first().waitFor
+      check not res.isSome
+
+      res = rdb.table("TypeIndex_renamed").first().waitFor
+      check res.isSome
+
+
     test("drop table"):
       rdb.create(
         table("TypeIndex", [

@@ -7,4 +7,5 @@ type IQuery* = tuple
   changeColumn:proc(isReset:bool)
   renameColumn:proc(isReset:bool)
   dropColumn:proc(isReset:bool)
+  renameTable:proc(isReset:bool)
   dropTable:proc(isReset:bool)

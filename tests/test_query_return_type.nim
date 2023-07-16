@@ -130,6 +130,6 @@ for rdb in dbConnections:
         var r = await(rdb.table("user").find(10, Typ))
         check r.isSome() == false
 
-  rdb.alter(
-    drop("user")
+  rdb.drop(
+    table("user")
   )

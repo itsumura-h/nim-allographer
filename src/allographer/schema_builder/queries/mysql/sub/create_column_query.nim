@@ -239,7 +239,8 @@ proc createDateColumn(column:Column):string =
 
 
 proc createDatetimeColumn(column:Column):string =
-  result = &"`{column.name}` DATETIME(3)"
+  # result = &"`{column.name}` DATETIME(3)"
+  result = &"`{column.name}` DATETIME"
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "datetime", column.name)

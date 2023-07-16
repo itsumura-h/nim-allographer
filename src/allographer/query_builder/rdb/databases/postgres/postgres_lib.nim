@@ -188,6 +188,8 @@ proc dbQuote(s: string): string =
   # add(result, '\'')
 
   ## DB quotes the string.
+  if s == "null":
+    return "NULL"
   result = "'"
   for c in items(s):
     case c

@@ -10,14 +10,17 @@ import std/strformat
 import std/strutils
 import ../src/allographer/connection
 import ../src/allographer/query_builder
+import ../src/allographer/schema_builder
+import ./connections
 
 
-let setupConn = dbOpen(SurrealDb, "test", "test", "user", "pass", "http://surreal", 8000, 1, 30, false, false).waitFor()
-let surreal = dbOpen(SurrealDb, "test", "test", "user", "pass", "http://surreal", 8000, 10, 30, true, false).waitFor()
-
-suite("surreal type"):
+suite("SurrealDB type"):
   setup:
-    setupConn.table("user").delete().waitFor()
+    surreal.create(
+      table("user", [
+        Column.string("name")
+      ])
+    )
 
   test("SurrealId"):
     let aliceId = surreal.table("user").insertId(%*{"name": "alice"}).waitFor()
@@ -37,19 +40,28 @@ suite("surreal type"):
     check $alice3 == alice["id"].getStr().split(":")[1]
 
 
-suite("surreal query"):
+suite("SurrealDB query"):
   setup:
-    setupConn.table("auth").delete().waitFor()
-    setupConn.table("user").delete().waitFor()
+    surreal.create(
+      table("auth", [
+        Column.string("name")
+      ]),
+      table("user", [
+        Column.string("name"),
+        Column.string("email"),
+        Column.integer("index").autoIncrement(),
+        Column.foreign("auth").reference("id").on("auth").onDelete(SET_NULL).nullable()
+      ])
+    )
     
     var userData = newSeq[JsonNode]()
     var i = 0
     for auth in ["admin", "editor", "viewer"]:
-      let authId = setupConn.table("auth").insertId(%*{"name": auth}).waitFor()
+      let authId = surreal.table("auth").insertId(%*{"name": auth}).waitFor()
       for j in 1..3:
         userData.add(%*{"name": &"user{i+j}", "email": &"user{i+j}@example.com", "index":i+j, "auth":authId.rawId})
       i += 3
-    setupConn.table("user").insert(userData).waitFor()
+    surreal.table("user").insert(userData).waitFor()
 
   test("connection"):
     let surreal = dbOpen(SurrealDb, "test", "test", "user", "pass", "http://surreal", 8000, 10, 30, true, false).waitFor()
@@ -63,14 +75,14 @@ suite("surreal query"):
     check res[0]["email"].getStr() == "alice@example.com"
 
   test("get"):
-    surreal.insert(%*{"name": "alice", "email":"alice@example.com"}).waitFor()
+    surreal.table("user").insert(%*{"name": "alice", "email":"alice@example.com"}).waitFor()
     let res = surreal.table("user").orderBy("name", Collate, Asc).limit(1).get().waitFor()
     echo res
     check res[0]["name"].getStr() == "alice"
     check res[0]["email"].getStr() == "alice@example.com"
 
   test("first"):
-    surreal.insert(%*{"name": "alice", "email":"alice@example.com"}).waitFor()
+    surreal.table("user").insert(%*{"name": "alice", "email":"alice@example.com"}).waitFor()
     let dbRes = surreal.table("user").orderBy("name", Collate, Asc).first().waitFor()
     check dbRes.isSome()
     let res = dbRes.get()
@@ -79,7 +91,7 @@ suite("surreal query"):
     check res["email"].getStr() == "alice@example.com"
 
   test("find"):
-    let aliceId = surreal.insertId(%*{"name": "alice", "email":"alice@example.com"}).waitFor()
+    let aliceId = surreal.table("user").insertId(%*{"name": "alice", "email":"alice@example.com"}).waitFor()
     var dbRes = surreal.table("user").find(aliceId).waitFor()
     check dbRes.isSome()
     var res = dbRes.get()
@@ -90,10 +102,10 @@ suite("surreal query"):
     check res["email"].getStr() == "alice@example.com"
 
 
-  # ==================== SELECT ====================
+  # # ==================== SELECT ====================
   
   test("select"):
-    let aliceId = surreal.insertId(%*{"name": "alice", "email":"alice@example.com"}).waitFor()
+    let aliceId = surreal.table("user").insertId(%*{"name": "alice", "email":"alice@example.com"}).waitFor()
     let dbRes = surreal.table("user").select("name", "email").find(aliceId).waitFor()
     check dbRes.isSome()
     let res = dbRes.get()
@@ -202,7 +214,7 @@ suite("surreal query"):
     check res["auth"]["name"].getStr() == "viewer"
 
   test("parallel"):
-    setupConn.raw(""" DELETE `user` """).exec().waitFor()
+    surreal.raw(""" DELETE `user` """).exec().waitFor()
     let admin = surreal.table("auth").where("name", "=", "admin").first().waitFor().get()
     let adminId = admin["id"].getStr()
     var users = newSeq[JsonNode]()
@@ -224,6 +236,12 @@ suite("surreal query"):
 
 
   test("max"):
+    surreal.create(
+      table("data", [
+        Column.integer("index")
+      ])
+    )
+
     surreal.table("data").delete().waitFor()
     var data = newSeq[JsonNode]()
     for i in 1..5:
@@ -234,6 +252,12 @@ suite("surreal query"):
     check max == 5
 
   test("min"):
+    surreal.create(
+      table("data", [
+        Column.integer("index")
+      ])
+    )
+
     surreal.table("data").delete().waitFor()
     var data = newSeq[JsonNode]()
     for i in 1..5:

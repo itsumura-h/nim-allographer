@@ -41,3 +41,10 @@ proc toSchema*(self:Table):JsonNode =
 proc smallName*(self:Table):string =
   ## TableName -> tablename
   return self.name.toLowerAscii()
+
+proc renameTo*(self:Table, name:string):Table =
+  let previousName = self.name
+  self.name = name
+  self.previousName = previousName
+  self.migrationType = RenameTable
+  return self

@@ -74,7 +74,10 @@ for rdb in dbConnections:
       asyncBlock:
         rdb.raw("BEGIN").exec().await
         var t = rdb.table("user").get().await
-        check t[0] == %*{"id":1,"name":"user1","email":"user1@gmail.com","address":newJNull(),"submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00","auth_id":1}
+        let expect = %*{"id":1,"name":"user1","email":"user1@gmail.com","address":newJNull(),"submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00","auth_id":1}
+        echo t[0]
+        echo expect
+        check t[0] == expect
         rdb.raw("ROLLBACK").exec().await
 
     test("getPlainTest"):
@@ -217,7 +220,7 @@ for rdb in dbConnections:
         check t["email"].getStr() == "Paul@gmail.com"
         rdb.raw("ROLLBACK").exec().await
 
-    test("insertnilTest"):
+    test("insertNilTest"):
       asyncBlock:
         rdb.raw("BEGIN").exec().await
         var id = rdb.table("user").insertId(%*{

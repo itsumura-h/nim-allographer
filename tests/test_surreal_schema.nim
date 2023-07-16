@@ -11,9 +11,8 @@ import std/options
 import ../src/allographer/connection
 import ../src/allographer/schema_builder
 import ../src/allographer/query_builder
+import ./connections
 
-
-let surreal = dbOpen(SurrealDb, "test", "test", "user", "pass", "http://surreal", 8000, 10, 30, true, false).waitFor()
 
 suite("SurrealDB create table"):
   test("create table"):

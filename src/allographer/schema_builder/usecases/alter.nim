@@ -42,6 +42,7 @@ proc alter*(rdb:Rdb | SurrealDb, tables:varargs[Table]) =
     of ChangeTable:
       discard
     of RenameTable:
-      discard
+      query = createQuery(rdb, table)
+      query.renameTable(isReset)
     of DropTable:
       discard
