@@ -2,6 +2,7 @@ import std/asyncdispatch
 import std/json
 import std/options
 import std/sequtils
+import std/strformat
 import ../log
 import ../enums
 import ./surreal_types
@@ -75,6 +76,22 @@ proc find*(self: SurrealDb, id:SurrealId, key="id"):Future[Option[JsonNode]]{.as
     self.log.echoErrorMsg(sql, self.placeHolder)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return none(JsonNode)
+
+
+proc columns*(self: SurrealDb):Future[seq[string]] {.async.} =
+  let tableName = self.query["table"].getStr
+  let sql = &"INFO FOR TABLE `{tableName}`"
+  try:
+    self.log.logger(sql, self.placeHolder)
+    let resp = self.conn.info(sql, self.placeHolder).await
+    var columns:seq[string]
+    for (key, value) in resp[0]["result"]["fd"].pairs:
+      columns.add(key)
+    return columns
+  except Exception:
+    self.log.echoErrorMsg(sql, self.placeHolder)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    return @[]
 
 
 # ==================== INSERT ====================
