@@ -10,11 +10,14 @@ import ../../query_utils
 # int
 # =============================================================================
 proc createSerialColumn(column:Column, table:Table):string =
-  result = &"\"{column.name}\" SERIAL NOT NULL PRIMARY KEY"
+  result = &"\"{column.name}\" BIGSERIAL NOT NULL PRIMARY KEY"
 
 
 proc createIntColumn(column:Column, table:Table):string =
-  result = &"\"{column.name}\" INTEGER"
+  if column.isAutoIncrement:
+    result = &"\"{column.name}\" BIGSERIAL"
+  else:
+    result = &"\"{column.name}\" INTEGER"
 
   if column.isUnique:
     result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
@@ -32,6 +35,9 @@ proc createIntColumn(column:Column, table:Table):string =
 proc createSmallIntColumn(column:Column, table:Table):string =
   result = &"\"{column.name}\" SMALLINT"
 
+  if column.isAutoIncrement:
+    notAllowedOption("autoincrement", "smallint", column.name)
+
   if column.isUnique:
     result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
 
@@ -46,7 +52,10 @@ proc createSmallIntColumn(column:Column, table:Table):string =
 
 
 proc createMediumIntColumn(column:Column, table:Table):string =
-  result = &"\"{column.name}\" INTEGER"
+  if column.isAutoIncrement:
+    result = &"\"{column.name}\" BIGSERIAL"
+  else:
+    result = &"\"{column.name}\" INTEGER"
 
   if column.isUnique:
     result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")
@@ -62,7 +71,10 @@ proc createMediumIntColumn(column:Column, table:Table):string =
 
 
 proc createBigIntColumn(column:Column, table:Table):string =
-  result = &"\"{column.name}\" BIGINT"
+  if column.isAutoIncrement:
+    result = &"\"{column.name}\" BIGSERIAL"
+  else:
+    result = &"\"{column.name}\" BIGINT"
 
   if column.isUnique:
     result.add(&" CONSTRAINT \"{table.name}_{column.name}_unique\" UNIQUE")

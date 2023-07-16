@@ -296,6 +296,7 @@ proc onDelete*(self:Column, kind:ForeignOnDelete):Column =
 proc autoIncrement*(c: Column): Column =
   c.isAutoIncrement = true
   c.isDefault = false
+  c.isUnique = true
   return c
 
 

@@ -15,6 +15,9 @@ proc createSerialColumn(column:Column):string =
 proc createIntColumn(column:Column):string =
   result = &"`{column.name}` INT"
 
+  if column.isAutoIncrement:
+    result.add(" AUTO_INCREMENT")
+
   if column.isUnsigned:
     result.add(" UNSIGNED")
 
@@ -30,6 +33,9 @@ proc createIntColumn(column:Column):string =
 
 proc createSmallIntColumn(column:Column):string =
     result = &"`{column.name}` SMALLINT"
+
+    if column.isAutoIncrement:
+      result.add(" AUTO_INCREMENT")
 
     if column.isUnsigned:
       result.add(" UNSIGNED")
@@ -47,6 +53,9 @@ proc createSmallIntColumn(column:Column):string =
 proc createMediumIntColumn(column:Column):string =
     result = &"`{column.name}` MEDIUMINT"
 
+    if column.isAutoIncrement:
+      result.add(" AUTO_INCREMENT")
+
     if column.isUnsigned:
       result.add(" UNSIGNED")
 
@@ -62,6 +71,9 @@ proc createMediumIntColumn(column:Column):string =
 
 proc createBigIntColumn(column:Column):string =
     result = &"`{column.name}` BIGINT"
+
+    if column.isAutoIncrement:
+      result.add(" AUTO_INCREMENT")
 
     if column.isUnsigned:
       result.add(" UNSIGNED")

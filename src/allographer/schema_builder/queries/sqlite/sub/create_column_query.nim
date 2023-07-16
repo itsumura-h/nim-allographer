@@ -18,6 +18,9 @@ proc createSerialColumn(column:Column):string =
 proc createIntColumn(column:Column):string =
   result = &"'{column.name}' INTEGER"
 
+  if column.isAutoIncrement:
+    notAllowedOption("autoincrement", "integer", column.name)
+
   if column.isUnique:
     result.add(" UNIQUE")
 
