@@ -180,6 +180,14 @@ DEBUG SELECT * FROM `type` WHERE `id` = ? LIMIT 1 ["type:64t0w6gpnye7tdf083ch"]
 }
 ```
 
+### columns
+Retrieve columns from table.
+```nim
+let columns = surreal.table("users").columns().await
+columns == @["email", "name", "id"]
+```
+
+
 ### where
 user
 |id|name|email|

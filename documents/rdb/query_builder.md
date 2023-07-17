@@ -179,6 +179,14 @@ if user.isSome:
   echo user.get["name"]
 ```
 
+### columns
+Retrieve columns from table.
+```nim
+let columns = rdb.table("users").columns().await
+columns == @["id", "name", "email"]
+```
+
+
 ### join
 ```nim
 let users = rdb

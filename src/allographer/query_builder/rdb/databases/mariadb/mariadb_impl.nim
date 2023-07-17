@@ -25,6 +25,7 @@ proc dbopen*(database: string = "", user: string = "", password: string = "", ho
     timeout: timeout
   )
 
+
 proc query*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[(seq[database_types.Row], DbRows)] {.async.} =
   assert db.ping == 0
   var dbRows: DbRows
@@ -55,6 +56,7 @@ proc query*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[(se
   free_result(sqlres)
   return (rows, dbRows)
 
+
 proc queryPlain*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[seq[database_types.Row]] {.async.} =
   assert db.ping == 0
   rawExec(db, query, args)
@@ -75,6 +77,7 @@ proc queryPlain*(db:PMySQL, query: string, args: seq[string], timeout:int):Futur
     rows.add(baseRow)
   free_result(sqlres)
   return rows
+
 
 proc exec*(db:PMySQL, query: string, args: seq[string], timeout:int) {.async.} =
   var q = dbFormat(query, args)
@@ -100,6 +103,6 @@ proc getColumns*(db:PMySQL, query: string, args: seq[string], timeout:int):Futur
     for column in dbColumns:
       columns.add(column.name)
     row = mariadb_rdb.fetchRow(sqlres)
-    if row == nil: break
+    break
   free_result(sqlres)
   return columns
