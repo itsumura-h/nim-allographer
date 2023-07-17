@@ -30,7 +30,7 @@ Example: Query Builder for SurrealDB
       * [min](#min)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
-<!-- Added by: root, at: Mon Jul 17 06:30:16 UTC 2023 -->
+<!-- Added by: root, at: Mon Jul 17 07:17:23 UTC 2023 -->
 
 <!--te-->
 

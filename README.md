@@ -99,14 +99,14 @@ rdb.alter(
    * [Logging](#logging)
    * [Documents](#documents)
    * [Nim API Documents](#nim-api-documents)
+      * [Schema Builder](#schema-builder-1)
       * [Query Builder for RDB](#query-builder-for-rdb)
-      * [Schema Builder for RDB](#schema-builder-for-rdb)
       * [Query Builder for SurrealDB](#query-builder-for-surrealdb)
    * [Development](#development)
       * [Branch naming rule](#branch-naming-rule)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
-<!-- Added by: root, at: Mon Jul 17 06:29:56 UTC 2023 -->
+<!-- Added by: root, at: Mon Jul 17 07:17:04 UTC 2023 -->
 
 <!--te-->
 ---
