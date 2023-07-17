@@ -1,0 +1,1 @@
+drop	schema_builder/usecases/drop.html#drop,,varargs[Table]	drop: drop(rdb: Rdb | SurrealDb; tables: varargs[Table])	

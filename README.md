@@ -106,7 +106,7 @@ rdb.alter(
       * [Branch naming rule](#branch-naming-rule)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
-<!-- Added by: root, at: Tue Jun  6 05:51:58 UTC 2023 -->
+<!-- Added by: root, at: Mon Jul 17 06:29:56 UTC 2023 -->
 
 <!--te-->
 ---
@@ -177,6 +177,7 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 [Query Builder for RDB](./documents/rdb/query_builder.md)  
 [Schema Builder for RDB](./documents/rdb/schema_builder.md)  
 [Query Builder for SurrealDB](./documents/surrealdb/query_builder.md)  
+[Schema Builder for SurrealDB](./documents/surrealdb/schema_builder.md)  
 
 ## Nim API Documents
 [connection](https://itsumura-h.github.io/nim-allographer/connection.html)  

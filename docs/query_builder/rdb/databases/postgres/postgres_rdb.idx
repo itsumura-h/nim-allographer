@@ -1,0 +1,186 @@
+POid	query_builder/rdb/databases/postgres/postgres_rdb.html#POid	postgres_rdb: POid	
+Oid	query_builder/rdb/databases/postgres/postgres_rdb.html#Oid	postgres_rdb: Oid	
+ERROR_MSG_LENGTH	query_builder/rdb/databases/postgres/postgres_rdb.html#ERROR_MSG_LENGTH	postgres_rdb: ERROR_MSG_LENGTH	
+CMDSTATUS_LEN	query_builder/rdb/databases/postgres/postgres_rdb.html#CMDSTATUS_LEN	postgres_rdb: CMDSTATUS_LEN	
+SockAddr	query_builder/rdb/databases/postgres/postgres_rdb.html#SockAddr	postgres_rdb: SockAddr	
+PGresAttDesc	query_builder/rdb/databases/postgres/postgres_rdb.html#PGresAttDesc	postgres_rdb: PGresAttDesc	
+PPGresAttDesc	query_builder/rdb/databases/postgres/postgres_rdb.html#PPGresAttDesc	postgres_rdb: PPGresAttDesc	
+PPPGresAttDesc	query_builder/rdb/databases/postgres/postgres_rdb.html#PPPGresAttDesc	postgres_rdb: PPPGresAttDesc	
+PGresAttValue	query_builder/rdb/databases/postgres/postgres_rdb.html#PGresAttValue	postgres_rdb: PGresAttValue	
+PPGresAttValue	query_builder/rdb/databases/postgres/postgres_rdb.html#PPGresAttValue	postgres_rdb: PPGresAttValue	
+PPPGresAttValue	query_builder/rdb/databases/postgres/postgres_rdb.html#PPPGresAttValue	postgres_rdb: PPPGresAttValue	
+PExecStatusType	query_builder/rdb/databases/postgres/postgres_rdb.html#PExecStatusType	postgres_rdb: PExecStatusType	
+PGRES_EMPTY_QUERY	query_builder/rdb/databases/postgres/postgres_rdb.html#PGRES_EMPTY_QUERY	ExecStatusType.PGRES_EMPTY_QUERY	
+PGRES_COMMAND_OK	query_builder/rdb/databases/postgres/postgres_rdb.html#PGRES_COMMAND_OK	ExecStatusType.PGRES_COMMAND_OK	
+PGRES_TUPLES_OK	query_builder/rdb/databases/postgres/postgres_rdb.html#PGRES_TUPLES_OK	ExecStatusType.PGRES_TUPLES_OK	
+PGRES_COPY_OUT	query_builder/rdb/databases/postgres/postgres_rdb.html#PGRES_COPY_OUT	ExecStatusType.PGRES_COPY_OUT	
+PGRES_COPY_IN	query_builder/rdb/databases/postgres/postgres_rdb.html#PGRES_COPY_IN	ExecStatusType.PGRES_COPY_IN	
+PGRES_BAD_RESPONSE	query_builder/rdb/databases/postgres/postgres_rdb.html#PGRES_BAD_RESPONSE	ExecStatusType.PGRES_BAD_RESPONSE	
+PGRES_NONFATAL_ERROR	query_builder/rdb/databases/postgres/postgres_rdb.html#PGRES_NONFATAL_ERROR	ExecStatusType.PGRES_NONFATAL_ERROR	
+PGRES_FATAL_ERROR	query_builder/rdb/databases/postgres/postgres_rdb.html#PGRES_FATAL_ERROR	ExecStatusType.PGRES_FATAL_ERROR	
+PGRES_COPY_BOTH	query_builder/rdb/databases/postgres/postgres_rdb.html#PGRES_COPY_BOTH	ExecStatusType.PGRES_COPY_BOTH	
+PGRES_SINGLE_TUPLE	query_builder/rdb/databases/postgres/postgres_rdb.html#PGRES_SINGLE_TUPLE	ExecStatusType.PGRES_SINGLE_TUPLE	
+ExecStatusType	query_builder/rdb/databases/postgres/postgres_rdb.html#ExecStatusType	postgres_rdb: ExecStatusType	
+PGlobjfuncs	query_builder/rdb/databases/postgres/postgres_rdb.html#PGlobjfuncs	postgres_rdb: PGlobjfuncs	
+PPGlobjfuncs	query_builder/rdb/databases/postgres/postgres_rdb.html#PPGlobjfuncs	postgres_rdb: PPGlobjfuncs	
+PConnStatusType	query_builder/rdb/databases/postgres/postgres_rdb.html#PConnStatusType	postgres_rdb: PConnStatusType	
+CONNECTION_OK	query_builder/rdb/databases/postgres/postgres_rdb.html#CONNECTION_OK	ConnStatusType.CONNECTION_OK	
+CONNECTION_BAD	query_builder/rdb/databases/postgres/postgres_rdb.html#CONNECTION_BAD	ConnStatusType.CONNECTION_BAD	
+CONNECTION_STARTED	query_builder/rdb/databases/postgres/postgres_rdb.html#CONNECTION_STARTED	ConnStatusType.CONNECTION_STARTED	
+CONNECTION_MADE	query_builder/rdb/databases/postgres/postgres_rdb.html#CONNECTION_MADE	ConnStatusType.CONNECTION_MADE	
+CONNECTION_AWAITING_RESPONSE	query_builder/rdb/databases/postgres/postgres_rdb.html#CONNECTION_AWAITING_RESPONSE	ConnStatusType.CONNECTION_AWAITING_RESPONSE	
+CONNECTION_AUTH_OK	query_builder/rdb/databases/postgres/postgres_rdb.html#CONNECTION_AUTH_OK	ConnStatusType.CONNECTION_AUTH_OK	
+CONNECTION_SETENV	query_builder/rdb/databases/postgres/postgres_rdb.html#CONNECTION_SETENV	ConnStatusType.CONNECTION_SETENV	
+CONNECTION_SSL_STARTUP	query_builder/rdb/databases/postgres/postgres_rdb.html#CONNECTION_SSL_STARTUP	ConnStatusType.CONNECTION_SSL_STARTUP	
+CONNECTION_NEEDED	query_builder/rdb/databases/postgres/postgres_rdb.html#CONNECTION_NEEDED	ConnStatusType.CONNECTION_NEEDED	
+CONNECTION_CHECK_WRITABLE	query_builder/rdb/databases/postgres/postgres_rdb.html#CONNECTION_CHECK_WRITABLE	ConnStatusType.CONNECTION_CHECK_WRITABLE	
+CONNECTION_CONSUME	query_builder/rdb/databases/postgres/postgres_rdb.html#CONNECTION_CONSUME	ConnStatusType.CONNECTION_CONSUME	
+CONNECTION_GSS_STARTUP	query_builder/rdb/databases/postgres/postgres_rdb.html#CONNECTION_GSS_STARTUP	ConnStatusType.CONNECTION_GSS_STARTUP	
+CONNECTION_CHECK_TARGET	query_builder/rdb/databases/postgres/postgres_rdb.html#CONNECTION_CHECK_TARGET	ConnStatusType.CONNECTION_CHECK_TARGET	
+ConnStatusType	query_builder/rdb/databases/postgres/postgres_rdb.html#ConnStatusType	postgres_rdb: ConnStatusType	
+PGconn	query_builder/rdb/databases/postgres/postgres_rdb.html#PGconn	postgres_rdb: PGconn	
+PPGconn	query_builder/rdb/databases/postgres/postgres_rdb.html#PPGconn	postgres_rdb: PPGconn	
+PGresult	query_builder/rdb/databases/postgres/postgres_rdb.html#PGresult	postgres_rdb: PGresult	
+PGCancel	query_builder/rdb/databases/postgres/postgres_rdb.html#PGCancel	postgres_rdb: PGCancel	
+PPGcancel	query_builder/rdb/databases/postgres/postgres_rdb.html#PPGcancel	postgres_rdb: PPGcancel	
+PPGresult	query_builder/rdb/databases/postgres/postgres_rdb.html#PPGresult	postgres_rdb: PPGresult	
+PPostgresPollingStatusType	query_builder/rdb/databases/postgres/postgres_rdb.html#PPostgresPollingStatusType	postgres_rdb: PPostgresPollingStatusType	
+PGRES_POLLING_FAILED	query_builder/rdb/databases/postgres/postgres_rdb.html#PGRES_POLLING_FAILED	PostgresPollingStatusType.PGRES_POLLING_FAILED	
+PGRES_POLLING_READING	query_builder/rdb/databases/postgres/postgres_rdb.html#PGRES_POLLING_READING	PostgresPollingStatusType.PGRES_POLLING_READING	
+PGRES_POLLING_WRITING	query_builder/rdb/databases/postgres/postgres_rdb.html#PGRES_POLLING_WRITING	PostgresPollingStatusType.PGRES_POLLING_WRITING	
+PGRES_POLLING_OK	query_builder/rdb/databases/postgres/postgres_rdb.html#PGRES_POLLING_OK	PostgresPollingStatusType.PGRES_POLLING_OK	
+PGRES_POLLING_ACTIVE	query_builder/rdb/databases/postgres/postgres_rdb.html#PGRES_POLLING_ACTIVE	PostgresPollingStatusType.PGRES_POLLING_ACTIVE	
+PostgresPollingStatusType	query_builder/rdb/databases/postgres/postgres_rdb.html#PostgresPollingStatusType	postgres_rdb: PostgresPollingStatusType	
+PPGTransactionStatusType	query_builder/rdb/databases/postgres/postgres_rdb.html#PPGTransactionStatusType	postgres_rdb: PPGTransactionStatusType	
+PQTRANS_IDLE	query_builder/rdb/databases/postgres/postgres_rdb.html#PQTRANS_IDLE	PGTransactionStatusType.PQTRANS_IDLE	
+PQTRANS_ACTIVE	query_builder/rdb/databases/postgres/postgres_rdb.html#PQTRANS_ACTIVE	PGTransactionStatusType.PQTRANS_ACTIVE	
+PQTRANS_INTRANS	query_builder/rdb/databases/postgres/postgres_rdb.html#PQTRANS_INTRANS	PGTransactionStatusType.PQTRANS_INTRANS	
+PQTRANS_INERROR	query_builder/rdb/databases/postgres/postgres_rdb.html#PQTRANS_INERROR	PGTransactionStatusType.PQTRANS_INERROR	
+PQTRANS_UNKNOWN	query_builder/rdb/databases/postgres/postgres_rdb.html#PQTRANS_UNKNOWN	PGTransactionStatusType.PQTRANS_UNKNOWN	
+PGTransactionStatusType	query_builder/rdb/databases/postgres/postgres_rdb.html#PGTransactionStatusType	postgres_rdb: PGTransactionStatusType	
+PPGVerbosity	query_builder/rdb/databases/postgres/postgres_rdb.html#PPGVerbosity	postgres_rdb: PPGVerbosity	
+PQERRORS_TERSE	query_builder/rdb/databases/postgres/postgres_rdb.html#PQERRORS_TERSE	PGVerbosity.PQERRORS_TERSE	
+PQERRORS_DEFAULT	query_builder/rdb/databases/postgres/postgres_rdb.html#PQERRORS_DEFAULT	PGVerbosity.PQERRORS_DEFAULT	
+PQERRORS_VERBOSE	query_builder/rdb/databases/postgres/postgres_rdb.html#PQERRORS_VERBOSE	PGVerbosity.PQERRORS_VERBOSE	
+PQERRORS_SQLSTATE	query_builder/rdb/databases/postgres/postgres_rdb.html#PQERRORS_SQLSTATE	PGVerbosity.PQERRORS_SQLSTATE	
+PGVerbosity	query_builder/rdb/databases/postgres/postgres_rdb.html#PGVerbosity	postgres_rdb: PGVerbosity	
+PPGNotify	query_builder/rdb/databases/postgres/postgres_rdb.html#PPGNotify	postgres_rdb: PPGNotify	
+pgNotify	query_builder/rdb/databases/postgres/postgres_rdb.html#pgNotify	postgres_rdb: pgNotify	
+PQnoticeReceiver	query_builder/rdb/databases/postgres/postgres_rdb.html#PQnoticeReceiver	postgres_rdb: PQnoticeReceiver	
+PQnoticeProcessor	query_builder/rdb/databases/postgres/postgres_rdb.html#PQnoticeProcessor	postgres_rdb: PQnoticeProcessor	
+Ppqbool	query_builder/rdb/databases/postgres/postgres_rdb.html#Ppqbool	postgres_rdb: Ppqbool	
+pqbool	query_builder/rdb/databases/postgres/postgres_rdb.html#pqbool	postgres_rdb: pqbool	
+PPQprintOpt	query_builder/rdb/databases/postgres/postgres_rdb.html#PPQprintOpt	postgres_rdb: PPQprintOpt	
+PQprintOpt	query_builder/rdb/databases/postgres/postgres_rdb.html#PQprintOpt	postgres_rdb: PQprintOpt	
+PPQconninfoOption	query_builder/rdb/databases/postgres/postgres_rdb.html#PPQconninfoOption	postgres_rdb: PPQconninfoOption	
+PQconninfoOption	query_builder/rdb/databases/postgres/postgres_rdb.html#PQconninfoOption	postgres_rdb: PQconninfoOption	
+PPQArgBlock	query_builder/rdb/databases/postgres/postgres_rdb.html#PPQArgBlock	postgres_rdb: PPQArgBlock	
+PQArgBlock	query_builder/rdb/databases/postgres/postgres_rdb.html#PQArgBlock	postgres_rdb: PQArgBlock	
+pqinitOpenSSL	query_builder/rdb/databases/postgres/postgres_rdb.html#pqinitOpenSSL,int32,int32	postgres_rdb: pqinitOpenSSL(do_ssl: int32; do_crypto: int32)	
+pqconnectStart	query_builder/rdb/databases/postgres/postgres_rdb.html#pqconnectStart,cstring	postgres_rdb: pqconnectStart(conninfo: cstring): PPGconn	
+pqconnectPoll	query_builder/rdb/databases/postgres/postgres_rdb.html#pqconnectPoll,PPGconn	postgres_rdb: pqconnectPoll(conn: PPGconn): PostgresPollingStatusType	
+pqconnectdb	query_builder/rdb/databases/postgres/postgres_rdb.html#pqconnectdb,cstring	postgres_rdb: pqconnectdb(conninfo: cstring): PPGconn	
+pqsetdbLogin	query_builder/rdb/databases/postgres/postgres_rdb.html#pqsetdbLogin,cstring,cstring,cstring,cstring,cstring,cstring,cstring	postgres_rdb: pqsetdbLogin(pghost: cstring; pgport: cstring; pgoptions: cstring;\n             pgtty: cstring; dbName: cstring; login: cstring; pwd: cstring): PPGconn	
+pqfinish	query_builder/rdb/databases/postgres/postgres_rdb.html#pqfinish,PPGconn	postgres_rdb: pqfinish(conn: PPGconn)	
+pqconndefaults	query_builder/rdb/databases/postgres/postgres_rdb.html#pqconndefaults	postgres_rdb: pqconndefaults(): PPQconninfoOption	
+pqconninfoFree	query_builder/rdb/databases/postgres/postgres_rdb.html#pqconninfoFree,PPQconninfoOption	postgres_rdb: pqconninfoFree(connOptions: PPQconninfoOption)	
+pqresetStart	query_builder/rdb/databases/postgres/postgres_rdb.html#pqresetStart,PPGconn	postgres_rdb: pqresetStart(conn: PPGconn): int32	
+pqresetPoll	query_builder/rdb/databases/postgres/postgres_rdb.html#pqresetPoll,PPGconn	postgres_rdb: pqresetPoll(conn: PPGconn): PostgresPollingStatusType	
+pqreset	query_builder/rdb/databases/postgres/postgres_rdb.html#pqreset,PPGconn	postgres_rdb: pqreset(conn: PPGconn)	
+pqGetCancel	query_builder/rdb/databases/postgres/postgres_rdb.html#pqGetCancel,PPGconn	postgres_rdb: pqGetCancel(conn: PPGconn): PPGcancel	
+pqFreeCancel	query_builder/rdb/databases/postgres/postgres_rdb.html#pqFreeCancel,PPGcancel	postgres_rdb: pqFreeCancel(cancel: PPGcancel)	
+pqCancel	query_builder/rdb/databases/postgres/postgres_rdb.html#pqCancel,PPGcancel,cstring,int32	postgres_rdb: pqCancel(cancel: PPGcancel; errbuf: cstring; errbufsize: int32): int32	
+pqrequestCancel	query_builder/rdb/databases/postgres/postgres_rdb.html#pqrequestCancel,PPGconn	postgres_rdb: pqrequestCancel(conn: PPGconn): int32	
+pqdb	query_builder/rdb/databases/postgres/postgres_rdb.html#pqdb,PPGconn	postgres_rdb: pqdb(conn: PPGconn): cstring	
+pquser	query_builder/rdb/databases/postgres/postgres_rdb.html#pquser,PPGconn	postgres_rdb: pquser(conn: PPGconn): cstring	
+pqpass	query_builder/rdb/databases/postgres/postgres_rdb.html#pqpass,PPGconn	postgres_rdb: pqpass(conn: PPGconn): cstring	
+pqhost	query_builder/rdb/databases/postgres/postgres_rdb.html#pqhost,PPGconn	postgres_rdb: pqhost(conn: PPGconn): cstring	
+pqport	query_builder/rdb/databases/postgres/postgres_rdb.html#pqport,PPGconn	postgres_rdb: pqport(conn: PPGconn): cstring	
+pqtty	query_builder/rdb/databases/postgres/postgres_rdb.html#pqtty,PPGconn	postgres_rdb: pqtty(conn: PPGconn): cstring	
+pqoptions	query_builder/rdb/databases/postgres/postgres_rdb.html#pqoptions,PPGconn	postgres_rdb: pqoptions(conn: PPGconn): cstring	
+pqstatus	query_builder/rdb/databases/postgres/postgres_rdb.html#pqstatus,PPGconn	postgres_rdb: pqstatus(conn: PPGconn): ConnStatusType	
+pqtransactionStatus	query_builder/rdb/databases/postgres/postgres_rdb.html#pqtransactionStatus,PPGconn	postgres_rdb: pqtransactionStatus(conn: PPGconn): PGTransactionStatusType	
+pqparameterStatus	query_builder/rdb/databases/postgres/postgres_rdb.html#pqparameterStatus,PPGconn,cstring	postgres_rdb: pqparameterStatus(conn: PPGconn; paramName: cstring): cstring	
+pqserverVersion	query_builder/rdb/databases/postgres/postgres_rdb.html#pqserverVersion,PPGconn	postgres_rdb: pqserverVersion(conn: PPGconn): int32	
+pqprotocolVersion	query_builder/rdb/databases/postgres/postgres_rdb.html#pqprotocolVersion,PPGconn	postgres_rdb: pqprotocolVersion(conn: PPGconn): int32	
+pqerrorMessage	query_builder/rdb/databases/postgres/postgres_rdb.html#pqerrorMessage,PPGconn	postgres_rdb: pqerrorMessage(conn: PPGconn): cstring	
+pqsocket	query_builder/rdb/databases/postgres/postgres_rdb.html#pqsocket,PPGconn	postgres_rdb: pqsocket(conn: PPGconn): int32	
+pqbackendPID	query_builder/rdb/databases/postgres/postgres_rdb.html#pqbackendPID,PPGconn	postgres_rdb: pqbackendPID(conn: PPGconn): int32	
+pqconnectionNeedsPassword	query_builder/rdb/databases/postgres/postgres_rdb.html#pqconnectionNeedsPassword,PPGconn	postgres_rdb: pqconnectionNeedsPassword(conn: PPGconn): int32	
+pqconnectionUsedPassword	query_builder/rdb/databases/postgres/postgres_rdb.html#pqconnectionUsedPassword,PPGconn	postgres_rdb: pqconnectionUsedPassword(conn: PPGconn): int32	
+pqclientEncoding	query_builder/rdb/databases/postgres/postgres_rdb.html#pqclientEncoding,PPGconn	postgres_rdb: pqclientEncoding(conn: PPGconn): int32	
+pqsetClientEncoding	query_builder/rdb/databases/postgres/postgres_rdb.html#pqsetClientEncoding,PPGconn,cstring	postgres_rdb: pqsetClientEncoding(conn: PPGconn; encoding: cstring): int32	
+pqsetErrorVerbosity	query_builder/rdb/databases/postgres/postgres_rdb.html#pqsetErrorVerbosity,PPGconn,PGVerbosity	postgres_rdb: pqsetErrorVerbosity(conn: PPGconn; verbosity: PGVerbosity): PGVerbosity	
+pqtrace	query_builder/rdb/databases/postgres/postgres_rdb.html#pqtrace,PPGconn,File	postgres_rdb: pqtrace(conn: PPGconn; debug_port: File)	
+pquntrace	query_builder/rdb/databases/postgres/postgres_rdb.html#pquntrace,PPGconn	postgres_rdb: pquntrace(conn: PPGconn)	
+pqsetNoticeReceiver	query_builder/rdb/databases/postgres/postgres_rdb.html#pqsetNoticeReceiver,PPGconn,PQnoticeReceiver,pointer	postgres_rdb: pqsetNoticeReceiver(conn: PPGconn; theProc: PQnoticeReceiver; arg: pointer): PQnoticeReceiver	
+pqsetNoticeProcessor	query_builder/rdb/databases/postgres/postgres_rdb.html#pqsetNoticeProcessor,PPGconn,PQnoticeProcessor,pointer	postgres_rdb: pqsetNoticeProcessor(conn: PPGconn; theProc: PQnoticeProcessor; arg: pointer): PQnoticeProcessor	
+pqexec	query_builder/rdb/databases/postgres/postgres_rdb.html#pqexec,PPGconn,cstring	postgres_rdb: pqexec(conn: PPGconn; query: cstring): PPGresult	
+pqexecParams	query_builder/rdb/databases/postgres/postgres_rdb.html#pqexecParams,PPGconn,cstring,int32,POid,cstringArray,ptr.int32,ptr.int32,int32	postgres_rdb: pqexecParams(conn: PPGconn; command: cstring; nParams: int32; paramTypes: POid;\n             paramValues: cstringArray; paramLengths, paramFormats: ptr int32;\n             resultFormat: int32): PPGresult	
+pqprepare	query_builder/rdb/databases/postgres/postgres_rdb.html#pqprepare,PPGconn,cstring,cstring,int32,POid	postgres_rdb: pqprepare(conn: PPGconn; stmtName, query: cstring; nParams: int32;\n          paramTypes: POid): PPGresult	
+pqexecPrepared	query_builder/rdb/databases/postgres/postgres_rdb.html#pqexecPrepared,PPGconn,cstring,int32,cstringArray,ptr.int32,ptr.int32,int32	postgres_rdb: pqexecPrepared(conn: PPGconn; stmtName: cstring; nParams: int32;\n               paramValues: cstringArray; paramLengths, paramFormats: ptr int32;\n               resultFormat: int32): PPGresult	
+pqsendQuery	query_builder/rdb/databases/postgres/postgres_rdb.html#pqsendQuery,PPGconn,cstring	postgres_rdb: pqsendQuery(conn: PPGconn; query: cstring): int32	
+pqsendQueryParams	query_builder/rdb/databases/postgres/postgres_rdb.html#pqsendQueryParams,PPGconn,cstring,int32,POid,cstringArray,ptr.int32,ptr.int32,int32	postgres_rdb: pqsendQueryParams(conn: PPGconn; command: cstring; nParams: int32;\n                  paramTypes: POid; paramValues: cstringArray;\n                  paramLengths, paramFormats: ptr int32; resultFormat: int32): int32	
+pqsendPrepare	query_builder/rdb/databases/postgres/postgres_rdb.html#pqsendPrepare,PPGconn,cstring,cstring,int32,POid	postgres_rdb: pqsendPrepare(conn: PPGconn; stmtName: cstring; query: cstring; nParams: int32;\n              paramTypes: POid): int32	
+pqsendQueryPrepared	query_builder/rdb/databases/postgres/postgres_rdb.html#pqsendQueryPrepared,PPGconn,cstring,int32,cstringArray,ptr.int32,ptr.int32,int32	postgres_rdb: pqsendQueryPrepared(conn: PPGconn; stmtName: cstring; nParams: int32;\n                    paramValues: cstringArray;\n                    paramLengths, paramFormats: ptr int32; resultFormat: int32): int32	
+pqSetSingleRowMode	query_builder/rdb/databases/postgres/postgres_rdb.html#pqSetSingleRowMode,PPGconn	postgres_rdb: pqSetSingleRowMode(conn: PPGconn): int32	
+pqgetResult	query_builder/rdb/databases/postgres/postgres_rdb.html#pqgetResult,PPGconn	postgres_rdb: pqgetResult(conn: PPGconn): PPGresult	
+pqisBusy	query_builder/rdb/databases/postgres/postgres_rdb.html#pqisBusy,PPGconn	postgres_rdb: pqisBusy(conn: PPGconn): int32	
+pqconsumeInput	query_builder/rdb/databases/postgres/postgres_rdb.html#pqconsumeInput,PPGconn	postgres_rdb: pqconsumeInput(conn: PPGconn): int32	
+pqnotifies	query_builder/rdb/databases/postgres/postgres_rdb.html#pqnotifies,PPGconn	postgres_rdb: pqnotifies(conn: PPGconn): PPGNotify	
+pqputCopyData	query_builder/rdb/databases/postgres/postgres_rdb.html#pqputCopyData,PPGconn,cstring,int32	postgres_rdb: pqputCopyData(conn: PPGconn; buffer: cstring; nbytes: int32): int32	
+pqputCopyEnd	query_builder/rdb/databases/postgres/postgres_rdb.html#pqputCopyEnd,PPGconn,cstring	postgres_rdb: pqputCopyEnd(conn: PPGconn; errormsg: cstring): int32	
+pqgetCopyData	query_builder/rdb/databases/postgres/postgres_rdb.html#pqgetCopyData,PPGconn,cstringArray,int32	postgres_rdb: pqgetCopyData(conn: PPGconn; buffer: cstringArray; async: int32): int32	
+pqgetline	query_builder/rdb/databases/postgres/postgres_rdb.html#pqgetline,PPGconn,cstring,int32	postgres_rdb: pqgetline(conn: PPGconn; str: cstring; len: int32): int32	
+pqputline	query_builder/rdb/databases/postgres/postgres_rdb.html#pqputline,PPGconn,cstring	postgres_rdb: pqputline(conn: PPGconn; str: cstring): int32	
+pqgetlineAsync	query_builder/rdb/databases/postgres/postgres_rdb.html#pqgetlineAsync,PPGconn,cstring,int32	postgres_rdb: pqgetlineAsync(conn: PPGconn; buffer: cstring; bufsize: int32): int32	
+pqputnbytes	query_builder/rdb/databases/postgres/postgres_rdb.html#pqputnbytes,PPGconn,cstring,int32	postgres_rdb: pqputnbytes(conn: PPGconn; buffer: cstring; nbytes: int32): int32	
+pqendcopy	query_builder/rdb/databases/postgres/postgres_rdb.html#pqendcopy,PPGconn	postgres_rdb: pqendcopy(conn: PPGconn): int32	
+pqsetnonblocking	query_builder/rdb/databases/postgres/postgres_rdb.html#pqsetnonblocking,PPGconn,int32	postgres_rdb: pqsetnonblocking(conn: PPGconn; arg: int32): int32	
+pqisnonblocking	query_builder/rdb/databases/postgres/postgres_rdb.html#pqisnonblocking,PPGconn	postgres_rdb: pqisnonblocking(conn: PPGconn): int32	
+pqflush	query_builder/rdb/databases/postgres/postgres_rdb.html#pqflush,PPGconn	postgres_rdb: pqflush(conn: PPGconn): int32	
+pqfn	query_builder/rdb/databases/postgres/postgres_rdb.html#pqfn,PPGconn,int32,ptr.int32,ptr.int32,int32,PPQArgBlock,int32	postgres_rdb: pqfn(conn: PPGconn; fnid: int32; result_buf, result_len: ptr int32;\n     result_is_int: int32; args: PPQArgBlock; nargs: int32): PPGresult	
+pqresultStatus	query_builder/rdb/databases/postgres/postgres_rdb.html#pqresultStatus,PPGresult	postgres_rdb: pqresultStatus(res: PPGresult): ExecStatusType	
+pqresStatus	query_builder/rdb/databases/postgres/postgres_rdb.html#pqresStatus,ExecStatusType	postgres_rdb: pqresStatus(status: ExecStatusType): cstring	
+pqresultErrorMessage	query_builder/rdb/databases/postgres/postgres_rdb.html#pqresultErrorMessage,PPGresult	postgres_rdb: pqresultErrorMessage(res: PPGresult): cstring	
+pqresultErrorField	query_builder/rdb/databases/postgres/postgres_rdb.html#pqresultErrorField,PPGresult,int32	postgres_rdb: pqresultErrorField(res: PPGresult; fieldcode: int32): cstring	
+pqntuples	query_builder/rdb/databases/postgres/postgres_rdb.html#pqntuples,PPGresult	postgres_rdb: pqntuples(res: PPGresult): int32	
+pqnfields	query_builder/rdb/databases/postgres/postgres_rdb.html#pqnfields,PPGresult	postgres_rdb: pqnfields(res: PPGresult): int32	
+pqbinaryTuples	query_builder/rdb/databases/postgres/postgres_rdb.html#pqbinaryTuples,PPGresult	postgres_rdb: pqbinaryTuples(res: PPGresult): int32	
+pqfname	query_builder/rdb/databases/postgres/postgres_rdb.html#pqfname,PPGresult,int32	postgres_rdb: pqfname(res: PPGresult; field_num: int32): cstring	
+pqfnumber	query_builder/rdb/databases/postgres/postgres_rdb.html#pqfnumber,PPGresult,cstring	postgres_rdb: pqfnumber(res: PPGresult; field_name: cstring): int32	
+pqftable	query_builder/rdb/databases/postgres/postgres_rdb.html#pqftable,PPGresult,int32	postgres_rdb: pqftable(res: PPGresult; field_num: int32): Oid	
+pqftablecol	query_builder/rdb/databases/postgres/postgres_rdb.html#pqftablecol,PPGresult,int32	postgres_rdb: pqftablecol(res: PPGresult; field_num: int32): int32	
+pqfformat	query_builder/rdb/databases/postgres/postgres_rdb.html#pqfformat,PPGresult,int32	postgres_rdb: pqfformat(res: PPGresult; field_num: int32): int32	
+pqftype	query_builder/rdb/databases/postgres/postgres_rdb.html#pqftype,PPGresult,int32	postgres_rdb: pqftype(res: PPGresult; field_num: int32): Oid	
+pqfsize	query_builder/rdb/databases/postgres/postgres_rdb.html#pqfsize,PPGresult,int32	postgres_rdb: pqfsize(res: PPGresult; field_num: int32): int32	
+pqfmod	query_builder/rdb/databases/postgres/postgres_rdb.html#pqfmod,PPGresult,int32	postgres_rdb: pqfmod(res: PPGresult; field_num: int32): int32	
+pqcmdStatus	query_builder/rdb/databases/postgres/postgres_rdb.html#pqcmdStatus,PPGresult	postgres_rdb: pqcmdStatus(res: PPGresult): cstring	
+pqoidStatus	query_builder/rdb/databases/postgres/postgres_rdb.html#pqoidStatus,PPGresult	postgres_rdb: pqoidStatus(res: PPGresult): cstring	
+pqoidValue	query_builder/rdb/databases/postgres/postgres_rdb.html#pqoidValue,PPGresult	postgres_rdb: pqoidValue(res: PPGresult): Oid	
+pqcmdTuples	query_builder/rdb/databases/postgres/postgres_rdb.html#pqcmdTuples,PPGresult	postgres_rdb: pqcmdTuples(res: PPGresult): cstring	
+pqgetvalue	query_builder/rdb/databases/postgres/postgres_rdb.html#pqgetvalue,PPGresult,int32,int32	postgres_rdb: pqgetvalue(res: PPGresult; tup_num: int32; field_num: int32): cstring	
+pqgetlength	query_builder/rdb/databases/postgres/postgres_rdb.html#pqgetlength,PPGresult,int32,int32	postgres_rdb: pqgetlength(res: PPGresult; tup_num: int32; field_num: int32): int32	
+pqgetisnull	query_builder/rdb/databases/postgres/postgres_rdb.html#pqgetisnull,PPGresult,int32,int32	postgres_rdb: pqgetisnull(res: PPGresult; tup_num: int32; field_num: int32): int32	
+pqclear	query_builder/rdb/databases/postgres/postgres_rdb.html#pqclear,PPGresult	postgres_rdb: pqclear(res: PPGresult)	
+pqfreemem	query_builder/rdb/databases/postgres/postgres_rdb.html#pqfreemem,pointer	postgres_rdb: pqfreemem(p: pointer)	
+pqmakeEmptyPGresult	query_builder/rdb/databases/postgres/postgres_rdb.html#pqmakeEmptyPGresult,PPGconn,ExecStatusType	postgres_rdb: pqmakeEmptyPGresult(conn: PPGconn; status: ExecStatusType): PPGresult	
+pqescapeString	query_builder/rdb/databases/postgres/postgres_rdb.html#pqescapeString,cstring,cstring,int	postgres_rdb: pqescapeString(till, from: cstring; len: int): int	
+pqescapeBytea	query_builder/rdb/databases/postgres/postgres_rdb.html#pqescapeBytea,cstring,int,int	postgres_rdb: pqescapeBytea(bintext: cstring; binlen: int; bytealen: var int): cstring	
+pqunescapeBytea	query_builder/rdb/databases/postgres/postgres_rdb.html#pqunescapeBytea,cstring,int	postgres_rdb: pqunescapeBytea(strtext: cstring; retbuflen: var int): cstring	
+pqprint	query_builder/rdb/databases/postgres/postgres_rdb.html#pqprint,File,PPGresult,PPQprintOpt	postgres_rdb: pqprint(fout: File; res: PPGresult; ps: PPQprintOpt)	
+pqdisplayTuples	query_builder/rdb/databases/postgres/postgres_rdb.html#pqdisplayTuples,PPGresult,File,int32,cstring,int32,int32	postgres_rdb: pqdisplayTuples(res: PPGresult; fp: File; fillAlign: int32; fieldSep: cstring;\n                printHeader: int32; quiet: int32)	
+pqprintTuples	query_builder/rdb/databases/postgres/postgres_rdb.html#pqprintTuples,PPGresult,File,int32,int32,int32	postgres_rdb: pqprintTuples(res: PPGresult; fout: File; printAttName: int32;\n              terseOutput: int32; width: int32)	
+lo_open	query_builder/rdb/databases/postgres/postgres_rdb.html#lo_open,PPGconn,Oid,int32	postgres_rdb: lo_open(conn: PPGconn; lobjId: Oid; mode: int32): int32	
+lo_close	query_builder/rdb/databases/postgres/postgres_rdb.html#lo_close,PPGconn,int32	postgres_rdb: lo_close(conn: PPGconn; fd: int32): int32	
+lo_read	query_builder/rdb/databases/postgres/postgres_rdb.html#lo_read,PPGconn,int32,cstring,int	postgres_rdb: lo_read(conn: PPGconn; fd: int32; buf: cstring; length: int): int32	
+lo_write	query_builder/rdb/databases/postgres/postgres_rdb.html#lo_write,PPGconn,int32,cstring,int	postgres_rdb: lo_write(conn: PPGconn; fd: int32; buf: cstring; length: int): int32	
+lo_lseek	query_builder/rdb/databases/postgres/postgres_rdb.html#lo_lseek,PPGconn,int32,int32,int32	postgres_rdb: lo_lseek(conn: PPGconn; fd: int32; offset: int32; whence: int32): int32	
+lo_creat	query_builder/rdb/databases/postgres/postgres_rdb.html#lo_creat,PPGconn,int32	postgres_rdb: lo_creat(conn: PPGconn; mode: int32): Oid	
+lo_tell	query_builder/rdb/databases/postgres/postgres_rdb.html#lo_tell,PPGconn,int32	postgres_rdb: lo_tell(conn: PPGconn; fd: int32): int32	
+lo_unlink	query_builder/rdb/databases/postgres/postgres_rdb.html#lo_unlink,PPGconn,Oid	postgres_rdb: lo_unlink(conn: PPGconn; lobjId: Oid): int32	
+lo_import	query_builder/rdb/databases/postgres/postgres_rdb.html#lo_import,PPGconn,cstring	postgres_rdb: lo_import(conn: PPGconn; filename: cstring): Oid	
+lo_export	query_builder/rdb/databases/postgres/postgres_rdb.html#lo_export,PPGconn,Oid,cstring	postgres_rdb: lo_export(conn: PPGconn; lobjId: Oid; filename: cstring): int32	
+pqmblen	query_builder/rdb/databases/postgres/postgres_rdb.html#pqmblen,cstring,int32	postgres_rdb: pqmblen(s: cstring; encoding: int32): int32	
+pqenv2encoding	query_builder/rdb/databases/postgres/postgres_rdb.html#pqenv2encoding	postgres_rdb: pqenv2encoding(): int32	
+pqsetdb	query_builder/rdb/databases/postgres/postgres_rdb.html#pqsetdb,cstring,cstring,cstring,cstring,cstring	postgres_rdb: pqsetdb(M_PGHOST, M_PGPORT, M_PGOPT, M_PGTTY, M_DBNAME: cstring): PPGconn	

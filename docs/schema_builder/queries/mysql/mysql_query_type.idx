@@ -1,0 +1,3 @@
+MysqlQuery	schema_builder/queries/mysql/mysql_query_type.html#MysqlQuery	mysql_query_type: MysqlQuery	
+new	schema_builder/queries/mysql/mysql_query_type.html#new,typeMysqlQuery,Rdb,Table	mysql_query_type: new(_: type MysqlQuery; rdb: Rdb; table: Table): MysqlQuery	
+new	schema_builder/queries/mysql/mysql_query_type.html#new,typeMysqlQuery,Rdb,Table,Column	mysql_query_type: new(_: type MysqlQuery; rdb: Rdb; table: Table; column: Column): MysqlQuery	

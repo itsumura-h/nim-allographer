@@ -1,0 +1,1 @@
+toInterface	schema_builder/queries/surreal/surreal_query_impl.html#toInterface,SurrealQuery	surreal_query_impl: toInterface(self: SurrealQuery): IQuery	

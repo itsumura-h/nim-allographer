@@ -1,0 +1,1 @@
+createMigrationTable	schema_builder/queries/surreal/create_migration_table.html#createMigrationTable,SurrealQuery	create_migration_table: createMigrationTable(self: SurrealQuery)	

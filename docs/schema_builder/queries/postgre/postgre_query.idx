@@ -1,4 +1,0 @@
-PostgreQuery	schema_builder/queries/postgre/postgre_query.html#PostgreQuery	postgre_query: PostgreQuery	
-new	schema_builder/queries/postgre/postgre_query.html#new,typePostgreQuery,Rdb	postgre_query: new(_: type PostgreQuery; rdb: Rdb): PostgreQuery	
-renameTableSql	schema_builder/queries/postgre/postgre_query.html#renameTableSql,PostgreQuery,Table	postgre_query: renameTableSql(self: PostgreQuery; table: Table)	
-toInterface	schema_builder/queries/postgre/postgre_query.html#toInterface,PostgreQuery	postgre_query: toInterface(self: PostgreQuery): IGenerator	

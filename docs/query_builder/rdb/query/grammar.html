@@ -188,12 +188,12 @@ window.addEventListener('DOMContentLoaded', main);
 
   </ul>
   <ul class="simple nested-toc-section">where
-      <li><a class="reference" href="#where%2CRdb%2Cstring%2Cstring%2C"
-    title="where(self: Rdb; column: string; symbol: string;
-      value: string | int | float | bool): Rdb">where(self: Rdb; column: string; symbol: string;
-      value: string | int | float | bool): Rdb</a></li>
+      <li><a class="reference" href="#where%2CRdb%2Cstring%2Cstring%2Cbool"
+    title="where(self: Rdb; column: string; symbol: string; value: bool): Rdb">where(self: Rdb; column: string; symbol: string; value: bool): Rdb</a></li>
   <li><a class="reference" href="#where%2CRdb%2Cstring%2Cstring%2C_2"
     title="where(self: Rdb; column: string; symbol: string; value: nil.type): Rdb">where(self: Rdb; column: string; symbol: string; value: nil.type): Rdb</a></li>
+  <li><a class="reference" href="#where%2CRdb%2Cstring%2Cstring%2C"
+    title="where(self: Rdb; column: string; symbol: string; value: string | int | float): Rdb">where(self: Rdb; column: string; symbol: string; value: string | int | float): Rdb</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">whereBetween
@@ -381,9 +381,9 @@ Only used in transation block
 
 </dd>
 </div>
-<div id="where,Rdb,string,string,">
-<dt><pre><span class="Keyword">proc</span> <a href="#where%2CRdb%2Cstring%2Cstring%2C"><span class="Identifier">where</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../rdb_types.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">symbol</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span>
-           <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Operator">|</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">float</span> <span class="Operator">|</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <a href="../rdb_types.html#Rdb"><span class="Identifier">Rdb</span></a></pre></dt>
+<div id="where,Rdb,string,string,bool">
+<dt><pre><span class="Keyword">proc</span> <a href="#where%2CRdb%2Cstring%2Cstring%2Cbool"><span class="Identifier">where</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../rdb_types.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">symbol</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <a href="../rdb_types.html#Rdb"><span class="Identifier">Rdb</span></a> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
 
 
@@ -393,6 +393,15 @@ Only used in transation block
 <div id="where,Rdb,string,string,_2">
 <dt><pre><span class="Keyword">proc</span> <a href="#where%2CRdb%2Cstring%2Cstring%2C_2"><span class="Identifier">where</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../rdb_types.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">symbol</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">nil</span><span class="Other">.</span><span class="Keyword">type</span><span class="Other">)</span><span class="Other">:</span> <a href="../rdb_types.html#Rdb"><span class="Identifier">Rdb</span></a> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<dd>
+
+
+
+</dd>
+</div>
+<div id="where,Rdb,string,string,">
+<dt><pre><span class="Keyword">proc</span> <a href="#where%2CRdb%2Cstring%2Cstring%2C"><span class="Identifier">where</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="../rdb_types.html#Rdb"><span class="Identifier">Rdb</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">symbol</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span>
+           <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">string</span> <span class="Operator">|</span> <span class="Identifier">int</span> <span class="Operator">|</span> <span class="Identifier">float</span><span class="Other">)</span><span class="Other">:</span> <a href="../rdb_types.html#Rdb"><span class="Identifier">Rdb</span></a></pre></dt>
 <dd>
 
 
@@ -467,7 +476,7 @@ Only used in transation block
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-06-06 05:52:00 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-07-17 06:29:38 UTC</small>
       </div>
     </div>
   </div>

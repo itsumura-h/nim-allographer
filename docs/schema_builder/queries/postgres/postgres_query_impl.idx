@@ -1,0 +1,1 @@
+toInterface	schema_builder/queries/postgres/postgres_query_impl.html#toInterface,PostgresQuery	postgres_query_impl: toInterface(self: PostgresQuery): IQuery	

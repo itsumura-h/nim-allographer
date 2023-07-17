@@ -1,2 +1,0 @@
-create	schema_builder/schema.html#create,Rdb,varargs[Table]	schema: create(rdb: Rdb; tables: varargs[Table])	
-alter	schema_builder/schema.html#alter,Rdb,varargs[Table]	schema: alter(rdb: Rdb; tables: varargs[Table])	

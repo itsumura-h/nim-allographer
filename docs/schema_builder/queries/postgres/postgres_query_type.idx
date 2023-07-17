@@ -1,0 +1,3 @@
+PostgresQuery	schema_builder/queries/postgres/postgres_query_type.html#PostgresQuery	postgres_query_type: PostgresQuery	
+new	schema_builder/queries/postgres/postgres_query_type.html#new,typePostgresQuery,Rdb,Table	postgres_query_type: new(_: type PostgresQuery; rdb: Rdb; table: Table): PostgresQuery	
+new	schema_builder/queries/postgres/postgres_query_type.html#new,typePostgresQuery,Rdb,Table,Column	postgres_query_type: new(_: type PostgresQuery; rdb: Rdb; table: Table; column: Column): PostgresQuery	

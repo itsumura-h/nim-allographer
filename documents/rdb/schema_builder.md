@@ -10,7 +10,7 @@ Example: Schema Builder
    * [Alter Table](#alter-table)
       * [add column](#add-column)
       * [change column](#change-column)
-      * [delete column](#delete-column)
+      * [drop column](#drop-column)
       * [rename table](#rename-table)
       * [drop table](#drop-table)
    * [Migration history](#migration-history)
@@ -24,7 +24,7 @@ Example: Schema Builder
    * [Foreign Key Constraints](#foreign-key-constraints)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
-<!-- Added by: root, at: Tue Jun  6 05:52:13 UTC 2023 -->
+<!-- Added by: root, at: Mon Jul 17 06:30:07 UTC 2023 -->
 
 <!--te-->
 ---
@@ -82,11 +82,11 @@ rdb.alter(
 - Drop old table
 
 
-### delete column
+### drop column
 ```nim
 rdb.alter(
   table("users",
-    Column.deleteColumn("name")
+    Column.dropColumn("name")
   )
 )
 ```
@@ -101,8 +101,8 @@ rdb.alter(
 
 ### drop table
 ```nim
-rdb.alter(
-  drop("users")
+rdb.drop(
+  table("users")
 )
 ```
 `>> DROP TABLE users`

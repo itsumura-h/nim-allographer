@@ -1,0 +1,3 @@
+createColumnString	schema_builder/queries/postgres/sub/create_column_query.html#createColumnString,Table,Column	create_column_query: createColumnString(table: Table; column: Column): string	
+createForeignString	schema_builder/queries/postgres/sub/create_column_query.html#createForeignString,Table,Column	create_column_query: createForeignString(table: Table; column: Column): string	
+createIndexString	schema_builder/queries/postgres/sub/create_column_query.html#createIndexString,Table,Column	create_column_query: createIndexString(table: Table; column: Column): string	

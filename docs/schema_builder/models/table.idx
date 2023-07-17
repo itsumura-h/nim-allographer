@@ -1,0 +1,6 @@
+Table	schema_builder/models/table.html#Table	table: Table	
+table	schema_builder/models/table.html#table,string,varargs[Column]	table: table(name: string; columns: varargs[Column]): Table	
+table	schema_builder/models/table.html#table,string,seq[Column],seq[string]	table: table(name: string; columns: seq[Column]; primary: seq[string] = @[]): Table	
+toSchema	schema_builder/models/table.html#toSchema,Table	table: toSchema(self: Table): JsonNode	
+smallName	schema_builder/models/table.html#smallName,Table	table: smallName(self: Table): string	
+renameTo	schema_builder/models/table.html#renameTo,Table,string	table: renameTo(self: Table; name: string): Table	

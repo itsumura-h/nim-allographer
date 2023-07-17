@@ -1,0 +1,10 @@
+notAllowedOption	schema_builder/queries/query_utils.html#notAllowedOption,string,string,string	query_utils: notAllowedOption(option, typ, column: string)	
+notAllowedType	schema_builder/queries/query_utils.html#notAllowedType,string	query_utils: notAllowedType(typ: string)	
+shouldRun	schema_builder/queries/query_utils.html#shouldRun,Rdb,Table,string,bool	query_utils: shouldRun(rdb: Rdb; table: Table; checksum: string; isReset: bool): bool	
+exec	schema_builder/queries/query_utils.html#exec,Rdb,seq[string]	query_utils: exec(rdb: Rdb; queries: seq[string])	
+execThenSaveHistory	schema_builder/queries/query_utils.html#execThenSaveHistory,Rdb,string,seq[string],string	query_utils: execThenSaveHistory(rdb: Rdb; tableName: string; queries: seq[string];\n                    checksum: string)	
+execThenSaveHistory	schema_builder/queries/query_utils.html#execThenSaveHistory,Rdb,string,string,string	query_utils: execThenSaveHistory(rdb: Rdb; tableName: string; query: string; checksum: string)	
+shouldRun	schema_builder/queries/query_utils.html#shouldRun,SurrealDb,Table,string,bool	query_utils: shouldRun(rdb: SurrealDb; table: Table; checksum: string; isReset: bool): bool	
+exec	schema_builder/queries/query_utils.html#exec,SurrealDb,seq[string]	query_utils: exec(rdb: SurrealDb; queries: seq[string])	
+execThenSaveHistory	schema_builder/queries/query_utils.html#execThenSaveHistory,SurrealDb,string,seq[string],string	query_utils: execThenSaveHistory(rdb: SurrealDb; tableName: string; queries: seq[string];\n                    checksum: string)	
+execThenSaveHistory	schema_builder/queries/query_utils.html#execThenSaveHistory,SurrealDb,string,string,string	query_utils: execThenSaveHistory(rdb: SurrealDb; tableName: string; query: string;\n                    checksum: string)	

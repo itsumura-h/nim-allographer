@@ -1,0 +1,1 @@
+addColumn	schema_builder/queries/mysql/add_column.html#addColumn,MysqlQuery,bool	add_column: addColumn(self: MysqlQuery; isReset: bool)	

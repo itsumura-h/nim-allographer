@@ -1,0 +1,1 @@
+changeColumn	schema_builder/queries/sqlite/change_column.html#changeColumn,SqliteQuery,bool	change_column: changeColumn(self: SqliteQuery; isReset: bool)	
