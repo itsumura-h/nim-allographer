@@ -420,22 +420,7 @@ proc updateSql*(self: Rdb, items: JsonNode):string =
 
 
 proc update*(self: Rdb, items: JsonNode){.async.} =
-  var updatePlaceHolder: seq[string]
-  for item in items.pairs:
-    if item.val.kind == JInt:
-      updatePlaceHolder.add($(item.val.getInt()))
-    elif item.val.kind == JFloat:
-      updatePlaceHolder.add($(item.val.getFloat()))
-    elif item.val.kind == JBool:
-      updatePlaceHolder.add($(item.val.getBool()))
-    elif [JObject, JArray].contains(item.val.kind):
-      updatePlaceHolder.add($(item.val))
-    else:
-      updatePlaceHolder.add(item.val.getStr())
-
-  self.placeHolder = updatePlaceHolder & self.placeHolder
   let sql = self.updateBuilder(items)
-
   self.log.logger(sql, self.placeHolder)
   self.conn.exec(self.driver, sql, self.placeHolder, self.isInTransaction, self.transactionConn).await
 
