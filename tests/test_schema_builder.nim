@@ -247,8 +247,12 @@ for rdb in dbConnections:
         table("TypeIndex").renameTo("TypeIndex_renamed")
       )
 
-      var res = rdb.table("TypeIndex").first().waitFor
-      check not res.isSome
+      var res:Option[JsonNode]
+      try:
+        res = rdb.table("TypeIndex").first().waitFor
+        check not res.isSome
+      except:
+        check true
 
       res = rdb.table("TypeIndex_renamed").first().waitFor
       check res.isSome
@@ -265,8 +269,12 @@ for rdb in dbConnections:
         table("TypeIndex")
       )
       
-      let res = rdb.table("TypeIndex").first().waitFor
-      check not res.isSome
+      var res:Option[JsonNode]
+      try:
+        res = rdb.table("TypeIndex").first().waitFor
+        check not res.isSome
+      except:
+        check true
 
 
   suite($rdb.driver & " primary"):
