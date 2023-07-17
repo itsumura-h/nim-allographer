@@ -184,7 +184,7 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 
 ### Schema Builder for RDB
 [usecases/create](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/create.html)  
-[alterusecases/](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/alter.html)  
+[usecases/alter](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/alter.html)  
 [usecases/drop](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/drop.html)  
 [models/table](https://itsumura-h.github.io/nim-allographer/schema_builder/models/table.html)  
 [models/column](https://itsumura-h.github.io/nim-allographer/schema_builder/models/column.html)  
