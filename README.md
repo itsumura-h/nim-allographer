@@ -174,15 +174,15 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 
 
 ## Documents
-[Query Builder for RDB](./documents/rdb/query_builder.md)  
 [Schema Builder for RDB](./documents/rdb/schema_builder.md)  
-[Query Builder for SurrealDB](./documents/surrealdb/query_builder.md)  
+[Query Builder for RDB](./documents/rdb/query_builder.md)  
 [Schema Builder for SurrealDB](./documents/surrealdb/schema_builder.md)  
+[Query Builder for SurrealDB](./documents/surrealdb/query_builder.md)  
 
 ## Nim API Documents
 [connection](https://itsumura-h.github.io/nim-allographer/connection.html)  
 
-### Schema Builder for RDB
+### Schema Builder
 [usecases/create](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/create.html)  
 [usecases/alter](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/alter.html)  
 [usecases/drop](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/drop.html)  
