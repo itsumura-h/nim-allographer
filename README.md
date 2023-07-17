@@ -182,24 +182,23 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 ## Nim API Documents
 [connection](https://itsumura-h.github.io/nim-allographer/connection.html)  
 
+### Schema Builder for RDB
+[usecases/create](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/create.html)  
+[alterusecases/](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/alter.html)  
+[usecases/drop](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/drop.html)  
+[models/table](https://itsumura-h.github.io/nim-allographer/schema_builder/models/table.html)  
+[models/column](https://itsumura-h.github.io/nim-allographer/schema_builder/models/column.html)  
+[queries/query_interface](https://itsumura-h.github.io/nim-allographer/schema_builder/queries/query_interface.html)  
+
 ### Query Builder for RDB
 [rdb_types](https://itsumura-h.github.io/nim-allographer/query_builder/rdb/rdb_types.html)  
 [rdb_interface](https://itsumura-h.github.io/nim-allographer/query_builder/rdb/rdb_interface.html)  
-[grammars](https://itsumura-h.github.io/nim-allographer/query_builder/rdb/query/grammar.html)  
-[exec](https://itsumura-h.github.io/nim-allographer/query_builder/rdb/exec.html)  
-
-### Schema Builder for RDB
-[schema](https://itsumura-h.github.io/nim-allographer/schema_builder/schema.html)  
-[grammar](https://itsumura-h.github.io/nim-allographer/schema_builder/grammars.html)  
+[grammars](https://itsumura-h.github.io/nim-allographer/query_builder/rdb/query/grammar.html)
 
 ### Query Builder for SurrealDB
 [surreal_types](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/surreal_types.html)  
 [surreal_interface](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/surreal_interface.html)  
 [grammars](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/query/grammar.html)  
-
-### Schema Builder for SurrealDB
-[schema](https://itsumura-h.github.io/nim-allographer/schema_builder/schema.html)  
-[grammar](https://itsumura-h.github.io/nim-allographer/schema_builder/grammars.html)  
 
 ## Development
 ### Branch naming rule
