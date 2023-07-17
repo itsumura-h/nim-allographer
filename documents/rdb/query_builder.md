@@ -13,6 +13,7 @@ Example: Query Builder for RDB
       * [get](#get)
       * [first](#first)
       * [find](#find)
+      * [columns](#columns)
       * [join](#join)
       * [where](#where)
       * [orWhere](#orwhere)
@@ -36,7 +37,7 @@ Example: Query Builder for RDB
    * [Transaction](#transaction)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
-<!-- Added by: root, at: Mon Jul 17 07:17:08 UTC 2023 -->
+<!-- Added by: root, at: Mon Jul 17 07:46:13 UTC 2023 -->
 
 <!--te-->
 ---

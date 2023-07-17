@@ -13,6 +13,7 @@ Example: Query Builder for SurrealDB
       * [get](#get)
       * [first](#first)
       * [find](#find)
+      * [columns](#columns)
       * [where](#where)
       * [fetch](#fetch)
    * [INSERT](#insert)
@@ -30,7 +31,7 @@ Example: Query Builder for SurrealDB
       * [min](#min)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
-<!-- Added by: root, at: Mon Jul 17 07:17:23 UTC 2023 -->
+<!-- Added by: root, at: Mon Jul 17 07:46:29 UTC 2023 -->
 
 <!--te-->
 

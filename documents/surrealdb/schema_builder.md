@@ -14,7 +14,7 @@ Example: Schema Builder for SurrealDB
       * [drop table](#drop-table)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
-<!-- Added by: root, at: Mon Jul 17 07:17:27 UTC 2023 -->
+<!-- Added by: root, at: Mon Jul 17 07:46:33 UTC 2023 -->
 
 <!--te-->
 
