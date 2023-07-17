@@ -13,6 +13,7 @@ Example: Query Builder for SurrealDB
       * [get](#get)
       * [first](#first)
       * [find](#find)
+      * [columns](#columns)
       * [where](#where)
       * [fetch](#fetch)
    * [INSERT](#insert)
@@ -30,7 +31,7 @@ Example: Query Builder for SurrealDB
       * [min](#min)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
-<!-- Added by: root, at: Mon Jul 17 06:30:16 UTC 2023 -->
+<!-- Added by: root, at: Mon Jul 17 07:46:29 UTC 2023 -->
 
 <!--te-->
 
@@ -179,6 +180,14 @@ DEBUG SELECT * FROM `type` WHERE `id` = ? LIMIT 1 ["type:64t0w6gpnye7tdf083ch"]
   "string":"alice"
 }
 ```
+
+### columns
+Retrieve columns from table.
+```nim
+let columns = surreal.table("users").columns().await
+columns == @["email", "name", "id"]
+```
+
 
 ### where
 user

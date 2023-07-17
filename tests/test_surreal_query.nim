@@ -101,6 +101,13 @@ suite("SurrealDB query"):
     check res["name"].getStr() == "alice"
     check res["email"].getStr() == "alice@example.com"
 
+  test("columns"):
+    let columns = surreal.table("user").columns().waitFor
+    check columns.contains("name")
+    check columns.contains("email")
+    check columns.contains("index")
+    check columns.contains("auth")
+
 
   # # ==================== SELECT ====================
   

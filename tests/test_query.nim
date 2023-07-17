@@ -187,6 +187,11 @@ for rdb in dbConnections:
         ]
         rdb.raw("ROLLBACK").exec().await
 
+    test("columns"):
+      asyncBlock:
+        let columns = rdb.table("user").columns().await
+        check columns == @["id", "name", "email", "address", "submit_on", "submit_at", "auth_id"]
+
     test("updateTest"):
       asyncBlock:
         rdb.raw("BEGIN").exec().await

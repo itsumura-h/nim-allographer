@@ -13,6 +13,7 @@ Example: Query Builder for RDB
       * [get](#get)
       * [first](#first)
       * [find](#find)
+      * [columns](#columns)
       * [join](#join)
       * [where](#where)
       * [orWhere](#orwhere)
@@ -36,7 +37,7 @@ Example: Query Builder for RDB
    * [Transaction](#transaction)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
-<!-- Added by: root, at: Mon Jul 17 06:30:00 UTC 2023 -->
+<!-- Added by: root, at: Mon Jul 17 07:46:13 UTC 2023 -->
 
 <!--te-->
 ---
@@ -178,6 +179,14 @@ let user = rdb.table("users").find(1, "user_id").await
 if user.isSome:
   echo user.get["name"]
 ```
+
+### columns
+Retrieve columns from table.
+```nim
+let columns = rdb.table("users").columns().await
+columns == @["id", "name", "email"]
+```
+
 
 ### join
 ```nim

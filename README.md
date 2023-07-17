@@ -99,14 +99,14 @@ rdb.alter(
    * [Logging](#logging)
    * [Documents](#documents)
    * [Nim API Documents](#nim-api-documents)
+      * [Schema Builder](#schema-builder-1)
       * [Query Builder for RDB](#query-builder-for-rdb)
-      * [Schema Builder for RDB](#schema-builder-for-rdb)
       * [Query Builder for SurrealDB](#query-builder-for-surrealdb)
    * [Development](#development)
       * [Branch naming rule](#branch-naming-rule)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
-<!-- Added by: root, at: Mon Jul 17 06:29:56 UTC 2023 -->
+<!-- Added by: root, at: Mon Jul 17 07:46:10 UTC 2023 -->
 
 <!--te-->
 ---
@@ -174,17 +174,17 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 
 
 ## Documents
-[Query Builder for RDB](./documents/rdb/query_builder.md)  
 [Schema Builder for RDB](./documents/rdb/schema_builder.md)  
-[Query Builder for SurrealDB](./documents/surrealdb/query_builder.md)  
+[Query Builder for RDB](./documents/rdb/query_builder.md)  
 [Schema Builder for SurrealDB](./documents/surrealdb/schema_builder.md)  
+[Query Builder for SurrealDB](./documents/surrealdb/query_builder.md)  
 
 ## Nim API Documents
 [connection](https://itsumura-h.github.io/nim-allographer/connection.html)  
 
-### Schema Builder for RDB
+### Schema Builder
 [usecases/create](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/create.html)  
-[alterusecases/](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/alter.html)  
+[usecases/alter](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/alter.html)  
 [usecases/drop](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/drop.html)  
 [models/table](https://itsumura-h.github.io/nim-allographer/schema_builder/models/table.html)  
 [models/column](https://itsumura-h.github.io/nim-allographer/schema_builder/models/column.html)  
