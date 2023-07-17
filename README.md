@@ -197,6 +197,9 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 [surreal_interface](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/surreal_interface.html)  
 [grammars](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/query/grammar.html)  
 
+### Schema Builder for SurrealDB
+[schema](https://itsumura-h.github.io/nim-allographer/schema_builder/schema.html)  
+[grammar](https://itsumura-h.github.io/nim-allographer/schema_builder/grammars.html)  
 
 ## Development
 ### Branch naming rule
