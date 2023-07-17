@@ -97,7 +97,7 @@ const whereSymbols = ["is", "is not", "=", "!=", "<", "<=", ">=", ">", "<>", "LI
 const whereSymbolsError = """Arg position 3 is only allowed of ["is", "is not", "=", "!=", "<", "<=", ">=", ">", "<>", "LIKE","%LIKE","LIKE%","%LIKE%"]"""
 
 proc where*(self: Rdb, column: string, symbol: string,
-            value: string|int|float|bool): Rdb =
+            value: string|int|float): Rdb =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -105,6 +105,34 @@ proc where*(self: Rdb, column: string, symbol: string,
     )
 
   self.placeHolder.add($value)
+
+  if self.query.hasKey("where") == false:
+    self.query["where"] = %*[{
+      "column": column,
+      "symbol": symbol,
+      "value": "?"
+    }]
+  else:
+    self.query["where"].add(
+      %*{
+        "column": column,
+        "symbol": symbol,
+        "value": "?"
+      }
+    )
+  return self
+
+
+proc where*(self: Rdb, column: string, symbol: string,
+            value: bool): Rdb =
+  if not whereSymbols.contains(symbol):
+    raise newException(
+      Exception,
+      whereSymbolsError
+    )
+
+  let val = if value: 1 else: 0
+  self.placeHolder.add($val)
 
   if self.query.hasKey("where") == false:
     self.query["where"] = %*[{

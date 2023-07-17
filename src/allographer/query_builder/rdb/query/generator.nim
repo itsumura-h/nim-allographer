@@ -393,15 +393,37 @@ proc updateSql*(self: Rdb): Rdb =
 
 proc updateValuesSql*(self: Rdb, items:JsonNode): Rdb =
   var value = ""
-
+  var placeHolder:seq[string]
   var i = 0
+
   for key, val in items.pairs:
+
     if i > 0: value.add(", ")
     i += 1
+
+    if val.kind == JInt:
+      placeHolder.add($(val.getInt()))
+    elif val.kind == JFloat:
+      placeHolder.add($(val.getFloat()))
+    elif val.kind == JBool:
+      let val =
+        if val.getBool():
+          1
+        else:
+          0
+      placeHolder.add($val)
+    elif val.kind == JObject:
+      placeHolder.add($val)
+    elif val.kind == JNull:
+      placeHolder.add("null")
+    else:
+      placeHolder.add(val.getStr())
+
     var key = key
     quote(key, self.driver)
     value.add(&"{key} = ?")
 
+  self.placeHolder = placeHolder & self.placeHolder
   self.queryString.add(value)
   return self
 
