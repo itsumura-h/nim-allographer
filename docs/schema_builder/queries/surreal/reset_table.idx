@@ -1,0 +1,2 @@
+resetMigrationTable	schema_builder/queries/surreal/reset_table.html#resetMigrationTable,SurrealQuery	reset_table: resetMigrationTable(self: SurrealQuery)	
+resetTable	schema_builder/queries/surreal/reset_table.html#resetTable,SurrealQuery	reset_table: resetTable(self: SurrealQuery)	

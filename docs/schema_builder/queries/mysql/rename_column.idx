@@ -1,0 +1,1 @@
+renameColumn	schema_builder/queries/mysql/rename_column.html#renameColumn,MysqlQuery,bool	rename_column: renameColumn(self: MysqlQuery; isReset: bool)	

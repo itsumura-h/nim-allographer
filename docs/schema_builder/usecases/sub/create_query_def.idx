@@ -1,0 +1,4 @@
+createQuery	schema_builder/usecases/sub/create_query_def.html#createQuery,Rdb,Table	create_query_def: createQuery(rdb: Rdb; table: Table): IQuery	
+createQuery	schema_builder/usecases/sub/create_query_def.html#createQuery,Rdb,Table,Column	create_query_def: createQuery(rdb: Rdb; table: Table; column: Column): IQuery	
+createQuery	schema_builder/usecases/sub/create_query_def.html#createQuery,SurrealDb,Table	create_query_def: createQuery(rdb: SurrealDb; table: Table): IQuery	
+createQuery	schema_builder/usecases/sub/create_query_def.html#createQuery,SurrealDb,Table,Column	create_query_def: createQuery(rdb: SurrealDb; table: Table; column: Column): IQuery	

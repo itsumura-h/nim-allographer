@@ -1,0 +1,1 @@
+addColumnString	schema_builder/queries/mysql/sub/add_column_query.html#addColumnString,Table,Column	add_column_query: addColumnString(table: Table; column: Column): seq[string]	

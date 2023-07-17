@@ -1,6 +1,0 @@
-dbError	query_builder/rdb/databases/mysql/mysql_lib.html#dbError,PMySQL	mysql_lib: dbError(db: PMySQL)	
-checkError	query_builder/rdb/databases/mysql/mysql_lib.html#checkError,PMySQL	mysql_lib: checkError(db: PMySQL)	
-setColumnInfo	query_builder/rdb/databases/mysql/mysql_lib.html#setColumnInfo,PRES,DbRows,int,int	mysql_lib: setColumnInfo(res: PRES; dbRows: var DbRows; line, cols: int)	
-newRow	query_builder/rdb/databases/mysql/mysql_lib.html#newRow,int	mysql_lib: newRow(L: int): database_types.Row	
-properFreeResult	query_builder/rdb/databases/mysql/mysql_lib.html#properFreeResult,PRES,cstringArray	mysql_lib: properFreeResult(sqlres: PRES; row: cstringArray)	
-dbFormat	query_builder/rdb/databases/mysql/mysql_lib.html#dbFormat,string,varargs[string,]	mysql_lib: dbFormat(formatstr: string; args: varargs[string, `$`]): string	

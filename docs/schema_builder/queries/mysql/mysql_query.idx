@@ -1,3 +1,0 @@
-MysqlQuery	schema_builder/queries/mysql/mysql_query.html#MysqlQuery	mysql_query: MysqlQuery	
-new	schema_builder/queries/mysql/mysql_query.html#new,typeMysqlQuery,Rdb	mysql_query: new(_: type MysqlQuery; rdb: Rdb): MysqlQuery	
-toInterface	schema_builder/queries/mysql/mysql_query.html#toInterface,MysqlQuery	mysql_query: toInterface(self: MysqlQuery): IGenerator	

@@ -1,0 +1,1 @@
+dropColumn	schema_builder/queries/sqlite/drop_column.html#dropColumn,SqliteQuery,bool	drop_column: dropColumn(self: SqliteQuery; isReset: bool)	

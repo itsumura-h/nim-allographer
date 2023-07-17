@@ -1,6 +1,7 @@
 get	query_builder/surreal/surreal_interface.html#get,SurrealDb	surreal_interface: get(self: SurrealDb): Future[seq[JsonNode]]	
 first	query_builder/surreal/surreal_interface.html#first,SurrealDb	surreal_interface: first(self: SurrealDb): Future[Option[JsonNode]]	
 find	query_builder/surreal/surreal_interface.html#find,SurrealDb,SurrealId,string	surreal_interface: find(self: SurrealDb; id: SurrealId; key = &quot;id&quot;): Future[Option[JsonNode]]	
+columns	query_builder/surreal/surreal_interface.html#columns,SurrealDb	surreal_interface: columns(self: SurrealDb): Future[seq[string]]	
 insert	query_builder/surreal/surreal_interface.html#insert,SurrealDb,JsonNode	surreal_interface: insert(self: SurrealDb; items: JsonNode): owned(Future[void])	
 insert	query_builder/surreal/surreal_interface.html#insert,SurrealDb,seq[JsonNode]	surreal_interface: insert(self: SurrealDb; items: seq[JsonNode]): owned(Future[void])	
 insertId	query_builder/surreal/surreal_interface.html#insertId,SurrealDb,JsonNode,string	surreal_interface: insertId(self: SurrealDb; items: JsonNode; key = &quot;id&quot;): Future[SurrealId]	

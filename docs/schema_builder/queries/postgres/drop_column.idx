@@ -1,0 +1,1 @@
+dropColumn	schema_builder/queries/postgres/drop_column.html#dropColumn,PostgresQuery,bool	drop_column: dropColumn(self: PostgresQuery; isReset: bool)	

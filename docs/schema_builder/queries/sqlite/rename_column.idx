@@ -1,0 +1,1 @@
+renameColumn	schema_builder/queries/sqlite/rename_column.html#renameColumn,SqliteQuery,bool	rename_column: renameColumn(self: SqliteQuery; isReset: bool)	

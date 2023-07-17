@@ -1,0 +1,1 @@
+dropTable	schema_builder/queries/mysql/drop_table.html#dropTable,MysqlQuery,bool	drop_table: dropTable(self: MysqlQuery; isReset: bool)	

@@ -1,0 +1,3 @@
+SurrealQuery	schema_builder/queries/surreal/surreal_query_type.html#SurrealQuery	surreal_query_type: SurrealQuery	
+new	schema_builder/queries/surreal/surreal_query_type.html#new,typeSurrealQuery,SurrealDb,Table	surreal_query_type: new(_: type SurrealQuery; rdb: SurrealDb; table: Table): SurrealQuery	
+new	schema_builder/queries/surreal/surreal_query_type.html#new,typeSurrealQuery,SurrealDb,Table,Column	surreal_query_type: new(_: type SurrealQuery; rdb: SurrealDb; table: Table; column: Column): SurrealQuery	
