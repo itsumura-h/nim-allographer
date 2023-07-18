@@ -43,10 +43,7 @@ proc main(){.async.} =
   query = "PRAGMA table_info(\"test\")"
   var columns = newSeq[Column]()
   for row in db.instantRows(dbRows, query, newSeq[string]()):
-    var dbColumns = newSeq[string](row.len)
-    for i in 0..row.len()-1:
-      dbColumns[i] = row[i]
-    columns.add(Column(name:dbColumns[1], typ:dbColumns[2]))
+    columns.add(Column(name:row[1], typ:row[2]))
 
   # insert data
   query = "INSERT INTO \"test\"(\"blob\", \"int\", \"float\", \"str\") VALUES (?, ?, ?, ?)"
