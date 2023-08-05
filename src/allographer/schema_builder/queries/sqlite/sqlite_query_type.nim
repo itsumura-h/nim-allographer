@@ -1,14 +1,14 @@
-import ../../../query_builder/rdb/rdb_types
+import ../../../query_builder/models/sqlite/sqlite_types
 import ../../models/table
 import ../../models/column
 
-type SqliteQuery* = ref object
-  rdb*:Rdb
+type SqliteSchema* = ref object
+  rdb*:SqliteConnections
   table*:Table
   column*:Column
 
-proc new*(_:type SqliteQuery, rdb:Rdb, table:Table):SqliteQuery =
-  return SqliteQuery(rdb:rdb, table:table)
+proc new*(_:type SqliteSchema, rdb:SqliteConnections, table:Table):SqliteSchema =
+  return SqliteSchema(rdb:rdb, table:table)
 
-proc new*(_:type SqliteQuery, rdb:Rdb, table:Table, column:Column):SqliteQuery =
-  return SqliteQuery(rdb:rdb, table:table, column:column)
+proc new*(_:type SqliteSchema, rdb:SqliteConnections, table:Table, column:Column):SqliteSchema =
+  return SqliteSchema(rdb:rdb, table:table, column:column)

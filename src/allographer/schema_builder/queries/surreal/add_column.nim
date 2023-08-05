@@ -2,7 +2,7 @@ import std/json
 import std/sha1
 import ../../models/table
 import ../../models/column
-import ../query_utils
+import ../schema_utils
 import ./surreal_query_type
 import ./sub/create_column_query
 

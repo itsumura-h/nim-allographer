@@ -4,6 +4,7 @@ import std/streams
 import std/json
 import ../../src/allographer/connection
 import ../../src/allographer/query_builder
+import ../../src/allographer/schema_builder
 
 
 proc main() {.async.} =
@@ -13,19 +14,18 @@ proc main() {.async.} =
   let binaryImage = imageStream.readAll()
 
   let rdb = dbOpen(SQLite3, "/root/project/db.sqlite3", shouldDisplayLog=true)
-  await rdb.raw("DROP TABLE IF EXISTS \"test\"").exec()
-  await rdb.raw("""
-    CREATE TABLE IF NOT EXISTS "test" (
-      'id' INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-      'bool' TINYINT,
-      'int' INTEGER,
-      'float' NUMERIC,
-      'str' VARCHAR,
-      'json' VARCHAR,
-      'null' VARCHAR,
-      'blob' BLOB
-    )
-  """).exec()
+  rdb.create(
+    table("test", [
+      Column.increments("id"),
+      Column.boolean("bool"),
+      Column.integer("int"),
+      Column.float("float"),
+      Column.string("str"),
+      Column.json("json"),
+      Column.string("null").nullable(),
+      Column.binary("blob"),
+    ])
+  )
 
   await rdb.table("test").insert(%*{
     "blob": binaryImage,

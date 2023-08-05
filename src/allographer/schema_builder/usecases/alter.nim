@@ -13,7 +13,7 @@ proc alter*(rdb:Rdb | SurrealDb, tables:varargs[Table]) =
   let isReset = defined(reset) or cmd.contains("--reset")
 
   # create migration table
-  var query = createQuery(rdb, migrationTable)
+  var query = createSchema(rdb, migrationTable)
   query.createMigrationTable()
 
   for i, table in tables:
@@ -25,24 +25,24 @@ proc alter*(rdb:Rdb | SurrealDb, tables:varargs[Table]) =
         case column.migrationType
         of AddColumn:
           discard
-          query = createQuery(rdb, table, column)
+          query = createSchema(rdb, table, column)
           query.addColumn(isReset)
         of ChangeColumn:
           discard
-          query = createQuery(rdb, table, column)
+          query = createSchema(rdb, table, column)
           query.changeColumn(isReset)
         of RenameColumn:
           discard
-          query = createQuery(rdb, table, column)
+          query = createSchema(rdb, table, column)
           query.renameColumn(isReset)
         of DropColumn:
           discard
-          query = createQuery(rdb, table, column)
+          query = createSchema(rdb, table, column)
           query.dropColumn(isReset)
     of ChangeTable:
       discard
     of RenameTable:
-      query = createQuery(rdb, table)
+      query = createSchema(rdb, table)
       query.renameTable(isReset)
     of DropTable:
       discard

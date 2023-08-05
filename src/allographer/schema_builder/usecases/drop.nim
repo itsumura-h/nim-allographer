@@ -12,10 +12,10 @@ proc drop*(rdb:Rdb | SurrealDb, tables:varargs[Table]) =
   let isReset = defined(reset) or cmd.contains("--reset")
 
   # create migration table
-  var query = createQuery(rdb, migrationTable)
+  var query = createSchema(rdb, migrationTable)
   query.createMigrationTable()
 
   for table in tables:
     table.usecaseType = Drop
-    query = createQuery(rdb, table)
+    query = createSchema(rdb, table)
     query.dropTable(isReset)

@@ -1,4 +1,4 @@
-import ../query_interface
+import ../schema_interface
 import ./surreal_query_type
 import ./create_migration_table
 import ./create_table
@@ -11,7 +11,7 @@ import ./rename_table
 import ./drop_table
 
 
-proc toInterface*(self:SurrealQuery):IQuery =
+proc toInterface*(self:SurrealQuery):ISchema =
   return (
     createMigrationTable:proc() = self.createMigrationTable(),
     createTable:proc(isReset:bool) = self.createTable(isReset),

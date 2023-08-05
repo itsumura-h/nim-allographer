@@ -3,7 +3,7 @@ import std/sha1
 import std/json
 import ../../models/table
 import ./postgres_query_type
-import ../query_utils
+import ../schema_utils
 
 
 proc renameTable*(self:PostgresQuery, isReset:bool) =

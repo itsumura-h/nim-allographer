@@ -2,7 +2,7 @@ import std/sha1
 import std/json
 import ../../models/table
 import ../../models/column
-import ../query_utils
+import ../schema_utils
 import ./mysql_query_type
 import ./sub/add_column_query
 

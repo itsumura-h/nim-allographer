@@ -505,7 +505,7 @@ proc getRow(self:SqliteQuery, queryString:string, args:JsonNode):Future[Option[J
   return toJson(rows, dbRows)[0].some
 
 
-proc exec(self:SqliteQuery, queryString:string, args:JsonNode) {.async.} =
+proc exec(self:SqliteQuery, queryString:string, args=newJArray()) {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
@@ -586,7 +586,7 @@ proc getAllRows(self:RawSqliteQuery, queryString:string, args:JsonNode):Future[s
 #   sqlite_impl.exec(self.pools[connI].conn, queryString, self.placeHolder, self.timeout).await
 
 
-proc getColumns(self:SqliteQuery, queryString:string, args:seq[string]):Future[seq[string]] {.async.} =
+proc getColumns(self:SqliteQuery, queryString:string, args=newJArray()):Future[seq[string]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
@@ -596,7 +596,26 @@ proc getColumns(self:SqliteQuery, queryString:string, args:seq[string]):Future[s
   if connI == errorConnectionNum:
     return
 
-  return sqlite_impl.getColumns(self.pools[connI].conn, queryString, args, self.timeout).await
+  var strArgs:seq[string]
+  for arg in args.items:
+    case arg["value"].kind
+    of JBool:
+      if arg["value"].getBool:
+        strArgs.add("1")
+      else:
+        strArgs.add("0")
+    of JInt:
+      strArgs.add($arg["value"].getInt)
+    of JFloat:
+      strArgs.add($arg["value"].getFloat)
+    of JString:
+      strArgs.add($arg["value"].getStr)
+    of JNull:
+      strArgs.add("NULL")
+    else:
+      strArgs.add(arg["value"].pretty)
+
+  return sqlite_impl.getColumns(self.pools[connI].conn, queryString, strArgs, self.timeout).await
 
 # ================================================================================
 # public exec
@@ -621,7 +640,7 @@ proc find*(self:SqliteQuery, id: string, key="id"):Future[Option[JsonNode]] {.as
   return self.getRow(sql, self.placeHolder).await
 
 
-proc find*(self: SqliteQuery, id: int, key="id"):Future[Option[JsonNode]]{.async.} =
+proc find*(self:SqliteQuery, id:int, key="id"):Future[Option[JsonNode]]{.async.} =
   return self.find($id, key).await
 
 
@@ -635,6 +654,24 @@ proc update*(self:SqliteQuery, items:JsonNode) {.async.} =
   let sql = self.updateBuilder(items)
   self.log.logger(sql)
   self.exec(sql, items).await
+
+
+proc delete*(self:SqliteQuery) {.async.} =
+  let sql = self.deleteBuilder()
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc delete*(self:SqliteQuery, id:int, key="id") {.async.} =
+  let sql = self.deleteByIdBuilder(id, key)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc columns*(self:SqliteQuery):Future[seq[string]] {.async.} =
+  let sql = self.columnBuilder()
+  self.log.logger(sql)
+  return self.getColumns(sql, self.placeHolder).await
 
 
 proc exec*(self: RawSqliteQuery) {.async.} =

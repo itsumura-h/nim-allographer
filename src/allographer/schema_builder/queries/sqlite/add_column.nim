@@ -4,10 +4,10 @@ import ../../models/table
 import ../../models/column
 import ./sqlite_query_type
 import ./sub/add_column_query
-import ../query_utils
+import ../schema_utils
 
 
-# proc shouldRun(rdb:Rdb, table:Table, column:Column, checksum:string, isReset:bool):bool =
+# proc shouldRun(rdb:SqliteConnections, table:Table, column:Column, checksum:string, isReset:bool):bool =
 #   if isReset:
 #     return true
 
@@ -18,7 +18,7 @@ import ../query_utils
 #   return not history.isSome() or not history.get()["status"].getBool
 
 
-# proc execThenSaveHistory(rdb:Rdb, tableName:string, queries:seq[string], checksum:string) =
+# proc execThenSaveHistory(rdb:SqliteConnections, tableName:string, queries:seq[string], checksum:string) =
 #   var isSuccess = false
 #   try:
 #     for query in queries:
@@ -37,7 +37,7 @@ import ../query_utils
 #   })
 #   .waitFor
 
-proc addColumn*(self:SqliteQuery, isReset:bool) =
+proc addColumn*(self:SqliteSchema, isReset:bool) =
   let queries = addColumnString(self.rdb, self.table, self.column)
   let schema = $self.column.toSchema()
   let checksum = $schema.secureHash()
