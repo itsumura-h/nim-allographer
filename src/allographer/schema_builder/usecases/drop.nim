@@ -1,13 +1,14 @@
 import std/os
-import ../../query_builder/rdb/rdb_types
-import ../../query_builder/surreal/surreal_types
+# import ../../query_builder/rdb/rdb_types
+# import ../../query_builder/surreal/surreal_types
+import ../../query_builder/models/sqlite/sqlite_types
 import ../models/table
 import ../enums
 import ./sub/migration_table_def
 import ./sub/create_query_def
 
 
-proc drop*(rdb:Rdb | SurrealDb, tables:varargs[Table]) =
+proc drop*(rdb:SqliteConnections, tables:varargs[Table]) =
   let cmd = commandLineParams()
   let isReset = defined(reset) or cmd.contains("--reset")
 

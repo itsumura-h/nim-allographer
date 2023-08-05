@@ -2,6 +2,10 @@ import std/json
 import ./sqlite_types
 
 
+proc `$`*(self:SqliteConnections|SqliteQuery):string =
+  return "SQLite3"
+
+
 proc select*(self:SqliteConnections, columnsArg:varargs[string]):SqliteQuery =
   let query = newJObject()
   

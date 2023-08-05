@@ -2,6 +2,7 @@ import std/asyncdispatch
 import std/os
 import std/strutils
 import ../src/allographer/connection
+import ../src/allographer/query_builder
 
 
 let
@@ -25,9 +26,9 @@ let
 
 # let surreal* = dbOpen(SurrealDb, "test", "test", "user", "pass", surrealHost, surrealPort, 5, 30, false, false).waitFor()
 
-let dbConnections* = @[
+let dbConnections* :seq[SqliteConnections] = @[
   # dbopen(SQLite3, getCurrentDir() / "db.sqlite3", maxConnections=maxConnections, timeout=timeout, shouldDisplayLog=true),
-  dbopen(SQLite3, ":memory:", maxConnections=maxConnections, timeout=timeout, shouldDisplayLog=false),
+  dbopen(SQLite3, ":memory:", maxConnections=maxConnections, timeout=timeout, shouldDisplayLog=true),
   # dbopen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=false),
   # dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=false),
 ]

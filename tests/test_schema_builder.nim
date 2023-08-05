@@ -13,7 +13,7 @@ import ./connections
 
 for rdb in dbConnections:
 
-  suite($rdb.driver & " create table"):
+  suite($rdb & " create table"):
     test("create table"):
       rdb.create(
         table("IntRelation", [
@@ -132,7 +132,7 @@ for rdb in dbConnections:
       )
 
 
-  suite($rdb.driver & " alter table"):
+  suite($rdb & " alter table"):
     setup:
       rdb.create(
         table("IntRelation", [
@@ -277,7 +277,7 @@ for rdb in dbConnections:
         check true
 
 
-  suite($rdb.driver & " primary"):
+  suite($rdb & " primary"):
     test("primary key"):
       rdb.create(
         table("relation", [
@@ -294,22 +294,22 @@ for rdb in dbConnections:
       )
 
 
-  if [PostgreSQL, MySQL, MariaDB].contains(rdb.driver):
-    suite($rdb.driver & " autoincrement"):
-      test("autoincrement"):
-        rdb.create(
-          table("TypeIndex", [
-            Column.integer("index").autoIncrement(),
-            Column.string("string")
-          ])
-        )
+  # if [PostgreSQL, MySQL, MariaDB].contains($rdb):
+  #   suite($rdb.driver & " autoincrement"):
+  #     test("autoincrement"):
+  #       rdb.create(
+  #         table("TypeIndex", [
+  #           Column.integer("index").autoIncrement(),
+  #           Column.string("string")
+  #         ])
+  #       )
 
-        rdb.table("TypeIndex").insert(@[
-          %*{"string": "a"},
-          %*{"string": "b"},
-          %*{"string": "c"},
-        ]).waitFor
+  #       rdb.table("TypeIndex").insert(@[
+  #         %*{"string": "a"},
+  #         %*{"string": "b"},
+  #         %*{"string": "c"},
+  #       ]).waitFor
 
-        let res = rdb.table("TypeIndex").orderBy("index", Asc).get().waitFor
-        for i, row in res:
-          check row["index"].getInt == i+1
+  #       let res = rdb.table("TypeIndex").orderBy("index", Asc).get().waitFor
+  #       for i, row in res:
+  #         check row["index"].getInt == i+1
