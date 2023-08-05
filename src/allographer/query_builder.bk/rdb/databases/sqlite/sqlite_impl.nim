@@ -1,6 +1,7 @@
 import std/asyncdispatch
 import std/times
 import std/strutils
+import std/strformat
 import ../database_types
 import ./sqlite_rdb
 import ./sqlite_lib
@@ -42,6 +43,7 @@ proc queryPlain*(db:PSqlite3, query:string, args:seq[string], timeout:int):Futur
     rows.add(columns)
   return rows
 
+
 proc exec*(db:PSqlite3, query: string, args: seq[string], timeout:int) {.async.} =
   assert(not db.isNil, "Database not connected.")
   var q = dbFormat(query, args)
@@ -56,6 +58,7 @@ proc exec*(db:PSqlite3, query: string, args: seq[string], timeout:int) {.async.}
       res = false
   if not res:
     dbError(db)
+
 
 proc getColumns*(db:PSqlite3, query:string, args:seq[string], timeout:int):Future[seq[string]] {.async.} =
   assert(not db.isNil, "Database not connected.")

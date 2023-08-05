@@ -4,9 +4,13 @@ import std/asyncdispatch
 import std/httpclient
 import std/json
 import std/streams
+import ../src/allographer/connection
+import ../src/allographer/query_builder/rdb/rdb_types
+import ../src/allographer/query_builder/rdb/query/grammar
+import ../src/allographer/query_builder/rdb/rdb_interface
 import ../src/allographer/query_builder/rdb/databases/database_types
 import ../src/allographer/query_builder/rdb/databases/sqlite/sqlite_rdb
-import ../src/allographer/query_builder/rdb/databases/sqlite/sqlite_lib
+# import ../src/allographer/query_builder/rdb/databases/sqlite/sqlite_lib
 import ../src/allographer/query_builder/rdb/databases/sqlite/sqlite_impl
 
 
@@ -77,4 +81,16 @@ proc main(){.async.} =
   if not res:
     dbError(db)
 
-main().waitFor
+
+proc useAllographer() {.async.} =
+  let client = newAsyncHttpClient()
+  let response = client.getContent("https://nim-lang.org/assets/img/twitter_banner.png").await
+  let imageStream = newStringStream(response)
+  let binaryImage = imageStream.readAll()
+
+  let rdb = dbOpen(SQLite3, "/root/project/db.sqlite3")
+  rdb.table("test").insert(%*{"blob": binaryImage, "int": 100, "float": 1.1, "str": "alice"}).await
+
+
+# main().waitFor
+useAllographer().waitFor

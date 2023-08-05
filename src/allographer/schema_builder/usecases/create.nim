@@ -1,13 +1,14 @@
 import std/os
 import ../enums
-import ../../query_builder/rdb/rdb_types
-import ../../query_builder/surreal/surreal_types
+# import ../../query_builder/rdb/rdb_types
+# import ../../query_builder/surreal/surreal_types
+import ../../query_builder/models/sqlite/sqlite_query_typ
 import ../models/table
 import ./sub/migration_table_def
 import ./sub/create_query_def
 
 
-proc create*(rdb:Rdb | SurrealDb, tables:varargs[Table]) =
+proc create*(rdb:SqliteQuery, tables:varargs[Table]) =
   let cmd = commandLineParams()
   let isReset = defined(reset) or cmd.contains("--reset")
 
