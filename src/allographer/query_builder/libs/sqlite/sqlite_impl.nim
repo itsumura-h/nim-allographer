@@ -39,6 +39,7 @@ proc getColumnTypes*(db:PSqlite3, query: string):Future[seq[(string, string)]] {
 
 
 proc exec*(db:PSqlite3, query: string, args: JsonNode, columns:seq[(string, string)], timeout:int) {.async.} =
+  ## args is `JArray`
   assert(not db.isNil, "Database not connected.")
   # var q = dbFormat(query, strArges)
   var stmt: PStmt

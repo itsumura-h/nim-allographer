@@ -4,27 +4,27 @@ import std/options
 import std/strformat
 import std/strutils
 import std/times
-import ../../libs/sqlite/sqlite_impl
+import ../../libs/postgres/postgres_impl
 import ../../log
 import ../../enums
 import ../database_types
-import ./query/sqlite_builder
-import ./sqlite_types
+import ./query/postgres_builder
+import ./postgres_types
 
 
-proc table*(self:SqliteQuery, tableArg: string): SqliteQuery =
+proc table*(self:PostgresQuery, tableArg: string): PostgresQuery =
   self.query["table"] = %tableArg
   return self
 
 
-proc `distinct`*(self: SqliteQuery): SqliteQuery =
+proc `distinct`*(self: PostgresQuery): PostgresQuery =
   self.query["distinct"] = %true
   return self
 
 # ============================== Conditions ==============================
 
-proc join*(self: SqliteQuery, table: string, column1: string, symbol: string,
-            column2: string): SqliteQuery =
+proc join*(self: PostgresQuery, table: string, column1: string, symbol: string,
+            column2: string): PostgresQuery =
   if self.query.hasKey("join") == false:
     self.query["join"] = %*[{
       "table": table,
@@ -42,8 +42,8 @@ proc join*(self: SqliteQuery, table: string, column1: string, symbol: string,
   return self
 
 
-proc leftJoin*(self: SqliteQuery, table: string, column1: string, symbol: string,
-              column2: string): SqliteQuery =
+proc leftJoin*(self: PostgresQuery, table: string, column1: string, symbol: string,
+              column2: string): PostgresQuery =
   if self.query.hasKey("left_join") == false:
     self.query["left_join"] = %*[{
       "table": table,
@@ -64,8 +64,8 @@ proc leftJoin*(self: SqliteQuery, table: string, column1: string, symbol: string
 const whereSymbols = ["is", "is not", "=", "!=", "<", "<=", ">=", ">", "<>", "LIKE","%LIKE","LIKE%","%LIKE%"]
 const whereSymbolsError = """Arg position 3 is only allowed of ["is", "is not", "=", "!=", "<", "<=", ">=", ">", "<>", "LIKE","%LIKE","LIKE%","%LIKE%"]"""
 
-proc where*(self: SqliteQuery, column: string, symbol: string,
-            value: string|int|float): SqliteQuery =
+proc where*(self: PostgresQuery, column: string, symbol: string,
+            value: string|int|float): PostgresQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -91,8 +91,8 @@ proc where*(self: SqliteQuery, column: string, symbol: string,
   return self
 
 
-proc where*(self: SqliteQuery, column: string, symbol: string,
-            value: bool): SqliteQuery =
+proc where*(self: PostgresQuery, column: string, symbol: string,
+            value: bool): PostgresQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -119,7 +119,7 @@ proc where*(self: SqliteQuery, column: string, symbol: string,
   return self
 
 
-proc where*(self: SqliteQuery, column: string, symbol: string, value: nil.type): SqliteQuery =
+proc where*(self: PostgresQuery, column: string, symbol: string, value: nil.type): PostgresQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -143,8 +143,8 @@ proc where*(self: SqliteQuery, column: string, symbol: string, value: nil.type):
   return self
 
 
-proc orWhere*(self: SqliteQuery, column: string, symbol: string,
-              value: string|int|float|bool): SqliteQuery =
+proc orWhere*(self: PostgresQuery, column: string, symbol: string,
+              value: string|int|float|bool): PostgresQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -169,7 +169,7 @@ proc orWhere*(self: SqliteQuery, column: string, symbol: string,
     )
   return self
 
-proc orWhere*(self: SqliteQuery, column: string, symbol: string, value: nil.type): SqliteQuery =
+proc orWhere*(self: PostgresQuery, column: string, symbol: string, value: nil.type): PostgresQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -190,7 +190,7 @@ proc orWhere*(self: SqliteQuery, column: string, symbol: string, value: nil.type
     })
   return self
 
-proc whereBetween*(self:SqliteQuery, column:string, width:array[2, int|float]): SqliteQuery =
+proc whereBetween*(self:PostgresQuery, column:string, width:array[2, int|float]): PostgresQuery =
   if self.query.hasKey("where_between") == false:
     self.query["where_between"] = %*[{
       "column": column,
@@ -203,7 +203,7 @@ proc whereBetween*(self:SqliteQuery, column:string, width:array[2, int|float]): 
     })
   return self
 
-proc whereBetween*(self:SqliteQuery, column:string, width:array[2, string]): SqliteQuery =
+proc whereBetween*(self:PostgresQuery, column:string, width:array[2, string]): PostgresQuery =
   if self.query.hasKey("where_between_string") == false:
     self.query["where_between_string"] = %*[{
       "column": column,
@@ -216,7 +216,7 @@ proc whereBetween*(self:SqliteQuery, column:string, width:array[2, string]): Sql
     })
   return self
 
-proc whereNotBetween*(self:SqliteQuery, column:string, width:array[2, int|float]): SqliteQuery =
+proc whereNotBetween*(self:PostgresQuery, column:string, width:array[2, int|float]): PostgresQuery =
   if self.query.hasKey("where_not_between") == false:
     self.query["where_not_between"] = %*[{
       "column": column,
@@ -229,7 +229,7 @@ proc whereNotBetween*(self:SqliteQuery, column:string, width:array[2, int|float]
     })
   return self
 
-proc whereNotBetween*(self:SqliteQuery, column:string, width:array[2, string]): SqliteQuery =
+proc whereNotBetween*(self:PostgresQuery, column:string, width:array[2, string]): PostgresQuery =
   if self.query.hasKey("where_not_between_string") == false:
     self.query["where_not_between_string"] = %*[{
       "column": column,
@@ -242,7 +242,7 @@ proc whereNotBetween*(self:SqliteQuery, column:string, width:array[2, string]): 
     })
   return self
 
-proc whereIn*(self:SqliteQuery, column:string, width:seq[int|float|string]): SqliteQuery =
+proc whereIn*(self:PostgresQuery, column:string, width:seq[int|float|string]): PostgresQuery =
   if self.query.hasKey("where_in") == false:
     self.query["where_in"] = %*[{
       "column": column,
@@ -256,7 +256,7 @@ proc whereIn*(self:SqliteQuery, column:string, width:seq[int|float|string]): Sql
   return self
 
 
-proc whereNotIn*(self:SqliteQuery, column:string, width:seq[int|float|string]): SqliteQuery =
+proc whereNotIn*(self:PostgresQuery, column:string, width:seq[int|float|string]): PostgresQuery =
   if self.query.hasKey("where_not_in") == false:
     self.query["where_not_in"] = %*[{
       "column": column,
@@ -270,7 +270,7 @@ proc whereNotIn*(self:SqliteQuery, column:string, width:seq[int|float|string]): 
   return self
 
 
-proc whereNull*(self:SqliteQuery, column:string): SqliteQuery =
+proc whereNull*(self:PostgresQuery, column:string): PostgresQuery =
   if self.query.hasKey("where_null") == false:
     self.query["where_null"] = %*[{
       "column": column
@@ -282,7 +282,7 @@ proc whereNull*(self:SqliteQuery, column:string): SqliteQuery =
   return self
 
 
-proc groupBy*(self:SqliteQuery, column:string): SqliteQuery =
+proc groupBy*(self:PostgresQuery, column:string): PostgresQuery =
   if self.query.hasKey("group_by") == false:
     self.query["group_by"] = %*[{"column": column}]
   else:
@@ -290,8 +290,8 @@ proc groupBy*(self:SqliteQuery, column:string): SqliteQuery =
   return self
 
 
-proc having*(self: SqliteQuery, column: string, symbol: string,
-              value: string|int|float|bool): SqliteQuery =
+proc having*(self: PostgresQuery, column: string, symbol: string,
+              value: string|int|float|bool): PostgresQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -316,7 +316,7 @@ proc having*(self: SqliteQuery, column: string, symbol: string,
     )
   return self
 
-proc having*(self: SqliteQuery, column: string, symbol: string, value: nil.type): SqliteQuery =
+proc having*(self: PostgresQuery, column: string, symbol: string, value: nil.type): PostgresQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -340,7 +340,7 @@ proc having*(self: SqliteQuery, column: string, symbol: string, value: nil.type)
   return self
 
 
-proc orderBy*(self:SqliteQuery, column:string, order:Order): SqliteQuery =
+proc orderBy*(self:PostgresQuery, column:string, order:Order): PostgresQuery =
   if self.query.hasKey("order_by") == false:
     self.query["order_by"] = %*[{
       "column": column,
@@ -354,23 +354,23 @@ proc orderBy*(self:SqliteQuery, column:string, order:Order): SqliteQuery =
   return self
 
 
-proc limit*(self: SqliteQuery, num: int): SqliteQuery =
+proc limit*(self: PostgresQuery, num: int): PostgresQuery =
   self.query["limit"] = %num
   return self
 
 
-proc offset*(self: SqliteQuery, num: int): SqliteQuery =
+proc offset*(self: PostgresQuery, num: int): PostgresQuery =
   self.query["offset"] = %num
   return self
 
 
-proc inTransaction*(self:SqliteQuery, connI:int) =
+proc inTransaction*(self:PostgresQuery, connI:int) =
   ## Only used in transation block
   self.isInTransaction = true
   self.transactionConn = connI
 
 
-proc freeTransactionConn*(self:SqliteQuery, connI:int) =
+proc freeTransactionConn*(self:PostgresQuery, connI:int) =
   ## Only used in transation block
   self.isInTransaction = false
 
@@ -379,7 +379,7 @@ proc freeTransactionConn*(self:SqliteQuery, connI:int) =
 # connection
 # ================================================================================
 
-proc getFreeConn(self:SqliteQuery | RawSqliteQuery):Future[int] {.async.} =
+proc getFreeConn(self:PostgresQuery | RawPostgresQuery):Future[int] {.async.} =
   let calledAt = getTime().toUnix()
   while true:
     for i in 0..<self.pools.len:
@@ -393,7 +393,7 @@ proc getFreeConn(self:SqliteQuery | RawSqliteQuery):Future[int] {.async.} =
       return errorConnectionNum
 
 
-proc returnConn(self: SqliteQuery | RawSqliteQuery, i: int) {.async.} =
+proc returnConn(self: PostgresQuery | RawPostgresQuery, i: int) {.async.} =
   if i != errorConnectionNum:
     self.pools[i].isBusy = false
 
@@ -409,20 +409,30 @@ proc toJson(results:openArray[seq[string]], dbRows:DbRows):seq[JsonNode] =
     for i, row in rows:
       let key = dbRows[index][i].name
       let typ = dbRows[index][i].typ.kind
-      let kindName = dbRows[index][i].typ.name
+      # let kindName = dbRows[index][i].typ.name
       # let size = dbRows[index][i].typ.size
 
       if typ == dbNull:
         response_row[key] = newJNull()
-      elif ["INTEGER", "INT", "SMALLINT", "MEDIUMINT", "BIGINT"].contains(kindName):
+      elif [dbInt, dbUInt].contains(typ):
         response_row[key] = newJInt(row.parseInt)
-      elif ["NUMERIC", "DECIMAL", "DOUBLE", "REAL"].contains(kindName):
+      elif [dbDecimal, dbFloat].contains(typ):
         response_row[key] = newJFloat(row.parseFloat)
-      elif ["TINYINT", "BOOLEAN"].contains(kindName):
-        response_row[key] = newJBool(row.parseBool)
+      elif [dbBool].contains(typ):
+        if row == "f":
+          response_row[key] = newJBool(false)
+        elif row == "t":
+          response_row[key] = newJBool(true)
+      elif [dbJson].contains(typ):
+        response_row[key] = row.parseJson
+      elif [dbFixedChar, dbVarchar].contains(typ):
+        if row == "NULL":
+          response_row[key] = newJNull()
+        else:
+          response_row[key] = newJString(row)
       else:
         response_row[key] = newJString(row)
-      
+    
     response_table[index] = response_row
   return response_table
 
@@ -431,7 +441,37 @@ proc toJson(results:openArray[seq[string]], dbRows:DbRows):seq[JsonNode] =
 # private exec
 # ================================================================================
 
-proc getAllRows(self:SqliteQuery, queryString:string, args:JsonNode):Future[seq[JsonNode]] {.async.} =
+proc exec(self:PostgresQuery, queryString:string, args:JsonNode) {.async.} =
+  ## args is `JObject`
+  var connI = self.transactionConn
+  if not self.isInTransaction:
+    connI = getFreeConn(self).await
+  defer:
+    if not self.isInTransaction:
+      self.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  var strArgs:seq[string]
+  for (key, val) in args.pairs:
+    case val.kind
+    of JBool:
+      strArgs.add($val.getBool)
+    of JInt:
+      strArgs.add($val.getInt)
+    of JFloat:
+      strArgs.add($val.getFloat)
+    of JString:
+      strArgs.add($val.getStr)
+    of JNull:
+      strArgs.add("NULL")
+    else:
+      strArgs.add(val.pretty)
+
+  postgres_impl.exec(self.pools[connI].conn, queryString, strArgs, self.timeout).await
+
+
+proc exec(self:RawPostgresQuery, queryString:string, args:JsonNode) {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
@@ -445,10 +485,7 @@ proc getAllRows(self:SqliteQuery, queryString:string, args:JsonNode):Future[seq[
   for arg in args.items:
     case arg["value"].kind
     of JBool:
-      if arg["value"].getBool:
-        strArgs.add("1")
-      else:
-        strArgs.add("0")
+      strArgs.add($arg["value"].getBool)
     of JInt:
       strArgs.add($arg["value"].getInt)
     of JFloat:
@@ -460,228 +497,21 @@ proc getAllRows(self:SqliteQuery, queryString:string, args:JsonNode):Future[seq[
     else:
       strArgs.add(arg["value"].pretty)
 
-  let (rows, dbRows) = sqlite_impl.query(self.pools[connI].conn, queryString, strArgs, self.timeout).await
+  postgres_impl.exec(self.pools[connI].conn, queryString, strArgs, self.timeout).await
 
-  if rows.len == 0:
-    self.log.echoErrorMsg(queryString)
-    return newSeq[JsonNode](0)
-  return toJson(rows, dbRows) # seq[JsonNode]
-
-
-proc getRow(self:SqliteQuery, queryString:string, args:JsonNode):Future[Option[JsonNode]] {.async.} =
-  var connI = self.transactionConn
-  if not self.isInTransaction:
-    connI = getFreeConn(self).await
-  defer:
-    if not self.isInTransaction:
-      self.returnConn(connI).await
-  if connI == errorConnectionNum:
-    return
-
-  var strArgs:seq[string]
-  for arg in args.items:
-    case arg["value"].kind
-    of JBool:
-      if arg["value"].getBool:
-        strArgs.add("1")
-      else:
-        strArgs.add("0")
-    of JInt:
-      strArgs.add($arg["value"].getInt)
-    of JFloat:
-      strArgs.add($arg["value"].getFloat)
-    of JString:
-      strArgs.add($arg["value"].getStr)
-    of JNull:
-      strArgs.add("NULL")
-    else:
-      strArgs.add(arg["value"].pretty)
-  
-  let (rows, dbRows) = sqlite_impl.query(self.pools[connI].conn, queryString, strArgs, self.timeout).await
-
-  if rows.len == 0:
-    self.log.echoErrorMsg(queryString)
-    return none(JsonNode)
-  return toJson(rows, dbRows)[0].some
-
-
-proc exec(self:SqliteQuery, queryString:string, args=newJArray()) {.async.} =
-  ## args is `JArray`
-  var connI = self.transactionConn
-  if not self.isInTransaction:
-    connI = getFreeConn(self).await
-  defer:
-    if not self.isInTransaction:
-      self.returnConn(connI).await
-  if connI == errorConnectionNum:
-    return
-
-  let table = self.query["table"].getStr
-  let columnGetQuery = &"PRAGMA table_info(\"{table}\")"
-  let columns = sqlite_impl.getColumnTypes(self.pools[connI].conn, columnGetQuery).await
-
-  sqlite_impl.exec(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
-
-
-proc exec(self:RawSqliteQuery, queryString:string, args:JsonNode) {.async.} =
-  var connI = self.transactionConn
-  if not self.isInTransaction:
-    connI = getFreeConn(self).await
-  defer:
-    if not self.isInTransaction:
-      self.returnConn(connI).await
-  if connI == errorConnectionNum:
-    return
-
-  sqlite_impl.exec(self.pools[connI].conn, queryString, args, self.timeout).await
-
-
-proc getAllRows(self:RawSqliteQuery, queryString:string, args:JsonNode):Future[seq[JsonNode]] {.async.} =
-  var connI = self.transactionConn
-  if not self.isInTransaction:
-    connI = getFreeConn(self).await
-  defer:
-    if not self.isInTransaction:
-      self.returnConn(connI).await
-  if connI == errorConnectionNum:
-    return
-
-  var strArgs:seq[string]
-  for arg in args.items:
-    case arg["value"].kind
-    of JBool:
-      if arg["value"].getBool:
-        strArgs.add("1")
-      else:
-        strArgs.add("0")
-    of JInt:
-      strArgs.add($arg["value"].getInt)
-    of JFloat:
-      strArgs.add($arg["value"].getFloat)
-    of JString:
-      strArgs.add($arg["value"].getStr)
-    of JNull:
-      strArgs.add("NULL")
-    else:
-      strArgs.add(arg["value"].pretty)
-
-  let (rows, dbRows) = sqlite_impl.query(self.pools[connI].conn, queryString, strArgs, self.timeout).await
-
-  if rows.len == 0:
-    self.log.echoErrorMsg(queryString)
-    return newSeq[JsonNode](0)
-  return toJson(rows, dbRows) # seq[JsonNode]
-
-
-
-# proc exec(self:SqliteQuery, queryString:string, args:seq[string]) {.async.} =
-#   var connI = self.transactionConn
-#   if not self.isInTransaction:
-#     connI = getFreeConn(self).await
-#   defer:
-#     if not self.isInTransaction:
-#       self.returnConn(connI).await
-#   if connI == errorConnectionNum:
-#     return
-
-#   sqlite_impl.exec(self.pools[connI].conn, queryString, self.placeHolder, self.timeout).await
-
-
-proc getColumns(self:SqliteQuery, queryString:string, args=newJArray()):Future[seq[string]] {.async.} =
-  var connI = self.transactionConn
-  if not self.isInTransaction:
-    connI = getFreeConn(self).await
-  defer:
-    if not self.isInTransaction:
-      self.returnConn(connI).await
-  if connI == errorConnectionNum:
-    return
-
-  var strArgs:seq[string]
-  for arg in args.items:
-    case arg["value"].kind
-    of JBool:
-      if arg["value"].getBool:
-        strArgs.add("1")
-      else:
-        strArgs.add("0")
-    of JInt:
-      strArgs.add($arg["value"].getInt)
-    of JFloat:
-      strArgs.add($arg["value"].getFloat)
-    of JString:
-      strArgs.add($arg["value"].getStr)
-    of JNull:
-      strArgs.add("NULL")
-    else:
-      strArgs.add(arg["value"].pretty)
-
-  return sqlite_impl.getColumns(self.pools[connI].conn, queryString, strArgs, self.timeout).await
 
 # ================================================================================
 # public exec
 # ================================================================================
 
-proc get*(self:SqliteQuery):Future[seq[JsonNode]] {.async.} =
-  let sql = self.selectBuilder()
-  self.log.logger(sql)
-  return self.getAllRows(sql, self.placeHolder).await
-
-
-proc first*(self:SqliteQuery):Future[Option[JsonNode]] {.async.} =
-  let sql = self.selectFirstBuilder()
-  self.log.logger(sql)
-  return self.getRow(sql, self.placeHolder).await
-
-
-proc find*(self:SqliteQuery, id: string, key="id"):Future[Option[JsonNode]] {.async.} =
-  self.placeHolder.add(%*{"key":key, "value":id})
-  let sql = self.selectFindBuilder(key)
-  self.log.logger(sql)
-  return self.getRow(sql, self.placeHolder).await
-
-
-proc find*(self:SqliteQuery, id:int, key="id"):Future[Option[JsonNode]]{.async.} =
-  return self.find($id, key).await
-
-
-proc insert*(self:SqliteQuery, items:JsonNode) {.async.} =
+proc insert*(self:PostgresQuery, items:JsonNode) {.async.} =
+  ## items is `JObject`
   let sql = self.insertValueBuilder(items)
   self.log.logger(sql)
   self.exec(sql, items).await
 
 
-proc update*(self:SqliteQuery, items:JsonNode) {.async.} =
-  let sql = self.updateBuilder(items)
-  self.log.logger(sql)
-  self.exec(sql, items).await
-
-
-proc delete*(self:SqliteQuery) {.async.} =
-  let sql = self.deleteBuilder()
-  self.log.logger(sql)
-  self.exec(sql).await
-
-
-proc delete*(self:SqliteQuery, id:int, key="id") {.async.} =
-  let sql = self.deleteByIdBuilder(id, key)
-  self.log.logger(sql)
-  self.exec(sql).await
-
-
-proc columns*(self:SqliteQuery):Future[seq[string]] {.async.} =
-  let sql = self.columnBuilder()
-  self.log.logger(sql)
-  return self.getColumns(sql, self.placeHolder).await
-
-
-proc exec*(self: RawSqliteQuery) {.async.} =
+proc exec*(self: RawPostgresQuery) {.async.} =
   ## It is only used with raw()
   self.log.logger(self.queryString)
   self.exec(self.queryString, self.placeHolder).await
-
-
-proc get*(self: RawSqliteQuery):Future[seq[JsonNode]] {.async.} =
-  ## It is only used with raw()
-  self.log.logger(self.queryString)
-  return self.getAllRows(self.queryString, self.placeHolder).await

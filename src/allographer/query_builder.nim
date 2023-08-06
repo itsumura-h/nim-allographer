@@ -13,6 +13,10 @@ import ./query_builder/error; export error
 # import ./query_builder/surreal/query/grammar as surreal_grammar; export surreal_grammar
 # import ./query_builder/prepared; export prepared
 
-import ./query_builder/models/sqlite/sqlite_connections; export sqlite_connections
 import ./query_builder/models/sqlite/sqlite_types; export sqlite_types
+import ./query_builder/models/sqlite/sqlite_connections; export sqlite_connections
 import ./query_builder/models/sqlite/sqlite_query; export sqlite_query
+
+import ./query_builder/models/postgres/postgres_types; export postgres_types
+import ./query_builder/models/postgres/postgres_connections; export postgres_connections
+import ./query_builder/models/postgres/postgres_query; export postgres_query
