@@ -276,10 +276,10 @@ proc insertValueSql*(self: PostgresQuery, items: JsonNode): PostgresQuery =
 
   var i = 0
   for key, val in items.pairs:
+    defer: i += 1
     if i > 0:
       columns.add(", ")
       values.add(", ")
-    i += 1
     # If column name contains Upper letter, column name is covered by double quote
     columns.add(&"\"{key}\"")
 
@@ -338,7 +338,7 @@ proc updateValuesSql*(self: PostgresQuery, items:JsonNode): PostgresQuery =
  
   var i = 0
   for key, val in items.pairs:
-    defer: i.inc()
+    defer: i += 1
     if i > 0: value.add(",")
     value.add(&" \"{key}\" = ?")
     placeHolder.add(%*{"key":key, "value":val})

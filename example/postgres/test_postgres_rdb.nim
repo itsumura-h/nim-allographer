@@ -170,12 +170,12 @@ proc newDbParam(args: varargs[DbValue]): DbParam =
       # result.types[i] = args[i].o.oid
     of dvkNull:
       # result.values[i] = nil
-      values[i] = "nil"
+      values[i] = "NULL"
       result.formats[i] = 0
 
   result.values = allocCStringArray(values)
   for i, row in values:
-    if row == "nil":
+    if row == "NULL":
       result.values[i] = nil
 
 

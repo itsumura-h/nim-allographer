@@ -1,4 +1,6 @@
 import std/strutils
+import std/strformat
+import std/json
 import ../../error
 import ../../models/database_types
 import ./postgres_rdb
@@ -212,3 +214,169 @@ proc dbFormat*(formatstr: string, args: varargs[string]): string =
         inc(a)
       else:
         add(result, c)
+
+
+proc questionToDaller*(s:string):string =
+  ## from `UPDATE user SET name = ?, email = ? WHERE id = ?`
+  ## 
+  ## to   `UPDATE user SET name = $1, email = $2 WHERE id = $3`
+  var i = 1
+  for c in s:
+    if c == '?':
+      result.add(&"${i}")
+      i += 1
+    else:
+      result.add(c)
+
+
+type PGParams* = object
+  nParams*: int32
+  values*: cstringArray
+  lengths*: seq[int32]
+  formats*: seq[int32] # 0:text,1:binary
+
+
+proc fromObjArray*(_:type PGParams, args: JsonNode, columns:seq[Row]):PGParams =
+  if args.len == 0:
+    return
+  result.nParams = args.len.int32
+
+  var values = newSeq[string](args.len)
+  result.formats = newSeq[int32](args.len)
+  result.lengths = newSeq[int32](args.len)
+
+  var i = 0
+  for arg in args.items:
+    defer: i.inc()
+    case arg["value"].kind
+    of JBool:
+      values[i] = if arg["value"].getBool: "t" else: "f"
+      result.lengths[i] = 0
+      result.formats[i] = 0
+    of JInt:
+      values[i] = $arg["value"].getInt
+      result.lengths[i] = 0
+      result.formats[i] = 0
+    of JFloat:
+      values[i] = $arg["value"].getFloat
+      result.lengths[i] = 0
+      result.formats[i] = 0
+    of JNull:
+      values[i] = "NULL"
+      result.lengths[i] = 0
+      result.formats[i] = 0
+    of JObject, JArray:
+      values[i] = arg["value"].pretty
+      result.lengths[i] = 0
+      result.formats[i] = 0
+    of JString:
+      for column in columns:
+        let columnName = column[0]
+        let columnTyp = column[1]
+
+        if columnName == arg["key"].getStr:
+          defer: break
+          let value = arg["value"].getStr
+          values[i] = value
+          result.lengths[i] = value.len.int32
+          if columnTyp == "bytea":
+            result.formats[i] = 1
+          else:
+            result.formats[i] = 0
+
+  result.values = allocCStringArray(values)
+  for i, row in values:
+    if row == "NULL":
+      result.values[i] = nil
+
+
+proc fromObjArray*(_:type PGParams, args: JsonNode):PGParams =
+  ## `args` is JArray `[{"key": "bool", "value": true},{"key": "int", "value": 1}]`
+  if args.len == 0:
+    return
+  result.nParams = args.len.int32
+
+  var values = newSeq[string](args.len)
+  result.formats = newSeq[int32](args.len)
+  result.lengths = newSeq[int32](args.len)
+
+  var i = 0
+  for arg in args.items:
+    defer: i.inc()
+    case arg["value"].kind
+    of JBool:
+      values[i] = if arg["value"].getBool: "t" else: "f"
+      result.lengths[i] = 0
+      result.formats[i] = 0
+    of JInt:
+      values[i] = $arg["value"].getInt
+      result.lengths[i] = 0
+      result.formats[i] = 0
+    of JFloat:
+      values[i] = $arg["value"].getFloat
+      result.lengths[i] = 0
+      result.formats[i] = 0
+    of JNull:
+      values[i] = "NULL"
+      result.lengths[i] = 0
+      result.formats[i] = 0
+    of JObject, JArray:
+      values[i] = arg["value"].pretty
+      result.lengths[i] = 0
+      result.formats[i] = 0
+    of JString:
+      let value = arg["value"].getStr
+      values[i] = value
+      result.lengths[i] = value.len.int32
+      result.formats[i] = 0
+
+  result.values = allocCStringArray(values)
+  for i, row in values:
+    if row == "NULL":
+      result.values[i] = nil
+
+
+proc fromArray*(_:type PGParams, args: JsonNode):PGParams =
+  ## `args` is JArray `{true, 1, 1.1, "alice"}`
+  if args.len == 0:
+    return
+  result.nParams = args.len.int32
+
+  var values = newSeq[string](args.len)
+  result.formats = newSeq[int32](args.len)
+  result.lengths = newSeq[int32](args.len)
+
+  var i = 0
+  for arg in args.items:
+    defer: i.inc()
+    case arg.kind
+    of JBool:
+      values[i] = if arg.getBool: "t" else: "f"
+      result.lengths[i] = 0
+      result.formats[i] = 0
+    of JInt:
+      values[i] = $arg.getInt
+      result.lengths[i] = 0
+      result.formats[i] = 0
+    of JFloat:
+      values[i] = $arg.getFloat
+      result.lengths[i] = 0
+      result.formats[i] = 0
+    of JNull:
+      values[i] = "NULL"
+      result.lengths[i] = 0
+      result.formats[i] = 0
+    of JObject, JArray:
+      values[i] = arg.pretty
+      result.lengths[i] = 0
+      result.formats[i] = 0
+    of JString:
+      let value = arg.getStr
+      values[i] = value
+      result.lengths[i] = value.len.int32
+      result.formats[i] = 0
+
+  result.values = allocCStringArray(values)
+  for i, row in values:
+    if row == "NULL":
+      result.values[i] = nil

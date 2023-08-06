@@ -41,7 +41,7 @@ proc main() {.async.} =
   #   ])
   # )
 
-  await rdb.table("test").insert(%*{
+  let id = await rdb.table("test").insertId(%*{
     "blob": binaryImage,
     "bool": true,
     "int": 1,
@@ -51,33 +51,33 @@ proc main() {.async.} =
     "null": nil
   })
   # echo rdb.table("test").get().await
-  # echo rdb.select("id", "str").table("test").get().await
+  echo rdb.select("bool", "int", "float", "str", "json", "null").table("test").get().await
 
-  # await rdb.table("test").where("id", "=", 1).update(%*{
-  #   "blob": binaryImage,
-  #   "bool": false,
-  #   "int": 2,
-  #   "float": 2.1,
-  #   "json": {"name":"bob", "email":"bob@example.com"},
-  #   "str": "bob",
-  # })
-  # echo rdb.table("test").get().await
+  await rdb.table("test").where("id", "=", id).update(%*{
+    "blob": binaryImage,
+    "bool": false,
+    "int": 2,
+    "float": 2.1,
+    "json": {"name":"bob", "email":"bob@example.com"},
+    "str": "bob",
+  })
+  echo rdb.select("bool", "int", "float", "str", "json", "null").table("test").get().await
 
-  # await rdb.raw(
-  #   """
-  #     UPDATE "test"
-  #     SET
-  #       `bool` = ?,
-  #       `int` = ?,
-  #       `float` = ?,
-  #       `json` = ?,
-  #       `str` = ?,
-  #       `null` = ?
-  #     WHERE `id` = ?
-  #   """,
-  #   %*[true, 3, 3.3, {"name":"charlie", "email":"charlie@example.com"}, "charlie", nil, 1]
-  # ).exec()
-  # echo rdb.raw("SELECT * FROM \"test\"").get().await
+  await rdb.raw(
+    """
+      UPDATE "test"
+      SET
+        "bool" = $1,
+        "int" = $2,
+        "float" = $3,
+        "json" = $4,
+        "str" = $5,
+        "null" = $6
+      WHERE "id" = $7
+    """,
+    %*[true, 3, 3.3, {"name":"charlie", "email":"charlie@example.com"}, "charlie", nil, 1]
+  ).exec()
+  echo rdb.raw("SELECT bool, int, float, json, str, \"null\" FROM \"test\"").get().await
 
 
 main().waitFor()
