@@ -19,7 +19,7 @@ proc dbOpen*(driver:type SQLite3, database="", user="", password="",
 
 
 proc dbOpen*(driver:type PostgreSQL, database="", user="", password="",
-            host="", port:int32=0, maxConnections=1, timeout=30,
+            host="", port=0, maxConnections=1, timeout=30,
             shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""):PostgresConnections =
-  result = postgresOpen(database, user, password, host, port, maxConnections, timeout)
+  result = postgresOpen(database, user, password, host, port.int32, maxConnections, timeout)
   result.log = LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)

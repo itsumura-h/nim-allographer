@@ -11,7 +11,7 @@ import ./sub/create_column_query
 import ../schema_utils
 
 
-proc createTable*(self: PostgresQuery, isReset:bool) =
+proc createTable*(self: PostgresSchema, isReset:bool) =
   var queries:seq[string] = @[]
   var query = ""
   var foreignQuery = ""

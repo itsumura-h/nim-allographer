@@ -7,7 +7,7 @@ import ./postgres_query_type
 import ./sub/add_column_query
 
 
-proc addColumn*(self:PostgresQuery, isReset:bool) =
+proc addColumn*(self:PostgresSchema, isReset:bool) =
   let queries = addColumnString(self.table, self.column)
   
   let schema = $self.column.toSchema()

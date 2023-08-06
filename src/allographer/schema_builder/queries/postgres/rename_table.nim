@@ -6,7 +6,7 @@ import ./postgres_query_type
 import ../schema_utils
 
 
-proc renameTable*(self:PostgresQuery, isReset:bool) =
+proc renameTable*(self:PostgresSchema, isReset:bool) =
   let query = &"ALTER TABLE \"{self.table.previousName}\" RENAME TO \"{self.table.name}\""
   let schema = $self.table.toSchema()
   let checksum = $schema.secureHash()

@@ -11,7 +11,7 @@ import ./rename_table
 import ./drop_table
 
 
-proc toInterface*(self:PostgresQuery):ISchema =
+proc toInterface*(self:PostgresSchema):ISchema =
   return (
     createMigrationTable:proc() = self.createMigrationTable(),
     createTable:proc(isReset:bool) = self.createTable(isReset),

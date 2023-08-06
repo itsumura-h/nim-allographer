@@ -442,6 +442,38 @@ proc toJson(results:openArray[seq[string]], dbRows:DbRows):seq[JsonNode] =
 # private exec
 # ================================================================================
 
+proc getColumn(self:PostgresQuery, queryString:string):Future[seq[string]] {.async.} =
+  var connI = self.transactionConn
+  if not self.isInTransaction:
+    connI = getFreeConn(self).await
+  defer:
+    if not self.isInTransaction:
+      self.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  var strArgs:seq[string]
+  for arg in self.placeHolder.items:
+    case arg["value"].kind
+    of JBool:
+      if arg["value"].getBool:
+        strArgs.add("1")
+      else:
+        strArgs.add("0")
+    of JInt:
+      strArgs.add($arg["value"].getInt)
+    of JFloat:
+      strArgs.add($arg["value"].getFloat)
+    of JString:
+      strArgs.add($arg["value"].getStr)
+    of JNull:
+      strArgs.add("NULL")
+    else:
+      strArgs.add(arg["value"].pretty)
+
+  return postgres_impl.getColumns(self.pools[connI].conn, queryString, strArgs, self.timeout).await
+
+
 proc getAllRows(self:PostgresQuery, queryString:string):Future[seq[JsonNode]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
@@ -559,6 +591,19 @@ proc exec(self:RawPostgresQuery, queryString:string) {.async.} =
 # public exec
 # ================================================================================
 
+proc columns*(self:PostgresQuery):Future[seq[string]] {.async.} =
+  ## get columns sequence from table
+  var sql = self.columnBuilder()
+  sql = questionToDaller(sql)
+  try:
+    self.log.logger(sql)
+    return self.getColumn(sql).await
+  except Exception:
+    self.log.echoErrorMsg(sql)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    raise getCurrentException()
+
+
 proc get*(self: PostgresQuery):Future[seq[JsonNode]] {.async.} =
   var sql = self.selectBuilder()
   sql = questionToDaller(sql)
@@ -569,6 +614,35 @@ proc get*(self: PostgresQuery):Future[seq[JsonNode]] {.async.} =
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
+
+
+proc first*(self: PostgresQuery):Future[Option[JsonNode]] {.async.} =
+  var sql = self.selectFirstBuilder()
+  sql = questionToDaller(sql)
+  try:
+    self.log.logger(sql)
+    return self.getRow(sql).await
+  except Exception:
+    self.log.echoErrorMsg(sql)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    raise getCurrentException()
+
+
+proc find*(self: PostgresQuery, id:string, key="id"):Future[Option[JsonNode]] {.async.} =
+  self.placeHolder.add(%*{"key":key, "value": id})
+  var sql = self.selectFindBuilder(key)
+  sql = questionToDaller(sql)
+  try:
+    self.log.logger(sql)
+    return self.getRow(sql).await
+  except Exception:
+    self.log.echoErrorMsg(sql)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    raise getCurrentException()
+
+
+proc find*(self: PostgresQuery, id:int, key="id"):Future[Option[JsonNode]] {.async.} =
+  return self.find($id, key).await
 
 
 proc insert*(self:PostgresQuery, items:JsonNode) {.async.} =
@@ -587,9 +661,49 @@ proc insertId*(self:PostgresQuery, items:JsonNode, key="id"):Future[int] {.async
   return self.insertId(sql, key).await
 
 
+proc insert*(self: PostgresQuery, items: seq[JsonNode]){.async.} =
+  var sql = self.insertValuesBuilder(items)
+  sql = questionToDaller(sql)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc inserts*(self: PostgresQuery, items: seq[JsonNode]){.async.} =
+  for row in items:
+    var sql = self.insertValueBuilder(row)
+    sql = questionToDaller(sql)
+    self.log.logger(sql)
+    self.exec(sql).await
+    self.placeHolder = newJArray()
+
+
+proc insertsId*(self: PostgresQuery, items: seq[JsonNode], key="id"):Future[seq[int]]{.async.} =
+  var response = newSeq[int](items.len)
+  for i, row in items:
+    var sql = self.insertValueBuilder(row)
+    sql = questionToDaller(sql)
+    response[i] = self.insertId(sql, key).await
+    self.placeHolder = newJArray()
+  return response
+
+
 proc update*(self: PostgresQuery, items: JsonNode){.async.} =
   var sql = self.updateBuilder(items)
   sql = questionToDaller(sql)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc delete*(self: PostgresQuery){.async.} =
+  var sql = self.deleteBuilder()
+  sql = questionToDaller(sql)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc delete*(self: PostgresQuery, id: int, key="id"){.async.} =
+  self.placeHolder.add(%*{"key":key, "value":id})
+  let sql = self.deleteByIdBuilder(id, key)
   self.log.logger(sql)
   self.exec(sql).await
 

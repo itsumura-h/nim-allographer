@@ -7,7 +7,7 @@ import ./sub/create_column_query
 import ../schema_utils
 
 
-proc createMigrationTable*(self: PostgresQuery) =
+proc createMigrationTable*(self: PostgresSchema) =
   var queries:seq[string] = @[]
   var query = ""
   var foreignQuery = ""

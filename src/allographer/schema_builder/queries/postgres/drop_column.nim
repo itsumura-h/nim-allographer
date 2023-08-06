@@ -7,7 +7,7 @@ import ../schema_utils
 import ./postgres_query_type
 
 
-proc dropColumn*(self:PostgresQuery, isReset:bool) =
+proc dropColumn*(self:PostgresSchema, isReset:bool) =
   let query = &"ALTER TABLE \"{self.table.name}\" DROP COLUMN \"{self.column.name}\""
   let schema = $self.column.toSchema()
   let checksum = $schema.secureHash()

@@ -15,31 +15,31 @@ proc main() {.async.} =
   let binaryImage = imageStream.readAll()
 
   let rdb = dbOpen(PostgreSQL, "database", "user", "pass", "postgres", 5432, shouldDisplayLog=true)
-  await rdb.raw("DROP TABLE IF EXISTS \"test\"").exec()
-  await rdb.raw("""
-    CREATE TABLE "test" (
-      "id" BIGSERIAL NOT NULL PRIMARY KEY,
-      "bool" BOOLEAN,
-      "int" INTEGER,
-      "float" NUMERIC,
-      "str" VARCHAR(256),
-      "json" JSONB,
-      "null" VARCHAR(256),
-      "blob" BYTEA
-    )
-  """).exec()
-  # rdb.create(
-  #   table("test", [
-  #     Column.increments("id"),
-  #     Column.boolean("bool"),
-  #     Column.integer("int"),
-  #     Column.float("float"),
-  #     Column.string("str"),
-  #     Column.json("json"),
-  #     Column.string("null").nullable(),
-  #     Column.binary("blob"),
-  #   ])
-  # )
+  # await rdb.raw("DROP TABLE IF EXISTS \"test\"").exec()
+  # await rdb.raw("""
+  #   CREATE TABLE "test" (
+  #     "id" BIGSERIAL NOT NULL PRIMARY KEY,
+  #     "bool" BOOLEAN,
+  #     "int" INTEGER,
+  #     "float" NUMERIC,
+  #     "str" VARCHAR(256),
+  #     "json" JSONB,
+  #     "null" VARCHAR(256),
+  #     "blob" BYTEA
+  #   )
+  # """).exec()
+  rdb.create(
+    table("test", [
+      Column.increments("id"),
+      Column.boolean("bool"),
+      Column.integer("int"),
+      Column.float("float"),
+      Column.string("str"),
+      Column.json("json"),
+      Column.string("null").nullable(),
+      Column.binary("blob"),
+    ])
+  )
 
   let id = await rdb.table("test").insertId(%*{
     "blob": binaryImage,
