@@ -71,6 +71,7 @@ proc selectFindBuilder*(self: SqliteQuery, key: string): string =
 # ==================== INSERT ====================
 
 proc insertValueBuilder*(self: SqliteQuery, items: JsonNode): string =
+  ## items is JOject
   return self
     .insertSql()
     .insertValueSql(items)

@@ -708,6 +708,68 @@ proc delete*(self: PostgresQuery, id: int, key="id"){.async.} =
   self.exec(sql).await
 
 
+proc count*(self:PostgresQuery):Future[int] {.async.} =
+  let sql = self.countBuilder()
+  self.log.logger(sql)
+  let response =  self.getRow(sql).await
+  if response.isSome:
+    return response.get["aggregate"].getInt()
+  else:
+    return 0
+
+
+proc min*(self:PostgresQuery, column:string):Future[Option[string]] {.async.} =
+  let sql = self.minBuilder(column)
+  self.log.logger(sql)
+  let response =  self.getRow(sql).await
+  if response.isSome:
+    case response.get["aggregate"].kind
+    of JInt:
+      return some($(response.get["aggregate"].getInt))
+    of JFloat:
+      return some($(response.get["aggregate"].getFloat))
+    else:
+      return some(response.get["aggregate"].getStr)
+  else:
+    return none(string)
+
+
+proc max*(self:PostgresQuery, column:string):Future[Option[string]] {.async.} =
+  let sql = self.maxBuilder(column)
+  self.log.logger(sql)
+  let response =  self.getRow(sql).await
+  if response.isSome:
+    case response.get["aggregate"].kind
+    of JInt:
+      return some($(response.get["aggregate"].getInt))
+    of JFloat:
+      return some($(response.get["aggregate"].getFloat))
+    else:
+      return some(response.get["aggregate"].getStr)
+  else:
+    return none(string)
+
+
+proc avg*(self:PostgresQuery, column:string):Future[Option[float]]{.async.} =
+  let sql = self.avgBuilder(column)
+  self.log.logger(sql)
+  let response =  await self.getRow(sql)
+  if response.isSome:
+    return response.get["aggregate"].getStr().parseFloat.some
+  else:
+    return none(float)
+
+
+proc sum*(self:PostgresQuery, column:string):Future[Option[float]]{.async.} =
+  let sql = self.sumBuilder(column)
+  self.log.logger(sql)
+  let response = await self.getRow(sql)
+  if response.isSome:
+    return response.get["aggregate"].getStr.parseFloat.some
+  else:
+    return none(float)
+
+
 proc exec*(self: RawPostgresQuery) {.async.} =
   ## It is only used with raw()
   self.log.logger(self.queryString)
@@ -718,3 +780,17 @@ proc get*(self: RawPostgresQuery):Future[seq[JsonNode]] {.async.} =
   ## It is only used with raw()
   self.log.logger(self.queryString)
   return self.getAllRows(self.queryString).await
+
+
+template seeder*(rdb:PostgresConnections, tableName:string, body:untyped):untyped =
+  ## The `seeder` block allows the code in the block to work only when the table is empty.
+  block:
+    if rdb.table(tableName).count().waitFor == 0:
+      body
+
+
+template seeder*(rdb:PostgresConnections, tableName, column:string, body:untyped):untyped =
+  ## The `seeder` block allows the code in the block to work only when the table or specified column is empty.
+  block:
+    if rdb.table(tableName).select(column).count().waitFor == 0:
+      body

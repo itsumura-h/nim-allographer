@@ -19,7 +19,12 @@ proc selectSql*(self: PostgresQuery): PostgresQuery =
     for i, item in self.query["select"].getElems():
       if i > 0: queryString.add(",")
       let column = item.getStr()
-      queryString.add(&" \"{column}\"")
+      if column.contains("as"):
+        let original = column.split("as")[0].strip()
+        let renamed = column.split("as")[1].strip()
+        queryString.add(&" \"{original}\" as \"{renamed}\"")
+      else:
+        queryString.add(&" \"{column}\"")
   else:
     queryString.add(" *")
 

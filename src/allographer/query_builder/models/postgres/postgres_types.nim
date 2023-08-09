@@ -17,6 +17,12 @@ type PostgresConnections* = object
   log*: LogSetting
   pools*:seq[PostgresConnection]
   timeout*:int
+  # for transaction
+  isInTransaction*: bool
+  transactionConn*: int
+
+proc `$`*(self:PostgresConnections):string =
+  return "PostgreSQL"
 
 
 ## created by `rdb.select("columnName")` or `rdb.table("tableName")`
