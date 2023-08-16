@@ -5,6 +5,17 @@ import std/strutils
 import ../sqlite_types
 
 
+proc quote(input:string):string =
+  ## `User.id as userId` => `"User"."id" as "userId"`
+  var tmp = newSeq[string]()
+  for row in input.split("."):
+    if row.contains(" as "):
+      let c = row.split(" as ")
+      tmp.add(&"\"{c[0]}\" as \"{c[1]}\"")
+    else:
+      tmp.add(&"\"{row}\"")
+  return tmp.join(".")
+
 # ==================== SELECT ====================
 
 proc selectSql*(self: SqliteQuery): SqliteQuery =
@@ -18,13 +29,15 @@ proc selectSql*(self: SqliteQuery): SqliteQuery =
   if self.query.hasKey("select"):
     for i, item in self.query["select"].getElems():
       if i > 0: queryString.add(",")
-      let column = item.getStr()
-      if column.contains("as"):
-        let original = column.split("as")[0].strip()
-        let renamed = column.split("as")[1].strip()
-        queryString.add(&" `{original}` as `{renamed}`")
-      else:
-        queryString.add(&" `{column}`")
+      var column = item.getStr()
+      # if column.contains("as"):
+      #   let original = column.split("as")[0].strip()
+      #   let renamed = column.split("as")[1].strip()
+      #   queryString.add(&" \"{original}\" as \"{renamed}\"")
+      # else:
+      #   queryString.add(&" {column}")
+      column = quote(column)
+      queryString.add(&" {column}")
   else:
     queryString.add(" *")
 
@@ -34,7 +47,7 @@ proc selectSql*(self: SqliteQuery): SqliteQuery =
 
 proc fromSql*(self: SqliteQuery): SqliteQuery =
   let table = self.query["table"].getStr()
-  self.queryString.add(&" FROM `{table}`")
+  self.queryString.add(&" FROM \"{table}\"")
   return self
 
 
@@ -45,117 +58,117 @@ proc selectFirstSql*(self: SqliteQuery): SqliteQuery =
 
 proc selectByIdSql*(self: SqliteQuery, key:string): SqliteQuery =
   if self.queryString.contains("WHERE"):
-    self.queryString.add(&" AND `{key}` = ? LIMIT 1")
+    self.queryString.add(&" AND \"{key}\" = ? LIMIT 1")
   else:
-    self.queryString.add(&" WHERE `{key}` = ? LIMIT 1")
+    self.queryString.add(&" WHERE \"{key}\" = ? LIMIT 1")
   return self
 
 
 proc joinSql*(self: SqliteQuery): SqliteQuery =
   if self.query.hasKey("join"):
     for row in self.query["join"]:
-      let table = row["table"].getStr()
-      let column1 = row["column1"].getStr()
+      let table = row["table"].getStr().quote()
+      let column1 = row["column1"].getStr().quote()
       let symbol = row["symbol"].getStr()
-      let column2 = row["column2"].getStr()
+      let column2 = row["column2"].getStr().quote()
 
-      self.queryString.add(&" INNER JOIN `{table}` ON `{column1}` {symbol} `{column2}`")
+      self.queryString.add(&" INNER JOIN {table} ON {column1} {symbol} {column2}")
   return self
 
 
 proc leftJoinSql*(self: SqliteQuery): SqliteQuery =
   if self.query.hasKey("left_join"):
     for row in self.query["left_join"]:
-      let table = row["table"].getStr()
-      let column1 = row["column1"].getStr()
+      let table = row["table"].getStr().quote()
+      let column1 = row["column1"].getStr().quote()
       let symbol = row["symbol"].getStr()
-      let column2 = row["column2"].getStr()
+      let column2 = row["column2"].getStr().quote()
 
-      self.queryString.add(&" LEFT JOIN `{table}` ON `{column1}` {symbol} `{column2}`")
+      self.queryString.add(&" LEFT JOIN {table} ON {column1} {symbol} {column2}")
   return self
 
 
 proc whereSql*(self: SqliteQuery): SqliteQuery =
   if self.query.hasKey("where"):
     for i, row in self.query["where"].getElems():
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       let symbol = row["symbol"].getStr()
       let value = row["value"].getStr()
 
       if i == 0:
-        self.queryString.add(&" WHERE `{column}` {symbol} {value}")
+        self.queryString.add(&" WHERE {column} {symbol} {value}")
       else:
-        self.queryString.add(&" AND `{column}` {symbol} {value}")
+        self.queryString.add(&" AND {column} {symbol} {value}")
   return self
 
 
 proc orWhereSql*(self: SqliteQuery): SqliteQuery =
   if self.query.hasKey("or_where"):
     for row in self.query["or_where"]:
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       let symbol = row["symbol"].getStr()
       let value = row["value"].getStr()
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" OR `{column}` {symbol} {value}")
+        self.queryString.add(&" OR {column} {symbol} {value}")
       else:
-        self.queryString.add(&" WHERE `{column}` {symbol} {value}")
+        self.queryString.add(&" WHERE {column} {symbol} {value}")
   return self
 
 
 proc whereBetweenSql*(self: SqliteQuery): SqliteQuery =
   if self.query.hasKey("where_between"):
     for row in self.query["where_between"]:
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       let start = row["width"][0].getFloat()
       let stop = row["width"][1].getFloat()
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND `{column}` BETWEEN {start} AND {stop}")
+        self.queryString.add(&" AND {column} BETWEEN {start} AND {stop}")
       else:
-        self.queryString.add(&" WHERE `{column}` BETWEEN {start} AND {stop}")
+        self.queryString.add(&" WHERE {column} BETWEEN {start} AND {stop}")
   return self
 
 
 proc whereBetweenStringSql*(self: SqliteQuery): SqliteQuery =
   if self.query.hasKey("where_between_string"):
     for row in self.query["where_between_string"]:
-      let column = row["column"].getStr()
-      let start = row["width"][0].getStr
-      let stop = row["width"][1].getStr
+      let column = row["column"].getStr().quote()
+      let start = row["width"][0].getStr()
+      let stop = row["width"][1].getStr()
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND `{column}` BETWEEN `{start}` AND `{stop}`")
+        self.queryString.add(&" AND {column} BETWEEN \"{start}\" AND \"{stop}\"")
       else:
-        self.queryString.add(&" WHERE `{column}` BETWEEN `{start}` AND `{stop}`")
+        self.queryString.add(&" WHERE {column} BETWEEN \"{start}\" AND \"{stop}\"")
   return self
 
 
 proc whereNotBetweenSql*(self: SqliteQuery): SqliteQuery =
   if self.query.hasKey("where_not_between"):
     for row in self.query["where_not_between"]:
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       let start = row["width"][0].getFloat()
       let stop = row["width"][1].getFloat()
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND `{column}` NOT BETWEEN {start} AND {stop}")
+        self.queryString.add(&" AND {column} NOT BETWEEN {start} AND {stop}")
       else:
-        self.queryString.add(&" WHERE `{column}` NOT BETWEEN {start} AND {stop}")
+        self.queryString.add(&" WHERE {column} NOT BETWEEN {start} AND {stop}")
   return self
 
 
 proc whereNotBetweenStringSql*(self: SqliteQuery): SqliteQuery =
   if self.query.hasKey("where_not_between_string"):
     for row in self.query["where_not_between_string"]:
-      let column = row["column"].getStr()
-      let start = row["width"][0].getStr
-      let stop = row["width"][1].getStr
+      let column = row["column"].getStr().quote()
+      let start = row["width"][0].getStr()
+      let stop = row["width"][1].getStr()
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND `{column}` NOT BETWEEN `{start}` AND `{stop}`")
+        self.queryString.add(&" AND {column} NOT BETWEEN \"{start}\" AND \"{stop}\"")
       else:
-        self.queryString.add(&" WHERE `{column}` NOT BETWEEN `{start}` AND `{stop}`")
+        self.queryString.add(&" WHERE {column} NOT BETWEEN \"{start}\" AND \"{stop}\"")
   return self
 
 
@@ -163,7 +176,7 @@ proc whereInSql*(self: SqliteQuery): SqliteQuery =
   if self.query.hasKey("where_in"):
     var widthString = ""
     for row in self.query["where_in"]:
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       for i, val in row["width"].getElems():
         if i > 0: widthString.add(", ")
         if val.kind == JInt:
@@ -171,12 +184,12 @@ proc whereInSql*(self: SqliteQuery): SqliteQuery =
         elif val.kind == JFloat:
           widthString.add($(val.getFloat()))
         elif val.kind == JString:
-          widthString.add(&"`{val.getStr()}`")
+          widthString.add(&"\"{val.getStr()}\"")
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND `{column}` IN ({widthString})")
+        self.queryString.add(&" AND {column} IN ({widthString})")
       else:
-        self.queryString.add(&" WHERE `{column}` IN ({widthString})")
+        self.queryString.add(&" WHERE {column} IN ({widthString})")
   return self
 
 
@@ -184,7 +197,7 @@ proc whereNotInSql*(self: SqliteQuery): SqliteQuery =
   if self.query.hasKey("where_not_in"):
     var widthString = ""
     for row in self.query["where_not_in"]:
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       for i, val in row["width"].getElems():
         if i > 0: widthString.add(", ")
         if val.kind == JInt:
@@ -192,48 +205,48 @@ proc whereNotInSql*(self: SqliteQuery): SqliteQuery =
         elif val.kind == JFloat:
           widthString.add($(val.getFloat()))
         elif val.kind == JString:
-          widthString.add(&"`{val.getStr()}`")
+          widthString.add(&"\"{val.getStr()}\"")
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND `{column}` NOT IN ({widthString})")
+        self.queryString.add(&" AND {column} NOT IN ({widthString})")
       else:
-        self.queryString.add(&" WHERE `{column}` NOT IN ({widthString})")
+        self.queryString.add(&" WHERE {column} NOT IN ({widthString})")
   return self
 
 
 proc whereNullSql*(self: SqliteQuery): SqliteQuery =
   if self.query.hasKey("where_null"):
     for row in self.query["where_null"]:
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND `{column}` is null")
+        self.queryString.add(&" AND {column} is null")
       else:
-        self.queryString.add(&" WHERE `{column}` is null")
+        self.queryString.add(&" WHERE {column} is null")
   return self
 
 
 proc groupBySql*(self: SqliteQuery): SqliteQuery =
   if self.query.hasKey("group_by"):
     for row in self.query["group_by"]:
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       if self.queryString.contains("GROUP BY"):
-        self.queryString.add(&", `{column}`")
+        self.queryString.add(&", {column}")
       else:
-        self.queryString.add(&" GROUP BY `{column}`")
+        self.queryString.add(&" GROUP BY {column}")
   return self
 
 
 proc havingSql*(self: SqliteQuery): SqliteQuery =
   if self.query.hasKey("having"):
     for i, row in self.query["having"].getElems():
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       let symbol = row["symbol"].getStr()
       let value = row["value"].getStr()
 
       if i == 0:
-        self.queryString.add(&" HAVING `{column}` {symbol} {value}")
+        self.queryString.add(&" HAVING {column} {symbol} {value}")
       else:
-        self.queryString.add(&" AND `{column}` {symbol} {value}")
+        self.queryString.add(&" AND {column} {symbol} {value}")
 
   return self
 
@@ -241,13 +254,13 @@ proc havingSql*(self: SqliteQuery): SqliteQuery =
 proc orderBySql*(self: SqliteQuery): SqliteQuery =
   if self.query.hasKey("order_by"):
     for row in self.query["order_by"]:
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       let order = row["order"].getStr()
 
       if self.queryString.contains("ORDER BY"):
-        self.queryString.add(&", `{column}` {order}")
+        self.queryString.add(&", {column} {order}")
       else:
-        self.queryString.add(&" ORDER BY `{column}` {order}")
+        self.queryString.add(&" ORDER BY {column} {order}")
   return self
 
 
@@ -271,25 +284,23 @@ proc offsetSql*(self: SqliteQuery): SqliteQuery =
 
 proc insertSql*(self: SqliteQuery): SqliteQuery =
   let table = self.query["table"].getStr()
-  self.queryString = &"INSERT INTO `{table}`"
+  self.queryString = &"INSERT INTO \"{table}\""
   return self
 
 
 proc insertValueSql*(self: SqliteQuery, items: JsonNode): SqliteQuery =
   ## items is JObject
-  echo "=== insertValueSql"
   var columns = ""
   var values = ""
 
   var i = 0
-  echo items.kind
   for key, val in items.pairs:
     if i > 0:
       columns.add(", ")
       values.add(", ")
     i += 1
     # If column name contains Upper letter, column name is covered by double quote
-    columns.add(&"`{key}`")
+    columns.add(&"\"{key}\"")
 
     self.placeHolder.add(%*{"key":key, "value":val})
     values.add("?")
@@ -335,7 +346,7 @@ proc updateSql*(self: SqliteQuery): SqliteQuery =
   queryString.add("UPDATE")
 
   var table = self.query["table"].getStr()
-  queryString.add(&" `{table}` SET")
+  queryString.add(&" \"{table}\" SET")
   self.queryString = queryString
   return self
 
@@ -348,7 +359,7 @@ proc updateValuesSql*(self: SqliteQuery, items:JsonNode): SqliteQuery =
   for key, val in items.pairs:
     defer: i.inc()
     if i > 0: value.add(",")
-    value.add(&" `{key}` = ?")
+    value.add(&" \"{key}\" = ?")
     placeHolder.add(%*{"key":key, "value":val})
 
   for row in self.placeHolder.items:
@@ -368,7 +379,7 @@ proc deleteSql*(self: SqliteQuery): SqliteQuery =
 
 
 proc deleteByIdSql*(self: SqliteQuery, id: int, key: string): SqliteQuery =
-  self.queryString.add(&" WHERE `{key}` = ?")
+  self.queryString.add(&" WHERE \"{key}\" = ?")
   return self
 
 # ==================== Aggregates ====================
@@ -377,7 +388,7 @@ proc selectCountSql*(self: SqliteQuery): SqliteQuery =
   let queryString =
     if self.query.hasKey("select"):
       let column = self.query["select"][0].getStr
-      &"`{column}`"
+      &"{column}"
     else:
       "*"
   self.queryString = &"SELECT count({queryString}) as aggregate"
@@ -385,20 +396,20 @@ proc selectCountSql*(self: SqliteQuery): SqliteQuery =
 
 
 proc selectMaxSql*(self: SqliteQuery, column:string): SqliteQuery =
-  self.queryString = &"SELECT max(`{column}`) as aggregate"
+  self.queryString = &"SELECT max({column}) as aggregate"
   return self
 
 
 proc selectMinSql*(self: SqliteQuery, column:string): SqliteQuery =
-  self.queryString = &"SELECT min(`{column}`) as aggregate"
+  self.queryString = &"SELECT min({column}) as aggregate"
   return self
 
 
 proc selectAvgSql*(self: SqliteQuery, column:string): SqliteQuery =
-  self.queryString = &"SELECT avg(`{column}`) as aggregate"
+  self.queryString = &"SELECT avg({column}) as aggregate"
   return self
 
 
 proc selectSumSql*(self: SqliteQuery, column:string): SqliteQuery =
-  self.queryString = &"SELECT sum(`{column}`) as aggregate"
+  self.queryString = &"SELECT sum({column}) as aggregate"
   return self
