@@ -74,6 +74,7 @@ proc where*(self: PostgresQuery, column: string, symbol: string,
     )
 
   self.placeHolder.add(%*{"key": column, "value": value})
+  # self.placeHolder.add(%value)
 
   if self.query.hasKey("where") == false:
     self.query["where"] = %*[{
@@ -442,38 +443,6 @@ proc toJson(results:openArray[seq[string]], dbRows:DbRows):seq[JsonNode] =
 # private exec
 # ================================================================================
 
-proc getColumn(self:PostgresQuery, queryString:string):Future[seq[string]] {.async.} =
-  var connI = self.transactionConn
-  if not self.isInTransaction:
-    connI = getFreeConn(self).await
-  defer:
-    if not self.isInTransaction:
-      self.returnConn(connI).await
-  if connI == errorConnectionNum:
-    return
-
-  var strArgs:seq[string]
-  for arg in self.placeHolder.items:
-    case arg["value"].kind
-    of JBool:
-      if arg["value"].getBool:
-        strArgs.add("1")
-      else:
-        strArgs.add("0")
-    of JInt:
-      strArgs.add($arg["value"].getInt)
-    of JFloat:
-      strArgs.add($arg["value"].getFloat)
-    of JString:
-      strArgs.add($arg["value"].getStr)
-    of JNull:
-      strArgs.add("NULL")
-    else:
-      strArgs.add(arg["value"].pretty)
-
-  return postgres_impl.getColumns(self.pools[connI].conn, queryString, strArgs, self.timeout).await
-
-
 proc getAllRows(self:PostgresQuery, queryString:string):Future[seq[JsonNode]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
@@ -497,6 +466,26 @@ proc getAllRows(self:PostgresQuery, queryString:string):Future[seq[JsonNode]] {.
   return toJson(rows, dbRows) # seq[JsonNode]
 
 
+proc getAllRowsPlain(self:PostgresQuery, queryString:string, args:JsonNode):Future[seq[seq[string]]] {.async.} =
+  var connI = self.transactionConn
+  if not self.isInTransaction:
+    connI = getFreeConn(self).await
+  defer:
+    if not self.isInTransaction:
+      self.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  let (rows, _) = postgres_impl.query(
+    self.pools[connI].conn,
+    queryString,
+    self.placeHolder,
+    self.timeout
+  ).await
+  
+  return rows
+
+
 proc getRow(self:PostgresQuery, queryString:string):Future[Option[JsonNode]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
@@ -518,6 +507,110 @@ proc getRow(self:PostgresQuery, queryString:string):Future[Option[JsonNode]] {.a
     self.log.echoErrorMsg(queryString)
     return none(JsonNode)
   return toJson(rows, dbRows)[0].some # seq[JsonNode]
+
+
+proc getRowPlain(self:PostgresQuery, queryString:string, args:JsonNode):Future[seq[string]] {.async.} =
+  var connI = self.transactionConn
+  if not self.isInTransaction:
+    connI = getFreeConn(self).await
+  defer:
+    if not self.isInTransaction:
+      self.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+  
+  let (rows, _) = postgres_impl.query(
+    self.pools[connI].conn,
+    queryString,
+    self.placeHolder,
+    self.timeout
+  ).await
+  return rows[0]
+
+
+proc getAllRows(self:RawPostgresQuery, queryString:string):Future[seq[JsonNode]] {.async.} =
+  var connI = self.transactionConn
+  if not self.isInTransaction:
+    connI = getFreeConn(self).await
+  defer:
+    if not self.isInTransaction:
+      self.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  let (rows, dbRows) = postgres_impl.query(
+    self.pools[connI].conn,
+    queryString,
+    self.placeHolder,
+    self.timeout
+  ).await
+
+  if rows.len == 0:
+    self.log.echoErrorMsg(queryString)
+    return newSeq[JsonNode](0)
+  return toJson(rows, dbRows) # seq[JsonNode]
+
+
+proc getAllRowsPlain(self:RawPostgresQuery, queryString:string, args:JsonNode):Future[seq[seq[string]]] {.async.} =
+  var connI = self.transactionConn
+  if not self.isInTransaction:
+    connI = getFreeConn(self).await
+  defer:
+    if not self.isInTransaction:
+      self.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  let (rows, _) = postgres_impl.query(
+    self.pools[connI].conn,
+    queryString,
+    self.placeHolder,
+    self.timeout
+  ).await
+  
+  return rows
+
+
+proc getRow(self:RawPostgresQuery, queryString:string):Future[Option[JsonNode]] {.async.} =
+  var connI = self.transactionConn
+  if not self.isInTransaction:
+    connI = getFreeConn(self).await
+  defer:
+    if not self.isInTransaction:
+      self.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  let (rows, dbRows) = postgres_impl.query(
+    self.pools[connI].conn,
+    queryString,
+    self.placeHolder,
+    self.timeout
+  ).await
+
+  if rows.len == 0:
+    self.log.echoErrorMsg(queryString)
+    return none(JsonNode)
+  return toJson(rows, dbRows)[0].some # seq[JsonNode]
+
+
+proc getRowPlain(self:RawPostgresQuery, queryString:string, args:JsonNode):Future[seq[string]] {.async.} =
+  var connI = self.transactionConn
+  if not self.isInTransaction:
+    connI = getFreeConn(self).await
+  defer:
+    if not self.isInTransaction:
+      self.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+  
+  let (rows, _) = postgres_impl.query(
+    self.pools[connI].conn,
+    queryString,
+    self.placeHolder,
+    self.timeout
+  ).await
+  return rows[0]
 
 
 proc exec(self:PostgresQuery, queryString:string) {.async.} =
@@ -556,24 +649,6 @@ proc insertId(self:PostgresQuery, queryString:string, key:string):Future[int] {.
   return rows[0][0].parseInt
 
 
-proc getAllRows(self:RawPostgresQuery, queryString:string):Future[seq[JsonNode]] {.async.} =
-  var connI = self.transactionConn
-  if not self.isInTransaction:
-    connI = getFreeConn(self).await
-  defer:
-    if not self.isInTransaction:
-      self.returnConn(connI).await
-  if connI == errorConnectionNum:
-    return
-
-  let (rows, dbRows) = postgres_impl.rawQuery(self.pools[connI].conn, queryString, self.placeHolder, self.timeout).await
-
-  if rows.len == 0:
-    self.log.echoErrorMsg(queryString)
-    return newSeq[JsonNode](0)
-  return toJson(rows, dbRows) # seq[JsonNode]
-
-
 proc exec(self:RawPostgresQuery, queryString:string) {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
@@ -587,22 +662,68 @@ proc exec(self:RawPostgresQuery, queryString:string) {.async.} =
   postgres_impl.rawExec(self.pools[connI].conn, queryString, self.placeHolder, self.timeout).await
 
 
+proc getColumn(self:PostgresQuery, queryString:string):Future[seq[string]] {.async.} =
+  var connI = self.transactionConn
+  if not self.isInTransaction:
+    connI = getFreeConn(self).await
+  defer:
+    if not self.isInTransaction:
+      self.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  var strArgs:seq[string]
+  for arg in self.placeHolder.items:
+    case arg["value"].kind
+    of JBool:
+      if arg["value"].getBool:
+        strArgs.add("1")
+      else:
+        strArgs.add("0")
+    of JInt:
+      strArgs.add($arg["value"].getInt)
+    of JFloat:
+      strArgs.add($arg["value"].getFloat)
+    of JString:
+      strArgs.add($arg["value"].getStr)
+    of JNull:
+      strArgs.add("NULL")
+    else:
+      strArgs.add(arg["value"].pretty)
+
+  return postgres_impl.getColumns(self.pools[connI].conn, queryString, strArgs, self.timeout).await
+
+
+proc transactionStart(self:PostgresQuery) {.async.} =
+  let connI = getFreeConn(self).await
+  if connI == errorConnectionNum:
+    return
+  self.isInTransaction = true
+  self.transactionConn = connI
+
+  let table = self.query["table"].getStr
+  let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
+  let (columns, _) = postgres_impl.query(self.pools[connI].conn, columnGetQuery, newJArray(), self.timeout).await
+
+  postgres_impl.exec(self.pools[connI].conn, "BEGIN", newJArray(), columns, self.timeout).await
+
+
+proc transactionEnd(self:PostgresQuery, query:string) {.async.} =
+  defer:
+    self.returnConn(self.transactionConn).await
+    self.transactionConn = 0
+    self.isInTransaction = false
+
+  let table = self.query["table"].getStr
+  let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
+  let (columns, _) = postgres_impl.query(self.pools[self.transactionConn].conn, columnGetQuery, newJArray(), self.timeout).await
+
+  postgres_impl.exec(self.pools[self.transactionConn].conn, query, newJArray(), columns, self.timeout).await
+
+
 # ================================================================================
 # public exec
 # ================================================================================
-
-proc columns*(self:PostgresQuery):Future[seq[string]] {.async.} =
-  ## get columns sequence from table
-  var sql = self.columnBuilder()
-  sql = questionToDaller(sql)
-  try:
-    self.log.logger(sql)
-    return self.getColumn(sql).await
-  except Exception:
-    self.log.echoErrorMsg(sql)
-    self.log.echoErrorMsg( getCurrentExceptionMsg() )
-    raise getCurrentException()
-
 
 proc get*(self: PostgresQuery):Future[seq[JsonNode]] {.async.} =
   var sql = self.selectBuilder()
@@ -645,6 +766,47 @@ proc find*(self: PostgresQuery, id:int, key="id"):Future[Option[JsonNode]] {.asy
   return self.find($id, key).await
 
 
+proc getPlain*(self:PostgresQuery):Future[seq[seq[string]]] {.async.} =
+  var sql = self.selectBuilder()
+  sql = questionToDaller(sql)
+  try:
+    self.log.logger(sql)
+    return self.getAllRowsPlain(sql, self.placeHolder).await
+  except Exception:
+    self.log.echoErrorMsg(sql)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    raise getCurrentException()
+
+
+proc firstPlain*(self:PostgresQuery):Future[seq[string]] {.async.} =
+  var sql = self.selectFirstBuilder()
+  sql = questionToDaller(sql)
+  try:
+    self.log.logger(sql)
+    return self.getRowPlain(sql, self.placeHolder).await
+  except Exception:
+    self.log.echoErrorMsg(sql)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    raise getCurrentException()
+
+
+proc findPlain*(self:PostgresQuery, id: string, key="id"):Future[seq[string]] {.async.} =
+  self.placeHolder.add(%*{"key":key, "value":id})
+  var sql = self.selectFindBuilder(key)
+  sql = questionToDaller(sql)
+  try:
+    self.log.logger(sql)
+    return self.getRowPlain(sql, self.placeHolder).await
+  except Exception:
+    self.log.echoErrorMsg(sql)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    raise getCurrentException()
+
+
+proc findPlain*(self:PostgresQuery, id: int, key="id"):Future[seq[string]] {.async.} =
+  return self.findPlain($id, key).await
+
+
 proc insert*(self:PostgresQuery, items:JsonNode) {.async.} =
   ## items is `JObject`
   var sql = self.insertValueBuilder(items)
@@ -653,15 +815,7 @@ proc insert*(self:PostgresQuery, items:JsonNode) {.async.} =
   self.exec(sql).await
 
 
-proc insertId*(self:PostgresQuery, items:JsonNode, key="id"):Future[int] {.async.} =
-  var sql = self.insertValueBuilder(items)
-  sql.add(&" RETURNING \"{key}\"")
-  sql = questionToDaller(sql)
-  self.log.logger(sql)
-  return self.insertId(sql, key).await
-
-
-proc insert*(self: PostgresQuery, items: seq[JsonNode]){.async.} =
+proc insert*(self:PostgresQuery, items:seq[JsonNode]) {.async.} =
   var sql = self.insertValuesBuilder(items)
   sql = questionToDaller(sql)
   self.log.logger(sql)
@@ -677,11 +831,28 @@ proc inserts*(self: PostgresQuery, items: seq[JsonNode]){.async.} =
     self.placeHolder = newJArray()
 
 
+proc insertId*(self:PostgresQuery, items:JsonNode, key="id"):Future[int] {.async.} =
+  var sql = self.insertValueBuilder(items)
+  sql.add(&" RETURNING \"{key}\"")
+  sql = questionToDaller(sql)
+  self.log.logger(sql)
+  return self.insertId(sql, key).await
+
+
+proc insertId*(self: PostgresQuery, items: seq[JsonNode], key="id"):Future[int] {.async.} =
+  var sql = self.insertValuesBuilder(items)
+  sql = questionToDaller(sql)
+  self.log.logger(sql)
+  result = self.insertId(sql, key).await
+  self.placeHolder = newJArray()
+
+
 proc insertsId*(self: PostgresQuery, items: seq[JsonNode], key="id"):Future[seq[int]]{.async.} =
   var response = newSeq[int](items.len)
   for i, row in items:
     var sql = self.insertValueBuilder(row)
     sql = questionToDaller(sql)
+    self.log.logger(sql)
     response[i] = self.insertId(sql, key).await
     self.placeHolder = newJArray()
   return response
@@ -703,13 +874,28 @@ proc delete*(self: PostgresQuery){.async.} =
 
 proc delete*(self: PostgresQuery, id: int, key="id"){.async.} =
   self.placeHolder.add(%*{"key":key, "value":id})
-  let sql = self.deleteByIdBuilder(id, key)
+  var sql = self.deleteByIdBuilder(id, key)
+  sql = questionToDaller(sql)
   self.log.logger(sql)
   self.exec(sql).await
 
 
+proc columns*(self:PostgresQuery):Future[seq[string]] {.async.} =
+  ## get columns sequence from table
+  var sql = self.columnBuilder()
+  sql = questionToDaller(sql)
+  try:
+    self.log.logger(sql)
+    return self.getColumn(sql).await
+  except Exception:
+    self.log.echoErrorMsg(sql)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    raise getCurrentException()
+
+
 proc count*(self:PostgresQuery):Future[int] {.async.} =
-  let sql = self.countBuilder()
+  var sql = self.countBuilder()
+  sql = questionToDaller(sql)
   self.log.logger(sql)
   let response =  self.getRow(sql).await
   if response.isSome:
@@ -719,7 +905,8 @@ proc count*(self:PostgresQuery):Future[int] {.async.} =
 
 
 proc min*(self:PostgresQuery, column:string):Future[Option[string]] {.async.} =
-  let sql = self.minBuilder(column)
+  var sql = self.minBuilder(column)
+  sql = questionToDaller(sql)
   self.log.logger(sql)
   let response =  self.getRow(sql).await
   if response.isSome:
@@ -735,7 +922,8 @@ proc min*(self:PostgresQuery, column:string):Future[Option[string]] {.async.} =
 
 
 proc max*(self:PostgresQuery, column:string):Future[Option[string]] {.async.} =
-  let sql = self.maxBuilder(column)
+  var sql = self.maxBuilder(column)
+  sql = questionToDaller(sql)
   self.log.logger(sql)
   let response =  self.getRow(sql).await
   if response.isSome:
@@ -751,7 +939,8 @@ proc max*(self:PostgresQuery, column:string):Future[Option[string]] {.async.} =
 
 
 proc avg*(self:PostgresQuery, column:string):Future[Option[float]]{.async.} =
-  let sql = self.avgBuilder(column)
+  var sql = self.avgBuilder(column)
+  sql = questionToDaller(sql)
   self.log.logger(sql)
   let response =  await self.getRow(sql)
   if response.isSome:
@@ -761,7 +950,8 @@ proc avg*(self:PostgresQuery, column:string):Future[Option[float]]{.async.} =
 
 
 proc sum*(self:PostgresQuery, column:string):Future[Option[float]]{.async.} =
-  let sql = self.sumBuilder(column)
+  var sql = self.sumBuilder(column)
+  sql = questionToDaller(sql)
   self.log.logger(sql)
   let response = await self.getRow(sql)
   if response.isSome:
@@ -770,16 +960,49 @@ proc sum*(self:PostgresQuery, column:string):Future[Option[float]]{.async.} =
     return none(float)
 
 
-proc exec*(self: RawPostgresQuery) {.async.} =
-  ## It is only used with raw()
-  self.log.logger(self.queryString)
-  self.exec(self.queryString).await
+proc begin*(self:PostgresQuery) {.async.} =
+  self.log.logger("BEGIN")
+  self.transactionStart().await
+
+
+proc rollback*(self:PostgresQuery) {.async.} =
+  self.log.logger("ROLLBACK")
+  self.transactionEnd("ROLLBACK").await
+
+
+proc commit*(self:PostgresQuery, connI:int) {.async.} =
+  self.log.logger("COMMIT")
+  self.transactionEnd("COMMIT").await
 
 
 proc get*(self: RawPostgresQuery):Future[seq[JsonNode]] {.async.} =
   ## It is only used with raw()
   self.log.logger(self.queryString)
   return self.getAllRows(self.queryString).await
+
+
+proc getPlain*(self: RawPostgresQuery):Future[seq[seq[string]]] {.async.} =
+  ## It is only used with raw()
+  self.log.logger(self.queryString)
+  return self.getAllRowsPlain(self.queryString, self.placeHolder).await
+
+
+proc exec*(self: RawPostgresQuery) {.async.} =
+  ## It is only used with raw()
+  self.log.logger(self.queryString)
+  self.exec(self.queryString).await
+
+
+proc first*(self: RawPostgresQuery):Future[Option[JsonNode]] {.async.} =
+  ## It is only used with raw()
+  self.log.logger(self.queryString)
+  return self.getRow(self.queryString).await
+
+
+proc firstPlain*(self: RawPostgresQuery):Future[seq[string]] {.async.} =
+  ## It is only used with raw()
+  self.log.logger(self.queryString)
+  return self.getRowPlain(self.queryString, self.placeHolder).await
 
 
 template seeder*(rdb:PostgresConnections, tableName:string, body:untyped):untyped =

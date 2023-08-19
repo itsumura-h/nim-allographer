@@ -125,9 +125,9 @@ proc whereBetweenStringSql*(self: PostgresQuery): PostgresQuery =
       let stop = row["width"][1].getStr
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND \"{column}\" BETWEEN \"{start}\" AND \"{stop}\"")
+        self.queryString.add(&" AND \"{column}\" BETWEEN '{start}' AND '{stop}'")
       else:
-        self.queryString.add(&" WHERE \"{column}\" BETWEEN \"{start}\" AND \"{stop}\"")
+        self.queryString.add(&" WHERE \"{column}\" BETWEEN '{start}' AND '{stop}'")
   return self
 
 
@@ -153,9 +153,9 @@ proc whereNotBetweenStringSql*(self: PostgresQuery): PostgresQuery =
       let stop = row["width"][1].getStr
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND \"{column}\" NOT BETWEEN \"{start}\" AND \"{stop}\"")
+        self.queryString.add(&" AND \"{column}\" NOT BETWEEN '{start}' AND '{stop}'")
       else:
-        self.queryString.add(&" WHERE \"{column}\" NOT BETWEEN \"{start}\" AND \"{stop}\"")
+        self.queryString.add(&" WHERE \"{column}\" NOT BETWEEN '{start}' AND '{stop}'")
   return self
 
 
