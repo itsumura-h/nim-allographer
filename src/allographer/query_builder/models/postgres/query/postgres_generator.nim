@@ -348,11 +348,6 @@ proc updateValuesSql*(self: PostgresQuery, items:JsonNode): PostgresQuery =
     value.add(&" \"{key}\" = ?")
     placeHolder.add(%*{"key":key, "value":val})
 
-  for row in self.placeHolder.items:
-    placeHolder.add(row)
-
-  self.placeHolder = placeHolder
-
   self.queryString.add(value)
   return self
 
