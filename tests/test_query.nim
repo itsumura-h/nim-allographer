@@ -63,7 +63,8 @@ proc setup(rdb:SqliteConnections|PostgresConnections) =
     rdb.table("user").insert(users).waitFor
 
 
-let rdb = postgres
+let rdb = sqlite
+# let rdb = postgres
 
 setup(rdb)
 
@@ -411,6 +412,8 @@ suite($rdb & " insert"):
 
 
 suite($rdb & " update"):
+  setup(rdb)
+
   test("update"):
     rdb.begin().waitFor
     rdb.table("user").where("id", "=", 1).update(%*{"name": "Alice"}).waitFor
@@ -420,6 +423,8 @@ suite($rdb & " update"):
 
 
 suite($rdb & " delete"):
+  setup(rdb)
+
   test("delete"):
     rdb.begin().waitFor
     rdb.table("user").delete(1).waitFor
@@ -434,34 +439,48 @@ suite($rdb & " delete"):
     rdb.rollback().waitFor
 
 
-# suite($rdb & " rawQuery"):
-#   test("raw select"):
-#     rdb.begin().waitFor
-#     echo rdb.table("user").get().waitFor
-#     let sql = &"SELECT * FROM user WHERE id = ?"
-#     let res = rdb.raw(sql, %*[1]).get().waitFor
-#     echo res
-#     check res[0]["name"].getStr == "user1"
-#     rdb.rollback().waitFor
+suite($rdb & " rawQuery"):
+  setup(rdb)
+
+  test("get"):
+    echo rdb.table("user").get().waitFor
+    let sql = &"SELECT * FROM \"user\" WHERE \"id\" = ?"
+    let res = rdb.raw(sql, %*[1]).get().waitFor
+    echo res
+    check res[0]["name"].getStr == "user1"
 
 
-#   # test("raw getPlain"):
-#   #   rdb.begin().waitFor
-#   #   let sql = &"SELECT * FROM user WHERE id = ?"
-#   #   let res = rdb.raw(sql, %*[1]).getPlain().waitFor
-#   #   echo res
-#   #   check res[0][1] == "user1"
-#   #   rdb.rollback().waitFor
+  test("getPlain"):
+    let sql = &"SELECT * FROM \"user\" WHERE \"id\" = ?"
+    let res = rdb.raw(sql, %*[1]).getPlain().waitFor
+    echo res
+    check res[0][1] == "user1"
 
 
-#   # test("raw firstPlain"):
-#   #   rdb.begin().waitFor
-#   #   var sql = "UPDATE user SET name = ? WHERE id = ?"
-#   #   rdb.raw(sql, %*["updated user1", 1]).exec().waitFor
-#   #   sql = &"SELECT * FROM user WHERE id = ?"
-#   #   let res = rdb.raw(sql, %[1]).firstPlain().waitFor
-#   #   echo res
-#   #   check res[1] == "updated user1"
-#   #   rdb.rollback().waitFor
+  test("first"):
+    echo rdb.table("user").get().waitFor
+    let sql = &"SELECT * FROM \"user\" WHERE \"id\" = ?"
+    let res = rdb.raw(sql, %*[1]).first().waitFor().get()
+    echo res
+    check res["name"].getStr == "user1"
 
-#   # echo &"=== {rdb} {cpuTime() - start}"
+
+  test("firstPlain"):
+    echo rdb.table("user").get().waitFor
+    let sql = &"SELECT name FROM \"user\" WHERE \"id\" = ?"
+    let res = rdb.raw(sql, %*[1]).firstPlain().waitFor()
+    echo res
+    check res[0] == "user1"
+
+
+  test("exec"):
+    rdb.begin().waitFor
+    var sql = "UPDATE \"user\" SET \"name\" = ? WHERE \"id\" = ?"
+    rdb.raw(sql, %*["updated user1", 1]).exec().waitFor
+    sql = &"SELECT * FROM \"user\" WHERE \"id\" = ?"
+    let res = rdb.raw(sql, %[1]).get().waitFor
+    echo res
+    check res[0]["name"].getStr == "updated user1"
+    rdb.rollback().waitFor
+
+  # echo &"=== {rdb} {cpuTime() - start}"

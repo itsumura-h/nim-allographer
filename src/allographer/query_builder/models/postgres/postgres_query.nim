@@ -602,7 +602,7 @@ proc getAllRows(self:RawPostgresQuery, queryString:string):Future[seq[JsonNode]]
 
   let queryString = queryString.questionToDaller()
 
-  let (rows, dbRows) = postgres_impl.query(
+  let (rows, dbRows) = postgres_impl.rawQuery(
     self.pools[connI].conn,
     queryString,
     self.placeHolder,
@@ -627,7 +627,7 @@ proc getAllRowsPlain(self:RawPostgresQuery, queryString:string, args:JsonNode):F
 
   let queryString = queryString.questionToDaller()
 
-  let (rows, _) = postgres_impl.query(
+  let (rows, _) = postgres_impl.rawQuery(
     self.pools[connI].conn,
     queryString,
     self.placeHolder,
@@ -649,7 +649,7 @@ proc getRow(self:RawPostgresQuery, queryString:string):Future[Option[JsonNode]] 
 
   let queryString = queryString.questionToDaller()
 
-  let (rows, dbRows) = postgres_impl.query(
+  let (rows, dbRows) = postgres_impl.rawQuery(
     self.pools[connI].conn,
     queryString,
     self.placeHolder,
@@ -674,7 +674,7 @@ proc getRowPlain(self:RawPostgresQuery, queryString:string, args:JsonNode):Futur
 
   let queryString = queryString.questionToDaller()
   
-  let (rows, _) = postgres_impl.query(
+  let (rows, _) = postgres_impl.rawQuery(
     self.pools[connI].conn,
     queryString,
     self.placeHolder,
