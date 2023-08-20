@@ -5,6 +5,18 @@ import std/strutils
 import ../postgres_types
 
 
+proc quote(input:string):string =
+  ## `User.id as userId` => `"User"."id" as "userId"`
+  var tmp = newSeq[string]()
+  for row in input.split("."):
+    if row.contains(" as "):
+      let c = row.split(" as ")
+      tmp.add(&"\"{c[0]}\" as \"{c[1]}\"")
+    else:
+      tmp.add(&"\"{row}\"")
+  return tmp.join(".")
+
+
 # ==================== SELECT ====================
 
 proc selectSql*(self: PostgresQuery): PostgresQuery =
@@ -18,13 +30,15 @@ proc selectSql*(self: PostgresQuery): PostgresQuery =
   if self.query.hasKey("select"):
     for i, item in self.query["select"].getElems():
       if i > 0: queryString.add(",")
-      let column = item.getStr()
-      if column.contains("as"):
-        let original = column.split("as")[0].strip()
-        let renamed = column.split("as")[1].strip()
-        queryString.add(&" \"{original}\" as \"{renamed}\"")
-      else:
-        queryString.add(&" \"{column}\"")
+      var column = item.getStr()
+      # if column.contains("as"):
+      #   let original = column.split("as")[0].strip()
+      #   let renamed = column.split("as")[1].strip()
+      #   queryString.add(&" \"{original}\" as \"{renamed}\"")
+      # else:
+      #   queryString.add(&" \"{column}\"")
+      column = quote(column)
+      queryString.add(&" {column}")
   else:
     queryString.add(" *")
 
@@ -54,52 +68,51 @@ proc selectByIdSql*(self: PostgresQuery, key:string): PostgresQuery =
 proc joinSql*(self: PostgresQuery): PostgresQuery =
   if self.query.hasKey("join"):
     for row in self.query["join"]:
-      let table = row["table"].getStr()
-      let column1 = row["column1"].getStr()
+      let table = row["table"].getStr().quote()
+      let column1 = row["column1"].getStr().quote()
       let symbol = row["symbol"].getStr()
-      let column2 = row["column2"].getStr()
+      let column2 = row["column2"].getStr().quote()
 
-      self.queryString.add(&" INNER JOIN \"{table}\" ON \"{column1}\" {symbol} \"{column2}\"")
+      self.queryString.add(&" INNER JOIN {table} ON {column1} {symbol} {column2}")
   return self
 
 
 proc leftJoinSql*(self: PostgresQuery): PostgresQuery =
   if self.query.hasKey("left_join"):
     for row in self.query["left_join"]:
-      let table = row["table"].getStr()
-      let column1 = row["column1"].getStr()
+      let table = row["table"].getStr().quote()
+      let column1 = row["column1"].getStr().quote()
       let symbol = row["symbol"].getStr()
-      let column2 = row["column2"].getStr()
+      let column2 = row["column2"].getStr().quote()
 
-      self.queryString.add(&" LEFT JOIN \"{table}\" ON \"{column1}\" {symbol} \"{column2}\"")
+      self.queryString.add(&" LEFT JOIN {table} ON {column1} {symbol} {column2}")
   return self
 
 
 proc whereSql*(self: PostgresQuery): PostgresQuery =
   if self.query.hasKey("where"):
     for i, row in self.query["where"].getElems():
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       let symbol = row["symbol"].getStr()
-      let value = row["value"].getStr()
-
+      # let value = row["value"].getStr()
       if i == 0:
-        self.queryString.add(&" WHERE \"{column}\" {symbol} {value}")
+        self.queryString.add(&" WHERE {column} {symbol} ?")
       else:
-        self.queryString.add(&" AND \"{column}\" {symbol} {value}")
+        self.queryString.add(&" AND {column} {symbol} ?")
   return self
 
 
 proc orWhereSql*(self: PostgresQuery): PostgresQuery =
   if self.query.hasKey("or_where"):
     for row in self.query["or_where"]:
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       let symbol = row["symbol"].getStr()
-      let value = row["value"].getStr()
+      # let value = row["value"].getStr()
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" OR \"{column}\" {symbol} {value}")
+        self.queryString.add(&" OR {column} {symbol} ?")
       else:
-        self.queryString.add(&" WHERE \"{column}\" {symbol} {value}")
+        self.queryString.add(&" WHERE {column} {symbol} ?")
   return self
 
 
@@ -107,13 +120,15 @@ proc whereBetweenSql*(self: PostgresQuery): PostgresQuery =
   if self.query.hasKey("where_between"):
     for row in self.query["where_between"]:
       let column = row["column"].getStr()
-      let start = row["width"][0].getFloat()
-      let stop = row["width"][1].getFloat()
+      # let start = row["width"][0].getFloat()
+      # let stop = row["width"][1].getFloat()
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND \"{column}\" BETWEEN {start} AND {stop}")
+        # self.queryString.add(&" AND \"{column}\" BETWEEN {start} AND {stop}")
+        self.queryString.add(&" AND \"{column}\" BETWEEN ? AND ?")
       else:
-        self.queryString.add(&" WHERE \"{column}\" BETWEEN {start} AND {stop}")
+        # self.queryString.add(&" WHERE \"{column}\" BETWEEN {start} AND {stop}")
+        self.queryString.add(&" WHERE \"{column}\" BETWEEN ? AND ?")
   return self
 
 
@@ -121,41 +136,47 @@ proc whereBetweenStringSql*(self: PostgresQuery): PostgresQuery =
   if self.query.hasKey("where_between_string"):
     for row in self.query["where_between_string"]:
       let column = row["column"].getStr()
-      let start = row["width"][0].getStr
-      let stop = row["width"][1].getStr
+      # let start = row["width"][0].getStr
+      # let stop = row["width"][1].getStr
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND \"{column}\" BETWEEN '{start}' AND '{stop}'")
+        # self.queryString.add(&" AND \"{column}\" BETWEEN '{start}' AND '{stop}'")
+        self.queryString.add(&" AND \"{column}\" BETWEEN ? AND ?")
       else:
-        self.queryString.add(&" WHERE \"{column}\" BETWEEN '{start}' AND '{stop}'")
+        # self.queryString.add(&" WHERE \"{column}\" BETWEEN '{start}' AND '{stop}'")
+        self.queryString.add(&" WHERE \"{column}\" BETWEEN ? AND ?")
   return self
 
 
 proc whereNotBetweenSql*(self: PostgresQuery): PostgresQuery =
   if self.query.hasKey("where_not_between"):
     for row in self.query["where_not_between"]:
-      let column = row["column"].getStr()
-      let start = row["width"][0].getFloat()
-      let stop = row["width"][1].getFloat()
+      let column = row["column"].getStr().quote()
+      # let start = row["width"][0].getFloat()
+      # let stop = row["width"][1].getFloat()
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND \"{column}\" NOT BETWEEN {start} AND {stop}")
+        # self.queryString.add(&" AND \"{column}\" NOT BETWEEN {start} AND {stop}")
+        self.queryString.add(&" AND {column} NOT BETWEEN ? AND ?")
       else:
-        self.queryString.add(&" WHERE \"{column}\" NOT BETWEEN {start} AND {stop}")
+        # self.queryString.add(&" WHERE \"{column}\" NOT BETWEEN {start} AND {stop}")
+        self.queryString.add(&" WHERE {column} NOT BETWEEN ? AND ?")
   return self
 
 
 proc whereNotBetweenStringSql*(self: PostgresQuery): PostgresQuery =
   if self.query.hasKey("where_not_between_string"):
     for row in self.query["where_not_between_string"]:
-      let column = row["column"].getStr()
-      let start = row["width"][0].getStr
-      let stop = row["width"][1].getStr
+      let column = row["column"].getStr().quote()
+      # let start = row["width"][0].getStr
+      # let stop = row["width"][1].getStr
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND \"{column}\" NOT BETWEEN '{start}' AND '{stop}'")
+        # self.queryString.add(&" AND \"{column}\" NOT BETWEEN '{start}' AND '{stop}'")
+        self.queryString.add(&" AND {column} NOT BETWEEN ? AND ?")
       else:
-        self.queryString.add(&" WHERE \"{column}\" NOT BETWEEN '{start}' AND '{stop}'")
+        # self.queryString.add(&" WHERE \"{column}\" NOT BETWEEN '{start}' AND '{stop}'")
+        self.queryString.add(&" WHERE {column} NOT BETWEEN ? AND ?")
   return self
 
 
@@ -163,20 +184,15 @@ proc whereInSql*(self: PostgresQuery): PostgresQuery =
   if self.query.hasKey("where_in"):
     var widthString = ""
     for row in self.query["where_in"]:
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       for i, val in row["width"].getElems():
         if i > 0: widthString.add(", ")
-        if val.kind == JInt:
-          widthString.add($(val.getInt()))
-        elif val.kind == JFloat:
-          widthString.add($(val.getFloat()))
-        elif val.kind == JString:
-          widthString.add(&"\"{val.getStr()}\"")
+        widthString.add("?")
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND \"{column}\" IN ({widthString})")
+        self.queryString.add(&" AND {column} IN ({widthString})")
       else:
-        self.queryString.add(&" WHERE \"{column}\" IN ({widthString})")
+        self.queryString.add(&" WHERE {column} IN ({widthString})")
   return self
 
 
@@ -184,56 +200,52 @@ proc whereNotInSql*(self: PostgresQuery): PostgresQuery =
   if self.query.hasKey("where_not_in"):
     var widthString = ""
     for row in self.query["where_not_in"]:
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       for i, val in row["width"].getElems():
         if i > 0: widthString.add(", ")
-        if val.kind == JInt:
-          widthString.add($(val.getInt()))
-        elif val.kind == JFloat:
-          widthString.add($(val.getFloat()))
-        elif val.kind == JString:
-          widthString.add(&"\"{val.getStr()}\"")
+        widthString.add("?")
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND \"{column}\" NOT IN ({widthString})")
+        self.queryString.add(&" AND {column} NOT IN ({widthString})")
       else:
-        self.queryString.add(&" WHERE \"{column}\" NOT IN ({widthString})")
+        self.queryString.add(&" WHERE {column} NOT IN ({widthString})")
   return self
 
 
 proc whereNullSql*(self: PostgresQuery): PostgresQuery =
   if self.query.hasKey("where_null"):
     for row in self.query["where_null"]:
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
+      let symbol = row["symbol"].getStr()
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND \"{column}\" is null")
+        self.queryString.add(&" AND {column} {symbol} null")
       else:
-        self.queryString.add(&" WHERE \"{column}\" is null")
+        self.queryString.add(&" WHERE {column} {symbol} null")
   return self
 
 
 proc groupBySql*(self: PostgresQuery): PostgresQuery =
   if self.query.hasKey("group_by"):
     for row in self.query["group_by"]:
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       if self.queryString.contains("GROUP BY"):
-        self.queryString.add(&", \"{column}\"")
+        self.queryString.add(&", {column}")
       else:
-        self.queryString.add(&" GROUP BY \"{column}\"")
+        self.queryString.add(&" GROUP BY {column}")
   return self
 
 
 proc havingSql*(self: PostgresQuery): PostgresQuery =
   if self.query.hasKey("having"):
     for i, row in self.query["having"].getElems():
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       let symbol = row["symbol"].getStr()
-      let value = row["value"].getStr()
+      # let value = row["value"].getStr()
 
       if i == 0:
-        self.queryString.add(&" HAVING \"{column}\" {symbol} {value}")
+        self.queryString.add(&" HAVING {column} {symbol} ?")
       else:
-        self.queryString.add(&" AND \"{column}\" {symbol} {value}")
+        self.queryString.add(&" AND {column} {symbol} ?")
 
   return self
 
@@ -241,13 +253,13 @@ proc havingSql*(self: PostgresQuery): PostgresQuery =
 proc orderBySql*(self: PostgresQuery): PostgresQuery =
   if self.query.hasKey("order_by"):
     for row in self.query["order_by"]:
-      let column = row["column"].getStr()
+      let column = row["column"].getStr().quote()
       let order = row["order"].getStr()
 
       if self.queryString.contains("ORDER BY"):
-        self.queryString.add(&", \"{column}\" {order}")
+        self.queryString.add(&", {column} {order}")
       else:
-        self.queryString.add(&" ORDER BY \"{column}\" {order}")
+        self.queryString.add(&" ORDER BY {column} {order}")
   return self
 
 
@@ -340,13 +352,18 @@ proc updateSql*(self: PostgresQuery): PostgresQuery =
 proc updateValuesSql*(self: PostgresQuery, items:JsonNode): PostgresQuery =
   var value = ""
   let placeHolder = newJArray()
- 
+
   var i = 0
   for key, val in items.pairs:
     defer: i += 1
     if i > 0: value.add(",")
     value.add(&" \"{key}\" = ?")
     placeHolder.add(%*{"key":key, "value":val})
+
+  for row in self.placeHolder.items:
+    placeHolder.add(row)
+
+  self.placeHolder = placeHolder
 
   self.queryString.add(value)
   return self

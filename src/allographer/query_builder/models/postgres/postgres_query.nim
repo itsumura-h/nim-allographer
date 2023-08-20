@@ -128,14 +128,14 @@ proc where*(self: PostgresQuery, column: string, symbol: string, value: nil.type
       whereSymbolsError
     )
 
-  if self.query.hasKey("where") == false:
-    self.query["where"] = %*[{
+  if self.query.hasKey("where_null") == false:
+    self.query["where_null"] = %*[{
       "column": column,
       "symbol": symbol,
       "value": "null"
     }]
   else:
-    self.query["where"].add(
+    self.query["where_null"].add(
       %*{
         "column": column,
         "symbol": symbol,
@@ -171,6 +171,7 @@ proc orWhere*(self: PostgresQuery, column: string, symbol: string,
     )
   return self
 
+
 proc orWhere*(self: PostgresQuery, column: string, symbol: string, value: nil.type): PostgresQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
@@ -192,7 +193,11 @@ proc orWhere*(self: PostgresQuery, column: string, symbol: string, value: nil.ty
     })
   return self
 
+
 proc whereBetween*(self:PostgresQuery, column:string, width:array[2, int|float]): PostgresQuery =
+  self.placeHolder.add(%*{"key": column, "value": width[0]})
+  self.placeHolder.add(%*{"key": column, "value": width[1]})
+
   if self.query.hasKey("where_between") == false:
     self.query["where_between"] = %*[{
       "column": column,
@@ -205,7 +210,11 @@ proc whereBetween*(self:PostgresQuery, column:string, width:array[2, int|float])
     })
   return self
 
+
 proc whereBetween*(self:PostgresQuery, column:string, width:array[2, string]): PostgresQuery =
+  self.placeHolder.add(%*{"key": column, "value": width[0]})
+  self.placeHolder.add(%*{"key": column, "value": width[1]})
+
   if self.query.hasKey("where_between_string") == false:
     self.query["where_between_string"] = %*[{
       "column": column,
@@ -218,7 +227,11 @@ proc whereBetween*(self:PostgresQuery, column:string, width:array[2, string]): P
     })
   return self
 
+
 proc whereNotBetween*(self:PostgresQuery, column:string, width:array[2, int|float]): PostgresQuery =
+  self.placeHolder.add(%*{"key": column, "value": width[0]})
+  self.placeHolder.add(%*{"key": column, "value": width[1]})
+
   if self.query.hasKey("where_not_between") == false:
     self.query["where_not_between"] = %*[{
       "column": column,
@@ -231,7 +244,11 @@ proc whereNotBetween*(self:PostgresQuery, column:string, width:array[2, int|floa
     })
   return self
 
+
 proc whereNotBetween*(self:PostgresQuery, column:string, width:array[2, string]): PostgresQuery =
+  self.placeHolder.add(%*{"key": column, "value": width[0]})
+  self.placeHolder.add(%*{"key": column, "value": width[1]})
+
   if self.query.hasKey("where_not_between_string") == false:
     self.query["where_not_between_string"] = %*[{
       "column": column,
@@ -244,7 +261,11 @@ proc whereNotBetween*(self:PostgresQuery, column:string, width:array[2, string])
     })
   return self
 
+
 proc whereIn*(self:PostgresQuery, column:string, width:seq[int|float|string]): PostgresQuery =
+  for row in width:
+    self.placeHolder.add(%*{"key": column, "value": row})
+
   if self.query.hasKey("where_in") == false:
     self.query["where_in"] = %*[{
       "column": column,
@@ -259,6 +280,9 @@ proc whereIn*(self:PostgresQuery, column:string, width:seq[int|float|string]): P
 
 
 proc whereNotIn*(self:PostgresQuery, column:string, width:seq[int|float|string]): PostgresQuery =
+  for row in width:
+    self.placeHolder.add(%*{"key": column, "value": row})
+
   if self.query.hasKey("where_not_in") == false:
     self.query["where_not_in"] = %*[{
       "column": column,
@@ -275,11 +299,13 @@ proc whereNotIn*(self:PostgresQuery, column:string, width:seq[int|float|string])
 proc whereNull*(self:PostgresQuery, column:string): PostgresQuery =
   if self.query.hasKey("where_null") == false:
     self.query["where_null"] = %*[{
-      "column": column
+      "column": column,
+      "symbol": "is",
     }]
   else:
     self.query["where_null"].add(%*{
-      "column": column
+      "column": column,
+      "symbol": "is",
     })
   return self
 
@@ -381,7 +407,7 @@ proc freeTransactionConn*(self:PostgresQuery, connI:int) =
 # connection
 # ================================================================================
 
-proc getFreeConn(self:PostgresQuery | RawPostgresQuery):Future[int] {.async.} =
+proc getFreeConn(self:PostgresConnections | PostgresQuery | RawPostgresQuery):Future[int] {.async.} =
   let calledAt = getTime().toUnix()
   while true:
     for i in 0..<self.pools.len:
@@ -395,7 +421,7 @@ proc getFreeConn(self:PostgresQuery | RawPostgresQuery):Future[int] {.async.} =
       return errorConnectionNum
 
 
-proc returnConn(self: PostgresQuery | RawPostgresQuery, i: int) {.async.} =
+proc returnConn(self:PostgresConnections | PostgresQuery | RawPostgresQuery, i: int) {.async.} =
   if i != errorConnectionNum:
     self.pools[i].isBusy = false
 
@@ -528,6 +554,42 @@ proc getRowPlain(self:PostgresQuery, queryString:string, args:JsonNode):Future[s
   return rows[0]
 
 
+proc exec(self:PostgresQuery, queryString:string) {.async.} =
+  ## args is `JObject`
+  var connI = self.transactionConn
+  if not self.isInTransaction:
+    connI = getFreeConn(self).await
+  defer:
+    if not self.isInTransaction:
+      self.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  let table = self.query["table"].getStr
+  let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
+  let (columns, _) = postgres_impl.query(self.pools[connI].conn, columnGetQuery, newJArray(), self.timeout).await
+
+  postgres_impl.exec(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
+
+
+proc insertId(self:PostgresQuery, queryString:string, key:string):Future[string] {.async.} =
+  var connI = self.transactionConn
+  if not self.isInTransaction:
+    connI = getFreeConn(self).await
+  defer:
+    if not self.isInTransaction:
+      self.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  let table = self.query["table"].getStr
+  let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
+  let (columns, _) = postgres_impl.query(self.pools[connI].conn, columnGetQuery, newJArray(), self.timeout).await
+
+  let (rows, _) = postgres_impl.execGetValue(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
+  return rows[0][0]
+
+
 proc getAllRows(self:RawPostgresQuery, queryString:string):Future[seq[JsonNode]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
@@ -537,6 +599,8 @@ proc getAllRows(self:RawPostgresQuery, queryString:string):Future[seq[JsonNode]]
       self.returnConn(connI).await
   if connI == errorConnectionNum:
     return
+
+  let queryString = queryString.questionToDaller()
 
   let (rows, dbRows) = postgres_impl.query(
     self.pools[connI].conn,
@@ -561,6 +625,8 @@ proc getAllRowsPlain(self:RawPostgresQuery, queryString:string, args:JsonNode):F
   if connI == errorConnectionNum:
     return
 
+  let queryString = queryString.questionToDaller()
+
   let (rows, _) = postgres_impl.query(
     self.pools[connI].conn,
     queryString,
@@ -580,6 +646,8 @@ proc getRow(self:RawPostgresQuery, queryString:string):Future[Option[JsonNode]] 
       self.returnConn(connI).await
   if connI == errorConnectionNum:
     return
+
+  let queryString = queryString.questionToDaller()
 
   let (rows, dbRows) = postgres_impl.query(
     self.pools[connI].conn,
@@ -603,6 +671,8 @@ proc getRowPlain(self:RawPostgresQuery, queryString:string, args:JsonNode):Futur
       self.returnConn(connI).await
   if connI == errorConnectionNum:
     return
+
+  let queryString = queryString.questionToDaller()
   
   let (rows, _) = postgres_impl.query(
     self.pools[connI].conn,
@@ -611,42 +681,6 @@ proc getRowPlain(self:RawPostgresQuery, queryString:string, args:JsonNode):Futur
     self.timeout
   ).await
   return rows[0]
-
-
-proc exec(self:PostgresQuery, queryString:string) {.async.} =
-  ## args is `JObject`
-  var connI = self.transactionConn
-  if not self.isInTransaction:
-    connI = getFreeConn(self).await
-  defer:
-    if not self.isInTransaction:
-      self.returnConn(connI).await
-  if connI == errorConnectionNum:
-    return
-
-  let table = self.query["table"].getStr
-  let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
-  let (columns, _) = postgres_impl.query(self.pools[connI].conn, columnGetQuery, newJArray(), self.timeout).await
-
-  postgres_impl.exec(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
-
-
-proc insertId(self:PostgresQuery, queryString:string, key:string):Future[int] {.async.} =
-  var connI = self.transactionConn
-  if not self.isInTransaction:
-    connI = getFreeConn(self).await
-  defer:
-    if not self.isInTransaction:
-      self.returnConn(connI).await
-  if connI == errorConnectionNum:
-    return
-
-  let table = self.query["table"].getStr
-  let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
-  let (columns, _) = postgres_impl.query(self.pools[connI].conn, columnGetQuery, newJArray(), self.timeout).await
-
-  let (rows, _) = postgres_impl.execGetValue(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
-  return rows[0][0].parseInt
 
 
 proc exec(self:RawPostgresQuery, queryString:string) {.async.} =
@@ -659,7 +693,14 @@ proc exec(self:RawPostgresQuery, queryString:string) {.async.} =
   if connI == errorConnectionNum:
     return
 
-  postgres_impl.rawExec(self.pools[connI].conn, queryString, self.placeHolder, self.timeout).await
+  let queryString = queryString.questionToDaller()
+
+  postgres_impl.rawExec(
+    self.pools[connI].conn,
+    queryString,
+    self.placeHolder,
+    self.timeout
+  ).await
 
 
 proc getColumn(self:PostgresQuery, queryString:string):Future[seq[string]] {.async.} =
@@ -694,31 +735,23 @@ proc getColumn(self:PostgresQuery, queryString:string):Future[seq[string]] {.asy
   return postgres_impl.getColumns(self.pools[connI].conn, queryString, strArgs, self.timeout).await
 
 
-proc transactionStart(self:PostgresQuery) {.async.} =
+proc transactionStart(self:PostgresConnections) {.async.} =
   let connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
   self.isInTransaction = true
   self.transactionConn = connI
 
-  let table = self.query["table"].getStr
-  let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
-  let (columns, _) = postgres_impl.query(self.pools[connI].conn, columnGetQuery, newJArray(), self.timeout).await
-
-  postgres_impl.exec(self.pools[connI].conn, "BEGIN", newJArray(), columns, self.timeout).await
+  postgres_impl.exec(self.pools[connI].conn, "BEGIN", newJArray(), newSeq[Row](), self.timeout).await
 
 
-proc transactionEnd(self:PostgresQuery, query:string) {.async.} =
+proc transactionEnd(self:PostgresConnections, query:string) {.async.} =
   defer:
     self.returnConn(self.transactionConn).await
     self.transactionConn = 0
     self.isInTransaction = false
 
-  let table = self.query["table"].getStr
-  let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
-  let (columns, _) = postgres_impl.query(self.pools[self.transactionConn].conn, columnGetQuery, newJArray(), self.timeout).await
-
-  postgres_impl.exec(self.pools[self.transactionConn].conn, query, newJArray(), columns, self.timeout).await
+  postgres_impl.exec(self.pools[self.transactionConn].conn, query, newJArray(), newSeq[Row](), self.timeout).await
 
 
 # ================================================================================
@@ -822,16 +855,16 @@ proc insert*(self:PostgresQuery, items:seq[JsonNode]) {.async.} =
   self.exec(sql).await
 
 
-proc inserts*(self: PostgresQuery, items: seq[JsonNode]){.async.} =
-  for row in items:
-    var sql = self.insertValueBuilder(row)
-    sql = questionToDaller(sql)
-    self.log.logger(sql)
-    self.exec(sql).await
-    self.placeHolder = newJArray()
+# proc inserts*(self:PostgresQuery, rows:seq[seq[JsonNode]]){.async.} =
+#   for row in rows:
+#     var sql = self.insertValuesBuilder(row)
+#     sql = questionToDaller(sql)
+#     self.log.logger(sql)
+#     self.exec(sql).await
+#     self.placeHolder = newJArray()
 
 
-proc insertId*(self:PostgresQuery, items:JsonNode, key="id"):Future[int] {.async.} =
+proc insertId*(self:PostgresQuery, items:JsonNode, key="id"):Future[string] {.async.} =
   var sql = self.insertValueBuilder(items)
   sql.add(&" RETURNING \"{key}\"")
   sql = questionToDaller(sql)
@@ -839,23 +872,15 @@ proc insertId*(self:PostgresQuery, items:JsonNode, key="id"):Future[int] {.async
   return self.insertId(sql, key).await
 
 
-proc insertId*(self: PostgresQuery, items: seq[JsonNode], key="id"):Future[int] {.async.} =
-  var sql = self.insertValuesBuilder(items)
-  sql = questionToDaller(sql)
-  self.log.logger(sql)
-  result = self.insertId(sql, key).await
-  self.placeHolder = newJArray()
-
-
-proc insertsId*(self: PostgresQuery, items: seq[JsonNode], key="id"):Future[seq[int]]{.async.} =
-  var response = newSeq[int](items.len)
-  for i, row in items:
-    var sql = self.insertValueBuilder(row)
+proc insertId*(self: PostgresQuery, items: seq[JsonNode], key="id"):Future[seq[string]] {.async.} =
+  result = newSeq[string](items.len)
+  for i, item in items:
+    var sql = self.insertValueBuilder(item)
+    sql.add(&" RETURNING \"{key}\"")
     sql = questionToDaller(sql)
     self.log.logger(sql)
-    response[i] = self.insertId(sql, key).await
+    result[i] = self.insertId(sql, key).await
     self.placeHolder = newJArray()
-  return response
 
 
 proc update*(self: PostgresQuery, items: JsonNode){.async.} =
@@ -960,17 +985,17 @@ proc sum*(self:PostgresQuery, column:string):Future[Option[float]]{.async.} =
     return none(float)
 
 
-proc begin*(self:PostgresQuery) {.async.} =
+proc begin*(self:PostgresConnections) {.async.} =
   self.log.logger("BEGIN")
   self.transactionStart().await
 
 
-proc rollback*(self:PostgresQuery) {.async.} =
+proc rollback*(self:PostgresConnections) {.async.} =
   self.log.logger("ROLLBACK")
   self.transactionEnd("ROLLBACK").await
 
 
-proc commit*(self:PostgresQuery, connI:int) {.async.} =
+proc commit*(self:PostgresConnections, connI:int) {.async.} =
   self.log.logger("COMMIT")
   self.transactionEnd("COMMIT").await
 

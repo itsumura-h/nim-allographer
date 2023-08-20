@@ -13,7 +13,7 @@ type PostgresConnection* = object
 
 
 ## created by `let rdb = dbOpen(PostgreSQL, "/path/to/sqlite.db")`
-type PostgresConnections* = object
+type PostgresConnections* = ref object
   log*: LogSetting
   pools*:seq[PostgresConnection]
   timeout*:int

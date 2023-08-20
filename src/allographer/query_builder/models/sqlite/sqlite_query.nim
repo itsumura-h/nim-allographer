@@ -923,14 +923,6 @@ proc insert*(self:SqliteQuery, items:seq[JsonNode]) {.async.} =
   self.exec(sql).await
 
 
-proc inserts*(self: SqliteQuery, items: seq[JsonNode]){.async.} =
-  for row in items:
-    let sql = self.insertValueBuilder(row)
-    self.log.logger(sql)
-    self.exec(sql).await
-    self.placeHolder = newJArray()
-
-
 proc insertId*(self: SqliteQuery, items: JsonNode, key="id"):Future[int] {.async.} =
   let sql = self.insertValueBuilder(items)
   self.log.logger(sql)
@@ -942,17 +934,6 @@ proc insertId*(self: SqliteQuery, items: seq[JsonNode], key="id"):Future[int] {.
   self.log.logger(sql)
   result = self.insertId(sql, key).await
   self.placeHolder = newJArray()
-
-
-proc insertsId*(self: SqliteQuery, items: seq[JsonNode], key="id"):Future[seq[int]]{.async.} =
-  var response = newSeq[int](items.len)
-  for i, row in items:
-    # row is JObject
-    let sql = self.insertValueBuilder(row)
-    self.log.logger(sql)
-    response[i] = self.insertId(sql, key).await
-    self.placeHolder = newJArray()
-  return response
 
 
 proc update*(self:SqliteQuery, items:JsonNode) {.async.} =
