@@ -855,15 +855,6 @@ proc insert*(self:PostgresQuery, items:seq[JsonNode]) {.async.} =
   self.exec(sql).await
 
 
-# proc inserts*(self:PostgresQuery, rows:seq[seq[JsonNode]]){.async.} =
-#   for row in rows:
-#     var sql = self.insertValuesBuilder(row)
-#     sql = questionToDaller(sql)
-#     self.log.logger(sql)
-#     self.exec(sql).await
-#     self.placeHolder = newJArray()
-
-
 proc insertId*(self:PostgresQuery, items:JsonNode, key="id"):Future[string] {.async.} =
   var sql = self.insertValueBuilder(items)
   sql.add(&" RETURNING \"{key}\"")

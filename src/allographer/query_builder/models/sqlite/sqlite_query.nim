@@ -742,7 +742,7 @@ proc exec(self:RawSqliteQuery, queryString:string, args:JsonNode) {.async.} =
   sqlite_impl.exec(self.pools[connI].conn, queryString, args, self.timeout).await
 
 
-proc insertId(self:SqliteQuery, queryString:string, key:string):Future[int]{.async.} =
+proc insertId(self:SqliteQuery, queryString:string, key:string):Future[string]{.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
@@ -778,7 +778,7 @@ proc insertId(self:SqliteQuery, queryString:string, key:string):Future[int]{.asy
       strArgs.add(arg["value"].pretty)
 
   let (rows, _) = sqlite_impl.query(self.pools[connI].conn, "SELECT last_insert_rowid()", strArgs, self.timeout).await
-  return rows[0][0].parseInt
+  return rows[0][0]
 
 
 proc getColumns(self:SqliteQuery, queryString:string, args=newJArray()):Future[seq[string]] {.async.} =
@@ -923,17 +923,19 @@ proc insert*(self:SqliteQuery, items:seq[JsonNode]) {.async.} =
   self.exec(sql).await
 
 
-proc insertId*(self: SqliteQuery, items: JsonNode, key="id"):Future[int] {.async.} =
+proc insertId*(self: SqliteQuery, items: JsonNode, key="id"):Future[string] {.async.} =
   let sql = self.insertValueBuilder(items)
   self.log.logger(sql)
   return self.insertId(sql, key).await
 
 
-proc insertId*(self: SqliteQuery, items: seq[JsonNode], key="id"):Future[int] {.async.} =
-  let sql = self.insertValuesBuilder(items)
-  self.log.logger(sql)
-  result = self.insertId(sql, key).await
-  self.placeHolder = newJArray()
+proc insertId*(self: SqliteQuery, items: seq[JsonNode], key="id"):Future[seq[string]] {.async.} =
+  result = newSeq[string](items.len)
+  for i, item in items:
+    let sql = self.insertValueBuilder(item)
+    self.log.logger(sql)
+    result[i] = self.insertId(sql, key).await
+    self.placeHolder = newJArray()
 
 
 proc update*(self:SqliteQuery, items:JsonNode) {.async.} =

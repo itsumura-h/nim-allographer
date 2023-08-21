@@ -63,8 +63,8 @@ proc setup(rdb:SqliteConnections|PostgresConnections) =
     rdb.table("user").insert(users).waitFor
 
 
-let rdb = sqlite
-# let rdb = postgres
+# let rdb = sqlite
+let rdb = postgres
 
 setup(rdb)
 
@@ -346,16 +346,16 @@ suite($rdb & " get"):
 
 
 suite($rdb & " insert"):
+  setup:
+    setup(rdb)
+
   test("insert row"):
-    rdb.begin().waitFor
     rdb.table("user").insert(%*{"name": "Alice"}).waitFor
     let t = rdb.table("user").orderBy("id", Desc).first().waitFor().get()
     check t["name"].getStr() == "Alice"
-    rdb.rollback().waitFor
 
 
   test("insert rows"):
-    rdb.begin().waitFor
     rdb.table("user").insert(@[
       %*{"name": "Alice"},
       %*{"name": "Bob"},
@@ -363,20 +363,16 @@ suite($rdb & " insert"):
     let t = rdb.table("user").orderBy("id", Desc).limit(2).get().waitFor()
     check t[0]["name"].getStr() == "Bob"
     check t[1]["name"].getStr() == "Alice"
-    rdb.rollback().waitFor
 
 
   test("insertId row"):
-    rdb.begin().waitFor
     var id = rdb.table("user").insertId(%*{"name": "Alice"}).waitFor
     echo id
     let t = rdb.table("user").find(id).waitFor().get()
     check t["name"].getStr() == "Alice"
-    rdb.rollback().waitFor
 
   
   test("insertId rows"):
-    rdb.begin().waitFor
     let ids = rdb.table("user").insertId(@[
       %*{"name": "Alice"},
       %*{"name": "Bob"},
@@ -388,12 +384,8 @@ suite($rdb & " insert"):
     t = rdb.table("user").find(ids[1]).waitFor().get()
     check t["name"].getStr == "Bob"
 
-    rdb.rollback().waitFor
-
 
   test("insertNil"):
-    rdb.begin().waitFor
-
     var id = rdb.table("user").insertId(%*{
       "name": "Alice",
       "email": nil,
@@ -408,35 +400,28 @@ suite($rdb & " insert"):
     echo res.get
     check res.get["email"] == newJNull()
 
-    rdb.rollback().waitFor
-
 
 suite($rdb & " update"):
-  setup(rdb)
+  setup:
+    setup(rdb)
 
   test("update"):
-    rdb.begin().waitFor
     rdb.table("user").where("id", "=", 1).update(%*{"name": "Alice"}).waitFor
     var t = rdb.table("user").find(1).waitFor().get()
     check t["name"].getStr() == "Alice"
-    rdb.rollback().waitFor
 
 
 suite($rdb & " delete"):
   setup(rdb)
 
   test("delete"):
-    rdb.begin().waitFor
     rdb.table("user").delete(1).waitFor
     check rdb.table("user").find(1).waitFor.isSome == false
-    rdb.rollback().waitFor
 
 
   test("delete where"):
-    rdb.begin().waitFor
     rdb.table("user").where("name", "=", "user1").delete().waitFor
     check rdb.table("user").find(1).waitFor.isSome == false
-    rdb.rollback().waitFor
 
 
 suite($rdb & " rawQuery"):
@@ -474,13 +459,11 @@ suite($rdb & " rawQuery"):
 
 
   test("exec"):
-    rdb.begin().waitFor
     var sql = "UPDATE \"user\" SET \"name\" = ? WHERE \"id\" = ?"
     rdb.raw(sql, %*["updated user1", 1]).exec().waitFor
     sql = &"SELECT * FROM \"user\" WHERE \"id\" = ?"
     let res = rdb.raw(sql, %[1]).get().waitFor
     echo res
     check res[0]["name"].getStr == "updated user1"
-    rdb.rollback().waitFor
 
   # echo &"=== {rdb} {cpuTime() - start}"
