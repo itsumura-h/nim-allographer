@@ -20,10 +20,10 @@ let
   maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
   timeout = getEnv("DB_TIMEOUT").parseInt
 
-let sqlite* = dbOpen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=true)
+# let sqlite* = dbOpen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=true)
 # let sqlite* = dbopen(SQLite3, getCurrentDir() / "db.sqlite3" , maxConnections=maxConnections, shouldDisplayLog=true)
-# let rdb* = dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=true)
-let postgres* = dbOpen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=true)
+let mysql* = dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=true)
+# let postgres* = dbOpen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=true)
 
 # let surreal* = dbOpen(SurrealDb, "test", "test", "user", "pass", surrealHost, surrealPort, 5, 30, false, false).waitFor()
 

@@ -20,3 +20,7 @@ import ./query_builder/models/sqlite/sqlite_query; export sqlite_query
 import ./query_builder/models/postgres/postgres_types; export postgres_types
 import ./query_builder/models/postgres/postgres_connections; export postgres_connections
 import ./query_builder/models/postgres/postgres_query; export postgres_query
+
+import ./query_builder/models/mariadb/mariadb_types; export mariadb_types
+import ./query_builder/models/mariadb/mariadb_connections; export mariadb_connections
+import ./query_builder/models/mariadb/mariadb_query; export mariadb_query
