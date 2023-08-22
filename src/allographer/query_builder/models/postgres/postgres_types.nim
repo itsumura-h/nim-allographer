@@ -12,7 +12,7 @@ type PostgresConnection* = object
   createdAt*: int64
 
 
-## created by `let rdb = dbOpen(PostgreSQL, "/path/to/sqlite.db")`
+## created by `let rdb = dbOpen(PostgreSQL, "localhost", 5432)`
 type PostgresConnections* = ref object
   log*: LogSetting
   pools*:seq[PostgresConnection]
