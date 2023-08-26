@@ -77,7 +77,7 @@ type
 ## int wait_for_mysql(MYSQL *mysql, int status);
 ##  Init, connect and close
 
-proc mysql_init*(mysql: ptr MYSQL): ptr MYSQL {.importc.}
+proc mysql_init*(mysql: ptr MYSQL): ptr MYSQL
 proc mysql_options*(mysql: ptr MYSQL; option: mysql_option; arg: pointer): cint
 proc mysql_real_connect*(mysql: ptr MYSQL; host: cstring; user: cstring;
                         passwd: cstring; db: cstring; port: cuint;

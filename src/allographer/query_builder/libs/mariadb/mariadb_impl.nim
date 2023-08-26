@@ -1,5 +1,6 @@
 import std/asyncdispatch
 import std/times
+import std/strutils
 import std/json
 import ../../error
 import ../../models/database_types
@@ -30,30 +31,75 @@ import ./mariadb_lib
 proc rawExec*(conn:PMySQL, query: string, args: JsonNode, timeout:int) {.async.} =
   ## args is `JArray`
   assert conn.ping == 0
+  let query = query.strip.cstring
 
   var stmt = mariadb_rdb.stmt_init(conn)
-  if stmt == nil:
+  if stmt.isNil:
     mariadb_rdb.close(conn)
     dbError("mysql_stmt_init() failed")
 
-  var ret:cint
-
-  if mariadb_rdb.stmt_prepare_start(ret.unsafeAddr, stmt, query, query.len) != 0:
+  if mariadb_rdb.stmt_prepare(stmt, query, query.len) != 0:
     discard mariadb_rdb.stmt_close(stmt)
     mariadb_rdb.close(conn)
-    dbError("mysql_stmt_prepare_start() failed")
+    dbError("mysql_stmt_prepare() failed")
 
-  # let bind = 
-  # if mariadb_rdb.stmt_bind_param(stmt, bind) !== 0:
+  let params = MariadbParams.fromArray(args)
+  if params.nParams > 0:
+    echo params.repr
+
+  # var bindParams = newSeq[BIND](args.len)
+  # var i = 0
+  # for arg in args.items:
+  #   defer: i.inc()
+  #   if arg.kind == JInt:
+  #     let buffer = arg.getInt.cint
+  #     let pBuffer = buffer.unsafeAddr
+  #     echo "pBuffer.repr: ", pBuffer.repr
+  #     let param = BIND(
+  #       buffer: pBuffer,
+  #       buffer_type:Enum_field_types.TYPE_LONG,
+  #     )
+  #     bindParams[i] = param
+  #   elif arg.kind == JString:
+  #     let buffer = arg.getStr.cstring
+  #     let pBuffer = buffer.unsafeAddr
+  #     echo "pBuffer.repr: ", pBuffer.repr
+  #     let param = BIND(
+  #       buffer: pBuffer,
+  #       buffer_type:Enum_field_types.TYPE_STRING,
+  #       buffer_length: buffer.len
+  #     )
+  #     bindParams[i] = param
+
+  # if args.len > 0:
+  #   echo "==== stmt_bind_param"
+  #   if mariadb_rdb.stmt_bind_param(stmt, bindParams[0].unsafeAddr):
+  #     echo "stmt_error: ",stmt.stmt_error()
+  #     echo "stmt_errno: ",stmt.stmt_errno() 
+  #     echo "error: ",conn.error()
+  #     echo "errno: ",conn.errno()
+  #     discard mariadb_rdb.stmt_close(stmt)
+  #     mariadb_rdb.close(conn)
+  #     dbError("mysql_stmt_bind_param() failed")
+  #   else:
+  #     echo "stmt_error: ",stmt.stmt_error()
+  #     echo "stmt_errno: ",stmt.stmt_errno()
+  #     echo "error: ",conn.error()
+  #     echo "errno: ",conn.errno()
+
+  # echo "stmt_param_count: ", mariadb_rdb.stmt_param_count(stmt)
+
+  # echo "stmt.isNil: ",stmt.isNil
+  # echo "==== stmt_execute start"
+  # if mariadb_rdb.stmt_execute(stmt) != 0:
+  #   echo "stmt_error: ",stmt.stmt_error()
+  #   echo "error: ",conn.error()
+  #   echo "errno: ",conn.errno()
   #   discard mariadb_rdb.stmt_close(stmt)
   #   mariadb_rdb.close(conn)
-  #   dbError("mysql_stmt_bind_param() failed")
+  #   dbError("mysql_stmt_execute() failed")
 
-
-  if mariadb_rdb.stmt_execute_start(ret.unsafeAddr, stmt) != 0:
-    discard mariadb_rdb.stmt_close(stmt)
-    mariadb_rdb.close(conn)
-    dbError("mysql_stmt_execute_start() failed")
+  # discard bindParams.repr
 
 
 

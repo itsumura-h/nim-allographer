@@ -1046,11 +1046,11 @@ proc read_query_result*(MySQL: PMySQL): my_bool{.stdcall, dynlib: lib,
 proc stmt_init*(MySQL: PMySQL): PSTMT{.stdcall, dynlib: lib, importc: "mysql_stmt_init".}
 proc stmt_prepare*(stmt: PSTMT, query: cstring, len: int): cint{.stdcall,
     dynlib: lib, importc: "mysql_stmt_prepare".}
-proc stmt_prepare_start*(ret: ptr cint, stmt: PSTMT, query: cstring, len: int): cint{.stdcall,
+proc stmt_prepare_start*(ret: ptr int, stmt: PSTMT, query: cstring, len: int): cint{.stdcall,
     dynlib: lib, importc: "mysql_stmt_prepare_start".}
 proc stmt_execute*(stmt: PSTMT): cint{.stdcall, dynlib: lib,
                                        importc: "mysql_stmt_execute".}
-proc stmt_execute_start*(ret: ptr cint, stmt: PSTMT): cint{.stdcall, dynlib: lib,
+proc stmt_execute_start*(ret: ptr int, stmt: PSTMT): cint{.stdcall, dynlib: lib,
                                        importc: "mysql_stmt_execute_start".}
 proc stmt_fetch*(stmt: PSTMT): cint{.stdcall, dynlib: lib,
                                      importc: "mysql_stmt_fetch".}
@@ -1066,6 +1066,8 @@ proc stmt_attr_get*(stmt: PSTMT, attr_type: Enum_stmt_attr_type, attr: pointer):
     stdcall, dynlib: lib, importc: "mysql_stmt_attr_get".}
 proc stmt_bind_param*(stmt: PSTMT, bnd: PBIND): my_bool{.stdcall, dynlib: lib,
     importc: "mysql_stmt_bind_param".}
+# proc stmt_bind_param*(stmt: PSTMT, bnd: pointer): my_bool{.stdcall, dynlib: lib,
+#     importc: "mysql_stmt_bind_param".}
 proc stmt_bind_result*(stmt: PSTMT, bnd: PBIND): my_bool{.stdcall, dynlib: lib,
     importc: "mysql_stmt_bind_result".}
 proc stmt_close*(stmt: PSTMT): my_bool{.stdcall, dynlib: lib,

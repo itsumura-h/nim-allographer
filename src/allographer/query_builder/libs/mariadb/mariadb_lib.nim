@@ -1,3 +1,4 @@
+import std/json
 import ../../error
 import ../../models/database_types
 import ./mariadb_rdb
@@ -160,3 +161,52 @@ proc unsafeColumnAt*(row: InstantRow, index: int): cstring {.inline.} =
 proc len*(row: InstantRow): int {.inline.} =
   ## Returns number of columns in the row.
   row.len
+
+
+type MariadbParams* = object
+  nParams*:int
+  buffer*: cstringArray
+  bufferType*:seq[Enum_field_types]
+  bufferlength*: seq[int]
+  len*:seq[int]
+  isNull*:seq[my_bool]
+
+proc fromArray*(_:type MariadbParams, args:JsonNode):MariadbParams =
+  ## args is JArray [true, 1, "alice"]
+  if args.len == 0:
+    return
+  result.nParams = args.len.int32
+
+  var values = newSeq[string](args.len)
+  result.bufferType = newSeq[Enum_field_types](args.len)
+  result.bufferlength = newSeq[int](args.len)
+  result.len = newSeq[int](args.len)
+  result.isNull = newSeq[my_bool](args.len)
+
+  var i = 0
+  for arg in args.items:
+    defer: i.inc()
+    case arg.kind
+    of JBool:
+      discard
+    of JInt:
+      values[i] = $arg["value"].getInt
+      result.bufferType[i] = TYPE_LONG
+      result.bufferlength[i] = sizeof(int)
+      result.len[i] = 0
+      result.isNull[i] = my_bool(0)
+    of JFloat:
+      discard
+    of JNull:
+      discard
+    of JObject, JArray:
+      discard
+    of JString:
+      let value = arg["value"].getStr
+      values[i] = value
+      result.bufferType[i] = TYPE_STRING
+      result.bufferlength[i] = sizeof(value)
+      result.len[i] = value.len
+      result.isNull[i] = my_bool(0)
+
+  result.buffer = allocCStringArray(values)

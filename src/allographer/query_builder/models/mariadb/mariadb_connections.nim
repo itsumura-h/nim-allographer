@@ -41,7 +41,7 @@ proc table*(self:MariadbConnections, tableArg: string): MariadbQuery =
 
 
 proc raw*(self:MariadbConnections, sql:string, arges=newJArray()): RawMariadbQuery =
-  ## arges is `JArray`
+  ## arges is `JArray` `[true, 1, 1.1, "str"]`
   ## 
   ## can't use BLOB data.
   let rawQueryRdb = RawMariadbQuery(
