@@ -35,6 +35,58 @@
 ##   the SHARED_LIB_MAJOR_VERSION in cmake/mysql_version.cmake
 ##
 
+when not defined(MYSQL_ABI_CHECK):
+  discard
+##  Legacy definition for the benefit of old code. Use uint64_t in new code.
+##  If you get warnings from printf, use the PRIu64 macro, or, if you need
+##  compatibility with older versions of the client library, cast
+##  before printing.
+
+type
+  my_ulonglong* = uint64_t
+
+when defined(_WIN32) and not defined(MYSQL_ABI_CHECK):
+  when defined(WIN32_LEAN_AND_MEAN):
+    discard
+  const
+    my_socket* = SOCKET
+else:
+  type
+    my_socket* = cint
+##  Small extra definition to avoid pulling in my_compiler.h in client code.
+##  IWYU pragma: no_include "my_compiler.h"
+
+when not defined(MY_COMPILER_INCLUDED):
+  when not defined(_WIN32) or defined(MYSQL_ABI_CHECK):
+    discard
+  else:
+    discard
+import
+  field_types, my_list, mysql_com
+
+##  Include declarations of plug-in API
+
+import
+  client_plugin
+
+##
+##   The client should be able to know which version it is compiled against,
+##   even if mysql.h doesn't use this information directly.
+##
+
+import
+  mysql_version
+
+##  MYSQL_TIME is part of our public API.
+
+import
+  mysql_time
+
+##  The error messages are part of our public API.
+
+import
+  errmsg
+
 var mysql_port*: cuint
 
 var mysql_unix_port*: cstring

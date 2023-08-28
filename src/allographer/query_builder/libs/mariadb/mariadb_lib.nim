@@ -163,12 +163,19 @@ proc len*(row: InstantRow): int {.inline.} =
   row.len
 
 
+type MariadbParamValue* = object
+  boolBuffer*: bool
+  intBuffer*: int
+  floatBuffer*: float
+  stringBuffer*: cstring
+  kind*: JsonNodeKind
+
 type MariadbParams* = object
   nParams*:int
-  buffer*: cstringArray
+  buffer*: seq[MariadbParamValue]
   bufferType*:seq[Enum_field_types]
-  bufferlength*: seq[int]
-  len*:seq[int]
+  bufferlength*: seq[culong]
+  len*:seq[culong]
   isNull*:seq[my_bool]
 
 proc fromArray*(_:type MariadbParams, args:JsonNode):MariadbParams =
@@ -177,10 +184,10 @@ proc fromArray*(_:type MariadbParams, args:JsonNode):MariadbParams =
     return
   result.nParams = args.len.int32
 
-  var values = newSeq[string](args.len)
+  result.buffer = newSeq[MariadbParamValue](args.len)
   result.bufferType = newSeq[Enum_field_types](args.len)
-  result.bufferlength = newSeq[int](args.len)
-  result.len = newSeq[int](args.len)
+  result.bufferlength = newSeq[culong](args.len)
+  result.len = newSeq[culong](args.len)
   result.isNull = newSeq[my_bool](args.len)
 
   var i = 0
@@ -190,11 +197,11 @@ proc fromArray*(_:type MariadbParams, args:JsonNode):MariadbParams =
     of JBool:
       discard
     of JInt:
-      values[i] = $arg["value"].getInt
+      result.buffer[i] = MariadbParamValue(intBuffer:arg.getInt, kind:JInt)
       result.bufferType[i] = TYPE_LONG
-      result.bufferlength[i] = sizeof(int)
-      result.len[i] = 0
-      result.isNull[i] = my_bool(0)
+      result.bufferlength[i] = sizeof(int).culong
+      result.len[i] = sizeof(int).culong
+      result.isNull[i] = my_bool(false)
     of JFloat:
       discard
     of JNull:
@@ -202,11 +209,8 @@ proc fromArray*(_:type MariadbParams, args:JsonNode):MariadbParams =
     of JObject, JArray:
       discard
     of JString:
-      let value = arg["value"].getStr
-      values[i] = value
+      result.buffer[i] = MariadbParamValue(stringBuffer:arg.getStr.cstring, kind:JString)
       result.bufferType[i] = TYPE_STRING
-      result.bufferlength[i] = sizeof(value)
-      result.len[i] = value.len
-      result.isNull[i] = my_bool(0)
-
-  result.buffer = allocCStringArray(values)
+      result.bufferlength[i] = arg.getStr.cstring.len.culong
+      result.len[i] = arg.getStr.cstring.len.culong
+      result.isNull[i] = my_bool(false)

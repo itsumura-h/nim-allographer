@@ -43,61 +43,70 @@ proc rawExec*(conn:PMySQL, query: string, args: JsonNode, timeout:int) {.async.}
     mariadb_rdb.close(conn)
     dbError("mysql_stmt_prepare() failed")
 
-  let params = MariadbParams.fromArray(args)
-  if params.nParams > 0:
-    echo params.repr
+  let mariaParams = MariadbParams.fromArray(args)
+  
+  if args.len > 0:
+    var bindParams = newSeq[BIND](args.len)
+    for i in 0..<mariaParams.nParams:
+      case mariaParams.buffer[i].kind
+      of JBool:
+        discard
+      of JInt:
+        let param = BIND(
+          length: mariaParams.len[i].unsafeAddr,
+          is_null: mariaParams.isNull[i].unsafeAddr,
+          buffer: mariaParams.buffer[i].intBuffer.unsafeAddr,
+          buffer_type: mariaParams.bufferType[i],
+          buffer_length: mariaParams.bufferlength[i],
+        )
+        bindParams[i] = param
+      of JFloat:
+        discard
+      of JArray, JObject:
+        discard
+      of JNull:
+        discard
+      of JString:
+        let param = BIND(
+          length: mariaParams.len[i].unsafeAddr,
+          is_null: mariaParams.isNull[i].unsafeAddr,
+          buffer: mariaParams.buffer[i].stringBuffer.unsafeAddr,
+          buffer_type: mariaParams.bufferType[i],
+          buffer_length: mariaParams.bufferlength[i],
+        )
+        bindParams[i] = param
 
-  # var bindParams = newSeq[BIND](args.len)
-  # var i = 0
-  # for arg in args.items:
-  #   defer: i.inc()
-  #   if arg.kind == JInt:
-  #     let buffer = arg.getInt.cint
-  #     let pBuffer = buffer.unsafeAddr
-  #     echo "pBuffer.repr: ", pBuffer.repr
-  #     let param = BIND(
-  #       buffer: pBuffer,
-  #       buffer_type:Enum_field_types.TYPE_LONG,
-  #     )
-  #     bindParams[i] = param
-  #   elif arg.kind == JString:
-  #     let buffer = arg.getStr.cstring
-  #     let pBuffer = buffer.unsafeAddr
-  #     echo "pBuffer.repr: ", pBuffer.repr
-  #     let param = BIND(
-  #       buffer: pBuffer,
-  #       buffer_type:Enum_field_types.TYPE_STRING,
-  #       buffer_length: buffer.len
-  #     )
-  #     bindParams[i] = param
+    echo ""
+    echo bindParams.repr
+    echo ""
 
-  # if args.len > 0:
-  #   echo "==== stmt_bind_param"
-  #   if mariadb_rdb.stmt_bind_param(stmt, bindParams[0].unsafeAddr):
-  #     echo "stmt_error: ",stmt.stmt_error()
-  #     echo "stmt_errno: ",stmt.stmt_errno() 
-  #     echo "error: ",conn.error()
-  #     echo "errno: ",conn.errno()
-  #     discard mariadb_rdb.stmt_close(stmt)
-  #     mariadb_rdb.close(conn)
-  #     dbError("mysql_stmt_bind_param() failed")
-  #   else:
-  #     echo "stmt_error: ",stmt.stmt_error()
-  #     echo "stmt_errno: ",stmt.stmt_errno()
-  #     echo "error: ",conn.error()
-  #     echo "errno: ",conn.errno()
+    echo "==== stmt_bind_param"
+    if mariadb_rdb.stmt_bind_param(stmt, bindParams[0].unsafeAddr):
+      echo "stmt_error: ",stmt.stmt_error()
+      echo "stmt_errno: ",stmt.stmt_errno() 
+      echo "error: ",conn.error()
+      echo "errno: ",conn.errno()
+      discard mariadb_rdb.stmt_close(stmt)
+      mariadb_rdb.close(conn)
+      dbError("mysql_stmt_bind_param() failed")
+    else:
+      echo "stmt_error: ",stmt.stmt_error()
+      echo "stmt_errno: ",stmt.stmt_errno()
+      echo "error: ",conn.error()
+      echo "errno: ",conn.errno()
 
-  # echo "stmt_param_count: ", mariadb_rdb.stmt_param_count(stmt)
+  echo "stmt_param_count: ", mariadb_rdb.stmt_param_count(stmt)
 
-  # echo "stmt.isNil: ",stmt.isNil
-  # echo "==== stmt_execute start"
-  # if mariadb_rdb.stmt_execute(stmt) != 0:
-  #   echo "stmt_error: ",stmt.stmt_error()
-  #   echo "error: ",conn.error()
-  #   echo "errno: ",conn.errno()
-  #   discard mariadb_rdb.stmt_close(stmt)
-  #   mariadb_rdb.close(conn)
-  #   dbError("mysql_stmt_execute() failed")
+  echo "stmt.isNil: ",stmt.isNil
+  echo "==== stmt_execute start"
+  if mariadb_rdb.stmt_execute(stmt) != 0:
+    echo "stmt_error: ",stmt.stmt_error()
+    echo "error: ",conn.error()
+    echo "errno: ",conn.errno()
+    discard mariadb_rdb.stmt_close(stmt)
+    mariadb_rdb.close(conn)
+    dbError("mysql_stmt_execute() failed")
+  echo "==== stmt_execute end"
 
   # discard bindParams.repr
 
