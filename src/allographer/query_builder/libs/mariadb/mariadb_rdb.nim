@@ -763,62 +763,26 @@ type
   Enum_mysql_stmt_state* = enum
     STMT_INIT_DONE = 1, STMT_PREPARE_DONE, STMT_EXECUTE_DONE, STMT_FETCH_DONE
   Pst_mysql_bind* = ptr St_mysql_bind
-  # St_mysql_bind*{.final.} = object
-  #   len*: int                 # output length pointer
-  #   is_null*: Pmy_bool        # Pointer to null indicator
-  #   buffer*: pointer          # buffer to get/put data
-  #   error*: Pmy_bool          # set this if you want to track data truncations happened during fetch
-  #   buffer_type*: Enum_field_types # buffer type
-  #   buffer_length*: int       # buffer length, must be set for str/binary
-  #                             # Following are for internal use. Set by mysql_stmt_bind_param
-  #   row_ptr*: ptr byte        # for the current data position
-  #   offset*: int              # offset position for char/binary fetch
-  #   length_value*: int        #  Used if length is 0
-  #   param_number*: cuint      # For null count and error messages
-  #   pack_length*: cuint       # Internal length for packed data
-  #   error_value*: my_bool     # used if error is 0
-  #   is_unsigned*: my_bool     # set if integer type is unsigned
-  #   long_data_used*: my_bool  # If used with mysql_send_long_data
-  #   is_null_value*: my_bool   # Used if is_null is 0
-  #   store_param_func*: proc (net: PNET, param: Pst_mysql_bind){.cdecl.}
-  #   fetch_result*: proc (para1: Pst_mysql_bind, para2: PFIELD, row: PPByte)
-  #   skip_result*: proc (para1: Pst_mysql_bind, para2: PFIELD, row: PPByte)
-
-  St_mysql_bind* {.final.} = object
-    length*: ptr culong
-    ##  output length pointer
-    is_null*: ptr bool
-    ##  Pointer to null indicator
-    buffer*: pointer
-    ##  buffer to get/put data
-    ##  set this if you want to track data truncations happened during fetch
-    error*: ptr bool
-    row_ptr*: ptr uint8
-    ##  for the current data position
-    store_param_func*: proc (net: ptr NET; param: ptr St_mysql_bind)
-    fetch_result*: proc (a1: ptr St_mysql_bind; a2: ptr FIELD; row: ptr ptr uint8)
-    skip_result*: proc (a1: ptr St_mysql_bind; a2: ptr FIELD; row: ptr ptr uint8)
-    ##  output buffer length, must be set when fetching str/binary
-    buffer_length*: culong
-    offset*: culong
-    ##  offset position for char/binary fetch
-    length_value*: culong
-    ##  Used if length is 0
-    param_number*: cuint
-    ##  For null count and error messages
-    pack_length*: cuint
-    ##  Internal length for packed data
-    buffer_type*: Enum_field_types
-    ##  buffer type
-    error_value*: bool
-    ##  used if error is 0
-    is_unsigned*: bool
-    ##  set if integer type is unsigned
-    long_data_used*: bool
-    ##  If used with mysql_send_long_data
-    is_null_value*: bool
-    ##  Used if is_null is 0
-    extension*: pointer
+  St_mysql_bind*{.final.} = object
+    len*: int                 # output length pointer
+    is_null*: Pmy_bool        # Pointer to null indicator
+    buffer*: pointer          # buffer to get/put data
+    error*: Pmy_bool          # set this if you want to track data truncations happened during fetch
+    buffer_type*: Enum_field_types # buffer type
+    buffer_length*: int       # buffer length, must be set for str/binary
+                              # Following are for internal use. Set by mysql_stmt_bind_param
+    row_ptr*: ptr byte        # for the current data position
+    offset*: int              # offset position for char/binary fetch
+    length_value*: int        #  Used if length is 0
+    param_number*: cuint      # For null count and error messages
+    pack_length*: cuint       # Internal length for packed data
+    error_value*: my_bool     # used if error is 0
+    is_unsigned*: my_bool     # set if integer type is unsigned
+    long_data_used*: my_bool  # If used with mysql_send_long_data
+    is_null_value*: my_bool   # Used if is_null is 0
+    store_param_func*: proc (net: PNET, param: Pst_mysql_bind){.cdecl.}
+    fetch_result*: proc (para1: Pst_mysql_bind, para2: PFIELD, row: PPByte)
+    skip_result*: proc (para1: Pst_mysql_bind, para2: PFIELD, row: PPByte)
 
   BIND* = St_mysql_bind
   PBIND* = ptr BIND           # statement handler
@@ -932,14 +896,10 @@ proc real_connect*(MySQL: PMySQL, host: cstring, user: cstring, passwd: cstring,
                    db: cstring, port: cuint, unix_socket: cstring,
                    clientflag: int): PMySQL{.stdcall, dynlib: lib,
                                         importc: "mysql_real_connect".}
-proc real_connect_start*(ret: ptr PMySQL, MySQL: PMySQL, host: cstring, user: cstring, passwd: cstring,
+proc real_connect_start*(ret: ptr PMySQL, mysql: PMySQL, host: cstring, user: cstring, passwd: cstring,
                    db: cstring, port: cuint, unix_socket: cstring,
-                   clientflag: int): int{.stdcall, dynlib: lib,
+                   clientflag: culong): cint{.stdcall, dynlib: lib,
                                         importc: "mysql_real_connect_start".}
-# proc real_connect_start*(ret: ptr PMySQL, mysql: PMySQL, host: cstring, user: cstring, passwd: cstring,
-#                    db: cstring, port: cuint, unix_socket: cstring,
-#                    clientflag: culong): cint{.stdcall, dynlib: lib,
-#                                         importc: "mysql_real_connect_start".}
 proc fetch_row_nonblocking*(MYSQL_RES: PRES, MYSQL_ROW: PROW): NetAsyncStatus{.stdcall, dynlib: lib,
                                         importc: "mysql_fetch_row_nonblocking".}
 proc free_result_nonblocking*(MYSQL_RES: PRES): NetAsyncStatus{.stdcall, dynlib: lib,
@@ -1057,6 +1017,8 @@ proc escape_string*(fto: cstring, `from`: cstring, from_length: int): int{.
     stdcall, dynlib: lib, importc: "mysql_escape_string".}
 proc hex_string*(fto: cstring, `from`: cstring, from_length: int): int{.stdcall,
     dynlib: lib, importc: "mysql_hex_string".}
+# proc real_escape_string*(MySQL: PMySQL, fto: cstring, `from`: cstring, len: int): int{.
+#     stdcall, dynlib: lib, importc: "mysql_real_escape_string".}
 proc real_escape_string*(MySQL: PMySQL, fto: cstring, `from`: cstring, len: int): int{.
     stdcall, dynlib: lib, importc: "mysql_real_escape_string".}
 proc debug*(debug: cstring){.stdcall, dynlib: lib, importc: "mysql_debug".}
@@ -1082,12 +1044,8 @@ proc read_query_result*(MySQL: PMySQL): my_bool{.stdcall, dynlib: lib,
 proc stmt_init*(MySQL: PMySQL): PSTMT{.stdcall, dynlib: lib, importc: "mysql_stmt_init".}
 proc stmt_prepare*(stmt: PSTMT, query: cstring, len: int): cint{.stdcall,
     dynlib: lib, importc: "mysql_stmt_prepare".}
-proc stmt_prepare_start*(ret: ptr int, stmt: PSTMT, query: cstring, len: int): cint{.stdcall,
-    dynlib: lib, importc: "mysql_stmt_prepare_start".}
 proc stmt_execute*(stmt: PSTMT): cint{.stdcall, dynlib: lib,
                                        importc: "mysql_stmt_execute".}
-proc stmt_execute_start*(ret: ptr int, stmt: PSTMT): cint{.stdcall, dynlib: lib,
-                                       importc: "mysql_stmt_execute_start".}
 proc stmt_fetch*(stmt: PSTMT): cint{.stdcall, dynlib: lib,
                                      importc: "mysql_stmt_fetch".}
 proc stmt_fetch_column*(stmt: PSTMT, `bind`: PBIND, column: cuint, offset: int): cint{.
@@ -1102,8 +1060,6 @@ proc stmt_attr_get*(stmt: PSTMT, attr_type: Enum_stmt_attr_type, attr: pointer):
     stdcall, dynlib: lib, importc: "mysql_stmt_attr_get".}
 proc stmt_bind_param*(stmt: PSTMT, bnd: PBIND): my_bool{.stdcall, dynlib: lib,
     importc: "mysql_stmt_bind_param".}
-# proc stmt_bind_param*(stmt: PSTMT, bnd: pointer): my_bool{.stdcall, dynlib: lib,
-#     importc: "mysql_stmt_bind_param".}
 proc stmt_bind_result*(stmt: PSTMT, bnd: PBIND): my_bool{.stdcall, dynlib: lib,
     importc: "mysql_stmt_bind_result".}
 proc stmt_close*(stmt: PSTMT): my_bool{.stdcall, dynlib: lib,

@@ -413,7 +413,6 @@ proc getFreeConn(self:MariadbConnections | MariadbQuery | RawMariadbQuery):Futur
     for i in 0..<self.pools.len:
       if not self.pools[i].isBusy:
         self.pools[i].isBusy = true
-        # echo "=== getFreeConn ", i
         return i
         break
     await sleepAsync(10)
@@ -554,22 +553,21 @@ proc returnConn(self:MariadbConnections | MariadbQuery | RawMariadbQuery, i: int
 #   return rows[0]
 
 
-# proc exec(self:MariadbQuery, queryString:string) {.async.} =
-#   ## args is `JObject`
-#   var connI = self.transactionConn
-#   if not self.isInTransaction:
-#     connI = getFreeConn(self).await
-#   defer:
-#     if not self.isInTransaction:
-#       self.returnConn(connI).await
-#   if connI == errorConnectionNum:
-#     return
+proc exec(self:MariadbQuery, queryString:string) {.async.} =
+  ## args is `JObject`
+  var connI = self.transactionConn
+  if not self.isInTransaction:
+    connI = getFreeConn(self).await
+  defer:
+    if not self.isInTransaction:
+      self.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
 
-#   let table = self.query["table"].getStr
-#   let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
-#   let (columns, _) = mariadb_impl.query(self.pools[connI].conn, columnGetQuery, newJArray(), self.timeout).await
-
-#   mariadb_impl.exec(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
+  let database = self.pools[connI].info.database
+  let table = self.query["table"].getStr
+  let columns = mariadb_impl.getColumnTypes(self.pools[connI].conn, $database, table, self.timeout).await
+  mariadb_impl.exec(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
 
 
 # proc insertId(self:MariadbQuery, queryString:string, key:string):Future[string] {.async.} =
@@ -693,7 +691,7 @@ proc exec(self:RawMariadbQuery, queryString:string) {.async.} =
   if connI == errorConnectionNum:
     return
 
-  mariadb_impl.rawExec(
+  mariadb_impl.exec(
     self.pools[connI].conn,
     queryString,
     self.placeHolder,
@@ -752,9 +750,9 @@ proc exec(self:RawMariadbQuery, queryString:string) {.async.} =
 #   mariadb_impl.exec(self.pools[self.transactionConn].conn, query, newJArray(), newSeq[Row](), self.timeout).await
 
 
-# # ================================================================================
-# # public exec
-# # ================================================================================
+# ================================================================================
+# public exec
+# ================================================================================
 
 # proc get*(self: MariadbQuery):Future[seq[JsonNode]] {.async.} =
 #   var sql = self.selectBuilder()
@@ -838,12 +836,11 @@ proc exec(self:RawMariadbQuery, queryString:string) {.async.} =
 #   return self.findPlain($id, key).await
 
 
-# proc insert*(self:MariadbQuery, items:JsonNode) {.async.} =
-#   ## items is `JObject`
-#   var sql = self.insertValueBuilder(items)
-#   sql = questionToDaller(sql)
-#   self.log.logger(sql)
-#   self.exec(sql).await
+proc insert*(self:MariadbQuery, items:JsonNode) {.async.} =
+  ## items is `JObject`
+  var sql = self.insertValueBuilder(items)
+  self.log.logger(sql)
+  self.exec(sql).await
 
 
 # proc insert*(self:MariadbQuery, items:seq[JsonNode]) {.async.} =

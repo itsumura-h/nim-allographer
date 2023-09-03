@@ -4,10 +4,10 @@ import ../../models/database_types
 import ./mariadb_rdb
 
 
-type InstantRow* = object ## a handle that can be used to get a row's
-                       ## column text on demand
-  row*: cstringArray
-  len: int
+# type InstantRow* = object ## a handle that can be used to get a row's
+#                        ## column text on demand
+#   row*: cstringArray
+#   len: int
 
 proc dbError*(db: PMySQL) {.noreturn.} =
   ## raises a DbError exception.
@@ -16,11 +16,11 @@ proc dbError*(db: PMySQL) {.noreturn.} =
   e.msg = $db.error
   raise e
 
-proc checkError*(db: PMySQL) =
-  ## Raises a DbError exception.
-  var message = $db.error
-  if message.len > 0:
-    raise newException(DbError, $message)
+# proc checkError*(db: PMySQL) =
+#   ## Raises a DbError exception.
+#   var message = $db.error
+#   if message.len > 0:
+#     raise newException(DbError, $message)
 
 proc setTypeName(t: var DbType; f: PFIELD) =
   t.name = $f.name
@@ -86,14 +86,14 @@ proc setColumnInfo*(columns: var DbColumns; res: PRES; L: int) =
     columns[i].tableName = $fp.table
     columns[i].primaryKey = (fp.flags and PRI_KEY_FLAG) != 0
 
-proc newRow*(L: int): database_types.Row =
-  newSeq(result, L)
-  for i in 0..L-1: result[i] = ""
+# proc newRow*(L: int): database_types.Row =
+#   newSeq(result, L)
+#   for i in 0..L-1: result[i] = ""
 
-proc properFreeResult*(sqlres: PRES, row: cstringArray) =
-  if row != nil:
-    while fetchRow(sqlres) != nil: discard
-  freeResult(sqlres)
+# proc properFreeResult*(sqlres: PRES, row: cstringArray) =
+#   if row != nil:
+#     while fetchRow(sqlres) != nil: discard
+#   freeResult(sqlres)
 
 proc dbQuote(s: string): string =
   ## DB quotes the string.
@@ -127,90 +127,98 @@ proc dbFormat*(formatstr: string, args: seq[string]): string =
     else:
       add(result, c)
 
-proc rawExec*(db:PMySQL, query:string, args: seq[string]) =
-  var q = dbFormat(query, args)
-  if realQuery(db, q.cstring, q.len) != 0'i32: dbError(db)
 
-iterator instantRows*(db: PMySQL; dbRows: var DbRows; query: string;
-                      args: seq[string]): InstantRow =
-  ## Same as fastRows but returns a handle that can be used to get column text
-  ## on demand using []. Returned handle is valid only within the iterator body.
-  rawExec(db, query, args)
-  var sqlres = mariadb_rdb.useResult(db)
-  var dbColumns: DbColumns
-  if sqlres != nil:
-    let L = int(mariadb_rdb.numFields(sqlres))
-    var row: cstringArray
-    while true:
-      setColumnInfo(dbColumns, sqlres, L)
-      dbRows.add(dbColumns)
-      for i in 0..L:
-        row = mariadb_rdb.fetchRow(sqlres)
-      if row == nil: break
-      yield InstantRow(row: row, len: L)
-    properFreeResult(sqlres, row)
+# proc rawExec*(db:PMySQL, query:string, args: seq[string]) =
+#   var q = dbFormat(query, args)
+#   if realQuery(db, q.cstring, q.len) != 0'i32: dbError(db)
 
-proc `[]`*(row: InstantRow, col: int): string {.inline.} =
-  ## Returns text for given column of the row.
-  $row.row[col]
+# iterator instantRows*(db: PMySQL; dbRows: var DbRows; query: string;
+#                       args: seq[string]): InstantRow =
+#   ## Same as fastRows but returns a handle that can be used to get column text
+#   ## on demand using []. Returned handle is valid only within the iterator body.
+#   rawExec(db, query, args)
+#   var sqlres = mariadb_rdb.useResult(db)
+#   var dbColumns: DbColumns
+#   if sqlres != nil:
+#     let L = int(mariadb_rdb.numFields(sqlres))
+#     var row: cstringArray
+#     while true:
+#       setColumnInfo(dbColumns, sqlres, L)
+#       dbRows.add(dbColumns)
+#       for i in 0..L:
+#         row = mariadb_rdb.fetchRow(sqlres)
+#       if row == nil: break
+#       yield InstantRow(row: row, len: L)
+#     properFreeResult(sqlres, row)
 
-proc unsafeColumnAt*(row: InstantRow, index: int): cstring {.inline.} =
-  ## Return cstring of given column of the row
-  row.row[index]
+# proc `[]`*(row: InstantRow, col: int): string {.inline.} =
+#   ## Returns text for given column of the row.
+#   $row.row[col]
 
-proc len*(row: InstantRow): int {.inline.} =
-  ## Returns number of columns in the row.
-  row.len
+# proc unsafeColumnAt*(row: InstantRow, index: int): cstring {.inline.} =
+#   ## Return cstring of given column of the row
+#   row.row[index]
+
+# proc len*(row: InstantRow): int {.inline.} =
+#   ## Returns number of columns in the row.
+#   row.len
 
 
 type MariadbParamValue* = object
-  boolBuffer*: bool
-  intBuffer*: int
-  floatBuffer*: float
-  stringBuffer*: cstring
-  kind*: JsonNodeKind
+  value*: string
+  isBinary*:bool
 
-type MariadbParams* = object
-  nParams*:int
-  buffer*: seq[MariadbParamValue]
-  bufferType*:seq[Enum_field_types]
-  bufferlength*: seq[culong]
-  len*:seq[culong]
-  isNull*:seq[my_bool]
+type MariadbParams* = seq[MariadbParamValue]
 
-proc fromArray*(_:type MariadbParams, args:JsonNode):MariadbParams =
-  ## args is JArray [true, 1, "alice"]
-  if args.len == 0:
-    return
-  result.nParams = args.len.int32
-
-  result.buffer = newSeq[MariadbParamValue](args.len)
-  result.bufferType = newSeq[Enum_field_types](args.len)
-  result.bufferlength = newSeq[culong](args.len)
-  result.len = newSeq[culong](args.len)
-  result.isNull = newSeq[my_bool](args.len)
-
+proc fromObj*(_:type MariadbParams, args:JsonNode, columns:seq[seq[string]]):MariadbParams =
+  ## args is JArray [{"key":"id", "value": 1}, {"key": "name" "value": "alice"}] 
+  result = newSeq[MariadbParamValue](args.len)
   var i = 0
   for arg in args.items:
     defer: i.inc()
-    case arg.kind
+    case arg["value"].kind
     of JBool:
-      discard
+      let value = if arg["value"].getBool: "1" else: "0"
+      result[i] = MariadbParamValue(value:value, isBinary:false)
     of JInt:
-      result.buffer[i] = MariadbParamValue(intBuffer:arg.getInt, kind:JInt)
-      result.bufferType[i] = TYPE_LONG
-      result.bufferlength[i] = sizeof(int).culong
-      result.len[i] = sizeof(int).culong
-      result.isNull[i] = my_bool(false)
+      let value = $arg["value"].getInt
+      result[i] = MariadbParamValue(value:value, isBinary:false)
     of JFloat:
-      discard
+      let value = $arg["value"].getFloat
+      result[i] = MariadbParamValue(value:value, isBinary:false)
+    of JArray, JObject:
+      let value = arg["value"].pretty()
+      result[i] = MariadbParamValue(value:value, isBinary:false)
     of JNull:
-      discard
-    of JObject, JArray:
-      discard
-    of JString:
-      result.buffer[i] = MariadbParamValue(stringBuffer:arg.getStr.cstring, kind:JString)
-      result.bufferType[i] = TYPE_STRING
-      result.bufferlength[i] = arg.getStr.cstring.len.culong
-      result.len[i] = arg.getStr.cstring.len.culong
-      result.isNull[i] = my_bool(false)
+      let value = "NULL"
+      result[i] = MariadbParamValue(value:value, isBinary:false)
+    else: # JString
+      let value = arg["value"].getStr
+      result[i] = MariadbParamValue(value:value, isBinary:false)
+      for column in columns:
+        let columnName = column[0]
+        let columnTyp = column[1]
+        if columnName == arg["key"].getStr:
+          defer:break
+          if columnTyp == "blob":
+            result[i].isBinary = true
+
+
+proc dbFormat*(conn:PMySQL, formatstr: string, args: MariadbParams): string =
+  result = ""
+  var a = 0
+  for c in items(formatstr):
+    if c == '?':
+      defer: a.inc()
+      if args[a].isBinary:
+        var to = newString(args[a].value.len * 2 + 1)
+        let `from` = args[a].value
+        let len = mariadb_rdb.real_escape_string(conn, to.cstring, `from`.cstring, `from`.len)
+        to.setLen(len)
+        result.add("\'")
+        result.add(to)
+        result.add("\'")
+      else:
+        result.add(dbQuote(args[a].value))
+    else:
+      result.add(c)

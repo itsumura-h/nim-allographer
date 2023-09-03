@@ -5,12 +5,18 @@ import ../../libs/mariadb/mariadb_rdb
 
 type MariaDB* = object
 
+type MariadbConnectionInfo* = object
+  database*:string
+  user*:string
+  password*:string
+  host*:string
+  port*:int
 
 type MariadbConnection* = object
   conn*: PMySQL
   isBusy*: bool
   createdAt*: int64
-
+  info*:MariadbConnectionInfo
 
 ## created by `let rdb = dbOpen(MySQL, "localhost", 3306)`
 type MariadbConnections* = ref object
