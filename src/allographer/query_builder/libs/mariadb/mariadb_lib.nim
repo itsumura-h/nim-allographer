@@ -204,21 +204,25 @@ proc fromObj*(_:type MariadbParams, args:JsonNode, columns:seq[seq[string]]):Mar
             result[i].isBinary = true
 
 
-proc dbFormat*(conn:PMySQL, formatstr: string, args: MariadbParams): string =
+proc dbFormat*(conn:PMySQL, query: string, args: MariadbParams): string =
   result = ""
-  var a = 0
-  for c in items(formatstr):
+  var i = 0
+  for c in query:
     if c == '?':
-      defer: a.inc()
-      if args[a].isBinary:
-        var to = newString(args[a].value.len * 2 + 1)
-        let `from` = args[a].value
+      defer: i.inc()
+      if args[i].isBinary:
+        let `from` = args[i].value
+        var to = newString(`from`.len * 2 + 1)
+        echo "=== to"
+        echo to
         let len = mariadb_rdb.real_escape_string(conn, to.cstring, `from`.cstring, `from`.len)
         to.setLen(len)
         result.add("\'")
+        echo "=== to"
+        echo to
         result.add(to)
         result.add("\'")
       else:
-        result.add(dbQuote(args[a].value))
+        result.add(dbQuote(args[i].value))
     else:
       result.add(c)

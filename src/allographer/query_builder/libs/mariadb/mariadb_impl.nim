@@ -30,10 +30,9 @@ import ./mariadb_lib
 #   )
 
 proc rawExec(conn:PMySQL, query: string, args: MariadbParams) =
-  ## args is `JArray`
   assert conn.ping == 0
+  
   let query = query.strip
-
   var stmt = mariadb_rdb.stmt_init(conn)
   if stmt.isNil:
     mariadb_rdb.close(conn)

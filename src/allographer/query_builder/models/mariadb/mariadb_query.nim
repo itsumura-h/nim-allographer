@@ -554,7 +554,6 @@ proc returnConn(self:MariadbConnections | MariadbQuery | RawMariadbQuery, i: int
 
 
 proc exec(self:MariadbQuery, queryString:string) {.async.} =
-  ## args is `JObject`
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
