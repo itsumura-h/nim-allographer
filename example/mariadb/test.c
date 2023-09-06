@@ -1,3 +1,4 @@
+// apt install -y libcurl4-openssl-dev
 // gcc test.c -o test -lmariadb -lcurl && ./test
 
 #include <stdio.h>

@@ -29,22 +29,9 @@ import ./mariadb_lib
 #     timeout: timeout
 #   )
 
-proc rawExec(conn:PMySQL, query: string, args: MariadbParams) =
-  assert conn.ping == 0
-  
-  let query = query.strip
-  var stmt = mariadb_rdb.stmt_init(conn)
-  if stmt.isNil:
-    mariadb_rdb.close(conn)
-    dbError("mysql_stmt_init() failed")
-
-  var q = dbFormat(conn, query, args)
-  if realQuery(conn, q.cstring, q.len) != 0'i32: dbError(conn)
-
 
 proc rawExec(conn:PMySQL, query: string, args: seq[string]) =
   assert conn.ping == 0
-  let query = query.strip
 
   var stmt = mariadb_rdb.stmt_init(conn)
   if stmt.isNil:
@@ -55,53 +42,16 @@ proc rawExec(conn:PMySQL, query: string, args: seq[string]) =
   if realQuery(conn, q.cstring, q.len) != 0'i32: dbError(conn)
 
 
-proc query*(db:PMySQL, query: string, args: JsonNode, timeout:int):Future[(seq[database_types.Row], DbRows)] {.async.} =
-  assert db.ping == 0
-  var dbRows: DbRows
-  var rows = newSeq[seq[string]]()
-  var lines = 0
+proc rawExec(conn:PMySQL, query: string, args: MariadbParams) =
+  assert conn.ping == 0
 
-  var strArgs = newSeq[string](args.len)
-  var i = 0
-  for arg in args.items:
-    defer: i.inc()
-    case arg.kind
-    of JBool:
-      strArgs[i] = if arg.getBool: "TRUE" else: "FALSE"
-    of JInt:
-      strArgs[i] = $arg.getInt
-    of JFloat:
-      strArgs[i] = $arg.getFloat
-    of JArray, JObject:
-      strArgs[i] = arg.pretty()
-    of JNull:
-      strArgs[i] = "NULL"
-    else: # JString
-      strArgs[i] = arg.getStr()
+  var stmt = mariadb_rdb.stmt_init(conn)
+  if stmt.isNil:
+    mariadb_rdb.close(conn)
+    dbError("mysql_stmt_init() failed")
 
-  rawExec(db, query, strArgs)
-  var sqlres = mariadb_rdb.useResult(db)
-  let calledAt = getTime().toUnix()
-  var dbColumns: DbColumns
-  let cols = int(mariadb_rdb.numFields(sqlres))
-  while true:
-    if getTime().toUnix() >= calledAt + timeout:
-      return
-    await sleepAsync(0)
-    var row: mariadb_rdb.Row
-    var baseRow = newSeq[string](cols)
-    setColumnInfo(dbColumns, sqlres, cols)
-    row = mariadb_rdb.fetchRow(sqlres)
-    if row == nil: break
-    for i in 0..<cols:
-      if row[i].isNil:
-        dbColumns[i].typ.kind = dbNull
-      baseRow[i] = $row[i]
-    rows.add(baseRow)
-    dbRows.add(dbColumns)
-    lines.inc()
-  free_result(sqlres)
-  return (rows, dbRows)
+  var q = dbFormat(conn, query, args)
+  if realQuery(conn, q.cstring, q.len) != 0'i32: dbError(conn)
 
 
 proc query*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[(seq[database_types.Row], DbRows)] {.async.} =
@@ -115,6 +65,7 @@ proc query*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[(se
   let calledAt = getTime().toUnix()
   var dbColumns: DbColumns
   let cols = int(mariadb_rdb.numFields(sqlres))
+
   while true:
     if getTime().toUnix() >= calledAt + timeout:
       return
@@ -131,8 +82,31 @@ proc query*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[(se
     rows.add(baseRow)
     dbRows.add(dbColumns)
     lines.inc()
+
   free_result(sqlres)
   return (rows, dbRows)
+
+
+proc query*(db:PMySQL, query: string, args: JsonNode, timeout:int):Future[(seq[database_types.Row], DbRows)] {.async.} =
+  var strArgs = newSeq[string](args.len)
+  var i = 0
+  for arg in args.items:
+    defer: i.inc()
+    case arg.kind
+    of JBool:
+      strArgs[i] = if arg.getBool: "1" else: "0"
+    of JInt:
+      strArgs[i] = $arg.getInt
+    of JFloat:
+      strArgs[i] = $arg.getFloat
+    of JArray, JObject:
+      strArgs[i] = arg.pretty()
+    of JNull:
+      strArgs[i] = "NULL"
+    else: # JString
+      strArgs[i] = arg.getStr()
+
+  return query(db, query, strArgs, timeout).await
 
 
 proc queryPlain*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[seq[database_types.Row]] {.async.} =
@@ -157,17 +131,7 @@ proc queryPlain*(db:PMySQL, query: string, args: seq[string], timeout:int):Futur
   return rows
 
 
-proc exec*(db:PMySQL, query: string, args: JsonNode, columns:seq[seq[string]], timeout:int) {.async.} =
-  ## args is JArray [{"key":"id", "value": 1}, {"key": "name" "value": "alice"}] 
-  assert db.ping == 0
-
-  let params = MariadbParams.fromObj(args, columns)
-  rawExec(db, query, params)
-
-
-proc exec*(db:PMySQL, query: string, args: JsonNode, timeout:int) {.async.} =
-  assert db.ping == 0
-
+proc queryPlain*(db:PMySQL, query: string, args: JsonNode, timeout:int):Future[seq[database_types.Row]] {.async.} =
   var strArgs = newSeq[string](args.len)
   var i = 0
   for arg in args.items:
@@ -186,13 +150,44 @@ proc exec*(db:PMySQL, query: string, args: JsonNode, timeout:int) {.async.} =
     else: # JString
       strArgs[i] = arg.getStr()
 
-  rawExec(db, query, strArgs)
+  return queryPlain(db, query, strArgs, timeout).await
 
 
-# proc exec*(db:PMySQL, query: string, args: seq[string], timeout:int) {.async.} =
-#   var q = dbFormat(query, args)
-#   await sleepAsync(0)
-#   if realQuery(db, q.cstring, q.len) != 0'i32: dbError(db)
+proc exec*(db:PMySQL, query: string, args: JsonNode, columns:seq[seq[string]], timeout:int) {.async.} =
+  ## args is JArray [{"key":"id", "value": 1}, {"key": "name" "value": "alice"}] 
+  assert db.ping == 0
+
+  let params = MariadbParams.fromObj(args, columns)
+  rawExec(db, query, params)
+
+
+proc exec*(db:PMySQL, query: string, args: seq[string], timeout:int) {.async.} =
+  var q = dbFormat(query, args)
+  await sleepAsync(0)
+  if realQuery(db, q.cstring, q.len) != 0'i32: dbError(db)
+
+
+proc exec*(db:PMySQL, query: string, args: JsonNode, timeout:int) {.async.} =
+  var strArgs = newSeq[string](args.len)
+  var i = 0
+  for arg in args.items:
+    defer: i.inc()
+    case arg.kind
+    of JBool:
+      strArgs[i] = if arg.getBool: "1" else: "0"
+    of JInt:
+      strArgs[i] = $arg.getInt
+    of JFloat:
+      strArgs[i] = $arg.getFloat
+    of JArray, JObject:
+      strArgs[i] = arg.pretty()
+    of JNull:
+      strArgs[i] = "NULL"
+    else: # JString
+      strArgs[i] = arg.getStr()
+
+  exec(db, query, strArgs, timeout).await
+
 
 
 proc getColumns*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[seq[string]] {.async.} =

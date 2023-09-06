@@ -13,14 +13,14 @@ import ./query/mariadb_builder
 import ./mariadb_types
 
 
-# proc table*(self:MariadbQuery, tableArg: string): MariadbQuery =
-#   self.query["table"] = %tableArg
-#   return self
+proc table*(self:MariadbQuery, tableArg: string): MariadbQuery =
+  self.query["table"] = %tableArg
+  return self
 
 
-# proc `distinct`*(self: MariadbQuery): MariadbQuery =
-#   self.query["distinct"] = %true
-#   return self
+proc `distinct`*(self: MariadbQuery): MariadbQuery =
+  self.query["distinct"] = %true
+  return self
 
 # # ============================== Conditions ==============================
 
@@ -425,70 +425,65 @@ proc returnConn(self:MariadbConnections | MariadbQuery | RawMariadbQuery, i: int
     self.pools[i].isBusy = false
 
 
-# # ================================================================================
-# # toJson
-# # ================================================================================
+# ================================================================================
+# toJson
+# ================================================================================
 
-# proc toJson(results:openArray[seq[string]], dbRows:DbRows):seq[JsonNode] =
-#   var response_table = newSeq[JsonNode](results.len)
-#   for index, rows in results.pairs:
-#     var response_row = newJObject()
-#     for i, row in rows:
-#       let key = dbRows[index][i].name
-#       let typ = dbRows[index][i].typ.kind
-#       # let kindName = dbRows[index][i].typ.name
-#       # let size = dbRows[index][i].typ.size
+proc toJson(results:openArray[seq[string]], dbRows:DbRows):seq[JsonNode] =
+  var response_table = newSeq[JsonNode](results.len)
+  for index, rows in results.pairs:
+    var response_row = newJObject()
+    for i, row in rows:
+      let key = dbRows[index][i].name
+      let typ = dbRows[index][i].typ.kind
+      # let kindName = dbRows[index][i].typ.name
+      let size = dbRows[index][i].typ.size
 
-#       if typ == dbNull:
-#         response_row[key] = newJNull()
-#       elif [dbInt, dbUInt].contains(typ):
-#         response_row[key] = newJInt(row.parseInt)
-#       elif [dbDecimal, dbFloat].contains(typ):
-#         response_row[key] = newJFloat(row.parseFloat)
-#       elif [dbBool].contains(typ):
-#         if row == "f":
-#           response_row[key] = newJBool(false)
-#         elif row == "t":
-#           response_row[key] = newJBool(true)
-#       elif [dbJson].contains(typ):
-#         response_row[key] = row.parseJson
-#       elif [dbFixedChar, dbVarchar].contains(typ):
-#         if row == "NULL":
-#           response_row[key] = newJNull()
-#         else:
-#           response_row[key] = newJString(row)
-#       else:
-#         response_row[key] = newJString(row)
+      if typ == dbNull:
+        response_row[key] = newJNull()
+      elif [dbInt, dbUInt].contains(typ) and size == 1:
+        if row == "0":
+          response_row[key] = newJBool(false)
+        elif row == "1":
+          response_row[key] = newJBool(true)
+      elif [dbInt, dbUInt].contains(typ):
+        response_row[key] = newJInt(row.parseInt)
+      elif [dbDecimal, dbFloat].contains(typ):
+        response_row[key] = newJFloat(row.parseFloat)
+      elif [dbJson].contains(typ):
+        response_row[key] = row.parseJson
+      else:
+        response_row[key] = newJString(row)
     
-#     response_table[index] = response_row
-#   return response_table
+    response_table[index] = response_row
+  return response_table
 
 
-# # ================================================================================
-# # private exec
-# # ================================================================================
+# ================================================================================
+# private exec
+# ================================================================================
 
-# proc getAllRows(self:MariadbQuery, queryString:string):Future[seq[JsonNode]] {.async.} =
-#   var connI = self.transactionConn
-#   if not self.isInTransaction:
-#     connI = getFreeConn(self).await
-#   defer:
-#     if not self.isInTransaction:
-#       self.returnConn(connI).await
-#   if connI == errorConnectionNum:
-#     return
+proc getAllRows(self:MariadbQuery, queryString:string):Future[seq[JsonNode]] {.async.} =
+  var connI = self.transactionConn
+  if not self.isInTransaction:
+    connI = getFreeConn(self).await
+  defer:
+    if not self.isInTransaction:
+      self.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
 
-#   let (rows, dbRows) = mariadb_impl.query(
-#     self.pools[connI].conn,
-#     queryString,
-#     self.placeHolder,
-#     self.timeout
-#   ).await
+  let (rows, dbRows) = mariadb_impl.query(
+    self.pools[connI].conn,
+    queryString,
+    self.placeHolder,
+    self.timeout
+  ).await
 
-#   if rows.len == 0:
-#     self.log.echoErrorMsg(queryString)
-#     return newSeq[JsonNode](0)
-#   return toJson(rows, dbRows) # seq[JsonNode]
+  if rows.len == 0:
+    self.log.echoErrorMsg(queryString)
+    return newSeq[JsonNode](0)
+  return toJson(rows, dbRows) # seq[JsonNode]
 
 
 # proc getAllRowsPlain(self:MariadbQuery, queryString:string, args:JsonNode):Future[seq[seq[string]]] {.async.} =
@@ -753,16 +748,15 @@ proc exec(self:RawMariadbQuery, queryString:string) {.async.} =
 # public exec
 # ================================================================================
 
-# proc get*(self: MariadbQuery):Future[seq[JsonNode]] {.async.} =
-#   var sql = self.selectBuilder()
-#   sql = questionToDaller(sql)
-#   try:
-#     self.log.logger(sql)
-#     return self.getAllRows(sql).await
-#   except Exception:
-#     self.log.echoErrorMsg(sql)
-#     self.log.echoErrorMsg( getCurrentExceptionMsg() )
-#     raise getCurrentException()
+proc get*(self: MariadbQuery):Future[seq[JsonNode]] {.async.} =
+  let sql = self.selectBuilder()
+  try:
+    self.log.logger(sql)
+    return self.getAllRows(sql).await
+  except Exception:
+    self.log.echoErrorMsg(sql)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    raise getCurrentException()
 
 
 # proc first*(self: MariadbQuery):Future[Option[JsonNode]] {.async.} =

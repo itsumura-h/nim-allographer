@@ -213,13 +213,9 @@ proc dbFormat*(conn:PMySQL, query: string, args: MariadbParams): string =
       if args[i].isBinary:
         let `from` = args[i].value
         var to = newString(`from`.len * 2 + 1)
-        echo "=== to"
-        echo to
         let len = mariadb_rdb.real_escape_string(conn, to.cstring, `from`.cstring, `from`.len)
         to.setLen(len)
         result.add("\'")
-        echo "=== to"
-        echo to
         result.add(to)
         result.add("\'")
       else:

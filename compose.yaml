@@ -82,3 +82,14 @@ services:
       - ./:/app
     depends_on:
       - app-ubuntu
+
+  phpmyadmin:
+    image: phpmyadmin
+    tty: true
+    environment:
+      - PMA_ARBITRARY=1
+    ports:
+      - "9004:80"
+    depends_on:
+      - mysql
+      - mariadb

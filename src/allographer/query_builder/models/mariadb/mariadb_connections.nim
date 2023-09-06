@@ -1,4 +1,5 @@
 import std/json
+import std/strutils
 import ./mariadb_types
 
 
@@ -49,7 +50,7 @@ proc raw*(self:MariadbConnections, sql:string, arges=newJArray()): RawMariadbQue
     pools: self.pools,
     timeout: self.timeout,
     query: newJObject(),
-    queryString: sql,
+    queryString: sql.strip(),
     placeHolder: arges,
     isInTransaction: false,
     transactionConn: 0

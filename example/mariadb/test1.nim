@@ -8,7 +8,6 @@ import ../../src/allographer/connection
 import ../../src/allographer/query_builder
 
 let rdb = dbOpen(MariaDB, "database", "user", "pass", "mariadb", 3306, shouldDisplayLog=true)
-echo rdb.pools.len
 # echo "rdb.pools[0].conn.repr: ",rdb.pools[0].conn.repr
 
 
@@ -37,6 +36,8 @@ proc main() {.async.} =
   """, %*[true, 1, 1.1, "alice"]).exec().waitFor
 
   rdb.table("test").insert(%*{"bool":false, "int":2, "float":2.1, "str": "bob", "data": binaryImage}).waitFor
+
+  echo rdb.select("bool", "int", "float", "str").table("test").get().waitFor
 
 
 main().waitFor
