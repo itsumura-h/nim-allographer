@@ -6,7 +6,7 @@ import ./mariadb_query_type
 
 
 proc resetMigrationTable*(self:MariadbSchema) =
-  self.rdb.table("allographer_migrations").where("name", "=", self.table.name).delete.waitFor
+  self.rdb.table("_allographer_migrations").where("name", "=", self.table.name).delete.waitFor
 
 proc resetTable*(self:MariadbSchema) =
   self.rdb.raw(&"DROP TABLE IF EXISTS `{self.table.name}`").exec.waitFor

@@ -6,7 +6,7 @@ import ./surreal_query_type
 
 
 proc resetMigrationTable*(self:SurrealQuery) =
-  self.rdb.table("allographer_migrations").where("name", "=", self.table.name).delete.waitFor
+  self.rdb.table("_allographer_migrations").where("name", "=", self.table.name).delete.waitFor
 
 proc resetTable*(self:SurrealQuery) =
   self.rdb.raw(&"REMOVE TABLE `{self.table.name}`").exec.waitFor
