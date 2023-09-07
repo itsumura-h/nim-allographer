@@ -7,7 +7,7 @@ import ../schema_utils
 import ./mysql_query_type
 
 
-proc dropColumn*(self:MysqlQuery, isReset:bool) =
+proc dropColumn*(self:MysqlSchema, isReset:bool) =
   let query = &"ALTER TABLE `{self.table.name}` DROP COLUMN `{self.column.name}`"
   let schema = $self.column.toSchema()
   let checksum = $schema.secureHash()

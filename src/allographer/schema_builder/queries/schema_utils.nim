@@ -35,7 +35,7 @@ proc shouldRun*(rdb:SqliteConnections, table:Table, checksum:string, isReset:boo
   if isReset:
     return true
 
-  let history = rdb.table("_migrations")
+  let history = rdb.table("allographer_migrations")
                   .where("checksum", "=", checksum)
                   .first()
                   .waitFor
@@ -79,7 +79,7 @@ proc execThenSaveHistory*(rdb:SqliteConnections, tableName:string, queries:seq[s
     #   return now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
   )()
 
-  rdb.table("_migrations").insert(%*{
+  rdb.table("allographer_migrations").insert(%*{
     "name": tableName,
     "query": tableQuery,
     "checksum": checksum,
@@ -106,7 +106,7 @@ proc execThenSaveHistory*(rdb:SqliteConnections, tableName:string, query:string,
     #   return now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
   )()
 
-  rdb.table("_migrations").insert(%*{
+  rdb.table("allographer_migrations").insert(%*{
     "name": tableName,
     "query": query,
     "checksum": checksum,
@@ -124,7 +124,7 @@ proc shouldRun*(rdb:PostgresConnections, table:Table, checksum:string, isReset:b
   if isReset:
     return true
 
-  let history = rdb.table("_migrations")
+  let history = rdb.table("allographer_migrations")
                   .where("checksum", "=", checksum)
                   .first()
                   .waitFor
@@ -168,7 +168,7 @@ proc execThenSaveHistory*(rdb:PostgresConnections, tableName:string, queries:seq
     #   return now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
   )()
 
-  rdb.table("_migrations").insert(%*{
+  rdb.table("allographer_migrations").insert(%*{
     "name": tableName,
     "query": tableQuery,
     "checksum": checksum,
@@ -195,7 +195,7 @@ proc execThenSaveHistory*(rdb:PostgresConnections, tableName:string, query:strin
     #   return now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
   )()
 
-  rdb.table("_migrations").insert(%*{
+  rdb.table("allographer_migrations").insert(%*{
     "name": tableName,
     "query": query,
     "checksum": checksum,
@@ -213,7 +213,7 @@ proc shouldRun*(rdb:MariadbConnections, table:Table, checksum:string, isReset:bo
   if isReset:
     return true
 
-  let history = rdb.table("_migrations")
+  let history = rdb.table("allographer_migrations")
                   .where("checksum", "=", checksum)
                   .first()
                   .waitFor
@@ -257,7 +257,7 @@ proc execThenSaveHistory*(rdb:MariadbConnections, tableName:string, queries:seq[
     #   return now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
   )()
 
-  rdb.table("_migrations").insert(%*{
+  rdb.table("allographer_migrations").insert(%*{
     "name": tableName,
     "query": tableQuery,
     "checksum": checksum,
@@ -284,7 +284,7 @@ proc execThenSaveHistory*(rdb:MariadbConnections, tableName:string, query:string
     #   return now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
   )()
 
-  rdb.table("_migrations").insert(%*{
+  rdb.table("allographer_migrations").insert(%*{
     "name": tableName,
     "query": query,
     "checksum": checksum,
@@ -297,6 +297,89 @@ proc execThenSaveHistory*(rdb:MariadbConnections, tableName:string, query:string
 # Mysql
 # ==================================================
 
+proc shouldRun*(rdb:MysqlConnections, table:Table, checksum:string, isReset:bool):bool =
+  if isReset:
+    return true
+
+  let history = rdb.table("allographer_migrations")
+                  .where("checksum", "=", checksum)
+                  .first()
+                  .waitFor
+  return not history.isSome() or not history.get()["status"].getBool
+
+
+proc exec*(rdb:MysqlConnections, queries:seq[string]) =
+  var isSuccess = false
+  let logDisplay = rdb.log.shouldDisplayLog
+  let logFile = rdb.log.shouldOutputLogFile
+  rdb.log.shouldDisplayLog = false
+  rdb.log.shouldOutputLogFile = false
+
+  try:
+    for query in queries:
+      rdb.raw(query).exec.waitFor
+    isSuccess = true
+  except:
+    echo getCurrentExceptionMsg()
+
+  rdb.log.shouldDisplayLog = logDisplay
+  rdb.log.shouldOutputLogFile = logFile
+
+
+proc execThenSaveHistory*(rdb:MysqlConnections, tableName:string, queries:seq[string], checksum:string) =
+  var isSuccess = false
+  try:
+    for query in queries:
+      rdb.raw(query).exec.waitFor
+    isSuccess = true
+  except:
+    echo getCurrentExceptionMsg()
+
+  let tableQuery = queries.join("; ")
+  let createdAt = (proc():string =
+    if rdb is MysqlConnections:
+      return now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
+    # if rdb.type == SQLite3 or rdb.driver == PostgreSQL:
+    #   return $now().utc
+    # elif rdb.driver == MariaDB or rdb.driver == MySQL:
+    #   return now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
+  )()
+
+  rdb.table("allographer_migrations").insert(%*{
+    "name": tableName,
+    "query": tableQuery,
+    "checksum": checksum,
+    "created_at": createdAt,
+    "status": isSuccess
+  })
+  .waitFor
+
+
+proc execThenSaveHistory*(rdb:MysqlConnections, tableName:string, query:string, checksum:string) =
+  var isSuccess = false
+  try:
+    rdb.raw(query).exec.waitFor
+    isSuccess = true
+  except:
+    echo getCurrentExceptionMsg()
+
+  let createdAt = (proc():string =
+    if rdb is MysqlConnections:
+      return now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
+    # if rdb.driver == SQLite3 or rdb.driver == PostgreSQL:
+    #   return $now().utc
+    # elif rdb.driver == MariaDB or rdb.driver == MySQL:
+    #   return now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
+  )()
+
+  rdb.table("allographer_migrations").insert(%*{
+    "name": tableName,
+    "query": query,
+    "checksum": checksum,
+    "created_at": createdAt,
+    "status": isSuccess
+  })
+  .waitFor
 
 # ==================================================
 # SurrealDB
@@ -307,7 +390,7 @@ proc execThenSaveHistory*(rdb:MariadbConnections, tableName:string, query:string
 #   if isReset:
 #     return true
 
-#   let history = rdb.table("_migrations")
+#   let history = rdb.table("allographer_migrations")
 #                   .where("checksum", "=", checksum)
 #                   .first()
 #                   .waitFor
@@ -352,7 +435,7 @@ proc execThenSaveHistory*(rdb:MariadbConnections, tableName:string, query:string
 
 #   let tableQuery = queries.join("; ")
 #   let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
-#   rdb.table("_migrations").insert(%*{
+#   rdb.table("allographer_migrations").insert(%*{
 #     "name": tableName,
 #     "query": tableQuery,
 #     "checksum": checksum,
@@ -382,7 +465,7 @@ proc execThenSaveHistory*(rdb:MariadbConnections, tableName:string, query:string
 #   rdb.log.shouldOutputLogFile = false
 
 #   let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
-#   rdb.table("_migrations").insert(%*{
+#   rdb.table("allographer_migrations").insert(%*{
 #     "name": tableName,
 #     "query": query,
 #     "checksum": checksum,

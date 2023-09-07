@@ -11,7 +11,7 @@ import ../schema_utils
 #   if isReset:
 #     return true
 
-#   let history = rdb.table("_migrations")
+#   let history = rdb.table("allographer_migrations")
 #                   .where("checksum", "=", checksum)
 #                   .first()
 #                   .waitFor
@@ -28,7 +28,7 @@ import ../schema_utils
 #     echo getCurrentExceptionMsg()
 
 #   let tableQuery = queries.join("; ")
-#   rdb.table("_migrations").insert(%*{
+#   rdb.table("allographer_migrations").insert(%*{
 #     "name": tableName,
 #     "query": tableQuery,
 #     "checksum": checksum,

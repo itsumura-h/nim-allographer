@@ -6,7 +6,7 @@ import ../schema_utils
 import ./mysql_query_type
 
 
-proc dropTable*(self:MysqlQuery, isReset:bool) =
+proc dropTable*(self:MysqlSchema, isReset:bool) =
   let query = &"DROP TABLE IF EXISTS `{self.table.name}`"
   let schema = $self.table.toSchema()
   let checksum = $schema.secureHash()

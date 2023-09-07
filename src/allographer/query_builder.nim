@@ -24,3 +24,7 @@ import ./query_builder/models/postgres/postgres_query; export postgres_query
 import ./query_builder/models/mariadb/mariadb_types; export mariadb_types
 import ./query_builder/models/mariadb/mariadb_connections; export mariadb_connections
 import ./query_builder/models/mariadb/mariadb_query; export mariadb_query
+
+import ./query_builder/models/mysql/mysql_types; export mysql_types
+import ./query_builder/models/mysql/mysql_connections; export mysql_connections
+import ./query_builder/models/mysql/mysql_query; export mysql_query

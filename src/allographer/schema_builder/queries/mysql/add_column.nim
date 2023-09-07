@@ -7,7 +7,7 @@ import ./mysql_query_type
 import ./sub/add_column_query
 
 
-proc addColumn*(self:MysqlQuery, isReset:bool) =
+proc addColumn*(self:MysqlSchema, isReset:bool) =
   let queries = addColumnString(self.table, self.column)
   
   let schema = $self.column.toSchema()

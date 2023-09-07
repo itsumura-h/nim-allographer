@@ -16,20 +16,20 @@ proc mariadbOpen*(database: string = "", user: string = "", password: string = "
       var errmsg = $mariadb_rdb.error(conn)
       mariadb_rdb.close(conn)
       dbError(errmsg)
-    let info = MariadbConnectionInfo(
-      database:database,
-      user:user,
-      password:password,
-      host:host,
-      port:port
-    )
     pools[i] = MariadbConnection(
       conn: conn,
       isBusy: false,
-      createdAt: getTime().toUnix(),
-      info:info
+      createdAt: getTime().toUnix()
     )
+  let info = MariadbConnectionInfo(
+    database:database,
+    user:user,
+    password:password,
+    host:host,
+    port:port
+  )
   result = MariadbConnections(
     pools: pools,
-    timeout: timeout
+    timeout: timeout,
+    info: info
   )

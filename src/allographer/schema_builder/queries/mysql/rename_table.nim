@@ -6,7 +6,7 @@ import ./mysql_query_type
 import ../schema_utils
 
 
-proc renameTable*(self:MysqlQuery, isReset:bool) =
+proc renameTable*(self:MysqlSchema, isReset:bool) =
   let query = &"RENAME TABLE `{self.table.previousName}` TO `{self.table.name}`"
   let schema = $self.table.toSchema()
   let checksum = $schema.secureHash()

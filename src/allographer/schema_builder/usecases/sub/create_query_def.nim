@@ -12,8 +12,10 @@ import ../../../query_builder/models/mariadb/mariadb_types
 import ../../queries/mariadb/mariadb_query_type
 import ../../queries/mariadb/mariadb_query_impl
 
-# import ../../queries/mysql/mysql_query_type
-# import ../../queries/mysql/mysql_query_impl
+import ../../../query_builder/models/mysql/mysql_types
+import ../../queries/mysql/mysql_query_type
+import ../../queries/mysql/mysql_query_impl
+
 # import ../../../query_builder/surreal/surreal_types
 # import ../../queries/surreal/surreal_query_type
 # import ../../queries/surreal/surreal_query_impl
@@ -40,6 +42,13 @@ proc createSchema*(rdb:MariadbConnections, table:Table):ISchema =
 
 proc createSchema*(rdb:MariadbConnections, table:Table, column:Column):ISchema =
   return MariadbSchema.new(rdb, table, column).toInterface()
+
+
+proc createSchema*(rdb:MysqlConnections, table:Table):ISchema =
+  return MysqlSchema.new(rdb, table).toInterface()
+
+proc createSchema*(rdb:MysqlConnections, table:Table, column:Column):ISchema =
+  return MysqlSchema.new(rdb, table, column).toInterface()
 
 
 # proc createSchema*(rdb:SurrealDb, table:Table):ISchema =

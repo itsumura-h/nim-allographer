@@ -11,7 +11,7 @@ import ./mysql_query_type
 import ./sub/create_column_query
 
 
-proc createTable*(self: MysqlQuery, isReset:bool) =
+proc createTable*(self: MysqlSchema, isReset:bool) =
   var queries:seq[string] = @[]
   var query = ""
   var foreignQuery = ""

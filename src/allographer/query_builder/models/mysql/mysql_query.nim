@@ -4,28 +4,28 @@ import std/options
 import std/strformat
 import std/strutils
 import std/times
-import ../../libs/mariadb/mariadb_lib
-import ../../libs/mariadb/mariadb_impl
+import ../../libs/mysql/mysql_lib
+import ../../libs/mysql/mysql_impl
 import ../../log
 import ../../enums
 import ../database_types
-import ./query/mariadb_builder
-import ./mariadb_types
+import ./query/mysql_builder
+import ./mysql_types
 
 
-proc table*(self:MariadbQuery, tableArg: string): MariadbQuery =
+proc table*(self:MysqlQuery, tableArg: string): MysqlQuery =
   self.query["table"] = %tableArg
   return self
 
 
-proc `distinct`*(self: MariadbQuery): MariadbQuery =
+proc `distinct`*(self: MysqlQuery): MysqlQuery =
   self.query["distinct"] = %true
   return self
 
 # ============================== Conditions ==============================
 
-proc join*(self: MariadbQuery, table: string, column1: string, symbol: string,
-            column2: string): MariadbQuery =
+proc join*(self: MysqlQuery, table: string, column1: string, symbol: string,
+            column2: string): MysqlQuery =
   if self.query.hasKey("join") == false:
     self.query["join"] = %*[{
       "table": table,
@@ -43,8 +43,8 @@ proc join*(self: MariadbQuery, table: string, column1: string, symbol: string,
   return self
 
 
-proc leftJoin*(self: MariadbQuery, table: string, column1: string, symbol: string,
-              column2: string): MariadbQuery =
+proc leftJoin*(self: MysqlQuery, table: string, column1: string, symbol: string,
+              column2: string): MysqlQuery =
   if self.query.hasKey("left_join") == false:
     self.query["left_join"] = %*[{
       "table": table,
@@ -65,8 +65,8 @@ proc leftJoin*(self: MariadbQuery, table: string, column1: string, symbol: strin
 const whereSymbols = ["is", "is not", "=", "!=", "<", "<=", ">=", ">", "<>", "LIKE","%LIKE","LIKE%","%LIKE%"]
 const whereSymbolsError = """Arg position 3 is only allowed of ["is", "is not", "=", "!=", "<", "<=", ">=", ">", "<>", "LIKE","%LIKE","LIKE%","%LIKE%"]"""
 
-proc where*(self: MariadbQuery, column: string, symbol: string,
-            value: string|int|float): MariadbQuery =
+proc where*(self: MysqlQuery, column: string, symbol: string,
+            value: string|int|float): MysqlQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -93,8 +93,8 @@ proc where*(self: MariadbQuery, column: string, symbol: string,
   return self
 
 
-proc where*(self: MariadbQuery, column: string, symbol: string,
-            value: bool): MariadbQuery =
+proc where*(self: MysqlQuery, column: string, symbol: string,
+            value: bool): MysqlQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -121,7 +121,7 @@ proc where*(self: MariadbQuery, column: string, symbol: string,
   return self
 
 
-proc where*(self: MariadbQuery, column: string, symbol: string, value: nil.type): MariadbQuery =
+proc where*(self: MysqlQuery, column: string, symbol: string, value: nil.type): MysqlQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -145,8 +145,8 @@ proc where*(self: MariadbQuery, column: string, symbol: string, value: nil.type)
   return self
 
 
-proc orWhere*(self: MariadbQuery, column: string, symbol: string,
-              value: string|int|float|bool): MariadbQuery =
+proc orWhere*(self: MysqlQuery, column: string, symbol: string,
+              value: string|int|float|bool): MysqlQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -172,7 +172,7 @@ proc orWhere*(self: MariadbQuery, column: string, symbol: string,
   return self
 
 
-proc orWhere*(self: MariadbQuery, column: string, symbol: string, value: nil.type): MariadbQuery =
+proc orWhere*(self: MysqlQuery, column: string, symbol: string, value: nil.type): MysqlQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -194,7 +194,7 @@ proc orWhere*(self: MariadbQuery, column: string, symbol: string, value: nil.typ
   return self
 
 
-proc whereBetween*(self:MariadbQuery, column:string, width:array[2, int|float]): MariadbQuery =
+proc whereBetween*(self:MysqlQuery, column:string, width:array[2, int|float]): MysqlQuery =
   self.placeHolder.add(%*{"key": column, "value": width[0]})
   self.placeHolder.add(%*{"key": column, "value": width[1]})
 
@@ -211,7 +211,7 @@ proc whereBetween*(self:MariadbQuery, column:string, width:array[2, int|float]):
   return self
 
 
-proc whereBetween*(self:MariadbQuery, column:string, width:array[2, string]): MariadbQuery =
+proc whereBetween*(self:MysqlQuery, column:string, width:array[2, string]): MysqlQuery =
   self.placeHolder.add(%*{"key": column, "value": width[0]})
   self.placeHolder.add(%*{"key": column, "value": width[1]})
 
@@ -228,7 +228,7 @@ proc whereBetween*(self:MariadbQuery, column:string, width:array[2, string]): Ma
   return self
 
 
-proc whereNotBetween*(self:MariadbQuery, column:string, width:array[2, int|float]): MariadbQuery =
+proc whereNotBetween*(self:MysqlQuery, column:string, width:array[2, int|float]): MysqlQuery =
   self.placeHolder.add(%*{"key": column, "value": width[0]})
   self.placeHolder.add(%*{"key": column, "value": width[1]})
 
@@ -245,7 +245,7 @@ proc whereNotBetween*(self:MariadbQuery, column:string, width:array[2, int|float
   return self
 
 
-proc whereNotBetween*(self:MariadbQuery, column:string, width:array[2, string]): MariadbQuery =
+proc whereNotBetween*(self:MysqlQuery, column:string, width:array[2, string]): MysqlQuery =
   self.placeHolder.add(%*{"key": column, "value": width[0]})
   self.placeHolder.add(%*{"key": column, "value": width[1]})
 
@@ -262,7 +262,7 @@ proc whereNotBetween*(self:MariadbQuery, column:string, width:array[2, string]):
   return self
 
 
-proc whereIn*(self:MariadbQuery, column:string, width:seq[int|float|string]): MariadbQuery =
+proc whereIn*(self:MysqlQuery, column:string, width:seq[int|float|string]): MysqlQuery =
   for row in width:
     self.placeHolder.add(%*{"key": column, "value": row})
 
@@ -279,7 +279,7 @@ proc whereIn*(self:MariadbQuery, column:string, width:seq[int|float|string]): Ma
   return self
 
 
-proc whereNotIn*(self:MariadbQuery, column:string, width:seq[int|float|string]): MariadbQuery =
+proc whereNotIn*(self:MysqlQuery, column:string, width:seq[int|float|string]): MysqlQuery =
   for row in width:
     self.placeHolder.add(%*{"key": column, "value": row})
 
@@ -296,7 +296,7 @@ proc whereNotIn*(self:MariadbQuery, column:string, width:seq[int|float|string]):
   return self
 
 
-proc whereNull*(self:MariadbQuery, column:string): MariadbQuery =
+proc whereNull*(self:MysqlQuery, column:string): MysqlQuery =
   if self.query.hasKey("where_null") == false:
     self.query["where_null"] = %*[{
       "column": column,
@@ -310,7 +310,7 @@ proc whereNull*(self:MariadbQuery, column:string): MariadbQuery =
   return self
 
 
-proc groupBy*(self:MariadbQuery, column:string): MariadbQuery =
+proc groupBy*(self:MysqlQuery, column:string): MysqlQuery =
   if self.query.hasKey("group_by") == false:
     self.query["group_by"] = %*[{"column": column}]
   else:
@@ -318,8 +318,8 @@ proc groupBy*(self:MariadbQuery, column:string): MariadbQuery =
   return self
 
 
-proc having*(self: MariadbQuery, column: string, symbol: string,
-              value: string|int|float|bool): MariadbQuery =
+proc having*(self: MysqlQuery, column: string, symbol: string,
+              value: string|int|float|bool): MysqlQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -344,7 +344,7 @@ proc having*(self: MariadbQuery, column: string, symbol: string,
     )
   return self
 
-proc having*(self: MariadbQuery, column: string, symbol: string, value: nil.type): MariadbQuery =
+proc having*(self: MysqlQuery, column: string, symbol: string, value: nil.type): MysqlQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -368,7 +368,7 @@ proc having*(self: MariadbQuery, column: string, symbol: string, value: nil.type
   return self
 
 
-proc orderBy*(self:MariadbQuery, column:string, order:Order): MariadbQuery =
+proc orderBy*(self:MysqlQuery, column:string, order:Order): MysqlQuery =
   if self.query.hasKey("order_by") == false:
     self.query["order_by"] = %*[{
       "column": column,
@@ -382,23 +382,23 @@ proc orderBy*(self:MariadbQuery, column:string, order:Order): MariadbQuery =
   return self
 
 
-proc limit*(self: MariadbQuery, num: int): MariadbQuery =
+proc limit*(self: MysqlQuery, num: int): MysqlQuery =
   self.query["limit"] = %num
   return self
 
 
-proc offset*(self: MariadbQuery, num: int): MariadbQuery =
+proc offset*(self: MysqlQuery, num: int): MysqlQuery =
   self.query["offset"] = %num
   return self
 
 
-proc inTransaction*(self:MariadbQuery, connI:int) =
+proc inTransaction*(self:MysqlQuery, connI:int) =
   ## Only used in transation block
   self.isInTransaction = true
   self.transactionConn = connI
 
 
-proc freeTransactionConn*(self:MariadbQuery, connI:int) =
+proc freeTransactionConn*(self:MysqlQuery, connI:int) =
   ## Only used in transation block
   self.isInTransaction = false
 
@@ -407,7 +407,7 @@ proc freeTransactionConn*(self:MariadbQuery, connI:int) =
 # connection
 # ================================================================================
 
-proc getFreeConn(self:MariadbConnections | MariadbQuery | RawMariadbQuery):Future[int] {.async.} =
+proc getFreeConn(self:MysqlConnections | MysqlQuery | RawMysqlQuery):Future[int] {.async.} =
   let calledAt = getTime().toUnix()
   while true:
     for i in 0..<self.pools.len:
@@ -420,7 +420,7 @@ proc getFreeConn(self:MariadbConnections | MariadbQuery | RawMariadbQuery):Futur
       return errorConnectionNum
 
 
-proc returnConn(self:MariadbConnections | MariadbQuery | RawMariadbQuery, i: int) {.async.} =
+proc returnConn(self:MysqlConnections | MysqlQuery | RawMysqlQuery, i: int) {.async.} =
   if i != errorConnectionNum:
     self.pools[i].isBusy = false
 
@@ -463,7 +463,7 @@ proc toJson(results:openArray[seq[string]], dbRows:DbRows):seq[JsonNode] =
 # private exec
 # ================================================================================
 
-proc getAllRows(self:MariadbQuery, queryString:string):Future[seq[JsonNode]] {.async.} =
+proc getAllRows(self:MysqlQuery, queryString:string):Future[seq[JsonNode]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
@@ -473,7 +473,7 @@ proc getAllRows(self:MariadbQuery, queryString:string):Future[seq[JsonNode]] {.a
   if connI == errorConnectionNum:
     return
 
-  let (rows, dbRows) = mariadb_impl.query(
+  let (rows, dbRows) = mysql_impl.query(
     self.pools[connI].conn,
     queryString,
     self.placeHolder,
@@ -486,7 +486,7 @@ proc getAllRows(self:MariadbQuery, queryString:string):Future[seq[JsonNode]] {.a
   return toJson(rows, dbRows) # seq[JsonNode]
 
 
-proc getAllRowsPlain(self:MariadbQuery, queryString:string, args:JsonNode):Future[seq[seq[string]]] {.async.} =
+proc getAllRowsPlain(self:MysqlQuery, queryString:string, args:JsonNode):Future[seq[seq[string]]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
@@ -496,7 +496,7 @@ proc getAllRowsPlain(self:MariadbQuery, queryString:string, args:JsonNode):Futur
   if connI == errorConnectionNum:
     return
 
-  let (rows, _) = mariadb_impl.query(
+  let (rows, _) = mysql_impl.query(
     self.pools[connI].conn,
     queryString,
     self.placeHolder,
@@ -506,7 +506,7 @@ proc getAllRowsPlain(self:MariadbQuery, queryString:string, args:JsonNode):Futur
   return rows
 
 
-proc getRow(self:MariadbQuery, queryString:string):Future[Option[JsonNode]] {.async.} =
+proc getRow(self:MysqlQuery, queryString:string):Future[Option[JsonNode]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
@@ -516,7 +516,7 @@ proc getRow(self:MariadbQuery, queryString:string):Future[Option[JsonNode]] {.as
   if connI == errorConnectionNum:
     return
 
-  let (rows, dbRows) = mariadb_impl.query(
+  let (rows, dbRows) = mysql_impl.query(
     self.pools[connI].conn,
     queryString,
     self.placeHolder,
@@ -529,7 +529,7 @@ proc getRow(self:MariadbQuery, queryString:string):Future[Option[JsonNode]] {.as
   return toJson(rows, dbRows)[0].some # seq[JsonNode]
 
 
-proc getRowPlain(self:MariadbQuery, queryString:string, args:JsonNode):Future[seq[string]] {.async.} =
+proc getRowPlain(self:MysqlQuery, queryString:string, args:JsonNode):Future[seq[string]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
@@ -539,7 +539,7 @@ proc getRowPlain(self:MariadbQuery, queryString:string, args:JsonNode):Future[se
   if connI == errorConnectionNum:
     return
   
-  let (rows, _) = mariadb_impl.query(
+  let (rows, _) = mysql_impl.query(
     self.pools[connI].conn,
     queryString,
     self.placeHolder,
@@ -548,7 +548,7 @@ proc getRowPlain(self:MariadbQuery, queryString:string, args:JsonNode):Future[se
   return rows[0]
 
 
-proc exec(self:MariadbQuery, queryString:string) {.async.} =
+proc exec(self:MysqlQuery, queryString:string) {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
@@ -560,11 +560,11 @@ proc exec(self:MariadbQuery, queryString:string) {.async.} =
 
   let database = self.info.database
   let table = self.query["table"].getStr
-  let columns = mariadb_impl.getColumnTypes(self.pools[connI].conn, $database, table, self.timeout).await
-  mariadb_impl.exec(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
+  let columns = mysql_impl.getColumnTypes(self.pools[connI].conn, $database, table, self.timeout).await
+  mysql_impl.exec(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
 
 
-proc insertId(self:MariadbQuery, queryString:string, key:string):Future[string] {.async.} =
+proc insertId(self:MysqlQuery, queryString:string, key:string):Future[string] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
@@ -576,13 +576,13 @@ proc insertId(self:MariadbQuery, queryString:string, key:string):Future[string] 
 
   let table = self.query["table"].getStr
   let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
-  let (columns, _) = mariadb_impl.query(self.pools[connI].conn, columnGetQuery, newJArray(), self.timeout).await
+  let (columns, _) = mysql_impl.query(self.pools[connI].conn, columnGetQuery, newJArray(), self.timeout).await
 
-  let (rows, _) = mariadb_impl.execGetValue(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
+  let (rows, _) = mysql_impl.execGetValue(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
   return rows[0][0]
 
 
-proc getAllRows(self:RawMariadbQuery, queryString:string):Future[seq[JsonNode]] {.async.} =
+proc getAllRows(self:RawMysqlQuery, queryString:string):Future[seq[JsonNode]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
@@ -592,7 +592,7 @@ proc getAllRows(self:RawMariadbQuery, queryString:string):Future[seq[JsonNode]] 
   if connI == errorConnectionNum:
     return
 
-  let (rows, dbRows) = mariadb_impl.rawQuery(
+  let (rows, dbRows) = mysql_impl.rawQuery(
     self.pools[connI].conn,
     queryString,
     self.placeHolder,
@@ -605,7 +605,7 @@ proc getAllRows(self:RawMariadbQuery, queryString:string):Future[seq[JsonNode]] 
   return toJson(rows, dbRows) # seq[JsonNode]
 
 
-proc getAllRowsPlain(self:RawMariadbQuery, queryString:string, args:JsonNode):Future[seq[seq[string]]] {.async.} =
+proc getAllRowsPlain(self:RawMysqlQuery, queryString:string, args:JsonNode):Future[seq[seq[string]]] {.async.} =
   ## args is JArray [true, 1, 1.1, "str"]
   var connI = self.transactionConn
   if not self.isInTransaction:
@@ -616,7 +616,7 @@ proc getAllRowsPlain(self:RawMariadbQuery, queryString:string, args:JsonNode):Fu
   if connI == errorConnectionNum:
     return
 
-  let (rows, _) = mariadb_impl.rawQuery(
+  let (rows, _) = mysql_impl.rawQuery(
     self.pools[connI].conn,
     queryString,
     self.placeHolder,
@@ -626,7 +626,7 @@ proc getAllRowsPlain(self:RawMariadbQuery, queryString:string, args:JsonNode):Fu
   return rows
 
 
-proc getRow(self:RawMariadbQuery, queryString:string):Future[Option[JsonNode]] {.async.} =
+proc getRow(self:RawMysqlQuery, queryString:string):Future[Option[JsonNode]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
@@ -636,7 +636,7 @@ proc getRow(self:RawMariadbQuery, queryString:string):Future[Option[JsonNode]] {
   if connI == errorConnectionNum:
     return
 
-  let (rows, dbRows) = mariadb_impl.rawQuery(
+  let (rows, dbRows) = mysql_impl.rawQuery(
     self.pools[connI].conn,
     queryString,
     self.placeHolder,
@@ -649,7 +649,7 @@ proc getRow(self:RawMariadbQuery, queryString:string):Future[Option[JsonNode]] {
   return toJson(rows, dbRows)[0].some # seq[JsonNode]
 
 
-proc getRowPlain(self:RawMariadbQuery, queryString:string, args:JsonNode):Future[seq[string]] {.async.} =
+proc getRowPlain(self:RawMysqlQuery, queryString:string, args:JsonNode):Future[seq[string]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
@@ -659,7 +659,7 @@ proc getRowPlain(self:RawMariadbQuery, queryString:string, args:JsonNode):Future
   if connI == errorConnectionNum:
     return
 
-  let (rows, _) = mariadb_impl.rawQuery(
+  let (rows, _) = mysql_impl.rawQuery(
     self.pools[connI].conn,
     queryString,
     self.placeHolder,
@@ -668,7 +668,7 @@ proc getRowPlain(self:RawMariadbQuery, queryString:string, args:JsonNode):Future
   return rows[0]
 
 
-proc exec(self:RawMariadbQuery, queryString:string) {.async.} =
+proc exec(self:RawMysqlQuery, queryString:string) {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
@@ -678,7 +678,7 @@ proc exec(self:RawMariadbQuery, queryString:string) {.async.} =
   if connI == errorConnectionNum:
     return
 
-  mariadb_impl.exec(
+  mysql_impl.exec(
     self.pools[connI].conn,
     queryString,
     self.placeHolder,
@@ -686,7 +686,7 @@ proc exec(self:RawMariadbQuery, queryString:string) {.async.} =
   ).await
 
 
-proc getColumns(self:MariadbQuery, queryString:string):Future[seq[string]] {.async.} =
+proc getColumns(self:MysqlQuery, queryString:string):Future[seq[string]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
@@ -715,33 +715,33 @@ proc getColumns(self:MariadbQuery, queryString:string):Future[seq[string]] {.asy
     else:
       strArgs.add(arg["value"].pretty)
 
-  return mariadb_impl.getColumns(self.pools[connI].conn, queryString, strArgs, self.timeout).await
+  return mysql_impl.getColumns(self.pools[connI].conn, queryString, strArgs, self.timeout).await
 
 
-# proc transactionStart(self:MariadbConnections) {.async.} =
+# proc transactionStart(self:MysqlConnections) {.async.} =
 #   let connI = getFreeConn(self).await
 #   if connI == errorConnectionNum:
 #     return
 #   self.isInTransaction = true
 #   self.transactionConn = connI
 
-#   mariadb_impl.exec(self.pools[connI].conn, "BEGIN", newJArray(), newSeq[Row](), self.timeout).await
+#   mysql_impl.exec(self.pools[connI].conn, "BEGIN", newJArray(), newSeq[Row](), self.timeout).await
 
 
-# proc transactionEnd(self:MariadbConnections, query:string) {.async.} =
+# proc transactionEnd(self:MysqlConnections, query:string) {.async.} =
 #   defer:
 #     self.returnConn(self.transactionConn).await
 #     self.transactionConn = 0
 #     self.isInTransaction = false
 
-#   mariadb_impl.exec(self.pools[self.transactionConn].conn, query, newJArray(), newSeq[Row](), self.timeout).await
+#   mysql_impl.exec(self.pools[self.transactionConn].conn, query, newJArray(), newSeq[Row](), self.timeout).await
 
 
 # ================================================================================
 # public exec
 # ================================================================================
 
-proc get*(self: MariadbQuery):Future[seq[JsonNode]] {.async.} =
+proc get*(self: MysqlQuery):Future[seq[JsonNode]] {.async.} =
   let sql = self.selectBuilder()
   try:
     self.log.logger(sql)
@@ -752,7 +752,7 @@ proc get*(self: MariadbQuery):Future[seq[JsonNode]] {.async.} =
     raise getCurrentException()
 
 
-proc first*(self: MariadbQuery):Future[Option[JsonNode]] {.async.} =
+proc first*(self: MysqlQuery):Future[Option[JsonNode]] {.async.} =
   var sql = self.selectFirstBuilder()
   try:
     self.log.logger(sql)
@@ -763,7 +763,7 @@ proc first*(self: MariadbQuery):Future[Option[JsonNode]] {.async.} =
     raise getCurrentException()
 
 
-proc find*(self: MariadbQuery, id:string, key="id"):Future[Option[JsonNode]] {.async.} =
+proc find*(self: MysqlQuery, id:string, key="id"):Future[Option[JsonNode]] {.async.} =
   self.placeHolder.add(%*{"key":key, "value": id})
   var sql = self.selectFindBuilder(key)
   try:
@@ -775,11 +775,11 @@ proc find*(self: MariadbQuery, id:string, key="id"):Future[Option[JsonNode]] {.a
     raise getCurrentException()
 
 
-proc find*(self: MariadbQuery, id:int, key="id"):Future[Option[JsonNode]] {.async.} =
+proc find*(self: MysqlQuery, id:int, key="id"):Future[Option[JsonNode]] {.async.} =
   return self.find($id, key).await
 
 
-proc getPlain*(self:MariadbQuery):Future[seq[seq[string]]] {.async.} =
+proc getPlain*(self:MysqlQuery):Future[seq[seq[string]]] {.async.} =
   var sql = self.selectBuilder()
   try:
     self.log.logger(sql)
@@ -790,7 +790,7 @@ proc getPlain*(self:MariadbQuery):Future[seq[seq[string]]] {.async.} =
     raise getCurrentException()
 
 
-proc firstPlain*(self:MariadbQuery):Future[seq[string]] {.async.} =
+proc firstPlain*(self:MysqlQuery):Future[seq[string]] {.async.} =
   var sql = self.selectFirstBuilder()
   try:
     self.log.logger(sql)
@@ -801,7 +801,7 @@ proc firstPlain*(self:MariadbQuery):Future[seq[string]] {.async.} =
     raise getCurrentException()
 
 
-proc findPlain*(self:MariadbQuery, id: string, key="id"):Future[seq[string]] {.async.} =
+proc findPlain*(self:MysqlQuery, id: string, key="id"):Future[seq[string]] {.async.} =
   self.placeHolder.add(%*{"key":key, "value":id})
   var sql = self.selectFindBuilder(key)
   try:
@@ -813,60 +813,76 @@ proc findPlain*(self:MariadbQuery, id: string, key="id"):Future[seq[string]] {.a
     raise getCurrentException()
 
 
-proc findPlain*(self:MariadbQuery, id: int, key="id"):Future[seq[string]] {.async.} =
+proc findPlain*(self:MysqlQuery, id: int, key="id"):Future[seq[string]] {.async.} =
   return self.findPlain($id, key).await
 
 
-proc insert*(self:MariadbQuery, items:JsonNode) {.async.} =
+proc insert*(self:MysqlQuery, items:JsonNode) {.async.} =
   ## items is `JObject`
   var sql = self.insertValueBuilder(items)
   self.log.logger(sql)
   self.exec(sql).await
 
 
-proc insert*(self:MariadbQuery, items:seq[JsonNode]) {.async.} =
+proc insert*(self:MysqlQuery, items:seq[JsonNode]) {.async.} =
   var sql = self.insertValuesBuilder(items)
   self.log.logger(sql)
   self.exec(sql).await
 
 
-proc insertId*(self:MariadbQuery, items:JsonNode, key="id"):Future[string] {.async.} =
+proc insertId*(self:MysqlQuery, items:JsonNode, key="id"):Future[string] {.async.} =
   var sql = self.insertValueBuilder(items)
-  sql.add(&" RETURNING `{key}`")
   self.log.logger(sql)
-  return self.insertId(sql, key).await
+  self.exec(sql).await
+  let resp = self.getRow(&"SELECT LAST_INSERT_ID() as '{key}'").await
+  if resp.isSome:
+    let row = resp.get()
+    if row[key].kind == JInt:
+      return $row[key].getInt
+    else:
+      return row[key].getStr
+  else:
+    return ""
 
 
-proc insertId*(self: MariadbQuery, items: seq[JsonNode], key="id"):Future[seq[string]] {.async.} =
+proc insertId*(self: MysqlQuery, items: seq[JsonNode], key="id"):Future[seq[string]] {.async.} =
   result = newSeq[string](items.len)
   for i, item in items:
     var sql = self.insertValueBuilder(item)
-    sql.add(&" RETURNING `{key}`")
     self.log.logger(sql)
-    result[i] = self.insertId(sql, key).await
+    self.exec(sql).await
+    let resp = self.getRow(&"SELECT LAST_INSERT_ID() as '{key}'").await
+    if resp.isSome:
+      let row = resp.get()
+      if row[key].kind == JInt:
+        result[i] = $row[key].getInt
+      else:
+        result[i] = row[key].getStr
+    else:
+      result[i] = ""
     self.placeHolder = newJArray()
 
 
-proc update*(self: MariadbQuery, items: JsonNode){.async.} =
+proc update*(self: MysqlQuery, items: JsonNode){.async.} =
   var sql = self.updateBuilder(items)
   self.log.logger(sql)
   self.exec(sql).await
 
 
-proc delete*(self: MariadbQuery){.async.} =
+proc delete*(self: MysqlQuery){.async.} =
   var sql = self.deleteBuilder()
   self.log.logger(sql)
   self.exec(sql).await
 
 
-proc delete*(self: MariadbQuery, id: int, key="id"){.async.} =
+proc delete*(self: MysqlQuery, id: int, key="id"){.async.} =
   self.placeHolder.add(%*{"key":key, "value":id})
   var sql = self.deleteByIdBuilder(id, key)
   self.log.logger(sql)
   self.exec(sql).await
 
 
-proc columns*(self:MariadbQuery):Future[seq[string]] {.async.} =
+proc columns*(self:MysqlQuery):Future[seq[string]] {.async.} =
   ## get columns sequence from table
   var sql = self.columnBuilder()
   try:
@@ -878,7 +894,7 @@ proc columns*(self:MariadbQuery):Future[seq[string]] {.async.} =
     raise getCurrentException()
 
 
-proc count*(self:MariadbQuery):Future[int] {.async.} =
+proc count*(self:MysqlQuery):Future[int] {.async.} =
   var sql = self.countBuilder()
   self.log.logger(sql)
   let response =  self.getRow(sql).await
@@ -888,7 +904,7 @@ proc count*(self:MariadbQuery):Future[int] {.async.} =
     return 0
 
 
-proc min*(self:MariadbQuery, column:string):Future[Option[string]] {.async.} =
+proc min*(self:MysqlQuery, column:string):Future[Option[string]] {.async.} =
   var sql = self.minBuilder(column)
   self.log.logger(sql)
   let response =  self.getRow(sql).await
@@ -904,7 +920,7 @@ proc min*(self:MariadbQuery, column:string):Future[Option[string]] {.async.} =
     return none(string)
 
 
-proc max*(self:MariadbQuery, column:string):Future[Option[string]] {.async.} =
+proc max*(self:MysqlQuery, column:string):Future[Option[string]] {.async.} =
   var sql = self.maxBuilder(column)
   self.log.logger(sql)
   let response =  self.getRow(sql).await
@@ -920,7 +936,7 @@ proc max*(self:MariadbQuery, column:string):Future[Option[string]] {.async.} =
     return none(string)
 
 
-proc avg*(self:MariadbQuery, column:string):Future[Option[float]]{.async.} =
+proc avg*(self:MysqlQuery, column:string):Future[Option[float]]{.async.} =
   var sql = self.avgBuilder(column)
   self.log.logger(sql)
   let response =  await self.getRow(sql)
@@ -930,7 +946,7 @@ proc avg*(self:MariadbQuery, column:string):Future[Option[float]]{.async.} =
     return none(float)
 
 
-proc sum*(self:MariadbQuery, column:string):Future[Option[float]]{.async.} =
+proc sum*(self:MysqlQuery, column:string):Future[Option[float]]{.async.} =
   var sql = self.sumBuilder(column)
   self.log.logger(sql)
   let response = await self.getRow(sql)
@@ -940,59 +956,59 @@ proc sum*(self:MariadbQuery, column:string):Future[Option[float]]{.async.} =
     return none(float)
 
 
-# proc begin*(self:MariadbConnections) {.async.} =
+# proc begin*(self:MysqlConnections) {.async.} =
 #   self.log.logger("BEGIN")
 #   self.transactionStart().await
 
 
-# proc rollback*(self:MariadbConnections) {.async.} =
+# proc rollback*(self:MysqlConnections) {.async.} =
 #   self.log.logger("ROLLBACK")
 #   self.transactionEnd("ROLLBACK").await
 
 
-# proc commit*(self:MariadbConnections, connI:int) {.async.} =
+# proc commit*(self:MysqlConnections, connI:int) {.async.} =
 #   self.log.logger("COMMIT")
 #   self.transactionEnd("COMMIT").await
 
 
-proc get*(self: RawMariadbQuery):Future[seq[JsonNode]] {.async.} =
+proc get*(self: RawMysqlQuery):Future[seq[JsonNode]] {.async.} =
   ## It is only used with raw()
   self.log.logger(self.queryString)
   return self.getAllRows(self.queryString).await
 
 
-proc getPlain*(self: RawMariadbQuery):Future[seq[seq[string]]] {.async.} =
+proc getPlain*(self: RawMysqlQuery):Future[seq[seq[string]]] {.async.} =
   ## It is only used with raw()
   self.log.logger(self.queryString)
   return self.getAllRowsPlain(self.queryString, self.placeHolder).await
 
 
-proc exec*(self: RawMariadbQuery) {.async.} =
+proc exec*(self: RawMysqlQuery) {.async.} =
   ## It is only used with raw()
   self.log.logger(self.queryString)
   self.exec(self.queryString).await
 
 
-proc first*(self: RawMariadbQuery):Future[Option[JsonNode]] {.async.} =
+proc first*(self: RawMysqlQuery):Future[Option[JsonNode]] {.async.} =
   ## It is only used with raw()
   self.log.logger(self.queryString)
   return self.getRow(self.queryString).await
 
 
-proc firstPlain*(self: RawMariadbQuery):Future[seq[string]] {.async.} =
+proc firstPlain*(self: RawMysqlQuery):Future[seq[string]] {.async.} =
   ## It is only used with raw()
   self.log.logger(self.queryString)
   return self.getRowPlain(self.queryString, self.placeHolder).await
 
 
-template seeder*(rdb:MariadbConnections, tableName:string, body:untyped):untyped =
+template seeder*(rdb:MysqlConnections, tableName:string, body:untyped):untyped =
   ## The `seeder` block allows the code in the block to work only when the table is empty.
   block:
     if rdb.table(tableName).count().waitFor == 0:
       body
 
 
-template seeder*(rdb:MariadbConnections, tableName, column:string, body:untyped):untyped =
+template seeder*(rdb:MysqlConnections, tableName, column:string, body:untyped):untyped =
   ## The `seeder` block allows the code in the block to work only when the table or specified column is empty.
   block:
     if rdb.table(tableName).select(column).count().waitFor == 0:

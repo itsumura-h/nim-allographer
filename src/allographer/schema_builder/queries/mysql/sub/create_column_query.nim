@@ -451,7 +451,7 @@ proc alterAddForeignKey*(column:Column, table:Table):string =
 #   return &"ALTER TABLE `{table.name}` DROP FOREIGN KEY `{constraintName}`"
 
 proc createIndexString*(table:Table, column:Column):string =
-  return &"CREATE INDEX IF NOT EXISTS `{table.name}_{column.name}_index` ON `{table.name}`(`{column.name}`)"
+  return &"CREATE INDEX `{table.name}_{column.name}_index` ON `{table.name}`(`{column.name}`)"
 
 
 proc createColumnString*(table:Table, column:Column):string =

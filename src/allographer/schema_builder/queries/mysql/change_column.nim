@@ -8,7 +8,7 @@ import ./mysql_query_type
 import ./sub/change_column_query
 
 
-proc changeColumn*(self:MysqlQuery, isReset:bool) =
+proc changeColumn*(self:MysqlSchema, isReset:bool) =
   let schema = $self.column.toSchema()
   let checksum = $schema.secureHash()
 

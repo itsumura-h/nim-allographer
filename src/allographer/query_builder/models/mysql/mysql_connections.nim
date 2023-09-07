@@ -1,13 +1,13 @@
 import std/json
 import std/strutils
-import ./mariadb_types
+import ./mysql_types
 
 
-proc `$`*(self:MariadbConnections|MariadbQuery):string =
+proc `$`*(self:MysqlConnections|MysqlQuery):string =
   return "PostgreSQL"
 
 
-proc select*(self:MariadbConnections, columnsArg:varargs[string]):MariadbQuery =
+proc select*(self:MysqlConnections, columnsArg:varargs[string]):MysqlQuery =
   let query = newJObject()
   
   if columnsArg.len == 0:
@@ -15,7 +15,7 @@ proc select*(self:MariadbConnections, columnsArg:varargs[string]):MariadbQuery =
   else:
     query["select"] = %columnsArg
   
-  let MariadbQuery = MariadbQuery(
+  let MysqlQuery = MysqlQuery(
     log: self.log,
     pools: self.pools,
     timeout: self.timeout,
@@ -24,29 +24,30 @@ proc select*(self:MariadbConnections, columnsArg:varargs[string]):MariadbQuery =
     queryString: "",
     placeHolder: newJArray()
   )
-  return MariadbQuery
+  return MysqlQuery
 
 
-proc table*(self:MariadbConnections, tableArg: string): MariadbQuery =
+proc table*(self:MysqlConnections, tableArg: string): MysqlQuery =
   let query = newJObject()
   query["table"] = %tableArg
 
-  let MariadbQuery = MariadbQuery(
+  let MysqlQuery = MysqlQuery(
     log: self.log,
     pools: self.pools,
     timeout: self.timeout,
+    info: self.info,
     query: query,
     queryString: "",
     placeHolder: newJArray()
   )
-  return MariadbQuery
+  return MysqlQuery
 
 
-proc raw*(self:MariadbConnections, sql:string, arges=newJArray()): RawMariadbQuery =
+proc raw*(self:MysqlConnections, sql:string, arges=newJArray()): RawMysqlQuery =
   ## arges is `JArray` `[true, 1, 1.1, "str"]`
   ## 
   ## can't use BLOB data.
-  let rawQueryRdb = RawMariadbQuery(
+  let rawQueryRdb = RawMysqlQuery(
     log: self.log,
     pools: self.pools,
     timeout: self.timeout,

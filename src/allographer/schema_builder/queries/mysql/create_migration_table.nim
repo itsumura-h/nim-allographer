@@ -1,4 +1,9 @@
+import std/asyncdispatch
 import std/strformat
+import std/strutils
+import std/options
+import std/json
+import ../../../query_builder
 import ../../enums
 import ../../models/table
 import ../../models/column
@@ -7,7 +12,7 @@ import ./mysql_query_type
 import ./sub/create_column_query
 
 
-proc createMigrationTable*(self: MysqlQuery) =
+proc createMigrationTable*(self: MysqlSchema) =
   var queries:seq[string] = @[]
   var query = ""
   var foreignQuery = ""
@@ -21,7 +26,24 @@ proc createMigrationTable*(self: MysqlQuery) =
       foreignQuery.add(createForeignKey(self.table, column))
     
     if column.isIndex:
-      indexQuery.add(createIndexString(self.table, column))
+      let logDisplay = self.rdb.log.shouldDisplayLog
+      let logFile = self.rdb.log.shouldOutputLogFile
+      self.rdb.log.shouldDisplayLog = false
+      self.rdb.log.shouldOutputLogFile = false
+      defer:
+        self.rdb.log.shouldDisplayLog = logDisplay
+        self.rdb.log.shouldOutputLogFile = logFile
+      let res = self.rdb.raw(&"""
+          SELECT count(*) as count
+          FROM `INFORMATION_SCHEMA`.`STATISTICS`
+          WHERE `TABLE_SCHEMA` = '{self.rdb.info.database}'
+          AND `TABLE_NAME` = '{self.table.name}'
+          AND `INDEX_NAME` = '{self.table.name}_{column.name}_index'
+        """)
+        .first()
+        .waitFor
+      if res.isSome and res.get()["count"].getInt == 0:
+        indexQuery.add(createIndexString(self.table, column))
 
   if foreignQuery.len > 0:
     queries.add(

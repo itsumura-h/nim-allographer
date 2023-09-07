@@ -1,42 +1,42 @@
 import std/json
 import ../../log
-import ../../libs/mariadb/mariadb_rdb
+import ../../libs/mysql/mysql_rdb
 
 
-type MariaDB* = object
+type MySQL* = object
 
-type MariadbConnectionInfo* = object
+type MysqlConnectionInfo* = object
   database*:string
   user*:string
   password*:string
   host*:string
   port*:int
 
-type MariadbConnection* = object
+type MysqlConnection* = object
   conn*: PMySQL
   isBusy*: bool
   createdAt*: int64
 
 ## created by `let rdb = dbOpen(MySQL, "localhost", 3306)`
-type MariadbConnections* = ref object
+type MysqlConnections* = ref object
   log*: LogSetting
-  pools*:seq[MariadbConnection]
+  pools*:seq[MysqlConnection]
   timeout*:int
-  info*:MariadbConnectionInfo
+  info*:MysqlConnectionInfo
   # for transaction
   isInTransaction*: bool
   transactionConn*: int
 
-proc `$`*(self:MariadbConnections):string =
-  return "MariaDB"
+proc `$`*(self:MysqlConnections):string =
+  return "MySQL"
 
 
 ## created by `rdb.select("columnName")` or `rdb.table("tableName")`
-type MariadbQuery* = ref object
+type MysqlQuery* = ref object
   log*: LogSetting
-  pools*:seq[MariadbConnection]
+  pools*:seq[MysqlConnection]
   timeout*:int
-  info*:MariadbConnectionInfo
+  info*:MysqlConnectionInfo
   query*: JsonNode
   queryString*: string
   placeHolder*: JsonNode # [{"key":"user", "value":"user1"}]
@@ -45,11 +45,11 @@ type MariadbQuery* = ref object
   transactionConn*: int
 
 
-type RawMariadbQuery* = ref object
+type RawMysqlQuery* = ref object
   log*: LogSetting
-  pools*:seq[MariadbConnection]
+  pools*:seq[MysqlConnection]
   timeout*:int
-  info*:MariadbConnectionInfo
+  info*:MysqlConnectionInfo
   query*: JsonNode
   queryString*: string
   placeHolder*: JsonNode # ["user1", "user1@example.com"]

@@ -455,7 +455,7 @@ proc addForeignKey(column:Column, table:Table):string =
 
 
 proc addIndexString(column:Column, table:Table):string =
-  return &"CREATE INDEX IF NOT EXISTS `{table.name}_{column.name}_index` ON `{table.name}`(`{column.name}`)"
+  return &"CREATE INDEX `{table.name}_{column.name}_index` ON `{table.name}`(`{column.name}`)"
 
 
 proc addColumnString*(table:Table, column:Column):seq[string] =

@@ -1,7 +1,7 @@
 import ../../models/table
 import ../../models/column
 
-let migrationTable* :Table = table("_migrations", [
+let migrationTable* :Table = table("allographer_migrations", [
   Column.increments("id"),
   Column.string("name"),
   Column.text("query"),
