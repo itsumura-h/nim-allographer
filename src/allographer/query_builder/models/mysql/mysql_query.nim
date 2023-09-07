@@ -4,7 +4,6 @@ import std/options
 import std/strformat
 import std/strutils
 import std/times
-import ../../libs/mysql/mysql_lib
 import ../../libs/mysql/mysql_impl
 import ../../log
 import ../../enums
@@ -74,7 +73,6 @@ proc where*(self: MysqlQuery, column: string, symbol: string,
     )
 
   self.placeHolder.add(%*{"key": column, "value": value})
-  # self.placeHolder.add(%value)
 
   if self.query.hasKey("where") == false:
     self.query["where"] = %*[{
@@ -101,7 +99,6 @@ proc where*(self: MysqlQuery, column: string, symbol: string,
       whereSymbolsError
     )
 
-  # let val = if value: 1 else: 0
   self.placeHolder.add(%*{"key":column, "value":value})
 
   if self.query.hasKey("where") == false:
@@ -564,22 +561,22 @@ proc exec(self:MysqlQuery, queryString:string) {.async.} =
   mysql_impl.exec(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
 
 
-proc insertId(self:MysqlQuery, queryString:string, key:string):Future[string] {.async.} =
-  var connI = self.transactionConn
-  if not self.isInTransaction:
-    connI = getFreeConn(self).await
-  defer:
-    if not self.isInTransaction:
-      self.returnConn(connI).await
-  if connI == errorConnectionNum:
-    return
+# proc insertId(self:MysqlQuery, queryString:string, key:string):Future[string] {.async.} =
+#   var connI = self.transactionConn
+#   if not self.isInTransaction:
+#     connI = getFreeConn(self).await
+#   defer:
+#     if not self.isInTransaction:
+#       self.returnConn(connI).await
+#   if connI == errorConnectionNum:
+#     return
 
-  let table = self.query["table"].getStr
-  let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
-  let (columns, _) = mysql_impl.query(self.pools[connI].conn, columnGetQuery, newJArray(), self.timeout).await
+#   let table = self.query["table"].getStr
+#   let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
+#   let (columns, _) = mysql_impl.query(self.pools[connI].conn, columnGetQuery, newJArray(), self.timeout).await
 
-  let (rows, _) = mysql_impl.execGetValue(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
-  return rows[0][0]
+#   let (rows, _) = mysql_impl.execGetValue(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
+#   return rows[0][0]
 
 
 proc getAllRows(self:RawMysqlQuery, queryString:string):Future[seq[JsonNode]] {.async.} =

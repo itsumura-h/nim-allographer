@@ -1,5 +1,4 @@
 import std/times
-import ../../../env
 import ../../error
 import ../../libs/mariadb/mariadb_rdb
 import ./mariadb_types

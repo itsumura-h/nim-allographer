@@ -4,7 +4,6 @@ import std/options
 import std/strformat
 import std/strutils
 import std/times
-import ../../libs/mariadb/mariadb_lib
 import ../../libs/mariadb/mariadb_impl
 import ../../log
 import ../../enums
@@ -74,7 +73,6 @@ proc where*(self: MariadbQuery, column: string, symbol: string,
     )
 
   self.placeHolder.add(%*{"key": column, "value": value})
-  # self.placeHolder.add(%value)
 
   if self.query.hasKey("where") == false:
     self.query["where"] = %*[{
@@ -101,7 +99,6 @@ proc where*(self: MariadbQuery, column: string, symbol: string,
       whereSymbolsError
     )
 
-  # let val = if value: 1 else: 0
   self.placeHolder.add(%*{"key":column, "value":value})
 
   if self.query.hasKey("where") == false:
