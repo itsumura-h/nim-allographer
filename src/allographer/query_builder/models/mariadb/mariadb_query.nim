@@ -925,7 +925,7 @@ proc avg*(self:MariadbQuery, column:string):Future[Option[float]]{.async.} =
   self.log.logger(sql)
   let response =  await self.getRow(sql)
   if response.isSome:
-    return response.get["aggregate"].getStr().parseFloat.some
+    return response.get["aggregate"].getFloat().some
   else:
     return none(float)
 
@@ -935,7 +935,7 @@ proc sum*(self:MariadbQuery, column:string):Future[Option[float]]{.async.} =
   self.log.logger(sql)
   let response = await self.getRow(sql)
   if response.isSome:
-    return response.get["aggregate"].getStr.parseFloat.some
+    return response.get["aggregate"].getFloat().some
   else:
     return none(float)
 
