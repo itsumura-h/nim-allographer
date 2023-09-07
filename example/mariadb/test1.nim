@@ -26,14 +26,14 @@ proc main() {.async.} =
     )
   """).exec().waitFor
 
+  rdb.raw("""
+    INSERT INTO `test` (`bool`, `int`, `float`, `str`) VALUES (?, ?, ?, ?)
+  """, %*[true, 1, 1.1, "alice"]).exec().waitFor
+
   let client = newAsyncHttpClient()
   let response = client.getContent("https://nim-lang.org/assets/img/twitter_banner.png").await
   let imageStream = newStringStream(response)
   let binaryImage = imageStream.readAll()
-
-  rdb.raw("""
-    INSERT INTO `test` (`bool`, `int`, `float`, `str`) VALUES (?, ?, ?, ?)
-  """, %*[true, 1, 1.1, "alice"]).exec().waitFor
 
   rdb.table("test").insert(%*{"bool":false, "int":2, "float":2.1, "str": "bob", "data": binaryImage}).waitFor
 

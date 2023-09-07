@@ -190,7 +190,7 @@ proc fromObj*(_:type MariadbParams, args:JsonNode, columns:seq[seq[string]]):Mar
       let value = arg["value"].pretty()
       result[i] = MariadbParamValue(value:value, isBinary:false)
     of JNull:
-      let value = "NULL"
+      let value = "null"
       result[i] = MariadbParamValue(value:value, isBinary:false)
     else: # JString
       let value = arg["value"].getStr

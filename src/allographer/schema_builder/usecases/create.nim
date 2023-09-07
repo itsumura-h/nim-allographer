@@ -4,12 +4,13 @@ import ../enums
 # import ../../query_builder/surreal/surreal_types
 import ../../query_builder/models/sqlite/sqlite_types
 import ../../query_builder/models/postgres/postgres_types
+import ../../query_builder/models/mariadb/mariadb_types
 import ../models/table
 import ./sub/migration_table_def
 import ./sub/create_query_def
 
 
-proc create*(rdb:SqliteConnections | PostgresConnections, tables:varargs[Table]) =
+proc create*(rdb:SqliteConnections | PostgresConnections | MariadbConnections, tables:varargs[Table]) =
   let cmd = commandLineParams()
   let isReset = defined(reset) or cmd.contains("--reset")
 

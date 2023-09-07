@@ -61,6 +61,7 @@ proc query*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[(se
   var lines = 0
 
   rawExec(db, query, args)
+
   var sqlres = mariadb_rdb.useResult(db)
   let calledAt = getTime().toUnix()
   var dbColumns: DbColumns
@@ -92,19 +93,19 @@ proc query*(db:PMySQL, query: string, args: JsonNode, timeout:int):Future[(seq[d
   var i = 0
   for arg in args.items:
     defer: i.inc()
-    case arg.kind
+    case arg["value"].kind
     of JBool:
-      strArgs[i] = if arg.getBool: "1" else: "0"
+      strArgs[i] = if arg["value"].getBool: "1" else: "0"
     of JInt:
-      strArgs[i] = $arg.getInt
+      strArgs[i] = $arg["value"].getInt
     of JFloat:
-      strArgs[i] = $arg.getFloat
+      strArgs[i] = $arg["value"].getFloat
     of JArray, JObject:
-      strArgs[i] = arg.pretty()
+      strArgs[i] = arg["value"].pretty()
     of JNull:
-      strArgs[i] = "NULL"
+      strArgs[i] = "null"
     else: # JString
-      strArgs[i] = arg.getStr()
+      strArgs[i] = arg["value"].getStr()
 
   return query(db, query, strArgs, timeout).await
 
@@ -146,19 +147,11 @@ proc queryPlain*(db:PMySQL, query: string, args: JsonNode, timeout:int):Future[s
     of JArray, JObject:
       strArgs[i] = arg.pretty()
     of JNull:
-      strArgs[i] = "NULL"
+      strArgs[i] = "null"
     else: # JString
       strArgs[i] = arg.getStr()
 
   return queryPlain(db, query, strArgs, timeout).await
-
-
-proc exec*(db:PMySQL, query: string, args: JsonNode, columns:seq[seq[string]], timeout:int) {.async.} =
-  ## args is JArray [{"key":"id", "value": 1}, {"key": "name" "value": "alice"}] 
-  assert db.ping == 0
-
-  let params = MariadbParams.fromObj(args, columns)
-  rawExec(db, query, params)
 
 
 proc exec*(db:PMySQL, query: string, args: seq[string], timeout:int) {.async.} =
@@ -182,12 +175,76 @@ proc exec*(db:PMySQL, query: string, args: JsonNode, timeout:int) {.async.} =
     of JArray, JObject:
       strArgs[i] = arg.pretty()
     of JNull:
-      strArgs[i] = "NULL"
+      strArgs[i] = "null"
     else: # JString
       strArgs[i] = arg.getStr()
 
   exec(db, query, strArgs, timeout).await
 
+
+proc exec*(db:PMySQL, query: string, args: JsonNode, columns:seq[seq[string]], timeout:int) {.async.} =
+  ## args is JArray [{"key":"id", "value": 1}, {"key": "name" "value": "alice"}] 
+  assert db.ping == 0
+
+  let params = MariadbParams.fromObj(args, columns)
+  rawExec(db, query, params)
+
+
+proc execGetValue*(db:PMySQL, query: string, args: JsonNode, columns:seq[seq[string]], timeout:int):Future[(seq[database_types.Row], DbRows)] {.async.} =
+  assert db.ping == 0
+  var dbRows: DbRows
+  var rows = newSeq[seq[string]]()
+  var lines = 0
+
+  let params = MariadbParams.fromObj(args, columns)
+  rawExec(db, query, params)
+
+  var sqlres = mariadb_rdb.useResult(db)
+  let calledAt = getTime().toUnix()
+  var dbColumns: DbColumns
+  let cols = int(mariadb_rdb.numFields(sqlres))
+
+  while true:
+    if getTime().toUnix() >= calledAt + timeout:
+      return
+    await sleepAsync(0)
+    var row: mariadb_rdb.Row
+    var baseRow = newSeq[string](cols)
+    setColumnInfo(dbColumns, sqlres, cols)
+    row = mariadb_rdb.fetchRow(sqlres)
+    if row == nil: break
+    for i in 0..<cols:
+      if row[i].isNil:
+        dbColumns[i].typ.kind = dbNull
+      baseRow[i] = $row[i]
+    rows.add(baseRow)
+    dbRows.add(dbColumns)
+    lines.inc()
+
+  free_result(sqlres)
+  return (rows, dbRows)
+
+
+proc rawQuery*(db:PMySQL, query: string, args: JsonNode, timeout:int):Future[(seq[database_types.Row], DbRows)] {.async.} =
+  var strArgs = newSeq[string](args.len)
+  var i = 0
+  for arg in args.items:
+    defer: i.inc()
+    case arg.kind
+    of JBool:
+      strArgs[i] = if arg.getBool: "1" else: "0"
+    of JInt:
+      strArgs[i] = $arg.getInt
+    of JFloat:
+      strArgs[i] = $arg.getFloat
+    of JArray, JObject:
+      strArgs[i] = arg.pretty()
+    of JNull:
+      strArgs[i] = "null"
+    else: # JString
+      strArgs[i] = arg.getStr()
+
+  return query(db, query, strArgs, timeout).await
 
 
 proc getColumns*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[seq[string]] {.async.} =

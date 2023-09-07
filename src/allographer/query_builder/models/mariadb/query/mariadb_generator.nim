@@ -218,9 +218,9 @@ proc whereNullSql*(self: MariadbQuery): MariadbQuery =
       let column = row["column"].getStr().quote()
       let symbol = row["symbol"].getStr()
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND {column} {symbol} null")
+        self.queryString.add(&" AND {column} {symbol} NULL")
       else:
-        self.queryString.add(&" WHERE {column} {symbol} null")
+        self.queryString.add(&" WHERE {column} {symbol} NULL")
   return self
 
 
