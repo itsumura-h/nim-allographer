@@ -49,7 +49,7 @@ proc setup(rdb:PostgresConnections) =
       users.add(
         %*{
           "name": &"user{i}",
-          "email": &"user{i}@gmail.com",
+          "email": &"user{i}@example.com",
           "auth_id": authId,
           "submit_on": &"2020-{month}-01",
           "submit_at": &"2020-{month}-01 00:00:00",
@@ -66,7 +66,7 @@ setup(rdb)
 suite($rdb & " get"):
   test("get"):
     let t = rdb.table("user").get().waitFor
-    let expect = %*{"id":1,"name":"user1","email":"user1@gmail.com","address":newJNull(),"submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00","auth_id":1}
+    let expect = %*{"id":1,"name":"user1","email":"user1@example.com","address":newJNull(),"submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00","auth_id":1}
     echo t[0]
     echo expect
     check t[0] == expect
@@ -74,32 +74,32 @@ suite($rdb & " get"):
 
   test("getPlain"):
     let t = rdb.table("user").getPlain().waitFor
-    check t[0] == @["1", "user1", "user1@gmail.com", "", "2020-01-01", "2020-01-01 00:00:00", "1"]
+    check t[0] == @["1", "user1", "user1@example.com", "", "2020-01-01", "2020-01-01 00:00:00", "1"]
 
 
   test("first"):
     var t = rdb.table("user").where("name", "=", "user1").first().waitFor().get
-    check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00", "auth_id": 1}
+    check t == %*{"id": 1, "name": "user1", "email": "user1@example.com", "address":newJNull(), "submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00", "auth_id": 1}
 
 
   test("firstPlain"):
     var t = rdb.table("user").firstPlain().waitFor
-    check t == @["1", "user1", "user1@gmail.com", "", "2020-01-01", "2020-01-01 00:00:00", "1"]
+    check t == @["1", "user1", "user1@example.com", "", "2020-01-01", "2020-01-01 00:00:00", "1"]
 
 
   test("find"):
     var t = rdb.table("user").find(1).waitFor.get
-    check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00", "auth_id": 1}
+    check t == %*{"id": 1, "name": "user1", "email": "user1@example.com", "address":newJNull(), "submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00", "auth_id": 1}
 
 
   test("findString"):
     var t = rdb.table("user").find("1").waitFor.get
-    check t == %*{"id": 1, "name": "user1", "email": "user1@gmail.com", "address":newJNull(), "submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00", "auth_id": 1}
+    check t == %*{"id": 1, "name": "user1", "email": "user1@example.com", "address":newJNull(), "submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00", "auth_id": 1}
 
 
   test("findPlain"):
     var t = rdb.table("user").findPlain(1).waitFor
-    check t == @["1", "user1", "user1@gmail.com", "", "2020-01-01", "2020-01-01 00:00:00", "1"]
+    check t == @["1", "user1", "user1@example.com", "", "2020-01-01", "2020-01-01 00:00:00", "1"]
 
 
   test("columns"):
@@ -109,43 +109,43 @@ suite($rdb & " get"):
 
   test("select"):
     var t = rdb.select("name", "email").table("user").get().waitFor
-    check t[0] == %*{"name": "user1", "email": "user1@gmail.com"}
+    check t[0] == %*{"name": "user1", "email": "user1@example.com"}
 
 
   test("selectAs"):
     var t = rdb.select("name as user_name", "email").table("user").get().waitFor
-    check t[0] == %*{"user_name": "user1", "email": "user1@gmail.com"}
+    check t[0] == %*{"user_name": "user1", "email": "user1@example.com"}
 
 
   test("selectLike"):
     var t = rdb.select("email").table("user").where("email", "LIKE", "%10%").get().waitFor
-    check t == @[%*{"email":"user10@gmail.com"}]
+    check t == @[%*{"email":"user10@example.com"}]
     t = rdb.select("email").table("user").where("email", "LIKE", "user10%").get().waitFor
-    check t == @[%*{"email":"user10@gmail.com"}]
-    t = rdb.select("email").table("user").where("email", "LIKE", "%10@gmail.com%").get().waitFor
-    check t == @[%*{"email":"user10@gmail.com"}]
+    check t == @[%*{"email":"user10@example.com"}]
+    t = rdb.select("email").table("user").where("email", "LIKE", "%10@example.com%").get().waitFor
+    check t == @[%*{"email":"user10@example.com"}]
 
 
   test("where"):
     var t = rdb.table("user").where("auth_id", "=", "1").get().waitFor
     check t == @[
-      %*{"id":1,"name":"user1","email":"user1@gmail.com","address":newJNull(),"submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00","auth_id":1},
-      %*{"id":3,"name":"user3","email":"user3@gmail.com","address":newJNull(),"submit_on":"2020-03-01","submit_at":"2020-03-01 00:00:00","auth_id":1},
-      %*{"id":5,"name":"user5","email":"user5@gmail.com","address":newJNull(),"submit_on":"2020-05-01","submit_at":"2020-05-01 00:00:00","auth_id":1},
-      %*{"id":7,"name":"user7","email":"user7@gmail.com","address":newJNull(),"submit_on":"2020-07-01","submit_at":"2020-07-01 00:00:00","auth_id":1},
-      %*{"id":9,"name":"user9","email":"user9@gmail.com","address":newJNull(),"submit_on":"2020-09-01","submit_at":"2020-09-01 00:00:00","auth_id":1}
+      %*{"id":1,"name":"user1","email":"user1@example.com","address":newJNull(),"submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00","auth_id":1},
+      %*{"id":3,"name":"user3","email":"user3@example.com","address":newJNull(),"submit_on":"2020-03-01","submit_at":"2020-03-01 00:00:00","auth_id":1},
+      %*{"id":5,"name":"user5","email":"user5@example.com","address":newJNull(),"submit_on":"2020-05-01","submit_at":"2020-05-01 00:00:00","auth_id":1},
+      %*{"id":7,"name":"user7","email":"user7@example.com","address":newJNull(),"submit_on":"2020-07-01","submit_at":"2020-07-01 00:00:00","auth_id":1},
+      %*{"id":9,"name":"user9","email":"user9@example.com","address":newJNull(),"submit_on":"2020-09-01","submit_at":"2020-09-01 00:00:00","auth_id":1}
     ]
 
 
   test("orWhere"):
     var t = rdb.table("user").where("auth_id", "=", "1").orWhere("name", "=", "user2").get().waitFor
     check t == @[
-      %*{"id":1,"name":"user1","email":"user1@gmail.com","address":newJNull(),"submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00","auth_id":1},
-      %*{"id":2,"name":"user2","email":"user2@gmail.com","address":newJNull(),"submit_on":"2020-02-01","submit_at":"2020-02-01 00:00:00","auth_id":2},
-      %*{"id":3,"name":"user3","email":"user3@gmail.com","address":newJNull(),"submit_on":"2020-03-01","submit_at":"2020-03-01 00:00:00","auth_id":1},
-      %*{"id":5,"name":"user5","email":"user5@gmail.com","address":newJNull(),"submit_on":"2020-05-01","submit_at":"2020-05-01 00:00:00","auth_id":1},
-      %*{"id":7,"name":"user7","email":"user7@gmail.com","address":newJNull(),"submit_on":"2020-07-01","submit_at":"2020-07-01 00:00:00","auth_id":1},
-      %*{"id":9,"name":"user9","email":"user9@gmail.com","address":newJNull(),"submit_on":"2020-09-01","submit_at":"2020-09-01 00:00:00","auth_id":1}
+      %*{"id":1,"name":"user1","email":"user1@example.com","address":newJNull(),"submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00","auth_id":1},
+      %*{"id":2,"name":"user2","email":"user2@example.com","address":newJNull(),"submit_on":"2020-02-01","submit_at":"2020-02-01 00:00:00","auth_id":2},
+      %*{"id":3,"name":"user3","email":"user3@example.com","address":newJNull(),"submit_on":"2020-03-01","submit_at":"2020-03-01 00:00:00","auth_id":1},
+      %*{"id":5,"name":"user5","email":"user5@example.com","address":newJNull(),"submit_on":"2020-05-01","submit_at":"2020-05-01 00:00:00","auth_id":1},
+      %*{"id":7,"name":"user7","email":"user7@example.com","address":newJNull(),"submit_on":"2020-07-01","submit_at":"2020-07-01 00:00:00","auth_id":1},
+      %*{"id":9,"name":"user9","email":"user9@example.com","address":newJNull(),"submit_on":"2020-09-01","submit_at":"2020-09-01 00:00:00","auth_id":1}
     ]
 
 
@@ -259,7 +259,7 @@ suite($rdb & " get"):
 
   test("whereNull"):
     setUp(rdb)
-    rdb.table("user").insert(%*{"email": "user11@gmail.com"}).waitFor
+    rdb.table("user").insert(%*{"email": "user11@example.com"}).waitFor
     var t = rdb
             .select("id", "name", "email")
             .table("user")

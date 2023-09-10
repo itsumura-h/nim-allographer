@@ -7,7 +7,7 @@ import ./surreal_query_type
 import ./sub/create_column_query
 
 
-proc addColumn*(self:SurrealQuery, isReset:bool) =
+proc addColumn*(self:SurrealSchema, isReset:bool) =
   let queries = createColumnString(self.table, self.column)
   
   let schema = $self.column.toSchema()

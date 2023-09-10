@@ -10,7 +10,7 @@ import ./surreal_query_type
 import ./sub/create_column_query
 
 
-proc createTable*(self: SurrealQuery, isReset:bool) =
+proc createTable*(self: SurrealSchema, isReset:bool) =
   var queries:seq[string]
   queries.add(&"DEFINE TABLE `{self.table.name}` SCHEMAFULL")
   

@@ -11,7 +11,7 @@ import ./rename_table
 import ./drop_table
 
 
-proc toInterface*(self:SurrealQuery):ISchema =
+proc toInterface*(self:SurrealSchema):ISchema =
   return (
     createMigrationTable:proc() = self.createMigrationTable(),
     createTable:proc(isReset:bool) = self.createTable(isReset),

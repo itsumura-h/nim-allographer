@@ -14,7 +14,7 @@ import ./surreal_query_type
 import ./sub/create_column_query
 
 
-proc createMigrationTable*(self: SurrealQuery) =
+proc createMigrationTable*(self: SurrealSchema) =
   var queries:seq[string]
   queries.add(&"DEFINE TABLE `{self.table.name}` SCHEMAFULL")
   

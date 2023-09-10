@@ -1,3 +1,4 @@
+import std/asyncdispatch
 import ./query_builder/log
 import ./query_builder/models/sqlite/sqlite_types
 import ./query_builder/models/sqlite/sqlite_open
@@ -7,12 +8,16 @@ import ./query_builder/models/mariadb/mariadb_types
 import ./query_builder/models/mariadb/mariadb_open
 import ./query_builder/models/mysql/mysql_types
 import ./query_builder/models/mysql/mysql_open
+import ./query_builder/models/surreal/surreal_types
+import ./query_builder/models/surreal/surreal_open
+
 
 export
   SQLite3,
   PostgreSQL,
   MariaDB,
-  MySql
+  MySql,
+  SurrealDB
 
 
 proc dbOpen*(driver:type SQLite3, database="", user="", password="",
@@ -40,4 +45,11 @@ proc dbOpen*(driver:type MySql, database="", user="", password="",
             host="", port=0, maxConnections=1, timeout=30,
             shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""):MysqlConnections =
   result = mysqlOpen(database, user, password, host, port.int32, maxConnections, timeout)
+  result.log = LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)
+
+
+proc dbOpen*(driver:type SurrealDB, namespace="", database="", user="", password="",
+            host="", port=0, maxConnections=1, timeout=30,
+            shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""):Future[SurrealConnections] {.async.} =
+  result = surrealOpen(namespace, database, user, password, host, port.int32, maxConnections, timeout).await
   result.log = LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)

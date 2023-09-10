@@ -41,7 +41,7 @@ for rdb in dbConnections:
       insertData.add(
         %*{
           "name": &"user{i}",
-          "email": &"user{i}@gmail.com",
+          "email": &"user{i}@example.com",
           "auth_id": authId
         }
       )

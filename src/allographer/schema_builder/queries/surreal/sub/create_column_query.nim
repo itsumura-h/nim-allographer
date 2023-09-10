@@ -33,11 +33,14 @@ proc createIntColumn(column:Column, table:Table):seq[string] =
     else:
       query.add(&" ASSERT $value >= 0")
 
-  if column.isDefault:
-    query.add(&" VALUE $value OR {column.defaultInt}")
-
   if column.isAutoIncrement:
     query.add(&" VALUE (SELECT `{column.name}` FROM `{table.name}` ORDER BY `{column.name}` NUMERIC DESC LIMIT 1)[0].{column.name} + 1 || 1")
+  elif column.isDefault:
+    query.add(&" VALUE $value OR {column.defaultInt}")
+  elif column.isNullable:
+    query.add(" VALUE $value OR NULL")
+  else:
+    query.add(" VALUE $value OR 0")
 
   result.add(query)
 
@@ -65,6 +68,10 @@ proc createDecimalColumn(column:Column, table:Table):seq[string] =
 
   if column.isDefault:
     query.add(&" VALUE $value OR {column.defaultFloat}")
+  elif column.isNullable:
+    query.add(" VALUE $value OR NULL")
+  else:
+    query.add(" VALUE $value OR 0.0")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
@@ -92,6 +99,10 @@ proc createFloatColumn(column:Column, table:Table):seq[string] =
 
   if column.isDefault:
     query.add(&" VALUE $value OR {column.defaultFloat}")
+  elif column.isNullable:
+    query.add(" VALUE $value OR NULL")
+  else:
+    query.add(" VALUE $value OR 0.0")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
@@ -124,6 +135,10 @@ proc createCharColumn(column:Column, table:Table):seq[string] =
 
   if column.isDefault:
     query.add(&" VALUE $value OR '{column.defaultString}'")
+  elif column.isNullable:
+    query.add(" VALUE $value OR NULL")
+  else:
+    query.add(" VALUE $value OR ''")
   
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
@@ -151,6 +166,10 @@ proc createVarcharColumn(column:Column, table:Table):seq[string] =
 
   if column.isDefault:
     query.add(&" VALUE $value OR '{column.defaultString}'")
+  elif column.isNullable:
+    query.add(" VALUE $value OR NULL")
+  else:
+    query.add(" VALUE $value OR ''")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
@@ -175,6 +194,10 @@ proc createTextColumn(column:Column, table:Table):seq[string] =
 
   if column.isDefault:
     query.add(&" VALUE $value OR '{column.defaultString}'")
+  elif column.isNullable:
+    query.add(" VALUE $value OR NULL")
+  else:
+    query.add(" VALUE $value OR ''")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
@@ -223,6 +246,10 @@ proc createDatetimeColumn(column:Column, table:Table):seq[string] =
 
   if column.isDefault:
     query.add(&" VALUE $value OR time::now()")
+  elif column.isNullable:
+    query.add(" VALUE $value OR NULL")
+  else:
+    query.add(" VALUE $value OR '1970-01-01T00:00:00Z'")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
@@ -305,6 +332,10 @@ proc createBlobColumn(column:Column, table:Table):seq[string] =
 
   if column.isDefault:
     query.add(&" VALUE $value OR '{column.defaultString}'")
+  elif column.isNullable:
+    query.add(" VALUE $value OR NULL")
+  else:
+    query.add(" VALUE $value OR ''")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
@@ -329,6 +360,10 @@ proc createBoolColumn(column:Column, table:Table):seq[string] =
 
   if column.isDefault:
     query.add(&" VALUE $value OR {column.defaultBool}")
+  elif column.isNullable:
+    query.add(" VALUE $value OR NULL")
+  else:
+    query.add(" VALUE $value OR false")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
@@ -370,6 +405,11 @@ proc createEnumColumn(column:Column, table:Table):seq[string] =
 
   if column.isDefault:
     query.add(&" VALUE $value OR '{column.defaultString}'")
+  elif column.isNullable:
+    query.add(" VALUE $value OR NULL")
+  else:
+    let default = column.info["options"][0].getStr
+    query.add(&" VALUE $value OR '{default}'")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
@@ -394,6 +434,10 @@ proc createJsonColumn(column:Column, table:Table):seq[string] =
 
   if column.isDefault:
     query.add(&" VALUE $value OR {$column.defaultJson}")
+  elif column.isNullable:
+    query.add(" VALUE $value OR NULL")
+  else:
+    query.add(" VALUE $value OR {}")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
@@ -425,6 +469,8 @@ proc createForeignColumn(column:Column, table:Table):seq[string] =
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
+  elif column.isNullable:
+    query.add(" VALUE $value OR NULL")
 
   result.add(query)
 

@@ -293,6 +293,7 @@ proc execThenSaveHistory*(rdb:MariadbConnections, tableName:string, query:string
   })
   .waitFor
 
+
 # ==================================================
 # Mysql
 # ==================================================
@@ -385,94 +386,93 @@ proc execThenSaveHistory*(rdb:MysqlConnections, tableName:string, query:string, 
 # SurrealDB
 # ==================================================
 
+proc shouldRun*(rdb:SurrealConnections, table:Table, checksum:string, isReset:bool):bool =
+  if isReset:
+    return true
 
-# proc shouldRun*(rdb:SurrealDb, table:Table, checksum:string, isReset:bool):bool =
-#   if isReset:
-#     return true
-
-#   let history = rdb.table("_allographer_migrations")
-#                   .where("checksum", "=", checksum)
-#                   .first()
-#                   .waitFor
-#   return not history.isSome() or not history.get()["status"].getBool
-
-
-# proc exec*(rdb:SurrealDb, queries:seq[string]) =
-#   var isSuccess = false
-#   let logDisplay = rdb.log.shouldDisplayLog
-#   let logFile = rdb.log.shouldOutputLogFile
-#   rdb.log.shouldDisplayLog = false
-#   rdb.log.shouldOutputLogFile = false
-
-#   try:
-#     for query in queries:
-#       rdb.raw(query).exec.waitFor
-#     isSuccess = true
-#   except:
-#     echo getCurrentExceptionMsg()
-
-#   rdb.log.shouldDisplayLog = logDisplay
-#   rdb.log.shouldOutputLogFile = logFile
+  let history = rdb.table("_allographer_migrations")
+                  .where("checksum", "=", checksum)
+                  .first()
+                  .waitFor
+  return not history.isSome() or not history.get()["status"].getBool
 
 
-# proc execThenSaveHistory*(rdb:SurrealDb, tableName:string, queries:seq[string], checksum:string) =
-#   var isSuccess = false
+proc exec*(rdb:SurrealConnections, queries:seq[string]) =
+  var isSuccess = false
+  let logDisplay = rdb.log.shouldDisplayLog
+  let logFile = rdb.log.shouldOutputLogFile
+  rdb.log.shouldDisplayLog = false
+  rdb.log.shouldOutputLogFile = false
 
-#   try:
-#     for query in queries:
-#       let resp = rdb.raw(query).info().waitFor
-#       for row in resp:
-#         if row["status"].getStr != "OK":
-#           raise newException(DbError, row["detail"].getStr)
-#     isSuccess = true
-#   except:
-#     echo getCurrentExceptionMsg()
+  try:
+    for query in queries:
+      rdb.raw(query).exec.waitFor
+    isSuccess = true
+  except:
+    echo getCurrentExceptionMsg()
 
-#   let logDisplay = rdb.log.shouldDisplayLog
-#   let logFile = rdb.log.shouldOutputLogFile
-#   rdb.log.shouldDisplayLog = false
-#   rdb.log.shouldOutputLogFile = false
-
-#   let tableQuery = queries.join("; ")
-#   let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
-#   rdb.table("_allographer_migrations").insert(%*{
-#     "name": tableName,
-#     "query": tableQuery,
-#     "checksum": checksum,
-#     "created_at": createdAt,
-#     "status": isSuccess
-#   })
-#   .waitFor
-
-#   rdb.log.shouldDisplayLog = logDisplay
-#   rdb.log.shouldOutputLogFile = logFile
+  rdb.log.shouldDisplayLog = logDisplay
+  rdb.log.shouldOutputLogFile = logFile
 
 
-# proc execThenSaveHistory*(rdb:SurrealDb, tableName:string, query:string, checksum:string) =
-#   var isSuccess = false
-#   try:
-#     let resp = rdb.raw(query).info().waitFor
-#     for row in resp:
-#       if row["status"].getStr != "OK":
-#         raise newException(DbError, row["detail"].getStr)
-#     isSuccess = true
-#   except:
-#     echo getCurrentExceptionMsg()
+proc execThenSaveHistory*(rdb:SurrealConnections, tableName:string, queries:seq[string], checksum:string) =
+  var isSuccess = false
 
-#   let logDisplay = rdb.log.shouldDisplayLog
-#   let logFile = rdb.log.shouldOutputLogFile
-#   rdb.log.shouldDisplayLog = false
-#   rdb.log.shouldOutputLogFile = false
+  try:
+    for query in queries:
+      let resp = rdb.raw(query).info().waitFor
+      for row in resp:
+        if row["status"].getStr != "OK":
+          raise newException(DbError, row["detail"].getStr)
+    isSuccess = true
+  except:
+    echo getCurrentExceptionMsg()
 
-#   let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
-#   rdb.table("_allographer_migrations").insert(%*{
-#     "name": tableName,
-#     "query": query,
-#     "checksum": checksum,
-#     "created_at": createdAt,
-#     "status": isSuccess
-#   })
-#   .waitFor
+  let logDisplay = rdb.log.shouldDisplayLog
+  let logFile = rdb.log.shouldOutputLogFile
+  rdb.log.shouldDisplayLog = false
+  rdb.log.shouldOutputLogFile = false
 
-#   rdb.log.shouldDisplayLog = logDisplay
-#   rdb.log.shouldOutputLogFile = logFile
+  let tableQuery = queries.join("; ")
+  let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
+  rdb.table("_allographer_migrations").insert(%*{
+    "name": tableName,
+    "query": tableQuery,
+    "checksum": checksum,
+    "created_at": createdAt,
+    "status": isSuccess
+  })
+  .waitFor
+
+  rdb.log.shouldDisplayLog = logDisplay
+  rdb.log.shouldOutputLogFile = logFile
+
+
+proc execThenSaveHistory*(rdb:SurrealConnections, tableName:string, query:string, checksum:string) =
+  var isSuccess = false
+  try:
+    let resp = rdb.raw(query).info().waitFor
+    for row in resp:
+      if row["status"].getStr != "OK":
+        raise newException(DbError, row["detail"].getStr)
+    isSuccess = true
+  except:
+    echo getCurrentExceptionMsg()
+
+  let logDisplay = rdb.log.shouldDisplayLog
+  let logFile = rdb.log.shouldOutputLogFile
+  rdb.log.shouldDisplayLog = false
+  rdb.log.shouldOutputLogFile = false
+
+  let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
+  rdb.table("_allographer_migrations").insert(%*{
+    "name": tableName,
+    "query": query,
+    "checksum": checksum,
+    "created_at": createdAt,
+    "status": isSuccess
+  })
+  .waitFor
+
+  rdb.log.shouldDisplayLog = logDisplay
+  rdb.log.shouldOutputLogFile = logFile

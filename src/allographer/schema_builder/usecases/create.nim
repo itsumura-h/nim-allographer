@@ -6,12 +6,13 @@ import ../../query_builder/models/sqlite/sqlite_types
 import ../../query_builder/models/postgres/postgres_types
 import ../../query_builder/models/mariadb/mariadb_types
 import ../../query_builder/models/mysql/mysql_types
+import ../../query_builder/models/surreal/surreal_types
 import ../models/table
 import ./sub/migration_table_def
 import ./sub/create_query_def
 
 
-proc create*(rdb:SqliteConnections | PostgresConnections | MariadbConnections | MysqlConnections, tables:varargs[Table]) =
+proc create*(rdb:SqliteConnections | PostgresConnections | MariadbConnections | MysqlConnections | SurrealConnections, tables:varargs[Table]) =
   let cmd = commandLineParams()
   let isReset = defined(reset) or cmd.contains("--reset")
 

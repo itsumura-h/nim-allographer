@@ -16,9 +16,10 @@ import ../../../query_builder/models/mysql/mysql_types
 import ../../queries/mysql/mysql_query_type
 import ../../queries/mysql/mysql_query_impl
 
-# import ../../../query_builder/surreal/surreal_types
-# import ../../queries/surreal/surreal_query_type
-# import ../../queries/surreal/surreal_query_impl
+import ../../../query_builder/models/surreal/surreal_types
+import ../../queries/surreal/surreal_query_type
+import ../../queries/surreal/surreal_query_impl
+
 import ../../models/table
 import ../../models/column
 
@@ -51,9 +52,9 @@ proc createSchema*(rdb:MysqlConnections, table:Table, column:Column):ISchema =
   return MysqlSchema.new(rdb, table, column).toInterface()
 
 
-# proc createSchema*(rdb:SurrealDb, table:Table):ISchema =
-#   return SurrealQuery.new(rdb, table).toInterface()
+proc createSchema*(rdb:SurrealConnections, table:Table):ISchema =
+  return SurrealSchema.new(rdb, table).toInterface()
 
 
-# proc createSchema*(rdb:SurrealDb, table:Table, column:Column):ISchema =
-#   return SurrealQuery.new(rdb, table, column).toInterface()
+proc createSchema*(rdb:SurrealConnections, table:Table, column:Column):ISchema =
+  return SurrealSchema.new(rdb, table, column).toInterface()

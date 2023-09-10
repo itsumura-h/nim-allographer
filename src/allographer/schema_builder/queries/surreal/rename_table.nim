@@ -7,7 +7,7 @@ import ./surreal_query_type
 # import ../schema_utils
 
 
-proc renameTable*(self:SurrealQuery, isReset:bool) =
+proc renameTable*(self:SurrealSchema, isReset:bool) =
   ## SurrealDB not support rename table field
   ## 
   ## https://github.com/surrealdb/surrealdb/issues/1615

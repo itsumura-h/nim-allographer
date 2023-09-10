@@ -43,7 +43,7 @@ proc setUp(rdb:Rdb) =
       users.add(
         %*{
           "name": &"user{i}",
-          "email": &"user{i}@gmail.com",
+          "email": &"user{i}@example.com",
           "auth_id": authId
         }
       )
@@ -68,7 +68,7 @@ for rdb in dbConnectionsTransacion:
           var user = rdb.table("user").select("id").where("name", "=", "user3").first.await.get
           var id = user["id"].getInt()
           user = rdb.table("user").select("name", "email").find(id).await.get
-          check user == %*{"name":"user3","email":"user3@gmail.com"}
+          check user == %*{"name":"user3","email":"user3@example.com"}
 
     test("insert"):
       asyncBlock:

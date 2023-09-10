@@ -10,7 +10,7 @@ import ./surreal_query_type
 # import ./sub/change_column_query
 
 
-proc changeColumn*(self:SurrealQuery, isReset:bool) =
+proc changeColumn*(self:SurrealSchema, isReset:bool) =
   ## SurrealDB not support change column field
   ## 
   ## https://github.com/surrealdb/surrealdb/issues/1838
