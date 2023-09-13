@@ -821,15 +821,15 @@ proc insertId*(self:SurrealQuery, items:JsonNode, key="id"):Future[SurrealId] {.
     return SurrealId.new()
 
 
-# proc insertId*(self: SurrealQuery, items: seq[JsonNode], key="id"):Future[seq[string]] {.async.} =
-#   result = newSeq[string](items.len)
-#   for i, item in items:
-#     var sql = self.insertValueBuilder(item)
-#     sql.add(&" RETURNING \"{key}\"")
-#     sql = questionToDaller(sql)
-#     self.log.logger(sql)
-#     result[i] = self.insertId(sql, key).await
-#     self.placeHolder = newJArray()
+proc insertId*(self: SurrealQuery, items: seq[JsonNode], key="id"):Future[seq[SurrealId]] {.async.} =
+  result = newSeq[SurrealId](items.len)
+  var sql = self.insertValuesBuilder(items)
+  self.log.logger(sql)
+  let res = self.getAllRows(sql).await
+  var i = 0
+  for row in res.items:
+    defer: i.inc()
+    result[i] = SurrealId.new(row[key].getStr)
 
 
 # proc update*(self: SurrealQuery, items: JsonNode){.async.} =

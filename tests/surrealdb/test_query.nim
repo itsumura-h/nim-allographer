@@ -30,7 +30,7 @@ proc setup(rdb:SurrealConnections) =
       Column.string("name").nullable(),
       Column.string("email").nullable(),
       Column.string("address").nullable(),
-      Column.date("submit_on").nullable(),
+      Column.date("submit_on"),
       Column.datetime("submit_at"),
       Column.foreign("auth").reference("id").on("auth").onDelete(SET_NULL).nullable()
     ])
@@ -275,60 +275,59 @@ suite($rdb & " get"):
     check newSeq[JsonNode](0) == rdb.table("user").where("id", "=", 50).get().waitFor()
 
 
-# suite($rdb & " insert"):
-#   setup:
-#     setup(rdb)
+suite($rdb & " insert"):
+  setup:
+    setup(rdb)
 
-#   test("insert row"):
-#     rdb.table("user").insert(%*{"name": "Alice"}).waitFor
-#     let t = rdb.table("user").orderBy("id", Desc).first().waitFor().get()
-#     check t["name"].getStr() == "Alice"
-
-
-#   test("insert rows"):
-#     rdb.table("user").insert(@[
-#       %*{"name": "Alice"},
-#       %*{"name": "Bob"},
-#     ]).waitFor
-#     let t = rdb.table("user").orderBy("id", Desc).limit(2).get().waitFor()
-#     check t[0]["name"].getStr() == "Bob"
-#     check t[1]["name"].getStr() == "Alice"
+  test("insert row"):
+    rdb.table("user").insert(%*{"name": "Alice"}).waitFor
+    let t = rdb.table("user").orderBy("index", Desc).first().waitFor().get()
+    check t["name"].getStr() == "Alice"
 
 
-#   test("insertId row"):
-#     var id = rdb.table("user").insertId(%*{"name": "Alice"}).waitFor
-#     echo id
-#     let t = rdb.table("user").find(id).waitFor().get()
-#     check t["name"].getStr() == "Alice"
+  test("insert rows"):
+    rdb.table("user").insert(@[
+      %*{"name": "Alice"},
+      %*{"name": "Bob"},
+    ]).waitFor
+    let t = rdb.table("user").orderBy("index", Desc).limit(2).get().waitFor()
+    check t[0]["name"].getStr() == "Bob"
+    check t[1]["name"].getStr() == "Alice"
+
+
+  test("insertId row"):
+    var id = rdb.table("user").insertId(%*{"name": "Alice"}).waitFor
+    echo id
+    let t = rdb.table("user").find(id).waitFor().get()
+    check t["name"].getStr() == "Alice"
 
   
-#   test("insertId rows"):
-#     let ids = rdb.table("user").insertId(@[
-#       %*{"name": "Alice"},
-#       %*{"name": "Bob"},
-#     ]).waitFor
-    
-#     var t = rdb.table("user").find(ids[0]).waitFor().get()
-#     check t["name"].getStr == "Alice"
+  test("insertId rows"):
+    let ids = rdb.table("user").insertId(@[
+      %*{"name": "Alice"},
+      %*{"name": "Bob"},
+    ]).waitFor
 
-#     t = rdb.table("user").find(ids[1]).waitFor().get()
-#     check t["name"].getStr == "Bob"
+    var t = rdb.table("user").find(ids[0]).waitFor().get()
+    check t["name"].getStr == "Alice"
+
+    t = rdb.table("user").find(ids[1]).waitFor().get()
+    check t["name"].getStr == "Bob"
 
 
-#   test("insertNil"):
-#     var id = rdb.table("user").insertId(%*{
-#       "name": "Alice",
-#       "email": nil,
-#       "address": ""
-#     })
-#     .waitFor
-#     var res = rdb.table("user").find(id).waitFor
-#     echo res.get
-#     check res.get["email"] == newJNull()
+  test("insertNil"):
+    var id = rdb.table("user").insertId(%*{
+      "name": "Alice",
+      "email": nil,
+      "address": ""
+    })
+    .waitFor
 
-#     res = rdb.table("user").where("email", "is", nil).first().waitFor
-#     echo res.get
-#     check res.get["email"] == newJNull()
+    var res = rdb.table("user").find(id).waitFor
+    check res.get["email"] == newJNull()
+
+    res = rdb.table("user").where("email", "is", nil).first().waitFor
+    check res.get["email"] == newJNull()
 
 
 # suite($rdb & " update"):

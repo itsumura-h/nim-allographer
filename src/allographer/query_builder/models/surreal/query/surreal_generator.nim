@@ -268,13 +268,18 @@ proc insertValueSql*(self: SurrealQuery, items: JsonNode): SurrealQuery =
 
 
 proc insertValuesSql*(self: SurrealQuery, rows: openArray[JsonNode]): SurrealQuery =
-  var query = " ["
+  self.queryString.add(" [")
   for i, row in rows:
-    if i > 0: query.add(", ")
-    query.add("?")
-    self.placeHolder.add(row)
-  query.add("]")
-  self.queryString.add(query)
+    if i > 0: self.queryString.add(", ")
+    var j = 0
+    self.queryString.add("{")
+    for (key, item) in row.pairs:
+      defer: j.inc()
+      if j > 0: self.queryString.add(", ")
+      self.queryString.add(&"{key}: ?")
+      self.placeHolder.add(item)
+    self.queryString.add("}")
+  self.queryString.add("]")
   return self
 
 
