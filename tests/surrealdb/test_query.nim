@@ -23,7 +23,7 @@ proc setup(rdb:SurrealConnections) =
   rdb.create([
     table("auth",[
       Column.increments("index"),
-      Column.string("auth")
+      Column.string("name")
     ]),
     table("user",[
       Column.increments("index"),
@@ -32,15 +32,15 @@ proc setup(rdb:SurrealConnections) =
       Column.string("address").nullable(),
       Column.date("submit_on").nullable(),
       Column.datetime("submit_at"),
-      Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL).nullable()
+      Column.foreign("auth").reference("id").on("auth").onDelete(SET_NULL).nullable()
     ])
   ])
 
   # seeder
   var adminId, userId:SurrealId
   seeder(rdb, "auth"):
-    adminId = rdb.table("auth").insertId(%*{"auth":"admin"}).waitFor
-    userId = rdb.table("auth").insertId(%*{"auth":"user"}).waitFor
+    adminId = rdb.table("auth").insertId(%*{"name":"admin"}).waitFor()
+    userId = rdb.table("auth").insertId(%*{"name":"user"}).waitFor()
 
   seeder(rdb, "user"):
     var users: seq[JsonNode]
@@ -51,13 +51,13 @@ proc setup(rdb:SurrealConnections) =
         %*{
           "name": &"user{i}",
           "email": &"user{i}@example.com",
-          "auth_id": authId,
+          "auth": authId,
           "submit_on": &"2020-{month}-01",
           "submit_at": &"2020-{month}-01 00:00:00",
         }
       )
 
-    rdb.table("user").insert(users).waitFor
+    rdb.table("user").insert(users).waitFor()
 
 
 let rdb = surreal
@@ -66,269 +66,213 @@ setup(rdb)
 
 suite($rdb & " get"):
   test("get"):
-    let t = rdb.table("user").orderBy("name", Asc).get().waitFor
+    let t = rdb.table("user").orderBy("name", Asc).get().waitFor()
     echo t[0]
-    check t[0]["index"].getInt == 1
-    check t[0]["name"].getStr == "user1"
-    check t[0]["email"].getStr == "user1@example.com"
+    check t[0]["index"].getInt() == 1
+    check t[0]["name"].getStr() == "user1"
+    check t[0]["email"].getStr() == "user1@example.com"
     check t[0]["address"].kind == JNull
-    check t[0]["submit_on"].getStr.parse("yyyy-MM-dd'T'hh:mm:ss'Z'").format("yyyy-MM-dd") == "2020-01-01"
-    check t[0]["submit_at"].getStr == "2020-01-01T00:00:00Z"
+    check t[0]["submit_on"].getStr().parse("yyyy-MM-dd'T'hh:mm:ss'Z'").format("yyyy-MM-dd") == "2020-01-01"
+    check t[0]["submit_at"].getStr() == "2020-01-01T00:00:00Z"
 
 
   test("first"):
-    var t = rdb.table("user").where("name", "=", "user1").orderBy("name", Asc).first().waitFor().get
-    check t["index"].getInt == 1
-    check t["name"].getStr == "user1"
-    check t["email"].getStr == "user1@example.com"
+    var t = rdb.table("user").where("name", "=", "user1").orderBy("name", Asc).first().waitFor().get()
+    check t["index"].getInt() == 1
+    check t["name"].getStr() == "user1"
+    check t["email"].getStr() == "user1@example.com"
     check t["address"].kind == JNull
-    check t["submit_on"].getStr.parse("yyyy-MM-dd'T'hh:mm:ss'Z'").format("yyyy-MM-dd") == "2020-01-01"
-    check t["submit_at"].getStr == "2020-01-01T00:00:00Z"
+    check t["submit_on"].getStr().parse("yyyy-MM-dd'T'hh:mm:ss'Z'").format("yyyy-MM-dd") == "2020-01-01"
+    check t["submit_at"].getStr() == "2020-01-01T00:00:00Z"
 
 
   test("find"):
-    var t = rdb.table("user").where("name", "=", "user1").orderBy("name", Asc).first().waitFor().get
-    let id = SurrealId.new(t["id"].getStr)
-    t = rdb.table("user").find(id).waitFor.get
-    check t["index"].getInt == 1
-    check t["name"].getStr == "user1"
-    check t["email"].getStr == "user1@example.com"
+    var t = rdb.table("user").where("name", "=", "user1").orderBy("name", Asc).first().waitFor().get()
+    let id = SurrealId.new(t["id"].getStr())
+    t = rdb.table("user").find(id).waitFor().get()
+    check t["index"].getInt() == 1
+    check t["name"].getStr() == "user1"
+    check t["email"].getStr() == "user1@example.com"
     check t["address"].kind == JNull
-    check t["submit_on"].getStr.parse("yyyy-MM-dd'T'hh:mm:ss'Z'").format("yyyy-MM-dd") == "2020-01-01"
-    check t["submit_at"].getStr == "2020-01-01T00:00:00Z"
+    check t["submit_on"].getStr().parse("yyyy-MM-dd'T'hh:mm:ss'Z'").format("yyyy-MM-dd") == "2020-01-01"
+    check t["submit_at"].getStr() == "2020-01-01T00:00:00Z"
 
 
   test("columns"):
-    let columns = rdb.table("user").columns().waitFor
-    check columns == @["address", "auth_id", "email", "index", "name", "submit_at", "submit_on"]
+    let columns = rdb.table("user").columns().waitFor()
+    check columns == @["address", "auth", "email", "index", "name", "submit_at", "submit_on"]
 
 
   test("select"):
-    var t = rdb.select("name", "email").table("user").orderBy("name", Asc).get().waitFor
+    var t = rdb.select("name", "email").table("user").orderBy("name", Asc).get().waitFor()
     check t[0] == %*{"name": "user1", "email": "user1@example.com"}
 
 
   test("selectAs"):
-    var t = rdb.select("name as user_name", "email").table("user").orderBy("user_name", Asc).get().waitFor
+    var t = rdb.select("name as user_name", "email").table("user").orderBy("user_name", Asc).get().waitFor()
     check t[0] == %*{"user_name": "user1", "email": "user1@example.com"}
 
 
   test("selectLike"):
-    var t = rdb.select("email").table("user").where("email", "CONTAINS", "10").get().waitFor
-    check t == @[%*{"email":"user10@example.com"}]
-
-
-  # test("where"):
-  #   var t = rdb.table("user").where("auth_id", "=", "1").get().waitFor
-  #   check t == @[
-  #     %*{"id":1,"name":"user1","email":"user1@example.com","address":newJNull(),"submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00","auth_id":1},
-  #     %*{"id":3,"name":"user3","email":"user3@example.com","address":newJNull(),"submit_on":"2020-03-01","submit_at":"2020-03-01 00:00:00","auth_id":1},
-  #     %*{"id":5,"name":"user5","email":"user5@example.com","address":newJNull(),"submit_on":"2020-05-01","submit_at":"2020-05-01 00:00:00","auth_id":1},
-  #     %*{"id":7,"name":"user7","email":"user7@example.com","address":newJNull(),"submit_on":"2020-07-01","submit_at":"2020-07-01 00:00:00","auth_id":1},
-  #     %*{"id":9,"name":"user9","email":"user9@example.com","address":newJNull(),"submit_on":"2020-09-01","submit_at":"2020-09-01 00:00:00","auth_id":1}
-  #   ]
-
-
-  # test("orWhere"):
-  #   var t = rdb.table("user").where("auth_id", "=", "1").orWhere("name", "=", "user2").get().waitFor
-  #   check t == @[
-  #     %*{"id":1,"name":"user1","email":"user1@example.com","address":newJNull(),"submit_on":"2020-01-01","submit_at":"2020-01-01 00:00:00","auth_id":1},
-  #     %*{"id":2,"name":"user2","email":"user2@example.com","address":newJNull(),"submit_on":"2020-02-01","submit_at":"2020-02-01 00:00:00","auth_id":2},
-  #     %*{"id":3,"name":"user3","email":"user3@example.com","address":newJNull(),"submit_on":"2020-03-01","submit_at":"2020-03-01 00:00:00","auth_id":1},
-  #     %*{"id":5,"name":"user5","email":"user5@example.com","address":newJNull(),"submit_on":"2020-05-01","submit_at":"2020-05-01 00:00:00","auth_id":1},
-  #     %*{"id":7,"name":"user7","email":"user7@example.com","address":newJNull(),"submit_on":"2020-07-01","submit_at":"2020-07-01 00:00:00","auth_id":1},
-  #     %*{"id":9,"name":"user9","email":"user9@example.com","address":newJNull(),"submit_on":"2020-09-01","submit_at":"2020-09-01 00:00:00","auth_id":1}
-  #   ]
-
-
-  # test("whereBetween"):
-  #   var t = rdb
-  #           .select("id", "name")
-  #           .table("user")
-  #           .where("auth_id", "=", 1)
-  #           .whereBetween("id", [6, 9])
-  #           .get()
-  #           .waitFor
-  #   echo t
-  #   check t[0]["name"].getStr() == "user7"
-
-
-  # test("whereBetweenString"):
-  #   var t = rdb
-  #           .table("user")
-  #           .whereBetween("submit_at", ["2020-01-01 00:00:00", "2020-01-31 00:00:00"])
-  #           .get()
-  #           .waitFor
-  #   check t[0]["name"].getStr == "user1"
-
-  #   t = rdb
-  #       .table("user")
-  #       .whereBetween("submit_on", ["2020-01-01", "2020-01-31"])
-  #       .get()
-  #       .waitFor
-  #   check t[0]["name"].getStr == "user1"
-
-
-  # test("whereNotBetween"):
-  #   var t = rdb
-  #           .select("id", "name")
-  #           .table("user")
-  #           .where("auth_id", "=", 1)
-  #           .whereNotBetween("id", [1, 4])
-  #           .get()
-  #           .waitFor
-  #   check t[0]["name"].getStr() == "user5"
-
-
-  # test("whereNotBetweenString"):
-  #   var t = rdb
-  #           .table("user")
-  #           .whereNotBetween("submit_at", ["2020-2-1 00:00:00", "2020-12-31 00:00:00"])
-  #           .get()
-  #           .waitFor
-  #   check t[0]["name"].getStr == "user1"
-
-  #   t = rdb
-  #       .table("user")
-  #       .whereNotBetween("submit_on", ["2020-2-1", "2020-12-31"])
-  #       .get()
-  #       .waitFor
-  #   check t[0]["name"].getStr == "user1"
-
-
-  # test("whereIn"):
-  #   var t = rdb
-  #           .select("id", "name")
-  #           .table("user")
-  #           .whereBetween("id", [4, 10])
-  #           .whereIn("id", @[5, 6, 7])
-  #           .get()
-  #           .waitFor
-  #   echo t
-  #   check t[0]["name"].getStr() == "user5"
+    let users = rdb.table("user").where("email", "CONTAINS", "10").get().waitFor()
+    check users[0]["email"].getStr() == "user10@example.com"
     
-  #   t = rdb
-  #       .select("id", "name")
-  #       .table("user")
-  #       .whereBetween("id", [4, 10])
-  #       .whereIn("name", @["user5", "user6", "user7"])
-  #       .get()
-  #       .waitFor
-  #   check t[0]["name"].getStr() == "user5"
+    var user10 = rdb.raw("SELECT * FROM user WHERE string::startsWith(email, \"user10\")").first().waitFor()
+    check user10.get()["email"].getStr() == "user10@example.com"
+
+    user10 = rdb.raw("SELECT * FROM user WHERE string::endsWith(email, \"10@example.com\")").first().waitFor()
+    check user10.get()["email"].getStr() == "user10@example.com"
 
 
-  # test("whereNotIn"):
-  #   var t = rdb
-  #           .select("id", "name")
-  #           .table("user")
-  #           .whereBetween("id", [4, 10])
-  #           .whereNotIn("id", @[5, 6, 7])
-  #           .get()
-  #           .waitFor
-  #   echo t
-  #   check t == @[
-  #     %*{"id":4, "name": "user4"},
-  #     %*{"id":8, "name": "user8"},
-  #     %*{"id":9, "name": "user9"},
-  #     %*{"id":10, "name": "user10"},
-  #   ]
-    
-  #   t = rdb
-  #       .select("id", "name")
-  #       .table("user")
-  #       .whereBetween("id", [4, 10])
-  #       .whereNotIn("name", @["user5", "user6", "user7"])
-  #       .get()
-  #       .waitFor
-  #   echo t
-  #   check t == @[
-  #     %*{"id":4, "name": "user4"},
-  #     %*{"id":8, "name": "user8"},
-  #     %*{"id":9, "name": "user9"},
-  #     %*{"id":10, "name": "user10"},
-  #   ]
+  test("where"):
+    let admin = rdb.table("auth").where("name", "=", "admin").first().waitFor().get()
+    let adminId = SurrealId.new(admin["id"].getStr())
+
+    var t = rdb.table("user").where("auth_id", "=", adminId.rawId()).orderBy("index", Asc).get().waitFor()
+    const ids = [1,3,5,7,9]
+    for i, row in t:
+      check row["index"].getInt() == ids[i]
+      check row["name"].getStr() == &"user{ids[i]}" 
+      check row["email"].getStr() == &"user{ids[i]}@example.com" 
+      check row["address"].kind == JNull
+      check row["submit_on"].getStr() == &"2020-0{ids[i]}-01T00:00:00Z"
 
 
-  # test("whereNull"):
-  #   setUp(rdb)
-  #   rdb.table("user").insert(%*{"email": "user11@example.com"}).waitFor
-  #   var t = rdb
-  #           .select("id", "name", "email")
-  #           .table("user")
-  #           .whereNull("name")
-  #           .get()
-  #           .waitFor
-  #   echo t
-  #   check t[0]["id"].getInt() == 11
+
+  test("orWhere"):
+    let admin = rdb.table("auth").where("name", "=", "admin").first().waitFor().get()
+    let adminId = SurrealId.new(admin["id"].getStr())
+
+    var t = rdb.table("user").where("auth", "=", adminId).orWhere("name", "=", "user2").orderBy("index", Asc).get().waitFor()
+    const ids = [1,2,3,5,7,9]
+    for i, row in t:
+      check row["index"].getInt() == ids[i]
+      check row["name"].getStr() == &"user{ids[i]}" 
+      check row["email"].getStr() == &"user{ids[i]}@example.com" 
+      check row["address"].kind == JNull
+      check row["submit_on"].getStr() == &"2020-0{ids[i]}-01T00:00:00Z"
 
 
+  test("whereBetween"):
+    var t = rdb
+            .table("user")
+            .whereBetween("index", [6, 9])
+            .orderBy("index", Asc)
+            .get()
+            .waitFor()
+
+    const ids = [6,7,8,9]
+    for i, row in t:
+      check row["index"].getInt() == ids[i]
+      check row["name"].getStr() == &"user{ids[i]}" 
+      check row["email"].getStr() == &"user{ids[i]}@example.com" 
+      check row["address"].kind == JNull
+      check row["submit_on"].getStr() == &"2020-0{ids[i]}-01T00:00:00Z"
+
+
+  test("whereNotBetween"):
+    var t = rdb
+            .table("user")
+            .whereNotBetween("index", [2, 6])
+            .orderBy("index", Asc)
+            .get()
+            .waitFor()
+
+    const ids = [1,7,8,9]
+    for i, row in t:
+      check row["index"].getInt() == ids[i]
+      check row["name"].getStr() == &"user{ids[i]}" 
+      check row["email"].getStr() == &"user{ids[i]}@example.com" 
+      check row["address"].kind == JNull
+      check row["submit_on"].getStr() == &"2020-0{ids[i]}-01T00:00:00Z"
+
+
+  test("whereIn"):
+    var t = rdb
+            .table("user")
+            .whereIn("index", @[5, 6, 7])
+            .orderBy("index", Asc)
+            .get()
+            .waitFor()
+
+    const ids = [5,6,7]
+    for i, row in t:
+      check row["index"].getInt() == ids[i]
+      check row["name"].getStr() == &"user{ids[i]}" 
+      check row["email"].getStr() == &"user{ids[i]}@example.com" 
+      check row["address"].kind == JNull
+      check row["submit_on"].getStr() == &"2020-0{ids[i]}-01T00:00:00Z"
+
+
+  test("whereNotIn"):
+    var t = rdb
+            .table("user")
+            .whereNotIn("index", @[4, 5, 6, 7, 10])
+            .orderBy("index", Asc)
+            .get()
+            .waitFor()
+
+    const ids = [1,2,3,8,9]
+    for i, row in t:
+      check row["index"].getInt() == ids[i]
+      check row["name"].getStr() == &"user{ids[i]}" 
+      check row["email"].getStr() == &"user{ids[i]}@example.com" 
+      check row["address"].kind == JNull
+      check row["submit_on"].getStr() == &"2020-0{ids[i]}-01T00:00:00Z"
+
+
+  test("whereNull"):
+    rdb.table("user").insert(%*{"email": "user11@example.com"}).waitFor()
+    var t = rdb
+            .table("user")
+            .whereNull("name")
+            .first()
+            .waitFor()
+    check t.get()["index"].getInt() == 11
+
+  setUp(rdb)
+
+  # TODO: not work
   # test("groupBy"):
   #   var t = rdb
+  #           .select("auth.name")
   #           .table("user")
-  #           .groupBy("auth_id")
-  #           .max("id")
+  #           .groupBy("auth.name")
+  #           .get()
   #           .waitFor()
-  #           .get()
   #   echo t
-  #   check t == "11"
 
 
-  # test("having"):
-  #   var t = rdb
-  #           .select("id", "name")
-  #           .table("user")
-  #           .groupBy("auth_id")
-  #           .groupBy("id")
-  #           .having("auth_id", "=", 1)
-  #           .get()
-  #           .waitFor
-  #   echo t
-  #   check t[0]["id"].getInt() == 1
+  test("orderBy"):
+    var res = rdb.table("user").orderBy("name", Asc).get().waitFor()
+    check res[0]["name"].getStr() == "user1"
+
+    res = rdb.table("user").orderBy("name", Desc).get().waitFor()
+    check res[0]["name"].getStr() == "user9"
+
+    res = rdb.table("user").orderBy("index", Numeric, Asc).get().waitFor()
+    check res[0]["name"].getStr() == "user1"
+
+    res = rdb.table("user").orderBy("index", Numeric, Desc).get().waitFor()
+    check res[0]["name"].getStr() == "user10"
+
+    res = rdb.table("user").orderBy("name", Collate, Asc).get().waitFor()
+    check res[0]["name"].getStr() == "user1"
+
+    res = rdb.table("user").orderBy("name", Collate, Desc).get().waitFor()
+    check res[0]["name"].getStr() == "user9"
 
 
-  # test("orderBy"):
-  #   var t = rdb.table("user")
-  #           .where("auth_id", "is not", nil)
-  #           .orderBy("auth_id", Asc)
-  #           .orderBy("id", Desc)
-  #           .get()
-  #           .waitFor
-  #   echo t
-  #   check t[0]["id"].getInt() == 9
+  test("fetch"):
+    var res = rdb.table("user").where("name", "=", "user1").fetch("auth").first().waitFor().get()
+    check res["auth"]["name"].getStr() == "admin"
+    res = rdb.table("user").where("name", "=", "user2").fetch("auth").first().waitFor().get()
+    check res["auth"]["name"].getStr() == "user"
 
 
-  # test("join"):
-  #   var t = rdb
-  #           .select("user.id", "user.name")
-  #           .table("user")
-  #           .join("auth", "auth.id", "=", "user.auth_id")
-  #           .where("auth.id", "=", "2")
-  #           .get()
-  #           .waitFor
-  #   echo t
-  #   check t[0]["name"].getStr() == "user2"
-
-
-  # test("leftJoin"):
-  #   rdb.table("user").insert(%*{
-  #     "name": "user11"
-  #   })
-  #   .waitFor
-  #   var t = rdb
-  #           .select("user.id", "user.name", "user.auth_id")
-  #           .table("user")
-  #           .leftJoin("auth", "auth.id", "=", "user.auth_id")
-  #           .orderBy("user.id", Desc)
-  #           .get()
-  #           .waitFor
-  #   echo t
-  #   check t[0]["name"].getStr() == "user11"
-  #   check t[0]["auth_id"] == newJNull()
-
-
-  # test("resultIsNull"):
-  #   check rdb.table("user").find(50).waitFor().isSome == false
-  #   check newSeq[JsonNode](0) == rdb.table("user").where("id", "=", 50).get().waitFor
+  test("resultIsNull"):
+    check rdb.table("user").where("id", "=", 50).first().waitFor().isSome() == false
+    check newSeq[JsonNode](0) == rdb.table("user").where("id", "=", 50).get().waitFor()
 
 
 # suite($rdb & " insert"):

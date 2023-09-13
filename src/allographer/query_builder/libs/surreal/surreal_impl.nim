@@ -68,6 +68,8 @@ proc query*(db:SurrealConn, query: string, args: JsonNode, timeout:int):Future[J
   echo query
   let resp = db.client.post(&"{db.host}:{db.port}/sql", query).await
   let body = resp.body().await.parseJson()
+  echo "=== body"
+  echo body
   if body.kind == JObject and body["code"].getInt() == 400:
     dbError(body["information"].getStr())
   if body[^1].hasKey("detail") and not body[^1].hasKey("result"):

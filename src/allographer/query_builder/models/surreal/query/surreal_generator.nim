@@ -61,9 +61,7 @@ proc selectByIdSql*(self:SurrealQuery, id:SurrealId, key:string): SurrealQuery =
 
 
 proc whereSql*(self: SurrealQuery): SurrealQuery =
-  echo "=== whereSql"
   if self.query.hasKey("where"):
-    echo "self.query[\"where\"]: ", self.query["where"]
     for i, row in self.query["where"].getElems():
       var column = row["column"].getStr()
       quoteColumn(column)
@@ -103,9 +101,9 @@ proc whereBetweenSql*(self: SurrealQuery): SurrealQuery =
       quoteColumn(column)
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND \"{column}\" BETWEEN ? AND ?")
+        self.queryString.add(&" AND ? <= {column} AND {column} <= ?")
       else:
-        self.queryString.add(&" WHERE \"{column}\" BETWEEN ? AND ?")
+        self.queryString.add(&" WHERE ? <= {column} AND {column} <= ?")
 
       self.placeHolder.add(row["width"][0])
       self.placeHolder.add(row["width"][1])
@@ -113,18 +111,80 @@ proc whereBetweenSql*(self: SurrealQuery): SurrealQuery =
   return self
 
 
-proc whereBetweenStringSql*(self: SurrealQuery): SurrealQuery =
-  if self.query.hasKey("where_between_string"):
-    for row in self.query["where_between_string"]:
-      let column = row["column"].getStr()
+proc whereNotBetweenSql*(self: SurrealQuery): SurrealQuery =
+  if self.query.hasKey("where_not_between"):
+    for row in self.query["where_not_between"]:
+      var column = row["column"].getStr()
+      quoteColumn(column)
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" AND \"{column}\" BETWEEN ? AND ?")
+        self.queryString.add(&" AND ? > {column} AND {column} < ?")
       else:
-        self.queryString.add(&" WHERE \"{column}\" BETWEEN ? AND ?")
+        self.queryString.add(&" WHERE ? > {column} AND {column} < ?")
 
       self.placeHolder.add(row["width"][0])
       self.placeHolder.add(row["width"][1])
+
+  return self
+
+
+proc whereInSql*(self: SurrealQuery): SurrealQuery =
+  if self.query.hasKey("where_in"):
+    for row in self.query["where_in"]:
+      var column = row["column"].getStr()
+      quoteColumn(column)
+
+      var values = ""
+      var i = 0
+      for row in row["width"].items:
+        defer: i.inc()
+        if i > 0: values.add(", ")
+        values.add("?")
+        self.placeHolder.add(row)
+      values.add("")
+
+      if self.queryString.contains("WHERE"):
+        self.queryString.add(&" AND [{values}] CONTAINS {column}")
+      else:
+        self.queryString.add(&" WHERE [{values}] CONTAINS {column}")
+
+  return self
+
+
+proc whereNotInSql*(self: SurrealQuery): SurrealQuery =
+  if self.query.hasKey("where_not_in"):
+    for row in self.query["where_not_in"]:
+      var column = row["column"].getStr()
+      quoteColumn(column)
+
+      var values = ""
+      var i = 0
+      for row in row["width"].items:
+        defer: i.inc()
+        if i > 0: values.add(", ")
+        values.add("?")
+        self.placeHolder.add(row)
+      values.add("")
+
+      if self.queryString.contains("WHERE"):
+        self.queryString.add(&" AND [{values}] CONTAINSNOT {column}")
+      else:
+        self.queryString.add(&" WHERE [{values}] CONTAINSNOT {column}")
+
+  return self
+
+
+proc whereNullSql*(self: SurrealQuery): SurrealQuery =
+  if self.query.hasKey("where_null"):
+    for row in self.query["where_null"]:
+      var column = row["column"].getStr()
+      quoteColumn(column)
+
+      if self.queryString.contains("WHERE"):
+        self.queryString.add(&" OR {column} IS NULL")
+      else:
+        self.queryString.add(&" WHERE {column} IS NULL")
+
   return self
 
 

@@ -68,32 +68,7 @@ const whereSymbols = ["is", "is not", "=", "!=", "<", "<=", ">=", ">", "<>", "CO
 const whereSymbolsError = """Arg position 3 is only allowed of ["is", "is not", "=", "!=", "<", "<=", ">=", ">", "<>", "CONTAINS", "CONTAINSNOT", "@@"]"""
 
 proc where*(self: SurrealQuery, column: string, symbol: string,
-            value: string|int|float): SurrealQuery =
-  if not whereSymbols.contains(symbol):
-    raise newException(
-      Exception,
-      whereSymbolsError
-    )
-
-  if self.query.hasKey("where") == false:
-    self.query["where"] = %*[{
-      "column": column,
-      "symbol": symbol,
-      "value": value
-    }]
-  else:
-    self.query["where"].add(
-      %*{
-        "column": column,
-        "symbol": symbol,
-        "value": value
-      }
-    )
-  return self
-
-
-proc where*(self: SurrealQuery, column: string, symbol: string,
-            value: bool): SurrealQuery =
+            value: bool|int|float|string|SurrealId): SurrealQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
@@ -142,14 +117,12 @@ proc where*(self: SurrealQuery, column: string, symbol: string, value: nil.type)
 
 
 proc orWhere*(self: SurrealQuery, column: string, symbol: string,
-              value: string|int|float|bool): SurrealQuery =
+              value: bool|int|float|string|SurrealId): SurrealQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
       Exception,
       whereSymbolsError
     )
-
-  # self.placeHolder.add(%*{"key":column, "value":value})
 
   if self.query.hasKey("or_where") == false:
     self.query["or_where"] = %*[{
@@ -191,6 +164,11 @@ proc orWhere*(self: SurrealQuery, column: string, symbol: string, value: nil.typ
 
 
 proc whereBetween*(self:SurrealQuery, column:string, width:array[2, int|float]): SurrealQuery =
+  ## `rdb.table("user").whereBetween("index", [1, 3]).get()`
+  ## 
+  ## `SELECT * FROM user WHERE 1 <= index AND index <= 3`
+  ## 
+  ## https://surrealdb.com/docs/surrealql/operators#lessthanorequal
   if self.query.hasKey("where_between") == false:
     self.query["where_between"] = %*[{
       "column": column,
@@ -204,35 +182,42 @@ proc whereBetween*(self:SurrealQuery, column:string, width:array[2, int|float]):
   return self
 
 
-proc whereBetween*(self:SurrealQuery, column:string, width:array[2, string]): SurrealQuery =
-  if self.query.hasKey("where_between_string") == false:
-    self.query["where_between_string"] = %*[{
-      "column": column,
-      "width": width
-    }]
-  else:
-    self.query["where_between_string"].add(%*{
-      "column": column,
-      "width": width
-    })
-  return self
-
-
-# proc whereNotBetween*(self:SurrealQuery, column:string, width:array[2, int|float]): SurrealQuery =
-#   self.placeHolder.add(%*{"key": column, "value": width[0]})
-#   self.placeHolder.add(%*{"key": column, "value": width[1]})
-
-#   if self.query.hasKey("where_not_between") == false:
-#     self.query["where_not_between"] = %*[{
+# proc whereBetween*(self:SurrealQuery, column:string, width:array[2, string]): SurrealQuery =
+#   ## rdb.table("user").whereBetween("name", ["user1", "user3"]).get()
+#   ## 
+#   ## `SELECT * FROM user WHERE "user1" <= index <= "user3`
+#   ## 
+#   ## https://surrealdb.com/docs/surrealql/operators#lessthanorequal
+#   if self.query.hasKey("where_between_string") == false:
+#     self.query["where_between_string"] = %*[{
 #       "column": column,
 #       "width": width
 #     }]
 #   else:
-#     self.query["where_not_between"].add(%*{
+#     self.query["where_between_string"].add(%*{
 #       "column": column,
 #       "width": width
 #     })
 #   return self
+
+
+proc whereNotBetween*(self:SurrealQuery, column:string, width:array[2, int|float]): SurrealQuery =
+  ## `rdb.table("user").whereNotBetween("index", [1, 3]).get()`
+  ## 
+  ## `SELECT * FROM user WHERE index > 1 AND 3 < index`
+  ## 
+  ## https://surrealdb.com/docs/surrealql/operators#greaterthan
+  if self.query.hasKey("where_not_between") == false:
+    self.query["where_not_between"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    self.query["where_not_between"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return self
 
 
 # proc whereNotBetween*(self:SurrealQuery, column:string, width:array[2, string]): SurrealQuery =
@@ -252,110 +237,119 @@ proc whereBetween*(self:SurrealQuery, column:string, width:array[2, string]): Su
 #   return self
 
 
-# proc whereIn*(self:SurrealQuery, column:string, width:seq[int|float|string]): SurrealQuery =
-#   for row in width:
-#     self.placeHolder.add(%*{"key": column, "value": row})
-
-#   if self.query.hasKey("where_in") == false:
-#     self.query["where_in"] = %*[{
-#       "column": column,
-#       "width": width
-#     }]
-#   else:
-#     self.query["where_in"].add(%*{
-#       "column": column,
-#       "width": width
-#     })
-#   return self
-
-
-# proc whereNotIn*(self:SurrealQuery, column:string, width:seq[int|float|string]): SurrealQuery =
-#   for row in width:
-#     self.placeHolder.add(%*{"key": column, "value": row})
-
-#   if self.query.hasKey("where_not_in") == false:
-#     self.query["where_not_in"] = %*[{
-#       "column": column,
-#       "width": width
-#     }]
-#   else:
-#     self.query["where_not_in"].add(%*{
-#       "column": column,
-#       "width": width
-#     })
-#   return self
+proc whereIn*(self:SurrealQuery, column:string, width:seq[int|float|string]): SurrealQuery =
+  ## `rdb.table("user").whereIn("index", [2, 3]).get()`
+  ## 
+  ## `SELECT * FROM user WHERE [2, 3] CONTAINS index`
+  ## 
+  ## https://surrealdb.com/docs/surrealql/operators#contains
+  if self.query.hasKey("where_in") == false:
+    self.query["where_in"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    self.query["where_in"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return self
 
 
-# proc whereNull*(self:SurrealQuery, column:string): SurrealQuery =
-#   if self.query.hasKey("where_null") == false:
-#     self.query["where_null"] = %*[{
-#       "column": column,
-#       "symbol": "is",
-#     }]
-#   else:
-#     self.query["where_null"].add(%*{
-#       "column": column,
-#       "symbol": "is",
-#     })
-#   return self
+proc whereNotIn*(self:SurrealQuery, column:string, width:seq[int|float|string]): SurrealQuery =
+  ## `rdb.table("user").whereNotIn("index", [2, 3]).get()`
+  ## 
+  ## `SELECT * FROM user WHERE [2, 3] CONTAINSNOT index`
+  ## 
+  ## https://surrealdb.com/docs/surrealql/operators#contains-not
+  if self.query.hasKey("where_not_in") == false:
+    self.query["where_not_in"] = %*[{
+      "column": column,
+      "width": width
+    }]
+  else:
+    self.query["where_not_in"].add(%*{
+      "column": column,
+      "width": width
+    })
+  return self
 
 
-# proc groupBy*(self:SurrealQuery, column:string): SurrealQuery =
-#   if self.query.hasKey("group_by") == false:
-#     self.query["group_by"] = %*[{"column": column}]
-#   else:
-#     self.query["group_by"].add(%*{"column": column})
-#   return self
+proc whereNull*(self:SurrealQuery, column:string): SurrealQuery =
+  ## https://surrealdb.com/docs/surrealql/operators#equal
+  if self.query.hasKey("where_null") == false:
+    self.query["where_null"] = %*[{
+      "column": column,
+      "symbol": "is",
+    }]
+  else:
+    self.query["where_null"].add(%*{
+      "column": column,
+      "symbol": "is",
+    })
+  return self
 
 
-# proc having*(self: SurrealQuery, column: string, symbol: string,
-#               value: string|int|float|bool): SurrealQuery =
-#   if not whereSymbols.contains(symbol):
-#     raise newException(
-#       Exception,
-#       whereSymbolsError
-#     )
+proc groupBy*(self:SurrealQuery, column:string): SurrealQuery =
+  if self.query.hasKey("group_by") == false:
+    self.query["group_by"] = %*[{"column": column}]
+  else:
+    self.query["group_by"].add(%*{"column": column})
+  return self
 
-#   self.placeHolder.add(%*{"key":column, "value":value})
 
-#   if self.query.hasKey("having") == false:
-#     self.query["having"] = %*[{
-#       "column": column,
-#       "symbol": symbol,
-#       "value": "?"
-#     }]
-#   else:
-#     self.query["having"].add(
-#       %*{
-#         "column": column,
-#         "symbol": symbol,
-#         "value": "?"
-#       }
-#     )
-#   return self
+proc having*(self: SurrealQuery, column: string, symbol: string,
+              value: bool|int|float|string): SurrealQuery =
+  if not whereSymbols.contains(symbol):
+    raise newException(
+      Exception,
+      whereSymbolsError
+    )
 
-# proc having*(self: SurrealQuery, column: string, symbol: string, value: nil.type): SurrealQuery =
-#   if not whereSymbols.contains(symbol):
-#     raise newException(
-#       Exception,
-#       whereSymbolsError
-#     )
+  if self.query.hasKey("having") == false:
+    self.query["having"] = %*[{
+      "column": column,
+      "symbol": symbol,
+      "value": value
+    }]
+  else:
+    self.query["having"].add(
+      %*{
+        "column": column,
+        "symbol": symbol,
+        "value": value
+      }
+    )
+  return self
 
-#   if self.query.hasKey("having") == false:
-#     self.query["having"] = %*[{
-#       "column": column,
-#       "symbol": symbol,
-#       "value": "null"
-#     }]
-#   else:
-#     self.query["having"].add(
-#       %*{
-#         "column": column,
-#         "symbol": symbol,
-#         "value": "null"
-#       }
-#     )
-#   return self
+
+proc having*(self: SurrealQuery, column: string, symbol: string, value: nil.type): SurrealQuery =
+  if not whereSymbols.contains(symbol):
+    raise newException(
+      Exception,
+      whereSymbolsError
+    )
+
+  if self.query.hasKey("having") == false:
+    self.query["having"] = %*[{
+      "column": column,
+      "symbol": symbol,
+      "value": nil
+    }]
+  else:
+    self.query["having"].add(
+      %*{
+        "column": column,
+        "symbol": symbol,
+        "value": nil
+      }
+    )
+  return self
+
+
+proc fetch*(self:SurrealQuery, columnsArg: varargs[string]):SurrealQuery =
+  self.query["fetch"] = %columnsArg
+  return self
 
 
 proc orderBy*(self:SurrealQuery, column:string, order:Order): SurrealQuery =
@@ -390,9 +384,20 @@ proc orderBy*(self:SurrealQuery, column:string, collation:Collation, order:Order
   return self
 
 
-# proc limit*(self: SurrealQuery, num: int): SurrealQuery =
-#   self.query["limit"] = %num
-#   return self
+proc limit*(self: SurrealQuery, num: int): SurrealQuery =
+  self.query["limit"] = %num
+  return self
+
+
+proc start*(self: SurrealQuery, num: int): SurrealQuery =
+  self.query["start"] = %num
+  return self
+
+
+proc parallel*(self: SurrealQuery): SurrealQuery =
+  self.query["parallel"] = %true
+  return self
+
 
 
 # proc offset*(self: SurrealQuery, num: int): SurrealQuery =
@@ -508,7 +513,7 @@ proc getRow(self:SurrealQuery, queryString:string):Future[Option[JsonNode]] {.as
   if rows.len == 0:
     return none(JsonNode)
   else:
-    return rows[^1].some
+    return rows[0].some
 
 
 proc exec(self:SurrealQuery, queryString:string) {.async.} =
@@ -598,29 +603,18 @@ proc getAllRows(self:RawSurrealQuery, queryString:string):Future[seq[JsonNode]] 
 #   return rows
 
 
-# proc getRow(self:RawSurrealQuery, queryString:string):Future[Option[JsonNode]] {.async.} =
-#   var connI = self.transactionConn
-#   if not self.isInTransaction:
-#     connI = getFreeConn(self).await
-#   defer:
-#     if not self.isInTransaction:
-#       self.returnConn(connI).await
-#   if connI == errorConnectionNum:
-#     return
+proc getRow(self:RawSurrealQuery, queryString:string):Future[Option[JsonNode]] {.async.} =
+  var connI = getFreeConn(self).await
+  defer:
+    self.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
 
-#   let queryString = queryString.questionToDaller()
-
-#   let (rows, dbRows) = surreal_impl.rawQuery(
-#     self.pools[connI].conn,
-#     queryString,
-#     self.placeHolder,
-#     self.timeout
-#   ).await
-
-#   if rows.len == 0:
-#     self.log.echoErrorMsg(queryString)
-#     return none(JsonNode)
-#   return toJson(rows, dbRows)[0].some # seq[JsonNode]
+  let rows = surreal_impl.query(self.pools[connI].conn, queryString, self.placeHolder, self.timeout).await
+  if rows.len == 0:
+    return none(JsonNode)
+  else:
+    return rows[^1].some
 
 
 # proc getRowPlain(self:RawSurrealQuery, queryString:string, args:JsonNode):Future[seq[string]] {.async.} =
@@ -903,21 +897,17 @@ proc count*(self:SurrealQuery):Future[int] {.async.} =
 #     return none(string)
 
 
-# proc max*(self:SurrealQuery, column:string):Future[Option[string]] {.async.} =
-#   var sql = self.maxBuilder(column)
-#   sql = questionToDaller(sql)
-#   self.log.logger(sql)
-#   let response =  self.getRow(sql).await
-#   if response.isSome:
-#     case response.get["aggregate"].kind
-#     of JInt:
-#       return some($(response.get["aggregate"].getInt))
-#     of JFloat:
-#       return some($(response.get["aggregate"].getFloat))
-#     else:
-#       return some(response.get["aggregate"].getStr)
-#   else:
-#     return none(string)
+proc max*(self:SurrealQuery, column:string, collaction:Collation=None):Future[int]{.async.} =
+  ## = `ORDER BY {column} {collaction} DESC LIMIT 1`
+  let self = self.orderBy(column, collaction, Desc).limit(1)
+  let sql = self.selectFirstBuilder()
+  self.log.logger(sql)
+  let response =  self.getRow(sql).await
+  if response.isSome:
+    let column = if column.contains("."): column.split(".")[^1] else: column
+    return response.get[column].getInt()
+  else:
+    return 0
 
 
 # proc avg*(self:SurrealQuery, column:string):Future[Option[float]]{.async.} =
@@ -1000,10 +990,10 @@ proc info*(self: RawSurrealQuery):Future[JsonNode] {.async.} =
 
 
 
-# proc first*(self: RawSurrealQuery):Future[Option[JsonNode]] {.async.} =
-#   ## It is only used with raw()
-#   self.log.logger(self.queryString)
-#   return self.getRow(self.queryString).await
+proc first*(self: RawSurrealQuery):Future[Option[JsonNode]] {.async.} =
+  ## It is only used with raw()
+  self.log.logger(self.queryString)
+  return self.getRow(self.queryString).await
 
 
 # proc firstPlain*(self: RawSurrealQuery):Future[seq[string]] {.async.} =
