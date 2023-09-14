@@ -66,14 +66,14 @@ proc whereSql*(self: SurrealQuery): SurrealQuery =
       var column = row["column"].getStr()
       quoteColumn(column)
       var symbol = row["symbol"].getStr()
-      var value = row["value"].getStr()
+      var value = row["value"]
 
       if i == 0:
         self.queryString.add(&" WHERE {column} {symbol} ?")
-        self.placeHolder.add(%value)
+        self.placeHolder.add(value)
       else:
         self.queryString.add(&" AND {column} {symbol} ?")
-        self.placeHolder.add(%value)
+        self.placeHolder.add(value)
   return self
 
 
@@ -83,14 +83,14 @@ proc orWhereSql*(self: SurrealQuery): SurrealQuery =
       var column = row["column"].getStr()
       quoteColumn(column)
       var symbol = row["symbol"].getStr()
-      var value = row["value"].getStr()
+      var value = row["value"]
 
       if self.queryString.contains("WHERE"):
         self.queryString.add(&" OR {column} {symbol} ?")
-        self.placeHolder.add(%value)
+        self.placeHolder.add(value)
       else:
         self.queryString.add(&" WHERE {column} {symbol} ?")
-        self.placeHolder.add(%value)
+        self.placeHolder.add(value)
   return self
 
 
@@ -297,21 +297,13 @@ proc updateSql*(self: SurrealQuery): SurrealQuery =
 
 
 proc updateValuesSql*(self: SurrealQuery, items:JsonNode): SurrealQuery =
-  var value = ""
-  let placeHolder = newJArray()
-
   var i = 0
   for key, val in items.pairs:
     defer: i.inc()
-    if i > 0: value.add(", ")
-    value.add(&"{key} = ?")
-    placeHolder.add(%val)
+    if i > 0: self.queryString.add(", ")
+    self.queryString.add(&"{key} = ?")
+    self.placeHolder.add(val)
 
-  self.queryString.add(value)
-
-  placeHolder.add(self.placeHolder)
-  self.placeHolder = placeHolder
-  
   return self
 
 

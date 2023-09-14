@@ -832,11 +832,24 @@ proc insertId*(self: SurrealQuery, items: seq[JsonNode], key="id"):Future[seq[Su
     result[i] = SurrealId.new(row[key].getStr)
 
 
-# proc update*(self: SurrealQuery, items: JsonNode){.async.} =
-#   var sql = self.updateBuilder(items)
-#   sql = questionToDaller(sql)
-#   self.log.logger(sql)
-#   self.exec(sql).await
+proc update*(self: SurrealQuery, items: JsonNode){.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/update
+  var sql = self.updateBuilder(items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc update*(self:SurrealConnections, id:SurrealId, items:JsonNode) {.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/update
+  let surrealQuery = SurrealQuery.new(
+    self.log,
+    self.pools,
+    self.timeout,
+    newJObject()
+  )
+  let sql = surrealQuery.updateMergeBuilder(id.rawid, items)
+  surrealQuery.log.logger(sql)
+  surrealQuery.exec(sql).await
 
 
 proc delete*(self: SurrealQuery){.async.} =
