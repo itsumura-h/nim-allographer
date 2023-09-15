@@ -861,7 +861,6 @@ proc delete*(self: SurrealQuery){.async.} =
 
 proc delete*(self: SurrealQuery, id: SurrealId){.async.} =
   ## https://surrealdb.com/docs/surrealql/statements/delete
-  self.placeHolder.add(%id)
   let sql = self.deleteByIdBuilder(id.rawId)
   self.log.logger(sql)
   self.exec(sql).await

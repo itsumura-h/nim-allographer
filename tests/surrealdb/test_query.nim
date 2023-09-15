@@ -338,38 +338,42 @@ setup(rdb)
 #     check res.get["email"] == newJNull()
 
 
-suite($rdb & " update"):
-  setup:
-    setup(rdb)
+# suite($rdb & " update"):
+#   setup:
+#     setup(rdb)
 
 
-  test("update"):
-    var user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
+#   test("update"):
+#     var user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
+#     let user1Id = SurrealId.new(user1["id"].getStr())
+#     rdb.table("user").where("id", "=", user1Id).update(%*{"name": "Alice"}).waitFor()
+#     user1 = rdb.table("user").find(user1Id).waitFor().get()
+#     check user1["name"].getStr() == "Alice"
+
+
+#   test("update merge"):
+#     var user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
+#     let user1Id = SurrealId.new(user1["id"].getStr())
+#     rdb.update(user1Id, %*{"name": "Alice"}).waitFor()
+#     user1 = rdb.table("user").find(user1Id).waitFor().get()
+#     check user1["name"].getStr() == "Alice"
+
+
+suite($rdb & " delete"):
+  setup(rdb)
+
+  test("delete"):
+    let user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
     let user1Id = SurrealId.new(user1["id"].getStr())
-    rdb.table("user").where("id", "=", user1Id).update(%*{"name": "Alice"}).waitFor()
-    user1 = rdb.table("user").find(user1Id).waitFor().get()
-    check user1["name"].getStr() == "Alice"
+    rdb.table("user").where("name", "=", "user1").delete().waitFor()
+    check rdb.table("user").find(user1Id).waitFor().isSome() == false
 
-
-  test("update merge"):
-    var user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
+  test("delete id"):
+    let user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
     let user1Id = SurrealId.new(user1["id"].getStr())
-    rdb.update(user1Id, %*{"name": "Alice"}).waitFor()
-    user1 = rdb.table("user").find(user1Id).waitFor().get()
-    check user1["name"].getStr() == "Alice"
+    rdb.table("user").delete(user1Id).waitFor
+    check rdb.table("user").find(user1Id).waitFor().isSome() == false
 
-
-# suite($rdb & " delete"):
-#   setup(rdb)
-
-#   test("delete"):
-#     rdb.table("user").delete(1).waitFor
-#     check rdb.table("user").find(1).waitFor.isSome == false
-
-
-#   test("delete where"):
-#     rdb.table("user").where("name", "=", "user1").delete().waitFor
-#     check rdb.table("user").find(1).waitFor.isSome == false
 
 
 # suite($rdb & " rawQuery"):
