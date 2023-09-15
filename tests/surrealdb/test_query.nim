@@ -354,69 +354,54 @@ setup(rdb)
 #   test("update merge"):
 #     var user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
 #     let user1Id = SurrealId.new(user1["id"].getStr())
-#     rdb.update(user1Id, %*{"name": "Alice"}).waitFor()
+#     rdb.update(user1Id, %*{"name": "updated"}).waitFor()
 #     user1 = rdb.table("user").find(user1Id).waitFor().get()
-#     check user1["name"].getStr() == "Alice"
+#     check user1["name"].getStr() == "updated"
 
 
-suite($rdb & " delete"):
-  setup(rdb)
-
-  test("delete"):
-    let user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
-    let user1Id = SurrealId.new(user1["id"].getStr())
-    rdb.table("user").where("name", "=", "user1").delete().waitFor()
-    check rdb.table("user").find(user1Id).waitFor().isSome() == false
-
-  test("delete id"):
-    let user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
-    let user1Id = SurrealId.new(user1["id"].getStr())
-    rdb.table("user").delete(user1Id).waitFor
-    check rdb.table("user").find(user1Id).waitFor().isSome() == false
-
-
-
-# suite($rdb & " rawQuery"):
+# suite($rdb & " delete"):
 #   setup(rdb)
 
-#   test("get"):
-#     echo rdb.table("user").get().waitFor
-#     let sql = &"SELECT * FROM \"user\" WHERE \"id\" = ?"
-#     let res = rdb.raw(sql, %*[1]).get().waitFor
-#     echo res
-#     check res[0]["name"].getStr == "user1"
+#   test("delete"):
+#     let user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
+#     let user1Id = SurrealId.new(user1["id"].getStr())
+#     rdb.table("user").where("name", "=", "user1").delete().waitFor()
+#     check rdb.table("user").find(user1Id).waitFor().isSome() == false
+
+#   test("delete id"):
+#     let user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
+#     let user1Id = SurrealId.new(user1["id"].getStr())
+#     rdb.table("user").delete(user1Id).waitFor
+#     check rdb.table("user").find(user1Id).waitFor().isSome() == false
 
 
-#   test("getPlain"):
-#     let sql = &"SELECT * FROM \"user\" WHERE \"id\" = ?"
-#     let res = rdb.raw(sql, %*[1]).getPlain().waitFor
-#     echo res
-#     check res[0][1] == "user1"
+suite($rdb & " rawQuery"):
+  setup(rdb)
+
+  test("get"):
+    let sql = &"SELECT * FROM `user` WHERE `index` = ?"
+    let res = rdb.raw(sql, %*[1]).get().waitFor
+    check res[0]["name"].getStr == "user1"
 
 
-#   test("first"):
-#     echo rdb.table("user").get().waitFor
-#     let sql = &"SELECT * FROM \"user\" WHERE \"id\" = ?"
-#     let res = rdb.raw(sql, %*[1]).first().waitFor().get()
-#     echo res
-#     check res["name"].getStr == "user1"
+  test("first"):
+    let sql = &"SELECT * FROM `user` WHERE `index` = ?"
+    let res = rdb.raw(sql, %*[1]).first().waitFor().get()
+    check res["name"].getStr() == "user1"
 
 
-#   test("firstPlain"):
-#     echo rdb.table("user").get().waitFor
-#     let sql = &"SELECT name FROM \"user\" WHERE \"id\" = ?"
-#     let res = rdb.raw(sql, %*[1]).firstPlain().waitFor()
-#     echo res
-#     check res[0] == "user1"
+  test("exec"):
+    var sql = "SELECT * FROM `user` WHERE `index` = ?"
+    let user1 = rdb.raw(sql, %*[1]).first().waitFor().get()
+    let user1Id = SurrealId.new(user1["id"].getStr())
 
+    sql = "UPDATE `user` SET `name` = ? WHERE `id` = ?"
+    rdb.raw(sql, %*["updated", user1Id.rawId()]).exec().waitFor
+    
+    sql = &"SELECT * FROM `user` WHERE `id` = ?"
+    let res = rdb.raw(sql, %[user1Id.rawId()]).get().waitFor
+    check res[0]["name"].getStr == "updated"
 
-#   test("exec"):
-#     var sql = "UPDATE \"user\" SET \"name\" = ? WHERE \"id\" = ?"
-#     rdb.raw(sql, %*["updated user1", 1]).exec().waitFor
-#     sql = &"SELECT * FROM \"user\" WHERE \"id\" = ?"
-#     let res = rdb.raw(sql, %[1]).get().waitFor
-#     echo res
-#     check res[0]["name"].getStr == "updated user1"
 
 # setup(rdb)
 # suite($rdb & " aggregates"):

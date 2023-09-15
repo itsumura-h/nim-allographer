@@ -552,26 +552,10 @@ proc getAllRows(self:RawSurrealQuery, queryString:string):Future[seq[JsonNode]] 
   if connI == errorConnectionNum:
     return
 
-  var strArgs:seq[string]
-  for arg in self.placeHolder.items:
-    case arg.kind
-    of JBool:
-      strArgs.add($arg.getBool)
-    of JInt:
-      strArgs.add($arg.getInt)
-    of JFloat:
-      strArgs.add($arg.getFloat)
-    of JString:
-      strArgs.add($arg.getStr)
-    of JNull:
-      strArgs.add("NULL")
-    else:
-      strArgs.add(arg.pretty)
-
   let rows = surreal_impl.query(
     self.pools[connI].conn,
     queryString,
-    strArgs,
+    self.placeHolder,
     self.timeout
   ).await
 
@@ -977,8 +961,6 @@ proc exec*(self: RawSurrealQuery) {.async.} =
   ## https://surrealdb.com/docs/integration/http#sql
   ## 
   ## https://surrealdb.com/docs/surrealql
-  self.log.logger(self.queryString)
-  self.exec(self.queryString).await
   try:
     self.log.logger(self.queryString)
     self.exec(self.queryString).await
