@@ -70,6 +70,24 @@ proc selectFindBuilder*(self: SurrealQuery, id:SurrealId, key: string): string =
     .queryString
 
 
+proc maxBuilder*(self: SurrealQuery, column: string): string =
+  return self
+    .selectSql()
+    .maxFromSql(column)
+    .whereSql()
+    .orWhereSql()
+    .whereBetweenSql()
+    # .whereBetweenStringSql()
+    .whereNotBetweenSql()
+    # .whereNotBetweenStringSql()
+    .whereInSql()
+    .whereNotInSql()
+    .whereNullSql()
+    .fetchSql()
+    .parallelSql()
+    .queryString
+
+
 # ==================== INSERT ====================
 
 proc insertValueBuilder*(self: SurrealQuery, items: JsonNode): string =
@@ -134,7 +152,7 @@ proc deleteByIdBuilder*(self: SurrealQuery, id: string): string =
 # ==================== Aggregates ====================
 
 proc countBuilder*(self:SurrealQuery): string =
-  return self
+  let sql = self
     .selectCountSql()
     .fromSql()
     .whereSql()
@@ -152,3 +170,4 @@ proc countBuilder*(self:SurrealQuery): string =
     .fetchSql()
     .parallelSql()
     .queryString
+  return sql & " GROUP ALL"

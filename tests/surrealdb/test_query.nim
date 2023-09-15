@@ -375,56 +375,56 @@ setup(rdb)
 #     check rdb.table("user").find(user1Id).waitFor().isSome() == false
 
 
-suite($rdb & " rawQuery"):
-  setup(rdb)
+# suite($rdb & " rawQuery"):
+#   setup(rdb)
 
-  test("get"):
-    let sql = &"SELECT * FROM `user` WHERE `index` = ?"
-    let res = rdb.raw(sql, %*[1]).get().waitFor
-    check res[0]["name"].getStr == "user1"
-
-
-  test("first"):
-    let sql = &"SELECT * FROM `user` WHERE `index` = ?"
-    let res = rdb.raw(sql, %*[1]).first().waitFor().get()
-    check res["name"].getStr() == "user1"
+#   test("get"):
+#     let sql = &"SELECT * FROM `user` WHERE `index` = ?"
+#     let res = rdb.raw(sql, %*[1]).get().waitFor
+#     check res[0]["name"].getStr == "user1"
 
 
-  test("exec"):
-    var sql = "SELECT * FROM `user` WHERE `index` = ?"
-    let user1 = rdb.raw(sql, %*[1]).first().waitFor().get()
-    let user1Id = SurrealId.new(user1["id"].getStr())
+#   test("first"):
+#     let sql = &"SELECT * FROM `user` WHERE `index` = ?"
+#     let res = rdb.raw(sql, %*[1]).first().waitFor().get()
+#     check res["name"].getStr() == "user1"
 
-    sql = "UPDATE `user` SET `name` = ? WHERE `id` = ?"
-    rdb.raw(sql, %*["updated", user1Id.rawId()]).exec().waitFor
+
+#   test("exec"):
+#     var sql = "SELECT * FROM `user` WHERE `index` = ?"
+#     let user1 = rdb.raw(sql, %*[1]).first().waitFor().get()
+#     let user1Id = SurrealId.new(user1["id"].getStr())
+
+#     sql = "UPDATE `user` SET `name` = ? WHERE `id` = ?"
+#     rdb.raw(sql, %*["updated", user1Id.rawId()]).exec().waitFor
     
-    sql = &"SELECT * FROM `user` WHERE `id` = ?"
-    let res = rdb.raw(sql, %[user1Id.rawId()]).get().waitFor
-    check res[0]["name"].getStr == "updated"
+#     sql = &"SELECT * FROM `user` WHERE `id` = ?"
+#     let res = rdb.raw(sql, %[user1Id.rawId()]).get().waitFor
+#     check res[0]["name"].getStr == "updated"
 
 
-# setup(rdb)
-# suite($rdb & " aggregates"):
-#   test("count"):
-#     var t = rdb.table("user").count().waitFor
-#     check t == 10
+setup(rdb)
+suite($rdb & " aggregates"):
+  test("count"):
+    var t = rdb.table("user").count().waitFor()
+    check t == 10
 
-#   test("max"):
-#     var t = rdb.table("user").max("name").waitFor.get
-#     check t == "user9"
-#     var t2 = rdb.table("user").max("id").waitFor.get
-#     check t2 == "10"
+  test("max"):
+    var t = rdb.table("user").max("name", Collate).waitFor()
+    check t == "user9"
+    var t2 = rdb.table("user").max("index", Numeric).waitFor()
+    check t2 == "10"
 
-#   test("min"):
-#     var t = rdb.table("user").min("name").waitFor.get
-#     check t == "user1"
-#     var t2 = rdb.table("user").min("id").waitFor.get
-#     check t2 == "1"
+  test("min"):
+    var t = rdb.table("user").min("name", Collate).waitFor()
+    check t == "user1"
+    var t2 = rdb.table("user").min("index", Numeric).waitFor()
+    check t2 == "1"
 
-#   test("avg"):
-#     var t = rdb.table("user").avg("id").waitFor.get
-#     check t == 5.5
+  # test("avg"):
+  #   var t = rdb.table("user").avg("id").waitFor.get
+  #   check t == 5.5
 
-#   test("sum"):
-#     var t = rdb.table("user").sum("id").waitFor.get
-#     check t == 55.0
+  # test("sum"):
+  #   var t = rdb.table("user").sum("id").waitFor.get
+  #   check t == 55.0

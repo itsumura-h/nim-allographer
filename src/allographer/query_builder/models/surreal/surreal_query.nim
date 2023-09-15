@@ -876,34 +876,40 @@ proc count*(self:SurrealQuery):Future[int] {.async.} =
     return 0
 
 
-# proc min*(self:SurrealQuery, column:string):Future[Option[string]] {.async.} =
-#   var sql = self.minBuilder(column)
-#   sql = questionToDaller(sql)
-#   self.log.logger(sql)
-#   let response =  self.getRow(sql).await
-#   if response.isSome:
-#     case response.get["aggregate"].kind
-#     of JInt:
-#       return some($(response.get["aggregate"].getInt))
-#     of JFloat:
-#       return some($(response.get["aggregate"].getFloat))
-#     else:
-#       return some(response.get["aggregate"].getStr)
-#   else:
-#     return none(string)
+proc min*(self:SurrealQuery, column:string, collaction:Collation=None):Future[string] {.async.} =
+  ## = `ORDER BY {column} {collaction} ASC LIMIT 1`
+  let self = self.orderBy(column, collaction, Asc).limit(1)
+  let sql = self.selectFirstBuilder()
+  self.log.logger(sql)
+  let response =  self.getRow(sql).await
+  if response.isSome():
+    let column = if column.contains("."): column.split(".")[^1] else: column
+    let value = response.get()[column]
+    case value.kind
+    of JString:
+      return $value.getStr()
+    else:
+      return $value
+  else:
+    return ""
 
 
-proc max*(self:SurrealQuery, column:string, collaction:Collation=None):Future[int]{.async.} =
+proc max*(self:SurrealQuery, column:string, collaction:Collation=None):Future[string]{.async.} =
   ## = `ORDER BY {column} {collaction} DESC LIMIT 1`
   let self = self.orderBy(column, collaction, Desc).limit(1)
   let sql = self.selectFirstBuilder()
   self.log.logger(sql)
   let response =  self.getRow(sql).await
-  if response.isSome:
+  if response.isSome():
     let column = if column.contains("."): column.split(".")[^1] else: column
-    return response.get[column].getInt()
+    let value = response.get()[column]
+    case value.kind
+    of JString:
+      return $value.getStr()
+    else:
+      return $value
   else:
-    return 0
+    return ""
 
 
 # proc avg*(self:SurrealQuery, column:string):Future[Option[float]]{.async.} =

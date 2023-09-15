@@ -43,6 +43,13 @@ proc fromSql*(self: SurrealQuery): SurrealQuery =
   return self
 
 
+proc maxFromSql*(self:SurrealQuery, column:string):SurrealQuery =
+  var table = self.query["table"].getStr()
+  quoteTable(table)
+  self.queryString.add(&" FROM array::max({column})")
+  return self
+
+
 proc selectFirstSql*(self:SurrealQuery): SurrealQuery =
   self.queryString.add(" LIMIT 1")
   return self
