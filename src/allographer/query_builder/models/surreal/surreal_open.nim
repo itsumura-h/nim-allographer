@@ -4,12 +4,9 @@ import std/httpcore
 import std/strformat
 import std/base64
 import std/strutils
-import std/json
 import std/times
-import ../../../env
 import ../../error
 import ../../libs/surreal/surreal_rdb
-import ../../libs/surreal/surreal_lib
 import ./surreal_types
 
 

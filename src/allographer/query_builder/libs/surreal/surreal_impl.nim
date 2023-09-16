@@ -1,9 +1,7 @@
 import std/asyncdispatch
 import std/httpclient
 import std/httpcore
-import std/times
 import std/strformat
-import std/base64
 import std/strutils
 import std/json
 import ../../error
