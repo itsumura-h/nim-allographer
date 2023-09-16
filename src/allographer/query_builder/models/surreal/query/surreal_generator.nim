@@ -346,8 +346,20 @@ proc selectCountSql*(self: SurrealQuery): SurrealQuery =
   return self
 
 
-proc selectMaxSql*(self:SurrealQuery, column:string): SurrealQuery =
+proc selectAvgSql*(self: SurrealQuery, column:string): SurrealQuery =
   var column = column
   quoteColumn(column)
-  self.queryString = &"SELECT max({column}) as aggregate"
+  self.queryString = &"SELECT math::trimean({column}) AS avg"
+  return self
+
+
+proc selectSumSql*(self: SurrealQuery, column:string): SurrealQuery =
+  var column = column
+  quoteColumn(column)
+  self.queryString = &"SELECT math::sum({column}) AS sum"
+  return self
+
+
+proc groupAllSql*(self: SurrealQuery):SurrealQuery =
+  self.queryString.add(" GROUP ALL")
   return self

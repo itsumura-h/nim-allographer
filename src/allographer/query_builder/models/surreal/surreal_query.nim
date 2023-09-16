@@ -912,26 +912,24 @@ proc max*(self:SurrealQuery, column:string, collaction:Collation=None):Future[st
     return ""
 
 
-# proc avg*(self:SurrealQuery, column:string):Future[Option[float]]{.async.} =
-#   var sql = self.avgBuilder(column)
-#   sql = questionToDaller(sql)
-#   self.log.logger(sql)
-#   let response =  await self.getRow(sql)
-#   if response.isSome:
-#     return response.get["aggregate"].getFloat().some
-#   else:
-#     return none(float)
+proc avg*(self:SurrealQuery, column:string):Future[float]{.async.} =
+  var sql = self.selectAvgBuilder(column)
+  self.log.logger(sql)
+  let response =  await self.getRow(sql)
+  if response.isSome:
+    return response.get["avg"].getStr().parseFloat()
+  else:
+    return 0.0
 
 
-# proc sum*(self:SurrealQuery, column:string):Future[Option[float]]{.async.} =
-#   var sql = self.sumBuilder(column)
-#   sql = questionToDaller(sql)
-#   self.log.logger(sql)
-#   let response = await self.getRow(sql)
-#   if response.isSome:
-#     return response.get["aggregate"].getFloat().some
-#   else:
-#     return none(float)
+proc sum*(self:SurrealQuery, column:string):Future[float]{.async.} =
+  var sql = self.selectSumBuilder(column)
+  self.log.logger(sql)
+  let response =  await self.getRow(sql)
+  if response.isSome:
+    return response.get["sum"].getFloat()
+  else:
+    return 0.0
 
 
 # proc begin*(self:SurrealConnections) {.async.} =

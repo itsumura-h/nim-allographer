@@ -70,24 +70,6 @@ proc selectFindBuilder*(self: SurrealQuery, id:SurrealId, key: string): string =
     .queryString
 
 
-proc maxBuilder*(self: SurrealQuery, column: string): string =
-  return self
-    .selectSql()
-    .maxFromSql(column)
-    .whereSql()
-    .orWhereSql()
-    .whereBetweenSql()
-    # .whereBetweenStringSql()
-    .whereNotBetweenSql()
-    # .whereNotBetweenStringSql()
-    .whereInSql()
-    .whereNotInSql()
-    .whereNullSql()
-    .fetchSql()
-    .parallelSql()
-    .queryString
-
-
 # ==================== INSERT ====================
 
 proc insertValueBuilder*(self: SurrealQuery, items: JsonNode): string =
@@ -171,3 +153,45 @@ proc countBuilder*(self:SurrealQuery): string =
     .parallelSql()
     .queryString
   return sql & " GROUP ALL"
+
+proc selectAvgBuilder*(self:SurrealQuery, column:string): string =
+  return self
+    .selectAvgSql(column)
+    .fromSql()
+    .whereSql()
+    .orWhereSql()
+    .whereBetweenSql()
+    .whereNotBetweenSql()
+    .whereInSql()
+    .whereNotInSql()
+    .whereNullSql()
+    .groupBySql()
+    #.havingSql()
+    .orderBySql()
+    .limitSql()
+    .startSql()
+    .fetchSql()
+    .parallelSql()
+    .groupAllSql()
+    .queryString
+
+proc selectSumBuilder*(self:SurrealQuery, column:string): string =
+  return self
+    .selectSumSql(column)
+    .fromSql()
+    .whereSql()
+    .orWhereSql()
+    .whereBetweenSql()
+    .whereNotBetweenSql()
+    .whereInSql()
+    .whereNotInSql()
+    .whereNullSql()
+    .groupBySql()
+    #.havingSql()
+    .orderBySql()
+    .limitSql()
+    .startSql()
+    .fetchSql()
+    .parallelSql()
+    .groupAllSql()
+    .queryString

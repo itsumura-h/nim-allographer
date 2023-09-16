@@ -64,12 +64,8 @@ proc query*(db:SurrealConn, query: string, args: JsonNode, timeout:int):Future[J
   ## return JArray
   assert(not db.client.isNil, "Database not connected.")
   let query = dbFormat(query, args)
-  echo "=== query"
-  echo query
   let resp = db.client.post(&"{db.host}:{db.port}/sql", query).await
   let body = resp.body().await.parseJson()
-  echo "=== body"
-  echo body
   if body.kind == JObject and body["code"].getInt() == 400:
     dbError(body["information"].getStr())
   if body[^1].hasKey("detail") and not body[^1].hasKey("result"):
@@ -94,8 +90,6 @@ proc exec*(db:SurrealConn, query: string, args: seq[string], timeout:int) {.asyn
 proc exec*(db:SurrealConn, query: string, args: JsonNode, timeout:int) {.async.} =
   assert(not db.client.isNil, "Database not connected.")
   let query = dbFormat(query, args)
-  echo "=== exec"
-  echo query
   let resp = db.client.post(&"{db.host}:{db.port}/sql", query).await
   let body = resp.body().await.parseJson()
   if body.kind == JObject and body["code"].getInt() == 400:
@@ -117,7 +111,5 @@ proc info*(db:SurrealConn, query: string, args: seq[string], timeout:int):Future
 proc info*(db:SurrealConn, query: string, args: JsonNode, timeout:int):Future[JsonNode] {.async.} =
   assert(not db.client.isNil, "Database not connected.")
   let query = dbFormat(query, args)
-  echo "=== info"
-  echo query
   let resp = db.client.post(&"{db.host}:{db.port}/sql", query).await
   return resp.body().await.parseJson()
