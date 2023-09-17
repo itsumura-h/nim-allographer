@@ -14,14 +14,6 @@ import ../../src/allographer/query_builder
 import ../connections
 
 
-surreal.raw("""
-REMOVE TABLE `TypeIndex`;
-DEFINE TABLE `TypeIndex` SCHEMAFULL;
-DEFINE FIELD `json` ON TABLE `TypeIndex` FLEXIBLE TYPE object ASSERT $value != NONE VALUE $value OR {"key": "value"};
-DEFINE INDEX `TypeIndex_json_index` ON TABLE `TypeIndex` COLUMNS `json`
-""")
-.exec().waitFor()
-
 suite("SurrealDB create table"):
   test("create table"):
     surreal.create(
