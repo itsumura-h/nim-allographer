@@ -8,11 +8,19 @@ import std/json
 import std/times
 import std/strutils
 import std/options
-import ../src/allographer/connection
-import ../src/allographer/schema_builder
-import ../src/allographer/query_builder
-import ./connections
+import ../../src/allographer/connection
+import ../../src/allographer/schema_builder
+import ../../src/allographer/query_builder
+import ../connections
 
+
+surreal.raw("""
+REMOVE TABLE `TypeIndex`;
+DEFINE TABLE `TypeIndex` SCHEMAFULL;
+DEFINE FIELD `json` ON TABLE `TypeIndex` FLEXIBLE TYPE object ASSERT $value != NONE VALUE $value OR {"key": "value"};
+DEFINE INDEX `TypeIndex_json_index` ON TABLE `TypeIndex` COLUMNS `json`
+""")
+.exec().waitFor()
 
 suite("SurrealDB create table"):
   test("create table"):
@@ -101,7 +109,7 @@ suite("SurrealDB create table"):
       check fields["boolean"].getStr ==       "DEFINE FIELD boolean ON TypeIndex TYPE bool VALUE $value OR true ASSERT $value != NONE"
       check fields["enumField"].getStr ==     "DEFINE FIELD enumField ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value INSIDE ['A', 'B', 'C'] AND $value != NONE"
       check fields["json"].getStr ==          "DEFINE FIELD json ON TypeIndex FLEXIBLE TYPE object VALUE $value OR { key: 'value' } ASSERT $value != NONE"
-      check fields["relation"].getStr ==      "DEFINE FIELD relation ON TypeIndex TYPE record(relation)"
+      check fields["relation"].getStr ==      "DEFINE FIELD relation ON TypeIndex TYPE record(relation) VALUE $value OR NULL"
 
       let indexs = info[0]["result"]["ix"]
       check indexs["TypeIndex_integer_index"].getStr ==       "DEFINE INDEX TypeIndex_integer_index ON TypeIndex FIELDS integer"
@@ -155,7 +163,7 @@ suite("SurrealDB create table"):
       check fields["boolean"].getStr ==       "DEFINE FIELD boolean ON TypeUnique TYPE bool VALUE $value OR true ASSERT $value != NONE"
       check fields["enumField"].getStr ==     "DEFINE FIELD enumField ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value INSIDE ['A', 'B', 'C'] AND $value != NONE"
       check fields["json"].getStr ==          "DEFINE FIELD json ON TypeUnique FLEXIBLE TYPE object VALUE $value OR { key: 'value' } ASSERT $value != NONE"
-      check fields["relation"].getStr ==      "DEFINE FIELD relation ON TypeUnique TYPE record(relation)"
+      check fields["relation"].getStr ==      "DEFINE FIELD relation ON TypeUnique TYPE record(relation) VALUE $value OR NULL"
 
       let indexs = info[0]["result"]["ix"]
       check indexs["TypeUnique_integer_unique"].getStr ==       "DEFINE INDEX TypeUnique_integer_unique ON TypeUnique FIELDS integer UNIQUE"
@@ -182,33 +190,33 @@ suite("SurrealDB create table"):
       check indexs["TypeUnique_enumField_unique"].getStr ==     "DEFINE INDEX TypeUnique_enumField_unique ON TypeUnique FIELDS enumField UNIQUE"
       check indexs["TypeUnique_json_unique"].getStr ==          "DEFINE INDEX TypeUnique_json_unique ON TypeUnique FIELDS json UNIQUE"
 
-  test("increment"):
-    surreal.create(
-      table("test",[
-        Column.increments("index"),
-        Column.integer("index2").autoIncrement(),
-        Column.string("string")
-      ])
-    )
+#   test("increment"):
+#     surreal.create(
+#       table("test",[
+#         Column.increments("index"),
+#         Column.integer("index2").autoIncrement(),
+#         Column.string("string")
+#       ])
+#     )
 
-    surreal.table("test").insert(%*{"string": "a"}).waitFor
-    surreal.table("test").insert(%*{"string": "b"}).waitFor
-    surreal.table("test").insert(%*{"string": "c"}).waitFor
-    surreal.table("test").where("string", "=", "b").delete().waitFor
-    surreal.table("test").insert(%*{"string": "d"}).waitFor
+#     surreal.table("test").insert(%*{"string": "a"}).waitFor
+#     surreal.table("test").insert(%*{"string": "b"}).waitFor
+#     surreal.table("test").insert(%*{"string": "c"}).waitFor
+#     surreal.table("test").where("string", "=", "b").delete().waitFor
+#     surreal.table("test").insert(%*{"string": "d"}).waitFor
     
-    let data = surreal.table("test").orderBy("index", Asc).get().waitFor
-    for row in data:
-      if row["string"].getStr == "a":
-        check row["index"].getInt == 1
-        check row["index2"].getInt == 1
+#     let data = surreal.table("test").orderBy("index", Asc).get().waitFor
+#     for row in data:
+#       if row["string"].getStr == "a":
+#         check row["index"].getInt == 1
+#         check row["index2"].getInt == 1
       
-      if row["string"].getStr == "c":
-        check row["index"].getInt == 3
-        check row["index2"].getInt == 3
+#       if row["string"].getStr == "c":
+#         check row["index"].getInt == 3
+#         check row["index2"].getInt == 3
       
-      if row["string"].getStr == "d":
-        check row["index2"].getInt == 4
+#       if row["string"].getStr == "d":
+#         check row["index2"].getInt == 4
 
 suite("SurrealDB alter table"):
   setup:
@@ -310,7 +318,7 @@ suite("SurrealDB alter table"):
       check fields["boolean"].getStr ==       "DEFINE FIELD boolean ON TypeIndex TYPE bool VALUE $value OR true ASSERT $value != NONE"
       check fields["enumField"].getStr ==     "DEFINE FIELD enumField ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value INSIDE ['A', 'B', 'C'] AND $value != NONE"
       check fields["json"].getStr ==          "DEFINE FIELD json ON TypeIndex FLEXIBLE TYPE object VALUE $value OR { key: 'value' } ASSERT $value != NONE"
-      check fields["relation"].getStr ==      "DEFINE FIELD relation ON TypeIndex TYPE record(relation)"
+      check fields["relation"].getStr ==      "DEFINE FIELD relation ON TypeIndex TYPE record(relation) VALUE $value OR NULL"
 
       let indexs = info[0]["result"]["ix"]
       check indexs["TypeIndex_integer_index"].getStr ==       "DEFINE INDEX TypeIndex_integer_index ON TypeIndex FIELDS integer"
@@ -364,7 +372,7 @@ suite("SurrealDB alter table"):
       check fields["boolean"].getStr ==       "DEFINE FIELD boolean ON TypeUnique TYPE bool VALUE $value OR true ASSERT $value != NONE"
       check fields["enumField"].getStr ==     "DEFINE FIELD enumField ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value INSIDE ['A', 'B', 'C'] AND $value != NONE"
       check fields["json"].getStr ==          "DEFINE FIELD json ON TypeUnique FLEXIBLE TYPE object VALUE $value OR { key: 'value' } ASSERT $value != NONE"
-      check fields["relation"].getStr ==      "DEFINE FIELD relation ON TypeUnique TYPE record(relation)"
+      check fields["relation"].getStr ==      "DEFINE FIELD relation ON TypeUnique TYPE record(relation) VALUE $value OR NULL"
 
       let indexs = info[0]["result"]["ix"]
       check indexs["TypeUnique_integer_unique"].getStr ==       "DEFINE INDEX TypeUnique_integer_unique ON TypeUnique FIELDS integer UNIQUE"

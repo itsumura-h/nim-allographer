@@ -1,6 +1,5 @@
 import std/asyncdispatch
 import std/httpclient
-import std/httpcore
 import std/strformat
 import std/strutils
 import std/json

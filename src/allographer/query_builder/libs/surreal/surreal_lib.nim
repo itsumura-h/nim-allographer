@@ -3,7 +3,7 @@ import std/strformat
 import std/json
 
 
-proc dbQuote*(s:string):string =
+proc dbQuote(s:string):string =
   ## DB quotes the string.
   if s == "null":
     return "NULL"
@@ -88,7 +88,7 @@ proc dbFormat*(queryString: string, args: JsonNode): string =
       of JFloat:
         strArgs.add(&"LET ${numToAlphabet(i)} = {$arg.getFloat}; ")
       of JString:
-        let val = arg.getStr()
+        let val = arg.getStr().replace("\"", "\\\"")
         strArgs.add(&"""LET ${numToAlphabet(i)} = "{val}"; """)
       of JNull:
         strArgs.add(&"LET ${numToAlphabet(i)} = null; ")
@@ -106,7 +106,8 @@ proc dbFormat*(queryString: string, args: JsonNode): string =
       of JFloat:
         strArgs.add(&"LET ${numToAlphabet(i)} = {$arg.getFloat}; ")
       of JString:
-        strArgs.add(&"""LET ${numToAlphabet(i)} = \"{arg.getStr}\""; """)
+        let val = arg.getStr().replace("\"", "\\\"")
+        strArgs.add(&"""LET ${numToAlphabet(i)} = {val}; """)
       of JNull:
         strArgs.add(&"LET ${numToAlphabet(i)} = null; ")
       of JArray, JObject:

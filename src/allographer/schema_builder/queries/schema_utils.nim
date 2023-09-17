@@ -4,17 +4,7 @@ import std/options
 import std/strformat
 import std/strutils
 import std/times
-# from std/db_common import DbError
-# import ../../query_builder/rdb/rdb_types
 import ../../query_builder
-# import ../../query_builder/error
-# import ../../query_builder/models/sqlite/sqlite_types
-# import ../../query_builder/models/sqlite/sqlite_query
-# import ../../query_builder/rdb/rdb_interface
-# import ../../query_builder/rdb/query/grammar
-# import ../../query_builder/surreal/surreal_types
-# import ../../query_builder/surreal/surreal_interface
-# import ../../query_builder/surreal/query/grammar as surreal_grammar
 import ../models/table
 
 
