@@ -10,9 +10,9 @@ import ../../src/allographer/schema_builder
 import ../../src/allographer/query_builder
 import ../connections
 
-let rdb = mariadb
+let rdb = mysql
 
-suite("MariaDB create table"):
+suite("MySQL create table"):
   test("create table"):
     rdb.create(
       table("IntRelation", [

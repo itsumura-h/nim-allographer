@@ -2,6 +2,7 @@ import std/os
 import ../../query_builder/models/sqlite/sqlite_types
 import ../../query_builder/models/postgres/postgres_types
 import ../../query_builder/models/mariadb/mariadb_types
+import ../../query_builder/models/mysql/mysql_types
 import ../../query_builder/models/surreal/surreal_types
 import ../models/table
 import ../enums
@@ -38,6 +39,20 @@ proc drop*(rdb:PostgresConnections, tables:varargs[Table]) =
 
 
 proc drop*(rdb:MariadbConnections, tables:varargs[Table]) =
+  let cmd = commandLineParams()
+  let isReset = defined(reset) or cmd.contains("--reset")
+
+  # create migration table
+  var query = createSchema(rdb, migrationTable)
+  query.createMigrationTable()
+
+  for table in tables:
+    table.usecaseType = Drop
+    query = createSchema(rdb, table)
+    query.dropTable(isReset)
+
+
+proc drop*(rdb:MysqlConnections, tables:varargs[Table]) =
   let cmd = commandLineParams()
   let isReset = defined(reset) or cmd.contains("--reset")
 
