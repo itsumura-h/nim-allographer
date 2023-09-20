@@ -20,7 +20,7 @@ when (NimMajor, NimMinor) > (1, 6):
 import strformat, os
 
 task test, "run testament test":
-  exec "testament p 'tests/test_*.nim'"
+  exec "testament p 'tests/*/test_*.nim'"
   for kind, path in walkDir(getCurrentDir() / "tests"):
     if not path.contains("."):
       exec "rm -f " & path
