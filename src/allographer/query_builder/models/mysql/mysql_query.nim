@@ -715,23 +715,23 @@ proc getColumns(self:MysqlQuery, queryString:string):Future[seq[string]] {.async
   return mysql_impl.getColumns(self.pools[connI].conn, queryString, strArgs, self.timeout).await
 
 
-# proc transactionStart(self:MysqlConnections) {.async.} =
-#   let connI = getFreeConn(self).await
-#   if connI == errorConnectionNum:
-#     return
-#   self.isInTransaction = true
-#   self.transactionConn = connI
+proc transactionStart(self:MysqlConnections) {.async.} =
+  let connI = getFreeConn(self).await
+  if connI == errorConnectionNum:
+    return
+  self.isInTransaction = true
+  self.transactionConn = connI
 
-#   mysql_impl.exec(self.pools[connI].conn, "BEGIN", newJArray(), newSeq[Row](), self.timeout).await
+  mysql_impl.exec(self.pools[connI].conn, "BEGIN", newJArray(), newSeq[Row](), self.timeout).await
 
 
-# proc transactionEnd(self:MysqlConnections, query:string) {.async.} =
-#   defer:
-#     self.returnConn(self.transactionConn).await
-#     self.transactionConn = 0
-#     self.isInTransaction = false
+proc transactionEnd(self:MysqlConnections, query:string) {.async.} =
+  defer:
+    self.returnConn(self.transactionConn).await
+    self.transactionConn = 0
+    self.isInTransaction = false
 
-#   mysql_impl.exec(self.pools[self.transactionConn].conn, query, newJArray(), newSeq[Row](), self.timeout).await
+  mysql_impl.exec(self.pools[self.transactionConn].conn, query, newJArray(), newSeq[Row](), self.timeout).await
 
 
 # ================================================================================
@@ -953,19 +953,19 @@ proc sum*(self:MysqlQuery, column:string):Future[Option[float]]{.async.} =
     return none(float)
 
 
-# proc begin*(self:MysqlConnections) {.async.} =
-#   self.log.logger("BEGIN")
-#   self.transactionStart().await
+proc begin*(self:MysqlConnections) {.async.} =
+  self.log.logger("BEGIN")
+  self.transactionStart().await
 
 
-# proc rollback*(self:MysqlConnections) {.async.} =
-#   self.log.logger("ROLLBACK")
-#   self.transactionEnd("ROLLBACK").await
+proc rollback*(self:MysqlConnections) {.async.} =
+  self.log.logger("ROLLBACK")
+  self.transactionEnd("ROLLBACK").await
 
 
-# proc commit*(self:MysqlConnections, connI:int) {.async.} =
-#   self.log.logger("COMMIT")
-#   self.transactionEnd("COMMIT").await
+proc commit*(self:MysqlConnections) {.async.} =
+  self.log.logger("COMMIT")
+  self.transactionEnd("COMMIT").await
 
 
 proc get*(self: RawMysqlQuery):Future[seq[JsonNode]] {.async.} =

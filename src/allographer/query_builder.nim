@@ -31,6 +31,7 @@ import ./query_builder/models/mariadb/mariadb_transaction; export mariadb_transa
 import ./query_builder/models/mysql/mysql_types; export mysql_types
 import ./query_builder/models/mysql/mysql_connections; export mysql_connections
 import ./query_builder/models/mysql/mysql_query; export mysql_query
+import ./query_builder/models/mysql/mysql_transaction; export mysql_transaction
 
 import ./query_builder/models/surreal/surreal_types; export surreal_types
 import ./query_builder/models/surreal/surreal_connections; export surreal_connections

@@ -22,7 +22,9 @@ proc select*(self:MysqlConnections, columnsArg:varargs[string]):MysqlQuery =
     info: self.info,
     query: query,
     queryString: "",
-    placeHolder: newJArray()
+    placeHolder: newJArray(),
+    isInTransaction: self.isInTransaction,
+    transactionConn: self.transactionConn,
   )
   return MysqlQuery
 
@@ -38,7 +40,9 @@ proc table*(self:MysqlConnections, tableArg: string): MysqlQuery =
     info: self.info,
     query: query,
     queryString: "",
-    placeHolder: newJArray()
+    placeHolder: newJArray(),
+    isInTransaction: self.isInTransaction,
+    transactionConn: self.transactionConn,
   )
   return MysqlQuery
 
