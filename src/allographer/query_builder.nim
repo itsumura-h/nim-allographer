@@ -16,10 +16,12 @@ import ./query_builder/error; export error
 import ./query_builder/models/sqlite/sqlite_types; export sqlite_types
 import ./query_builder/models/sqlite/sqlite_connections; export sqlite_connections
 import ./query_builder/models/sqlite/sqlite_query; export sqlite_query
+import ./query_builder/models/sqlite/sqlite_transaction; export sqlite_transaction
 
 import ./query_builder/models/postgres/postgres_types; export postgres_types
 import ./query_builder/models/postgres/postgres_connections; export postgres_connections
 import ./query_builder/models/postgres/postgres_query; export postgres_query
+import ./query_builder/models/postgres/poatgres_transaction; export poatgres_transaction
 
 import ./query_builder/models/mariadb/mariadb_types; export mariadb_types
 import ./query_builder/models/mariadb/mariadb_connections; export mariadb_connections

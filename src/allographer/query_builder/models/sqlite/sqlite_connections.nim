@@ -20,7 +20,9 @@ proc select*(self:SqliteConnections, columnsArg:varargs[string]):SqliteQuery =
     timeout: self.timeout,
     query: query,
     queryString: "",
-    placeHolder: newJArray()
+    placeHolder: newJArray(),
+    isInTransaction: self.isInTransaction,
+    transactionConn: self.transactionConn,
   )
   return sqliteQuery
 
@@ -35,7 +37,9 @@ proc table*(self:SqliteConnections, tableArg: string): SqliteQuery =
     timeout: self.timeout,
     query: query,
     queryString: "",
-    placeHolder: newJArray()
+    placeHolder: newJArray(),
+    isInTransaction: self.isInTransaction,
+    transactionConn: self.transactionConn,
   )
   return sqliteQuery
 

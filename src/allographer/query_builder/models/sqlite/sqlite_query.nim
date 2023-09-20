@@ -1034,7 +1034,7 @@ proc rollback*(self:SqliteConnections) {.async.} =
   self.transactionEnd("ROLLBACK").await
 
 
-proc commit*(self:SqliteConnections, connI:int) {.async.} =
+proc commit*(self:SqliteConnections) {.async.} =
   self.log.logger("COMMIT")
   self.transactionEnd("COMMIT").await
 
