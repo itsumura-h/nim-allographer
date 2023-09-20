@@ -10,9 +10,9 @@ import ../../src/allographer/schema_builder
 import ../../src/allographer/query_builder
 import ../connections
 
-let rdb = sqlite
+let rdb = postgres
 
-suite("Sqlite create table"):
+suite("PostgreSQL create table"):
   test("create table"):
     rdb.create(
       table("IntRelation", [
@@ -291,3 +291,11 @@ suite($rdb & " primary"):
         primary = @["index1", "index2"]
       )
     )
+
+rdb.raw("DROP TABLE IF EXISTS \"TypeIndex\"").exec().waitFor()
+rdb.raw("DROP TABLE IF EXISTS \"TypeUnique\"").exec().waitFor()
+rdb.raw("DROP TABLE IF EXISTS \"StrRelation\"").exec().waitFor()
+rdb.raw("DROP TABLE IF EXISTS \"IntRelation\"").exec().waitFor()
+rdb.raw("DROP TABLE IF EXISTS \"TypeIndex_renamed\"").exec().waitFor()
+rdb.raw("DROP TABLE IF EXISTS \"relation\"").exec().waitFor()
+ 

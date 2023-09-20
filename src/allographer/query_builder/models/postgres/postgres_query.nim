@@ -390,15 +390,15 @@ proc offset*(self: PostgresQuery, num: int): PostgresQuery =
   return self
 
 
-proc inTransaction*(self:PostgresQuery, connI:int) =
-  ## Only used in transation block
-  self.isInTransaction = true
-  self.transactionConn = connI
+# proc inTransaction*(self:PostgresQuery, connI:int) =
+#   ## Only used in transation block
+#   self.isInTransaction = true
+#   self.transactionConn = connI
 
 
-proc freeTransactionConn*(self:PostgresQuery, connI:int) =
-  ## Only used in transation block
-  self.isInTransaction = false
+# proc freeTransactionConn*(self:PostgresQuery, connI:int) =
+#   ## Only used in transation block
+#   self.isInTransaction = false
 
 
 # ================================================================================
@@ -984,7 +984,7 @@ proc rollback*(self:PostgresConnections) {.async.} =
   self.transactionEnd("ROLLBACK").await
 
 
-proc commit*(self:PostgresConnections, connI:int) {.async.} =
+proc commit*(self:PostgresConnections) {.async.} =
   self.log.logger("COMMIT")
   self.transactionEnd("COMMIT").await
 

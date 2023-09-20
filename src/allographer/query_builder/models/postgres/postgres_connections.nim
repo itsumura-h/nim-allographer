@@ -20,7 +20,9 @@ proc select*(self:PostgresConnections, columnsArg:varargs[string]):PostgresQuery
     timeout: self.timeout,
     query: query,
     queryString: "",
-    placeHolder: newJArray()
+    placeHolder: newJArray(),
+    isInTransaction: self.isInTransaction,
+    transactionConn: self.transactionConn,
   )
   return postgresQuery
 
@@ -35,7 +37,9 @@ proc table*(self:PostgresConnections, tableArg: string): PostgresQuery =
     timeout: self.timeout,
     query: query,
     queryString: "",
-    placeHolder: newJArray()
+    placeHolder: newJArray(),
+    isInTransaction: self.isInTransaction,
+    transactionConn: self.transactionConn,
   )
   return postgresQuery
 
