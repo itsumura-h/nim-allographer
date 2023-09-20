@@ -715,23 +715,23 @@ proc getColumns(self:MariadbQuery, queryString:string):Future[seq[string]] {.asy
   return mariadb_impl.getColumns(self.pools[connI].conn, queryString, strArgs, self.timeout).await
 
 
-# proc transactionStart(self:MariadbConnections) {.async.} =
-#   let connI = getFreeConn(self).await
-#   if connI == errorConnectionNum:
-#     return
-#   self.isInTransaction = true
-#   self.transactionConn = connI
+proc transactionStart(self:MariadbConnections) {.async.} =
+  let connI = getFreeConn(self).await
+  if connI == errorConnectionNum:
+    return
+  self.isInTransaction = true
+  self.transactionConn = connI
 
-#   mariadb_impl.exec(self.pools[connI].conn, "BEGIN", newJArray(), newSeq[Row](), self.timeout).await
+  mariadb_impl.exec(self.pools[connI].conn, "BEGIN", newJArray(), newSeq[Row](), self.timeout).await
 
 
-# proc transactionEnd(self:MariadbConnections, query:string) {.async.} =
-#   defer:
-#     self.returnConn(self.transactionConn).await
-#     self.transactionConn = 0
-#     self.isInTransaction = false
+proc transactionEnd(self:MariadbConnections, query:string) {.async.} =
+  defer:
+    self.returnConn(self.transactionConn).await
+    self.transactionConn = 0
+    self.isInTransaction = false
 
-#   mariadb_impl.exec(self.pools[self.transactionConn].conn, query, newJArray(), newSeq[Row](), self.timeout).await
+  mariadb_impl.exec(self.pools[self.transactionConn].conn, query, newJArray(), newSeq[Row](), self.timeout).await
 
 
 # ================================================================================
@@ -937,19 +937,19 @@ proc sum*(self:MariadbQuery, column:string):Future[Option[float]]{.async.} =
     return none(float)
 
 
-# proc begin*(self:MariadbConnections) {.async.} =
-#   self.log.logger("BEGIN")
-#   self.transactionStart().await
+proc begin*(self:MariadbConnections) {.async.} =
+  self.log.logger("BEGIN")
+  self.transactionStart().await
 
 
-# proc rollback*(self:MariadbConnections) {.async.} =
-#   self.log.logger("ROLLBACK")
-#   self.transactionEnd("ROLLBACK").await
+proc rollback*(self:MariadbConnections) {.async.} =
+  self.log.logger("ROLLBACK")
+  self.transactionEnd("ROLLBACK").await
 
 
-# proc commit*(self:MariadbConnections, connI:int) {.async.} =
-#   self.log.logger("COMMIT")
-#   self.transactionEnd("COMMIT").await
+proc commit*(self:MariadbConnections) {.async.} =
+  self.log.logger("COMMIT")
+  self.transactionEnd("COMMIT").await
 
 
 proc get*(self: RawMariadbQuery):Future[seq[JsonNode]] {.async.} =

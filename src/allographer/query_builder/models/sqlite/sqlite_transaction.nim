@@ -2,7 +2,6 @@ import std/macros
 import std/strutils
 import std/strformat
 import ../../models/sqlite/sqlite_types
-import ../../models/sqlite/sqlite_query
 
 
 macro rdbTransaction(rdb:SqliteConnections, callback: untyped):untyped =

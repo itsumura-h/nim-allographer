@@ -22,7 +22,9 @@ proc select*(self:MariadbConnections, columnsArg:varargs[string]):MariadbQuery =
     info: self.info,
     query: query,
     queryString: "",
-    placeHolder: newJArray()
+    placeHolder: newJArray(),
+    isInTransaction: self.isInTransaction,
+    transactionConn: self.transactionConn,
   )
   return MariadbQuery
 
@@ -37,7 +39,9 @@ proc table*(self:MariadbConnections, tableArg: string): MariadbQuery =
     timeout: self.timeout,
     query: query,
     queryString: "",
-    placeHolder: newJArray()
+    placeHolder: newJArray(),
+    isInTransaction: self.isInTransaction,
+    transactionConn: self.transactionConn,
   )
   return MariadbQuery
 

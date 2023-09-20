@@ -1,10 +1,10 @@
 import std/macros
 import std/strutils
 import std/strformat
-import ../../models/postgres/postgres_types
+import ../../models/mariadb/mariadb_types
 
 
-macro rdbTransaction(rdb:PostgresConnections, callback: untyped):untyped =
+macro rdbTransaction(rdb:MariadbConnections, callback: untyped):untyped =
   var callbackStr = callback.repr
   callbackStr.removePrefix
   callbackStr = callbackStr.indent(4)
@@ -20,5 +20,5 @@ block:
   let body = callbackStr.parseStmt()
   return body
 
-template transaction*(rdb:PostgresConnections, callback: untyped) =
+template transaction*(rdb:MariadbConnections, callback: untyped) =
   rdbTransaction(rdb, callback)
