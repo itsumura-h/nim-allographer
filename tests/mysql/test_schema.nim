@@ -21,6 +21,7 @@ suite("MySQL create table"):
       table("StrRelation", [
         Column.uuid("uuid")
       ]),
+      # text, binary, json column can't use default value and index
       table("TypeIndex", [
         Column.increments("id"),
         Column.integer("integer").unsigned().index().default(1),
@@ -33,22 +34,23 @@ suite("MySQL create table"):
         Column.uuid("uuid").index().default("A"),
         Column.char("char", 255).index().default("A"),
         Column.string("string").index().default("A"),
-        Column.text("text").index().default("A"),
-        Column.mediumText("mediumText").index().default("A"),
-        Column.longText("longText").index().default("A"),
+        Column.text("text"),
+        Column.mediumText("mediumText"),
+        Column.longText("longText"),
         Column.date("date").index().default(),
         Column.datetime("datetime").index().default(),
         Column.time("time").index().default(),
         Column.timestamp("timestamp").index().default(),
         Column.timestamps(),
         Column.softDelete(),
-        Column.binary("binary").index().default("A"),
+        Column.binary("binary"),
         Column.boolean("boolean").index().default(true),
         Column.enumField("enumField", ["A", "B", "C"]).index().default("A"),
-        Column.json("json").index().default(%*{"key":"value"}),
+        Column.json("json"),
         Column.foreign("int_relation_id").reference("id").on("IntRelation").onDelete(SET_NULL),
         Column.strForeign("str_relation_id").reference("uuid").on("StrRelation").onDelete(SET_NULL)
       ]),
+      # text, binary, json column can't use default value, index and unique
       table("TypeUnique", [
         Column.increments("id"),
         Column.integer("integer").unsigned().unique().index().default(1),
@@ -61,19 +63,19 @@ suite("MySQL create table"):
         Column.uuid("uuid").unique().index().default("A"),
         Column.char("char", 255).unique().index().default("A"),
         Column.string("string").unique().index().default("A"),
-        Column.text("text").unique().index().default("A"),
-        Column.mediumText("mediumText").unique().index().default("A"),
-        Column.longText("longText").unique().index().default("A"),
+        Column.text("text"),
+        Column.mediumText("mediumText"),
+        Column.longText("longText"),
         Column.date("date").unique().index().default(),
         Column.datetime("datetime").unique().index().default(),
         Column.time("time").unique().index().default(),
         Column.timestamp("timestamp").unique().index().default(),
         Column.timestamps(),
         Column.softDelete(),
-        Column.binary("binary").unique().index().default("A"),
+        Column.binary("binary"),
         Column.boolean("boolean").unique().index().default(true),
         Column.enumField("enumField", ["A", "B", "C"]).unique().index().default("A"),
-        Column.json("json").unique().index().default(%*{"key":"value"}),
+        Column.json("json"),
         Column.foreign("int_relation_id").reference("id").on("IntRelation").onDelete(SET_NULL),
         Column.strForeign("str_relation_id").reference("uuid").on("StrRelation").onDelete(SET_NULL)
       ])
@@ -93,17 +95,17 @@ suite("MySQL create table"):
         Column.uuid("uuid").index().default("A").change(),
         Column.char("char", 255).index().default("A").change(),
         Column.string("string").index().default("A").change(),
-        Column.text("text").index().default("A").change(),
-        Column.mediumText("mediumText").index().default("A").change(),
-        Column.longText("longText").index().default("A").change(),
+        Column.text("text").change(),
+        Column.mediumText("mediumText").change(),
+        Column.longText("longText").change(),
         Column.date("date").index().default().change(),
         Column.datetime("datetime").index().default().change(),
         Column.time("time").index().default().change(),
         Column.timestamp("timestamp").index().default().change(),
-        Column.binary("binary").index().default("A").change(),
+        Column.binary("binary").change(),
         Column.boolean("boolean").index().default(true).change(),
         Column.enumField("enumField", ["A", "B", "C"]).index().default("A").change(),
-        Column.json("json").index().default(%*{"key":"value"}).change(),
+        Column.json("json").change(),
       ]),
       table("TypeUnique", [
         Column.integer("integer").unsigned().unique().index().default(1).change(),
@@ -116,22 +118,329 @@ suite("MySQL create table"):
         Column.uuid("uuid").unique().index().default("A").change(),
         Column.char("char", 255).unique().index().default("A").change(),
         Column.string("string").unique().index().default("A").change(),
-        Column.text("text").unique().index().default("A").change(),
-        Column.mediumText("mediumText").unique().index().default("A").change(),
-        Column.longText("longText").unique().index().default("A").change(),
+        Column.text("text").change(),
+        Column.mediumText("mediumText").change(),
+        Column.longText("longText").change(),
         Column.date("date").unique().index().default().change(),
         Column.datetime("datetime").unique().index().default().change(),
         Column.time("time").unique().index().default().change(),
         Column.timestamp("timestamp").unique().index().default().change(),
-        Column.binary("binary").unique().index().default("A").change(),
+        Column.binary("binary").change(),
         Column.boolean("boolean").unique().index().default(true).change(),
         Column.enumField("enumField", ["A", "B", "C"]).unique().index().default("A").change(),
-        Column.json("json").unique().index().default(%*{"key":"value"}).change(),
+        Column.json("json").change(),
       ])
     )
 
 
-suite($rdb & " alter table"):
+suite("error in text, blob, json column for default, index and unique"):
+  suite("create table"):
+    test("text"):
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.text("text").default("A"),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.text("text").index(),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.text("text").unique(),
+          ])
+        )
+
+    test("mediumText"):
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.mediumText("mediumText").default("A"),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.mediumText("mediumText").index(),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.mediumText("mediumText").unique(),
+          ])
+        )
+
+    test("longText"):
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.longText("longText").default("A"),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.longText("longText").index(),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.longText("longText").unique(),
+          ])
+        )
+
+    test("binary"):
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.binary("binary").default("A"),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.binary("binary").index(),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.binary("binary").unique(),
+          ])
+        )
+
+    test("json"):
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.json("json").default(%*{"key": "value"}),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.json("json").index(),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.json("json").unique(),
+          ])
+        )
+
+
+  suite("add column"):
+    test("text"):
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.text("text").default("A").add(),
+          ])
+        )
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.text("text").index().add(),
+          ])
+        )
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.text("text").unique().add(),
+          ])
+        )
+
+    test("mediumText"):
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.mediumText("mediumText").default("A").add(),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.mediumText("mediumText").index().add(),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.mediumText("mediumText").unique().add(),
+          ])
+        )
+
+    test("longText"):
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.longText("longText").default("A").add(),
+          ])
+        )
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.longText("longText").index().add(),
+          ])
+        )
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.longText("longText").unique().add(),
+          ])
+        )
+
+    test("binary"):
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.binary("binary").default("A").add(),
+          ])
+        )
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.binary("binary").index().add(),
+          ])
+        )
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.binary("binary").unique().add(),
+          ])
+        )
+
+    test("json"):
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.json("json").default(%*{"key": "value"}).add(),
+          ])
+        )
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.json("json").index().add(),
+          ])
+        )
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.json("json").unique().add(),
+          ])
+        )
+
+
+  suite("change column"):
+    test("text"):
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.text("text").default("A").change(),
+          ])
+        )
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.text("text").index().change(),
+          ])
+        )
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.text("text").unique().change(),
+          ])
+        )
+
+    test("mediumText"):
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.mediumText("mediumText").default("A").change(),
+          ])
+        )
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.mediumText("mediumText").index().change(),
+          ])
+        )
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.mediumText("mediumText").unique().change(),
+          ])
+        )
+
+    test("longText"):
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.longText("longText").default("A").change(),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.longText("longText").index().change(),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.longText("longText").unique().change(),
+          ])
+        )
+
+    test("binary"):
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.binary("binary").default("A").change(),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.binary("binary").index().change(),
+          ])
+        )
+      expect DbError:
+        rdb.create(
+          table("TypeIndex", [
+            Column.binary("binary").unique().change(),
+          ])
+        )
+
+    test("json"):
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.json("json").default(%*{"key": "value"}).change(),
+          ])
+        )
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.json("json").index().change(),
+          ])
+        )
+      expect DbError:
+        rdb.alter(
+          table("TypeIndex", [
+            Column.json("json").unique().change(),
+          ])
+        )
+
+
+suite("MySQL alter table"):
   setup:
     rdb.create(
       table("IntRelation", [
@@ -165,19 +474,19 @@ suite($rdb & " alter table"):
         Column.uuid("uuid").index().default("A").add(),
         Column.char("char", 255).index().default("A").add(),
         Column.string("string").index().default("A").add(),
-        Column.text("text").index().default("A").add(),
-        Column.mediumText("mediumText").index().default("A").add(),
-        Column.longText("longText").index().default("A").add(),
+        Column.text("text").add(),
+        Column.mediumText("mediumText").add(),
+        Column.longText("longText").add(),
         Column.date("date").index().default().add(),
         Column.datetime("datetime").index().default(),
         Column.time("time").index().default().add(),
         Column.timestamp("timestamp").index().default().add(),
         Column.timestamps().add(),
         Column.softDelete().add(),
-        Column.binary("binary").index().default("A").add(),
+        Column.binary("binary").add(),
         Column.boolean("boolean").index().default(true).add(),
         Column.enumField("enumField", ["A", "B", "C"]).index().default("A").add(),
-        Column.json("json").index().default(%*{"key":"value"}).add(),
+        Column.json("json").add(),
         Column.foreign("int_relation_id").reference("id").on("IntRelation").onDelete(SET_NULL).add(),
         Column.strForeign("str_relation_id").reference("uuid").on("StrRelation").onDelete(SET_NULL).add()
       ]),
@@ -193,19 +502,19 @@ suite($rdb & " alter table"):
         Column.uuid("uuid").unique().index().default("A").add(),
         Column.char("char", 255).unique().index().default("A").add(),
         Column.string("string").unique().index().default("A").add(),
-        Column.text("text").unique().index().default("A").add(),
-        Column.mediumText("mediumText").unique().index().default("A").add(),
-        Column.longText("longText").unique().index().default("A").add(),
+        Column.text("text").add(),
+        Column.mediumText("mediumText").add(),
+        Column.longText("longText").add(),
         Column.date("date").unique().index().default().add(),
         Column.datetime("datetime").unique().index().default().add(),
         Column.time("time").unique().index().default().add(),
         Column.timestamp("timestamp").unique().index().default().add(),
         Column.timestamps().add(),
         Column.softDelete().add(),
-        Column.binary("binary").unique().index().default("A").add(),
+        Column.binary("binary").add(),
         Column.boolean("boolean").unique().index().default(true).add(),
         Column.enumField("enumField", ["A", "B", "C"]).unique().index().default("A").add(),
-        Column.json("json").unique().index().default(%*{"key":"value"}).add()
+        Column.json("json").add()
       ])
     )
 

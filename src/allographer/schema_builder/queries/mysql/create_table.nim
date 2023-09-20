@@ -1,14 +1,17 @@
+import std/asyncdispatch
 import std/strformat
 import std/strutils
 import std/sequtils
 import std/sha1
 import std/json
+import ../../../query_builder
 import ../../enums
 import ../../models/table
 import ../../models/column
 import ../schema_utils
 import ./mysql_query_type
 import ./sub/create_column_query
+import ./sub/is_exists
 
 
 proc createTable*(self: MysqlSchema, isReset:bool) =
@@ -23,9 +26,20 @@ proc createTable*(self: MysqlSchema, isReset:bool) =
     if column.typ == rdbForeign or column.typ == rdbStrForeign:
       if foreignQuery.len > 0:  foreignQuery.add(", ")
       foreignQuery.add(createForeignKey(self.table, column))
-    
+
     if column.isIndex:
-      indexQuery.add(createIndexString(self.table, column))
+      let logDisplay = self.rdb.log.shouldDisplayLog
+      let logFile = self.rdb.log.shouldOutputLogFile
+      self.rdb.log.shouldDisplayLog = false
+      self.rdb.log.shouldOutputLogFile = false
+      defer:
+        self.rdb.log.shouldDisplayLog = logDisplay
+        self.rdb.log.shouldOutputLogFile = logFile
+
+      if not isExistsIndex(self.rdb, self.table, column).waitFor():
+        if [rdbText, rdbMediumText,rdbLongText, rdbBinary, rdbJson].contains(column.typ):
+          dbError("BLOB, TEXT and JSON column can't use index")
+        indexQuery.add(createIndexString(self.table, column))
 
   if self.table.primary.len > 0:
     let primary = self.table.primary.map(

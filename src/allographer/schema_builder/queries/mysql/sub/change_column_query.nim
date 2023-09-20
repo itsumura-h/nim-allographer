@@ -195,10 +195,13 @@ proc addTextColumn(column:Column, table:Table):seq[string] =
     notAllowedOption("unsigned", "text", column.name)
 
   if column.isUnique:
-    query.add(" UNIQUE")
+    notAllowedOption("unique", "text", column.name)
 
   if column.isDefault:
-    query.add(&" DEFAULT '{column.defaultString}'")
+    notAllowedOption("default", "text", column.name)
+
+  if column.isIndex:
+    notAllowedOption("index", "text", column.name)
 
   if not column.isNullable:
     query.add(" NOT NULL")
@@ -213,10 +216,13 @@ proc addMediumTextColumn(column:Column, table:Table):seq[string] =
     notAllowedOption("unsigned", "medium text", column.name)
 
   if column.isUnique:
-    query.add(" UNIQUE")
+    notAllowedOption("unique", "medium text", column.name)
 
   if column.isDefault:
-    query.add(&" DEFAULT '{column.defaultString}'")
+    notAllowedOption("default", "medium text", column.name)
+
+  if column.isIndex:
+    notAllowedOption("index", "medium text", column.name)
 
   if not column.isNullable:
     query.add(" NOT NULL")
@@ -231,10 +237,13 @@ proc addLongTextColumn(column:Column, table:Table):seq[string] =
     notAllowedOption("unsigned", "long text", column.name)
 
   if column.isUnique:
-    query.add(" UNIQUE")
+    notAllowedOption("unique", "long text", column.name)
 
   if column.isDefault:
-    query.add(&" DEFAULT '{column.defaultString}'")
+    notAllowedOption("default", "long text", column.name)
+
+  if column.isIndex:
+    notAllowedOption("index", "long text", column.name)
 
   if not column.isNullable:
     query.add(" NOT NULL")
@@ -333,13 +342,16 @@ proc addBlobColumn(column:Column, table:Table):seq[string] =
   var query = &"ALTER TABLE `{table.name}` MODIFY COLUMN `{column.name}` BLOB"
 
   if column.isUnsigned:
-    notAllowedOption("unsigned", "blob", column.name)
+    notAllowedOption("unsigned", "binary", column.name)
 
   if column.isUnique:
-    query.add(" UNIQUE")
+    notAllowedOption("unique", "binary", column.name)
 
   if column.isDefault:
-    query.add(&" DEFAULT '{column.defaultString}'")
+    notAllowedOption("default", "binary", column.name)
+
+  if column.isIndex:
+    notAllowedOption("index", "binary", column.name)
 
   if not column.isNullable:
     query.add(" NOT NULL")
@@ -407,13 +419,16 @@ proc addJsonColumn(column:Column, table:Table):seq[string] =
     notAllowedOption("unsigned", "json", column.name)
 
   if column.isUnique:
-    query.add(" UNIQUE")
+    notAllowedOption("unique", "json", column.name)
+
+  if column.isDefault:
+    notAllowedOption("default", "json", column.name)
+
+  if column.isIndex:
+    notAllowedOption("index", "json", column.name)
 
   if not column.isNullable:
     query.add(" NOT NULL")
-
-  if column.isDefault:
-    query.add(&" DEFAULT '{column.defaultJson.pretty}'")
 
   return @[query]
 

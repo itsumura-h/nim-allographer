@@ -1,11 +1,13 @@
+import std/asyncdispatch
+import std/json
 import std/strformat
 import std/sha1
-import std/json
 import ../../models/table
 import ../../models/column
 import ../schema_utils
 import ./mysql_query_type
 import ./sub/change_column_query
+import ./sub/is_exists
 
 
 proc changeColumn*(self:MysqlSchema, isReset:bool) =
@@ -13,8 +15,10 @@ proc changeColumn*(self:MysqlSchema, isReset:bool) =
   let checksum = $schema.secureHash()
 
   var queries:seq[string]
-  queries.add(&"ALTER TABLE `{self.table.name}` DROP INDEX IF EXISTS `{self.column.name}`") # unique
-  queries.add(&"ALTER TABLE `{self.table.name}` DROP INDEX IF EXISTS `{self.table.name}_{self.column.name}_index`")
+  if isExistsUnique(self.rdb, self.table, self.column).waitFor():
+    queries.add(&"ALTER TABLE `{self.table.name}` DROP INDEX `{self.column.name}`") # unique
+  if isExistsIndex(self.rdb, self.table, self.column).waitFor():
+    queries.add(&"ALTER TABLE `{self.table.name}` DROP INDEX `{self.table.name}_{self.column.name}_index`")
   queries.add(
     changeColumnString(self.table, self.column)
   )

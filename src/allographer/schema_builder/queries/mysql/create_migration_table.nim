@@ -9,6 +9,7 @@ import ../../models/column
 import ../schema_utils
 import ./mysql_query_type
 import ./sub/create_column_query
+import ./sub/is_exists
 
 
 proc createMigrationTable*(self: MysqlSchema) =
@@ -32,16 +33,8 @@ proc createMigrationTable*(self: MysqlSchema) =
       defer:
         self.rdb.log.shouldDisplayLog = logDisplay
         self.rdb.log.shouldOutputLogFile = logFile
-      let res = self.rdb.raw(&"""
-          SELECT count(*) as count
-          FROM `INFORMATION_SCHEMA`.`STATISTICS`
-          WHERE `TABLE_SCHEMA` = '{self.rdb.info.database}'
-          AND `TABLE_NAME` = '{self.table.name}'
-          AND `INDEX_NAME` = '{self.table.name}_{column.name}_index'
-        """)
-        .first()
-        .waitFor
-      if res.isSome and res.get()["count"].getInt == 0:
+
+      if not isExistsIndex(self.rdb, self.table, column).waitFor():
         indexQuery.add(createIndexString(self.table, column))
 
   if foreignQuery.len > 0:

@@ -21,12 +21,12 @@ let
   maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
   timeout = getEnv("DB_TIMEOUT").parseInt
 
-let sqlite* = dbOpen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=true)
+let sqlite* = dbOpen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=false)
 # let sqlite* = dbopen(SQLite3, getCurrentDir() / "db.sqlite3" , maxConnections=maxConnections, shouldDisplayLog=true)
-let postgres* = dbOpen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=true)
-let mariadb* = dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=true)
-let mysql* = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=true)
-let surreal* = dbOpen(SurrealDB, "test", "test", "user", "pass", surrealHost, surrealPort, 5, 30, shouldDisplayLog=true).waitFor()
+let postgres* = dbOpen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=false)
+let mariadb* = dbopen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=false)
+let mysql* = dbopen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=false)
+let surreal* = dbOpen(SurrealDB, "test", "test", "user", "pass", surrealHost, surrealPort, 5, 30, shouldDisplayLog=false).waitFor()
 
 let dbConnections* :seq[PostgresConnections] = @[
   # dbopen(SQLite3, getCurrentDir() / "db.sqlite3", maxConnections=maxConnections, timeout=timeout, shouldDisplayLog=true),
