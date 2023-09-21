@@ -58,10 +58,11 @@ proc selectFirstSql*(self: PostgresQuery): PostgresQuery =
 
 
 proc selectByIdSql*(self: PostgresQuery, key:string): PostgresQuery =
+  let key = key.quote()
   if self.queryString.contains("WHERE"):
-    self.queryString.add(&" AND \"{key}\" = ? LIMIT 1")
+    self.queryString.add(&" AND {key} = ? LIMIT 1")
   else:
-    self.queryString.add(&" WHERE \"{key}\" = ? LIMIT 1")
+    self.queryString.add(&" WHERE {key} = ? LIMIT 1")
   return self
 
 

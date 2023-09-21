@@ -17,7 +17,7 @@ proc setUp(rdb:PostgresConnections) =
   rdb.create([
     table("auth",[
       Column.increments("id"),
-      Column.string("auth")
+      Column.string("name")
     ]),
     table("user",[
       Column.increments("id"),
@@ -31,8 +31,8 @@ proc setUp(rdb:PostgresConnections) =
   # seeder
   seeder(rdb, "auth"):
     rdb.table("auth").insert(@[
-      %*{"auth": "admin"},
-      %*{"auth": "user"}
+      %*{"name": "admin"},
+      %*{"name": "user"}
     ])
     .waitFor()
 
