@@ -803,7 +803,6 @@ proc findPlain*(self:MariadbQuery, id: int, key="id"):Future[seq[string]] {.asyn
   return self.findPlain($id, key).await
 
 
-
 # ==================== return Object ====================
 proc get*[T](self: MariadbQuery, typ:typedesc[T]):Future[seq[T]] {.async.} =
   var sql = self.selectBuilder()
