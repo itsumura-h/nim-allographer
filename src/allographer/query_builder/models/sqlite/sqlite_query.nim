@@ -363,17 +363,6 @@ proc offset*(self: SqliteQuery, num: int): SqliteQuery =
   return self
 
 
-proc inTransaction*(self:SqliteQuery, connI:int) =
-  ## Only used in transation block
-  self.isInTransaction = true
-  self.transactionConn = connI
-
-
-proc freeTransactionConn*(self:SqliteQuery, connI:int) =
-  ## Only used in transation block
-  self.isInTransaction = false
-
-
 # ================================================================================
 # connection
 # ================================================================================

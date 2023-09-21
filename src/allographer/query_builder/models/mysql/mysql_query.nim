@@ -389,17 +389,6 @@ proc offset*(self: MysqlQuery, num: int): MysqlQuery =
   return self
 
 
-proc inTransaction*(self:MysqlQuery, connI:int) =
-  ## Only used in transation block
-  self.isInTransaction = true
-  self.transactionConn = connI
-
-
-proc freeTransactionConn*(self:MysqlQuery, connI:int) =
-  ## Only used in transation block
-  self.isInTransaction = false
-
-
 # ================================================================================
 # connection
 # ================================================================================

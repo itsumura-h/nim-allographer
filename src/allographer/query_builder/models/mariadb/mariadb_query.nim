@@ -389,17 +389,6 @@ proc offset*(self: MariadbQuery, num: int): MariadbQuery =
   return self
 
 
-proc inTransaction*(self:MariadbQuery, connI:int) =
-  ## Only used in transation block
-  self.isInTransaction = true
-  self.transactionConn = connI
-
-
-proc freeTransactionConn*(self:MariadbQuery, connI:int) =
-  ## Only used in transation block
-  self.isInTransaction = false
-
-
 # ================================================================================
 # connection
 # ================================================================================

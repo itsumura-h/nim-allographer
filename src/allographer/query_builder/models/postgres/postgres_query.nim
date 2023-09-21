@@ -390,17 +390,6 @@ proc offset*(self: PostgresQuery, num: int): PostgresQuery =
   return self
 
 
-# proc inTransaction*(self:PostgresQuery, connI:int) =
-#   ## Only used in transation block
-#   self.isInTransaction = true
-#   self.transactionConn = connI
-
-
-# proc freeTransactionConn*(self:PostgresQuery, connI:int) =
-#   ## Only used in transation block
-#   self.isInTransaction = false
-
-
 # ================================================================================
 # connection
 # ================================================================================
