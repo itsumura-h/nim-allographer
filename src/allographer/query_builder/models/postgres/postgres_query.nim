@@ -882,7 +882,6 @@ proc find*[T](self: PostgresQuery, id:int, typ:typedesc[T], key="id"):Future[Opt
 
 
 # ==================== insert ====================
-
 proc insert*(self:PostgresQuery, items:JsonNode) {.async.} =
   ## items is `JObject`
   var sql = self.insertValueBuilder(items)

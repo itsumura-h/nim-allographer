@@ -823,6 +823,7 @@ proc transactionEnd(self:SqliteConnections, query:string) {.async.} =
 # public exec
 # ================================================================================
 
+# ==================== return json ====================
 proc get*(self:SqliteQuery):Future[seq[JsonNode]] {.async.} =
   let sql = self.selectBuilder()
   try:
@@ -861,6 +862,7 @@ proc find*(self:SqliteQuery, id:int, key="id"):Future[Option[JsonNode]]{.async.}
   return self.find($id, key).await
 
 
+# ==================== return string ====================
 proc getPlain*(self:SqliteQuery):Future[seq[seq[string]]] {.async.} =
   let sql = self.selectBuilder()
   try:
@@ -899,6 +901,56 @@ proc findPlain*(self:SqliteQuery, id: int, key="id"):Future[seq[string]] {.async
   return self.findPlain($id, key).await
 
 
+# ==================== return Object ====================
+proc get*[T](self: SqliteQuery, typ:typedesc[T]):Future[seq[T]] {.async.} =
+  var sql = self.selectBuilder()
+  try:
+    self.log.logger(sql)
+    let rows = self.getAllRows(sql).await
+    for row in rows:
+      result.add(row.to(typ))
+  except Exception:
+    self.log.echoErrorMsg(sql)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    raise getCurrentException()
+
+
+proc first*[T](self: SqliteQuery, typ:typedesc[T]):Future[Option[T]] {.async.} =
+  var sql = self.selectFirstBuilder()
+  try:
+    self.log.logger(sql)
+    let row = self.getRow(sql).await
+    if row.isSome():
+      return row.get().to(typ).some()
+    else:
+      return none(typ)
+  except Exception:
+    self.log.echoErrorMsg(sql)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    raise getCurrentException()
+
+
+proc find*[T](self: SqliteQuery, id:string, typ:typedesc[T], key="id"):Future[Option[T]] {.async.} =
+  self.placeHolder.add(%*{"key":key, "value": id})
+  var sql = self.selectFindBuilder(key)
+  try:
+    self.log.logger(sql)
+    let row = self.getRow(sql).await
+    if row.isSome():
+      return row.get().to(typ).some()
+    else:
+      return none(typ)
+  except Exception:
+    self.log.echoErrorMsg(sql)
+    self.log.echoErrorMsg( getCurrentExceptionMsg() )
+    raise getCurrentException()
+
+
+proc find*[T](self: SqliteQuery, id:int, typ:typedesc[T], key="id"):Future[Option[T]] {.async.} =
+  return self.find($id, typ, key).await
+
+
+# ==================== insert ====================
 proc insert*(self:SqliteQuery, items:JsonNode) {.async.} =
   let sql = self.insertValueBuilder(items)
   self.log.logger(sql)

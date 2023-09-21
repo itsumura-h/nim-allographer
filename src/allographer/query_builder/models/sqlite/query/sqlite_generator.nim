@@ -57,10 +57,11 @@ proc selectFirstSql*(self: SqliteQuery): SqliteQuery =
 
 
 proc selectByIdSql*(self: SqliteQuery, key:string): SqliteQuery =
+  let key = key.quote()
   if self.queryString.contains("WHERE"):
-    self.queryString.add(&" AND \"{key}\" = ? LIMIT 1")
+    self.queryString.add(&" AND {key} = ? LIMIT 1")
   else:
-    self.queryString.add(&" WHERE \"{key}\" = ? LIMIT 1")
+    self.queryString.add(&" WHERE {key} = ? LIMIT 1")
   return self
 
 
