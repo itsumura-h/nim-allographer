@@ -6,7 +6,7 @@ import ../mariadb_types
 
 
 proc quote(input:string):string =
-  ## `User.id as userId` => `"User"."id" as "userId"`
+  ## "User.id as userId" => ```User```.```id``` as ```userId```
   var tmp = newSeq[string]()
   for row in input.split("."):
     if row.contains(" as "):
@@ -58,10 +58,11 @@ proc selectFirstSql*(self: MariadbQuery): MariadbQuery =
 
 
 proc selectByIdSql*(self: MariadbQuery, key:string): MariadbQuery =
+  let key = key.quote()
   if self.queryString.contains("WHERE"):
-    self.queryString.add(&" AND `{key}` = ? LIMIT 1")
+    self.queryString.add(&" AND {key} = ? LIMIT 1")
   else:
-    self.queryString.add(&" WHERE `{key}` = ? LIMIT 1")
+    self.queryString.add(&" WHERE {key} = ? LIMIT 1")
   return self
 
 
@@ -315,7 +316,7 @@ proc insertValuesSql*(self: MariadbQuery, rows: openArray[JsonNode]): MariadbQue
     defer: i += 1
     if i > 0: columns.add(", ")
     # If column name contains Upper letter, column name is covered by double quote
-    columns.add(key)
+    columns.add(&"`{key}`")
 
   var values = ""
   var valuesCount = 0
