@@ -1,5 +1,4 @@
 import std/asyncdispatch
-import std/times
 import std/strutils
 import std/json
 import ../../models/database_types

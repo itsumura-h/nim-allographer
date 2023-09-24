@@ -318,7 +318,7 @@ proc insertValuesSql*(self: SqliteQuery, rows: openArray[JsonNode]): SqliteQuery
     defer: i += 1
     if i > 0: columns.add(", ")
     # If column name contains Upper letter, column name is covered by double quote
-    columns.add(key)
+    columns.add(&"\"{key}\"")
 
   var values = ""
   var valuesCount = 0
