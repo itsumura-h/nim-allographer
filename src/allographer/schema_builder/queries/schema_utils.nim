@@ -393,6 +393,9 @@ proc exec*(rdb:SurrealConnections, queries:seq[string]) =
   let logFile = rdb.log.shouldOutputLogFile
   rdb.log.shouldDisplayLog = false
   rdb.log.shouldOutputLogFile = false
+  defer:
+    rdb.log.shouldDisplayLog = logDisplay
+    rdb.log.shouldOutputLogFile = logFile
 
   try:
     for query in queries:
@@ -400,9 +403,6 @@ proc exec*(rdb:SurrealConnections, queries:seq[string]) =
     isSuccess = true
   except:
     echo getCurrentExceptionMsg()
-
-  rdb.log.shouldDisplayLog = logDisplay
-  rdb.log.shouldOutputLogFile = logFile
 
 
 proc execThenSaveHistory*(rdb:SurrealConnections, tableName:string, queries:seq[string], checksum:string) =
@@ -422,6 +422,9 @@ proc execThenSaveHistory*(rdb:SurrealConnections, tableName:string, queries:seq[
   let logFile = rdb.log.shouldOutputLogFile
   rdb.log.shouldDisplayLog = false
   rdb.log.shouldOutputLogFile = false
+  defer:
+    rdb.log.shouldDisplayLog = logDisplay
+    rdb.log.shouldOutputLogFile = logFile
 
   let tableQuery = queries.join("; ")
   let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
@@ -434,14 +437,13 @@ proc execThenSaveHistory*(rdb:SurrealConnections, tableName:string, queries:seq[
   })
   .waitFor
 
-  rdb.log.shouldDisplayLog = logDisplay
-  rdb.log.shouldOutputLogFile = logFile
-
 
 proc execThenSaveHistory*(rdb:SurrealConnections, tableName:string, query:string, checksum:string) =
   var isSuccess = false
   try:
     let resp = rdb.raw(query).info().waitFor
+    if resp.kind == JObject:
+      raise newException(DbError, resp["information"].getStr)
     for row in resp:
       if row["status"].getStr != "OK":
         raise newException(DbError, row["detail"].getStr)
@@ -453,6 +455,9 @@ proc execThenSaveHistory*(rdb:SurrealConnections, tableName:string, query:string
   let logFile = rdb.log.shouldOutputLogFile
   rdb.log.shouldDisplayLog = false
   rdb.log.shouldOutputLogFile = false
+  defer:
+    rdb.log.shouldDisplayLog = logDisplay
+    rdb.log.shouldOutputLogFile = logFile
 
   let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
   rdb.table("_allographer_migrations").insert(%*{
@@ -463,6 +468,3 @@ proc execThenSaveHistory*(rdb:SurrealConnections, tableName:string, query:string
     "status": isSuccess
   })
   .waitFor
-
-  rdb.log.shouldDisplayLog = logDisplay
-  rdb.log.shouldOutputLogFile = logFile

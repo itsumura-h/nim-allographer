@@ -11,6 +11,7 @@ import std/times
 import ../../src/allographer/schema_builder
 import ../../src/allographer/query_builder
 import ../connections
+import ./clear_tables
 
 
 # =============================================================================
@@ -430,3 +431,6 @@ suite($rdb & " aggregates"):
   test("sum"):
     let t = rdb.table("user").sum("index").waitFor()
     check t == 55.0
+
+
+clearTables(rdb).waitFor()

@@ -42,6 +42,7 @@ proc surrealOpen*(namespace:string = "", database: string = "", user: string = "
       isBusy: false,
       createdAt: getTime().toUnix(),
     )
+
   return SurrealConnections(
     pools: pools,
     timeout: timeout

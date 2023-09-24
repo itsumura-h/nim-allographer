@@ -18,11 +18,35 @@ import ../../schema_utils
 # int
 # =============================================================================
 proc createIncrementsColumn(column:Column, table:Table):seq[string] =
-  result.add(&"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE int VALUE (SELECT `{column.name}` FROM `{table.name}` ORDER BY `{column.name}` NUMERIC DESC LIMIT 1)[0].{column.name} + 1 || 1 ASSERT $value != NONE")
+  result.add(&"""
+    INSERT INTO `_autoincrement_sequences` {{table: "{table.name}", column: "{column.name}", max_index: 0}};
+    DEFINE EVENT `autoincrement_{table.name}_{column.name}` ON TABLE `{table.name}` WHEN $event = "CREATE" THEN {{
+      LET $val = (SELECT `max_index` FROM `_autoincrement_sequences` WHERE `table` = "{table.name}" AND `column` = "{column.name}" LIMIT 1)[0].max_index + 1;
+      UPDATE `{table.name}` MERGE {{{column.name}: $val}} WHERE id = $after.id;
+      UPDATE `_autoincrement_sequences` MERGE {{max_index: $val}} WHERE `table` = "{table.name}" AND `column` = "{column.name}";
+    }}
+  """)
+  result.add(&"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE int")
   result.add(&"DEFINE INDEX `{table.name}_{column.name}_unique` ON TABLE `{table.name}` COLUMNS `{column.name}` UNIQUE")
 
+
 proc createIntColumn(column:Column, table:Table):seq[string] =
-  var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE int"
+  var query = ""
+  
+  if column.isAutoIncrement:
+    query.add(&"""
+      INSERT INTO `_autoincrement_sequences` {{table: "{table.name}", column: "{column.name}", max_index: 0}};
+      DEFINE EVENT `autoincrement_{table.name}_{column.name}` ON TABLE `{table.name}` WHEN $event = "CREATE" THEN {{
+        LET $val = (SELECT `max_index` FROM `_autoincrement_sequences` WHERE `table` = "{table.name}" AND `column` = "{column.name}" LIMIT 1)[0].max_index + 1;
+        UPDATE `{table.name}` MERGE {{{column.name}: $val}} WHERE id = $after.id;
+        UPDATE `_autoincrement_sequences` MERGE {{max_index: $val}} WHERE `table` = "{table.name}" AND `column` = "{column.name}";
+      }};
+    """)
+  
+    query.add(&"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE int")
+    return @[query]
+
+  query.add(&"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE int")
 
   if not column.isNullable:
     query.add(" ASSERT $value != NONE")
@@ -32,10 +56,8 @@ proc createIntColumn(column:Column, table:Table):seq[string] =
       query.add(&" AND $value >= 0")
     else:
       query.add(&" ASSERT $value >= 0")
-
-  if column.isAutoIncrement:
-    query.add(&" VALUE (SELECT `{column.name}` FROM `{table.name}` ORDER BY `{column.name}` NUMERIC DESC LIMIT 1)[0].{column.name} + 1 || 1")
-  elif column.isDefault:
+  
+  if column.isDefault:
     query.add(&" VALUE $value OR {column.defaultInt}")
   elif column.isNullable:
     query.add(" VALUE $value OR NULL")

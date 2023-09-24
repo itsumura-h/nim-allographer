@@ -5,13 +5,11 @@ discard """
 import std/unittest
 import std/asyncdispatch
 import std/json
-import std/times
-import std/strutils
 import std/options
-import ../../src/allographer/connection
 import ../../src/allographer/schema_builder
 import ../../src/allographer/query_builder
 import ../connections
+import ./clear_tables
 
 
 suite("SurrealDB create table"):
@@ -77,7 +75,7 @@ suite("SurrealDB create table"):
     block:
       let info = surreal.raw(""" INFO FOR TABLE TypeIndex """).info().waitFor()
       let fields = info[0]["result"]["fd"]
-      check fields["index"].getStr ==         "DEFINE FIELD index ON TypeIndex TYPE int VALUE (SELECT index FROM TypeIndex ORDER BY index NUMERIC DESC LIMIT 1)[0].index + 1 OR 1 ASSERT $value != NONE"
+      check fields["index"].getStr ==         "DEFINE FIELD index ON TypeIndex TYPE int"
       check fields["integer"].getStr ==       "DEFINE FIELD integer ON TypeIndex TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
       check fields["smallInteger"].getStr ==  "DEFINE FIELD smallInteger ON TypeIndex TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
       check fields["mediumInteger"].getStr == "DEFINE FIELD mediumInteger ON TypeIndex TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
@@ -131,7 +129,7 @@ suite("SurrealDB create table"):
     block:
       let info = surreal.raw(""" INFO FOR TABLE TypeUnique """).info().waitFor()
       let fields = info[0]["result"]["fd"]
-      check fields["index"].getStr ==         "DEFINE FIELD index ON TypeUnique TYPE int VALUE (SELECT index FROM TypeUnique ORDER BY index NUMERIC DESC LIMIT 1)[0].index + 1 OR 1 ASSERT $value != NONE"
+      check fields["index"].getStr ==         "DEFINE FIELD index ON TypeUnique TYPE int"
       check fields["integer"].getStr ==       "DEFINE FIELD integer ON TypeUnique TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
       check fields["smallInteger"].getStr ==  "DEFINE FIELD smallInteger ON TypeUnique TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
       check fields["mediumInteger"].getStr == "DEFINE FIELD mediumInteger ON TypeUnique TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
@@ -182,33 +180,35 @@ suite("SurrealDB create table"):
       check indexs["TypeUnique_enumField_unique"].getStr ==     "DEFINE INDEX TypeUnique_enumField_unique ON TypeUnique FIELDS enumField UNIQUE"
       check indexs["TypeUnique_json_unique"].getStr ==          "DEFINE INDEX TypeUnique_json_unique ON TypeUnique FIELDS json UNIQUE"
 
-#   test("increment"):
-#     surreal.create(
-#       table("test",[
-#         Column.increments("index"),
-#         Column.integer("index2").autoIncrement(),
-#         Column.string("string")
-#       ])
-#     )
 
-#     surreal.table("test").insert(%*{"string": "a"}).waitFor
-#     surreal.table("test").insert(%*{"string": "b"}).waitFor
-#     surreal.table("test").insert(%*{"string": "c"}).waitFor
-#     surreal.table("test").where("string", "=", "b").delete().waitFor
-#     surreal.table("test").insert(%*{"string": "d"}).waitFor
+  test("increment"):
+    surreal.create(
+      table("test",[
+        Column.increments("index"),
+        Column.integer("index2").autoIncrement(),
+        Column.string("string")
+      ])
+    )
+
+    surreal.table("test").insert(%*{"string": "a"}).waitFor
+    surreal.table("test").insert(%*{"string": "b"}).waitFor
+    surreal.table("test").insert(%*{"string": "c"}).waitFor
+    surreal.table("test").where("string", "=", "b").delete().waitFor
+    surreal.table("test").insert(%*{"string": "d"}).waitFor
     
-#     let data = surreal.table("test").orderBy("index", Asc).get().waitFor
-#     for row in data:
-#       if row["string"].getStr == "a":
-#         check row["index"].getInt == 1
-#         check row["index2"].getInt == 1
+    let data = surreal.table("test").orderBy("index", Asc).get().waitFor
+    for row in data:
+      if row["string"].getStr == "a":
+        check row["index"].getInt == 1
+        check row["index2"].getInt == 1
       
-#       if row["string"].getStr == "c":
-#         check row["index"].getInt == 3
-#         check row["index2"].getInt == 3
+      if row["string"].getStr == "c":
+        check row["index"].getInt == 3
+        check row["index2"].getInt == 3
       
-#       if row["string"].getStr == "d":
-#         check row["index2"].getInt == 4
+      if row["string"].getStr == "d":
+        check row["index2"].getInt == 4
+
 
 suite("SurrealDB alter table"):
   setup:
@@ -286,7 +286,7 @@ suite("SurrealDB alter table"):
     block:
       let info = surreal.raw(""" INFO FOR TABLE TypeIndex """).info().waitFor()
       let fields = info[0]["result"]["fd"]
-      check fields["index"].getStr ==         "DEFINE FIELD index ON TypeIndex TYPE int VALUE (SELECT index FROM TypeIndex ORDER BY index NUMERIC DESC LIMIT 1)[0].index + 1 OR 1 ASSERT $value != NONE"
+      check fields["index"].getStr ==         "DEFINE FIELD index ON TypeIndex TYPE int"
       check fields["integer"].getStr ==       "DEFINE FIELD integer ON TypeIndex TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
       check fields["smallInteger"].getStr ==  "DEFINE FIELD smallInteger ON TypeIndex TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
       check fields["mediumInteger"].getStr == "DEFINE FIELD mediumInteger ON TypeIndex TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
@@ -340,7 +340,7 @@ suite("SurrealDB alter table"):
     block:
       let info = surreal.raw(""" INFO FOR TABLE TypeUnique """).info().waitFor()
       let fields = info[0]["result"]["fd"]
-      check fields["index"].getStr ==         "DEFINE FIELD index ON TypeUnique TYPE int VALUE (SELECT index FROM TypeUnique ORDER BY index NUMERIC DESC LIMIT 1)[0].index + 1 OR 1 ASSERT $value != NONE"
+      check fields["index"].getStr ==         "DEFINE FIELD index ON TypeUnique TYPE int"
       check fields["integer"].getStr ==       "DEFINE FIELD integer ON TypeUnique TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
       check fields["smallInteger"].getStr ==  "DEFINE FIELD smallInteger ON TypeUnique TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
       check fields["mediumInteger"].getStr == "DEFINE FIELD mediumInteger ON TypeUnique TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
@@ -416,3 +416,6 @@ suite("SurrealDB alter table"):
     
     let res = surreal.table("TypeIndex").first().waitFor
     check not res.isSome
+
+
+clearTables(surreal).waitFor()

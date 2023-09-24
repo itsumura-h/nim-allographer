@@ -1,12 +1,11 @@
 import std/os
 import ../enums
-# import ../../query_builder/rdb/rdb_types
-# import ../../query_builder/surreal/surreal_types
 import ../../query_builder/models/sqlite/sqlite_types
 import ../../query_builder/models/postgres/postgres_types
 import ../../query_builder/models/mariadb/mariadb_types
 import ../../query_builder/models/mysql/mysql_types
 import ../../query_builder/models/surreal/surreal_types
+import ../queries/surreal/create_sequence_table
 import ../models/table
 import ./sub/migration_table_def
 import ./sub/create_query_def
@@ -106,12 +105,15 @@ proc create*(rdb:SurrealConnections, tables:varargs[Table]) =
 
   # create migration table
   var query = createSchema(rdb, migrationTable)
+  createSequenceTable(rdb)
+  resetSequence(rdb, Table(name:"_allographer_migrations"))
   query.createMigrationTable()
 
   if isReset:
     # delete table in reverse loop in tables
     for i in countdown(tables.len-1, 0):
       let table = tables[i]
+      resetSequence(rdb, table)
       query = createSchema(rdb, table)
       query.resetMigrationTable()
       query.resetTable()

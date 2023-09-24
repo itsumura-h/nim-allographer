@@ -59,9 +59,9 @@ services:
   surreal:
     image: surrealdb/surrealdb:1.0.0-beta.9
     tty: true
-    # command: start --log DEBUG --user user --pass pass memory # like redis
-    # command: start --log DEBUG --user user --pass pass file://root/.surrealdb # like mongo
-    command: start --strict --log DEBUG --user user --pass pass memory # like in-memory sqlite
+    # command: start --log TRACE --user user --pass pass memory # like redis
+    # command: start --log TRACE --user user --pass pass file://root/.surrealdb # like mongo
+    command: start --strict --log TRACE --user user --pass pass memory # like in-memory sqlite
     # command: start --strict --log TRACE --user user --pass pass file://root/.surrealdb # like rdb
 
   adminer:
