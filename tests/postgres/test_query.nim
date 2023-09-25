@@ -505,7 +505,7 @@ suite($rdb & " binary data"):
 
     let id = rdb.table("test").insertId(%*{"pic": binaryImage}).waitFor()
 
-    let res = rdb.table("test").find(id).waitFor().get()
+    var res = rdb.table("test").find(id).waitFor().get()
     check res["pic"].getStr().len > 0
 
     rdb.table("test").where("id","=", id).update(%*{"pic": binaryImage}).waitFor()
