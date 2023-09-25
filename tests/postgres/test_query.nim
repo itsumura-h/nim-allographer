@@ -1,12 +1,14 @@
 discard """
-  cmd: "nim c -d:reset -r $file"
+  cmd: "nim c -d:reset -d:ssl -r $file"
 """
 
 import std/unittest
-import std/json
-import std/strformat
-import std/options
 import std/asyncdispatch
+import std/httpclient
+import std/json
+import std/options
+import std/streams
+import std/strformat
 import ../../src/allographer/schema_builder
 import ../../src/allographer/query_builder
 import ./connection
@@ -485,3 +487,33 @@ suite($rdb & " aggregates"):
   test("sum"):
     var t = rdb.table("user").sum("id").waitFor.get
     check t == 55.0
+
+
+suite($rdb & " binary data"):
+  test("insert binary"):
+    rdb.create(
+      table("test", [
+        Column.increments("id"),
+        Column.binary("pic"),
+      ])
+    )
+
+    let client = newAsyncHttpClient()
+    let response = client.getContent("https://nim-lang.org/assets/img/twitter_banner.png").waitFor()
+    let imageStream = newStringStream(response)
+    let binaryImage = imageStream.readAll()
+
+    let id = rdb.table("test").insertId(%*{"pic": binaryImage}).waitFor()
+
+    let res = rdb.table("test").find(id).waitFor().get()
+    check res["pic"].getStr().len > 0
+
+    rdb.table("test").where("id","=", id).update(%*{"pic": binaryImage}).waitFor()
+
+    res = rdb.table("test").find(id).waitFor().get()
+    check res["pic"].getStr().len > 0
+
+
+rdb.raw("DROP TABLE IF EXISTS \"test\"").exec().waitFor()
+rdb.raw("DROP TABLE IF EXISTS \"user\"").exec().waitFor()
+rdb.raw("DROP TABLE IF EXISTS \"auth\"").exec().waitFor()
