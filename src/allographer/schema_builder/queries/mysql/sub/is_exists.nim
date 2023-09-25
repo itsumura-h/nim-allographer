@@ -4,7 +4,9 @@ import std/options
 import std/strformat
 import ../../../models/table
 import ../../../models/column
-import ../../../../query_builder
+import ../../../../query_builder/models/mysql/mysql_types
+import ../../../../query_builder/models/mysql/mysql_connections
+import ../../../../query_builder/models/mysql/mysql_query
 
 
 proc isExistsIndex*(rdb:MysqlConnections, table:Table, column:Column):Future[bool] {.async.} =

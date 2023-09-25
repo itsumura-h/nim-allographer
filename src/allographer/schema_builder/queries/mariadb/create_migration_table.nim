@@ -2,7 +2,7 @@ import std/strformat
 import ../../enums
 import ../../models/table
 import ../../models/column
-import ../schema_utils
+import ./schema_utils
 import ./mariadb_query_type
 import ./sub/create_column_query
 

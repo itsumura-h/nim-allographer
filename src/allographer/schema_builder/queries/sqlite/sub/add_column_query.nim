@@ -5,11 +5,13 @@ import std/json
 import std/strformat
 import std/strutils
 import std/re
-import ../../../../query_builder
-import ../../../enums
+import ../../../../query_builder/models/sqlite/sqlite_types
+import ../../../../query_builder/models/sqlite/sqlite_connections
+import ../../../../query_builder/models/sqlite/sqlite_query
 import ../../../models/table
 import ../../../models/column
-import ../../schema_utils
+import ../../../enums
+import ../schema_utils
 import ./create_column_query
 
 # =============================================================================

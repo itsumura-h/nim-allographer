@@ -3,7 +3,7 @@ import std/sha1
 import std/json
 import ../../models/table
 import ./mysql_query_type
-import ../schema_utils
+import ./schema_utils
 
 
 proc renameTable*(self:MysqlSchema, isReset:bool) =

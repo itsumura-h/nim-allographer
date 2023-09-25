@@ -2,7 +2,7 @@ import std/strformat
 import std/sha1
 import std/json
 import ../../models/table
-import ../schema_utils
+import ./schema_utils
 import ./mysql_query_type
 
 

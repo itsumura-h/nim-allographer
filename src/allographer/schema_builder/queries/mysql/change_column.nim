@@ -4,7 +4,7 @@ import std/strformat
 import std/sha1
 import ../../models/table
 import ../../models/column
-import ../schema_utils
+import ./schema_utils
 import ./mysql_query_type
 import ./sub/change_column_query
 import ./sub/is_exists

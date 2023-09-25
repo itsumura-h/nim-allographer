@@ -3,10 +3,10 @@ FROM ubuntu:22.04
 # prevent timezone dialogue
 ENV DEBIAN_FRONTEND=noninteractive
 
-RUN apt update; apt install -y libgnutls30 && \
-    apt update --fix-missing && \
+RUN apt update; apt install -y libgnutls30
+RUN apt update; \
     apt upgrade -y
-RUN apt install -y --fix-missing \
+RUN apt install -y \
         gcc \
         xz-utils \
         ca-certificates \
@@ -14,7 +14,6 @@ RUN apt install -y --fix-missing \
         curl \
         wget \
         git \
-        libsass-dev \
         sqlite3 \
         libpq-dev \
         libmariadb-dev

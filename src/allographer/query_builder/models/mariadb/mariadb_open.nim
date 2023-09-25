@@ -1,10 +1,13 @@
 import std/times
-import ../../error
 import ../../libs/mariadb/mariadb_rdb
+import ../../error
+import ../../log
 import ./mariadb_types
 
 
-proc mariadbOpen*(database: string = "", user: string = "", password: string = "", host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30): MariadbConnections =
+proc dbOpen*(_: type MariaDB, database: string = "", user: string = "", password: string = "",
+                  host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30,
+                  shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): MariadbConnections =
   var pools = newSeq[MariadbConnection](maxConnections)
   for i in 0..<maxConnections:
     let conn = mariadb_rdb.init(nil)
@@ -30,5 +33,6 @@ proc mariadbOpen*(database: string = "", user: string = "", password: string = "
   result = MariadbConnections(
     pools: pools,
     timeout: timeout,
-    info: info
+    info: info,
+    log: LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)
   )

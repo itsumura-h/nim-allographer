@@ -1,6 +1,7 @@
 import std/asyncdispatch
 import std/strformat
-import ../../../query_builder
+import ../../../query_builder/models/mysql/mysql_connections
+import ../../../query_builder/models/mysql/mysql_query
 import ../../models/table
 import ./mysql_query_type
 

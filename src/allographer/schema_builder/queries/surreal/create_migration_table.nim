@@ -8,7 +8,7 @@ import ../../../query_builder/models/surreal/surreal_types
 import ../../../query_builder/models/surreal/surreal_connections
 import ../../../query_builder/models/surreal/surreal_query
 import ../../models/table
-import ../schema_utils
+import ./schema_utils
 import ./surreal_query_type
 import ./sub/create_column_query
 

@@ -11,7 +11,7 @@ import std/strutils
 import ../../../enums
 import ../../../models/table
 import ../../../models/column
-import ../../schema_utils
+import ../schema_utils
 
 
 # =============================================================================

@@ -1,6 +1,7 @@
 import std/asyncdispatch
 import std/strformat
-import ../../../query_builder
+import ../../../query_builder/models/sqlite/sqlite_connections
+import ../../../query_builder/models/sqlite/sqlite_query
 import ../../models/table
 import ./sqlite_query_type
 

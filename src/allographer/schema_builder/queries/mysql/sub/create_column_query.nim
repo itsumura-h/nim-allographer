@@ -3,7 +3,7 @@ import std/strformat
 import ../../../enums
 import ../../../models/table
 import ../../../models/column
-import ../../schema_utils
+import ../schema_utils
 
 
 ## In MySQL, BLOB, TEXT, GEOMETRY or JSON column can't have a default value.

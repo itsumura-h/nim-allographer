@@ -3,7 +3,7 @@ import std/strformat
 import ../../../enums
 import ../../../models/table
 import ../../../models/column
-import ../../schema_utils
+import ../schema_utils
 
 
 proc commonSetup(column:Column, table:Table):seq[string] =

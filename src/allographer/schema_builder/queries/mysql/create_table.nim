@@ -8,7 +8,7 @@ import ../../../query_builder
 import ../../enums
 import ../../models/table
 import ../../models/column
-import ../schema_utils
+import ./schema_utils
 import ./mysql_query_type
 import ./sub/create_column_query
 import ./sub/is_exists

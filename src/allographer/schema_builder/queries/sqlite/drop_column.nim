@@ -5,10 +5,11 @@ import std/sequtils
 import std/re
 import std/sha1
 import std/json
-import ../../../query_builder
+import ../../../query_builder/models/sqlite/sqlite_connections
+import ../../../query_builder/models/sqlite/sqlite_query
 import ../../models/table
 import ../../models/column
-import  ../schema_utils
+import  ./schema_utils
 import ./sqlite_query_type
 
 

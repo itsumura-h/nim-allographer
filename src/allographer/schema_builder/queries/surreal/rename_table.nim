@@ -4,7 +4,7 @@ import std/strformat
 # import std/json
 # import ../../models/table
 import ./surreal_query_type
-# import ../schema_utils
+# import ./schema_utils
 
 
 proc renameTable*(self:SurrealSchema, isReset:bool) =

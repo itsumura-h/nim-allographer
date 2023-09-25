@@ -1,11 +1,13 @@
 import std/times
-# import ../../../env
-import ../../error
 import ../../libs/mysql/mysql_rdb
+import ../../error
+import ../../log
 import ./mysql_types
 
 
-proc mysqlOpen*(database: string = "", user: string = "", password: string = "", host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30): MysqlConnections =
+proc dbOpen*(_:type MySQL, database: string = "", user: string = "", password: string = "",
+              host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30,
+              shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): MysqlConnections =
   var pools = newSeq[MysqlConnection](maxConnections)
   for i in 0..<maxConnections:
     let conn = mysql_rdb.init(nil)
@@ -31,5 +33,6 @@ proc mysqlOpen*(database: string = "", user: string = "", password: string = "",
   result = MysqlConnections(
     pools: pools,
     timeout: timeout,
-    info: info
+    info: info,
+    log: LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)
   )

@@ -1,6 +1,7 @@
 import std/asyncdispatch
 import std/strformat
-import ../../../query_builder
+import ../../../query_builder/models/postgres/postgres_connections
+import ../../../query_builder/models/postgres/postgres_query
 import ../../models/table
 import ./postgres_query_type
 

@@ -2,7 +2,7 @@ import std/json
 import std/sha1
 import ../../models/table
 import ../../models/column
-import ../schema_utils
+import ./schema_utils
 import ./postgres_query_type
 import ./sub/add_column_query
 

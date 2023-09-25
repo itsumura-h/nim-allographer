@@ -1,6 +1,7 @@
 import std/asyncdispatch
 import std/strformat
-import ../../../query_builder
+import ../../../query_builder/models/surreal/surreal_connections
+import ../../../query_builder/models/surreal/surreal_query
 import ../../models/table
 import ./surreal_query_type
 

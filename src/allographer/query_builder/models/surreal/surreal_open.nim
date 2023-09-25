@@ -5,12 +5,15 @@ import std/strformat
 import std/base64
 import std/strutils
 import std/times
-import ../../error
 import ../../libs/surreal/surreal_rdb
+import ../../error
+import ../../log
 import ./surreal_types
 
 
-proc surrealOpen*(namespace:string = "", database: string = "", user: string = "", password: string = "", host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30): Future[SurrealConnections] {.async.} =
+proc dbOpen*(_:type SurrealDB, namespace:string = "", database: string = "", user: string = "", password: string = "",
+              host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30,
+              shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): Future[SurrealConnections] {.async.} =
   var pools = newSeq[SurrealConnection](maxConnections)
   for i in 0..<maxConnections:
     let client = newAsyncHttpClient()
@@ -45,5 +48,6 @@ proc surrealOpen*(namespace:string = "", database: string = "", user: string = "
 
   return SurrealConnections(
     pools: pools,
-    timeout: timeout
+    timeout: timeout,
+    log: LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)
   )

@@ -3,7 +3,7 @@ import std/sha1
 import std/json
 import ../../models/table
 import ./sqlite_query_type
-import ../schema_utils
+import ./schema_utils
 
 
 proc renameTable*(self:SqliteSchema, isReset:bool) =

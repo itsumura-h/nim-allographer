@@ -6,7 +6,7 @@ import std/json
 import ../../enums
 import ../../models/table
 import ../../models/column
-import ../schema_utils
+import ./schema_utils
 import ./sqlite_query_type
 import ./sub/create_column_query
 

@@ -3,7 +3,7 @@ import std/json
 import ../../models/table
 import ../../models/column
 import ../../enums
-import ../schema_utils
+import ./schema_utils
 import ./postgres_query_type
 import ./sub/change_column_query
 

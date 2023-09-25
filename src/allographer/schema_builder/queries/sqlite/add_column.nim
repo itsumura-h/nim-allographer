@@ -4,7 +4,7 @@ import ../../models/table
 import ../../models/column
 import ./sqlite_query_type
 import ./sub/add_column_query
-import ../schema_utils
+import ./schema_utils
 
 
 # proc shouldRun(rdb:SqliteConnections, table:Table, column:Column, checksum:string, isReset:bool):bool =

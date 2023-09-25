@@ -8,7 +8,7 @@ import std/json
 import std/options
 import ../../src/allographer/schema_builder
 import ../../src/allographer/query_builder
-import ../connections
+import ./connection
 
 let rdb = mariadb
 

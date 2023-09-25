@@ -3,7 +3,7 @@ import std/sha1
 import std/json
 import ../../models/table
 import ../../models/column
-import ../schema_utils
+import ./schema_utils
 import ./mariadb_query_type
 
 

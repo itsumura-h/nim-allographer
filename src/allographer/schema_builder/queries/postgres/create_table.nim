@@ -8,7 +8,7 @@ import ../../models/table
 import ../../models/column
 import ./postgres_query_type
 import ./sub/create_column_query
-import ../schema_utils
+import ./schema_utils
 
 
 proc createTable*(self: PostgresSchema, isReset:bool) =
