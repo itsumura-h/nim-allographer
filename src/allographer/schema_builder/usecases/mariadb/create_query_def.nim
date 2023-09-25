@@ -1,8 +1,7 @@
-import ../../../env
-import ../../queries/schema_interface
 import ../../../query_builder/models/mariadb/mariadb_types
 import ../../queries/mariadb/mariadb_query_type
 import ../../queries/mariadb/mariadb_query_impl
+import ../../queries/schema_interface
 import ../../models/table
 import ../../models/column
 

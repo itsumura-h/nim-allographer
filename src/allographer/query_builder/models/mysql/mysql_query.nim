@@ -400,7 +400,6 @@ proc getFreeConn(self:MysqlConnections | MysqlQuery | RawMysqlQuery):Future[int]
       if not self.pools[i].isBusy:
         self.pools[i].isBusy = true
         return i
-        break
     await sleepAsync(10)
     if getTime().toUnix() >= calledAt + self.timeout:
       return errorConnectionNum

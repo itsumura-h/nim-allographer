@@ -402,7 +402,6 @@ proc getFreeConn(self:PostgresConnections | PostgresQuery | RawPostgresQuery):Fu
         self.pools[i].isBusy = true
         # echo "=== getFreeConn ", i
         return i
-        break
     await sleepAsync(10)
     if getTime().toUnix() >= calledAt + self.timeout:
       return errorConnectionNum

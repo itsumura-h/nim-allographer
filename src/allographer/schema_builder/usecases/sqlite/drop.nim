@@ -1,5 +1,4 @@
 import std/os
-import ../../../env
 import ../../../query_builder/models/sqlite/sqlite_types
 import ../../models/table
 import ../../enums

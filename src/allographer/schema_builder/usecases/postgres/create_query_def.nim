@@ -1,6 +1,5 @@
-import ../../../env
-import ../../queries/schema_interface
 import ../../../query_builder/models/postgres/postgres_types
+import ../../queries/schema_interface
 import ../../queries/postgres/postgres_query_type
 import ../../queries/postgres/postgres_query_impl
 import ../../models/table

@@ -1,5 +1,4 @@
 import std/os
-import ../../../env
 import ../../enums
 import ../../../query_builder/models/mysql/mysql_types
 import ../../models/table

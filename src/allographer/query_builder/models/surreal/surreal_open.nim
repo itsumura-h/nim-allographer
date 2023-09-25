@@ -3,7 +3,6 @@ import std/httpclient
 import std/httpcore
 import std/strformat
 import std/base64
-import std/strutils
 import std/times
 import ../../libs/surreal/surreal_rdb
 import ../../error

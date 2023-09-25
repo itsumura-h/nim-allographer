@@ -1,5 +1,4 @@
 import std/os
-import ../../../env
 import ../../../query_builder/models/mariadb/mariadb_types
 import ../../models/table
 import ../../models/column

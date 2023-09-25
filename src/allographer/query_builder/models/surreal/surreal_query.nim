@@ -428,7 +428,6 @@ proc getFreeConn(self:SurrealConnections | SurrealQuery | RawSurrealQuery):Futur
         self.pools[i].isBusy = true
         # echo "=== getFreeConn ", i
         return i
-        break
     await sleepAsync(10)
     if getTime().toUnix() >= calledAt + self.timeout:
       return errorConnectionNum

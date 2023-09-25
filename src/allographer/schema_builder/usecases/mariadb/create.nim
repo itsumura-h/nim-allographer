@@ -1,8 +1,7 @@
 import std/os
-import ../../../env
-import ../../enums
 import ../../../query_builder/models/mariadb/mariadb_types
 import ../../models/table
+import ../../enums
 import ../sub/migration_table_def
 import ./create_query_def
 

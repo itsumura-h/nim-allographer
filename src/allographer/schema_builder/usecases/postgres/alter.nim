@@ -1,5 +1,4 @@
 import std/os
-import ../../../env
 import ../../../query_builder/models/postgres/postgres_types
 import ../../models/table
 import ../../models/column
