@@ -1,0 +1,4 @@
+`$`	query_builder/models/mariadb/mariadb_connections.html#$	mariadb_connections: `$`(self: MariadbConnections | MariadbQuery): string	
+select	query_builder/models/mariadb/mariadb_connections.html#select,MariadbConnections,varargs[string]	mariadb_connections: select(self: MariadbConnections; columnsArg: varargs[string]): MariadbQuery	
+table	query_builder/models/mariadb/mariadb_connections.html#table,MariadbConnections,string	mariadb_connections: table(self: MariadbConnections; tableArg: string): MariadbQuery	
+raw	query_builder/models/mariadb/mariadb_connections.html#raw,MariadbConnections,string	mariadb_connections: raw(self: MariadbConnections; sql: string; arges = newJArray()): RawMariadbQuery	

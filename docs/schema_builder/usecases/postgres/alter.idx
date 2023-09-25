@@ -1,0 +1,1 @@
+alter	schema_builder/usecases/postgres/alter.html#alter,PostgresConnections,varargs[Table]	alter: alter(rdb: PostgresConnections; tables: varargs[Table])	

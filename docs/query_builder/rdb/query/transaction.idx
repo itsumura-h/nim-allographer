@@ -1,1 +1,0 @@
-transaction	query_builder/rdb/query/transaction.html#transaction.t,Rdb,untyped	transaction: transaction(rdb: Rdb; callback: untyped)	

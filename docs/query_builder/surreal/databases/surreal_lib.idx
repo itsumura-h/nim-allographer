@@ -1,2 +1,0 @@
-dbQuote	query_builder/surreal/databases/surreal_lib.html#dbQuote,string	surreal_lib: dbQuote(s: string): string	
-dbFormat	query_builder/surreal/databases/surreal_lib.html#dbFormat,string,varargs[string]	surreal_lib: dbFormat(formatstr: string; args: varargs[string]): string	

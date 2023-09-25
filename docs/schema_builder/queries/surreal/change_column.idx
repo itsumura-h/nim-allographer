@@ -1,1 +1,1 @@
-changeColumn	schema_builder/queries/surreal/change_column.html#changeColumn,SurrealQuery,bool	change_column: changeColumn(self: SurrealQuery; isReset: bool)	
+changeColumn	schema_builder/queries/surreal/change_column.html#changeColumn,SurrealSchema,bool	change_column: changeColumn(self: SurrealSchema; isReset: bool)	

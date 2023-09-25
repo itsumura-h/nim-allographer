@@ -1,0 +1,4 @@
+`$`	query_builder/models/mysql/mysql_connections.html#$	mysql_connections: `$`(self: MysqlConnections | MysqlQuery): string	
+select	query_builder/models/mysql/mysql_connections.html#select,MysqlConnections,varargs[string]	mysql_connections: select(self: MysqlConnections; columnsArg: varargs[string]): MysqlQuery	
+table	query_builder/models/mysql/mysql_connections.html#table,MysqlConnections,string	mysql_connections: table(self: MysqlConnections; tableArg: string): MysqlQuery	
+raw	query_builder/models/mysql/mysql_connections.html#raw,MysqlConnections,string	mysql_connections: raw(self: MysqlConnections; sql: string; arges = newJArray()): RawMysqlQuery	

@@ -1,0 +1,1 @@
+transaction	query_builder/models/mariadb/mariadb_transaction.html#transaction.t,MariadbConnections,untyped	mariadb_transaction: transaction(rdb: MariadbConnections; callback: untyped)	

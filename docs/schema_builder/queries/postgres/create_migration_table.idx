@@ -1,1 +1,1 @@
-createMigrationTable	schema_builder/queries/postgres/create_migration_table.html#createMigrationTable,PostgresQuery	create_migration_table: createMigrationTable(self: PostgresQuery)	
+createMigrationTable	schema_builder/queries/postgres/create_migration_table.html#createMigrationTable,PostgresSchema	create_migration_table: createMigrationTable(self: PostgresSchema)	

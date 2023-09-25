@@ -1,0 +1,7 @@
+dbError	query_builder/libs/mariadb/mariadb_lib.html#dbError,PMySQL	mariadb_lib: dbError(db: PMySQL)	
+setColumnInfo	query_builder/libs/mariadb/mariadb_lib.html#setColumnInfo,DbColumns,PRES,int	mariadb_lib: setColumnInfo(columns: var DbColumns; res: PRES; L: int)	
+dbFormat	query_builder/libs/mariadb/mariadb_lib.html#dbFormat,string,seq[string]	mariadb_lib: dbFormat(formatstr: string; args: seq[string]): string	
+MariadbParamValue	query_builder/libs/mariadb/mariadb_lib.html#MariadbParamValue	mariadb_lib: MariadbParamValue	
+MariadbParams	query_builder/libs/mariadb/mariadb_lib.html#MariadbParams	mariadb_lib: MariadbParams	
+fromObj	query_builder/libs/mariadb/mariadb_lib.html#fromObj,typeMariadbParams,JsonNode,seq[seq[string]]	mariadb_lib: fromObj(_: type MariadbParams; args: JsonNode; columns: seq[seq[string]]): MariadbParams	
+dbFormat	query_builder/libs/mariadb/mariadb_lib.html#dbFormat,PMySQL,string,MariadbParams	mariadb_lib: dbFormat(conn: PMySQL; query: string; args: MariadbParams): string	

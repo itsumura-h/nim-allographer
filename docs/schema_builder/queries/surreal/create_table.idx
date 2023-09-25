@@ -1,1 +1,1 @@
-createTable	schema_builder/queries/surreal/create_table.html#createTable,SurrealQuery,bool	create_table: createTable(self: SurrealQuery; isReset: bool)	
+createTable	schema_builder/queries/surreal/create_table.html#createTable,SurrealSchema,bool	create_table: createTable(self: SurrealSchema; isReset: bool)	

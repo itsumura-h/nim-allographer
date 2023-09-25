@@ -1,1 +1,0 @@
-alter	schema_builder/usecases/alter.html#alter,,varargs[Table]	alter: alter(rdb: Rdb | SurrealDb; tables: varargs[Table])	

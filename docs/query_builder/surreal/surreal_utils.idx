@@ -1,2 +1,0 @@
-quoteTable	query_builder/surreal/surreal_utils.html#quoteTable,string	surreal_utils: quoteTable(input: var string)	
-quoteColumn	query_builder/surreal/surreal_utils.html#quoteColumn,string	surreal_utils: quoteColumn(input: var string)	

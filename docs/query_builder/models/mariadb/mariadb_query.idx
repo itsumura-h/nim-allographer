@@ -1,0 +1,57 @@
+table	query_builder/models/mariadb/mariadb_query.html#table,MariadbQuery,string	mariadb_query: table(self: MariadbQuery; tableArg: string): MariadbQuery	
+`distinct`	query_builder/models/mariadb/mariadb_query.html#distinct,MariadbQuery	mariadb_query: `distinct`(self: MariadbQuery): MariadbQuery	
+join	query_builder/models/mariadb/mariadb_query.html#join,MariadbQuery,string,string,string,string	mariadb_query: join(self: MariadbQuery; table: string; column1: string; symbol: string;\n     column2: string): MariadbQuery	
+leftJoin	query_builder/models/mariadb/mariadb_query.html#leftJoin,MariadbQuery,string,string,string,string	mariadb_query: leftJoin(self: MariadbQuery; table: string; column1: string; symbol: string;\n         column2: string): MariadbQuery	
+where	query_builder/models/mariadb/mariadb_query.html#where,MariadbQuery,string,string,	mariadb_query: where(self: MariadbQuery; column: string; symbol: string;\n      value: string | int | float): MariadbQuery	
+where	query_builder/models/mariadb/mariadb_query.html#where,MariadbQuery,string,string,bool	mariadb_query: where(self: MariadbQuery; column: string; symbol: string; value: bool): MariadbQuery	
+where	query_builder/models/mariadb/mariadb_query.html#where,MariadbQuery,string,string,_2	mariadb_query: where(self: MariadbQuery; column: string; symbol: string; value: nil.type): MariadbQuery	
+orWhere	query_builder/models/mariadb/mariadb_query.html#orWhere,MariadbQuery,string,string,	mariadb_query: orWhere(self: MariadbQuery; column: string; symbol: string;\n        value: string | int | float | bool): MariadbQuery	
+orWhere	query_builder/models/mariadb/mariadb_query.html#orWhere,MariadbQuery,string,string,_2	mariadb_query: orWhere(self: MariadbQuery; column: string; symbol: string; value: nil.type): MariadbQuery	
+whereBetween	query_builder/models/mariadb/mariadb_query.html#whereBetween,MariadbQuery,string,array[,]	mariadb_query: whereBetween(self: MariadbQuery; column: string; width: array[2, int | float]): MariadbQuery	
+whereBetween	query_builder/models/mariadb/mariadb_query.html#whereBetween,MariadbQuery,string,array[,string]	mariadb_query: whereBetween(self: MariadbQuery; column: string; width: array[2, string]): MariadbQuery	
+whereNotBetween	query_builder/models/mariadb/mariadb_query.html#whereNotBetween,MariadbQuery,string,array[,]	mariadb_query: whereNotBetween(self: MariadbQuery; column: string; width: array[2, int | float]): MariadbQuery	
+whereNotBetween	query_builder/models/mariadb/mariadb_query.html#whereNotBetween,MariadbQuery,string,array[,string]	mariadb_query: whereNotBetween(self: MariadbQuery; column: string; width: array[2, string]): MariadbQuery	
+whereIn	query_builder/models/mariadb/mariadb_query.html#whereIn,MariadbQuery,string,seq[]	mariadb_query: whereIn(self: MariadbQuery; column: string; width: seq[int | float | string]): MariadbQuery	
+whereNotIn	query_builder/models/mariadb/mariadb_query.html#whereNotIn,MariadbQuery,string,seq[]	mariadb_query: whereNotIn(self: MariadbQuery; column: string; width: seq[int | float | string]): MariadbQuery	
+whereNull	query_builder/models/mariadb/mariadb_query.html#whereNull,MariadbQuery,string	mariadb_query: whereNull(self: MariadbQuery; column: string): MariadbQuery	
+groupBy	query_builder/models/mariadb/mariadb_query.html#groupBy,MariadbQuery,string	mariadb_query: groupBy(self: MariadbQuery; column: string): MariadbQuery	
+having	query_builder/models/mariadb/mariadb_query.html#having,MariadbQuery,string,string,	mariadb_query: having(self: MariadbQuery; column: string; symbol: string;\n       value: string | int | float | bool): MariadbQuery	
+having	query_builder/models/mariadb/mariadb_query.html#having,MariadbQuery,string,string,_2	mariadb_query: having(self: MariadbQuery; column: string; symbol: string; value: nil.type): MariadbQuery	
+orderBy	query_builder/models/mariadb/mariadb_query.html#orderBy,MariadbQuery,string,Order	mariadb_query: orderBy(self: MariadbQuery; column: string; order: Order): MariadbQuery	
+limit	query_builder/models/mariadb/mariadb_query.html#limit,MariadbQuery,int	mariadb_query: limit(self: MariadbQuery; num: int): MariadbQuery	
+offset	query_builder/models/mariadb/mariadb_query.html#offset,MariadbQuery,int	mariadb_query: offset(self: MariadbQuery; num: int): MariadbQuery	
+get	query_builder/models/mariadb/mariadb_query.html#get,MariadbQuery	mariadb_query: get(self: MariadbQuery): Future[seq[JsonNode]]	
+first	query_builder/models/mariadb/mariadb_query.html#first,MariadbQuery	mariadb_query: first(self: MariadbQuery): Future[Option[JsonNode]]	
+find	query_builder/models/mariadb/mariadb_query.html#find,MariadbQuery,string,string	mariadb_query: find(self: MariadbQuery; id: string; key = &quot;id&quot;): Future[Option[JsonNode]]	
+find	query_builder/models/mariadb/mariadb_query.html#find,MariadbQuery,int,string	mariadb_query: find(self: MariadbQuery; id: int; key = &quot;id&quot;): Future[Option[JsonNode]]	
+getPlain	query_builder/models/mariadb/mariadb_query.html#getPlain,MariadbQuery	mariadb_query: getPlain(self: MariadbQuery): Future[seq[seq[string]]]	
+firstPlain	query_builder/models/mariadb/mariadb_query.html#firstPlain,MariadbQuery	mariadb_query: firstPlain(self: MariadbQuery): Future[seq[string]]	
+findPlain	query_builder/models/mariadb/mariadb_query.html#findPlain,MariadbQuery,string,string	mariadb_query: findPlain(self: MariadbQuery; id: string; key = &quot;id&quot;): Future[seq[string]]	
+findPlain	query_builder/models/mariadb/mariadb_query.html#findPlain,MariadbQuery,int,string	mariadb_query: findPlain(self: MariadbQuery; id: int; key = &quot;id&quot;): Future[seq[string]]	
+get	query_builder/models/mariadb/mariadb_query.html#get,MariadbQuery,typedesc[T]	mariadb_query: get[T](self: MariadbQuery; typ: typedesc[T]): Future[seq[T]]	
+first	query_builder/models/mariadb/mariadb_query.html#first,MariadbQuery,typedesc[T]	mariadb_query: first[T](self: MariadbQuery; typ: typedesc[T]): Future[Option[T]]	
+find	query_builder/models/mariadb/mariadb_query.html#find,MariadbQuery,string,typedesc[T],string	mariadb_query: find[T](self: MariadbQuery; id: string; typ: typedesc[T]; key = &quot;id&quot;): Future[\n    Option[T]]	
+find	query_builder/models/mariadb/mariadb_query.html#find,MariadbQuery,int,typedesc[T],string	mariadb_query: find[T](self: MariadbQuery; id: int; typ: typedesc[T]; key = &quot;id&quot;): Future[\n    Option[T]]	
+insert	query_builder/models/mariadb/mariadb_query.html#insert,MariadbQuery,JsonNode	mariadb_query: insert(self: MariadbQuery; items: JsonNode): owned(Future[void])	
+insert	query_builder/models/mariadb/mariadb_query.html#insert,MariadbQuery,seq[JsonNode]	mariadb_query: insert(self: MariadbQuery; items: seq[JsonNode]): owned(Future[void])	
+insertId	query_builder/models/mariadb/mariadb_query.html#insertId,MariadbQuery,JsonNode,string	mariadb_query: insertId(self: MariadbQuery; items: JsonNode; key = &quot;id&quot;): Future[string]	
+insertId	query_builder/models/mariadb/mariadb_query.html#insertId,MariadbQuery,seq[JsonNode],string	mariadb_query: insertId(self: MariadbQuery; items: seq[JsonNode]; key = &quot;id&quot;): Future[\n    seq[string]]	
+update	query_builder/models/mariadb/mariadb_query.html#update,MariadbQuery,JsonNode	mariadb_query: update(self: MariadbQuery; items: JsonNode): owned(Future[void])	
+delete	query_builder/models/mariadb/mariadb_query.html#delete,MariadbQuery	mariadb_query: delete(self: MariadbQuery): owned(Future[void])	
+delete	query_builder/models/mariadb/mariadb_query.html#delete,MariadbQuery,int,string	mariadb_query: delete(self: MariadbQuery; id: int; key = &quot;id&quot;): owned(Future[void])	
+columns	query_builder/models/mariadb/mariadb_query.html#columns,MariadbQuery	mariadb_query: columns(self: MariadbQuery): Future[seq[string]]	
+count	query_builder/models/mariadb/mariadb_query.html#count,MariadbQuery	mariadb_query: count(self: MariadbQuery): Future[int]	
+min	query_builder/models/mariadb/mariadb_query.html#min,MariadbQuery,string	mariadb_query: min(self: MariadbQuery; column: string): Future[Option[string]]	
+max	query_builder/models/mariadb/mariadb_query.html#max,MariadbQuery,string	mariadb_query: max(self: MariadbQuery; column: string): Future[Option[string]]	
+avg	query_builder/models/mariadb/mariadb_query.html#avg,MariadbQuery,string	mariadb_query: avg(self: MariadbQuery; column: string): Future[Option[float]]	
+sum	query_builder/models/mariadb/mariadb_query.html#sum,MariadbQuery,string	mariadb_query: sum(self: MariadbQuery; column: string): Future[Option[float]]	
+begin	query_builder/models/mariadb/mariadb_query.html#begin,MariadbConnections	mariadb_query: begin(self: MariadbConnections): owned(Future[void])	
+rollback	query_builder/models/mariadb/mariadb_query.html#rollback,MariadbConnections	mariadb_query: rollback(self: MariadbConnections): owned(Future[void])	
+commit	query_builder/models/mariadb/mariadb_query.html#commit,MariadbConnections	mariadb_query: commit(self: MariadbConnections): owned(Future[void])	
+get	query_builder/models/mariadb/mariadb_query.html#get,RawMariadbQuery	mariadb_query: get(self: RawMariadbQuery): Future[seq[JsonNode]]	
+getPlain	query_builder/models/mariadb/mariadb_query.html#getPlain,RawMariadbQuery	mariadb_query: getPlain(self: RawMariadbQuery): Future[seq[seq[string]]]	
+exec	query_builder/models/mariadb/mariadb_query.html#exec,RawMariadbQuery	mariadb_query: exec(self: RawMariadbQuery): owned(Future[void])	
+first	query_builder/models/mariadb/mariadb_query.html#first,RawMariadbQuery	mariadb_query: first(self: RawMariadbQuery): Future[Option[JsonNode]]	
+firstPlain	query_builder/models/mariadb/mariadb_query.html#firstPlain,RawMariadbQuery	mariadb_query: firstPlain(self: RawMariadbQuery): Future[seq[string]]	
+seeder	query_builder/models/mariadb/mariadb_query.html#seeder.t,MariadbConnections,string,untyped	mariadb_query: seeder(rdb: MariadbConnections; tableName: string; body: untyped): untyped	
+seeder	query_builder/models/mariadb/mariadb_query.html#seeder.t,MariadbConnections,string,string,untyped	mariadb_query: seeder(rdb: MariadbConnections; tableName, column: string; body: untyped): untyped	

@@ -1,1 +1,1 @@
-changeColumn	schema_builder/queries/postgres/change_column.html#changeColumn,PostgresQuery,bool	change_column: changeColumn(self: PostgresQuery; isReset: bool)	
+changeColumn	schema_builder/queries/postgres/change_column.html#changeColumn,PostgresSchema,bool	change_column: changeColumn(self: PostgresSchema; isReset: bool)	

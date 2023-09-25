@@ -1,1 +1,1 @@
-dropColumn	schema_builder/queries/surreal/drop_column.html#dropColumn,SurrealQuery,bool	drop_column: dropColumn(self: SurrealQuery; isReset: bool)	
+dropColumn	schema_builder/queries/surreal/drop_column.html#dropColumn,SurrealSchema,bool	drop_column: dropColumn(self: SurrealSchema; isReset: bool)	

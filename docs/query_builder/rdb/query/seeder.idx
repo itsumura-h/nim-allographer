@@ -1,2 +1,0 @@
-seeder	query_builder/rdb/query/seeder.html#seeder.t,Rdb,string,untyped	seeder: seeder(rdb: Rdb; tableName: string; body: untyped): untyped	
-seeder	query_builder/rdb/query/seeder.html#seeder.t,Rdb,string,string,untyped	seeder: seeder(rdb: Rdb; tableName, column: string; body: untyped): untyped	

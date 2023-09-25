@@ -1,0 +1,4 @@
+`$`	query_builder/models/surreal/surreal_connections.html#$	surreal_connections: `$`(self: SurrealConnections | SurrealQuery): string	
+select	query_builder/models/surreal/surreal_connections.html#select,SurrealConnections,varargs[string]	surreal_connections: select(self: SurrealConnections; columnsArg: varargs[string]): SurrealQuery	
+table	query_builder/models/surreal/surreal_connections.html#table,SurrealConnections,string	surreal_connections: table(self: SurrealConnections; tableArg: string): SurrealQuery	
+raw	query_builder/models/surreal/surreal_connections.html#raw,SurrealConnections,string	surreal_connections: raw(self: SurrealConnections; sql: string; arges = newJArray()): RawSurrealQuery	

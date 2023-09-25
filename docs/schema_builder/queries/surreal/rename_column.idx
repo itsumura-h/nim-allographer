@@ -1,1 +1,1 @@
-renameColumn	schema_builder/queries/surreal/rename_column.html#renameColumn,SurrealQuery,bool	rename_column: renameColumn(self: SurrealQuery; isReset: bool)	
+renameColumn	schema_builder/queries/surreal/rename_column.html#renameColumn,SurrealSchema,bool	rename_column: renameColumn(self: SurrealSchema; isReset: bool)	
