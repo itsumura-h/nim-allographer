@@ -1,15 +1,15 @@
-import ../../../query_builder/rdb/rdb_types
+import ../../../query_builder/models/postgres/postgres_types
 import ../../models/table
 import ../../models/column
 
 
-type PostgresQuery* = ref object
-  rdb*:Rdb
+type PostgresSchema* = ref object
+  rdb*:PostgresConnections
   table*:Table
   column*:Column
 
-proc new*(_:type PostgresQuery, rdb:Rdb, table:Table):PostgresQuery =
-  return PostgresQuery(rdb:rdb, table:table)
+proc new*(_:type PostgresSchema, rdb:PostgresConnections, table:Table):PostgresSchema =
+  return PostgresSchema(rdb:rdb, table:table)
 
-proc new*(_:type PostgresQuery, rdb:Rdb, table:Table, column:Column):PostgresQuery =
-  return PostgresQuery(rdb:rdb, table:table, column:column)
+proc new*(_:type PostgresSchema, rdb:PostgresConnections, table:Table, column:Column):PostgresSchema =
+  return PostgresSchema(rdb:rdb, table:table, column:column)

@@ -1,0 +1,2 @@
+createSequenceTable	schema_builder/queries/surreal/create_sequence_table.html#createSequenceTable,SurrealConnections	create_sequence_table: createSequenceTable(rdb: SurrealConnections)	
+resetSequence	schema_builder/queries/surreal/create_sequence_table.html#resetSequence,SurrealConnections,Table	create_sequence_table: resetSequence(rdb: SurrealConnections; table: Table)	

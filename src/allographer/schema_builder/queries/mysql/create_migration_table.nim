@@ -1,13 +1,18 @@
+import std/asyncdispatch
 import std/strformat
+# import std/options
+# import std/json
+# import ../../../query_builder
 import ../../enums
 import ../../models/table
 import ../../models/column
-import ../query_utils
+import ./schema_utils
 import ./mysql_query_type
 import ./sub/create_column_query
+import ./sub/is_exists
 
 
-proc createMigrationTable*(self: MysqlQuery) =
+proc createMigrationTable*(self: MysqlSchema) =
   var queries:seq[string] = @[]
   var query = ""
   var foreignQuery = ""
@@ -21,7 +26,16 @@ proc createMigrationTable*(self: MysqlQuery) =
       foreignQuery.add(createForeignKey(self.table, column))
     
     if column.isIndex:
-      indexQuery.add(createIndexString(self.table, column))
+      let logDisplay = self.rdb.log.shouldDisplayLog
+      let logFile = self.rdb.log.shouldOutputLogFile
+      self.rdb.log.shouldDisplayLog = false
+      self.rdb.log.shouldOutputLogFile = false
+      defer:
+        self.rdb.log.shouldDisplayLog = logDisplay
+        self.rdb.log.shouldOutputLogFile = logFile
+
+      if not isExistsIndex(self.rdb, self.table, column).waitFor():
+        indexQuery.add(createIndexString(self.table, column))
 
   if foreignQuery.len > 0:
     queries.add(

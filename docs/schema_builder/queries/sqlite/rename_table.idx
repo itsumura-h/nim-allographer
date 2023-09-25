@@ -1,1 +1,1 @@
-renameTable	schema_builder/queries/sqlite/rename_table.html#renameTable,SqliteQuery,bool	rename_table: renameTable(self: SqliteQuery; isReset: bool)	
+renameTable	schema_builder/queries/sqlite/rename_table.html#renameTable,SqliteSchema,bool	rename_table: renameTable(self: SqliteSchema; isReset: bool)	

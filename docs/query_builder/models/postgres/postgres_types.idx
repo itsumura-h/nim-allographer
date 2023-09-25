@@ -1,0 +1,6 @@
+PostgreSQL	query_builder/models/postgres/postgres_types.html#PostgreSQL	postgres_types: PostgreSQL	
+PostgresConnection	query_builder/models/postgres/postgres_types.html#PostgresConnection	postgres_types: PostgresConnection	
+PostgresConnections	query_builder/models/postgres/postgres_types.html#PostgresConnections	postgres_types: PostgresConnections	
+`$`	query_builder/models/postgres/postgres_types.html#$,PostgresConnections	postgres_types: `$`(self: PostgresConnections): string	
+PostgresQuery	query_builder/models/postgres/postgres_types.html#PostgresQuery	postgres_types: PostgresQuery	
+RawPostgresQuery	query_builder/models/postgres/postgres_types.html#RawPostgresQuery	postgres_types: RawPostgresQuery	

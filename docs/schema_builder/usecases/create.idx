@@ -1,1 +1,0 @@
-create	schema_builder/usecases/create.html#create,,varargs[Table]	create: create(rdb: Rdb | SurrealDb; tables: varargs[Table])	

@@ -2,12 +2,12 @@ import std/json
 import std/sha1
 import ../../models/table
 import ../../models/column
-import ../query_utils
+import ./schema_utils
 import ./postgres_query_type
 import ./sub/add_column_query
 
 
-proc addColumn*(self:PostgresQuery, isReset:bool) =
+proc addColumn*(self:PostgresSchema, isReset:bool) =
   let queries = addColumnString(self.table, self.column)
   
   let schema = $self.column.toSchema()

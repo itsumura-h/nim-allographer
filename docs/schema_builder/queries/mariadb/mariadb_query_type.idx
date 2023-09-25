@@ -1,0 +1,3 @@
+MariadbSchema	schema_builder/queries/mariadb/mariadb_query_type.html#MariadbSchema	mariadb_query_type: MariadbSchema	
+new	schema_builder/queries/mariadb/mariadb_query_type.html#new,typeMariadbSchema,MariadbConnections,Table	mariadb_query_type: new(_: type MariadbSchema; rdb: MariadbConnections; table: Table): MariadbSchema	
+new	schema_builder/queries/mariadb/mariadb_query_type.html#new,typeMariadbSchema,MariadbConnections,Table,Column	mariadb_query_type: new(_: type MariadbSchema; rdb: MariadbConnections; table: Table; column: Column): MariadbSchema	

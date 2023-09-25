@@ -5,17 +5,19 @@ import std/json
 import std/strformat
 import std/strutils
 import std/re
-import ../../../../query_builder
-import ../../../enums
+import ../../../../query_builder/models/sqlite/sqlite_types
+import ../../../../query_builder/models/sqlite/sqlite_connections
+import ../../../../query_builder/models/sqlite/sqlite_query
 import ../../../models/table
 import ../../../models/column
-import ../../query_utils
+import ../../../enums
+import ../schema_utils
 import ./create_column_query
 
 # =============================================================================
 # int
 # =============================================================================
-proc addSerialColumn(rdb:Rdb, table:Table, column:Column, query:string):seq[string] =
+proc addSerialColumn(rdb:SqliteConnections, table:Table, column:Column, query:string):seq[string] =
   # get culumn definition
   let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '{table.name}'"
   var rows = rdb.raw(tableDifinitionSql).get.waitFor
@@ -358,7 +360,7 @@ proc addIndexColumn(column:Column, table:Table):string =
   return &"CREATE INDEX IF NOT EXISTS \"{table.name}_{column.name}_index\" ON \"{table.name}\"('{column.name}')"
 
 
-proc addColumnString*(rdb:Rdb, table:Table, column:Column):seq[string] =
+proc addColumnString*(rdb:SqliteConnections, table:Table, column:Column):seq[string] =
   var queries:seq[string]
   case column.typ
   of rdbIncrements:

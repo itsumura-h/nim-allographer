@@ -3,16 +3,17 @@ import std/strformat
 import std/re
 import std/sha1
 import std/json
-import ../../enums
-import ../../../query_builder
+import ../../../query_builder/models/sqlite/sqlite_connections
+import ../../../query_builder/models/sqlite/sqlite_query
 import ../../models/table
 import ../../models/column
-import ../query_utils
+import ../../enums
+import ./schema_utils
 import ./sqlite_query_type
 import ./sub/create_column_query
 
 
-proc changeColumn*(self:SqliteQuery, isReset:bool) =
+proc changeColumn*(self:SqliteSchema, isReset:bool) =
   ## - create tmp table with new column difinition
   ## - copy data from old table to tmp table
   ## - delete old table

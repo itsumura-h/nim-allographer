@@ -1,0 +1,2 @@
+resetMigrationTable	schema_builder/queries/mariadb/reset_table.html#resetMigrationTable,MariadbSchema	reset_table: resetMigrationTable(self: MariadbSchema)	
+resetTable	schema_builder/queries/mariadb/reset_table.html#resetTable,MariadbSchema	reset_table: resetTable(self: MariadbSchema)	

@@ -1,1 +1,1 @@
-createMigrationTable	schema_builder/queries/mysql/create_migration_table.html#createMigrationTable,MysqlQuery	create_migration_table: createMigrationTable(self: MysqlQuery)	
+createMigrationTable	schema_builder/queries/mysql/create_migration_table.html#createMigrationTable,MysqlSchema	create_migration_table: createMigrationTable(self: MysqlSchema)	

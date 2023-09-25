@@ -1,0 +1,1 @@
+transaction	query_builder/models/sqlite/sqlite_transaction.html#transaction.t,SqliteConnections,untyped	sqlite_transaction: transaction(rdb: SqliteConnections; callback: untyped)	

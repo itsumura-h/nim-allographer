@@ -3,12 +3,12 @@ import std/json
 import ../../models/table
 import ../../models/column
 import ../../enums
-import ../query_utils
+import ./schema_utils
 import ./postgres_query_type
 import ./sub/change_column_query
 
 
-proc changeColumn*(self:PostgresQuery, isReset:bool) =
+proc changeColumn*(self:PostgresSchema, isReset:bool) =
   var queries = changeColumnString(self.table, self.column)
   
   if self.column.isIndex and self.column.typ != rdbIncrements:

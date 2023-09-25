@@ -108,13 +108,13 @@ window.addEventListener('DOMContentLoaded', main);
   <a class="reference reference-toplevel" href="#12" id="62">Procs</a>
   <ul class="simple simple-toc-section">
       <ul class="simple nested-toc-section">resetMigrationTable
-      <li><a class="reference" href="#resetMigrationTable%2CMysqlQuery"
-    title="resetMigrationTable(self: MysqlQuery)">resetMigrationTable(self: MysqlQuery)</a></li>
+      <li><a class="reference" href="#resetMigrationTable%2CMysqlSchema"
+    title="resetMigrationTable(self: MysqlSchema)">resetMigrationTable(self: MysqlSchema)</a></li>
 
   </ul>
   <ul class="simple nested-toc-section">resetTable
-      <li><a class="reference" href="#resetTable%2CMysqlQuery"
-    title="resetTable(self: MysqlQuery)">resetTable(self: MysqlQuery)</a></li>
+      <li><a class="reference" href="#resetTable%2CMysqlSchema"
+    title="resetTable(self: MysqlSchema)">resetTable(self: MysqlSchema)</a></li>
 
   </ul>
 
@@ -132,13 +132,13 @@ window.addEventListener('DOMContentLoaded', main);
   <div class="section" id="6">
 <h1><a class="toc-backref" href="#6">Imports</a></h1>
 <dl class="item">
-<a class="reference external" href="../../../query_builder/rdb/rdb_interface.html">../../../query_builder/rdb/rdb_interface</a>, <a class="reference external" href="../../../query_builder/rdb/query/grammar.html">../../../query_builder/rdb/query/grammar</a>, <a class="reference external" href="../../models/table.html">../../models/table</a>, <a class="reference external" href="mysql_query_type.html">mysql_query_type</a>
+<a class="reference external" href="../../../query_builder/models/mysql/mysql_connections.html">../../../query_builder/models/mysql/mysql_connections</a>, <a class="reference external" href="../../../query_builder/models/mysql/mysql_query.html">../../../query_builder/models/mysql/mysql_query</a>, <a class="reference external" href="../../models/table.html">../../models/table</a>, <a class="reference external" href="mysql_query_type.html">mysql_query_type</a>
 </dl></div>
 <div class="section" id="12">
 <h1><a class="toc-backref" href="#12">Procs</a></h1>
 <dl class="item">
-<div id="resetMigrationTable,MysqlQuery">
-<dt><pre><span class="Keyword">proc</span> <a href="#resetMigrationTable%2CMysqlQuery"><span class="Identifier">resetMigrationTable</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mysql_query_type.html#MysqlQuery"><span class="Identifier">MysqlQuery</span></a><span class="Other">)</span> {.
+<div id="resetMigrationTable,MysqlSchema">
+<dt><pre><span class="Keyword">proc</span> <a href="#resetMigrationTable%2CMysqlSchema"><span class="Identifier">resetMigrationTable</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mysql_query_type.html#MysqlSchema"><span class="Identifier">MysqlSchema</span></a><span class="Other">)</span> {.
     <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
     <span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
@@ -147,8 +147,8 @@ window.addEventListener('DOMContentLoaded', main);
 
 </dd>
 </div>
-<div id="resetTable,MysqlQuery">
-<dt><pre><span class="Keyword">proc</span> <a href="#resetTable%2CMysqlQuery"><span class="Identifier">resetTable</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mysql_query_type.html#MysqlQuery"><span class="Identifier">MysqlQuery</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
+<div id="resetTable,MysqlSchema">
+<dt><pre><span class="Keyword">proc</span> <a href="#resetTable%2CMysqlSchema"><span class="Identifier">resetTable</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mysql_query_type.html#MysqlSchema"><span class="Identifier">MysqlSchema</span></a><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">,</span> <span class="Identifier">OSError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
     <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span>
     <span class="Identifier">WriteIOEffect</span><span class="Other">]</span></span>.}</pre></dt>
 <dd>
@@ -167,7 +167,7 @@ window.addEventListener('DOMContentLoaded', main);
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br/>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-07-17 06:29:39 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2023-09-25 03:39:47 UTC</small>
       </div>
     </div>
   </div>

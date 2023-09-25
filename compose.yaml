@@ -59,9 +59,10 @@ services:
   surreal:
     image: surrealdb/surrealdb:1.0.0-beta.9
     tty: true
-    # command: start --strict --log trace --user user --pass pass file://root/.surrealdb
-    command: start --strict --log debug --user user --pass pass memory
-    # command: start --log trace --user user --pass pass file://root/.surrealdb
+    # command: start --log TRACE --user user --pass pass memory # like redis
+    # command: start --log TRACE --user user --pass pass file://root/.surrealdb # like mongo
+    command: start --strict --log TRACE --user user --pass pass memory # like in-memory sqlite
+    # command: start --strict --log TRACE --user user --pass pass file://root/.surrealdb # like rdb
 
   adminer:
     image: adminer:4.8.1-standalone
@@ -82,3 +83,14 @@ services:
       - ./:/app
     depends_on:
       - app-ubuntu
+
+  phpmyadmin:
+    image: phpmyadmin
+    tty: true
+    environment:
+      - PMA_ARBITRARY=1
+    ports:
+      - "9004:80"
+    depends_on:
+      - mysql
+      - mariadb

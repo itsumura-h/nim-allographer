@@ -1,1 +1,1 @@
-dropTable	schema_builder/queries/postgres/drop_table.html#dropTable,PostgresQuery,bool	drop_table: dropTable(self: PostgresQuery; isReset: bool)	
+dropTable	schema_builder/queries/postgres/drop_table.html#dropTable,PostgresSchema,bool	drop_table: dropTable(self: PostgresSchema; isReset: bool)	

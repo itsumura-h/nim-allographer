@@ -1,0 +1,57 @@
+table	query_builder/models/sqlite/sqlite_query.html#table,SqliteQuery,string	sqlite_query: table(self: SqliteQuery; tableArg: string): SqliteQuery	
+`distinct`	query_builder/models/sqlite/sqlite_query.html#distinct,SqliteQuery	sqlite_query: `distinct`(self: SqliteQuery): SqliteQuery	
+join	query_builder/models/sqlite/sqlite_query.html#join,SqliteQuery,string,string,string,string	sqlite_query: join(self: SqliteQuery; table: string; column1: string; symbol: string;\n     column2: string): SqliteQuery	
+leftJoin	query_builder/models/sqlite/sqlite_query.html#leftJoin,SqliteQuery,string,string,string,string	sqlite_query: leftJoin(self: SqliteQuery; table: string; column1: string; symbol: string;\n         column2: string): SqliteQuery	
+where	query_builder/models/sqlite/sqlite_query.html#where,SqliteQuery,string,string,	sqlite_query: where(self: SqliteQuery; column: string; symbol: string;\n      value: string | int | float): SqliteQuery	
+where	query_builder/models/sqlite/sqlite_query.html#where,SqliteQuery,string,string,bool	sqlite_query: where(self: SqliteQuery; column: string; symbol: string; value: bool): SqliteQuery	
+where	query_builder/models/sqlite/sqlite_query.html#where,SqliteQuery,string,string,_2	sqlite_query: where(self: SqliteQuery; column: string; symbol: string; value: nil.type): SqliteQuery	
+orWhere	query_builder/models/sqlite/sqlite_query.html#orWhere,SqliteQuery,string,string,	sqlite_query: orWhere(self: SqliteQuery; column: string; symbol: string;\n        value: string | int | float | bool): SqliteQuery	
+orWhere	query_builder/models/sqlite/sqlite_query.html#orWhere,SqliteQuery,string,string,_2	sqlite_query: orWhere(self: SqliteQuery; column: string; symbol: string; value: nil.type): SqliteQuery	
+whereBetween	query_builder/models/sqlite/sqlite_query.html#whereBetween,SqliteQuery,string,array[,]	sqlite_query: whereBetween(self: SqliteQuery; column: string; width: array[2, int | float]): SqliteQuery	
+whereBetween	query_builder/models/sqlite/sqlite_query.html#whereBetween,SqliteQuery,string,array[,string]	sqlite_query: whereBetween(self: SqliteQuery; column: string; width: array[2, string]): SqliteQuery	
+whereNotBetween	query_builder/models/sqlite/sqlite_query.html#whereNotBetween,SqliteQuery,string,array[,]	sqlite_query: whereNotBetween(self: SqliteQuery; column: string; width: array[2, int | float]): SqliteQuery	
+whereNotBetween	query_builder/models/sqlite/sqlite_query.html#whereNotBetween,SqliteQuery,string,array[,string]	sqlite_query: whereNotBetween(self: SqliteQuery; column: string; width: array[2, string]): SqliteQuery	
+whereIn	query_builder/models/sqlite/sqlite_query.html#whereIn,SqliteQuery,string,seq[]	sqlite_query: whereIn(self: SqliteQuery; column: string; width: seq[int | float | string]): SqliteQuery	
+whereNotIn	query_builder/models/sqlite/sqlite_query.html#whereNotIn,SqliteQuery,string,seq[]	sqlite_query: whereNotIn(self: SqliteQuery; column: string; width: seq[int | float | string]): SqliteQuery	
+whereNull	query_builder/models/sqlite/sqlite_query.html#whereNull,SqliteQuery,string	sqlite_query: whereNull(self: SqliteQuery; column: string): SqliteQuery	
+groupBy	query_builder/models/sqlite/sqlite_query.html#groupBy,SqliteQuery,string	sqlite_query: groupBy(self: SqliteQuery; column: string): SqliteQuery	
+having	query_builder/models/sqlite/sqlite_query.html#having,SqliteQuery,string,string,	sqlite_query: having(self: SqliteQuery; column: string; symbol: string;\n       value: string | int | float | bool): SqliteQuery	
+having	query_builder/models/sqlite/sqlite_query.html#having,SqliteQuery,string,string,_2	sqlite_query: having(self: SqliteQuery; column: string; symbol: string; value: nil.type): SqliteQuery	
+orderBy	query_builder/models/sqlite/sqlite_query.html#orderBy,SqliteQuery,string,Order	sqlite_query: orderBy(self: SqliteQuery; column: string; order: Order): SqliteQuery	
+limit	query_builder/models/sqlite/sqlite_query.html#limit,SqliteQuery,int	sqlite_query: limit(self: SqliteQuery; num: int): SqliteQuery	
+offset	query_builder/models/sqlite/sqlite_query.html#offset,SqliteQuery,int	sqlite_query: offset(self: SqliteQuery; num: int): SqliteQuery	
+get	query_builder/models/sqlite/sqlite_query.html#get,SqliteQuery	sqlite_query: get(self: SqliteQuery): Future[seq[JsonNode]]	
+first	query_builder/models/sqlite/sqlite_query.html#first,SqliteQuery	sqlite_query: first(self: SqliteQuery): Future[Option[JsonNode]]	
+find	query_builder/models/sqlite/sqlite_query.html#find,SqliteQuery,string,string	sqlite_query: find(self: SqliteQuery; id: string; key = &quot;id&quot;): Future[Option[JsonNode]]	
+find	query_builder/models/sqlite/sqlite_query.html#find,SqliteQuery,int,string	sqlite_query: find(self: SqliteQuery; id: int; key = &quot;id&quot;): Future[Option[JsonNode]]	
+getPlain	query_builder/models/sqlite/sqlite_query.html#getPlain,SqliteQuery	sqlite_query: getPlain(self: SqliteQuery): Future[seq[seq[string]]]	
+firstPlain	query_builder/models/sqlite/sqlite_query.html#firstPlain,SqliteQuery	sqlite_query: firstPlain(self: SqliteQuery): Future[seq[string]]	
+findPlain	query_builder/models/sqlite/sqlite_query.html#findPlain,SqliteQuery,string,string	sqlite_query: findPlain(self: SqliteQuery; id: string; key = &quot;id&quot;): Future[seq[string]]	
+findPlain	query_builder/models/sqlite/sqlite_query.html#findPlain,SqliteQuery,int,string	sqlite_query: findPlain(self: SqliteQuery; id: int; key = &quot;id&quot;): Future[seq[string]]	
+get	query_builder/models/sqlite/sqlite_query.html#get,SqliteQuery,typedesc[T]	sqlite_query: get[T](self: SqliteQuery; typ: typedesc[T]): Future[seq[T]]	
+first	query_builder/models/sqlite/sqlite_query.html#first,SqliteQuery,typedesc[T]	sqlite_query: first[T](self: SqliteQuery; typ: typedesc[T]): Future[Option[T]]	
+find	query_builder/models/sqlite/sqlite_query.html#find,SqliteQuery,string,typedesc[T],string	sqlite_query: find[T](self: SqliteQuery; id: string; typ: typedesc[T]; key = &quot;id&quot;): Future[\n    Option[T]]	
+find	query_builder/models/sqlite/sqlite_query.html#find,SqliteQuery,int,typedesc[T],string	sqlite_query: find[T](self: SqliteQuery; id: int; typ: typedesc[T]; key = &quot;id&quot;): Future[\n    Option[T]]	
+insert	query_builder/models/sqlite/sqlite_query.html#insert,SqliteQuery,JsonNode	sqlite_query: insert(self: SqliteQuery; items: JsonNode): owned(Future[void])	
+insert	query_builder/models/sqlite/sqlite_query.html#insert,SqliteQuery,seq[JsonNode]	sqlite_query: insert(self: SqliteQuery; items: seq[JsonNode]): owned(Future[void])	
+insertId	query_builder/models/sqlite/sqlite_query.html#insertId,SqliteQuery,JsonNode,string	sqlite_query: insertId(self: SqliteQuery; items: JsonNode; key = &quot;id&quot;): Future[string]	
+insertId	query_builder/models/sqlite/sqlite_query.html#insertId,SqliteQuery,seq[JsonNode],string	sqlite_query: insertId(self: SqliteQuery; items: seq[JsonNode]; key = &quot;id&quot;): Future[\n    seq[string]]	
+update	query_builder/models/sqlite/sqlite_query.html#update,SqliteQuery,JsonNode	sqlite_query: update(self: SqliteQuery; items: JsonNode): owned(Future[void])	
+delete	query_builder/models/sqlite/sqlite_query.html#delete,SqliteQuery	sqlite_query: delete(self: SqliteQuery): owned(Future[void])	
+delete	query_builder/models/sqlite/sqlite_query.html#delete,SqliteQuery,int,string	sqlite_query: delete(self: SqliteQuery; id: int; key = &quot;id&quot;): owned(Future[void])	
+columns	query_builder/models/sqlite/sqlite_query.html#columns,SqliteQuery	sqlite_query: columns(self: SqliteQuery): Future[seq[string]]	
+count	query_builder/models/sqlite/sqlite_query.html#count,SqliteQuery	sqlite_query: count(self: SqliteQuery): Future[int]	
+min	query_builder/models/sqlite/sqlite_query.html#min,SqliteQuery,string	sqlite_query: min(self: SqliteQuery; column: string): Future[Option[string]]	
+max	query_builder/models/sqlite/sqlite_query.html#max,SqliteQuery,string	sqlite_query: max(self: SqliteQuery; column: string): Future[Option[string]]	
+avg	query_builder/models/sqlite/sqlite_query.html#avg,SqliteQuery,string	sqlite_query: avg(self: SqliteQuery; column: string): Future[Option[float]]	
+sum	query_builder/models/sqlite/sqlite_query.html#sum,SqliteQuery,string	sqlite_query: sum(self: SqliteQuery; column: string): Future[Option[float]]	
+begin	query_builder/models/sqlite/sqlite_query.html#begin,SqliteConnections	sqlite_query: begin(self: SqliteConnections): owned(Future[void])	
+rollback	query_builder/models/sqlite/sqlite_query.html#rollback,SqliteConnections	sqlite_query: rollback(self: SqliteConnections): owned(Future[void])	
+commit	query_builder/models/sqlite/sqlite_query.html#commit,SqliteConnections	sqlite_query: commit(self: SqliteConnections): owned(Future[void])	
+get	query_builder/models/sqlite/sqlite_query.html#get,RawSqliteQuery	sqlite_query: get(self: RawSqliteQuery): Future[seq[JsonNode]]	
+getPlain	query_builder/models/sqlite/sqlite_query.html#getPlain,RawSqliteQuery	sqlite_query: getPlain(self: RawSqliteQuery): Future[seq[seq[string]]]	
+exec	query_builder/models/sqlite/sqlite_query.html#exec,RawSqliteQuery	sqlite_query: exec(self: RawSqliteQuery): owned(Future[void])	
+first	query_builder/models/sqlite/sqlite_query.html#first,RawSqliteQuery	sqlite_query: first(self: RawSqliteQuery): Future[Option[JsonNode]]	
+firstPlain	query_builder/models/sqlite/sqlite_query.html#firstPlain,RawSqliteQuery	sqlite_query: firstPlain(self: RawSqliteQuery): Future[seq[string]]	
+seeder	query_builder/models/sqlite/sqlite_query.html#seeder.t,SqliteConnections,string,untyped	sqlite_query: seeder(rdb: SqliteConnections; tableName: string; body: untyped): untyped	
+seeder	query_builder/models/sqlite/sqlite_query.html#seeder.t,SqliteConnections,string,string,untyped	sqlite_query: seeder(rdb: SqliteConnections; tableName, column: string; body: untyped): untyped	

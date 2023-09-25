@@ -3,8 +3,11 @@ import std/strformat
 import ../../../enums
 import ../../../models/table
 import ../../../models/column
-import ../../query_utils
+import ../schema_utils
 
+
+## In MySQL, BLOB, TEXT, GEOMETRY or JSON column can't have a default value.
+## BLOB/TEXT column caughn't use in key specification without a key length.
 
 # =============================================================================
 # int
@@ -187,11 +190,13 @@ proc createTextColumn(column:Column):string =
     notAllowedOption("unsigned", "text", column.name)
 
   if column.isUnique:
-    # notAllowedOption("unique", "text", column.name)
-    result.add(" UNIQUE")
+    notAllowedOption("unique", "text", column.name)
 
   if column.isDefault:
-    result.add(&" DEFAULT '{column.defaultString}'")
+    notAllowedOption("default", "text", column.name)
+
+  if column.isIndex:
+    notAllowedOption("index", "text", column.name)
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -204,11 +209,13 @@ proc createMediumTextColumn(column:Column):string =
     notAllowedOption("unsigned", "medium text", column.name)
 
   if column.isUnique:
-    result.add(" UNIQUE")
-    # notAllowedOption("unique", "medium text", column.name)
+    notAllowedOption("unique", "medium text", column.name)
 
   if column.isDefault:
-    result.add(&" DEFAULT '{column.defaultString}'")
+    notAllowedOption("default", "text", column.name)
+
+  if column.isIndex:
+    notAllowedOption("index", "text", column.name)
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -221,11 +228,13 @@ proc createLongTextColumn(column:Column):string =
     notAllowedOption("unsigned", "long text", column.name)
 
   if column.isUnique:
-    result.add(" UNIQUE")
-    # notAllowedOption("unique", "long text", column.name)
+    notAllowedOption("unique", "long text", column.name)
 
   if column.isDefault:
-    result.add(&" DEFAULT '{column.defaultString}'")
+    notAllowedOption("default", "text", column.name)
+
+  if column.isIndex:
+    notAllowedOption("index", "text", column.name)
 
   if not column.isNullable:
     result.add(" NOT NULL")
@@ -317,11 +326,13 @@ proc createBlobColumn(column:Column):string =
     notAllowedOption("unsigned", "blob", column.name)
 
   if column.isUnique:
-    result.add(" UNIQUE")
-    # notAllowedOption("unique", "blob", column.name)
+    notAllowedOption("unique", "blob", column.name)
 
   if column.isDefault:
-    result.add(&" DEFAULT '{column.defaultString}'")
+    notAllowedOption("default", "binary", column.name)
+
+  if column.isIndex:
+    notAllowedOption("index", "binary", column.name)
 
   if not column.isNullable:
       result.add(" NOT NULL")
@@ -382,15 +393,16 @@ proc createJsonColumn(column:Column):string =
     notAllowedOption("unsigned", "json", column.name)
 
   if column.isUnique:
-    result.add(" UNIQUE")
-    # notAllowedOption("unique", "json", column.name)
+    notAllowedOption("unique", "json", column.name)
 
   if not column.isNullable:
     result.add(" NOT NULL")
 
   if column.isDefault:
-    result.add(&" DEFAULT '{column.defaultJson.pretty}'")
-    # notAllowedOption("default value", "json", column.name)
+    notAllowedOption("default", "json", column.name)
+
+  if column.isIndex:
+    notAllowedOption("index", "json", column.name)
 
 
 # =============================================================================
@@ -451,7 +463,7 @@ proc alterAddForeignKey*(column:Column, table:Table):string =
 #   return &"ALTER TABLE `{table.name}` DROP FOREIGN KEY `{constraintName}`"
 
 proc createIndexString*(table:Table, column:Column):string =
-  return &"CREATE INDEX IF NOT EXISTS `{table.name}_{column.name}_index` ON `{table.name}`(`{column.name}`)"
+  return &"CREATE INDEX `{table.name}_{column.name}_index` ON `{table.name}`(`{column.name}`)"
 
 
 proc createColumnString*(table:Table, column:Column):string =

@@ -42,7 +42,7 @@ proc setUp(rdb:Rdb) =
       insertData.add(
         %*{
           "name": &"user{i}",
-          "email": &"user{i}@gmail.com",
+          "email": &"user{i}@example.com",
           "auth_id": authId
         }
       )

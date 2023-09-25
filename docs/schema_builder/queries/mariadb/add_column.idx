@@ -1,0 +1,1 @@
+addColumn	schema_builder/queries/mariadb/add_column.html#addColumn,MariadbSchema,bool	add_column: addColumn(self: MariadbSchema; isReset: bool)	

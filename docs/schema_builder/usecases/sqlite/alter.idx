@@ -1,0 +1,1 @@
+alter	schema_builder/usecases/sqlite/alter.html#alter,SqliteConnections,varargs[Table]	alter: alter(rdb: SqliteConnections; tables: varargs[Table])	

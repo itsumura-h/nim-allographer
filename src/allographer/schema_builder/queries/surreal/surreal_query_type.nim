@@ -1,15 +1,15 @@
-import ../../../query_builder/surreal/surreal_types
+import ../../../query_builder/models/surreal/surreal_types
 import ../../models/table
 import ../../models/column
 
 
-type SurrealQuery* = ref object
-  rdb*:SurrealDb
+type SurrealSchema* = ref object
+  rdb*:SurrealConnections
   table*:Table
   column*:Column
 
-proc new*(_:type SurrealQuery, rdb:SurrealDb, table:Table):SurrealQuery =
-  return SurrealQuery(rdb:rdb, table:table)
+proc new*(_:type SurrealSchema, rdb:SurrealConnections, table:Table):SurrealSchema =
+  return SurrealSchema(rdb:rdb, table:table)
 
-proc new*(_:type SurrealQuery, rdb:SurrealDb, table:Table, column:Column):SurrealQuery =
-  return SurrealQuery(rdb:rdb, table:table, column:column)
+proc new*(_:type SurrealSchema, rdb:SurrealConnections, table:Table, column:Column):SurrealSchema =
+  return SurrealSchema(rdb:rdb, table:table, column:column)

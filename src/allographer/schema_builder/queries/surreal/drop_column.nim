@@ -3,11 +3,11 @@ import std/strformat
 import std/sha1
 import ../../models/table
 import ../../models/column
-import ../query_utils
+import ./schema_utils
 import ./surreal_query_type
 
 
-proc dropColumn*(self:SurrealQuery, isReset:bool) =
+proc dropColumn*(self:SurrealSchema, isReset:bool) =
   let query = &"REMOVE FIELD `{self.column.name}` ON TABLE `{self.table.name}`"
   let schema = $self.column.toSchema()
   let checksum = $schema.secureHash()

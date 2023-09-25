@@ -1,12 +1,13 @@
 import std/asyncdispatch
 import std/strformat
-import ../../../query_builder/rdb/rdb_interface
-import ../../../query_builder/rdb/query/grammar
+import ../../../query_builder/models/postgres/postgres_connections
+import ../../../query_builder/models/postgres/postgres_query
 import ../../models/table
 import ./postgres_query_type
 
-proc resetMigrationTable*(self:PostgresQuery) =
-  self.rdb.table("_migrations").where("name", "=", self.table.name).delete.waitFor
 
-proc resetTable*(self:PostgresQuery) =
+proc resetMigrationTable*(self:PostgresSchema) =
+  self.rdb.table("_allographer_migrations").where("name", "=", self.table.name).delete.waitFor
+
+proc resetTable*(self:PostgresSchema) =
   self.rdb.raw(&"DROP TABLE IF EXISTS \"{self.table.name}\"").exec.waitFor

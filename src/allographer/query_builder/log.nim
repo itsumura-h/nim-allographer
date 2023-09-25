@@ -12,8 +12,9 @@ type
     shouldOutputLogFile*: bool
     logDir*: string
 
-proc logger*(self:LogSetting, output: auto, args:varargs[string]) =
-  let msg = $output & " " & $args
+proc logger*(self:LogSetting, output: auto) =
+  # let msg = $output & " " & $args
+  let msg = $output
   # console log
   if self.shouldDisplayLog:
     let logger = newConsoleLogger()

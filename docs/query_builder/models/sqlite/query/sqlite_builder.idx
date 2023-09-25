@@ -1,0 +1,14 @@
+selectBuilder	query_builder/models/sqlite/query/sqlite_builder.html#selectBuilder,SqliteQuery	sqlite_builder: selectBuilder(self: SqliteQuery): string	
+selectFirstBuilder	query_builder/models/sqlite/query/sqlite_builder.html#selectFirstBuilder,SqliteQuery	sqlite_builder: selectFirstBuilder(self: SqliteQuery): string	
+selectFindBuilder	query_builder/models/sqlite/query/sqlite_builder.html#selectFindBuilder,SqliteQuery,string	sqlite_builder: selectFindBuilder(self: SqliteQuery; key: string): string	
+insertValueBuilder	query_builder/models/sqlite/query/sqlite_builder.html#insertValueBuilder,SqliteQuery,JsonNode	sqlite_builder: insertValueBuilder(self: SqliteQuery; items: JsonNode): string	
+insertValuesBuilder	query_builder/models/sqlite/query/sqlite_builder.html#insertValuesBuilder,SqliteQuery,openArray[JsonNode]	sqlite_builder: insertValuesBuilder(self: SqliteQuery; rows: openArray[JsonNode]): string	
+updateBuilder	query_builder/models/sqlite/query/sqlite_builder.html#updateBuilder,SqliteQuery,JsonNode	sqlite_builder: updateBuilder(self: SqliteQuery; items: JsonNode): string	
+deleteBuilder	query_builder/models/sqlite/query/sqlite_builder.html#deleteBuilder,SqliteQuery	sqlite_builder: deleteBuilder(self: SqliteQuery): string	
+deleteByIdBuilder	query_builder/models/sqlite/query/sqlite_builder.html#deleteByIdBuilder,SqliteQuery,int,string	sqlite_builder: deleteByIdBuilder(self: SqliteQuery; id: int; key: string): string	
+countBuilder	query_builder/models/sqlite/query/sqlite_builder.html#countBuilder,SqliteQuery	sqlite_builder: countBuilder(self: SqliteQuery): string	
+maxBuilder	query_builder/models/sqlite/query/sqlite_builder.html#maxBuilder,SqliteQuery,string	sqlite_builder: maxBuilder(self: SqliteQuery; column: string): string	
+minBuilder	query_builder/models/sqlite/query/sqlite_builder.html#minBuilder,SqliteQuery,string	sqlite_builder: minBuilder(self: SqliteQuery; column: string): string	
+avgBuilder	query_builder/models/sqlite/query/sqlite_builder.html#avgBuilder,SqliteQuery,string	sqlite_builder: avgBuilder(self: SqliteQuery; column: string): string	
+sumBuilder	query_builder/models/sqlite/query/sqlite_builder.html#sumBuilder,SqliteQuery,string	sqlite_builder: sumBuilder(self: SqliteQuery; column: string): string	
+columnBuilder	query_builder/models/sqlite/query/sqlite_builder.html#columnBuilder,SqliteQuery	sqlite_builder: columnBuilder(self: SqliteQuery): string	

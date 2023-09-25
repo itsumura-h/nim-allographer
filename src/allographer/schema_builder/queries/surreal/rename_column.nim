@@ -4,11 +4,11 @@ import std/strformat
 # import std/json
 # import ../../models/table
 # import ../../models/column
-# import ../query_utils
+# import ./schema_utils
 import ./surreal_query_type
 
 
-proc renameColumn*(self:SurrealQuery, isReset:bool) =
+proc renameColumn*(self:SurrealSchema, isReset:bool) =
   ## SurrealDB not support rename column field
   ## 
   ## https://github.com/surrealdb/surrealdb/issues/1615

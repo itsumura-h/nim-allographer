@@ -1,0 +1,1 @@
+createTable	schema_builder/queries/mariadb/create_table.html#createTable,MariadbSchema,bool	create_table: createTable(self: MariadbSchema; isReset: bool)	

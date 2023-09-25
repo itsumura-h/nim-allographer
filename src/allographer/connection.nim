@@ -1,30 +1,22 @@
-import std/asyncdispatch
-import std/json
-import ./query_builder/log
-import ./query_builder/rdb/rdb_types
-import ./query_builder/rdb/query/exec
-import ./query_builder/surreal/surreal_types
-import ./query_builder/surreal/databases/surreal_impl
+import ./env
 
-export
-  Driver,
-  SurrealDb
 
-proc dbOpen*(driver:Driver, database="", user="", password="",
-            host="", port=0, maxConnections=1, timeout=30,
-            shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""):Rdb =
-  result = new Rdb
-  result.driver = driver
-  result.conn = open(driver, database, user, password, host, port, maxConnections, timeout)
-  result.log = LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)
-  result.query = newJObject()
-  result.isInTransaction = false
+when isExistsSqlite:
+  import ./query_builder/models/sqlite/sqlite_types; export SQLite3
+  import ./query_builder/models/sqlite/sqlite_open; export sqlite_open
 
-proc dbOpen*(_:type SurrealDb, namespace="", database="", user="", password="",
-            host="", port=0, maxConnections=1, timeout=30,
-            shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""):Future[SurrealDb] {.async.} =
-  result = new SurrealDb
-  result.conn = await SurrealImpl.open(namespace, database, user, password, host, port.int32, maxConnections, timeout)
-  result.log = LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)
-  result.query = newJObject()
-  result.isInTransaction = false
+when isExistsPostgres:
+  import ./query_builder/models/postgres/postgres_types; export PostgreSQL
+  import ./query_builder/models/postgres/postgres_open; export postgres_open
+
+when isExistsMariadb:
+  import ./query_builder/models/mariadb/mariadb_types; export MariaDB
+  import ./query_builder/models/mariadb/mariadb_open; export mariadb_open
+
+when isExistsMysql:
+  import ./query_builder/models/mysql/mysql_types; export MySql
+  import ./query_builder/models/mysql/mysql_open; export mysql_open
+
+when isExistsSurrealdb:
+  import ./query_builder/models/surreal/surreal_types; export SurrealDB
+  import ./query_builder/models/surreal/surreal_open; export surreal_open

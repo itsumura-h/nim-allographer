@@ -1,0 +1,12 @@
+selectBuilder	query_builder/models/surreal/query/surreal_builder.html#selectBuilder,SurrealQuery	surreal_builder: selectBuilder(self: SurrealQuery): string	
+selectFirstBuilder	query_builder/models/surreal/query/surreal_builder.html#selectFirstBuilder,SurrealQuery	surreal_builder: selectFirstBuilder(self: SurrealQuery): string	
+selectFindBuilder	query_builder/models/surreal/query/surreal_builder.html#selectFindBuilder,SurrealQuery,SurrealId,string	surreal_builder: selectFindBuilder(self: SurrealQuery; id: SurrealId; key: string): string	
+insertValueBuilder	query_builder/models/surreal/query/surreal_builder.html#insertValueBuilder,SurrealQuery,JsonNode	surreal_builder: insertValueBuilder(self: SurrealQuery; items: JsonNode): string	
+insertValuesBuilder	query_builder/models/surreal/query/surreal_builder.html#insertValuesBuilder,SurrealQuery,openArray[JsonNode]	surreal_builder: insertValuesBuilder(self: SurrealQuery; items: openArray[JsonNode]): string	
+updateBuilder	query_builder/models/surreal/query/surreal_builder.html#updateBuilder,SurrealQuery,JsonNode	surreal_builder: updateBuilder(self: SurrealQuery; items: JsonNode): string	
+updateMergeBuilder	query_builder/models/surreal/query/surreal_builder.html#updateMergeBuilder,SurrealQuery,string,JsonNode	surreal_builder: updateMergeBuilder(self: SurrealQuery; id: string; items: JsonNode): string	
+deleteBuilder	query_builder/models/surreal/query/surreal_builder.html#deleteBuilder,SurrealQuery	surreal_builder: deleteBuilder(self: SurrealQuery): string	
+deleteByIdBuilder	query_builder/models/surreal/query/surreal_builder.html#deleteByIdBuilder,SurrealQuery,string	surreal_builder: deleteByIdBuilder(self: SurrealQuery; id: string): string	
+countBuilder	query_builder/models/surreal/query/surreal_builder.html#countBuilder,SurrealQuery	surreal_builder: countBuilder(self: SurrealQuery): string	
+selectAvgBuilder	query_builder/models/surreal/query/surreal_builder.html#selectAvgBuilder,SurrealQuery,string	surreal_builder: selectAvgBuilder(self: SurrealQuery; column: string): string	
+selectSumBuilder	query_builder/models/surreal/query/surreal_builder.html#selectSumBuilder,SurrealQuery,string	surreal_builder: selectSumBuilder(self: SurrealQuery; column: string): string	

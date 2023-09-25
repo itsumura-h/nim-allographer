@@ -6,12 +6,12 @@ import std/json
 import ../../enums
 import ../../models/table
 import ../../models/column
-import ../query_utils
+import ./schema_utils
 import ./sqlite_query_type
 import ./sub/create_column_query
 
 
-proc createTable*(self: SqliteQuery, isReset:bool) =
+proc createTable*(self: SqliteSchema, isReset:bool) =
   var queries:seq[string] = @[]
   var query = ""
   var foreignQuery = ""

@@ -4,10 +4,10 @@ import ../../models/table
 import ../../models/column
 import ./postgres_query_type
 import ./sub/create_column_query
-import ../query_utils
+import ./schema_utils
 
 
-proc createMigrationTable*(self: PostgresQuery) =
+proc createMigrationTable*(self: PostgresSchema) =
   var queries:seq[string] = @[]
   var query = ""
   var foreignQuery = ""

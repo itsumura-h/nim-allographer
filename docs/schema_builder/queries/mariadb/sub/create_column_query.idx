@@ -1,0 +1,4 @@
+createForeignKey	schema_builder/queries/mariadb/sub/create_column_query.html#createForeignKey,Table,Column	create_column_query: createForeignKey(table: Table; column: Column): string	
+alterAddForeignKey	schema_builder/queries/mariadb/sub/create_column_query.html#alterAddForeignKey,Column,Table	create_column_query: alterAddForeignKey(column: Column; table: Table): string	
+createIndexString	schema_builder/queries/mariadb/sub/create_column_query.html#createIndexString,Table,Column	create_column_query: createIndexString(table: Table; column: Column): string	
+createColumnString	schema_builder/queries/mariadb/sub/create_column_query.html#createColumnString,Table,Column	create_column_query: createColumnString(table: Table; column: Column): string	
