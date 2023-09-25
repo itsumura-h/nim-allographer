@@ -8,9 +8,7 @@ import ../../models/column
 
 
 proc createSchema*(rdb:MysqlConnections, table:Table):ISchema =
-  when isExistsMysql:
-    return MysqlSchema.new(rdb, table).toInterface()
+  return MysqlSchema.new(rdb, table).toInterface()
 
 proc createSchema*(rdb:MysqlConnections, table:Table, column:Column):ISchema =
-  when isExistsMysql:
-    return MysqlSchema.new(rdb, table, column).toInterface()
+  return MysqlSchema.new(rdb, table, column).toInterface()

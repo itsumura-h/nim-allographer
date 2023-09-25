@@ -8,9 +8,7 @@ import ../../models/column
 
 
 proc createSchema*(rdb:PostgresConnections, table:Table):ISchema =
-  when isExistsPostgres:
-    return PostgresSchema.new(rdb, table).toInterface()
+  return PostgresSchema.new(rdb, table).toInterface()
 
 proc createSchema*(rdb:PostgresConnections, table:Table, column:Column):ISchema =
-  when isExistsPostgres:
-    return PostgresSchema.new(rdb, table, column).toInterface()
+  return PostgresSchema.new(rdb, table, column).toInterface()

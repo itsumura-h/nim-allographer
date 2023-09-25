@@ -8,9 +8,7 @@ import ../../models/column
 
 
 proc createSchema*(rdb:MariadbConnections, table:Table):ISchema =
-  when isExistsMariadb:
-    return MariadbSchema.new(rdb, table).toInterface()
+  return MariadbSchema.new(rdb, table).toInterface()
 
 proc createSchema*(rdb:MariadbConnections, table:Table, column:Column):ISchema =
-  when isExistsMariadb:
-    return MariadbSchema.new(rdb, table, column).toInterface()
+  return MariadbSchema.new(rdb, table, column).toInterface()
