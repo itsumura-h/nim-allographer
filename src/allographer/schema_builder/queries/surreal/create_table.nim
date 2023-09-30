@@ -13,7 +13,7 @@ import ./sub/create_column_query
 proc createTable*(self: SurrealSchema, isReset:bool) =
   var queries:seq[string]
   queries.add(&"DEFINE TABLE `{self.table.name}` SCHEMAFULL")
-  
+
   for i, column in self.table.columns:
     queries.add(createColumnString(self.table, column))
 
