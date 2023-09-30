@@ -738,47 +738,6 @@ proc find*(self: SurrealQuery, id:SurrealId, key="id"):Future[Option[JsonNode]] 
     raise getCurrentException()
 
 
-# proc getPlain*(self:SurrealQuery):Future[seq[seq[string]]] {.async.} =
-#   var sql = self.selectBuilder()
-#   sql = questionToDaller(sql)
-#   try:
-#     self.log.logger(sql)
-#     return self.getAllRowsPlain(sql, self.placeHolder).await
-#   except Exception:
-#     self.log.echoErrorMsg(sql)
-#     self.log.echoErrorMsg( getCurrentExceptionMsg() )
-#     raise getCurrentException()
-
-
-# proc firstPlain*(self:SurrealQuery):Future[seq[string]] {.async.} =
-#   var sql = self.selectFirstBuilder()
-#   sql = questionToDaller(sql)
-#   try:
-#     self.log.logger(sql)
-#     return self.getRowPlain(sql, self.placeHolder).await
-#   except Exception:
-#     self.log.echoErrorMsg(sql)
-#     self.log.echoErrorMsg( getCurrentExceptionMsg() )
-#     raise getCurrentException()
-
-
-# proc findPlain*(self:SurrealQuery, id: string, key="id"):Future[seq[string]] {.async.} =
-#   self.placeHolder.add(%*{"key":key, "value":id})
-#   var sql = self.selectFindBuilder(key)
-#   sql = questionToDaller(sql)
-#   try:
-#     self.log.logger(sql)
-#     return self.getRowPlain(sql, self.placeHolder).await
-#   except Exception:
-#     self.log.echoErrorMsg(sql)
-#     self.log.echoErrorMsg( getCurrentExceptionMsg() )
-#     raise getCurrentException()
-
-
-# proc findPlain*(self:SurrealQuery, id: int, key="id"):Future[seq[string]] {.async.} =
-#   return self.findPlain($id, key).await
-
-
 proc insert*(self:SurrealQuery, items:JsonNode) {.async.} =
   ## https://surrealdb.com/docs/surrealql/statements/insert
   let sql = self.insertValueBuilder(items)
@@ -931,31 +890,10 @@ proc sum*(self:SurrealQuery, column:string):Future[float]{.async.} =
     return 0.0
 
 
-# proc begin*(self:SurrealConnections) {.async.} =
-#   self.log.logger("BEGIN")
-#   self.transactionStart().await
-
-
-# proc rollback*(self:SurrealConnections) {.async.} =
-#   self.log.logger("ROLLBACK")
-#   self.transactionEnd("ROLLBACK").await
-
-
-# proc commit*(self:SurrealConnections, connI:int) {.async.} =
-#   self.log.logger("COMMIT")
-#   self.transactionEnd("COMMIT").await
-
-
 proc get*(self: RawSurrealQuery):Future[seq[JsonNode]] {.async.} =
   ## It is only used with raw()
   self.log.logger(self.queryString)
   return self.getAllRows(self.queryString).await
-
-
-# proc getPlain*(self: RawSurrealQuery):Future[seq[seq[string]]] {.async.} =
-#   ## It is only used with raw()
-#   self.log.logger(self.queryString)
-#   return self.getAllRowsPlain(self.queryString, self.placeHolder).await
 
 
 proc exec*(self: RawSurrealQuery) {.async.} =
@@ -986,17 +924,10 @@ proc info*(self: RawSurrealQuery):Future[JsonNode] {.async.} =
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
 
 
-
 proc first*(self: RawSurrealQuery):Future[Option[JsonNode]] {.async.} =
   ## It is only used with raw()
   self.log.logger(self.queryString)
   return self.getRow(self.queryString).await
-
-
-# proc firstPlain*(self: RawSurrealQuery):Future[seq[string]] {.async.} =
-#   ## It is only used with raw()
-#   self.log.logger(self.queryString)
-#   return self.getRowPlain(self.queryString, self.placeHolder).await
 
 
 template seeder*(rdb:SurrealConnections, tableName:string, body:untyped):untyped =
