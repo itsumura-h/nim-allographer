@@ -34,7 +34,8 @@ suite("SurrealDB create table"):
         Column.mediumText("mediumText").index().default("A"),
         Column.longText("longText").index().default("A"),
         Column.date("date").index().default(),
-        Column.datetime("datetime").index().default(),
+        Column.datetime("datetime1").index().default(Current),
+        Column.datetime("datetime2").index().default(CurrentOnUpdate),
         Column.timestamp("timestamp").index().default(),
         Column.timestamps(),
         Column.softDelete(),
@@ -60,7 +61,8 @@ suite("SurrealDB create table"):
         Column.mediumText("mediumText").index().unique().unique().default("A"),
         Column.longText("longText").index().unique().unique().default("A"),
         Column.date("date").index().unique().unique().default(),
-        Column.datetime("datetime").index().unique().unique().default(),
+        Column.datetime("datetime1").index().unique().unique().default(Current),
+        Column.datetime("datetime2").index().unique().unique().default(CurrentOnUpdate),
         Column.timestamp("timestamp").index().unique().unique().default(),
         Column.timestamps(),
         Column.softDelete(),
@@ -89,10 +91,11 @@ suite("SurrealDB create table"):
       check fields["text"].getStr ==          "DEFINE FIELD text ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["mediumText"].getStr ==    "DEFINE FIELD mediumText ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["longText"].getStr ==      "DEFINE FIELD longText ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
-      check fields["date"].getStr ==          "DEFINE FIELD date ON TypeIndex TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
-      check fields["datetime"].getStr ==      "DEFINE FIELD datetime ON TypeIndex TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
-      check fields["timestamp"].getStr ==     "DEFINE FIELD timestamp ON TypeIndex TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
-      check fields["created_at"].getStr ==    "DEFINE FIELD created_at ON TypeIndex TYPE datetime VALUE time::now()"
+      check fields["date"].getStr ==          "DEFINE FIELD date ON TypeIndex TYPE datetime VALUE $value OR '1970-01-01T00:00:00Z' ASSERT $value != NONE"
+      check fields["datetime1"].getStr ==     "DEFINE FIELD datetime1 ON TypeIndex TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
+      check fields["datetime2"].getStr ==     "DEFINE FIELD datetime2 ON TypeIndex TYPE datetime VALUE time::now() ASSERT $value != NONE"
+      check fields["timestamp"].getStr ==     "DEFINE FIELD timestamp ON TypeIndex TYPE datetime VALUE $value OR '1970-01-01T00:00:00Z' ASSERT $value != NONE"
+      check fields["created_at"].getStr ==    "DEFINE FIELD created_at ON TypeIndex TYPE datetime VALUE $value OR time::now()"
       check fields["updated_at"].getStr ==    "DEFINE FIELD updated_at ON TypeIndex TYPE datetime VALUE time::now()"
       check fields["deleted_at"].getStr ==    "DEFINE FIELD deleted_at ON TypeIndex TYPE datetime"
       check fields["binary"].getStr ==        "DEFINE FIELD binary ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
@@ -116,7 +119,8 @@ suite("SurrealDB create table"):
       check indexs["TypeIndex_mediumText_index"].getStr ==    "DEFINE INDEX TypeIndex_mediumText_index ON TypeIndex FIELDS mediumText"
       check indexs["TypeIndex_longText_index"].getStr ==      "DEFINE INDEX TypeIndex_longText_index ON TypeIndex FIELDS longText"
       check indexs["TypeIndex_date_index"].getStr ==          "DEFINE INDEX TypeIndex_date_index ON TypeIndex FIELDS date"
-      check indexs["TypeIndex_datetime_index"].getStr ==      "DEFINE INDEX TypeIndex_datetime_index ON TypeIndex FIELDS datetime"
+      check indexs["TypeIndex_datetime1_index"].getStr ==     "DEFINE INDEX TypeIndex_datetime1_index ON TypeIndex FIELDS datetime1"
+      check indexs["TypeIndex_datetime2_index"].getStr ==     "DEFINE INDEX TypeIndex_datetime2_index ON TypeIndex FIELDS datetime2"
       check indexs["TypeIndex_timestamp_index"].getStr ==     "DEFINE INDEX TypeIndex_timestamp_index ON TypeIndex FIELDS timestamp"
       check indexs["TypeIndex_created_at_index"].getStr ==    "DEFINE INDEX TypeIndex_created_at_index ON TypeIndex FIELDS created_at"
       check indexs["TypeIndex_updated_at_index"].getStr ==    "DEFINE INDEX TypeIndex_updated_at_index ON TypeIndex FIELDS updated_at"
@@ -143,10 +147,11 @@ suite("SurrealDB create table"):
       check fields["text"].getStr ==          "DEFINE FIELD text ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["mediumText"].getStr ==    "DEFINE FIELD mediumText ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["longText"].getStr ==      "DEFINE FIELD longText ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
-      check fields["date"].getStr ==          "DEFINE FIELD date ON TypeUnique TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
-      check fields["datetime"].getStr ==      "DEFINE FIELD datetime ON TypeUnique TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
-      check fields["timestamp"].getStr ==     "DEFINE FIELD timestamp ON TypeUnique TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
-      check fields["created_at"].getStr ==    "DEFINE FIELD created_at ON TypeUnique TYPE datetime VALUE time::now()"
+      check fields["date"].getStr ==          "DEFINE FIELD date ON TypeUnique TYPE datetime VALUE $value OR '1970-01-01T00:00:00Z' ASSERT $value != NONE"
+      check fields["datetime1"].getStr ==     "DEFINE FIELD datetime1 ON TypeUnique TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
+      check fields["datetime2"].getStr ==     "DEFINE FIELD datetime2 ON TypeUnique TYPE datetime VALUE time::now() ASSERT $value != NONE"
+      check fields["timestamp"].getStr ==     "DEFINE FIELD timestamp ON TypeUnique TYPE datetime VALUE $value OR '1970-01-01T00:00:00Z' ASSERT $value != NONE"
+      check fields["created_at"].getStr ==    "DEFINE FIELD created_at ON TypeUnique TYPE datetime VALUE $value OR time::now()"
       check fields["updated_at"].getStr ==    "DEFINE FIELD updated_at ON TypeUnique TYPE datetime VALUE time::now()"
       check fields["deleted_at"].getStr ==    "DEFINE FIELD deleted_at ON TypeUnique TYPE datetime"
       check fields["binary"].getStr ==        "DEFINE FIELD binary ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
@@ -170,7 +175,8 @@ suite("SurrealDB create table"):
       check indexs["TypeUnique_mediumText_unique"].getStr ==    "DEFINE INDEX TypeUnique_mediumText_unique ON TypeUnique FIELDS mediumText UNIQUE"
       check indexs["TypeUnique_longText_unique"].getStr ==      "DEFINE INDEX TypeUnique_longText_unique ON TypeUnique FIELDS longText UNIQUE"
       check indexs["TypeUnique_date_unique"].getStr ==          "DEFINE INDEX TypeUnique_date_unique ON TypeUnique FIELDS date UNIQUE"
-      check indexs["TypeUnique_datetime_unique"].getStr ==      "DEFINE INDEX TypeUnique_datetime_unique ON TypeUnique FIELDS datetime UNIQUE"
+      check indexs["TypeUnique_datetime1_unique"].getStr ==     "DEFINE INDEX TypeUnique_datetime1_unique ON TypeUnique FIELDS datetime1 UNIQUE"
+      check indexs["TypeUnique_datetime2_unique"].getStr ==     "DEFINE INDEX TypeUnique_datetime2_unique ON TypeUnique FIELDS datetime2 UNIQUE"
       check indexs["TypeUnique_timestamp_unique"].getStr ==     "DEFINE INDEX TypeUnique_timestamp_unique ON TypeUnique FIELDS timestamp UNIQUE"
       check indexs["TypeUnique_created_at_index"].getStr ==    "DEFINE INDEX TypeUnique_created_at_index ON TypeUnique FIELDS created_at"
       check indexs["TypeUnique_updated_at_index"].getStr ==    "DEFINE INDEX TypeUnique_updated_at_index ON TypeUnique FIELDS updated_at"
@@ -181,7 +187,7 @@ suite("SurrealDB create table"):
       check indexs["TypeUnique_json_unique"].getStr ==          "DEFINE INDEX TypeUnique_json_unique ON TypeUnique FIELDS json UNIQUE"
 
 
-  test("increment"):
+  test("autoincrement"):
     surreal.create(
       table("test",[
         Column.increments("index"),
@@ -195,19 +201,72 @@ suite("SurrealDB create table"):
     surreal.table("test").insert(%*{"string": "c"}).waitFor
     surreal.table("test").where("string", "=", "b").delete().waitFor
     surreal.table("test").insert(%*{"string": "d"}).waitFor
-    
+
     let data = surreal.table("test").orderBy("index", Asc).get().waitFor
     for row in data:
       if row["string"].getStr == "a":
         check row["index"].getInt == 1
         check row["index2"].getInt == 1
-      
+
       if row["string"].getStr == "c":
         check row["index"].getInt == 3
         check row["index2"].getInt == 3
-      
+
       if row["string"].getStr == "d":
         check row["index2"].getInt == 4
+
+
+  suite("Datetime"):
+    test("datetime default"):
+      surreal.create(
+        table("test", [
+          Column.string("name"),
+          Column.datetime("created_at").default(Current),
+          Column.datetime("updated_at").default(CurrentOnUpdate),
+        ])
+      )
+
+      let aliceId = surreal.table("test").insertId(%*{"name": "alice"}).waitFor()
+      
+      var alice = surreal.table("test").find(aliceId).waitFor().get()
+      echo alice
+      let aliceCreatedAt1 = alice["created_at"].getStr()
+      let aliceUpdatedAt1 = alice["updated_at"].getStr()
+
+      surreal.table("test").where("id", "=", aliceId).update(%*{"name": "updated"}).waitFor()
+
+      alice = surreal.table("test").find(aliceId).waitFor().get()
+      echo alice
+      let aliceCreatedAt2 = alice["created_at"].getStr()
+      let aliceUpdatedAt2 = alice["updated_at"].getStr()
+
+      check aliceCreatedAt1 == aliceCreatedAt2
+      check aliceUpdatedAt1 != aliceUpdatedAt2
+
+
+    test("timestamps"):
+      surreal.create(
+        table("test", [
+          Column.string("name"),
+          Column.timestamps()
+        ])
+      )
+
+      let aliceId = surreal.table("test").insertId(%*{"name": "alice"}).waitFor()
+      
+      var alice = surreal.table("test").find(aliceId).waitFor().get()
+      let aliceCreatedAt1 = alice["created_at"].getStr()
+      let aliceUpdatedAt1 = alice["updated_at"].getStr()
+
+      surreal.table("test").where("id", "=", aliceId).update(%*{"name": "updated"}).waitFor()
+
+      alice = surreal.table("test").find(aliceId).waitFor().get()
+      let aliceCreatedAt2 = alice["created_at"].getStr()
+      let aliceUpdatedAt2 = alice["updated_at"].getStr()
+
+      check aliceCreatedAt1 == aliceCreatedAt2
+      check aliceUpdatedAt1 != aliceUpdatedAt2
+
 
 
 suite("SurrealDB alter table"):
@@ -245,7 +304,8 @@ suite("SurrealDB alter table"):
         Column.mediumText("mediumText").index().default("A").add(),
         Column.longText("longText").index().default("A").add(),
         Column.date("date").index().default().add(),
-        Column.datetime("datetime").index().default().add(),
+        Column.datetime("datetime1").index().default(Current).add(),
+        Column.datetime("datetime2").index().default(CurrentOnUpdate).add(),
         Column.timestamp("timestamp").index().default().add(),
         Column.timestamps().add(),
         Column.softDelete().add(),
@@ -271,7 +331,8 @@ suite("SurrealDB alter table"):
         Column.mediumText("mediumText").index().unique().unique().default("A").add(),
         Column.longText("longText").index().unique().unique().default("A").add(),
         Column.date("date").index().unique().unique().default().add(),
-        Column.datetime("datetime").index().unique().unique().default().add(),
+        Column.datetime("datetime1").index().unique().unique().default(Current).add(),
+        Column.datetime("datetime2").index().unique().unique().default(CurrentOnUpdate).add(),
         Column.timestamp("timestamp").index().unique().unique().default().add(),
         Column.timestamps().add(),
         Column.softDelete().add(),
@@ -300,10 +361,11 @@ suite("SurrealDB alter table"):
       check fields["text"].getStr ==          "DEFINE FIELD text ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["mediumText"].getStr ==    "DEFINE FIELD mediumText ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["longText"].getStr ==      "DEFINE FIELD longText ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
-      check fields["date"].getStr ==          "DEFINE FIELD date ON TypeIndex TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
-      check fields["datetime"].getStr ==      "DEFINE FIELD datetime ON TypeIndex TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
-      check fields["timestamp"].getStr ==     "DEFINE FIELD timestamp ON TypeIndex TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
-      check fields["created_at"].getStr ==    "DEFINE FIELD created_at ON TypeIndex TYPE datetime VALUE time::now()"
+      check fields["date"].getStr ==          "DEFINE FIELD date ON TypeIndex TYPE datetime VALUE $value OR '1970-01-01T00:00:00Z' ASSERT $value != NONE"
+      check fields["datetime1"].getStr ==     "DEFINE FIELD datetime1 ON TypeIndex TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
+      check fields["datetime2"].getStr ==     "DEFINE FIELD datetime2 ON TypeIndex TYPE datetime VALUE time::now() ASSERT $value != NONE"
+      check fields["timestamp"].getStr ==     "DEFINE FIELD timestamp ON TypeIndex TYPE datetime VALUE $value OR '1970-01-01T00:00:00Z' ASSERT $value != NONE"
+      check fields["created_at"].getStr ==    "DEFINE FIELD created_at ON TypeIndex TYPE datetime VALUE $value OR time::now()"
       check fields["updated_at"].getStr ==    "DEFINE FIELD updated_at ON TypeIndex TYPE datetime VALUE time::now()"
       check fields["deleted_at"].getStr ==    "DEFINE FIELD deleted_at ON TypeIndex TYPE datetime"
       check fields["binary"].getStr ==        "DEFINE FIELD binary ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
@@ -327,7 +389,8 @@ suite("SurrealDB alter table"):
       check indexs["TypeIndex_mediumText_index"].getStr ==    "DEFINE INDEX TypeIndex_mediumText_index ON TypeIndex FIELDS mediumText"
       check indexs["TypeIndex_longText_index"].getStr ==      "DEFINE INDEX TypeIndex_longText_index ON TypeIndex FIELDS longText"
       check indexs["TypeIndex_date_index"].getStr ==          "DEFINE INDEX TypeIndex_date_index ON TypeIndex FIELDS date"
-      check indexs["TypeIndex_datetime_index"].getStr ==      "DEFINE INDEX TypeIndex_datetime_index ON TypeIndex FIELDS datetime"
+      check indexs["TypeIndex_datetime1_index"].getStr ==     "DEFINE INDEX TypeIndex_datetime1_index ON TypeIndex FIELDS datetime1"
+      check indexs["TypeIndex_datetime2_index"].getStr ==     "DEFINE INDEX TypeIndex_datetime2_index ON TypeIndex FIELDS datetime2"
       check indexs["TypeIndex_timestamp_index"].getStr ==     "DEFINE INDEX TypeIndex_timestamp_index ON TypeIndex FIELDS timestamp"
       check indexs["TypeIndex_created_at_index"].getStr ==    "DEFINE INDEX TypeIndex_created_at_index ON TypeIndex FIELDS created_at"
       check indexs["TypeIndex_updated_at_index"].getStr ==    "DEFINE INDEX TypeIndex_updated_at_index ON TypeIndex FIELDS updated_at"
@@ -354,10 +417,11 @@ suite("SurrealDB alter table"):
       check fields["text"].getStr ==          "DEFINE FIELD text ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["mediumText"].getStr ==    "DEFINE FIELD mediumText ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["longText"].getStr ==      "DEFINE FIELD longText ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
-      check fields["date"].getStr ==          "DEFINE FIELD date ON TypeUnique TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
-      check fields["datetime"].getStr ==      "DEFINE FIELD datetime ON TypeUnique TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
-      check fields["timestamp"].getStr ==     "DEFINE FIELD timestamp ON TypeUnique TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
-      check fields["created_at"].getStr ==    "DEFINE FIELD created_at ON TypeUnique TYPE datetime VALUE time::now()"
+      check fields["date"].getStr ==          "DEFINE FIELD date ON TypeUnique TYPE datetime VALUE $value OR '1970-01-01T00:00:00Z' ASSERT $value != NONE"
+      check fields["datetime1"].getStr ==     "DEFINE FIELD datetime1 ON TypeUnique TYPE datetime VALUE $value OR time::now() ASSERT $value != NONE"
+      check fields["datetime2"].getStr ==     "DEFINE FIELD datetime2 ON TypeUnique TYPE datetime VALUE time::now() ASSERT $value != NONE"
+      check fields["timestamp"].getStr ==     "DEFINE FIELD timestamp ON TypeUnique TYPE datetime VALUE $value OR '1970-01-01T00:00:00Z' ASSERT $value != NONE"
+      check fields["created_at"].getStr ==    "DEFINE FIELD created_at ON TypeUnique TYPE datetime VALUE $value OR time::now()"
       check fields["updated_at"].getStr ==    "DEFINE FIELD updated_at ON TypeUnique TYPE datetime VALUE time::now()"
       check fields["deleted_at"].getStr ==    "DEFINE FIELD deleted_at ON TypeUnique TYPE datetime"
       check fields["binary"].getStr ==        "DEFINE FIELD binary ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
@@ -381,11 +445,12 @@ suite("SurrealDB alter table"):
       check indexs["TypeUnique_mediumText_unique"].getStr ==    "DEFINE INDEX TypeUnique_mediumText_unique ON TypeUnique FIELDS mediumText UNIQUE"
       check indexs["TypeUnique_longText_unique"].getStr ==      "DEFINE INDEX TypeUnique_longText_unique ON TypeUnique FIELDS longText UNIQUE"
       check indexs["TypeUnique_date_unique"].getStr ==          "DEFINE INDEX TypeUnique_date_unique ON TypeUnique FIELDS date UNIQUE"
-      check indexs["TypeUnique_datetime_unique"].getStr ==      "DEFINE INDEX TypeUnique_datetime_unique ON TypeUnique FIELDS datetime UNIQUE"
+      check indexs["TypeUnique_datetime1_unique"].getStr ==     "DEFINE INDEX TypeUnique_datetime1_unique ON TypeUnique FIELDS datetime1 UNIQUE"
+      check indexs["TypeUnique_datetime2_unique"].getStr ==     "DEFINE INDEX TypeUnique_datetime2_unique ON TypeUnique FIELDS datetime2 UNIQUE"
       check indexs["TypeUnique_timestamp_unique"].getStr ==     "DEFINE INDEX TypeUnique_timestamp_unique ON TypeUnique FIELDS timestamp UNIQUE"
-      check indexs["TypeUnique_created_at_index"].getStr ==    "DEFINE INDEX TypeUnique_created_at_index ON TypeUnique FIELDS created_at"
-      check indexs["TypeUnique_updated_at_index"].getStr ==    "DEFINE INDEX TypeUnique_updated_at_index ON TypeUnique FIELDS updated_at"
-      check indexs["TypeUnique_deleted_at_index"].getStr ==    "DEFINE INDEX TypeUnique_deleted_at_index ON TypeUnique FIELDS deleted_at"
+      check indexs["TypeUnique_created_at_index"].getStr ==     "DEFINE INDEX TypeUnique_created_at_index ON TypeUnique FIELDS created_at"
+      check indexs["TypeUnique_updated_at_index"].getStr ==     "DEFINE INDEX TypeUnique_updated_at_index ON TypeUnique FIELDS updated_at"
+      check indexs["TypeUnique_deleted_at_index"].getStr ==     "DEFINE INDEX TypeUnique_deleted_at_index ON TypeUnique FIELDS deleted_at"
       check indexs["TypeUnique_binary_unique"].getStr ==        "DEFINE INDEX TypeUnique_binary_unique ON TypeUnique FIELDS binary UNIQUE"
       check indexs["TypeUnique_boolean_unique"].getStr ==       "DEFINE INDEX TypeUnique_boolean_unique ON TypeUnique FIELDS boolean UNIQUE"
       check indexs["TypeUnique_enumField_unique"].getStr ==     "DEFINE INDEX TypeUnique_enumField_unique ON TypeUnique FIELDS enumField UNIQUE"
@@ -393,14 +458,14 @@ suite("SurrealDB alter table"):
 
 
   test("drop column"):
-      surreal.alter(
-        table("TypeIndex", [
-          Column.dropColumn("str")
-        ])
-      )
+    surreal.alter(
+      table("TypeIndex", [
+        Column.dropColumn("str")
+      ])
+    )
 
-      let columns = surreal.table("TypeIndex").columns().waitFor
-      check not columns.contains("str")
+    let columns = surreal.table("TypeIndex").columns().waitFor
+    check not columns.contains("str")
 
 
   test("drop table"):
@@ -413,8 +478,8 @@ suite("SurrealDB alter table"):
     surreal.drop(
       table("TypeIndex")
     )
-    
-    let res = surreal.table("TypeIndex").first().waitFor
+
+    let res = surreal.table("TypeIndex").first().waitFor()
     check not res.isSome
 
 

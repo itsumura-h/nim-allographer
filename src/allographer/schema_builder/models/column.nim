@@ -16,6 +16,7 @@ type Column* = ref object
   defaultFloat*: float
   defaultString*: string
   defaultJson*: JsonNode
+  defaultDatetime*: DefaultDateTime
   foreignOnDelete*: ForeignOnDelete
   info*: JsonNode
   checksum*:string
@@ -332,6 +333,13 @@ proc default*(c: Column, value:JsonNode): Column =
   if not c.isAutoIncrement:
     c.isDefault = true
     c.defaultJson = value
+  return c
+
+
+proc default*(c: Column, value:DefaultDateTime): Column =
+  if not c.isAutoIncrement:
+    c.isDefault = true
+    c.defaultDatetime = value
   return c
 
 

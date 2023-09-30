@@ -32,7 +32,7 @@ proc createIncrementsColumn(column:Column, table:Table):seq[string] =
 
 proc createIntColumn(column:Column, table:Table):seq[string] =
   var query = ""
-  
+
   if column.isAutoIncrement:
     query.add(&"""
       INSERT INTO `_autoincrement_sequences` {{table: "{table.name}", column: "{column.name}", max_index: 0}};
@@ -42,7 +42,7 @@ proc createIntColumn(column:Column, table:Table):seq[string] =
         UPDATE `_autoincrement_sequences` MERGE {{max_index: $val}} WHERE `table` = "{table.name}" AND `column` = "{column.name}";
       }};
     """)
-  
+
     query.add(&"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE int")
     return @[query]
 
@@ -56,7 +56,7 @@ proc createIntColumn(column:Column, table:Table):seq[string] =
       query.add(&" AND $value >= 0")
     else:
       query.add(&" ASSERT $value >= 0")
-  
+
   if column.isDefault:
     query.add(&" VALUE $value OR {column.defaultInt}")
   elif column.isNullable:
@@ -161,7 +161,7 @@ proc createCharColumn(column:Column, table:Table):seq[string] =
     query.add(" VALUE $value OR NULL")
   else:
     query.add(" VALUE $value OR ''")
-  
+
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
 
@@ -239,35 +239,16 @@ proc createTextColumn(column:Column, table:Table):seq[string] =
 # =============================================================================
 # date
 # =============================================================================
-# proc createDateColumn(column:Column, table:Table):seq[string] =
-#   var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE string"
-
-#   if not column.isNullable:
-#     query.add(" ASSERT $value != NONE")
-
-#   if column.isDefault:
-#     query.add(&" VALUE $value OR '{column.defaultString}'")
-
-#   result.add(query)
-
-#   if column.isIndex:
-#     result.add(&"DEFINE INDEX `{table.name}_{column.name}_index` ON TABLE `{table.name}` COLUMNS `{column.name}`")
-
-#   if column.isUnique:
-#     result.add(&"DEFINE INDEX `{table.name}_{column.name}_unique` ON TABLE `{table.name}` COLUMNS `{column.name}` UNIQUE")
-
-#   if column.isUnsigned:
-#     notAllowedOption("unsigned", "varchar", column.name)
-
-
 proc createDatetimeColumn(column:Column, table:Table):seq[string] =
   var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE datetime"
 
   if not column.isNullable:
     query.add(" ASSERT $value != NONE")
 
-  if column.isDefault:
+  if column.isDefault and column.defaultDatetime == Current:
     query.add(&" VALUE $value OR time::now()")
+  elif column.isDefault and column.defaultDatetime == CurrentOnUpdate:
+    query.add(&" VALUE time::now()")
   elif column.isNullable:
     query.add(" VALUE $value OR NULL")
   else:
@@ -288,50 +269,8 @@ proc createDatetimeColumn(column:Column, table:Table):seq[string] =
     notAllowedOption("unsigned", "varchar", column.name)
 
 
-# proc createTimeColumn(column:Column, table:Table):seq[string] =
-#   var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE string"
-
-#   if not column.isNullable:
-#     query.add(" ASSERT $value != NONE")
-
-#   if column.isDefault:
-#     query.add(&" VALUE $value OR '{column.defaultString}'")
-
-#   result.add(query)
-
-#   if column.isIndex:
-#     result.add(&"DEFINE INDEX `{table.name}_{column.name}_index` ON TABLE `{table.name}` COLUMNS `{column.name}`")
-
-#   if column.isUnique:
-#     result.add(&"DEFINE INDEX `{table.name}_{column.name}_unique` ON TABLE `{table.name}` COLUMNS `{column.name}` UNIQUE")
-
-#   if column.isUnsigned:
-#     notAllowedOption("unsigned", "varchar", column.name)
-
-
-# proc createTimestampColumn(column:Column, table:Table):seq[string] =
-#   var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE string"
-
-#   if not column.isNullable:
-#     query.add(" ASSERT $value != NONE")
-
-#   if column.isDefault:
-#     query.add(&" VALUE $value OR '{column.defaultString}'")
-
-#   result.add(query)
-
-#   if column.isIndex:
-#     result.add(&"DEFINE INDEX `{table.name}_{column.name}_index` ON TABLE `{table.name}` COLUMNS `{column.name}`")
-
-#   if column.isUnique:
-#     result.add(&"DEFINE INDEX `{table.name}_{column.name}_unique` ON TABLE `{table.name}` COLUMNS `{column.name}` UNIQUE")
-
-#   if column.isUnsigned:
-#     notAllowedOption("unsigned", "varchar", column.name)
-
-
 proc createTimestampsColumn(column:Column, table:Table):seq[string] =
-  result.add(&"DEFINE FIELD `created_at` ON TABLE `{table.name}` TYPE datetime VALUE time::now()")
+  result.add(&"DEFINE FIELD `created_at` ON TABLE `{table.name}` TYPE datetime VALUE $value OR time::now()")
   result.add(&"DEFINE INDEX `{table.name}_created_at_index` ON TABLE `{table.name}` COLUMNS `created_at`")
 
   result.add(&"DEFINE FIELD `updated_at` ON TABLE `{table.name}` TYPE datetime VALUE time::now()")

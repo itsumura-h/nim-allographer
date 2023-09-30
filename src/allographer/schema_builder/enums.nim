@@ -38,6 +38,12 @@ type ForeignOnDelete* = enum
   SET_NULL
   NO_ACTION
 
+
+type DefaultDateTime* = enum
+  None
+  Current
+  CurrentOnUpdate
+
 type UsecaseType* = enum
   Create
   Alter
