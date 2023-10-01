@@ -19,18 +19,12 @@ RUN apt install -y \
         libmariadb-dev
 
 # ===== Nim =====
-ARG VERSION="1.6.10"
+ARG VERSION="2.0.0"
 WORKDIR /root
-RUN wget --inet4-only https://nim-lang.org/download/nim-${VERSION}-linux_x64.tar.xz && \
-    tar -Jxf nim-${VERSION}-linux_x64.tar.xz && \
-    rm -f nim-${VERSION}-linux_x64.tar.xz && \
-    mv nim-${VERSION} .nimble
-
-RUN rm -rf /var/lib/apt/lists/*
+RUN curl https://nim-lang.org/choosenim/init.sh -o init.sh
+RUN sh init.sh -y
+RUN rm -f init.sh
 ENV PATH $PATH:/root/.nimble/bin
+RUN choosenim ${VERSION}
+
 WORKDIR /root/project
-COPY ./allographer.nimble .
-RUN nimble install -y -d
-RUN nimble install -y \
-           bcrypt \
-           progress
