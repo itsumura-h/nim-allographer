@@ -18,10 +18,17 @@ when (NimMajor, NimMinor) > (1, 6):
   requires "db_connector >= 0.1.0"
   requires "checksums >= 0.1.0"
 
+
 import strformat, os
 
 task test, "run testament test":
-  exec "testament p 'tests/*/test_*.nim'"
+  exec "testament p 'tests/v2/*/test_*.nim'"
+  for kind, path in walkDir(getCurrentDir() / "tests"):
+    if not path.contains(".") and path.fileExists():
+      exec "rm -f " & path
+
+task test_v1, "run testament test":
+  exec "testament p 'tests/v1/*/test_*.nim'"
   for kind, path in walkDir(getCurrentDir() / "tests"):
     if not path.contains(".") and path.fileExists():
       exec "rm -f " & path

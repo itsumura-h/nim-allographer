@@ -28,3 +28,6 @@ ENV PATH $PATH:/root/.nimble/bin
 RUN choosenim ${VERSION}
 
 WORKDIR /root/project
+COPY ./allographer.nimble .
+RUN nimble install -y -d
+RUN git config --global --add safe.directory /root/project

@@ -1,0 +1,67 @@
+version: '3'
+services:
+  app-ubuntu-v1:
+    build:
+      context: .
+      dockerfile: ./docker/ubuntu/Dockerfile
+      args:
+        VERSION: 1.6.14
+    tty: true
+    volumes:
+      - .:/root/project
+    depends_on:
+      - postgres
+      - mysql
+      - mariadb
+      - surreal
+
+  app-ubuntu:
+    build:
+      context: .
+      dockerfile: ./docker/ubuntu/Dockerfile
+      args:
+        VERSION: 2.0.0
+    tty: true
+    volumes:
+      - .:/root/project
+    depends_on:
+      - postgres
+      - mysql
+      - mariadb
+      - surreal
+
+  mysql:
+    image: mysql:8
+    tty: true
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+
+  mariadb:
+    image: mariadb
+    tty: true
+    command: --default-authentication-plugin=mysql_native_password
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: pass
+
+  postgres:
+    image: postgres:alpine
+    tty: true
+    environment:
+      POSTGRES_DB: database
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: pass
+
+  surreal:
+    image: surrealdb/surrealdb:1.0.0-beta.9
+    tty: true
+    # command: start --log TRACE --user user --pass pass memory # like redis
+    # command: start --log TRACE --user user --pass pass file://root/.surrealdb # like mongo
+    command: start --strict --log TRACE --user user --pass pass memory # like in-memory sqlite
+    # command: start --strict --log TRACE --user user --pass pass file://root/.surrealdb # like rdb
