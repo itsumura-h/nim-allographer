@@ -1,0 +1,73 @@
+nimTitle	sqlite_query	v2/query_builder/models/sqlite/sqlite_query.html	module src/allographer/v2/query_builder/models/sqlite/sqlite_query		0
+nim	table	v2/query_builder/models/sqlite/sqlite_query.html#table,SqliteQuery,string	proc table(self: SqliteQuery; tableArg: string): SqliteQuery		15
+nim	`distinct`	v2/query_builder/models/sqlite/sqlite_query.html#distinct,SqliteQuery	proc `distinct`(self: SqliteQuery): SqliteQuery		20
+nim	join	v2/query_builder/models/sqlite/sqlite_query.html#join,SqliteQuery,string,string,string,string	proc join(self: SqliteQuery; table: string; column1: string; symbol: string;\n     column2: string): SqliteQuery		26
+nim	leftJoin	v2/query_builder/models/sqlite/sqlite_query.html#leftJoin,SqliteQuery,string,string,string,string	proc leftJoin(self: SqliteQuery; table: string; column1: string; symbol: string;\n         column2: string): SqliteQuery		45
+nim	where	v2/query_builder/models/sqlite/sqlite_query.html#where,SqliteQuery,string,string,	proc where(self: SqliteQuery; column: string; symbol: string;\n      value: string | int | float): SqliteQuery		67
+nim	where	v2/query_builder/models/sqlite/sqlite_query.html#where,SqliteQuery,string,string,bool	proc where(self: SqliteQuery; column: string; symbol: string; value: bool): SqliteQuery		94
+nim	where	v2/query_builder/models/sqlite/sqlite_query.html#where,SqliteQuery,string,string,_2	proc where(self: SqliteQuery; column: string; symbol: string; value: nil.type): SqliteQuery		121
+nim	orWhere	v2/query_builder/models/sqlite/sqlite_query.html#orWhere,SqliteQuery,string,string,	proc orWhere(self: SqliteQuery; column: string; symbol: string;\n        value: string | int | float | bool): SqliteQuery		145
+nim	orWhere	v2/query_builder/models/sqlite/sqlite_query.html#orWhere,SqliteQuery,string,string,_2	proc orWhere(self: SqliteQuery; column: string; symbol: string; value: nil.type): SqliteQuery		171
+nim	whereBetween	v2/query_builder/models/sqlite/sqlite_query.html#whereBetween,SqliteQuery,string,array[,]	proc whereBetween(self: SqliteQuery; column: string; width: array[2, int | float]): SqliteQuery		192
+nim	whereBetween	v2/query_builder/models/sqlite/sqlite_query.html#whereBetween,SqliteQuery,string,array[,string]	proc whereBetween(self: SqliteQuery; column: string; width: array[2, string]): SqliteQuery		205
+nim	whereNotBetween	v2/query_builder/models/sqlite/sqlite_query.html#whereNotBetween,SqliteQuery,string,array[,]	proc whereNotBetween(self: SqliteQuery; column: string; width: array[2, int | float]): SqliteQuery		218
+nim	whereNotBetween	v2/query_builder/models/sqlite/sqlite_query.html#whereNotBetween,SqliteQuery,string,array[,string]	proc whereNotBetween(self: SqliteQuery; column: string; width: array[2, string]): SqliteQuery		231
+nim	whereIn	v2/query_builder/models/sqlite/sqlite_query.html#whereIn,SqliteQuery,string,seq[]	proc whereIn(self: SqliteQuery; column: string; width: seq[int | float | string]): SqliteQuery		244
+nim	whereNotIn	v2/query_builder/models/sqlite/sqlite_query.html#whereNotIn,SqliteQuery,string,seq[]	proc whereNotIn(self: SqliteQuery; column: string; width: seq[int | float | string]): SqliteQuery		258
+nim	whereNull	v2/query_builder/models/sqlite/sqlite_query.html#whereNull,SqliteQuery,string	proc whereNull(self: SqliteQuery; column: string): SqliteQuery		272
+nim	groupBy	v2/query_builder/models/sqlite/sqlite_query.html#groupBy,SqliteQuery,string	proc groupBy(self: SqliteQuery; column: string): SqliteQuery		284
+nim	having	v2/query_builder/models/sqlite/sqlite_query.html#having,SqliteQuery,string,string,	proc having(self: SqliteQuery; column: string; symbol: string;\n       value: string | int | float | bool): SqliteQuery		292
+nim	having	v2/query_builder/models/sqlite/sqlite_query.html#having,SqliteQuery,string,string,_2	proc having(self: SqliteQuery; column: string; symbol: string; value: nil.type): SqliteQuery		318
+nim	orderBy	v2/query_builder/models/sqlite/sqlite_query.html#orderBy,SqliteQuery,string,Order	proc orderBy(self: SqliteQuery; column: string; order: Order): SqliteQuery		342
+nim	limit	v2/query_builder/models/sqlite/sqlite_query.html#limit,SqliteQuery,int	proc limit(self: SqliteQuery; num: int): SqliteQuery		356
+nim	offset	v2/query_builder/models/sqlite/sqlite_query.html#offset,SqliteQuery,int	proc offset(self: SqliteQuery; num: int): SqliteQuery		361
+nim	get	v2/query_builder/models/sqlite/sqlite_query.html#get,SqliteQuery	proc get(self: SqliteQuery): Future[seq[JsonNode]]		826
+nim	first	v2/query_builder/models/sqlite/sqlite_query.html#first,SqliteQuery	proc first(self: SqliteQuery): Future[Option[JsonNode]]		837
+nim	find	v2/query_builder/models/sqlite/sqlite_query.html#find,SqliteQuery,string,string	proc find(self: SqliteQuery; id: string; key = "id"): Future[Option[JsonNode]]		848
+nim	find	v2/query_builder/models/sqlite/sqlite_query.html#find,SqliteQuery,int,string	proc find(self: SqliteQuery; id: int; key = "id"): Future[Option[JsonNode]]		860
+nim	getPlain	v2/query_builder/models/sqlite/sqlite_query.html#getPlain,SqliteQuery	proc getPlain(self: SqliteQuery): Future[seq[seq[string]]]		865
+nim	firstPlain	v2/query_builder/models/sqlite/sqlite_query.html#firstPlain,SqliteQuery	proc firstPlain(self: SqliteQuery): Future[seq[string]]		876
+nim	findPlain	v2/query_builder/models/sqlite/sqlite_query.html#findPlain,SqliteQuery,string,string	proc findPlain(self: SqliteQuery; id: string; key = "id"): Future[seq[string]]		887
+nim	findPlain	v2/query_builder/models/sqlite/sqlite_query.html#findPlain,SqliteQuery,int,string	proc findPlain(self: SqliteQuery; id: int; key = "id"): Future[seq[string]]		899
+nim	get	v2/query_builder/models/sqlite/sqlite_query.html#get,SqliteQuery,typedesc[T]	proc get[T](self: SqliteQuery; typ: typedesc[T]): Future[seq[T]]		904
+nim	first	v2/query_builder/models/sqlite/sqlite_query.html#first,SqliteQuery,typedesc[T]	proc first[T](self: SqliteQuery; typ: typedesc[T]): Future[Option[T]]		917
+nim	find	v2/query_builder/models/sqlite/sqlite_query.html#find,SqliteQuery,string,typedesc[T],string	proc find[T](self: SqliteQuery; id: string; typ: typedesc[T]; key = "id"): Future[\n    Option[T]]		932
+nim	find	v2/query_builder/models/sqlite/sqlite_query.html#find,SqliteQuery,int,typedesc[T],string	proc find[T](self: SqliteQuery; id: int; typ: typedesc[T]; key = "id"): Future[\n    Option[T]]		948
+nim	insert	v2/query_builder/models/sqlite/sqlite_query.html#insert,SqliteQuery,JsonNode	proc insert(self: SqliteQuery; items: JsonNode): owned(Future[void])		953
+nim	insert	v2/query_builder/models/sqlite/sqlite_query.html#insert,SqliteQuery,seq[JsonNode]	proc insert(self: SqliteQuery; items: seq[JsonNode]): owned(Future[void])		959
+nim	insertId	v2/query_builder/models/sqlite/sqlite_query.html#insertId,SqliteQuery,JsonNode,string	proc insertId(self: SqliteQuery; items: JsonNode; key = "id"): Future[string]		965
+nim	insertId	v2/query_builder/models/sqlite/sqlite_query.html#insertId,SqliteQuery,seq[JsonNode],string	proc insertId(self: SqliteQuery; items: seq[JsonNode]; key = "id"): Future[\n    seq[string]]		971
+nim	update	v2/query_builder/models/sqlite/sqlite_query.html#update,SqliteQuery,JsonNode	proc update(self: SqliteQuery; items: JsonNode): owned(Future[void])		980
+nim	delete	v2/query_builder/models/sqlite/sqlite_query.html#delete,SqliteQuery	proc delete(self: SqliteQuery): owned(Future[void])		986
+nim	delete	v2/query_builder/models/sqlite/sqlite_query.html#delete,SqliteQuery,int,string	proc delete(self: SqliteQuery; id: int; key = "id"): owned(Future[void])		992
+nim	columns	v2/query_builder/models/sqlite/sqlite_query.html#columns,SqliteQuery	proc columns(self: SqliteQuery): Future[seq[string]]		999
+nim	count	v2/query_builder/models/sqlite/sqlite_query.html#count,SqliteQuery	proc count(self: SqliteQuery): Future[int]		1005
+nim	min	v2/query_builder/models/sqlite/sqlite_query.html#min,SqliteQuery,string	proc min(self: SqliteQuery; column: string): Future[Option[string]]		1015
+nim	max	v2/query_builder/models/sqlite/sqlite_query.html#max,SqliteQuery,string	proc max(self: SqliteQuery; column: string): Future[Option[string]]		1031
+nim	avg	v2/query_builder/models/sqlite/sqlite_query.html#avg,SqliteQuery,string	proc avg(self: SqliteQuery; column: string): Future[Option[float]]		1047
+nim	sum	v2/query_builder/models/sqlite/sqlite_query.html#sum,SqliteQuery,string	proc sum(self: SqliteQuery; column: string): Future[Option[float]]		1057
+nim	begin	v2/query_builder/models/sqlite/sqlite_query.html#begin,SqliteConnections	proc begin(self: SqliteConnections): owned(Future[void])		1067
+nim	rollback	v2/query_builder/models/sqlite/sqlite_query.html#rollback,SqliteConnections	proc rollback(self: SqliteConnections): owned(Future[void])		1072
+nim	commit	v2/query_builder/models/sqlite/sqlite_query.html#commit,SqliteConnections	proc commit(self: SqliteConnections): owned(Future[void])		1077
+nim	get	v2/query_builder/models/sqlite/sqlite_query.html#get,RawSqliteQuery	proc get(self: RawSqliteQuery): Future[seq[JsonNode]]		1082
+nim	getPlain	v2/query_builder/models/sqlite/sqlite_query.html#getPlain,RawSqliteQuery	proc getPlain(self: RawSqliteQuery): Future[seq[seq[string]]]		1088
+nim	exec	v2/query_builder/models/sqlite/sqlite_query.html#exec,RawSqliteQuery	proc exec(self: RawSqliteQuery): owned(Future[void])		1094
+nim	first	v2/query_builder/models/sqlite/sqlite_query.html#first,RawSqliteQuery	proc first(self: RawSqliteQuery): Future[Option[JsonNode]]		1100
+nim	firstPlain	v2/query_builder/models/sqlite/sqlite_query.html#firstPlain,RawSqliteQuery	proc firstPlain(self: RawSqliteQuery): Future[seq[string]]		1106
+nim	seeder	v2/query_builder/models/sqlite/sqlite_query.html#seeder.t,SqliteConnections,string,untyped	template seeder(rdb: SqliteConnections; tableName: string; body: untyped): untyped		1112
+nim	seeder	v2/query_builder/models/sqlite/sqlite_query.html#seeder.t,SqliteConnections,string,string,untyped	template seeder(rdb: SqliteConnections; tableName, column: string; body: untyped): untyped		1119
+nimgrp	firstplain	v2/query_builder/models/sqlite/sqlite_query.html#firstPlain-procs-all	proc		876
+nimgrp	findplain	v2/query_builder/models/sqlite/sqlite_query.html#findPlain-procs-all	proc		887
+nimgrp	wherenotbetween	v2/query_builder/models/sqlite/sqlite_query.html#whereNotBetween-procs-all	proc		218
+nimgrp	wherebetween	v2/query_builder/models/sqlite/sqlite_query.html#whereBetween-procs-all	proc		192
+nimgrp	having	v2/query_builder/models/sqlite/sqlite_query.html#having-procs-all	proc		292
+nimgrp	orwhere	v2/query_builder/models/sqlite/sqlite_query.html#orWhere-procs-all	proc		145
+nimgrp	first	v2/query_builder/models/sqlite/sqlite_query.html#first-procs-all	proc		837
+nimgrp	get	v2/query_builder/models/sqlite/sqlite_query.html#get-procs-all	proc		826
+nimgrp	insertid	v2/query_builder/models/sqlite/sqlite_query.html#insertId-procs-all	proc		965
+nimgrp	insert	v2/query_builder/models/sqlite/sqlite_query.html#insert-procs-all	proc		953
+nimgrp	where	v2/query_builder/models/sqlite/sqlite_query.html#where-procs-all	proc		67
+nimgrp	delete	v2/query_builder/models/sqlite/sqlite_query.html#delete-procs-all	proc		986
+nimgrp	getplain	v2/query_builder/models/sqlite/sqlite_query.html#getPlain-procs-all	proc		865
+nimgrp	find	v2/query_builder/models/sqlite/sqlite_query.html#find-procs-all	proc		848
+nimgrp	seeder	v2/query_builder/models/sqlite/sqlite_query.html#seeder-templates-all	template		1112

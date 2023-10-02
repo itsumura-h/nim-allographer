@@ -1,0 +1,2 @@
+nimTitle	drop	v2/schema_builder/usecases/postgres/drop.html	module src/allographer/v2/schema_builder/usecases/postgres/drop		0
+nim	drop	v2/schema_builder/usecases/postgres/drop.html#drop,PostgresConnections,varargs[Table]	proc drop(rdb: PostgresConnections; tables: varargs[Table])		9

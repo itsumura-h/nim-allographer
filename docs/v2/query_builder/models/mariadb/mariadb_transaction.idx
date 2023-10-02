@@ -1,0 +1,2 @@
+nimTitle	mariadb_transaction	v2/query_builder/models/mariadb/mariadb_transaction.html	module src/allographer/v2/query_builder/models/mariadb/mariadb_transaction		0
+nim	transaction	v2/query_builder/models/mariadb/mariadb_transaction.html#transaction.t,MariadbConnections,untyped	template transaction(rdb: MariadbConnections; callback: untyped)		23

@@ -1,0 +1,17 @@
+nimTitle	surreal_types	v2/query_builder/models/surreal/surreal_types.html	module src/allographer/v2/query_builder/models/surreal/surreal_types		0
+nim	SurrealDB	v2/query_builder/models/surreal/surreal_types.html#SurrealDB	object SurrealDB		8
+nim	SurrealConnection	v2/query_builder/models/surreal/surreal_types.html#SurrealConnection	object SurrealConnection		11
+nim	SurrealConnections	v2/query_builder/models/surreal/surreal_types.html#SurrealConnections	type SurrealConnections		17
+nim	`$`	v2/query_builder/models/surreal/surreal_types.html#$,SurrealConnections	proc `$`(self: SurrealConnections): string		22
+nim	SurrealQuery	v2/query_builder/models/surreal/surreal_types.html#SurrealQuery	type SurrealQuery		26
+nim	new	v2/query_builder/models/surreal/surreal_types.html#new,typeSurrealQuery,LogSetting,seq[SurrealConnection],int,JsonNode	proc new(__4328521756: type SurrealQuery; log: LogSetting;\n    pools: seq[SurrealConnection]; timeout: int; query: JsonNode): SurrealQuery		37
+nim	RawSurrealQuery	v2/query_builder/models/surreal/surreal_types.html#RawSurrealQuery	type RawSurrealQuery		48
+nim	SurrealId	v2/query_builder/models/surreal/surreal_types.html#SurrealId	object SurrealId		57
+nim	new	v2/query_builder/models/surreal/surreal_types.html#new,typeSurrealId	proc new(__4328521775: type SurrealId): SurrealId		62
+nim	new	v2/query_builder/models/surreal/surreal_types.html#new,typeSurrealId,string,string	proc new(__4328521779: type SurrealId; table, id: string): SurrealId		67
+nim	new	v2/query_builder/models/surreal/surreal_types.html#new,typeSurrealId,string	proc new(__4328521785: type SurrealId; rawId: string): SurrealId		80
+nim	rawId	v2/query_builder/models/surreal/surreal_types.html#rawId,SurrealId	proc rawId(self: SurrealId): string		92
+nim	`$`	v2/query_builder/models/surreal/surreal_types.html#$,SurrealId	proc `$`(self: SurrealId): string		100
+nim	`%`	v2/query_builder/models/surreal/surreal_types.html#%,SurrealId	proc `%`(self: SurrealId): JsonNode		104
+nimgrp	$	v2/query_builder/models/surreal/surreal_types.html#$-procs-all	proc		22
+nimgrp	new	v2/query_builder/models/surreal/surreal_types.html#new-procs-all	proc		37

@@ -1,0 +1,33 @@
+nimTitle	mysql_generator	v2/query_builder/models/mysql/query/mysql_generator.html	module src/allographer/v2/query_builder/models/mysql/query/mysql_generator		0
+nim	selectSql	v2/query_builder/models/mysql/query/mysql_generator.html#selectSql,MysqlQuery	proc selectSql(self: MysqlQuery): MysqlQuery		22
+nim	fromSql	v2/query_builder/models/mysql/query/mysql_generator.html#fromSql,MysqlQuery	proc fromSql(self: MysqlQuery): MysqlQuery		49
+nim	selectFirstSql	v2/query_builder/models/mysql/query/mysql_generator.html#selectFirstSql,MysqlQuery	proc selectFirstSql(self: MysqlQuery): MysqlQuery		55
+nim	selectByIdSql	v2/query_builder/models/mysql/query/mysql_generator.html#selectByIdSql,MysqlQuery,string	proc selectByIdSql(self: MysqlQuery; key: string): MysqlQuery		60
+nim	joinSql	v2/query_builder/models/mysql/query/mysql_generator.html#joinSql,MysqlQuery	proc joinSql(self: MysqlQuery): MysqlQuery		69
+nim	leftJoinSql	v2/query_builder/models/mysql/query/mysql_generator.html#leftJoinSql,MysqlQuery	proc leftJoinSql(self: MysqlQuery): MysqlQuery		81
+nim	whereSql	v2/query_builder/models/mysql/query/mysql_generator.html#whereSql,MysqlQuery	proc whereSql(self: MysqlQuery): MysqlQuery		93
+nim	orWhereSql	v2/query_builder/models/mysql/query/mysql_generator.html#orWhereSql,MysqlQuery	proc orWhereSql(self: MysqlQuery): MysqlQuery		106
+nim	whereBetweenSql	v2/query_builder/models/mysql/query/mysql_generator.html#whereBetweenSql,MysqlQuery	proc whereBetweenSql(self: MysqlQuery): MysqlQuery		120
+nim	whereBetweenStringSql	v2/query_builder/models/mysql/query/mysql_generator.html#whereBetweenStringSql,MysqlQuery	proc whereBetweenStringSql(self: MysqlQuery): MysqlQuery		136
+nim	whereNotBetweenSql	v2/query_builder/models/mysql/query/mysql_generator.html#whereNotBetweenSql,MysqlQuery	proc whereNotBetweenSql(self: MysqlQuery): MysqlQuery		152
+nim	whereNotBetweenStringSql	v2/query_builder/models/mysql/query/mysql_generator.html#whereNotBetweenStringSql,MysqlQuery	proc whereNotBetweenStringSql(self: MysqlQuery): MysqlQuery		168
+nim	whereInSql	v2/query_builder/models/mysql/query/mysql_generator.html#whereInSql,MysqlQuery	proc whereInSql(self: MysqlQuery): MysqlQuery		184
+nim	whereNotInSql	v2/query_builder/models/mysql/query/mysql_generator.html#whereNotInSql,MysqlQuery	proc whereNotInSql(self: MysqlQuery): MysqlQuery		200
+nim	whereNullSql	v2/query_builder/models/mysql/query/mysql_generator.html#whereNullSql,MysqlQuery	proc whereNullSql(self: MysqlQuery): MysqlQuery		216
+nim	groupBySql	v2/query_builder/models/mysql/query/mysql_generator.html#groupBySql,MysqlQuery	proc groupBySql(self: MysqlQuery): MysqlQuery		228
+nim	havingSql	v2/query_builder/models/mysql/query/mysql_generator.html#havingSql,MysqlQuery	proc havingSql(self: MysqlQuery): MysqlQuery		239
+nim	orderBySql	v2/query_builder/models/mysql/query/mysql_generator.html#orderBySql,MysqlQuery	proc orderBySql(self: MysqlQuery): MysqlQuery		254
+nim	limitSql	v2/query_builder/models/mysql/query/mysql_generator.html#limitSql,MysqlQuery	proc limitSql(self: MysqlQuery): MysqlQuery		267
+nim	offsetSql	v2/query_builder/models/mysql/query/mysql_generator.html#offsetSql,MysqlQuery	proc offsetSql(self: MysqlQuery): MysqlQuery		275
+nim	insertSql	v2/query_builder/models/mysql/query/mysql_generator.html#insertSql,MysqlQuery	proc insertSql(self: MysqlQuery): MysqlQuery		285
+nim	insertValueSql	v2/query_builder/models/mysql/query/mysql_generator.html#insertValueSql,MysqlQuery,JsonNode	proc insertValueSql(self: MysqlQuery; items: JsonNode): MysqlQuery		291
+nim	insertValuesSql	v2/query_builder/models/mysql/query/mysql_generator.html#insertValuesSql,MysqlQuery,openArray[JsonNode]	proc insertValuesSql(self: MysqlQuery; rows: openArray[JsonNode]): MysqlQuery		311
+nim	updateSql	v2/query_builder/models/mysql/query/mysql_generator.html#updateSql,MysqlQuery	proc updateSql(self: MysqlQuery): MysqlQuery		343
+nim	updateValuesSql	v2/query_builder/models/mysql/query/mysql_generator.html#updateValuesSql,MysqlQuery,JsonNode	proc updateValuesSql(self: MysqlQuery; items: JsonNode): MysqlQuery		353
+nim	deleteSql	v2/query_builder/models/mysql/query/mysql_generator.html#deleteSql,MysqlQuery	proc deleteSql(self: MysqlQuery): MysqlQuery		375
+nim	deleteByIdSql	v2/query_builder/models/mysql/query/mysql_generator.html#deleteByIdSql,MysqlQuery,int,string	proc deleteByIdSql(self: MysqlQuery; id: int; key: string): MysqlQuery		380
+nim	selectCountSql	v2/query_builder/models/mysql/query/mysql_generator.html#selectCountSql,MysqlQuery	proc selectCountSql(self: MysqlQuery): MysqlQuery		386
+nim	selectMaxSql	v2/query_builder/models/mysql/query/mysql_generator.html#selectMaxSql,MysqlQuery,string	proc selectMaxSql(self: MysqlQuery; column: string): MysqlQuery		397
+nim	selectMinSql	v2/query_builder/models/mysql/query/mysql_generator.html#selectMinSql,MysqlQuery,string	proc selectMinSql(self: MysqlQuery; column: string): MysqlQuery		402
+nim	selectAvgSql	v2/query_builder/models/mysql/query/mysql_generator.html#selectAvgSql,MysqlQuery,string	proc selectAvgSql(self: MysqlQuery; column: string): MysqlQuery		407
+nim	selectSumSql	v2/query_builder/models/mysql/query/mysql_generator.html#selectSumSql,MysqlQuery,string	proc selectSumSql(self: MysqlQuery; column: string): MysqlQuery		412

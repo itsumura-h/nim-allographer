@@ -1,0 +1,2 @@
+nimTitle	mysql_transaction	v2/query_builder/models/mysql/mysql_transaction.html	module src/allographer/v2/query_builder/models/mysql/mysql_transaction		0
+nim	transaction	v2/query_builder/models/mysql/mysql_transaction.html#transaction.t,MysqlConnections,untyped	template transaction(rdb: MysqlConnections; callback: untyped)		23

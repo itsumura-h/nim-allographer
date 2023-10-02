@@ -1,0 +1,5 @@
+nimTitle	mysql_connections	v2/query_builder/models/mysql/mysql_connections.html	module src/allographer/v2/query_builder/models/mysql/mysql_connections		0
+nim	`$`	v2/query_builder/models/mysql/mysql_connections.html#$	proc `$`(self: MysqlConnections | MysqlQuery): string		6
+nim	select	v2/query_builder/models/mysql/mysql_connections.html#select,MysqlConnections,varargs[string]	proc select(self: MysqlConnections; columnsArg: varargs[string]): MysqlQuery		10
+nim	table	v2/query_builder/models/mysql/mysql_connections.html#table,MysqlConnections,string	proc table(self: MysqlConnections; tableArg: string): MysqlQuery		32
+nim	raw	v2/query_builder/models/mysql/mysql_connections.html#raw,MysqlConnections,string	proc raw(self: MysqlConnections; sql: string; arges = newJArray()): RawMysqlQuery		50

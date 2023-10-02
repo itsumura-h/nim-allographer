@@ -1,0 +1,8 @@
+nimTitle	mysql_types	v2/query_builder/models/mysql/mysql_types.html	module src/allographer/v2/query_builder/models/mysql/mysql_types		0
+nim	MySQL	v2/query_builder/models/mysql/mysql_types.html#MySQL	object MySQL		6
+nim	MysqlConnectionInfo	v2/query_builder/models/mysql/mysql_types.html#MysqlConnectionInfo	object MysqlConnectionInfo		8
+nim	MysqlConnection	v2/query_builder/models/mysql/mysql_types.html#MysqlConnection	object MysqlConnection		15
+nim	MysqlConnections	v2/query_builder/models/mysql/mysql_types.html#MysqlConnections	type MysqlConnections		21
+nim	`$`	v2/query_builder/models/mysql/mysql_types.html#$,MysqlConnections	proc `$`(self: MysqlConnections): string		30
+nim	MysqlQuery	v2/query_builder/models/mysql/mysql_types.html#MysqlQuery	type MysqlQuery		35
+nim	RawMysqlQuery	v2/query_builder/models/mysql/mysql_types.html#RawMysqlQuery	type RawMysqlQuery		48

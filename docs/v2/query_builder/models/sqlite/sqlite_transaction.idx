@@ -1,0 +1,2 @@
+nimTitle	sqlite_transaction	v2/query_builder/models/sqlite/sqlite_transaction.html	module src/allographer/v2/query_builder/models/sqlite/sqlite_transaction		0
+nim	transaction	v2/query_builder/models/sqlite/sqlite_transaction.html#transaction.t,SqliteConnections,untyped	template transaction(rdb: SqliteConnections; callback: untyped)		23

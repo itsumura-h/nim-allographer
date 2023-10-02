@@ -1,0 +1,51 @@
+nimTitle	database_types	v2/query_builder/models/database_types.html	module src/allographer/v2/query_builder/models/database_types		0
+nim	Row	v2/query_builder/models/database_types.html#Row	type Row		2
+nim	dbUnknown	v2/query_builder/models/database_types.html#dbUnknown	DbTypeKind.dbUnknown		4
+nim	dbSerial	v2/query_builder/models/database_types.html#dbSerial	DbTypeKind.dbSerial		4
+nim	dbNull	v2/query_builder/models/database_types.html#dbNull	DbTypeKind.dbNull		4
+nim	dbBit	v2/query_builder/models/database_types.html#dbBit	DbTypeKind.dbBit		4
+nim	dbBool	v2/query_builder/models/database_types.html#dbBool	DbTypeKind.dbBool		4
+nim	dbBlob	v2/query_builder/models/database_types.html#dbBlob	DbTypeKind.dbBlob		4
+nim	dbFixedChar	v2/query_builder/models/database_types.html#dbFixedChar	DbTypeKind.dbFixedChar		4
+nim	dbVarchar	v2/query_builder/models/database_types.html#dbVarchar	DbTypeKind.dbVarchar		4
+nim	dbJson	v2/query_builder/models/database_types.html#dbJson	DbTypeKind.dbJson		4
+nim	dbXml	v2/query_builder/models/database_types.html#dbXml	DbTypeKind.dbXml		4
+nim	dbInt	v2/query_builder/models/database_types.html#dbInt	DbTypeKind.dbInt		4
+nim	dbUInt	v2/query_builder/models/database_types.html#dbUInt	DbTypeKind.dbUInt		4
+nim	dbDecimal	v2/query_builder/models/database_types.html#dbDecimal	DbTypeKind.dbDecimal		4
+nim	dbFloat	v2/query_builder/models/database_types.html#dbFloat	DbTypeKind.dbFloat		4
+nim	dbDate	v2/query_builder/models/database_types.html#dbDate	DbTypeKind.dbDate		4
+nim	dbTime	v2/query_builder/models/database_types.html#dbTime	DbTypeKind.dbTime		4
+nim	dbDatetime	v2/query_builder/models/database_types.html#dbDatetime	DbTypeKind.dbDatetime		4
+nim	dbTimestamp	v2/query_builder/models/database_types.html#dbTimestamp	DbTypeKind.dbTimestamp		4
+nim	dbTimeInterval	v2/query_builder/models/database_types.html#dbTimeInterval	DbTypeKind.dbTimeInterval		4
+nim	dbEnum	v2/query_builder/models/database_types.html#dbEnum	DbTypeKind.dbEnum		4
+nim	dbSet	v2/query_builder/models/database_types.html#dbSet	DbTypeKind.dbSet		4
+nim	dbArray	v2/query_builder/models/database_types.html#dbArray	DbTypeKind.dbArray		4
+nim	dbComposite	v2/query_builder/models/database_types.html#dbComposite	DbTypeKind.dbComposite		4
+nim	dbUrl	v2/query_builder/models/database_types.html#dbUrl	DbTypeKind.dbUrl		4
+nim	dbUuid	v2/query_builder/models/database_types.html#dbUuid	DbTypeKind.dbUuid		4
+nim	dbInet	v2/query_builder/models/database_types.html#dbInet	DbTypeKind.dbInet		4
+nim	dbMacAddress	v2/query_builder/models/database_types.html#dbMacAddress	DbTypeKind.dbMacAddress		4
+nim	dbGeometry	v2/query_builder/models/database_types.html#dbGeometry	DbTypeKind.dbGeometry		4
+nim	dbPoint	v2/query_builder/models/database_types.html#dbPoint	DbTypeKind.dbPoint		4
+nim	dbLine	v2/query_builder/models/database_types.html#dbLine	DbTypeKind.dbLine		4
+nim	dbLseg	v2/query_builder/models/database_types.html#dbLseg	DbTypeKind.dbLseg		4
+nim	dbBox	v2/query_builder/models/database_types.html#dbBox	DbTypeKind.dbBox		4
+nim	dbPath	v2/query_builder/models/database_types.html#dbPath	DbTypeKind.dbPath		4
+nim	dbPolygon	v2/query_builder/models/database_types.html#dbPolygon	DbTypeKind.dbPolygon		4
+nim	dbCircle	v2/query_builder/models/database_types.html#dbCircle	DbTypeKind.dbCircle		4
+nim	dbUser1	v2/query_builder/models/database_types.html#dbUser1	DbTypeKind.dbUser1		4
+nim	dbUser2	v2/query_builder/models/database_types.html#dbUser2	DbTypeKind.dbUser2		4
+nim	dbUser3	v2/query_builder/models/database_types.html#dbUser3	DbTypeKind.dbUser3		4
+nim	dbUser4	v2/query_builder/models/database_types.html#dbUser4	DbTypeKind.dbUser4		4
+nim	dbUser5	v2/query_builder/models/database_types.html#dbUser5	DbTypeKind.dbUser5		4
+nim	DbTypeKind	v2/query_builder/models/database_types.html#DbTypeKind	enum DbTypeKind		4
+nim	DbType	v2/query_builder/models/database_types.html#DbType	object DbType		48
+nim	DbColumn	v2/query_builder/models/database_types.html#DbColumn	object DbColumn		58
+nim	DbColumns	v2/query_builder/models/database_types.html#DbColumns	type DbColumns		65
+nim	DbRows	v2/query_builder/models/database_types.html#DbRows	type DbRows		66
+nim	DbEffect	v2/query_builder/models/database_types.html#DbEffect	object DbEffect		67
+nim	ReadDbEffect	v2/query_builder/models/database_types.html#ReadDbEffect	object ReadDbEffect		68
+nim	WriteDbEffect	v2/query_builder/models/database_types.html#WriteDbEffect	object WriteDbEffect		69
+nim	errorConnectionNum	v2/query_builder/models/database_types.html#errorConnectionNum	const errorConnectionNum		71

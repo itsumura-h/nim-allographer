@@ -112,7 +112,7 @@ echo surreal.table("user").get().await
 ```
 
 ```nim
-DEBUG SELECT * FROM `type` []
+DEBUG SELECT * FROM `type`
 
 @[
   {
@@ -144,7 +144,7 @@ if res.isSome():
 ```
 
 ```nim
-DEBUG SELECT * FROM `type` LIMIT 1 []
+DEBUG SELECT * FROM `type` LIMIT 1
 
 {
   "bool":true,

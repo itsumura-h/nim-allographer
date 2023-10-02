@@ -1,0 +1,2 @@
+nimTitle	create_table	v2/schema_builder/queries/surreal/create_table.html	module src/allographer/v2/schema_builder/queries/surreal/create_table		0
+nim	createTable	v2/schema_builder/queries/surreal/create_table.html#createTable,SurrealSchema,bool	proc createTable(self: SurrealSchema; isReset: bool)		13

@@ -1,0 +1,4 @@
+nimTitle	create_column_query	v2/schema_builder/queries/postgres/sub/create_column_query.html	module src/allographer/v2/schema_builder/queries/postgres/sub/create_column_query		0
+nim	createColumnString	v2/schema_builder/queries/postgres/sub/create_column_query.html#createColumnString,Table,Column	proc createColumnString(table: Table; column: Column): string		373
+nim	createForeignString	v2/schema_builder/queries/postgres/sub/create_column_query.html#createForeignString,Table,Column	proc createForeignString(table: Table; column: Column): string		436
+nim	createIndexString	v2/schema_builder/queries/postgres/sub/create_column_query.html#createIndexString,Table,Column	proc createIndexString(table: Table; column: Column): string		440

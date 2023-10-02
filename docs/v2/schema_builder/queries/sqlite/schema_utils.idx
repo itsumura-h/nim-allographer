@@ -1,0 +1,8 @@
+nimTitle	schema_utils	v2/schema_builder/queries/sqlite/schema_utils.html	module src/allographer/v2/schema_builder/queries/sqlite/schema_utils		0
+nim	notAllowedOption	v2/schema_builder/queries/sqlite/schema_utils.html#notAllowedOption,string,string,string	proc notAllowedOption(option, typ, column: string)		14
+nim	notAllowedType	v2/schema_builder/queries/sqlite/schema_utils.html#notAllowedType,string	proc notAllowedType(typ: string)		18
+nim	shouldRun	v2/schema_builder/queries/sqlite/schema_utils.html#shouldRun,SqliteConnections,Table,string,bool	proc shouldRun(rdb: SqliteConnections; table: Table; checksum: string; isReset: bool): bool		27
+nim	exec	v2/schema_builder/queries/sqlite/schema_utils.html#exec,SqliteConnections,seq[string]	proc exec(rdb: SqliteConnections; queries: seq[string])		38
+nim	execThenSaveHistory	v2/schema_builder/queries/sqlite/schema_utils.html#execThenSaveHistory,SqliteConnections,string,seq[string],string	proc execThenSaveHistory(rdb: SqliteConnections; tableName: string;\n                    queries: seq[string]; checksum: string)		56
+nim	execThenSaveHistory	v2/schema_builder/queries/sqlite/schema_utils.html#execThenSaveHistory,SqliteConnections,string,string,string	proc execThenSaveHistory(rdb: SqliteConnections; tableName: string; query: string;\n                    checksum: string)		85
+nimgrp	execthensavehistory	v2/schema_builder/queries/sqlite/schema_utils.html#execThenSaveHistory-procs-all	proc		56

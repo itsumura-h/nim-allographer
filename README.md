@@ -181,7 +181,11 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 [Query Builder for SurrealDB](./documents/surrealdb/query_builder.md)  
 
 ## Nim API Documents
+### v1
 [connection](https://itsumura-h.github.io/nim-allographer/connection.html)  
+
+### v2
+
 
 ### Schema Builder
 [usecases/create](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/create.html)  

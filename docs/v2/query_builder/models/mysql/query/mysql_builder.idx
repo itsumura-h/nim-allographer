@@ -1,0 +1,15 @@
+nimTitle	mysql_builder	v2/query_builder/models/mysql/query/mysql_builder.html	module src/allographer/v2/query_builder/models/mysql/query/mysql_builder		0
+nim	selectBuilder	v2/query_builder/models/mysql/query/mysql_builder.html#selectBuilder,MysqlQuery	proc selectBuilder(self: MysqlQuery): string		8
+nim	selectFirstBuilder	v2/query_builder/models/mysql/query/mysql_builder.html#selectFirstBuilder,MysqlQuery	proc selectFirstBuilder(self: MysqlQuery): string		30
+nim	selectFindBuilder	v2/query_builder/models/mysql/query/mysql_builder.html#selectFindBuilder,MysqlQuery,string	proc selectFindBuilder(self: MysqlQuery; key: string): string		52
+nim	insertValueBuilder	v2/query_builder/models/mysql/query/mysql_builder.html#insertValueBuilder,MysqlQuery,JsonNode	proc insertValueBuilder(self: MysqlQuery; items: JsonNode): string		73
+nim	insertValuesBuilder	v2/query_builder/models/mysql/query/mysql_builder.html#insertValuesBuilder,MysqlQuery,openArray[JsonNode]	proc insertValuesBuilder(self: MysqlQuery; rows: openArray[JsonNode]): string		79
+nim	updateBuilder	v2/query_builder/models/mysql/query/mysql_builder.html#updateBuilder,MysqlQuery,JsonNode	proc updateBuilder(self: MysqlQuery; items: JsonNode): string		88
+nim	deleteBuilder	v2/query_builder/models/mysql/query/mysql_builder.html#deleteBuilder,MysqlQuery	proc deleteBuilder(self: MysqlQuery): string		101
+nim	deleteByIdBuilder	v2/query_builder/models/mysql/query/mysql_builder.html#deleteByIdBuilder,MysqlQuery,int,string	proc deleteByIdBuilder(self: MysqlQuery; id: int; key: string): string		113
+nim	countBuilder	v2/query_builder/models/mysql/query/mysql_builder.html#countBuilder,MysqlQuery	proc countBuilder(self: MysqlQuery): string		123
+nim	maxBuilder	v2/query_builder/models/mysql/query/mysql_builder.html#maxBuilder,MysqlQuery,string	proc maxBuilder(self: MysqlQuery; column: string): string		143
+nim	minBuilder	v2/query_builder/models/mysql/query/mysql_builder.html#minBuilder,MysqlQuery,string	proc minBuilder(self: MysqlQuery; column: string): string		163
+nim	avgBuilder	v2/query_builder/models/mysql/query/mysql_builder.html#avgBuilder,MysqlQuery,string	proc avgBuilder(self: MysqlQuery; column: string): string		183
+nim	sumBuilder	v2/query_builder/models/mysql/query/mysql_builder.html#sumBuilder,MysqlQuery,string	proc sumBuilder(self: MysqlQuery; column: string): string		203
+nim	columnBuilder	v2/query_builder/models/mysql/query/mysql_builder.html#columnBuilder,MysqlQuery	proc columnBuilder(self: MysqlQuery): string		223

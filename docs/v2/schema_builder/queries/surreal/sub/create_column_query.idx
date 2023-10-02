@@ -1,0 +1,2 @@
+nimTitle	create_column_query	v2/schema_builder/queries/surreal/sub/create_column_query.html	module src/allographer/v2/schema_builder/queries/surreal/sub/create_column_query		0
+nim	createColumnString	v2/schema_builder/queries/surreal/sub/create_column_query.html#createColumnString,Table,Column	proc createColumnString(table: Table; column: Column): seq[string]		472

@@ -1,0 +1,55 @@
+nimTitle	surreal_query	v2/query_builder/models/surreal/surreal_query.html	module src/allographer/v2/query_builder/models/surreal/surreal_query		0
+nim	table	v2/query_builder/models/surreal/surreal_query.html#table,SurrealQuery,string	proc table(self: SurrealQuery; tableArg: string): SurrealQuery		17
+nim	`distinct`	v2/query_builder/models/surreal/surreal_query.html#distinct,SurrealQuery	proc `distinct`(self: SurrealQuery): SurrealQuery		22
+nim	where	v2/query_builder/models/surreal/surreal_query.html#where,SurrealQuery,string,string,	proc where(self: SurrealQuery; column: string; symbol: string;\n      value: bool | int | float | string | SurrealId): SurrealQuery		70
+nim	where	v2/query_builder/models/surreal/surreal_query.html#where,SurrealQuery,string,string,_2	proc where(self: SurrealQuery; column: string; symbol: string; value: nil.type): SurrealQuery		95
+nim	orWhere	v2/query_builder/models/surreal/surreal_query.html#orWhere,SurrealQuery,string,string,	proc orWhere(self: SurrealQuery; column: string; symbol: string;\n        value: bool | int | float | string | SurrealId): SurrealQuery		119
+nim	orWhere	v2/query_builder/models/surreal/surreal_query.html#orWhere,SurrealQuery,string,string,_2	proc orWhere(self: SurrealQuery; column: string; symbol: string; value: nil.type): SurrealQuery		144
+nim	whereBetween	v2/query_builder/models/surreal/surreal_query.html#whereBetween,SurrealQuery,string,array[,]	proc whereBetween(self: SurrealQuery; column: string; width: array[2, int | float]): SurrealQuery		166
+nim	whereNotBetween	v2/query_builder/models/surreal/surreal_query.html#whereNotBetween,SurrealQuery,string,array[,]	proc whereNotBetween(self: SurrealQuery; column: string; width: array[2, int | float]): SurrealQuery		204
+nim	whereIn	v2/query_builder/models/surreal/surreal_query.html#whereIn,SurrealQuery,string,seq[]	proc whereIn(self: SurrealQuery; column: string; width: seq[int | float | string]): SurrealQuery		240
+nim	whereNotIn	v2/query_builder/models/surreal/surreal_query.html#whereNotIn,SurrealQuery,string,seq[]	proc whereNotIn(self: SurrealQuery; column: string; width: seq[int | float | string]): SurrealQuery		259
+nim	whereNull	v2/query_builder/models/surreal/surreal_query.html#whereNull,SurrealQuery,string	proc whereNull(self: SurrealQuery; column: string): SurrealQuery		278
+nim	groupBy	v2/query_builder/models/surreal/surreal_query.html#groupBy,SurrealQuery,string	proc groupBy(self: SurrealQuery; column: string): SurrealQuery		293
+nim	having	v2/query_builder/models/surreal/surreal_query.html#having,SurrealQuery,string,string,	proc having(self: SurrealQuery; column: string; symbol: string;\n       value: bool | int | float | string): SurrealQuery		301
+nim	having	v2/query_builder/models/surreal/surreal_query.html#having,SurrealQuery,string,string,_2	proc having(self: SurrealQuery; column: string; symbol: string; value: nil.type): SurrealQuery		326
+nim	fetch	v2/query_builder/models/surreal/surreal_query.html#fetch,SurrealQuery,varargs[string]	proc fetch(self: SurrealQuery; columnsArg: varargs[string]): SurrealQuery		350
+nim	orderBy	v2/query_builder/models/surreal/surreal_query.html#orderBy,SurrealQuery,string,Order	proc orderBy(self: SurrealQuery; column: string; order: Order): SurrealQuery		355
+nim	orderBy	v2/query_builder/models/surreal/surreal_query.html#orderBy,SurrealQuery,string,Collation,Order	proc orderBy(self: SurrealQuery; column: string; collation: Collation; order: Order): SurrealQuery		371
+nim	limit	v2/query_builder/models/surreal/surreal_query.html#limit,SurrealQuery,int	proc limit(self: SurrealQuery; num: int): SurrealQuery		387
+nim	start	v2/query_builder/models/surreal/surreal_query.html#start,SurrealQuery,int	proc start(self: SurrealQuery; num: int): SurrealQuery		392
+nim	parallel	v2/query_builder/models/surreal/surreal_query.html#parallel,SurrealQuery	proc parallel(self: SurrealQuery): SurrealQuery		397
+nim	get	v2/query_builder/models/surreal/surreal_query.html#get,SurrealQuery	proc get(self: SurrealQuery): Future[seq[JsonNode]]		706
+nim	first	v2/query_builder/models/surreal/surreal_query.html#first,SurrealQuery	proc first(self: SurrealQuery): Future[Option[JsonNode]]		718
+nim	find	v2/query_builder/models/surreal/surreal_query.html#find,SurrealQuery,SurrealId,string	proc find(self: SurrealQuery; id: SurrealId; key = "id"): Future[Option[JsonNode]]		729
+nim	insert	v2/query_builder/models/surreal/surreal_query.html#insert,SurrealQuery,JsonNode	proc insert(self: SurrealQuery; items: JsonNode): owned(Future[void])		741
+nim	insert	v2/query_builder/models/surreal/surreal_query.html#insert,SurrealQuery,seq[JsonNode]	proc insert(self: SurrealQuery; items: seq[JsonNode]): owned(Future[void])		748
+nim	insertId	v2/query_builder/models/surreal/surreal_query.html#insertId,SurrealQuery,JsonNode,string	proc insertId(self: SurrealQuery; items: JsonNode; key = "id"): Future[SurrealId]		755
+nim	insertId	v2/query_builder/models/surreal/surreal_query.html#insertId,SurrealQuery,seq[JsonNode],string	proc insertId(self: SurrealQuery; items: seq[JsonNode]; key = "id"): Future[\n    seq[SurrealId]]		766
+nim	update	v2/query_builder/models/surreal/surreal_query.html#update,SurrealQuery,JsonNode	proc update(self: SurrealQuery; items: JsonNode): owned(Future[void])		777
+nim	update	v2/query_builder/models/surreal/surreal_query.html#update,SurrealConnections,SurrealId,JsonNode	proc update(self: SurrealConnections; id: SurrealId; items: JsonNode): owned(\n    Future[void])		784
+nim	delete	v2/query_builder/models/surreal/surreal_query.html#delete,SurrealQuery	proc delete(self: SurrealQuery): owned(Future[void])		797
+nim	delete	v2/query_builder/models/surreal/surreal_query.html#delete,SurrealQuery,SurrealId	proc delete(self: SurrealQuery; id: SurrealId): owned(Future[void])		804
+nim	columns	v2/query_builder/models/surreal/surreal_query.html#columns,SurrealQuery	proc columns(self: SurrealQuery): Future[seq[string]]		811
+nim	count	v2/query_builder/models/surreal/surreal_query.html#count,SurrealQuery	proc count(self: SurrealQuery): Future[int]		827
+nim	min	v2/query_builder/models/surreal/surreal_query.html#min,SurrealQuery,string,Collation	proc min(self: SurrealQuery; column: string; collaction: Collation = None): Future[\n    string]		837
+nim	max	v2/query_builder/models/surreal/surreal_query.html#max,SurrealQuery,string,Collation	proc max(self: SurrealQuery; column: string; collaction: Collation = None): Future[\n    string]		855
+nim	avg	v2/query_builder/models/surreal/surreal_query.html#avg,SurrealQuery,string	proc avg(self: SurrealQuery; column: string): Future[float]		873
+nim	sum	v2/query_builder/models/surreal/surreal_query.html#sum,SurrealQuery,string	proc sum(self: SurrealQuery; column: string): Future[float]		883
+nim	get	v2/query_builder/models/surreal/surreal_query.html#get,RawSurrealQuery	proc get(self: RawSurrealQuery): Future[seq[JsonNode]]		893
+nim	exec	v2/query_builder/models/surreal/surreal_query.html#exec,RawSurrealQuery	proc exec(self: RawSurrealQuery): owned(Future[void])		899
+nim	info	v2/query_builder/models/surreal/surreal_query.html#info,RawSurrealQuery	proc info(self: RawSurrealQuery): Future[JsonNode]		913
+nim	first	v2/query_builder/models/surreal/surreal_query.html#first,RawSurrealQuery	proc first(self: RawSurrealQuery): Future[Option[JsonNode]]		927
+nim	seeder	v2/query_builder/models/surreal/surreal_query.html#seeder.t,SurrealConnections,string,untyped	template seeder(rdb: SurrealConnections; tableName: string; body: untyped): untyped		933
+nim	seeder	v2/query_builder/models/surreal/surreal_query.html#seeder.t,SurrealConnections,string,string,untyped	template seeder(rdb: SurrealConnections; tableName, column: string; body: untyped): untyped		940
+nimgrp	orderby	v2/query_builder/models/surreal/surreal_query.html#orderBy-procs-all	proc		355
+nimgrp	having	v2/query_builder/models/surreal/surreal_query.html#having-procs-all	proc		301
+nimgrp	orwhere	v2/query_builder/models/surreal/surreal_query.html#orWhere-procs-all	proc		119
+nimgrp	first	v2/query_builder/models/surreal/surreal_query.html#first-procs-all	proc		718
+nimgrp	get	v2/query_builder/models/surreal/surreal_query.html#get-procs-all	proc		706
+nimgrp	insert	v2/query_builder/models/surreal/surreal_query.html#insert-procs-all	proc		741
+nimgrp	insertid	v2/query_builder/models/surreal/surreal_query.html#insertId-procs-all	proc		755
+nimgrp	where	v2/query_builder/models/surreal/surreal_query.html#where-procs-all	proc		70
+nimgrp	delete	v2/query_builder/models/surreal/surreal_query.html#delete-procs-all	proc		797
+nimgrp	update	v2/query_builder/models/surreal/surreal_query.html#update-procs-all	proc		777
+nimgrp	seeder	v2/query_builder/models/surreal/surreal_query.html#seeder-templates-all	template		933

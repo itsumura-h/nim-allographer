@@ -1,0 +1,12 @@
+nimTitle	sqlite_lib	v2/query_builder/libs/sqlite/sqlite_lib.html	module src/allographer/v2/query_builder/libs/sqlite/sqlite_lib		0
+nim	dbError	v2/query_builder/libs/sqlite/sqlite_lib.html#dbError,PSqlite3	proc dbError(db: PSqlite3)		22
+nim	dbFormat	v2/query_builder/libs/sqlite/sqlite_lib.html#dbFormat,string,varargs[string]	proc dbFormat(formatstr: string; args: varargs[string]): string		38
+nim	instantRows	v2/query_builder/libs/sqlite/sqlite_lib.html#instantRows.i,PSqlite3,DbRows,string,seq[string]	iterator instantRows(db: PSqlite3; dbRows: var DbRows; query: string; args: seq[string]): InstantRow		75
+nim	instantRowsPlain	v2/query_builder/libs/sqlite/sqlite_lib.html#instantRowsPlain.i,PSqlite3,string,seq[string]	iterator instantRowsPlain(db: PSqlite3; query: string; args: seq[string]): InstantRow		114
+nim	instantRows	v2/query_builder/libs/sqlite/sqlite_lib.html#instantRows.i,PSqlite3,DbRows,PStmt	iterator instantRows(db: PSqlite3; dbRows: var DbRows; sqliteStmt: PStmt): InstantRow		123
+nim	getColumns	v2/query_builder/libs/sqlite/sqlite_lib.html#getColumns,PSqlite3,DbRows,string,seq[string]	proc getColumns(db: PSqlite3; dbRows: var DbRows; query: string; args: seq[string]): seq[\n    string]		135
+nim	len	v2/query_builder/libs/sqlite/sqlite_lib.html#len,InstantRow	proc len(row: InstantRow): int32		149
+nim	`[]`	v2/query_builder/libs/sqlite/sqlite_lib.html#[],InstantRow,int32	proc `[]`(row: InstantRow; col: int32): string		157
+nim	dbBindParamError	v2/query_builder/libs/sqlite/sqlite_lib.html#dbBindParamError.t,int,varargs[untyped]	template dbBindParamError(paramIdx: int; val: varargs[untyped])		165
+nim	bindParam	v2/query_builder/libs/sqlite/sqlite_lib.html#bindParam,PStmt,int,string	proc bindParam(ps: PStmt; paramIdx: int; val: string; copy = true)		172
+nimgrp	instantrows	v2/query_builder/libs/sqlite/sqlite_lib.html#instantRows-iterators-all	iterator		75

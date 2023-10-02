@@ -1,0 +1,15 @@
+nimTitle	postgres_builder	v2/query_builder/models/postgres/query/postgres_builder.html	module src/allographer/v2/query_builder/models/postgres/query/postgres_builder		0
+nim	selectBuilder	v2/query_builder/models/postgres/query/postgres_builder.html#selectBuilder,PostgresQuery	proc selectBuilder(self: PostgresQuery): string		8
+nim	selectFirstBuilder	v2/query_builder/models/postgres/query/postgres_builder.html#selectFirstBuilder,PostgresQuery	proc selectFirstBuilder(self: PostgresQuery): string		30
+nim	selectFindBuilder	v2/query_builder/models/postgres/query/postgres_builder.html#selectFindBuilder,PostgresQuery,string	proc selectFindBuilder(self: PostgresQuery; key: string): string		52
+nim	insertValueBuilder	v2/query_builder/models/postgres/query/postgres_builder.html#insertValueBuilder,PostgresQuery,JsonNode	proc insertValueBuilder(self: PostgresQuery; items: JsonNode): string		73
+nim	insertValuesBuilder	v2/query_builder/models/postgres/query/postgres_builder.html#insertValuesBuilder,PostgresQuery,openArray[JsonNode]	proc insertValuesBuilder(self: PostgresQuery; rows: openArray[JsonNode]): string		79
+nim	updateBuilder	v2/query_builder/models/postgres/query/postgres_builder.html#updateBuilder,PostgresQuery,JsonNode	proc updateBuilder(self: PostgresQuery; items: JsonNode): string		88
+nim	deleteBuilder	v2/query_builder/models/postgres/query/postgres_builder.html#deleteBuilder,PostgresQuery	proc deleteBuilder(self: PostgresQuery): string		101
+nim	deleteByIdBuilder	v2/query_builder/models/postgres/query/postgres_builder.html#deleteByIdBuilder,PostgresQuery,int,string	proc deleteByIdBuilder(self: PostgresQuery; id: int; key: string): string		113
+nim	countBuilder	v2/query_builder/models/postgres/query/postgres_builder.html#countBuilder,PostgresQuery	proc countBuilder(self: PostgresQuery): string		123
+nim	maxBuilder	v2/query_builder/models/postgres/query/postgres_builder.html#maxBuilder,PostgresQuery,string	proc maxBuilder(self: PostgresQuery; column: string): string		143
+nim	minBuilder	v2/query_builder/models/postgres/query/postgres_builder.html#minBuilder,PostgresQuery,string	proc minBuilder(self: PostgresQuery; column: string): string		163
+nim	avgBuilder	v2/query_builder/models/postgres/query/postgres_builder.html#avgBuilder,PostgresQuery,string	proc avgBuilder(self: PostgresQuery; column: string): string		183
+nim	sumBuilder	v2/query_builder/models/postgres/query/postgres_builder.html#sumBuilder,PostgresQuery,string	proc sumBuilder(self: PostgresQuery; column: string): string		203
+nim	columnBuilder	v2/query_builder/models/postgres/query/postgres_builder.html#columnBuilder,PostgresQuery	proc columnBuilder(self: PostgresQuery): string		223

@@ -1,0 +1,7 @@
+nimTitle	sqlite_types	v2/query_builder/models/sqlite/sqlite_types.html	module src/allographer/v2/query_builder/models/sqlite/sqlite_types		0
+nim	SQLite3	v2/query_builder/models/sqlite/sqlite_types.html#SQLite3	object SQLite3		6
+nim	SqliteConnection	v2/query_builder/models/sqlite/sqlite_types.html#SqliteConnection	type SqliteConnection		9
+nim	SqliteConnections	v2/query_builder/models/sqlite/sqlite_types.html#SqliteConnections	type SqliteConnections		16
+nim	`$`	v2/query_builder/models/sqlite/sqlite_types.html#$,SqliteConnections	proc `$`(self: SqliteConnections): string		24
+nim	SqliteQuery	v2/query_builder/models/sqlite/sqlite_types.html#SqliteQuery	type SqliteQuery		29
+nim	RawSqliteQuery	v2/query_builder/models/sqlite/sqlite_types.html#RawSqliteQuery	type RawSqliteQuery		41

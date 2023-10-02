@@ -1,0 +1,5 @@
+nimTitle	postgres_query_type	v2/schema_builder/queries/postgres/postgres_query_type.html	module src/allographer/v2/schema_builder/queries/postgres/postgres_query_type		0
+nim	PostgresSchema	v2/schema_builder/queries/postgres/postgres_query_type.html#PostgresSchema	type PostgresSchema		6
+nim	new	v2/schema_builder/queries/postgres/postgres_query_type.html#new,typePostgresSchema,PostgresConnections,Table	proc new(__3103784970: type PostgresSchema; rdb: PostgresConnections; table: Table): PostgresSchema		11
+nim	new	v2/schema_builder/queries/postgres/postgres_query_type.html#new,typePostgresSchema,PostgresConnections,Table,Column	proc new(__3103784976: type PostgresSchema; rdb: PostgresConnections; table: Table;\n    column: Column): PostgresSchema		14
+nimgrp	new	v2/schema_builder/queries/postgres/postgres_query_type.html#new-procs-all	proc		11

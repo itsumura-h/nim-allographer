@@ -1,0 +1,2 @@
+nimTitle	rename_table	v2/schema_builder/queries/mariadb/rename_table.html	module src/allographer/v2/schema_builder/queries/mariadb/rename_table		0
+nim	renameTable	v2/schema_builder/queries/mariadb/rename_table.html#renameTable,MariadbSchema,bool	proc renameTable(self: MariadbSchema; isReset: bool)		9

@@ -1,0 +1,8 @@
+nimTitle	mariadb_types	v2/query_builder/models/mariadb/mariadb_types.html	module src/allographer/v2/query_builder/models/mariadb/mariadb_types		0
+nim	MariaDB	v2/query_builder/models/mariadb/mariadb_types.html#MariaDB	object MariaDB		6
+nim	MariadbConnectionInfo	v2/query_builder/models/mariadb/mariadb_types.html#MariadbConnectionInfo	object MariadbConnectionInfo		8
+nim	MariadbConnection	v2/query_builder/models/mariadb/mariadb_types.html#MariadbConnection	object MariadbConnection		15
+nim	MariadbConnections	v2/query_builder/models/mariadb/mariadb_types.html#MariadbConnections	type MariadbConnections		21
+nim	`$`	v2/query_builder/models/mariadb/mariadb_types.html#$,MariadbConnections	proc `$`(self: MariadbConnections): string		30
+nim	MariadbQuery	v2/query_builder/models/mariadb/mariadb_types.html#MariadbQuery	type MariadbQuery		35
+nim	RawMariadbQuery	v2/query_builder/models/mariadb/mariadb_types.html#RawMariadbQuery	type RawMariadbQuery		48

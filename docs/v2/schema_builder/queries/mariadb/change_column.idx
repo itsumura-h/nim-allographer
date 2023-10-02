@@ -1,0 +1,2 @@
+nimTitle	change_column	v2/schema_builder/queries/mariadb/change_column.html	module src/allographer/v2/schema_builder/queries/mariadb/change_column		0
+nim	changeColumn	v2/schema_builder/queries/mariadb/change_column.html#changeColumn,MariadbSchema,bool	proc changeColumn(self: MariadbSchema; isReset: bool)		11

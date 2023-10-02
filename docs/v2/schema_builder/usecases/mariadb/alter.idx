@@ -1,0 +1,2 @@
+nimTitle	alter	v2/schema_builder/usecases/mariadb/alter.html	module src/allographer/v2/schema_builder/usecases/mariadb/alter		0
+nim	alter	v2/schema_builder/usecases/mariadb/alter.html#alter,MariadbConnections,varargs[Table]	proc alter(rdb: MariadbConnections; tables: varargs[Table])		10

@@ -1,0 +1,2 @@
+nimTitle	mysql_open	v2/query_builder/models/mysql/mysql_open.html	module src/allographer/v2/query_builder/models/mysql/mysql_open		0
+nim	dbOpen	v2/query_builder/models/mysql/mysql_open.html#dbOpen,typeMySQL,string,string,string,string,int32,int,int,string	proc dbOpen(__2332033031: type MySQL; database: string = ""; user: string = "";\n       password: string = ""; host: string = ""; port: int32 = 0;\n       maxConnections: int = 1; timeout = 30; shouldDisplayLog = false;\n       shouldOutputLogFile = false; logDir = ""): MysqlConnections		8

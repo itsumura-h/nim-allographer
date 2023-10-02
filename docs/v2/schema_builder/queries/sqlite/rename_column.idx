@@ -1,0 +1,2 @@
+nimTitle	rename_column	v2/schema_builder/queries/sqlite/rename_column.html	module src/allographer/v2/schema_builder/queries/sqlite/rename_column		0
+nim	renameColumn	v2/schema_builder/queries/sqlite/rename_column.html#renameColumn,SqliteSchema,bool	proc renameColumn(self: SqliteSchema; isReset: bool)		10

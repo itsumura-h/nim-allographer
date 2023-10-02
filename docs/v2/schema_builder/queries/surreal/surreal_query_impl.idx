@@ -1,0 +1,2 @@
+nimTitle	surreal_query_impl	v2/schema_builder/queries/surreal/surreal_query_impl.html	module src/allographer/v2/schema_builder/queries/surreal/surreal_query_impl		0
+nim	toInterface	v2/schema_builder/queries/surreal/surreal_query_impl.html#toInterface,SurrealSchema	proc toInterface(self: SurrealSchema): ISchema		14

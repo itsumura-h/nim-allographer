@@ -1,0 +1,3 @@
+nimTitle	reset_table	v2/schema_builder/queries/mysql/reset_table.html	module src/allographer/v2/schema_builder/queries/mysql/reset_table		0
+nim	resetMigrationTable	v2/schema_builder/queries/mysql/reset_table.html#resetMigrationTable,MysqlSchema	proc resetMigrationTable(self: MysqlSchema)		9
+nim	resetTable	v2/schema_builder/queries/mysql/reset_table.html#resetTable,MysqlSchema	proc resetTable(self: MysqlSchema)		12

@@ -1,0 +1,13 @@
+nimTitle	postgres_lib	v2/query_builder/libs/postgres/postgres_lib.html	module src/allographer/v2/query_builder/libs/postgres/postgres_lib		0
+nim	dbError	v2/query_builder/libs/postgres/postgres_lib.html#dbError,PPGconn	proc dbError(db: PPGconn)		9
+nim	checkError	v2/query_builder/libs/postgres/postgres_lib.html#checkError,PPGconn	proc checkError(db: PPGconn)		16
+nim	setColumnInfo	v2/query_builder/libs/postgres/postgres_lib.html#setColumnInfo,PPGresult,DbRows,int32,int32	proc setColumnInfo(res: PPGresult; dbRows: var DbRows; line, cols: int32)		159
+nim	newRow	v2/query_builder/libs/postgres/postgres_lib.html#newRow,int	proc newRow(L: int): Row		169
+nim	setRow	v2/query_builder/libs/postgres/postgres_lib.html#setRow,PPGresult,Row,int32,int32	proc setRow(res: PPGresult; r: var Row; line, cols: int32)		173
+nim	dbFormat	v2/query_builder/libs/postgres/postgres_lib.html#dbFormat,string,varargs[string]	proc dbFormat(formatstr: string; args: varargs[string]): string		203
+nim	questionToDaller	v2/query_builder/libs/postgres/postgres_lib.html#questionToDaller,string	proc questionToDaller(s: string): string		219
+nim	PGParams	v2/query_builder/libs/postgres/postgres_lib.html#PGParams	object PGParams		232
+nim	fromObjArray	v2/query_builder/libs/postgres/postgres_lib.html#fromObjArray,typePGParams,JsonNode,seq[Row]	proc fromObjArray(__3221225599: type PGParams; args: JsonNode; columns: seq[Row]): PGParams		239
+nim	fromObjArray	v2/query_builder/libs/postgres/postgres_lib.html#fromObjArray,typePGParams,JsonNode	proc fromObjArray(__3221225614: type PGParams; args: JsonNode): PGParams		293
+nim	fromArray	v2/query_builder/libs/postgres/postgres_lib.html#fromArray,typePGParams,JsonNode	proc fromArray(__3221225625: type PGParams; args: JsonNode): PGParams		339
+nimgrp	fromobjarray	v2/query_builder/libs/postgres/postgres_lib.html#fromObjArray-procs-all	proc		239

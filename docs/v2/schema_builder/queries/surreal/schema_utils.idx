@@ -1,0 +1,8 @@
+nimTitle	schema_utils	v2/schema_builder/queries/surreal/schema_utils.html	module src/allographer/v2/schema_builder/queries/surreal/schema_utils		0
+nim	notAllowedOption	v2/schema_builder/queries/surreal/schema_utils.html#notAllowedOption,string,string,string	proc notAllowedOption(option, typ, column: string)		14
+nim	notAllowedType	v2/schema_builder/queries/surreal/schema_utils.html#notAllowedType,string	proc notAllowedType(typ: string)		18
+nim	shouldRun	v2/schema_builder/queries/surreal/schema_utils.html#shouldRun,SurrealConnections,Table,string,bool	proc shouldRun(rdb: SurrealConnections; table: Table; checksum: string; isReset: bool): bool		27
+nim	exec	v2/schema_builder/queries/surreal/schema_utils.html#exec,SurrealConnections,seq[string]	proc exec(rdb: SurrealConnections; queries: seq[string])		38
+nim	execThenSaveHistory	v2/schema_builder/queries/surreal/schema_utils.html#execThenSaveHistory,SurrealConnections,string,seq[string],string	proc execThenSaveHistory(rdb: SurrealConnections; tableName: string;\n                    queries: seq[string]; checksum: string)		56
+nim	execThenSaveHistory	v2/schema_builder/queries/surreal/schema_utils.html#execThenSaveHistory,SurrealConnections,string,string,string	proc execThenSaveHistory(rdb: SurrealConnections; tableName: string; query: string;\n                    checksum: string)		89
+nimgrp	execthensavehistory	v2/schema_builder/queries/surreal/schema_utils.html#execThenSaveHistory-procs-all	proc		56

@@ -1,0 +1,2 @@
+nimTitle	rename_column	v2/schema_builder/queries/surreal/rename_column.html	module src/allographer/v2/schema_builder/queries/surreal/rename_column		0
+nim	renameColumn	v2/schema_builder/queries/surreal/rename_column.html#renameColumn,SurrealSchema,bool	proc renameColumn(self: SurrealSchema; isReset: bool)		11

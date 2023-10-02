@@ -1,0 +1,2 @@
+nimTitle	drop	v2/schema_builder/usecases/mariadb/drop.html	module src/allographer/v2/schema_builder/usecases/mariadb/drop		0
+nim	drop	v2/schema_builder/usecases/mariadb/drop.html#drop,MariadbConnections,varargs[Table]	proc drop(rdb: MariadbConnections; tables: varargs[Table])		9
