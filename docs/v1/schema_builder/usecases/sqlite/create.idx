@@ -1,0 +1,1 @@
+create	v1/schema_builder/usecases/sqlite/create.html#create,SqliteConnections,varargs[Table]	create: create(rdb: SqliteConnections; tables: varargs[Table])	

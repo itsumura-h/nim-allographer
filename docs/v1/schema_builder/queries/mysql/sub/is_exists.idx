@@ -1,0 +1,2 @@
+isExistsIndex	v1/schema_builder/queries/mysql/sub/is_exists.html#isExistsIndex,MysqlConnections,Table,Column	is_exists: isExistsIndex(rdb: MysqlConnections; table: Table; column: Column): Future[bool]	
+isExistsUnique	v1/schema_builder/queries/mysql/sub/is_exists.html#isExistsUnique,MysqlConnections,Table,Column	is_exists: isExistsUnique(rdb: MysqlConnections; table: Table; column: Column): Future[bool]	

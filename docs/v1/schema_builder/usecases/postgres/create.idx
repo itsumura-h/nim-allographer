@@ -1,0 +1,1 @@
+create	v1/schema_builder/usecases/postgres/create.html#create,PostgresConnections,varargs[Table]	create: create(rdb: PostgresConnections; tables: varargs[Table])	

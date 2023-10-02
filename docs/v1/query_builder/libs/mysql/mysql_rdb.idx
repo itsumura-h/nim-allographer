@@ -1,0 +1,539 @@
+getOsName	v1/query_builder/libs/mysql/mysql_rdb.html#getOsName	mysql_rdb: getOsName(): string	
+false	v1/query_builder/libs/mysql/mysql_rdb.html#false	my_bool.false	
+true	v1/query_builder/libs/mysql/mysql_rdb.html#true	my_bool.true	
+my_bool	v1/query_builder/libs/mysql/mysql_rdb.html#my_bool	mysql_rdb: my_bool	
+Pmy_bool	v1/query_builder/libs/mysql/mysql_rdb.html#Pmy_bool	mysql_rdb: Pmy_bool	
+PVIO	v1/query_builder/libs/mysql/mysql_rdb.html#PVIO	mysql_rdb: PVIO	
+Pgptr	v1/query_builder/libs/mysql/mysql_rdb.html#Pgptr	mysql_rdb: Pgptr	
+gptr	v1/query_builder/libs/mysql/mysql_rdb.html#gptr	mysql_rdb: gptr	
+Pmy_socket	v1/query_builder/libs/mysql/mysql_rdb.html#Pmy_socket	mysql_rdb: Pmy_socket	
+my_socket	v1/query_builder/libs/mysql/mysql_rdb.html#my_socket	mysql_rdb: my_socket	
+PPByte	v1/query_builder/libs/mysql/mysql_rdb.html#PPByte	mysql_rdb: PPByte	
+cuint	v1/query_builder/libs/mysql/mysql_rdb.html#cuint	mysql_rdb: cuint	
+NET_ASYNC_COMPLETE	v1/query_builder/libs/mysql/mysql_rdb.html#NET_ASYNC_COMPLETE	NetAsyncStatus.NET_ASYNC_COMPLETE	
+NET_ASYNC_NOT_READY	v1/query_builder/libs/mysql/mysql_rdb.html#NET_ASYNC_NOT_READY	NetAsyncStatus.NET_ASYNC_NOT_READY	
+NET_ASYNC_ERROR	v1/query_builder/libs/mysql/mysql_rdb.html#NET_ASYNC_ERROR	NetAsyncStatus.NET_ASYNC_ERROR	
+NET_ASYNC_COMPLETE_NO_MORE_RESULTS	v1/query_builder/libs/mysql/mysql_rdb.html#NET_ASYNC_COMPLETE_NO_MORE_RESULTS	NetAsyncStatus.NET_ASYNC_COMPLETE_NO_MORE_RESULTS	
+NetAsyncStatus	v1/query_builder/libs/mysql/mysql_rdb.html#NetAsyncStatus	mysql_rdb: NetAsyncStatus	
+NAME_LEN	v1/query_builder/libs/mysql/mysql_rdb.html#NAME_LEN	mysql_rdb: NAME_LEN	
+HOSTNAME_LENGTH	v1/query_builder/libs/mysql/mysql_rdb.html#HOSTNAME_LENGTH	mysql_rdb: HOSTNAME_LENGTH	
+USERNAME_LENGTH	v1/query_builder/libs/mysql/mysql_rdb.html#USERNAME_LENGTH	mysql_rdb: USERNAME_LENGTH	
+SERVER_VERSION_LENGTH	v1/query_builder/libs/mysql/mysql_rdb.html#SERVER_VERSION_LENGTH	mysql_rdb: SERVER_VERSION_LENGTH	
+SQLSTATE_LENGTH	v1/query_builder/libs/mysql/mysql_rdb.html#SQLSTATE_LENGTH	mysql_rdb: SQLSTATE_LENGTH	
+LOCAL_HOST	v1/query_builder/libs/mysql/mysql_rdb.html#LOCAL_HOST	mysql_rdb: LOCAL_HOST	
+LOCAL_HOST_NAMEDPIPE	v1/query_builder/libs/mysql/mysql_rdb.html#LOCAL_HOST_NAMEDPIPE	mysql_rdb: LOCAL_HOST_NAMEDPIPE	
+NAMEDPIPE	v1/query_builder/libs/mysql/mysql_rdb.html#NAMEDPIPE	mysql_rdb: NAMEDPIPE	
+SERVICENAME	v1/query_builder/libs/mysql/mysql_rdb.html#SERVICENAME	mysql_rdb: SERVICENAME	
+COM_SLEEP	v1/query_builder/libs/mysql/mysql_rdb.html#COM_SLEEP	Enum_server_command.COM_SLEEP	
+COM_QUIT	v1/query_builder/libs/mysql/mysql_rdb.html#COM_QUIT	Enum_server_command.COM_QUIT	
+COM_INIT_DB	v1/query_builder/libs/mysql/mysql_rdb.html#COM_INIT_DB	Enum_server_command.COM_INIT_DB	
+COM_QUERY	v1/query_builder/libs/mysql/mysql_rdb.html#COM_QUERY	Enum_server_command.COM_QUERY	
+COM_FIELD_LIST	v1/query_builder/libs/mysql/mysql_rdb.html#COM_FIELD_LIST	Enum_server_command.COM_FIELD_LIST	
+COM_CREATE_DB	v1/query_builder/libs/mysql/mysql_rdb.html#COM_CREATE_DB	Enum_server_command.COM_CREATE_DB	
+COM_DROP_DB	v1/query_builder/libs/mysql/mysql_rdb.html#COM_DROP_DB	Enum_server_command.COM_DROP_DB	
+COM_REFRESH	v1/query_builder/libs/mysql/mysql_rdb.html#COM_REFRESH	Enum_server_command.COM_REFRESH	
+COM_SHUTDOWN	v1/query_builder/libs/mysql/mysql_rdb.html#COM_SHUTDOWN	Enum_server_command.COM_SHUTDOWN	
+COM_STATISTICS	v1/query_builder/libs/mysql/mysql_rdb.html#COM_STATISTICS	Enum_server_command.COM_STATISTICS	
+COM_PROCESS_INFO	v1/query_builder/libs/mysql/mysql_rdb.html#COM_PROCESS_INFO	Enum_server_command.COM_PROCESS_INFO	
+COM_CONNECT	v1/query_builder/libs/mysql/mysql_rdb.html#COM_CONNECT	Enum_server_command.COM_CONNECT	
+COM_PROCESS_KILL	v1/query_builder/libs/mysql/mysql_rdb.html#COM_PROCESS_KILL	Enum_server_command.COM_PROCESS_KILL	
+COM_DEBUG	v1/query_builder/libs/mysql/mysql_rdb.html#COM_DEBUG	Enum_server_command.COM_DEBUG	
+COM_PING	v1/query_builder/libs/mysql/mysql_rdb.html#COM_PING	Enum_server_command.COM_PING	
+COM_TIME	v1/query_builder/libs/mysql/mysql_rdb.html#COM_TIME	Enum_server_command.COM_TIME	
+COM_DELAYED_INSERT	v1/query_builder/libs/mysql/mysql_rdb.html#COM_DELAYED_INSERT	Enum_server_command.COM_DELAYED_INSERT	
+COM_CHANGE_USER	v1/query_builder/libs/mysql/mysql_rdb.html#COM_CHANGE_USER	Enum_server_command.COM_CHANGE_USER	
+COM_BINLOG_DUMP	v1/query_builder/libs/mysql/mysql_rdb.html#COM_BINLOG_DUMP	Enum_server_command.COM_BINLOG_DUMP	
+COM_TABLE_DUMP	v1/query_builder/libs/mysql/mysql_rdb.html#COM_TABLE_DUMP	Enum_server_command.COM_TABLE_DUMP	
+COM_CONNECT_OUT	v1/query_builder/libs/mysql/mysql_rdb.html#COM_CONNECT_OUT	Enum_server_command.COM_CONNECT_OUT	
+COM_REGISTER_SLAVE	v1/query_builder/libs/mysql/mysql_rdb.html#COM_REGISTER_SLAVE	Enum_server_command.COM_REGISTER_SLAVE	
+COM_STMT_PREPARE	v1/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_PREPARE	Enum_server_command.COM_STMT_PREPARE	
+COM_STMT_EXECUTE	v1/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_EXECUTE	Enum_server_command.COM_STMT_EXECUTE	
+COM_STMT_SEND_LONG_DATA	v1/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_SEND_LONG_DATA	Enum_server_command.COM_STMT_SEND_LONG_DATA	
+COM_STMT_CLOSE	v1/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_CLOSE	Enum_server_command.COM_STMT_CLOSE	
+COM_STMT_RESET	v1/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_RESET	Enum_server_command.COM_STMT_RESET	
+COM_SET_OPTION	v1/query_builder/libs/mysql/mysql_rdb.html#COM_SET_OPTION	Enum_server_command.COM_SET_OPTION	
+COM_STMT_FETCH	v1/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_FETCH	Enum_server_command.COM_STMT_FETCH	
+COM_END	v1/query_builder/libs/mysql/mysql_rdb.html#COM_END	Enum_server_command.COM_END	
+Enum_server_command	v1/query_builder/libs/mysql/mysql_rdb.html#Enum_server_command	mysql_rdb: Enum_server_command	
+SCRAMBLE_LENGTH	v1/query_builder/libs/mysql/mysql_rdb.html#SCRAMBLE_LENGTH	mysql_rdb: SCRAMBLE_LENGTH	
+SCRAMBLE_LENGTH_323	v1/query_builder/libs/mysql/mysql_rdb.html#SCRAMBLE_LENGTH_323	mysql_rdb: SCRAMBLE_LENGTH_323	
+SCRAMBLED_PASSWORD_CHAR_LENGTH	v1/query_builder/libs/mysql/mysql_rdb.html#SCRAMBLED_PASSWORD_CHAR_LENGTH	mysql_rdb: SCRAMBLED_PASSWORD_CHAR_LENGTH	
+SCRAMBLED_PASSWORD_CHAR_LENGTH_323	v1/query_builder/libs/mysql/mysql_rdb.html#SCRAMBLED_PASSWORD_CHAR_LENGTH_323	mysql_rdb: SCRAMBLED_PASSWORD_CHAR_LENGTH_323	
+NOT_NULL_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#NOT_NULL_FLAG	mysql_rdb: NOT_NULL_FLAG	
+PRI_KEY_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#PRI_KEY_FLAG	mysql_rdb: PRI_KEY_FLAG	
+UNIQUE_KEY_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#UNIQUE_KEY_FLAG	mysql_rdb: UNIQUE_KEY_FLAG	
+MULTIPLE_KEY_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#MULTIPLE_KEY_FLAG	mysql_rdb: MULTIPLE_KEY_FLAG	
+BLOB_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#BLOB_FLAG	mysql_rdb: BLOB_FLAG	
+UNSIGNED_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#UNSIGNED_FLAG	mysql_rdb: UNSIGNED_FLAG	
+ZEROFILL_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#ZEROFILL_FLAG	mysql_rdb: ZEROFILL_FLAG	
+BINARY_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#BINARY_FLAG	mysql_rdb: BINARY_FLAG	
+ENUM_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#ENUM_FLAG	mysql_rdb: ENUM_FLAG	
+AUTO_INCREMENT_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#AUTO_INCREMENT_FLAG	mysql_rdb: AUTO_INCREMENT_FLAG	
+TIMESTAMP_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#TIMESTAMP_FLAG	mysql_rdb: TIMESTAMP_FLAG	
+SET_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#SET_FLAG	mysql_rdb: SET_FLAG	
+NO_DEFAULT_VALUE_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#NO_DEFAULT_VALUE_FLAG	mysql_rdb: NO_DEFAULT_VALUE_FLAG	
+NUM_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#NUM_FLAG	mysql_rdb: NUM_FLAG	
+PART_KEY_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#PART_KEY_FLAG	mysql_rdb: PART_KEY_FLAG	
+GROUP_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#GROUP_FLAG	mysql_rdb: GROUP_FLAG	
+UNIQUE_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#UNIQUE_FLAG	mysql_rdb: UNIQUE_FLAG	
+BINCMP_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#BINCMP_FLAG	mysql_rdb: BINCMP_FLAG	
+REFRESH_GRANT	v1/query_builder/libs/mysql/mysql_rdb.html#REFRESH_GRANT	mysql_rdb: REFRESH_GRANT	
+REFRESH_LOG	v1/query_builder/libs/mysql/mysql_rdb.html#REFRESH_LOG	mysql_rdb: REFRESH_LOG	
+REFRESH_TABLES	v1/query_builder/libs/mysql/mysql_rdb.html#REFRESH_TABLES	mysql_rdb: REFRESH_TABLES	
+REFRESH_HOSTS	v1/query_builder/libs/mysql/mysql_rdb.html#REFRESH_HOSTS	mysql_rdb: REFRESH_HOSTS	
+REFRESH_STATUS	v1/query_builder/libs/mysql/mysql_rdb.html#REFRESH_STATUS	mysql_rdb: REFRESH_STATUS	
+REFRESH_THREADS	v1/query_builder/libs/mysql/mysql_rdb.html#REFRESH_THREADS	mysql_rdb: REFRESH_THREADS	
+REFRESH_SLAVE	v1/query_builder/libs/mysql/mysql_rdb.html#REFRESH_SLAVE	mysql_rdb: REFRESH_SLAVE	
+REFRESH_MASTER	v1/query_builder/libs/mysql/mysql_rdb.html#REFRESH_MASTER	mysql_rdb: REFRESH_MASTER	
+REFRESH_READ_LOCK	v1/query_builder/libs/mysql/mysql_rdb.html#REFRESH_READ_LOCK	mysql_rdb: REFRESH_READ_LOCK	
+REFRESH_FAST	v1/query_builder/libs/mysql/mysql_rdb.html#REFRESH_FAST	mysql_rdb: REFRESH_FAST	
+REFRESH_QUERY_CACHE	v1/query_builder/libs/mysql/mysql_rdb.html#REFRESH_QUERY_CACHE	mysql_rdb: REFRESH_QUERY_CACHE	
+REFRESH_QUERY_CACHE_FREE	v1/query_builder/libs/mysql/mysql_rdb.html#REFRESH_QUERY_CACHE_FREE	mysql_rdb: REFRESH_QUERY_CACHE_FREE	
+REFRESH_DES_KEY_FILE	v1/query_builder/libs/mysql/mysql_rdb.html#REFRESH_DES_KEY_FILE	mysql_rdb: REFRESH_DES_KEY_FILE	
+REFRESH_USER_RESOURCES	v1/query_builder/libs/mysql/mysql_rdb.html#REFRESH_USER_RESOURCES	mysql_rdb: REFRESH_USER_RESOURCES	
+CLIENT_LONG_PASSWORD	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_LONG_PASSWORD	mysql_rdb: CLIENT_LONG_PASSWORD	
+CLIENT_FOUND_ROWS	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_FOUND_ROWS	mysql_rdb: CLIENT_FOUND_ROWS	
+CLIENT_LONG_FLAG	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_LONG_FLAG	mysql_rdb: CLIENT_LONG_FLAG	
+CLIENT_CONNECT_WITH_DB	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_CONNECT_WITH_DB	mysql_rdb: CLIENT_CONNECT_WITH_DB	
+CLIENT_NO_SCHEMA	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_NO_SCHEMA	mysql_rdb: CLIENT_NO_SCHEMA	
+CLIENT_COMPRESS	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_COMPRESS	mysql_rdb: CLIENT_COMPRESS	
+CLIENT_ODBC	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_ODBC	mysql_rdb: CLIENT_ODBC	
+CLIENT_LOCAL_FILES	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_LOCAL_FILES	mysql_rdb: CLIENT_LOCAL_FILES	
+CLIENT_IGNORE_SPACE	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_IGNORE_SPACE	mysql_rdb: CLIENT_IGNORE_SPACE	
+CLIENT_PROTOCOL_41	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_PROTOCOL_41	mysql_rdb: CLIENT_PROTOCOL_41	
+CLIENT_INTERACTIVE	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_INTERACTIVE	mysql_rdb: CLIENT_INTERACTIVE	
+CLIENT_SSL	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_SSL	mysql_rdb: CLIENT_SSL	
+CLIENT_IGNORE_SIGPIPE	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_IGNORE_SIGPIPE	mysql_rdb: CLIENT_IGNORE_SIGPIPE	
+CLIENT_TRANSACTIONS	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_TRANSACTIONS	mysql_rdb: CLIENT_TRANSACTIONS	
+CLIENT_RESERVED	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_RESERVED	mysql_rdb: CLIENT_RESERVED	
+CLIENT_SECURE_CONNECTION	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_SECURE_CONNECTION	mysql_rdb: CLIENT_SECURE_CONNECTION	
+CLIENT_MULTI_STATEMENTS	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_MULTI_STATEMENTS	mysql_rdb: CLIENT_MULTI_STATEMENTS	
+CLIENT_MULTI_RESULTS	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_MULTI_RESULTS	mysql_rdb: CLIENT_MULTI_RESULTS	
+CLIENT_REMEMBER_OPTIONS	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_REMEMBER_OPTIONS	mysql_rdb: CLIENT_REMEMBER_OPTIONS	
+SERVER_STATUS_IN_TRANS	v1/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_IN_TRANS	mysql_rdb: SERVER_STATUS_IN_TRANS	
+SERVER_STATUS_AUTOCOMMIT	v1/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_AUTOCOMMIT	mysql_rdb: SERVER_STATUS_AUTOCOMMIT	
+SERVER_STATUS_MORE_RESULTS	v1/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_MORE_RESULTS	mysql_rdb: SERVER_STATUS_MORE_RESULTS	
+SERVER_MORE_RESULTS_EXISTS	v1/query_builder/libs/mysql/mysql_rdb.html#SERVER_MORE_RESULTS_EXISTS	mysql_rdb: SERVER_MORE_RESULTS_EXISTS	
+SERVER_QUERY_NO_GOOD_INDEX_USED	v1/query_builder/libs/mysql/mysql_rdb.html#SERVER_QUERY_NO_GOOD_INDEX_USED	mysql_rdb: SERVER_QUERY_NO_GOOD_INDEX_USED	
+SERVER_QUERY_NO_INDEX_USED	v1/query_builder/libs/mysql/mysql_rdb.html#SERVER_QUERY_NO_INDEX_USED	mysql_rdb: SERVER_QUERY_NO_INDEX_USED	
+SERVER_STATUS_CURSOR_EXISTS	v1/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_CURSOR_EXISTS	mysql_rdb: SERVER_STATUS_CURSOR_EXISTS	
+SERVER_STATUS_LAST_ROW_SENT	v1/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_LAST_ROW_SENT	mysql_rdb: SERVER_STATUS_LAST_ROW_SENT	
+SERVER_STATUS_DB_DROPPED	v1/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_DB_DROPPED	mysql_rdb: SERVER_STATUS_DB_DROPPED	
+SERVER_STATUS_NO_BACKSLASH_ESCAPES	v1/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_NO_BACKSLASH_ESCAPES	mysql_rdb: SERVER_STATUS_NO_BACKSLASH_ESCAPES	
+ERRMSG_SIZE	v1/query_builder/libs/mysql/mysql_rdb.html#ERRMSG_SIZE	mysql_rdb: ERRMSG_SIZE	
+NET_READ_TIMEOUT	v1/query_builder/libs/mysql/mysql_rdb.html#NET_READ_TIMEOUT	mysql_rdb: NET_READ_TIMEOUT	
+NET_WRITE_TIMEOUT	v1/query_builder/libs/mysql/mysql_rdb.html#NET_WRITE_TIMEOUT	mysql_rdb: NET_WRITE_TIMEOUT	
+NET_WAIT_TIMEOUT	v1/query_builder/libs/mysql/mysql_rdb.html#NET_WAIT_TIMEOUT	mysql_rdb: NET_WAIT_TIMEOUT	
+ONLY_KILL_QUERY	v1/query_builder/libs/mysql/mysql_rdb.html#ONLY_KILL_QUERY	mysql_rdb: ONLY_KILL_QUERY	
+MAX_TINYINT_WIDTH	v1/query_builder/libs/mysql/mysql_rdb.html#MAX_TINYINT_WIDTH	mysql_rdb: MAX_TINYINT_WIDTH	
+MAX_SMALLINT_WIDTH	v1/query_builder/libs/mysql/mysql_rdb.html#MAX_SMALLINT_WIDTH	mysql_rdb: MAX_SMALLINT_WIDTH	
+MAX_MEDIUMINT_WIDTH	v1/query_builder/libs/mysql/mysql_rdb.html#MAX_MEDIUMINT_WIDTH	mysql_rdb: MAX_MEDIUMINT_WIDTH	
+MAX_INT_WIDTH	v1/query_builder/libs/mysql/mysql_rdb.html#MAX_INT_WIDTH	mysql_rdb: MAX_INT_WIDTH	
+MAX_BIGINT_WIDTH	v1/query_builder/libs/mysql/mysql_rdb.html#MAX_BIGINT_WIDTH	mysql_rdb: MAX_BIGINT_WIDTH	
+MAX_CHAR_WIDTH	v1/query_builder/libs/mysql/mysql_rdb.html#MAX_CHAR_WIDTH	mysql_rdb: MAX_CHAR_WIDTH	
+MAX_BLOB_WIDTH	v1/query_builder/libs/mysql/mysql_rdb.html#MAX_BLOB_WIDTH	mysql_rdb: MAX_BLOB_WIDTH	
+Pst_net	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_net	mysql_rdb: Pst_net	
+St_net	v1/query_builder/libs/mysql/mysql_rdb.html#St_net	mysql_rdb: St_net	
+NET	v1/query_builder/libs/mysql/mysql_rdb.html#NET	mysql_rdb: NET	
+PNET	v1/query_builder/libs/mysql/mysql_rdb.html#PNET	mysql_rdb: PNET	
+packet_error	v1/query_builder/libs/mysql/mysql_rdb.html#packet_error	mysql_rdb: packet_error	
+TYPE_DECIMAL	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_DECIMAL	Enum_field_types.TYPE_DECIMAL	
+TYPE_TINY	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_TINY	Enum_field_types.TYPE_TINY	
+TYPE_SHORT	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_SHORT	Enum_field_types.TYPE_SHORT	
+TYPE_LONG	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_LONG	Enum_field_types.TYPE_LONG	
+TYPE_FLOAT	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_FLOAT	Enum_field_types.TYPE_FLOAT	
+TYPE_DOUBLE	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_DOUBLE	Enum_field_types.TYPE_DOUBLE	
+TYPE_NULL	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_NULL	Enum_field_types.TYPE_NULL	
+TYPE_TIMESTAMP	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_TIMESTAMP	Enum_field_types.TYPE_TIMESTAMP	
+TYPE_LONGLONG	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_LONGLONG	Enum_field_types.TYPE_LONGLONG	
+TYPE_INT24	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_INT24	Enum_field_types.TYPE_INT24	
+TYPE_DATE	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_DATE	Enum_field_types.TYPE_DATE	
+TYPE_TIME	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_TIME	Enum_field_types.TYPE_TIME	
+TYPE_DATETIME	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_DATETIME	Enum_field_types.TYPE_DATETIME	
+TYPE_YEAR	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_YEAR	Enum_field_types.TYPE_YEAR	
+TYPE_NEWDATE	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_NEWDATE	Enum_field_types.TYPE_NEWDATE	
+TYPE_VARCHAR	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_VARCHAR	Enum_field_types.TYPE_VARCHAR	
+TYPE_BIT	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_BIT	Enum_field_types.TYPE_BIT	
+TYPE_NEWDECIMAL	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_NEWDECIMAL	Enum_field_types.TYPE_NEWDECIMAL	
+TYPE_ENUM	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_ENUM	Enum_field_types.TYPE_ENUM	
+TYPE_SET	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_SET	Enum_field_types.TYPE_SET	
+TYPE_TINY_BLOB	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_TINY_BLOB	Enum_field_types.TYPE_TINY_BLOB	
+TYPE_MEDIUM_BLOB	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_MEDIUM_BLOB	Enum_field_types.TYPE_MEDIUM_BLOB	
+TYPE_LONG_BLOB	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_LONG_BLOB	Enum_field_types.TYPE_LONG_BLOB	
+TYPE_BLOB	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_BLOB	Enum_field_types.TYPE_BLOB	
+TYPE_VAR_STRING	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_VAR_STRING	Enum_field_types.TYPE_VAR_STRING	
+TYPE_STRING	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_STRING	Enum_field_types.TYPE_STRING	
+TYPE_GEOMETRY	v1/query_builder/libs/mysql/mysql_rdb.html#TYPE_GEOMETRY	Enum_field_types.TYPE_GEOMETRY	
+Enum_field_types	v1/query_builder/libs/mysql/mysql_rdb.html#Enum_field_types	mysql_rdb: Enum_field_types	
+CLIENT_MULTI_QUERIES	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_MULTI_QUERIES	mysql_rdb: CLIENT_MULTI_QUERIES	
+FIELD_TYPE_DECIMAL	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_DECIMAL	mysql_rdb: FIELD_TYPE_DECIMAL	
+FIELD_TYPE_NEWDECIMAL	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_NEWDECIMAL	mysql_rdb: FIELD_TYPE_NEWDECIMAL	
+FIELD_TYPE_TINY	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_TINY	mysql_rdb: FIELD_TYPE_TINY	
+FIELD_TYPE_SHORT	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_SHORT	mysql_rdb: FIELD_TYPE_SHORT	
+FIELD_TYPE_LONG	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_LONG	mysql_rdb: FIELD_TYPE_LONG	
+FIELD_TYPE_FLOAT	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_FLOAT	mysql_rdb: FIELD_TYPE_FLOAT	
+FIELD_TYPE_DOUBLE	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_DOUBLE	mysql_rdb: FIELD_TYPE_DOUBLE	
+FIELD_TYPE_NULL	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_NULL	mysql_rdb: FIELD_TYPE_NULL	
+FIELD_TYPE_TIMESTAMP	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_TIMESTAMP	mysql_rdb: FIELD_TYPE_TIMESTAMP	
+FIELD_TYPE_LONGLONG	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_LONGLONG	mysql_rdb: FIELD_TYPE_LONGLONG	
+FIELD_TYPE_INT24	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_INT24	mysql_rdb: FIELD_TYPE_INT24	
+FIELD_TYPE_DATE	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_DATE	mysql_rdb: FIELD_TYPE_DATE	
+FIELD_TYPE_TIME	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_TIME	mysql_rdb: FIELD_TYPE_TIME	
+FIELD_TYPE_DATETIME	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_DATETIME	mysql_rdb: FIELD_TYPE_DATETIME	
+FIELD_TYPE_YEAR	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_YEAR	mysql_rdb: FIELD_TYPE_YEAR	
+FIELD_TYPE_NEWDATE	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_NEWDATE	mysql_rdb: FIELD_TYPE_NEWDATE	
+FIELD_TYPE_ENUM	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_ENUM	mysql_rdb: FIELD_TYPE_ENUM	
+FIELD_TYPE_SET	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_SET	mysql_rdb: FIELD_TYPE_SET	
+FIELD_TYPE_TINY_BLOB	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_TINY_BLOB	mysql_rdb: FIELD_TYPE_TINY_BLOB	
+FIELD_TYPE_MEDIUM_BLOB	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_MEDIUM_BLOB	mysql_rdb: FIELD_TYPE_MEDIUM_BLOB	
+FIELD_TYPE_LONG_BLOB	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_LONG_BLOB	mysql_rdb: FIELD_TYPE_LONG_BLOB	
+FIELD_TYPE_BLOB	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_BLOB	mysql_rdb: FIELD_TYPE_BLOB	
+FIELD_TYPE_VAR_STRING	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_VAR_STRING	mysql_rdb: FIELD_TYPE_VAR_STRING	
+FIELD_TYPE_STRING	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_STRING	mysql_rdb: FIELD_TYPE_STRING	
+FIELD_TYPE_CHAR	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_CHAR	mysql_rdb: FIELD_TYPE_CHAR	
+FIELD_TYPE_INTERVAL	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_INTERVAL	mysql_rdb: FIELD_TYPE_INTERVAL	
+FIELD_TYPE_GEOMETRY	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_GEOMETRY	mysql_rdb: FIELD_TYPE_GEOMETRY	
+FIELD_TYPE_BIT	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_BIT	mysql_rdb: FIELD_TYPE_BIT	
+SHUTDOWN_KILLABLE_CONNECT	v1/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_KILLABLE_CONNECT	mysql_rdb: SHUTDOWN_KILLABLE_CONNECT	
+SHUTDOWN_KILLABLE_TRANS	v1/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_KILLABLE_TRANS	mysql_rdb: SHUTDOWN_KILLABLE_TRANS	
+SHUTDOWN_KILLABLE_LOCK_TABLE	v1/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_KILLABLE_LOCK_TABLE	mysql_rdb: SHUTDOWN_KILLABLE_LOCK_TABLE	
+SHUTDOWN_KILLABLE_UPDATE	v1/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_KILLABLE_UPDATE	mysql_rdb: SHUTDOWN_KILLABLE_UPDATE	
+SHUTDOWN_DEFAULT	v1/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_DEFAULT	Enum_shutdown_level.SHUTDOWN_DEFAULT	
+SHUTDOWN_WAIT_CONNECTIONS	v1/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_WAIT_CONNECTIONS	Enum_shutdown_level.SHUTDOWN_WAIT_CONNECTIONS	
+SHUTDOWN_WAIT_TRANSACTIONS	v1/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_WAIT_TRANSACTIONS	Enum_shutdown_level.SHUTDOWN_WAIT_TRANSACTIONS	
+SHUTDOWN_WAIT_UPDATES	v1/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_WAIT_UPDATES	Enum_shutdown_level.SHUTDOWN_WAIT_UPDATES	
+SHUTDOWN_WAIT_ALL_BUFFERS	v1/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_WAIT_ALL_BUFFERS	Enum_shutdown_level.SHUTDOWN_WAIT_ALL_BUFFERS	
+SHUTDOWN_WAIT_CRITICAL_BUFFERS	v1/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_WAIT_CRITICAL_BUFFERS	Enum_shutdown_level.SHUTDOWN_WAIT_CRITICAL_BUFFERS	
+KILL_QUERY	v1/query_builder/libs/mysql/mysql_rdb.html#KILL_QUERY	Enum_shutdown_level.KILL_QUERY	
+KILL_CONNECTION	v1/query_builder/libs/mysql/mysql_rdb.html#KILL_CONNECTION	Enum_shutdown_level.KILL_CONNECTION	
+Enum_shutdown_level	v1/query_builder/libs/mysql/mysql_rdb.html#Enum_shutdown_level	mysql_rdb: Enum_shutdown_level	
+CURSOR_TYPE_NO_CURSOR	v1/query_builder/libs/mysql/mysql_rdb.html#CURSOR_TYPE_NO_CURSOR	Enum_cursor_type.CURSOR_TYPE_NO_CURSOR	
+CURSOR_TYPE_READ_ONLY	v1/query_builder/libs/mysql/mysql_rdb.html#CURSOR_TYPE_READ_ONLY	Enum_cursor_type.CURSOR_TYPE_READ_ONLY	
+CURSOR_TYPE_FOR_UPDATE	v1/query_builder/libs/mysql/mysql_rdb.html#CURSOR_TYPE_FOR_UPDATE	Enum_cursor_type.CURSOR_TYPE_FOR_UPDATE	
+CURSOR_TYPE_SCROLLABLE	v1/query_builder/libs/mysql/mysql_rdb.html#CURSOR_TYPE_SCROLLABLE	Enum_cursor_type.CURSOR_TYPE_SCROLLABLE	
+Enum_cursor_type	v1/query_builder/libs/mysql/mysql_rdb.html#Enum_cursor_type	mysql_rdb: Enum_cursor_type	
+OPTION_MULTI_STATEMENTS_ON	v1/query_builder/libs/mysql/mysql_rdb.html#OPTION_MULTI_STATEMENTS_ON	Enum_mysql_set_option.OPTION_MULTI_STATEMENTS_ON	
+OPTION_MULTI_STATEMENTS_OFF	v1/query_builder/libs/mysql/mysql_rdb.html#OPTION_MULTI_STATEMENTS_OFF	Enum_mysql_set_option.OPTION_MULTI_STATEMENTS_OFF	
+Enum_mysql_set_option	v1/query_builder/libs/mysql/mysql_rdb.html#Enum_mysql_set_option	mysql_rdb: Enum_mysql_set_option	
+my_net_init	v1/query_builder/libs/mysql/mysql_rdb.html#my_net_init,PNET,PVIO	mysql_rdb: my_net_init(net: PNET; vio: PVIO): my_bool	
+my_net_local_init	v1/query_builder/libs/mysql/mysql_rdb.html#my_net_local_init,PNET	mysql_rdb: my_net_local_init(net: PNET)	
+net_end	v1/query_builder/libs/mysql/mysql_rdb.html#net_end,PNET	mysql_rdb: net_end(net: PNET)	
+net_clear	v1/query_builder/libs/mysql/mysql_rdb.html#net_clear,PNET	mysql_rdb: net_clear(net: PNET)	
+net_realloc	v1/query_builder/libs/mysql/mysql_rdb.html#net_realloc,PNET,int	mysql_rdb: net_realloc(net: PNET; len: int): my_bool	
+net_flush	v1/query_builder/libs/mysql/mysql_rdb.html#net_flush,PNET	mysql_rdb: net_flush(net: PNET): my_bool	
+my_net_write	v1/query_builder/libs/mysql/mysql_rdb.html#my_net_write,PNET,cstring,int	mysql_rdb: my_net_write(net: PNET; packet: cstring; length: int): my_bool	
+net_write_command	v1/query_builder/libs/mysql/mysql_rdb.html#net_write_command,PNET,char,cstring,int,cstring,int	mysql_rdb: net_write_command(net: PNET; command: char; header: cstring; head_len: int;\n                  packet: cstring; length: int): my_bool	
+net_real_write	v1/query_builder/libs/mysql/mysql_rdb.html#net_real_write,PNET,cstring,int	mysql_rdb: net_real_write(net: PNET; packet: cstring; length: int): cint	
+my_net_read	v1/query_builder/libs/mysql/mysql_rdb.html#my_net_read,PNET	mysql_rdb: my_net_read(net: PNET): int	
+Psockaddr	v1/query_builder/libs/mysql/mysql_rdb.html#Psockaddr	mysql_rdb: Psockaddr	
+Sockaddr	v1/query_builder/libs/mysql/mysql_rdb.html#Sockaddr	mysql_rdb: Sockaddr	
+my_connect	v1/query_builder/libs/mysql/mysql_rdb.html#my_connect,my_socket,Psockaddr,cuint,cuint	mysql_rdb: my_connect(s: my_socket; name: Psockaddr; namelen: cuint; timeout: cuint): cint	
+Prand_struct	v1/query_builder/libs/mysql/mysql_rdb.html#Prand_struct	mysql_rdb: Prand_struct	
+Rand_struct	v1/query_builder/libs/mysql/mysql_rdb.html#Rand_struct	mysql_rdb: Rand_struct	
+STRING_RESULT	v1/query_builder/libs/mysql/mysql_rdb.html#STRING_RESULT	Item_result.STRING_RESULT	
+REAL_RESULT	v1/query_builder/libs/mysql/mysql_rdb.html#REAL_RESULT	Item_result.REAL_RESULT	
+INT_RESULT	v1/query_builder/libs/mysql/mysql_rdb.html#INT_RESULT	Item_result.INT_RESULT	
+ROW_RESULT	v1/query_builder/libs/mysql/mysql_rdb.html#ROW_RESULT	Item_result.ROW_RESULT	
+DECIMAL_RESULT	v1/query_builder/libs/mysql/mysql_rdb.html#DECIMAL_RESULT	Item_result.DECIMAL_RESULT	
+Item_result	v1/query_builder/libs/mysql/mysql_rdb.html#Item_result	mysql_rdb: Item_result	
+PItem_result	v1/query_builder/libs/mysql/mysql_rdb.html#PItem_result	mysql_rdb: PItem_result	
+Pst_udf_args	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_udf_args	mysql_rdb: Pst_udf_args	
+St_udf_args	v1/query_builder/libs/mysql/mysql_rdb.html#St_udf_args	mysql_rdb: St_udf_args	
+UDF_ARGS	v1/query_builder/libs/mysql/mysql_rdb.html#UDF_ARGS	mysql_rdb: UDF_ARGS	
+PUDF_ARGS	v1/query_builder/libs/mysql/mysql_rdb.html#PUDF_ARGS	mysql_rdb: PUDF_ARGS	
+Pst_udf_init	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_udf_init	mysql_rdb: Pst_udf_init	
+St_udf_init	v1/query_builder/libs/mysql/mysql_rdb.html#St_udf_init	mysql_rdb: St_udf_init	
+UDF_INIT	v1/query_builder/libs/mysql/mysql_rdb.html#UDF_INIT	mysql_rdb: UDF_INIT	
+PUDF_INIT	v1/query_builder/libs/mysql/mysql_rdb.html#PUDF_INIT	mysql_rdb: PUDF_INIT	
+NET_HEADER_SIZE	v1/query_builder/libs/mysql/mysql_rdb.html#NET_HEADER_SIZE	mysql_rdb: NET_HEADER_SIZE	
+COMP_HEADER_SIZE	v1/query_builder/libs/mysql/mysql_rdb.html#COMP_HEADER_SIZE	mysql_rdb: COMP_HEADER_SIZE	
+randominit	v1/query_builder/libs/mysql/mysql_rdb.html#randominit,Prand_struct,int,int	mysql_rdb: randominit(para1: Prand_struct; seed1: int; seed2: int)	
+my_rnd	v1/query_builder/libs/mysql/mysql_rdb.html#my_rnd,Prand_struct	mysql_rdb: my_rnd(para1: Prand_struct): cdouble	
+create_random_string	v1/query_builder/libs/mysql/mysql_rdb.html#create_random_string,cstring,cuint,Prand_struct	mysql_rdb: create_random_string(fto: cstring; len: cuint; rand_st: Prand_struct)	
+hash_password	v1/query_builder/libs/mysql/mysql_rdb.html#hash_password,int,cstring,cuint	mysql_rdb: hash_password(fto: int; password: cstring; password_len: cuint)	
+make_scrambled_password_323	v1/query_builder/libs/mysql/mysql_rdb.html#make_scrambled_password_323,cstring,cstring	mysql_rdb: make_scrambled_password_323(fto: cstring; password: cstring)	
+scramble_323	v1/query_builder/libs/mysql/mysql_rdb.html#scramble_323,cstring,cstring,cstring	mysql_rdb: scramble_323(fto: cstring; message: cstring; password: cstring)	
+check_scramble_323	v1/query_builder/libs/mysql/mysql_rdb.html#check_scramble_323,cstring,cstring,int	mysql_rdb: check_scramble_323(para1: cstring; message: cstring; salt: int): my_bool	
+get_salt_from_password_323	v1/query_builder/libs/mysql/mysql_rdb.html#get_salt_from_password_323,ptr.int,cstring	mysql_rdb: get_salt_from_password_323(res: ptr int; password: cstring)	
+make_password_from_salt_323	v1/query_builder/libs/mysql/mysql_rdb.html#make_password_from_salt_323,cstring,ptr.int	mysql_rdb: make_password_from_salt_323(fto: cstring; salt: ptr int)	
+octet2hex	v1/query_builder/libs/mysql/mysql_rdb.html#octet2hex,cstring,cstring,cuint	mysql_rdb: octet2hex(fto: cstring; str: cstring; length: cuint): cstring	
+make_scrambled_password	v1/query_builder/libs/mysql/mysql_rdb.html#make_scrambled_password,cstring,cstring	mysql_rdb: make_scrambled_password(fto: cstring; password: cstring)	
+scramble	v1/query_builder/libs/mysql/mysql_rdb.html#scramble,cstring,cstring,cstring	mysql_rdb: scramble(fto: cstring; message: cstring; password: cstring)	
+check_scramble	v1/query_builder/libs/mysql/mysql_rdb.html#check_scramble,cstring,cstring,pointer	mysql_rdb: check_scramble(reply: cstring; message: cstring; hash_stage2: pointer): my_bool	
+get_salt_from_password	v1/query_builder/libs/mysql/mysql_rdb.html#get_salt_from_password,pointer,cstring	mysql_rdb: get_salt_from_password(res: pointer; password: cstring)	
+make_password_from_salt	v1/query_builder/libs/mysql/mysql_rdb.html#make_password_from_salt,cstring,pointer	mysql_rdb: make_password_from_salt(fto: cstring; hash_stage2: pointer)	
+get_tty_password	v1/query_builder/libs/mysql/mysql_rdb.html#get_tty_password,cstring	mysql_rdb: get_tty_password(opt_message: cstring): cstring	
+errno_to_sqlstate	v1/query_builder/libs/mysql/mysql_rdb.html#errno_to_sqlstate,cuint	mysql_rdb: errno_to_sqlstate(errno: cuint): cstring	
+modify_defaults_file	v1/query_builder/libs/mysql/mysql_rdb.html#modify_defaults_file,cstring,cstring,cstring,cstring,cint	mysql_rdb: modify_defaults_file(file_location: cstring; option: cstring;\n                     option_value: cstring; section_name: cstring;\n                     remove_option: cint): cint	
+load_defaults	v1/query_builder/libs/mysql/mysql_rdb.html#load_defaults,cstring,cstringArray,ptr.cint,ptr.cstringArray	mysql_rdb: load_defaults(conf_file: cstring; groups: cstringArray; argc: ptr cint;\n              argv: ptr cstringArray): cint	
+my_init	v1/query_builder/libs/mysql/mysql_rdb.html#my_init	mysql_rdb: my_init(): my_bool	
+my_thread_init	v1/query_builder/libs/mysql/mysql_rdb.html#my_thread_init	mysql_rdb: my_thread_init(): my_bool	
+my_thread_end	v1/query_builder/libs/mysql/mysql_rdb.html#my_thread_end	mysql_rdb: my_thread_end()	
+NULL_LENGTH	v1/query_builder/libs/mysql/mysql_rdb.html#NULL_LENGTH	mysql_rdb: NULL_LENGTH	
+STMT_HEADER	v1/query_builder/libs/mysql/mysql_rdb.html#STMT_HEADER	mysql_rdb: STMT_HEADER	
+LONG_DATA_HEADER	v1/query_builder/libs/mysql/mysql_rdb.html#LONG_DATA_HEADER	mysql_rdb: LONG_DATA_HEADER	
+CLIENT_NET_READ_TIMEOUT	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_NET_READ_TIMEOUT	mysql_rdb: CLIENT_NET_READ_TIMEOUT	
+CLIENT_NET_WRITE_TIMEOUT	v1/query_builder/libs/mysql/mysql_rdb.html#CLIENT_NET_WRITE_TIMEOUT	mysql_rdb: CLIENT_NET_WRITE_TIMEOUT	
+Pst_mysql_field	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_field	mysql_rdb: Pst_mysql_field	
+St_mysql_field	v1/query_builder/libs/mysql/mysql_rdb.html#St_mysql_field	mysql_rdb: St_mysql_field	
+FIELD	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD	mysql_rdb: FIELD	
+PFIELD	v1/query_builder/libs/mysql/mysql_rdb.html#PFIELD	mysql_rdb: PFIELD	
+PROW	v1/query_builder/libs/mysql/mysql_rdb.html#PROW	mysql_rdb: PROW	
+ROW	v1/query_builder/libs/mysql/mysql_rdb.html#ROW	mysql_rdb: ROW	
+PFIELD_OFFSET	v1/query_builder/libs/mysql/mysql_rdb.html#PFIELD_OFFSET	mysql_rdb: PFIELD_OFFSET	
+FIELD_OFFSET	v1/query_builder/libs/mysql/mysql_rdb.html#FIELD_OFFSET	mysql_rdb: FIELD_OFFSET	
+my_ulonglong	v1/query_builder/libs/mysql/mysql_rdb.html#my_ulonglong	mysql_rdb: my_ulonglong	
+Pmy_ulonglong	v1/query_builder/libs/mysql/mysql_rdb.html#Pmy_ulonglong	mysql_rdb: Pmy_ulonglong	
+COUNT_ERROR	v1/query_builder/libs/mysql/mysql_rdb.html#COUNT_ERROR	mysql_rdb: COUNT_ERROR	
+Pst_mysql_rows	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_rows	mysql_rdb: Pst_mysql_rows	
+St_mysql_rows	v1/query_builder/libs/mysql/mysql_rdb.html#St_mysql_rows	mysql_rdb: St_mysql_rows	
+ROWS	v1/query_builder/libs/mysql/mysql_rdb.html#ROWS	mysql_rdb: ROWS	
+PROWS	v1/query_builder/libs/mysql/mysql_rdb.html#PROWS	mysql_rdb: PROWS	
+PROW_OFFSET	v1/query_builder/libs/mysql/mysql_rdb.html#PROW_OFFSET	mysql_rdb: PROW_OFFSET	
+ROW_OFFSET	v1/query_builder/libs/mysql/mysql_rdb.html#ROW_OFFSET	mysql_rdb: ROW_OFFSET	
+ALLOC_MAX_BLOCK_TO_DROP	v1/query_builder/libs/mysql/mysql_rdb.html#ALLOC_MAX_BLOCK_TO_DROP	mysql_rdb: ALLOC_MAX_BLOCK_TO_DROP	
+ALLOC_MAX_BLOCK_USAGE_BEFORE_DROP	v1/query_builder/libs/mysql/mysql_rdb.html#ALLOC_MAX_BLOCK_USAGE_BEFORE_DROP	mysql_rdb: ALLOC_MAX_BLOCK_USAGE_BEFORE_DROP	
+Pst_used_mem	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_used_mem	mysql_rdb: Pst_used_mem	
+St_used_mem	v1/query_builder/libs/mysql/mysql_rdb.html#St_used_mem	mysql_rdb: St_used_mem	
+USED_MEM	v1/query_builder/libs/mysql/mysql_rdb.html#USED_MEM	mysql_rdb: USED_MEM	
+PUSED_MEM	v1/query_builder/libs/mysql/mysql_rdb.html#PUSED_MEM	mysql_rdb: PUSED_MEM	
+Pst_mem_root	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_mem_root	mysql_rdb: Pst_mem_root	
+St_mem_root	v1/query_builder/libs/mysql/mysql_rdb.html#St_mem_root	mysql_rdb: St_mem_root	
+MEM_ROOT	v1/query_builder/libs/mysql/mysql_rdb.html#MEM_ROOT	mysql_rdb: MEM_ROOT	
+PMEM_ROOT	v1/query_builder/libs/mysql/mysql_rdb.html#PMEM_ROOT	mysql_rdb: PMEM_ROOT	
+Pst_mysql_data	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_data	mysql_rdb: Pst_mysql_data	
+St_mysql_data	v1/query_builder/libs/mysql/mysql_rdb.html#St_mysql_data	mysql_rdb: St_mysql_data	
+DATA	v1/query_builder/libs/mysql/mysql_rdb.html#DATA	mysql_rdb: DATA	
+PDATA	v1/query_builder/libs/mysql/mysql_rdb.html#PDATA	mysql_rdb: PDATA	
+OPT_CONNECT_TIMEOUT	v1/query_builder/libs/mysql/mysql_rdb.html#OPT_CONNECT_TIMEOUT	Option.OPT_CONNECT_TIMEOUT	
+OPT_COMPRESS	v1/query_builder/libs/mysql/mysql_rdb.html#OPT_COMPRESS	Option.OPT_COMPRESS	
+OPT_NAMED_PIPE	v1/query_builder/libs/mysql/mysql_rdb.html#OPT_NAMED_PIPE	Option.OPT_NAMED_PIPE	
+INIT_COMMAND	v1/query_builder/libs/mysql/mysql_rdb.html#INIT_COMMAND	Option.INIT_COMMAND	
+READ_DEFAULT_FILE	v1/query_builder/libs/mysql/mysql_rdb.html#READ_DEFAULT_FILE	Option.READ_DEFAULT_FILE	
+READ_DEFAULT_GROUP	v1/query_builder/libs/mysql/mysql_rdb.html#READ_DEFAULT_GROUP	Option.READ_DEFAULT_GROUP	
+SET_CHARSET_DIR	v1/query_builder/libs/mysql/mysql_rdb.html#SET_CHARSET_DIR	Option.SET_CHARSET_DIR	
+SET_CHARSET_NAME	v1/query_builder/libs/mysql/mysql_rdb.html#SET_CHARSET_NAME	Option.SET_CHARSET_NAME	
+OPT_LOCAL_INFILE	v1/query_builder/libs/mysql/mysql_rdb.html#OPT_LOCAL_INFILE	Option.OPT_LOCAL_INFILE	
+OPT_PROTOCOL	v1/query_builder/libs/mysql/mysql_rdb.html#OPT_PROTOCOL	Option.OPT_PROTOCOL	
+SHARED_MEMORY_BASE_NAME	v1/query_builder/libs/mysql/mysql_rdb.html#SHARED_MEMORY_BASE_NAME	Option.SHARED_MEMORY_BASE_NAME	
+OPT_READ_TIMEOUT	v1/query_builder/libs/mysql/mysql_rdb.html#OPT_READ_TIMEOUT	Option.OPT_READ_TIMEOUT	
+OPT_WRITE_TIMEOUT	v1/query_builder/libs/mysql/mysql_rdb.html#OPT_WRITE_TIMEOUT	Option.OPT_WRITE_TIMEOUT	
+OPT_USE_RESULT	v1/query_builder/libs/mysql/mysql_rdb.html#OPT_USE_RESULT	Option.OPT_USE_RESULT	
+OPT_USE_REMOTE_CONNECTION	v1/query_builder/libs/mysql/mysql_rdb.html#OPT_USE_REMOTE_CONNECTION	Option.OPT_USE_REMOTE_CONNECTION	
+OPT_USE_EMBEDDED_CONNECTION	v1/query_builder/libs/mysql/mysql_rdb.html#OPT_USE_EMBEDDED_CONNECTION	Option.OPT_USE_EMBEDDED_CONNECTION	
+OPT_GUESS_CONNECTION	v1/query_builder/libs/mysql/mysql_rdb.html#OPT_GUESS_CONNECTION	Option.OPT_GUESS_CONNECTION	
+SET_CLIENT_IP	v1/query_builder/libs/mysql/mysql_rdb.html#SET_CLIENT_IP	Option.SET_CLIENT_IP	
+SECURE_AUTH	v1/query_builder/libs/mysql/mysql_rdb.html#SECURE_AUTH	Option.SECURE_AUTH	
+REPORT_DATA_TRUNCATION	v1/query_builder/libs/mysql/mysql_rdb.html#REPORT_DATA_TRUNCATION	Option.REPORT_DATA_TRUNCATION	
+OPT_RECONNECT	v1/query_builder/libs/mysql/mysql_rdb.html#OPT_RECONNECT	Option.OPT_RECONNECT	
+MYSQL_OPT_NONBLOCK	v1/query_builder/libs/mysql/mysql_rdb.html#MYSQL_OPT_NONBLOCK	Option.MYSQL_OPT_NONBLOCK	
+Option	v1/query_builder/libs/mysql/mysql_rdb.html#Option	mysql_rdb: Option	
+MAX_MYSQL_MANAGER_ERR	v1/query_builder/libs/mysql/mysql_rdb.html#MAX_MYSQL_MANAGER_ERR	mysql_rdb: MAX_MYSQL_MANAGER_ERR	
+MAX_MYSQL_MANAGER_MSG	v1/query_builder/libs/mysql/mysql_rdb.html#MAX_MYSQL_MANAGER_MSG	mysql_rdb: MAX_MYSQL_MANAGER_MSG	
+MANAGER_OK	v1/query_builder/libs/mysql/mysql_rdb.html#MANAGER_OK	mysql_rdb: MANAGER_OK	
+MANAGER_INFO	v1/query_builder/libs/mysql/mysql_rdb.html#MANAGER_INFO	mysql_rdb: MANAGER_INFO	
+MANAGER_ACCESS	v1/query_builder/libs/mysql/mysql_rdb.html#MANAGER_ACCESS	mysql_rdb: MANAGER_ACCESS	
+MANAGER_CLIENT_ERR	v1/query_builder/libs/mysql/mysql_rdb.html#MANAGER_CLIENT_ERR	mysql_rdb: MANAGER_CLIENT_ERR	
+MANAGER_INTERNAL_ERR	v1/query_builder/libs/mysql/mysql_rdb.html#MANAGER_INTERNAL_ERR	mysql_rdb: MANAGER_INTERNAL_ERR	
+St_dynamic_array	v1/query_builder/libs/mysql/mysql_rdb.html#St_dynamic_array	mysql_rdb: St_dynamic_array	
+DYNAMIC_ARRAY	v1/query_builder/libs/mysql/mysql_rdb.html#DYNAMIC_ARRAY	mysql_rdb: DYNAMIC_ARRAY	
+Pst_dynamic_array	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_dynamic_array	mysql_rdb: Pst_dynamic_array	
+Pst_mysql_options	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_options	mysql_rdb: Pst_mysql_options	
+St_mysql_options	v1/query_builder/libs/mysql/mysql_rdb.html#St_mysql_options	mysql_rdb: St_mysql_options	
+STATUS_READY	v1/query_builder/libs/mysql/mysql_rdb.html#STATUS_READY	Status.STATUS_READY	
+STATUS_GET_RESULT	v1/query_builder/libs/mysql/mysql_rdb.html#STATUS_GET_RESULT	Status.STATUS_GET_RESULT	
+STATUS_USE_RESULT	v1/query_builder/libs/mysql/mysql_rdb.html#STATUS_USE_RESULT	Status.STATUS_USE_RESULT	
+Status	v1/query_builder/libs/mysql/mysql_rdb.html#Status	mysql_rdb: Status	
+PROTOCOL_DEFAULT	v1/query_builder/libs/mysql/mysql_rdb.html#PROTOCOL_DEFAULT	Protocol_type.PROTOCOL_DEFAULT	
+PROTOCOL_TCP	v1/query_builder/libs/mysql/mysql_rdb.html#PROTOCOL_TCP	Protocol_type.PROTOCOL_TCP	
+PROTOCOL_SOCKET	v1/query_builder/libs/mysql/mysql_rdb.html#PROTOCOL_SOCKET	Protocol_type.PROTOCOL_SOCKET	
+PROTOCOL_PIPE	v1/query_builder/libs/mysql/mysql_rdb.html#PROTOCOL_PIPE	Protocol_type.PROTOCOL_PIPE	
+PROTOCOL_MEMORY	v1/query_builder/libs/mysql/mysql_rdb.html#PROTOCOL_MEMORY	Protocol_type.PROTOCOL_MEMORY	
+Protocol_type	v1/query_builder/libs/mysql/mysql_rdb.html#Protocol_type	mysql_rdb: Protocol_type	
+RPL_MASTER	v1/query_builder/libs/mysql/mysql_rdb.html#RPL_MASTER	Rpl_type.RPL_MASTER	
+RPL_SLAVE	v1/query_builder/libs/mysql/mysql_rdb.html#RPL_SLAVE	Rpl_type.RPL_SLAVE	
+RPL_ADMIN	v1/query_builder/libs/mysql/mysql_rdb.html#RPL_ADMIN	Rpl_type.RPL_ADMIN	
+Rpl_type	v1/query_builder/libs/mysql/mysql_rdb.html#Rpl_type	mysql_rdb: Rpl_type	
+Charset_info_st	v1/query_builder/libs/mysql/mysql_rdb.html#Charset_info_st	mysql_rdb: Charset_info_st	
+CHARSET_INFO	v1/query_builder/libs/mysql/mysql_rdb.html#CHARSET_INFO	mysql_rdb: CHARSET_INFO	
+Pcharset_info_st	v1/query_builder/libs/mysql/mysql_rdb.html#Pcharset_info_st	mysql_rdb: Pcharset_info_st	
+Pcharacter_set	v1/query_builder/libs/mysql/mysql_rdb.html#Pcharacter_set	mysql_rdb: Pcharacter_set	
+Character_set	v1/query_builder/libs/mysql/mysql_rdb.html#Character_set	mysql_rdb: Character_set	
+MY_CHARSET_INFO	v1/query_builder/libs/mysql/mysql_rdb.html#MY_CHARSET_INFO	mysql_rdb: MY_CHARSET_INFO	
+PMY_CHARSET_INFO	v1/query_builder/libs/mysql/mysql_rdb.html#PMY_CHARSET_INFO	mysql_rdb: PMY_CHARSET_INFO	
+Pst_mysql_methods	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_methods	mysql_rdb: Pst_mysql_methods	
+Pst_mysql	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql	mysql_rdb: Pst_mysql	
+St_mysql	v1/query_builder/libs/mysql/mysql_rdb.html#St_mysql	mysql_rdb: St_mysql	
+PMySQL	v1/query_builder/libs/mysql/mysql_rdb.html#PMySQL	mysql_rdb: PMySQL	
+Pst_mysql_res	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_res	mysql_rdb: Pst_mysql_res	
+St_mysql_res	v1/query_builder/libs/mysql/mysql_rdb.html#St_mysql_res	mysql_rdb: St_mysql_res	
+RES	v1/query_builder/libs/mysql/mysql_rdb.html#RES	mysql_rdb: RES	
+PRES	v1/query_builder/libs/mysql/mysql_rdb.html#PRES	mysql_rdb: PRES	
+Pst_mysql_stmt	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_stmt	mysql_rdb: Pst_mysql_stmt	
+PSTMT	v1/query_builder/libs/mysql/mysql_rdb.html#PSTMT	mysql_rdb: PSTMT	
+St_mysql_methods	v1/query_builder/libs/mysql/mysql_rdb.html#St_mysql_methods	mysql_rdb: St_mysql_methods	
+METHODS	v1/query_builder/libs/mysql/mysql_rdb.html#METHODS	mysql_rdb: METHODS	
+PMETHODS	v1/query_builder/libs/mysql/mysql_rdb.html#PMETHODS	mysql_rdb: PMETHODS	
+Pst_mysql_manager	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_manager	mysql_rdb: Pst_mysql_manager	
+St_mysql_manager	v1/query_builder/libs/mysql/mysql_rdb.html#St_mysql_manager	mysql_rdb: St_mysql_manager	
+MANAGER	v1/query_builder/libs/mysql/mysql_rdb.html#MANAGER	mysql_rdb: MANAGER	
+PMANAGER	v1/query_builder/libs/mysql/mysql_rdb.html#PMANAGER	mysql_rdb: PMANAGER	
+Pst_mysql_parameters	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_parameters	mysql_rdb: Pst_mysql_parameters	
+St_mysql_parameters	v1/query_builder/libs/mysql/mysql_rdb.html#St_mysql_parameters	mysql_rdb: St_mysql_parameters	
+PARAMETERS	v1/query_builder/libs/mysql/mysql_rdb.html#PARAMETERS	mysql_rdb: PARAMETERS	
+PPARAMETERS	v1/query_builder/libs/mysql/mysql_rdb.html#PPARAMETERS	mysql_rdb: PPARAMETERS	
+STMT_INIT_DONE	v1/query_builder/libs/mysql/mysql_rdb.html#STMT_INIT_DONE	Enum_mysql_stmt_state.STMT_INIT_DONE	
+STMT_PREPARE_DONE	v1/query_builder/libs/mysql/mysql_rdb.html#STMT_PREPARE_DONE	Enum_mysql_stmt_state.STMT_PREPARE_DONE	
+STMT_EXECUTE_DONE	v1/query_builder/libs/mysql/mysql_rdb.html#STMT_EXECUTE_DONE	Enum_mysql_stmt_state.STMT_EXECUTE_DONE	
+STMT_FETCH_DONE	v1/query_builder/libs/mysql/mysql_rdb.html#STMT_FETCH_DONE	Enum_mysql_stmt_state.STMT_FETCH_DONE	
+Enum_mysql_stmt_state	v1/query_builder/libs/mysql/mysql_rdb.html#Enum_mysql_stmt_state	mysql_rdb: Enum_mysql_stmt_state	
+Pst_mysql_bind	v1/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_bind	mysql_rdb: Pst_mysql_bind	
+U	v1/query_builder/libs/mysql/mysql_rdb.html#U	mysql_rdb: U	
+St_mysql_bind	v1/query_builder/libs/mysql/mysql_rdb.html#St_mysql_bind	mysql_rdb: St_mysql_bind	
+BIND	v1/query_builder/libs/mysql/mysql_rdb.html#BIND	mysql_rdb: BIND	
+PBIND	v1/query_builder/libs/mysql/mysql_rdb.html#PBIND	mysql_rdb: PBIND	
+St_mysql_stmt	v1/query_builder/libs/mysql/mysql_rdb.html#St_mysql_stmt	mysql_rdb: St_mysql_stmt	
+STMT	v1/query_builder/libs/mysql/mysql_rdb.html#STMT	mysql_rdb: STMT	
+STMT_ATTR_UPDATE_MAX_LENGTH	v1/query_builder/libs/mysql/mysql_rdb.html#STMT_ATTR_UPDATE_MAX_LENGTH	Enum_stmt_attr_type.STMT_ATTR_UPDATE_MAX_LENGTH	
+STMT_ATTR_CURSOR_TYPE	v1/query_builder/libs/mysql/mysql_rdb.html#STMT_ATTR_CURSOR_TYPE	Enum_stmt_attr_type.STMT_ATTR_CURSOR_TYPE	
+STMT_ATTR_PREFETCH_ROWS	v1/query_builder/libs/mysql/mysql_rdb.html#STMT_ATTR_PREFETCH_ROWS	Enum_stmt_attr_type.STMT_ATTR_PREFETCH_ROWS	
+Enum_stmt_attr_type	v1/query_builder/libs/mysql/mysql_rdb.html#Enum_stmt_attr_type	mysql_rdb: Enum_stmt_attr_type	
+server_init	v1/query_builder/libs/mysql/mysql_rdb.html#server_init,cint,cstringArray,cstringArray	mysql_rdb: server_init(argc: cint; argv: cstringArray; groups: cstringArray): cint	
+server_end	v1/query_builder/libs/mysql/mysql_rdb.html#server_end	mysql_rdb: server_end()	
+library_init	v1/query_builder/libs/mysql/mysql_rdb.html#library_init,cint,cstringArray,cstringArray	mysql_rdb: library_init(argc: cint; argv: cstringArray; groups: cstringArray): cint	
+library_end	v1/query_builder/libs/mysql/mysql_rdb.html#library_end	mysql_rdb: library_end()	
+get_parameters	v1/query_builder/libs/mysql/mysql_rdb.html#get_parameters	mysql_rdb: get_parameters(): PPARAMETERS	
+thread_init	v1/query_builder/libs/mysql/mysql_rdb.html#thread_init	mysql_rdb: thread_init(): my_bool	
+thread_end	v1/query_builder/libs/mysql/mysql_rdb.html#thread_end	mysql_rdb: thread_end()	
+num_rows	v1/query_builder/libs/mysql/mysql_rdb.html#num_rows,PRES	mysql_rdb: num_rows(res: PRES): my_ulonglong	
+num_fields	v1/query_builder/libs/mysql/mysql_rdb.html#num_fields,PRES	mysql_rdb: num_fields(res: PRES): cuint	
+eof	v1/query_builder/libs/mysql/mysql_rdb.html#eof,PRES	mysql_rdb: eof(res: PRES): my_bool	
+fetch_field_direct	v1/query_builder/libs/mysql/mysql_rdb.html#fetch_field_direct,PRES,cuint	mysql_rdb: fetch_field_direct(res: PRES; fieldnr: cuint): PFIELD	
+fetch_fields	v1/query_builder/libs/mysql/mysql_rdb.html#fetch_fields,PRES	mysql_rdb: fetch_fields(res: PRES): PFIELD	
+row_tell	v1/query_builder/libs/mysql/mysql_rdb.html#row_tell,PRES	mysql_rdb: row_tell(res: PRES): ROW_OFFSET	
+field_tell	v1/query_builder/libs/mysql/mysql_rdb.html#field_tell,PRES	mysql_rdb: field_tell(res: PRES): FIELD_OFFSET	
+field_count	v1/query_builder/libs/mysql/mysql_rdb.html#field_count,PMySQL	mysql_rdb: field_count(MySQL: PMySQL): cuint	
+affected_rows	v1/query_builder/libs/mysql/mysql_rdb.html#affected_rows,PMySQL	mysql_rdb: affected_rows(MySQL: PMySQL): my_ulonglong	
+insert_id	v1/query_builder/libs/mysql/mysql_rdb.html#insert_id,PMySQL	mysql_rdb: insert_id(MySQL: PMySQL): my_ulonglong	
+errno	v1/query_builder/libs/mysql/mysql_rdb.html#errno,PMySQL	mysql_rdb: errno(MySQL: PMySQL): cuint	
+error	v1/query_builder/libs/mysql/mysql_rdb.html#error,PMySQL	mysql_rdb: error(MySQL: PMySQL): cstring	
+sqlstate	v1/query_builder/libs/mysql/mysql_rdb.html#sqlstate,PMySQL	mysql_rdb: sqlstate(MySQL: PMySQL): cstring	
+warning_count	v1/query_builder/libs/mysql/mysql_rdb.html#warning_count,PMySQL	mysql_rdb: warning_count(MySQL: PMySQL): cuint	
+info	v1/query_builder/libs/mysql/mysql_rdb.html#info,PMySQL	mysql_rdb: info(MySQL: PMySQL): cstring	
+thread_id	v1/query_builder/libs/mysql/mysql_rdb.html#thread_id,PMySQL	mysql_rdb: thread_id(MySQL: PMySQL): int	
+character_set_name	v1/query_builder/libs/mysql/mysql_rdb.html#character_set_name,PMySQL	mysql_rdb: character_set_name(MySQL: PMySQL): cstring	
+set_character_set	v1/query_builder/libs/mysql/mysql_rdb.html#set_character_set,PMySQL,cstring	mysql_rdb: set_character_set(MySQL: PMySQL; csname: cstring): int32	
+init	v1/query_builder/libs/mysql/mysql_rdb.html#init,PMySQL	mysql_rdb: init(MySQL: PMySQL): PMySQL	
+ssl_set	v1/query_builder/libs/mysql/mysql_rdb.html#ssl_set,PMySQL,cstring,cstring,cstring,cstring,cstring	mysql_rdb: ssl_set(MySQL: PMySQL; key: cstring; cert: cstring; ca: cstring;\n        capath: cstring; cipher: cstring): my_bool	
+change_user	v1/query_builder/libs/mysql/mysql_rdb.html#change_user,PMySQL,cstring,cstring,cstring	mysql_rdb: change_user(MySQL: PMySQL; user: cstring; passwd: cstring; db: cstring): my_bool	
+real_connect	v1/query_builder/libs/mysql/mysql_rdb.html#real_connect,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,int	mysql_rdb: real_connect(MySQL: PMySQL; host: cstring; user: cstring; passwd: cstring;\n             db: cstring; port: cuint; unix_socket: cstring; clientflag: int): PMySQL	
+real_connect_start	v1/query_builder/libs/mysql/mysql_rdb.html#real_connect_start,ptr.PMySQL,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,culong	mysql_rdb: real_connect_start(ret: ptr PMySQL; mysql: PMySQL; host: cstring; user: cstring;\n                   passwd: cstring; db: cstring; port: cuint;\n                   unix_socket: cstring; clientflag: culong): cint	
+fetch_row_nonblocking	v1/query_builder/libs/mysql/mysql_rdb.html#fetch_row_nonblocking,PRES,PROW	mysql_rdb: fetch_row_nonblocking(MYSQL_RES: PRES; MYSQL_ROW: PROW): NetAsyncStatus	
+free_result_nonblocking	v1/query_builder/libs/mysql/mysql_rdb.html#free_result_nonblocking,PRES	mysql_rdb: free_result_nonblocking(MYSQL_RES: PRES): NetAsyncStatus	
+fetch_next_result_nonblocking	v1/query_builder/libs/mysql/mysql_rdb.html#fetch_next_result_nonblocking,PMySQL	mysql_rdb: fetch_next_result_nonblocking(MySQL: PMySQL): NetAsyncStatus	
+real_query_nonblocking	v1/query_builder/libs/mysql/mysql_rdb.html#real_query_nonblocking,PMySQL,cstring,int	mysql_rdb: real_query_nonblocking(MySQL: PMySQL; q: cstring; length: int): NetAsyncStatus	
+store_result_nonblocking	v1/query_builder/libs/mysql/mysql_rdb.html#store_result_nonblocking,PMySQL,ptr.PRES	mysql_rdb: store_result_nonblocking(MySQL: PMySQL; MYSQL_RES: ptr PRES): NetAsyncStatus	
+select_db	v1/query_builder/libs/mysql/mysql_rdb.html#select_db,PMySQL,cstring	mysql_rdb: select_db(MySQL: PMySQL; db: cstring): cint	
+query	v1/query_builder/libs/mysql/mysql_rdb.html#query,PMySQL,cstring	mysql_rdb: query(MySQL: PMySQL; q: cstring): cint	
+send_query	v1/query_builder/libs/mysql/mysql_rdb.html#send_query,PMySQL,cstring,int	mysql_rdb: send_query(MySQL: PMySQL; q: cstring; len: int): cint	
+real_query	v1/query_builder/libs/mysql/mysql_rdb.html#real_query,PMySQL,cstring,int	mysql_rdb: real_query(MySQL: PMySQL; q: cstring; len: int): cint	
+store_result	v1/query_builder/libs/mysql/mysql_rdb.html#store_result,PMySQL	mysql_rdb: store_result(MySQL: PMySQL): PRES	
+use_result	v1/query_builder/libs/mysql/mysql_rdb.html#use_result,PMySQL	mysql_rdb: use_result(MySQL: PMySQL): PRES	
+master_query	v1/query_builder/libs/mysql/mysql_rdb.html#master_query,PMySQL,cstring,int	mysql_rdb: master_query(MySQL: PMySQL; q: cstring; len: int): my_bool	
+master_send_query	v1/query_builder/libs/mysql/mysql_rdb.html#master_send_query,PMySQL,cstring,int	mysql_rdb: master_send_query(MySQL: PMySQL; q: cstring; len: int): my_bool	
+slave_query	v1/query_builder/libs/mysql/mysql_rdb.html#slave_query,PMySQL,cstring,int	mysql_rdb: slave_query(MySQL: PMySQL; q: cstring; len: int): my_bool	
+slave_send_query	v1/query_builder/libs/mysql/mysql_rdb.html#slave_send_query,PMySQL,cstring,int	mysql_rdb: slave_send_query(MySQL: PMySQL; q: cstring; len: int): my_bool	
+get_character_set_info	v1/query_builder/libs/mysql/mysql_rdb.html#get_character_set_info,PMySQL,PMY_CHARSET_INFO	mysql_rdb: get_character_set_info(MySQL: PMySQL; charset: PMY_CHARSET_INFO)	
+LOCAL_INFILE_ERROR_LEN	v1/query_builder/libs/mysql/mysql_rdb.html#LOCAL_INFILE_ERROR_LEN	mysql_rdb: LOCAL_INFILE_ERROR_LEN	
+set_local_infile_default	v1/query_builder/libs/mysql/mysql_rdb.html#set_local_infile_default,PMySQL	mysql_rdb: set_local_infile_default(MySQL: PMySQL)	
+enable_rpl_parse	v1/query_builder/libs/mysql/mysql_rdb.html#enable_rpl_parse,PMySQL	mysql_rdb: enable_rpl_parse(MySQL: PMySQL)	
+disable_rpl_parse	v1/query_builder/libs/mysql/mysql_rdb.html#disable_rpl_parse,PMySQL	mysql_rdb: disable_rpl_parse(MySQL: PMySQL)	
+rpl_parse_enabled	v1/query_builder/libs/mysql/mysql_rdb.html#rpl_parse_enabled,PMySQL	mysql_rdb: rpl_parse_enabled(MySQL: PMySQL): cint	
+enable_reads_from_master	v1/query_builder/libs/mysql/mysql_rdb.html#enable_reads_from_master,PMySQL	mysql_rdb: enable_reads_from_master(MySQL: PMySQL)	
+disable_reads_from_master	v1/query_builder/libs/mysql/mysql_rdb.html#disable_reads_from_master,PMySQL	mysql_rdb: disable_reads_from_master(MySQL: PMySQL)	
+reads_from_master_enabled	v1/query_builder/libs/mysql/mysql_rdb.html#reads_from_master_enabled,PMySQL	mysql_rdb: reads_from_master_enabled(MySQL: PMySQL): my_bool	
+rpl_query_type	v1/query_builder/libs/mysql/mysql_rdb.html#rpl_query_type,cstring,cint	mysql_rdb: rpl_query_type(q: cstring; length: cint): Rpl_type	
+rpl_probe	v1/query_builder/libs/mysql/mysql_rdb.html#rpl_probe,PMySQL	mysql_rdb: rpl_probe(MySQL: PMySQL): my_bool	
+set_master	v1/query_builder/libs/mysql/mysql_rdb.html#set_master,PMySQL,cstring,cuint,cstring,cstring	mysql_rdb: set_master(MySQL: PMySQL; host: cstring; port: cuint; user: cstring;\n           passwd: cstring): cint	
+add_slave	v1/query_builder/libs/mysql/mysql_rdb.html#add_slave,PMySQL,cstring,cuint,cstring,cstring	mysql_rdb: add_slave(MySQL: PMySQL; host: cstring; port: cuint; user: cstring;\n          passwd: cstring): cint	
+shutdown	v1/query_builder/libs/mysql/mysql_rdb.html#shutdown,PMySQL,Enum_shutdown_level	mysql_rdb: shutdown(MySQL: PMySQL; shutdown_level: Enum_shutdown_level): cint	
+dump_debug_info	v1/query_builder/libs/mysql/mysql_rdb.html#dump_debug_info,PMySQL	mysql_rdb: dump_debug_info(MySQL: PMySQL): cint	
+refresh	v1/query_builder/libs/mysql/mysql_rdb.html#refresh,PMySQL,cuint	mysql_rdb: refresh(sql: PMySQL; refresh_options: cuint): cint	
+kill	v1/query_builder/libs/mysql/mysql_rdb.html#kill,PMySQL,int	mysql_rdb: kill(MySQL: PMySQL; pid: int): cint	
+set_server_option	v1/query_builder/libs/mysql/mysql_rdb.html#set_server_option,PMySQL,Enum_mysql_set_option	mysql_rdb: set_server_option(MySQL: PMySQL; option: Enum_mysql_set_option): cint	
+ping	v1/query_builder/libs/mysql/mysql_rdb.html#ping,PMySQL	mysql_rdb: ping(MySQL: PMySQL): cint	
+stat	v1/query_builder/libs/mysql/mysql_rdb.html#stat,PMySQL	mysql_rdb: stat(MySQL: PMySQL): cstring	
+get_server_info	v1/query_builder/libs/mysql/mysql_rdb.html#get_server_info,PMySQL	mysql_rdb: get_server_info(MySQL: PMySQL): cstring	
+get_client_info	v1/query_builder/libs/mysql/mysql_rdb.html#get_client_info	mysql_rdb: get_client_info(): cstring	
+get_client_version	v1/query_builder/libs/mysql/mysql_rdb.html#get_client_version	mysql_rdb: get_client_version(): int	
+get_host_info	v1/query_builder/libs/mysql/mysql_rdb.html#get_host_info,PMySQL	mysql_rdb: get_host_info(MySQL: PMySQL): cstring	
+get_server_version	v1/query_builder/libs/mysql/mysql_rdb.html#get_server_version,PMySQL	mysql_rdb: get_server_version(MySQL: PMySQL): int	
+get_proto_info	v1/query_builder/libs/mysql/mysql_rdb.html#get_proto_info,PMySQL	mysql_rdb: get_proto_info(MySQL: PMySQL): cuint	
+list_dbs	v1/query_builder/libs/mysql/mysql_rdb.html#list_dbs,PMySQL,cstring	mysql_rdb: list_dbs(MySQL: PMySQL; wild: cstring): PRES	
+list_tables	v1/query_builder/libs/mysql/mysql_rdb.html#list_tables,PMySQL,cstring	mysql_rdb: list_tables(MySQL: PMySQL; wild: cstring): PRES	
+list_processes	v1/query_builder/libs/mysql/mysql_rdb.html#list_processes,PMySQL	mysql_rdb: list_processes(MySQL: PMySQL): PRES	
+options	v1/query_builder/libs/mysql/mysql_rdb.html#options,PMySQL,Option,cstring	mysql_rdb: options(MySQL: PMySQL; option: Option; arg: cstring): cint	
+free_result	v1/query_builder/libs/mysql/mysql_rdb.html#free_result,PRES	mysql_rdb: free_result(result: PRES)	
+data_seek	v1/query_builder/libs/mysql/mysql_rdb.html#data_seek,PRES,my_ulonglong	mysql_rdb: data_seek(result: PRES; offset: my_ulonglong)	
+row_seek	v1/query_builder/libs/mysql/mysql_rdb.html#row_seek,PRES,St_mysql_rows	mysql_rdb: row_seek(result: PRES; offset: ROW_OFFSET): ROW_OFFSET	
+field_seek	v1/query_builder/libs/mysql/mysql_rdb.html#field_seek,PRES,FIELD_OFFSET	mysql_rdb: field_seek(result: PRES; offset: FIELD_OFFSET): FIELD_OFFSET	
+fetch_row	v1/query_builder/libs/mysql/mysql_rdb.html#fetch_row,PRES	mysql_rdb: fetch_row(result: PRES): ROW	
+fetch_lengths	v1/query_builder/libs/mysql/mysql_rdb.html#fetch_lengths,PRES	mysql_rdb: fetch_lengths(result: PRES): ptr int	
+fetch_field	v1/query_builder/libs/mysql/mysql_rdb.html#fetch_field,PRES	mysql_rdb: fetch_field(result: PRES): PFIELD	
+list_fields	v1/query_builder/libs/mysql/mysql_rdb.html#list_fields,PMySQL,cstring,cstring	mysql_rdb: list_fields(MySQL: PMySQL; table: cstring; wild: cstring): PRES	
+escape_string	v1/query_builder/libs/mysql/mysql_rdb.html#escape_string,cstring,cstring,int	mysql_rdb: escape_string(fto: cstring; from: cstring; from_length: int): int	
+hex_string	v1/query_builder/libs/mysql/mysql_rdb.html#hex_string,cstring,cstring,int	mysql_rdb: hex_string(fto: cstring; from: cstring; from_length: int): int	
+real_escape_string	v1/query_builder/libs/mysql/mysql_rdb.html#real_escape_string,PMySQL,cstring,cstring,int	mysql_rdb: real_escape_string(MySQL: PMySQL; fto: cstring; from: cstring; len: int): int	
+debug	v1/query_builder/libs/mysql/mysql_rdb.html#debug,cstring	mysql_rdb: debug(debug: cstring)	
+myodbc_remove_escape	v1/query_builder/libs/mysql/mysql_rdb.html#myodbc_remove_escape,PMySQL,cstring	mysql_rdb: myodbc_remove_escape(MySQL: PMySQL; name: cstring)	
+thread_safe	v1/query_builder/libs/mysql/mysql_rdb.html#thread_safe	mysql_rdb: thread_safe(): cuint	
+embedded	v1/query_builder/libs/mysql/mysql_rdb.html#embedded	mysql_rdb: embedded(): my_bool	
+manager_init	v1/query_builder/libs/mysql/mysql_rdb.html#manager_init,PMANAGER	mysql_rdb: manager_init(con: PMANAGER): PMANAGER	
+manager_connect	v1/query_builder/libs/mysql/mysql_rdb.html#manager_connect,PMANAGER,cstring,cstring,cstring,cuint	mysql_rdb: manager_connect(con: PMANAGER; host: cstring; user: cstring; passwd: cstring;\n                port: cuint): PMANAGER	
+manager_close	v1/query_builder/libs/mysql/mysql_rdb.html#manager_close,PMANAGER	mysql_rdb: manager_close(con: PMANAGER)	
+manager_command	v1/query_builder/libs/mysql/mysql_rdb.html#manager_command,PMANAGER,cstring,cint	mysql_rdb: manager_command(con: PMANAGER; cmd: cstring; cmd_len: cint): cint	
+manager_fetch_line	v1/query_builder/libs/mysql/mysql_rdb.html#manager_fetch_line,PMANAGER,cstring,cint	mysql_rdb: manager_fetch_line(con: PMANAGER; res_buf: cstring; res_buf_size: cint): cint	
+read_query_result	v1/query_builder/libs/mysql/mysql_rdb.html#read_query_result,PMySQL	mysql_rdb: read_query_result(MySQL: PMySQL): my_bool	
+stmt_init	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_init,PMySQL	mysql_rdb: stmt_init(MySQL: PMySQL): PSTMT	
+stmt_prepare	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_prepare,PSTMT,cstring,int	mysql_rdb: stmt_prepare(stmt: PSTMT; query: cstring; len: int): cint	
+stmt_execute	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_execute,PSTMT	mysql_rdb: stmt_execute(stmt: PSTMT): cint	
+stmt_fetch	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_fetch,PSTMT	mysql_rdb: stmt_fetch(stmt: PSTMT): cint	
+stmt_fetch_column	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_fetch_column,PSTMT,PBIND,cuint,int	mysql_rdb: stmt_fetch_column(stmt: PSTMT; bind: PBIND; column: cuint; offset: int): cint	
+stmt_store_result	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_store_result,PSTMT	mysql_rdb: stmt_store_result(stmt: PSTMT): cint	
+stmt_param_count	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_param_count,PSTMT	mysql_rdb: stmt_param_count(stmt: PSTMT): int	
+stmt_attr_set	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_attr_set,PSTMT,Enum_stmt_attr_type,pointer	mysql_rdb: stmt_attr_set(stmt: PSTMT; attr_type: Enum_stmt_attr_type; attr: pointer): my_bool	
+stmt_attr_get	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_attr_get,PSTMT,Enum_stmt_attr_type,pointer	mysql_rdb: stmt_attr_get(stmt: PSTMT; attr_type: Enum_stmt_attr_type; attr: pointer): my_bool	
+stmt_bind_param	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_bind_param,PSTMT,PBIND	mysql_rdb: stmt_bind_param(stmt: PSTMT; bnd: PBIND): my_bool	
+stmt_bind_result	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_bind_result,PSTMT,PBIND	mysql_rdb: stmt_bind_result(stmt: PSTMT; bnd: PBIND): my_bool	
+stmt_close	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_close,PSTMT	mysql_rdb: stmt_close(stmt: PSTMT): my_bool	
+stmt_reset	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_reset,PSTMT	mysql_rdb: stmt_reset(stmt: PSTMT): my_bool	
+stmt_free_result	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_free_result,PSTMT	mysql_rdb: stmt_free_result(stmt: PSTMT): my_bool	
+stmt_send_long_data	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_send_long_data,PSTMT,cuint,cstring,int	mysql_rdb: stmt_send_long_data(stmt: PSTMT; param_number: cuint; data: cstring; len: int): my_bool	
+stmt_result_metadata	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_result_metadata,PSTMT	mysql_rdb: stmt_result_metadata(stmt: PSTMT): PRES	
+stmt_param_metadata	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_param_metadata,PSTMT	mysql_rdb: stmt_param_metadata(stmt: PSTMT): PRES	
+stmt_errno	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_errno,PSTMT	mysql_rdb: stmt_errno(stmt: PSTMT): cuint	
+stmt_error	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_error,PSTMT	mysql_rdb: stmt_error(stmt: PSTMT): cstring	
+stmt_sqlstate	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_sqlstate,PSTMT	mysql_rdb: stmt_sqlstate(stmt: PSTMT): cstring	
+stmt_row_seek	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_row_seek,PSTMT,St_mysql_rows	mysql_rdb: stmt_row_seek(stmt: PSTMT; offset: ROW_OFFSET): ROW_OFFSET	
+stmt_row_tell	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_row_tell,PSTMT	mysql_rdb: stmt_row_tell(stmt: PSTMT): ROW_OFFSET	
+stmt_data_seek	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_data_seek,PSTMT,my_ulonglong	mysql_rdb: stmt_data_seek(stmt: PSTMT; offset: my_ulonglong)	
+stmt_num_rows	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_num_rows,PSTMT	mysql_rdb: stmt_num_rows(stmt: PSTMT): my_ulonglong	
+stmt_affected_rows	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_affected_rows,PSTMT	mysql_rdb: stmt_affected_rows(stmt: PSTMT): my_ulonglong	
+stmt_insert_id	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_insert_id,PSTMT	mysql_rdb: stmt_insert_id(stmt: PSTMT): my_ulonglong	
+stmt_field_count	v1/query_builder/libs/mysql/mysql_rdb.html#stmt_field_count,PSTMT	mysql_rdb: stmt_field_count(stmt: PSTMT): cuint	
+commit	v1/query_builder/libs/mysql/mysql_rdb.html#commit,PMySQL	mysql_rdb: commit(MySQL: PMySQL): my_bool	
+rollback	v1/query_builder/libs/mysql/mysql_rdb.html#rollback,PMySQL	mysql_rdb: rollback(MySQL: PMySQL): my_bool	
+autocommit	v1/query_builder/libs/mysql/mysql_rdb.html#autocommit,PMySQL,my_bool	mysql_rdb: autocommit(MySQL: PMySQL; auto_mode: my_bool): my_bool	
+more_results	v1/query_builder/libs/mysql/mysql_rdb.html#more_results,PMySQL	mysql_rdb: more_results(MySQL: PMySQL): my_bool	
+next_result	v1/query_builder/libs/mysql/mysql_rdb.html#next_result,PMySQL	mysql_rdb: next_result(MySQL: PMySQL): cint	
+close	v1/query_builder/libs/mysql/mysql_rdb.html#close,PMySQL	mysql_rdb: close(sock: PMySQL)	
+NO_DATA	v1/query_builder/libs/mysql/mysql_rdb.html#NO_DATA	mysql_rdb: NO_DATA	
+DATA_TRUNCATED	v1/query_builder/libs/mysql/mysql_rdb.html#DATA_TRUNCATED	mysql_rdb: DATA_TRUNCATED	
+net_safe_read	v1/query_builder/libs/mysql/mysql_rdb.html#net_safe_read,PMySQL	mysql_rdb: net_safe_read(MySQL: PMySQL): cuint	
+IS_PRI_KEY	v1/query_builder/libs/mysql/mysql_rdb.html#IS_PRI_KEY,int32	mysql_rdb: IS_PRI_KEY(n: int32): bool	
+IS_NOT_NULL	v1/query_builder/libs/mysql/mysql_rdb.html#IS_NOT_NULL,int32	mysql_rdb: IS_NOT_NULL(n: int32): bool	
+IS_BLOB	v1/query_builder/libs/mysql/mysql_rdb.html#IS_BLOB,int32	mysql_rdb: IS_BLOB(n: int32): bool	
+IS_NUM_FIELD	v1/query_builder/libs/mysql/mysql_rdb.html#IS_NUM_FIELD,Pst_mysql_field	mysql_rdb: IS_NUM_FIELD(f: Pst_mysql_field): bool	
+IS_NUM	v1/query_builder/libs/mysql/mysql_rdb.html#IS_NUM,Enum_field_types	mysql_rdb: IS_NUM(t: Enum_field_types): bool	
+INTERNAL_NUM_FIELD	v1/query_builder/libs/mysql/mysql_rdb.html#INTERNAL_NUM_FIELD,Pst_mysql_field	mysql_rdb: INTERNAL_NUM_FIELD(f: Pst_mysql_field): bool	
+reload	v1/query_builder/libs/mysql/mysql_rdb.html#reload,PMySQL	mysql_rdb: reload(x: PMySQL): cint	

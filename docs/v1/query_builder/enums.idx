@@ -1,0 +1,7 @@
+Asc	v1/query_builder/enums.html#Asc	Order.Asc	
+Desc	v1/query_builder/enums.html#Desc	Order.Desc	
+Order	v1/query_builder/enums.html#Order	enums: Order	
+None	v1/query_builder/enums.html#None	Collation.None	
+Collate	v1/query_builder/enums.html#Collate	Collation.Collate	
+Numeric	v1/query_builder/enums.html#Numeric	Collation.Numeric	
+Collation	v1/query_builder/enums.html#Collation	enums: Collation	

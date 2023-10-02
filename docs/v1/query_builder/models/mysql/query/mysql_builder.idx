@@ -1,0 +1,14 @@
+selectBuilder	v1/query_builder/models/mysql/query/mysql_builder.html#selectBuilder,MysqlQuery	mysql_builder: selectBuilder(self: MysqlQuery): string	
+selectFirstBuilder	v1/query_builder/models/mysql/query/mysql_builder.html#selectFirstBuilder,MysqlQuery	mysql_builder: selectFirstBuilder(self: MysqlQuery): string	
+selectFindBuilder	v1/query_builder/models/mysql/query/mysql_builder.html#selectFindBuilder,MysqlQuery,string	mysql_builder: selectFindBuilder(self: MysqlQuery; key: string): string	
+insertValueBuilder	v1/query_builder/models/mysql/query/mysql_builder.html#insertValueBuilder,MysqlQuery,JsonNode	mysql_builder: insertValueBuilder(self: MysqlQuery; items: JsonNode): string	
+insertValuesBuilder	v1/query_builder/models/mysql/query/mysql_builder.html#insertValuesBuilder,MysqlQuery,openArray[JsonNode]	mysql_builder: insertValuesBuilder(self: MysqlQuery; rows: openArray[JsonNode]): string	
+updateBuilder	v1/query_builder/models/mysql/query/mysql_builder.html#updateBuilder,MysqlQuery,JsonNode	mysql_builder: updateBuilder(self: MysqlQuery; items: JsonNode): string	
+deleteBuilder	v1/query_builder/models/mysql/query/mysql_builder.html#deleteBuilder,MysqlQuery	mysql_builder: deleteBuilder(self: MysqlQuery): string	
+deleteByIdBuilder	v1/query_builder/models/mysql/query/mysql_builder.html#deleteByIdBuilder,MysqlQuery,int,string	mysql_builder: deleteByIdBuilder(self: MysqlQuery; id: int; key: string): string	
+countBuilder	v1/query_builder/models/mysql/query/mysql_builder.html#countBuilder,MysqlQuery	mysql_builder: countBuilder(self: MysqlQuery): string	
+maxBuilder	v1/query_builder/models/mysql/query/mysql_builder.html#maxBuilder,MysqlQuery,string	mysql_builder: maxBuilder(self: MysqlQuery; column: string): string	
+minBuilder	v1/query_builder/models/mysql/query/mysql_builder.html#minBuilder,MysqlQuery,string	mysql_builder: minBuilder(self: MysqlQuery; column: string): string	
+avgBuilder	v1/query_builder/models/mysql/query/mysql_builder.html#avgBuilder,MysqlQuery,string	mysql_builder: avgBuilder(self: MysqlQuery; column: string): string	
+sumBuilder	v1/query_builder/models/mysql/query/mysql_builder.html#sumBuilder,MysqlQuery,string	mysql_builder: sumBuilder(self: MysqlQuery; column: string): string	
+columnBuilder	v1/query_builder/models/mysql/query/mysql_builder.html#columnBuilder,MysqlQuery	mysql_builder: columnBuilder(self: MysqlQuery): string	

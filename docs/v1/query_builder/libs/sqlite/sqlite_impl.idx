@@ -1,0 +1,10 @@
+query	v1/query_builder/libs/sqlite/sqlite_impl.html#query,PSqlite3,string,seq[string],int	sqlite_impl: query(db: PSqlite3; query: string; args: seq[string]; timeout: int): Future[\n    (seq[Row], DbRows)]	
+queryPlain	v1/query_builder/libs/sqlite/sqlite_impl.html#queryPlain,PSqlite3,string,seq[string],int	sqlite_impl: queryPlain(db: PSqlite3; query: string; args: seq[string]; timeout: int): Future[\n    seq[Row]]	
+getColumnTypes	v1/query_builder/libs/sqlite/sqlite_impl.html#getColumnTypes,PSqlite3,string	sqlite_impl: getColumnTypes(db: PSqlite3; query: string): Future[seq[(string, string)]]	
+exec	v1/query_builder/libs/sqlite/sqlite_impl.html#exec,PSqlite3,string,JsonNode,seq[],int	sqlite_impl: exec(db: PSqlite3; query: string; args: JsonNode;\n     columns: seq[(string, string)]; timeout: int): owned(Future[void])	
+exec	v1/query_builder/libs/sqlite/sqlite_impl.html#exec,PSqlite3,string,JsonNode,int	sqlite_impl: exec(db: PSqlite3; query: string; args: JsonNode; timeout: int): owned(\n    Future[void])	
+exec	v1/query_builder/libs/sqlite/sqlite_impl.html#exec,PSqlite3,string,seq[string],int	sqlite_impl: exec(db: PSqlite3; query: string; args: seq[string]; timeout: int): owned(\n    Future[void])	
+getColumns	v1/query_builder/libs/sqlite/sqlite_impl.html#getColumns,PSqlite3,string,seq[string],int	sqlite_impl: getColumns(db: PSqlite3; query: string; args: seq[string]; timeout: int): Future[\n    seq[string]]	
+prepare	v1/query_builder/libs/sqlite/sqlite_impl.html#prepare,PSqlite3,string,int	sqlite_impl: prepare(db: PSqlite3; query: string; timeout: int): Future[PStmt]	
+preparedQuery	v1/query_builder/libs/sqlite/sqlite_impl.html#preparedQuery,PSqlite3,seq[string],PStmt	sqlite_impl: preparedQuery(db: PSqlite3; args: seq[string] = @[]; sqliteStmt: PStmt): Future[\n    (seq[Row], DbRows)]	
+preparedExec	v1/query_builder/libs/sqlite/sqlite_impl.html#preparedExec,PSqlite3,seq[string],PStmt	sqlite_impl: preparedExec(db: PSqlite3; args: seq[string] = @[]; sqliteStmt: PStmt): owned(\n    Future[void])	

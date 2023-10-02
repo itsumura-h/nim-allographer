@@ -1,1 +1,0 @@
-renameTable	schema_builder/queries/surreal/rename_table.html#renameTable,SurrealSchema,bool	rename_table: renameTable(self: SurrealSchema; isReset: bool)	

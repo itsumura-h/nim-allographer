@@ -1,0 +1,57 @@
+table	v1/query_builder/models/postgres/postgres_query.html#table,PostgresQuery,string	postgres_query: table(self: PostgresQuery; tableArg: string): PostgresQuery	
+`distinct`	v1/query_builder/models/postgres/postgres_query.html#distinct,PostgresQuery	postgres_query: `distinct`(self: PostgresQuery): PostgresQuery	
+join	v1/query_builder/models/postgres/postgres_query.html#join,PostgresQuery,string,string,string,string	postgres_query: join(self: PostgresQuery; table: string; column1: string; symbol: string;\n     column2: string): PostgresQuery	
+leftJoin	v1/query_builder/models/postgres/postgres_query.html#leftJoin,PostgresQuery,string,string,string,string	postgres_query: leftJoin(self: PostgresQuery; table: string; column1: string; symbol: string;\n         column2: string): PostgresQuery	
+where	v1/query_builder/models/postgres/postgres_query.html#where,PostgresQuery,string,string,	postgres_query: where(self: PostgresQuery; column: string; symbol: string;\n      value: string | int | float): PostgresQuery	
+where	v1/query_builder/models/postgres/postgres_query.html#where,PostgresQuery,string,string,bool	postgres_query: where(self: PostgresQuery; column: string; symbol: string; value: bool): PostgresQuery	
+where	v1/query_builder/models/postgres/postgres_query.html#where,PostgresQuery,string,string,_2	postgres_query: where(self: PostgresQuery; column: string; symbol: string; value: nil.type): PostgresQuery	
+orWhere	v1/query_builder/models/postgres/postgres_query.html#orWhere,PostgresQuery,string,string,	postgres_query: orWhere(self: PostgresQuery; column: string; symbol: string;\n        value: string | int | float | bool): PostgresQuery	
+orWhere	v1/query_builder/models/postgres/postgres_query.html#orWhere,PostgresQuery,string,string,_2	postgres_query: orWhere(self: PostgresQuery; column: string; symbol: string; value: nil.type): PostgresQuery	
+whereBetween	v1/query_builder/models/postgres/postgres_query.html#whereBetween,PostgresQuery,string,array[,]	postgres_query: whereBetween(self: PostgresQuery; column: string; width: array[2, int | float]): PostgresQuery	
+whereBetween	v1/query_builder/models/postgres/postgres_query.html#whereBetween,PostgresQuery,string,array[,string]	postgres_query: whereBetween(self: PostgresQuery; column: string; width: array[2, string]): PostgresQuery	
+whereNotBetween	v1/query_builder/models/postgres/postgres_query.html#whereNotBetween,PostgresQuery,string,array[,]	postgres_query: whereNotBetween(self: PostgresQuery; column: string;\n                width: array[2, int | float]): PostgresQuery	
+whereNotBetween	v1/query_builder/models/postgres/postgres_query.html#whereNotBetween,PostgresQuery,string,array[,string]	postgres_query: whereNotBetween(self: PostgresQuery; column: string; width: array[2, string]): PostgresQuery	
+whereIn	v1/query_builder/models/postgres/postgres_query.html#whereIn,PostgresQuery,string,seq[]	postgres_query: whereIn(self: PostgresQuery; column: string; width: seq[int | float | string]): PostgresQuery	
+whereNotIn	v1/query_builder/models/postgres/postgres_query.html#whereNotIn,PostgresQuery,string,seq[]	postgres_query: whereNotIn(self: PostgresQuery; column: string; width: seq[int | float | string]): PostgresQuery	
+whereNull	v1/query_builder/models/postgres/postgres_query.html#whereNull,PostgresQuery,string	postgres_query: whereNull(self: PostgresQuery; column: string): PostgresQuery	
+groupBy	v1/query_builder/models/postgres/postgres_query.html#groupBy,PostgresQuery,string	postgres_query: groupBy(self: PostgresQuery; column: string): PostgresQuery	
+having	v1/query_builder/models/postgres/postgres_query.html#having,PostgresQuery,string,string,	postgres_query: having(self: PostgresQuery; column: string; symbol: string;\n       value: string | int | float | bool): PostgresQuery	
+having	v1/query_builder/models/postgres/postgres_query.html#having,PostgresQuery,string,string,_2	postgres_query: having(self: PostgresQuery; column: string; symbol: string; value: nil.type): PostgresQuery	
+orderBy	v1/query_builder/models/postgres/postgres_query.html#orderBy,PostgresQuery,string,Order	postgres_query: orderBy(self: PostgresQuery; column: string; order: Order): PostgresQuery	
+limit	v1/query_builder/models/postgres/postgres_query.html#limit,PostgresQuery,int	postgres_query: limit(self: PostgresQuery; num: int): PostgresQuery	
+offset	v1/query_builder/models/postgres/postgres_query.html#offset,PostgresQuery,int	postgres_query: offset(self: PostgresQuery; num: int): PostgresQuery	
+get	v1/query_builder/models/postgres/postgres_query.html#get,PostgresQuery	postgres_query: get(self: PostgresQuery): Future[seq[JsonNode]]	
+first	v1/query_builder/models/postgres/postgres_query.html#first,PostgresQuery	postgres_query: first(self: PostgresQuery): Future[Option[JsonNode]]	
+find	v1/query_builder/models/postgres/postgres_query.html#find,PostgresQuery,string,string	postgres_query: find(self: PostgresQuery; id: string; key = &quot;id&quot;): Future[Option[JsonNode]]	
+find	v1/query_builder/models/postgres/postgres_query.html#find,PostgresQuery,int,string	postgres_query: find(self: PostgresQuery; id: int; key = &quot;id&quot;): Future[Option[JsonNode]]	
+getPlain	v1/query_builder/models/postgres/postgres_query.html#getPlain,PostgresQuery	postgres_query: getPlain(self: PostgresQuery): Future[seq[seq[string]]]	
+firstPlain	v1/query_builder/models/postgres/postgres_query.html#firstPlain,PostgresQuery	postgres_query: firstPlain(self: PostgresQuery): Future[seq[string]]	
+findPlain	v1/query_builder/models/postgres/postgres_query.html#findPlain,PostgresQuery,string,string	postgres_query: findPlain(self: PostgresQuery; id: string; key = &quot;id&quot;): Future[seq[string]]	
+findPlain	v1/query_builder/models/postgres/postgres_query.html#findPlain,PostgresQuery,int,string	postgres_query: findPlain(self: PostgresQuery; id: int; key = &quot;id&quot;): Future[seq[string]]	
+get	v1/query_builder/models/postgres/postgres_query.html#get,PostgresQuery,typedesc[T]	postgres_query: get[T](self: PostgresQuery; typ: typedesc[T]): Future[seq[T]]	
+first	v1/query_builder/models/postgres/postgres_query.html#first,PostgresQuery,typedesc[T]	postgres_query: first[T](self: PostgresQuery; typ: typedesc[T]): Future[Option[T]]	
+find	v1/query_builder/models/postgres/postgres_query.html#find,PostgresQuery,string,typedesc[T],string	postgres_query: find[T](self: PostgresQuery; id: string; typ: typedesc[T]; key = &quot;id&quot;): Future[\n    Option[T]]	
+find	v1/query_builder/models/postgres/postgres_query.html#find,PostgresQuery,int,typedesc[T],string	postgres_query: find[T](self: PostgresQuery; id: int; typ: typedesc[T]; key = &quot;id&quot;): Future[\n    Option[T]]	
+insert	v1/query_builder/models/postgres/postgres_query.html#insert,PostgresQuery,JsonNode	postgres_query: insert(self: PostgresQuery; items: JsonNode): owned(Future[void])	
+insert	v1/query_builder/models/postgres/postgres_query.html#insert,PostgresQuery,seq[JsonNode]	postgres_query: insert(self: PostgresQuery; items: seq[JsonNode]): owned(Future[void])	
+insertId	v1/query_builder/models/postgres/postgres_query.html#insertId,PostgresQuery,JsonNode,string	postgres_query: insertId(self: PostgresQuery; items: JsonNode; key = &quot;id&quot;): Future[string]	
+insertId	v1/query_builder/models/postgres/postgres_query.html#insertId,PostgresQuery,seq[JsonNode],string	postgres_query: insertId(self: PostgresQuery; items: seq[JsonNode]; key = &quot;id&quot;): Future[\n    seq[string]]	
+update	v1/query_builder/models/postgres/postgres_query.html#update,PostgresQuery,JsonNode	postgres_query: update(self: PostgresQuery; items: JsonNode): owned(Future[void])	
+delete	v1/query_builder/models/postgres/postgres_query.html#delete,PostgresQuery	postgres_query: delete(self: PostgresQuery): owned(Future[void])	
+delete	v1/query_builder/models/postgres/postgres_query.html#delete,PostgresQuery,int,string	postgres_query: delete(self: PostgresQuery; id: int; key = &quot;id&quot;): owned(Future[void])	
+columns	v1/query_builder/models/postgres/postgres_query.html#columns,PostgresQuery	postgres_query: columns(self: PostgresQuery): Future[seq[string]]	
+count	v1/query_builder/models/postgres/postgres_query.html#count,PostgresQuery	postgres_query: count(self: PostgresQuery): Future[int]	
+min	v1/query_builder/models/postgres/postgres_query.html#min,PostgresQuery,string	postgres_query: min(self: PostgresQuery; column: string): Future[Option[string]]	
+max	v1/query_builder/models/postgres/postgres_query.html#max,PostgresQuery,string	postgres_query: max(self: PostgresQuery; column: string): Future[Option[string]]	
+avg	v1/query_builder/models/postgres/postgres_query.html#avg,PostgresQuery,string	postgres_query: avg(self: PostgresQuery; column: string): Future[Option[float]]	
+sum	v1/query_builder/models/postgres/postgres_query.html#sum,PostgresQuery,string	postgres_query: sum(self: PostgresQuery; column: string): Future[Option[float]]	
+begin	v1/query_builder/models/postgres/postgres_query.html#begin,PostgresConnections	postgres_query: begin(self: PostgresConnections): owned(Future[void])	
+rollback	v1/query_builder/models/postgres/postgres_query.html#rollback,PostgresConnections	postgres_query: rollback(self: PostgresConnections): owned(Future[void])	
+commit	v1/query_builder/models/postgres/postgres_query.html#commit,PostgresConnections	postgres_query: commit(self: PostgresConnections): owned(Future[void])	
+get	v1/query_builder/models/postgres/postgres_query.html#get,RawPostgresQuery	postgres_query: get(self: RawPostgresQuery): Future[seq[JsonNode]]	
+getPlain	v1/query_builder/models/postgres/postgres_query.html#getPlain,RawPostgresQuery	postgres_query: getPlain(self: RawPostgresQuery): Future[seq[seq[string]]]	
+exec	v1/query_builder/models/postgres/postgres_query.html#exec,RawPostgresQuery	postgres_query: exec(self: RawPostgresQuery): owned(Future[void])	
+first	v1/query_builder/models/postgres/postgres_query.html#first,RawPostgresQuery	postgres_query: first(self: RawPostgresQuery): Future[Option[JsonNode]]	
+firstPlain	v1/query_builder/models/postgres/postgres_query.html#firstPlain,RawPostgresQuery	postgres_query: firstPlain(self: RawPostgresQuery): Future[seq[string]]	
+seeder	v1/query_builder/models/postgres/postgres_query.html#seeder.t,PostgresConnections,string,untyped	postgres_query: seeder(rdb: PostgresConnections; tableName: string; body: untyped): untyped	
+seeder	v1/query_builder/models/postgres/postgres_query.html#seeder.t,PostgresConnections,string,string,untyped	postgres_query: seeder(rdb: PostgresConnections; tableName, column: string; body: untyped): untyped	

@@ -1,0 +1,6 @@
+notAllowedOption	v1/schema_builder/queries/postgres/schema_utils.html#notAllowedOption,string,string,string	schema_utils: notAllowedOption(option, typ, column: string)	
+notAllowedType	v1/schema_builder/queries/postgres/schema_utils.html#notAllowedType,string	schema_utils: notAllowedType(typ: string)	
+shouldRun	v1/schema_builder/queries/postgres/schema_utils.html#shouldRun,PostgresConnections,Table,string,bool	schema_utils: shouldRun(rdb: PostgresConnections; table: Table; checksum: string;\n          isReset: bool): bool	
+exec	v1/schema_builder/queries/postgres/schema_utils.html#exec,PostgresConnections,seq[string]	schema_utils: exec(rdb: PostgresConnections; queries: seq[string])	
+execThenSaveHistory	v1/schema_builder/queries/postgres/schema_utils.html#execThenSaveHistory,PostgresConnections,string,seq[string],string	schema_utils: execThenSaveHistory(rdb: PostgresConnections; tableName: string;\n                    queries: seq[string]; checksum: string)	
+execThenSaveHistory	v1/schema_builder/queries/postgres/schema_utils.html#execThenSaveHistory,PostgresConnections,string,string,string	schema_utils: execThenSaveHistory(rdb: PostgresConnections; tableName: string; query: string;\n                    checksum: string)	

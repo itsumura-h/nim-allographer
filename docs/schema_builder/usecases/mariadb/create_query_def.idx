@@ -1,2 +1,0 @@
-createSchema	schema_builder/usecases/mariadb/create_query_def.html#createSchema,MariadbConnections,Table	create_query_def: createSchema(rdb: MariadbConnections; table: Table): ISchema	
-createSchema	schema_builder/usecases/mariadb/create_query_def.html#createSchema,MariadbConnections,Table,Column	create_query_def: createSchema(rdb: MariadbConnections; table: Table; column: Column): ISchema	

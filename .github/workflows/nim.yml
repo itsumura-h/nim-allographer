@@ -3,6 +3,12 @@ name: Build and test Nim
 # テストはPRだけ
 on: [pull_request]
 
+# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
+concurrency:
+  group: "test"
+  cancel-in-progress: false
+
 jobs:
   # WIP でジョブがスキップされてもCIが失敗した扱いにならないようにするため
   skip:
@@ -17,51 +23,22 @@ jobs:
     steps:
       - run: echo "no WIP"
 
-  # build:
-  #   runs-on: ${{ matrix.os }}
-  #   needs: before
-  #   strategy:
-  #     matrix:
-  #       os:
-  #         - ubuntu-latest
-  #         # - macOS-latest
-  #         # Need sqlite3_64.dll
-  #         # - windows-latest
-  #   env:
-  #     NIM_VERSION: 1.2.0
-  #   steps:
-  #   - uses: actions/checkout@v1
-  #   - name: Cache choosenim
-  #     id: cache-choosenim
-  #     uses: actions/cache@v1
-  #     with:
-  #       path: ~/.choosenim
-  #       key: ${{ runner.os }}-choosenim-${{ env.NIM_VERSION }}
-  #   - name: Cache nimble
-  #     id: cache-nimble
-  #     uses: actions/cache@v1
-  #     with:
-  #       path: ~/.nimble
-  #       key: ${{ runner.os }}-nimble-${{ env.NIM_VERSION }}
-  #   - uses: jiro4989/setup-nim-action@v1
-  #     with:
-  #       nim-version: ${{ env.NIM_VERSION }}
-  #   - name: Build
-  #     run: nimble install -Y
-
-  test-on-docker:
+  test-on-docker-nim-v1:
     runs-on: ubuntu-latest
     needs: before
     steps:
     - uses: actions/checkout@v1
     - name: Test
-      run: docker-compose run app-ubuntu nimble test
-    # マルチスレッドは使わない
-    # - name: Test multi-thread
-    #   run: |
-    #     echo '' >> tests/config.nims
-    #     echo 'switch("threads", "on")' >> tests/config.nims
-    #     docker-compose run app-ubuntu nimble test
+      run: docker compose -f compose.test.yaml run app-ubuntu-v1 nimble test_v1
+
+  test-on-docker-nim-v2:
+    runs-on: ubuntu-latest
+    needs: before
+    steps:
+    - uses: actions/checkout@v1
+    - name: Test
+      run: docker compose -f compose.test.yaml run app-ubuntu nimble test
+
 
   # アプリケーションの方を使うことにした
   # https://github.com/marketplace/actions/release-drafter

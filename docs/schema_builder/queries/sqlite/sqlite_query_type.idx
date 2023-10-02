@@ -1,3 +1,0 @@
-SqliteSchema	schema_builder/queries/sqlite/sqlite_query_type.html#SqliteSchema	sqlite_query_type: SqliteSchema	
-new	schema_builder/queries/sqlite/sqlite_query_type.html#new,typeSqliteSchema,SqliteConnections,Table	sqlite_query_type: new(_: type SqliteSchema; rdb: SqliteConnections; table: Table): SqliteSchema	
-new	schema_builder/queries/sqlite/sqlite_query_type.html#new,typeSqliteSchema,SqliteConnections,Table,Column	sqlite_query_type: new(_: type SqliteSchema; rdb: SqliteConnections; table: Table; column: Column): SqliteSchema	

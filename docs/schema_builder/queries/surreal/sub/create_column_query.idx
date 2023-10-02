@@ -1,1 +1,0 @@
-createColumnString	schema_builder/queries/surreal/sub/create_column_query.html#createColumnString,Table,Column	create_column_query: createColumnString(table: Table; column: Column): seq[string]	

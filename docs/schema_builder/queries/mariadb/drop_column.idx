@@ -1,1 +1,0 @@
-dropColumn	schema_builder/queries/mariadb/drop_column.html#dropColumn,MariadbSchema,bool	drop_column: dropColumn(self: MariadbSchema; isReset: bool)	

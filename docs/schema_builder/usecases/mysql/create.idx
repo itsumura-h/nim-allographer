@@ -1,1 +1,0 @@
-create	schema_builder/usecases/mysql/create.html#create,MysqlConnections,varargs[Table]	create: create(rdb: MysqlConnections; tables: varargs[Table])	

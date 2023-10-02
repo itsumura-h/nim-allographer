@@ -1,0 +1,1 @@
+dropColumn	v1/schema_builder/queries/mysql/drop_column.html#dropColumn,MysqlSchema,bool	drop_column: dropColumn(self: MysqlSchema; isReset: bool)	

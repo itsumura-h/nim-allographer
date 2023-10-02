@@ -1,1 +1,0 @@
-toInterface	schema_builder/queries/mysql/mysql_query_impl.html#toInterface,MysqlSchema	mysql_query_impl: toInterface(self: MysqlSchema): ISchema	

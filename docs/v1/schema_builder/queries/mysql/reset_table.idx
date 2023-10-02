@@ -1,0 +1,2 @@
+resetMigrationTable	v1/schema_builder/queries/mysql/reset_table.html#resetMigrationTable,MysqlSchema	reset_table: resetMigrationTable(self: MysqlSchema)	
+resetTable	v1/schema_builder/queries/mysql/reset_table.html#resetTable,MysqlSchema	reset_table: resetTable(self: MysqlSchema)	

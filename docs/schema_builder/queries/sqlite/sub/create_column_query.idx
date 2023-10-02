@@ -1,3 +1,0 @@
-createColumnString	schema_builder/queries/sqlite/sub/create_column_query.html#createColumnString,Column	create_column_query: createColumnString(column: Column): string	
-createForeignString	schema_builder/queries/sqlite/sub/create_column_query.html#createForeignString,Column	create_column_query: createForeignString(column: Column): string	
-createIndexString	schema_builder/queries/sqlite/sub/create_column_query.html#createIndexString,Table,Column	create_column_query: createIndexString(table: Table; column: Column): string	

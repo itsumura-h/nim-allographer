@@ -1,0 +1,14 @@
+SurrealDB	v1/query_builder/models/surreal/surreal_types.html#SurrealDB	surreal_types: SurrealDB	
+SurrealConnection	v1/query_builder/models/surreal/surreal_types.html#SurrealConnection	surreal_types: SurrealConnection	
+SurrealConnections	v1/query_builder/models/surreal/surreal_types.html#SurrealConnections	surreal_types: SurrealConnections	
+`$`	v1/query_builder/models/surreal/surreal_types.html#$,SurrealConnections	surreal_types: `$`(self: SurrealConnections): string	
+SurrealQuery	v1/query_builder/models/surreal/surreal_types.html#SurrealQuery	surreal_types: SurrealQuery	
+new	v1/query_builder/models/surreal/surreal_types.html#new,typeSurrealQuery,LogSetting,seq[SurrealConnection],int,JsonNode	surreal_types: new(_: type SurrealQuery; log: LogSetting; pools: seq[SurrealConnection];\n    timeout: int; query: JsonNode): SurrealQuery	
+RawSurrealQuery	v1/query_builder/models/surreal/surreal_types.html#RawSurrealQuery	surreal_types: RawSurrealQuery	
+SurrealId	v1/query_builder/models/surreal/surreal_types.html#SurrealId	surreal_types: SurrealId	
+new	v1/query_builder/models/surreal/surreal_types.html#new,typeSurrealId	surreal_types: new(_: type SurrealId): SurrealId	
+new	v1/query_builder/models/surreal/surreal_types.html#new,typeSurrealId,string,string	surreal_types: new(_: type SurrealId; table, id: string): SurrealId	
+new	v1/query_builder/models/surreal/surreal_types.html#new,typeSurrealId,string	surreal_types: new(_: type SurrealId; rawId: string): SurrealId	
+rawId	v1/query_builder/models/surreal/surreal_types.html#rawId,SurrealId	surreal_types: rawId(self: SurrealId): string	
+`$`	v1/query_builder/models/surreal/surreal_types.html#$,SurrealId	surreal_types: `$`(self: SurrealId): string	
+`%`	v1/query_builder/models/surreal/surreal_types.html#%,SurrealId	surreal_types: `%`(self: SurrealId): JsonNode	

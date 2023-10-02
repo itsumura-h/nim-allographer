@@ -1,0 +1,7 @@
+dbError	v1/query_builder/libs/mysql/mysql_lib.html#dbError,PMySQL	mysql_lib: dbError(db: PMySQL)	
+setColumnInfo	v1/query_builder/libs/mysql/mysql_lib.html#setColumnInfo,DbColumns,PRES,int	mysql_lib: setColumnInfo(columns: var DbColumns; res: PRES; L: int)	
+dbFormat	v1/query_builder/libs/mysql/mysql_lib.html#dbFormat,string,seq[string]	mysql_lib: dbFormat(formatstr: string; args: seq[string]): string	
+MysqlParamValue	v1/query_builder/libs/mysql/mysql_lib.html#MysqlParamValue	mysql_lib: MysqlParamValue	
+MysqlParams	v1/query_builder/libs/mysql/mysql_lib.html#MysqlParams	mysql_lib: MysqlParams	
+fromObj	v1/query_builder/libs/mysql/mysql_lib.html#fromObj,typeMysqlParams,JsonNode,seq[seq[string]]	mysql_lib: fromObj(_: type MysqlParams; args: JsonNode; columns: seq[seq[string]]): MysqlParams	
+dbFormat	v1/query_builder/libs/mysql/mysql_lib.html#dbFormat,PMySQL,string,MysqlParams	mysql_lib: dbFormat(conn: PMySQL; query: string; args: MysqlParams): string	

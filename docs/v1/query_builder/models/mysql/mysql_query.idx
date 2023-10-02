@@ -1,0 +1,57 @@
+table	v1/query_builder/models/mysql/mysql_query.html#table,MysqlQuery,string	mysql_query: table(self: MysqlQuery; tableArg: string): MysqlQuery	
+`distinct`	v1/query_builder/models/mysql/mysql_query.html#distinct,MysqlQuery	mysql_query: `distinct`(self: MysqlQuery): MysqlQuery	
+join	v1/query_builder/models/mysql/mysql_query.html#join,MysqlQuery,string,string,string,string	mysql_query: join(self: MysqlQuery; table: string; column1: string; symbol: string;\n     column2: string): MysqlQuery	
+leftJoin	v1/query_builder/models/mysql/mysql_query.html#leftJoin,MysqlQuery,string,string,string,string	mysql_query: leftJoin(self: MysqlQuery; table: string; column1: string; symbol: string;\n         column2: string): MysqlQuery	
+where	v1/query_builder/models/mysql/mysql_query.html#where,MysqlQuery,string,string,	mysql_query: where(self: MysqlQuery; column: string; symbol: string;\n      value: string | int | float): MysqlQuery	
+where	v1/query_builder/models/mysql/mysql_query.html#where,MysqlQuery,string,string,bool	mysql_query: where(self: MysqlQuery; column: string; symbol: string; value: bool): MysqlQuery	
+where	v1/query_builder/models/mysql/mysql_query.html#where,MysqlQuery,string,string,_2	mysql_query: where(self: MysqlQuery; column: string; symbol: string; value: nil.type): MysqlQuery	
+orWhere	v1/query_builder/models/mysql/mysql_query.html#orWhere,MysqlQuery,string,string,	mysql_query: orWhere(self: MysqlQuery; column: string; symbol: string;\n        value: string | int | float | bool): MysqlQuery	
+orWhere	v1/query_builder/models/mysql/mysql_query.html#orWhere,MysqlQuery,string,string,_2	mysql_query: orWhere(self: MysqlQuery; column: string; symbol: string; value: nil.type): MysqlQuery	
+whereBetween	v1/query_builder/models/mysql/mysql_query.html#whereBetween,MysqlQuery,string,array[,]	mysql_query: whereBetween(self: MysqlQuery; column: string; width: array[2, int | float]): MysqlQuery	
+whereBetween	v1/query_builder/models/mysql/mysql_query.html#whereBetween,MysqlQuery,string,array[,string]	mysql_query: whereBetween(self: MysqlQuery; column: string; width: array[2, string]): MysqlQuery	
+whereNotBetween	v1/query_builder/models/mysql/mysql_query.html#whereNotBetween,MysqlQuery,string,array[,]	mysql_query: whereNotBetween(self: MysqlQuery; column: string; width: array[2, int | float]): MysqlQuery	
+whereNotBetween	v1/query_builder/models/mysql/mysql_query.html#whereNotBetween,MysqlQuery,string,array[,string]	mysql_query: whereNotBetween(self: MysqlQuery; column: string; width: array[2, string]): MysqlQuery	
+whereIn	v1/query_builder/models/mysql/mysql_query.html#whereIn,MysqlQuery,string,seq[]	mysql_query: whereIn(self: MysqlQuery; column: string; width: seq[int | float | string]): MysqlQuery	
+whereNotIn	v1/query_builder/models/mysql/mysql_query.html#whereNotIn,MysqlQuery,string,seq[]	mysql_query: whereNotIn(self: MysqlQuery; column: string; width: seq[int | float | string]): MysqlQuery	
+whereNull	v1/query_builder/models/mysql/mysql_query.html#whereNull,MysqlQuery,string	mysql_query: whereNull(self: MysqlQuery; column: string): MysqlQuery	
+groupBy	v1/query_builder/models/mysql/mysql_query.html#groupBy,MysqlQuery,string	mysql_query: groupBy(self: MysqlQuery; column: string): MysqlQuery	
+having	v1/query_builder/models/mysql/mysql_query.html#having,MysqlQuery,string,string,	mysql_query: having(self: MysqlQuery; column: string; symbol: string;\n       value: string | int | float | bool): MysqlQuery	
+having	v1/query_builder/models/mysql/mysql_query.html#having,MysqlQuery,string,string,_2	mysql_query: having(self: MysqlQuery; column: string; symbol: string; value: nil.type): MysqlQuery	
+orderBy	v1/query_builder/models/mysql/mysql_query.html#orderBy,MysqlQuery,string,Order	mysql_query: orderBy(self: MysqlQuery; column: string; order: Order): MysqlQuery	
+limit	v1/query_builder/models/mysql/mysql_query.html#limit,MysqlQuery,int	mysql_query: limit(self: MysqlQuery; num: int): MysqlQuery	
+offset	v1/query_builder/models/mysql/mysql_query.html#offset,MysqlQuery,int	mysql_query: offset(self: MysqlQuery; num: int): MysqlQuery	
+get	v1/query_builder/models/mysql/mysql_query.html#get,MysqlQuery	mysql_query: get(self: MysqlQuery): Future[seq[JsonNode]]	
+first	v1/query_builder/models/mysql/mysql_query.html#first,MysqlQuery	mysql_query: first(self: MysqlQuery): Future[Option[JsonNode]]	
+find	v1/query_builder/models/mysql/mysql_query.html#find,MysqlQuery,string,string	mysql_query: find(self: MysqlQuery; id: string; key = &quot;id&quot;): Future[Option[JsonNode]]	
+find	v1/query_builder/models/mysql/mysql_query.html#find,MysqlQuery,int,string	mysql_query: find(self: MysqlQuery; id: int; key = &quot;id&quot;): Future[Option[JsonNode]]	
+getPlain	v1/query_builder/models/mysql/mysql_query.html#getPlain,MysqlQuery	mysql_query: getPlain(self: MysqlQuery): Future[seq[seq[string]]]	
+firstPlain	v1/query_builder/models/mysql/mysql_query.html#firstPlain,MysqlQuery	mysql_query: firstPlain(self: MysqlQuery): Future[seq[string]]	
+findPlain	v1/query_builder/models/mysql/mysql_query.html#findPlain,MysqlQuery,string,string	mysql_query: findPlain(self: MysqlQuery; id: string; key = &quot;id&quot;): Future[seq[string]]	
+findPlain	v1/query_builder/models/mysql/mysql_query.html#findPlain,MysqlQuery,int,string	mysql_query: findPlain(self: MysqlQuery; id: int; key = &quot;id&quot;): Future[seq[string]]	
+get	v1/query_builder/models/mysql/mysql_query.html#get,MysqlQuery,typedesc[T]	mysql_query: get[T](self: MysqlQuery; typ: typedesc[T]): Future[seq[T]]	
+first	v1/query_builder/models/mysql/mysql_query.html#first,MysqlQuery,typedesc[T]	mysql_query: first[T](self: MysqlQuery; typ: typedesc[T]): Future[Option[T]]	
+find	v1/query_builder/models/mysql/mysql_query.html#find,MysqlQuery,string,typedesc[T],string	mysql_query: find[T](self: MysqlQuery; id: string; typ: typedesc[T]; key = &quot;id&quot;): Future[\n    Option[T]]	
+find	v1/query_builder/models/mysql/mysql_query.html#find,MysqlQuery,int,typedesc[T],string	mysql_query: find[T](self: MysqlQuery; id: int; typ: typedesc[T]; key = &quot;id&quot;): Future[\n    Option[T]]	
+insert	v1/query_builder/models/mysql/mysql_query.html#insert,MysqlQuery,JsonNode	mysql_query: insert(self: MysqlQuery; items: JsonNode): owned(Future[void])	
+insert	v1/query_builder/models/mysql/mysql_query.html#insert,MysqlQuery,seq[JsonNode]	mysql_query: insert(self: MysqlQuery; items: seq[JsonNode]): owned(Future[void])	
+insertId	v1/query_builder/models/mysql/mysql_query.html#insertId,MysqlQuery,JsonNode,string	mysql_query: insertId(self: MysqlQuery; items: JsonNode; key = &quot;id&quot;): Future[string]	
+insertId	v1/query_builder/models/mysql/mysql_query.html#insertId,MysqlQuery,seq[JsonNode],string	mysql_query: insertId(self: MysqlQuery; items: seq[JsonNode]; key = &quot;id&quot;): Future[seq[string]]	
+update	v1/query_builder/models/mysql/mysql_query.html#update,MysqlQuery,JsonNode	mysql_query: update(self: MysqlQuery; items: JsonNode): owned(Future[void])	
+delete	v1/query_builder/models/mysql/mysql_query.html#delete,MysqlQuery	mysql_query: delete(self: MysqlQuery): owned(Future[void])	
+delete	v1/query_builder/models/mysql/mysql_query.html#delete,MysqlQuery,int,string	mysql_query: delete(self: MysqlQuery; id: int; key = &quot;id&quot;): owned(Future[void])	
+columns	v1/query_builder/models/mysql/mysql_query.html#columns,MysqlQuery	mysql_query: columns(self: MysqlQuery): Future[seq[string]]	
+count	v1/query_builder/models/mysql/mysql_query.html#count,MysqlQuery	mysql_query: count(self: MysqlQuery): Future[int]	
+min	v1/query_builder/models/mysql/mysql_query.html#min,MysqlQuery,string	mysql_query: min(self: MysqlQuery; column: string): Future[Option[string]]	
+max	v1/query_builder/models/mysql/mysql_query.html#max,MysqlQuery,string	mysql_query: max(self: MysqlQuery; column: string): Future[Option[string]]	
+avg	v1/query_builder/models/mysql/mysql_query.html#avg,MysqlQuery,string	mysql_query: avg(self: MysqlQuery; column: string): Future[Option[float]]	
+sum	v1/query_builder/models/mysql/mysql_query.html#sum,MysqlQuery,string	mysql_query: sum(self: MysqlQuery; column: string): Future[Option[float]]	
+begin	v1/query_builder/models/mysql/mysql_query.html#begin,MysqlConnections	mysql_query: begin(self: MysqlConnections): owned(Future[void])	
+rollback	v1/query_builder/models/mysql/mysql_query.html#rollback,MysqlConnections	mysql_query: rollback(self: MysqlConnections): owned(Future[void])	
+commit	v1/query_builder/models/mysql/mysql_query.html#commit,MysqlConnections	mysql_query: commit(self: MysqlConnections): owned(Future[void])	
+get	v1/query_builder/models/mysql/mysql_query.html#get,RawMysqlQuery	mysql_query: get(self: RawMysqlQuery): Future[seq[JsonNode]]	
+getPlain	v1/query_builder/models/mysql/mysql_query.html#getPlain,RawMysqlQuery	mysql_query: getPlain(self: RawMysqlQuery): Future[seq[seq[string]]]	
+exec	v1/query_builder/models/mysql/mysql_query.html#exec,RawMysqlQuery	mysql_query: exec(self: RawMysqlQuery): owned(Future[void])	
+first	v1/query_builder/models/mysql/mysql_query.html#first,RawMysqlQuery	mysql_query: first(self: RawMysqlQuery): Future[Option[JsonNode]]	
+firstPlain	v1/query_builder/models/mysql/mysql_query.html#firstPlain,RawMysqlQuery	mysql_query: firstPlain(self: RawMysqlQuery): Future[seq[string]]	
+seeder	v1/query_builder/models/mysql/mysql_query.html#seeder.t,MysqlConnections,string,untyped	mysql_query: seeder(rdb: MysqlConnections; tableName: string; body: untyped): untyped	
+seeder	v1/query_builder/models/mysql/mysql_query.html#seeder.t,MysqlConnections,string,string,untyped	mysql_query: seeder(rdb: MysqlConnections; tableName, column: string; body: untyped): untyped	

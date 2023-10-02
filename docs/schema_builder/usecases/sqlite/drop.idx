@@ -1,1 +1,0 @@
-drop	schema_builder/usecases/sqlite/drop.html#drop,SqliteConnections,varargs[Table]	drop: drop(rdb: SqliteConnections; tables: varargs[Table])	

@@ -1,0 +1,47 @@
+Column	v1/schema_builder/models/column.html#Column	column: Column	
+toSchema	v1/schema_builder/models/column.html#toSchema,Column	column: toSchema(self: Column): JsonNode	
+increments	v1/schema_builder/models/column.html#increments,typeColumn,string	column: increments(_: type Column; name: string): Column	
+integer	v1/schema_builder/models/column.html#integer,typeColumn,string	column: integer(_: type Column; name: string): Column	
+smallInteger	v1/schema_builder/models/column.html#smallInteger,typeColumn,string	column: smallInteger(_: type Column; name: string): Column	
+mediumInteger	v1/schema_builder/models/column.html#mediumInteger,typeColumn,string	column: mediumInteger(_: type Column; name: string): Column	
+bigInteger	v1/schema_builder/models/column.html#bigInteger,typeColumn,string	column: bigInteger(_: type Column; name: string): Column	
+decimal	v1/schema_builder/models/column.html#decimal,typeColumn,string,int,int	column: decimal(_: type Column; name: string; maximum: int; digit: int): Column	
+double	v1/schema_builder/models/column.html#double,typeColumn,string,int,int	column: double(_: type Column; name: string; maximum: int; digit: int): Column	
+float	v1/schema_builder/models/column.html#float,typeColumn,string	column: float(_: type Column; name: string): Column	
+char	v1/schema_builder/models/column.html#char,typeColumn,string,int	column: char(_: type Column; name: string; maxLength: int): Column	
+string	v1/schema_builder/models/column.html#string,typeColumn,string,int	column: string(_: type Column; name: string; length = 255): Column	
+uuid	v1/schema_builder/models/column.html#uuid,typeColumn,string	column: uuid(_: type Column; name: string): Column	
+text	v1/schema_builder/models/column.html#text,typeColumn,string	column: text(_: type Column; name: string): Column	
+mediumText	v1/schema_builder/models/column.html#mediumText,typeColumn,string	column: mediumText(_: type Column; name: string): Column	
+longText	v1/schema_builder/models/column.html#longText,typeColumn,string	column: longText(_: type Column; name: string): Column	
+date	v1/schema_builder/models/column.html#date,typeColumn,string	column: date(_: type Column; name: string): Column	
+datetime	v1/schema_builder/models/column.html#datetime,typeColumn,string	column: datetime(_: type Column; name: string): Column	
+time	v1/schema_builder/models/column.html#time,typeColumn,string	column: time(_: type Column; name: string): Column	
+timestamp	v1/schema_builder/models/column.html#timestamp,typeColumn,string	column: timestamp(_: type Column; name: string): Column	
+timestamps	v1/schema_builder/models/column.html#timestamps,typeColumn	column: timestamps(_: type Column): Column	
+softDelete	v1/schema_builder/models/column.html#softDelete,typeColumn	column: softDelete(_: type Column): Column	
+binary	v1/schema_builder/models/column.html#binary,typeColumn,string	column: binary(_: type Column; name: string): Column	
+boolean	v1/schema_builder/models/column.html#boolean,typeColumn,string	column: boolean(_: type Column; name: string): Column	
+enumField	v1/schema_builder/models/column.html#enumField,typeColumn,string,openArray[string]	column: enumField(_: type Column; name: string; options: openArray[string]): Column	
+json	v1/schema_builder/models/column.html#json,typeColumn,string	column: json(_: type Column; name: string): Column	
+foreign	v1/schema_builder/models/column.html#foreign,typeColumn,string	column: foreign(_: type Column; name: string): Column	
+strForeign	v1/schema_builder/models/column.html#strForeign,typeColumn,string,int	column: strForeign(_: type Column; name: string; length = 255): Column	
+reference	v1/schema_builder/models/column.html#reference,Column,string	column: reference(self: Column; column: string): Column	
+on	v1/schema_builder/models/column.html#on,Column,string	column: on(self: Column; table: string): Column	
+onDelete	v1/schema_builder/models/column.html#onDelete,Column,ForeignOnDelete	column: onDelete(self: Column; kind: ForeignOnDelete): Column	
+autoIncrement	v1/schema_builder/models/column.html#autoIncrement,Column	column: autoIncrement(c: Column): Column	
+default	v1/schema_builder/models/column.html#default,Column,bool	column: default(c: Column; value: bool): Column	
+default	v1/schema_builder/models/column.html#default,Column,int	column: default(c: Column; value: int): Column	
+default	v1/schema_builder/models/column.html#default,Column,float	column: default(c: Column; value: float): Column	
+default	v1/schema_builder/models/column.html#default,Column,string	column: default(c: Column; value: string): Column	
+default	v1/schema_builder/models/column.html#default,Column,JsonNode	column: default(c: Column; value: JsonNode): Column	
+default	v1/schema_builder/models/column.html#default,Column,DefaultDateTime	column: default(c: Column; value: DefaultDateTime): Column	
+default	v1/schema_builder/models/column.html#default,Column	column: default(c: Column): Column	
+index	v1/schema_builder/models/column.html#index,Column	column: index(c: Column): Column	
+nullable	v1/schema_builder/models/column.html#nullable,Column	column: nullable(c: Column): Column	
+unique	v1/schema_builder/models/column.html#unique,Column	column: unique(c: Column): Column	
+unsigned	v1/schema_builder/models/column.html#unsigned,Column	column: unsigned(c: Column): Column	
+add	v1/schema_builder/models/column.html#add,Column	column: add(c: Column): Column	
+change	v1/schema_builder/models/column.html#change,Column	column: change(c: Column): Column	
+renameColumn	v1/schema_builder/models/column.html#renameColumn,typeColumn,string,string	column: renameColumn(_: type Column; src, dest: string): Column	
+dropColumn	v1/schema_builder/models/column.html#dropColumn,typeColumn,string	column: dropColumn(_: type Column; name: string): Column	

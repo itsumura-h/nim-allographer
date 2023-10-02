@@ -1,0 +1,1 @@
+dropTable	v1/schema_builder/queries/mariadb/drop_table.html#dropTable,MariadbSchema,bool	drop_table: dropTable(self: MariadbSchema; isReset: bool)	

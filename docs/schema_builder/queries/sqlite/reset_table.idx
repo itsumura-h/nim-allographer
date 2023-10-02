@@ -1,2 +1,0 @@
-resetMigrationTable	schema_builder/queries/sqlite/reset_table.html#resetMigrationTable,SqliteSchema	reset_table: resetMigrationTable(self: SqliteSchema)	
-resetTable	schema_builder/queries/sqlite/reset_table.html#resetTable,SqliteSchema	reset_table: resetTable(self: SqliteSchema)	

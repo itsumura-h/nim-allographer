@@ -1,0 +1,7 @@
+MariaDB	v1/query_builder/models/mariadb/mariadb_types.html#MariaDB	mariadb_types: MariaDB	
+MariadbConnectionInfo	v1/query_builder/models/mariadb/mariadb_types.html#MariadbConnectionInfo	mariadb_types: MariadbConnectionInfo	
+MariadbConnection	v1/query_builder/models/mariadb/mariadb_types.html#MariadbConnection	mariadb_types: MariadbConnection	
+MariadbConnections	v1/query_builder/models/mariadb/mariadb_types.html#MariadbConnections	mariadb_types: MariadbConnections	
+`$`	v1/query_builder/models/mariadb/mariadb_types.html#$,MariadbConnections	mariadb_types: `$`(self: MariadbConnections): string	
+MariadbQuery	v1/query_builder/models/mariadb/mariadb_types.html#MariadbQuery	mariadb_types: MariadbQuery	
+RawMariadbQuery	v1/query_builder/models/mariadb/mariadb_types.html#RawMariadbQuery	mariadb_types: RawMariadbQuery	

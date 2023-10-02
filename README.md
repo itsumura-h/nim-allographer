@@ -6,7 +6,8 @@ allographer
 
 
 An asynchronous query builder library inspired by [Laravel/PHP](https://readouble.com/laravel/6.0/en/queries.html) and [Orator/Python](https://orator-orm.com) for Nim.  
-Supported Databases are [Sqlite3](https://www.sqlite.org/index.html), [PostgreSQL](https://www.postgresql.org/), [MySQL](https://www.mysql.com/), [MariaDB](https://mariadb.org/) and [SurrealDB](https://surrealdb.com/).
+Supported Databases are [Sqlite3](https://www.sqlite.org/index.html), [PostgreSQL](https://www.postgresql.org/), [MySQL](https://www.mysql.com/), [MariaDB](https://mariadb.org/) and [SurrealDB](https://surrealdb.com/).  
+Supported Nim for both `1.6.14` and `2.0.0`
 
 ## Easy to access Rdb
 ### Query Builder

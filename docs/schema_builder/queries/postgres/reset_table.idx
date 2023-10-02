@@ -1,2 +1,0 @@
-resetMigrationTable	schema_builder/queries/postgres/reset_table.html#resetMigrationTable,PostgresSchema	reset_table: resetMigrationTable(self: PostgresSchema)	
-resetTable	schema_builder/queries/postgres/reset_table.html#resetTable,PostgresSchema	reset_table: resetTable(self: PostgresSchema)	

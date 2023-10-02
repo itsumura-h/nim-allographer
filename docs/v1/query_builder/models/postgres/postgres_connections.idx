@@ -1,0 +1,4 @@
+`$`	v1/query_builder/models/postgres/postgres_connections.html#$	postgres_connections: `$`(self: PostgresConnections | PostgresQuery): string	
+select	v1/query_builder/models/postgres/postgres_connections.html#select,PostgresConnections,varargs[string]	postgres_connections: select(self: PostgresConnections; columnsArg: varargs[string]): PostgresQuery	
+table	v1/query_builder/models/postgres/postgres_connections.html#table,PostgresConnections,string	postgres_connections: table(self: PostgresConnections; tableArg: string): PostgresQuery	
+raw	v1/query_builder/models/postgres/postgres_connections.html#raw,PostgresConnections,string	postgres_connections: raw(self: PostgresConnections; sql: string; arges = newJArray()): RawPostgresQuery	

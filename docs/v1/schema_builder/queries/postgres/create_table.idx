@@ -1,0 +1,1 @@
+createTable	v1/schema_builder/queries/postgres/create_table.html#createTable,PostgresSchema,bool	create_table: createTable(self: PostgresSchema; isReset: bool)	

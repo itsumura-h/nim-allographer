@@ -1,0 +1,1 @@
+dropTable	v1/schema_builder/queries/sqlite/drop_table.html#dropTable,SqliteSchema,bool	drop_table: dropTable(self: SqliteSchema; isReset: bool)	

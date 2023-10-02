@@ -1,0 +1,6 @@
+notAllowedOption	v1/schema_builder/queries/surreal/schema_utils.html#notAllowedOption,string,string,string	schema_utils: notAllowedOption(option, typ, column: string)	
+notAllowedType	v1/schema_builder/queries/surreal/schema_utils.html#notAllowedType,string	schema_utils: notAllowedType(typ: string)	
+shouldRun	v1/schema_builder/queries/surreal/schema_utils.html#shouldRun,SurrealConnections,Table,string,bool	schema_utils: shouldRun(rdb: SurrealConnections; table: Table; checksum: string; isReset: bool): bool	
+exec	v1/schema_builder/queries/surreal/schema_utils.html#exec,SurrealConnections,seq[string]	schema_utils: exec(rdb: SurrealConnections; queries: seq[string])	
+execThenSaveHistory	v1/schema_builder/queries/surreal/schema_utils.html#execThenSaveHistory,SurrealConnections,string,seq[string],string	schema_utils: execThenSaveHistory(rdb: SurrealConnections; tableName: string;\n                    queries: seq[string]; checksum: string)	
+execThenSaveHistory	v1/schema_builder/queries/surreal/schema_utils.html#execThenSaveHistory,SurrealConnections,string,string,string	schema_utils: execThenSaveHistory(rdb: SurrealConnections; tableName: string; query: string;\n                    checksum: string)	

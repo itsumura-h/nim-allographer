@@ -1,1 +1,0 @@
-addColumn	schema_builder/queries/postgres/add_column.html#addColumn,PostgresSchema,bool	add_column: addColumn(self: PostgresSchema; isReset: bool)	

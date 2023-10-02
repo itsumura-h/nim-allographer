@@ -1,0 +1,3 @@
+changeForeignKey	v1/schema_builder/queries/mysql/sub/change_column_query.html#changeForeignKey,Column,Table	change_column_query: changeForeignKey(column: Column; table: Table): string	
+addIndexString	v1/schema_builder/queries/mysql/sub/change_column_query.html#addIndexString,Column,Table	change_column_query: addIndexString(column: Column; table: Table): string	
+changeColumnString	v1/schema_builder/queries/mysql/sub/change_column_query.html#changeColumnString,Table,Column	change_column_query: changeColumnString(table: Table; column: Column): seq[string]	

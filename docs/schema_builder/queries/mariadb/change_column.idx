@@ -1,1 +1,0 @@
-changeColumn	schema_builder/queries/mariadb/change_column.html#changeColumn,MariadbSchema,bool	change_column: changeColumn(self: MariadbSchema; isReset: bool)	

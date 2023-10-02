@@ -1,0 +1,1 @@
+changeColumn	v1/schema_builder/queries/mysql/change_column.html#changeColumn,MysqlSchema,bool	change_column: changeColumn(self: MysqlSchema; isReset: bool)	

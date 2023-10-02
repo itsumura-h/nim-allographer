@@ -1,1 +1,0 @@
-drop	schema_builder/usecases/mariadb/drop.html#drop,MariadbConnections,varargs[Table]	drop: drop(rdb: MariadbConnections; tables: varargs[Table])	

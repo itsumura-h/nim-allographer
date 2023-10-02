@@ -1,0 +1,4 @@
+`$`	v1/query_builder/models/sqlite/sqlite_connections.html#$	sqlite_connections: `$`(self: SqliteConnections | SqliteQuery): string	
+select	v1/query_builder/models/sqlite/sqlite_connections.html#select,SqliteConnections,varargs[string]	sqlite_connections: select(self: SqliteConnections; columnsArg: varargs[string]): SqliteQuery	
+table	v1/query_builder/models/sqlite/sqlite_connections.html#table,SqliteConnections,string	sqlite_connections: table(self: SqliteConnections; tableArg: string): SqliteQuery	
+raw	v1/query_builder/models/sqlite/sqlite_connections.html#raw,SqliteConnections,string	sqlite_connections: raw(self: SqliteConnections; sql: string; arges = newJArray()): RawSqliteQuery	
