@@ -1,0 +1,15 @@
+nimTitle	mariadb_builder	v2/query_builder/models/mariadb/query/mariadb_builder.html	module src/allographer/v2/query_builder/models/mariadb/query/mariadb_builder		0
+nim	selectBuilder	v2/query_builder/models/mariadb/query/mariadb_builder.html#selectBuilder,MariadbQuery	proc selectBuilder(self: MariadbQuery): string		8
+nim	selectFirstBuilder	v2/query_builder/models/mariadb/query/mariadb_builder.html#selectFirstBuilder,MariadbQuery	proc selectFirstBuilder(self: MariadbQuery): string		30
+nim	selectFindBuilder	v2/query_builder/models/mariadb/query/mariadb_builder.html#selectFindBuilder,MariadbQuery,string	proc selectFindBuilder(self: MariadbQuery; key: string): string		52
+nim	insertValueBuilder	v2/query_builder/models/mariadb/query/mariadb_builder.html#insertValueBuilder,MariadbQuery,JsonNode	proc insertValueBuilder(self: MariadbQuery; items: JsonNode): string		73
+nim	insertValuesBuilder	v2/query_builder/models/mariadb/query/mariadb_builder.html#insertValuesBuilder,MariadbQuery,openArray[JsonNode]	proc insertValuesBuilder(self: MariadbQuery; rows: openArray[JsonNode]): string		79
+nim	updateBuilder	v2/query_builder/models/mariadb/query/mariadb_builder.html#updateBuilder,MariadbQuery,JsonNode	proc updateBuilder(self: MariadbQuery; items: JsonNode): string		88
+nim	deleteBuilder	v2/query_builder/models/mariadb/query/mariadb_builder.html#deleteBuilder,MariadbQuery	proc deleteBuilder(self: MariadbQuery): string		101
+nim	deleteByIdBuilder	v2/query_builder/models/mariadb/query/mariadb_builder.html#deleteByIdBuilder,MariadbQuery,int,string	proc deleteByIdBuilder(self: MariadbQuery; id: int; key: string): string		113
+nim	countBuilder	v2/query_builder/models/mariadb/query/mariadb_builder.html#countBuilder,MariadbQuery	proc countBuilder(self: MariadbQuery): string		123
+nim	maxBuilder	v2/query_builder/models/mariadb/query/mariadb_builder.html#maxBuilder,MariadbQuery,string	proc maxBuilder(self: MariadbQuery; column: string): string		143
+nim	minBuilder	v2/query_builder/models/mariadb/query/mariadb_builder.html#minBuilder,MariadbQuery,string	proc minBuilder(self: MariadbQuery; column: string): string		163
+nim	avgBuilder	v2/query_builder/models/mariadb/query/mariadb_builder.html#avgBuilder,MariadbQuery,string	proc avgBuilder(self: MariadbQuery; column: string): string		183
+nim	sumBuilder	v2/query_builder/models/mariadb/query/mariadb_builder.html#sumBuilder,MariadbQuery,string	proc sumBuilder(self: MariadbQuery; column: string): string		203
+nim	columnBuilder	v2/query_builder/models/mariadb/query/mariadb_builder.html#columnBuilder,MariadbQuery	proc columnBuilder(self: MariadbQuery): string		223

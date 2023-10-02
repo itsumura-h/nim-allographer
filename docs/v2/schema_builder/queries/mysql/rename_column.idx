@@ -1,0 +1,2 @@
+nimTitle	rename_column	v2/schema_builder/queries/mysql/rename_column.html	module src/allographer/v2/schema_builder/queries/mysql/rename_column		0
+nim	renameColumn	v2/schema_builder/queries/mysql/rename_column.html#renameColumn,MysqlSchema,bool	proc renameColumn(self: MysqlSchema; isReset: bool)		10

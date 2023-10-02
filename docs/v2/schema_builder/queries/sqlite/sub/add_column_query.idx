@@ -1,0 +1,2 @@
+nimTitle	add_column_query	v2/schema_builder/queries/sqlite/sub/add_column_query.html	module src/allographer/v2/schema_builder/queries/sqlite/sub/add_column_query		0
+nim	addColumnString	v2/schema_builder/queries/sqlite/sub/add_column_query.html#addColumnString,SqliteConnections,Table,Column	proc addColumnString(rdb: SqliteConnections; table: Table; column: Column): seq[\n    string]		363

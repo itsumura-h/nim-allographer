@@ -1,0 +1,8 @@
+nimTitle	table	v2/schema_builder/models/table.html	module src/allographer/v2/schema_builder/models/table		0
+nim	Table	v2/schema_builder/models/table.html#Table	type Table		8
+nim	table	v2/schema_builder/models/table.html#table,string,varargs[Column]	proc table(name: string; columns: varargs[Column]): Table		19
+nim	table	v2/schema_builder/models/table.html#table,string,seq[Column],seq[string]	proc table(name: string; columns: seq[Column]; primary: seq[string] = @[]): Table		27
+nim	toSchema	v2/schema_builder/models/table.html#toSchema,Table	proc toSchema(self: Table): JsonNode		37
+nim	smallName	v2/schema_builder/models/table.html#smallName,Table	proc smallName(self: Table): string		51
+nim	renameTo	v2/schema_builder/models/table.html#renameTo,Table,string	proc renameTo(self: Table; name: string): Table		55
+nimgrp	table	v2/schema_builder/models/table.html#table-procs-all	proc		19

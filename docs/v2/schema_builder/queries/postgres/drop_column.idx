@@ -1,0 +1,2 @@
+nimTitle	drop_column	v2/schema_builder/queries/postgres/drop_column.html	module src/allographer/v2/schema_builder/queries/postgres/drop_column		0
+nim	dropColumn	v2/schema_builder/queries/postgres/drop_column.html#dropColumn,PostgresSchema,bool	proc dropColumn(self: PostgresSchema; isReset: bool)		10

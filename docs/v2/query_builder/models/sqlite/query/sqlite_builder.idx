@@ -1,0 +1,15 @@
+nimTitle	sqlite_builder	v2/query_builder/models/sqlite/query/sqlite_builder.html	module src/allographer/v2/query_builder/models/sqlite/query/sqlite_builder		0
+nim	selectBuilder	v2/query_builder/models/sqlite/query/sqlite_builder.html#selectBuilder,SqliteQuery	proc selectBuilder(self: SqliteQuery): string		8
+nim	selectFirstBuilder	v2/query_builder/models/sqlite/query/sqlite_builder.html#selectFirstBuilder,SqliteQuery	proc selectFirstBuilder(self: SqliteQuery): string		30
+nim	selectFindBuilder	v2/query_builder/models/sqlite/query/sqlite_builder.html#selectFindBuilder,SqliteQuery,string	proc selectFindBuilder(self: SqliteQuery; key: string): string		52
+nim	insertValueBuilder	v2/query_builder/models/sqlite/query/sqlite_builder.html#insertValueBuilder,SqliteQuery,JsonNode	proc insertValueBuilder(self: SqliteQuery; items: JsonNode): string		73
+nim	insertValuesBuilder	v2/query_builder/models/sqlite/query/sqlite_builder.html#insertValuesBuilder,SqliteQuery,openArray[JsonNode]	proc insertValuesBuilder(self: SqliteQuery; rows: openArray[JsonNode]): string		80
+nim	updateBuilder	v2/query_builder/models/sqlite/query/sqlite_builder.html#updateBuilder,SqliteQuery,JsonNode	proc updateBuilder(self: SqliteQuery; items: JsonNode): string		89
+nim	deleteBuilder	v2/query_builder/models/sqlite/query/sqlite_builder.html#deleteBuilder,SqliteQuery	proc deleteBuilder(self: SqliteQuery): string		102
+nim	deleteByIdBuilder	v2/query_builder/models/sqlite/query/sqlite_builder.html#deleteByIdBuilder,SqliteQuery,int,string	proc deleteByIdBuilder(self: SqliteQuery; id: int; key: string): string		114
+nim	countBuilder	v2/query_builder/models/sqlite/query/sqlite_builder.html#countBuilder,SqliteQuery	proc countBuilder(self: SqliteQuery): string		124
+nim	maxBuilder	v2/query_builder/models/sqlite/query/sqlite_builder.html#maxBuilder,SqliteQuery,string	proc maxBuilder(self: SqliteQuery; column: string): string		144
+nim	minBuilder	v2/query_builder/models/sqlite/query/sqlite_builder.html#minBuilder,SqliteQuery,string	proc minBuilder(self: SqliteQuery; column: string): string		164
+nim	avgBuilder	v2/query_builder/models/sqlite/query/sqlite_builder.html#avgBuilder,SqliteQuery,string	proc avgBuilder(self: SqliteQuery; column: string): string		184
+nim	sumBuilder	v2/query_builder/models/sqlite/query/sqlite_builder.html#sumBuilder,SqliteQuery,string	proc sumBuilder(self: SqliteQuery; column: string): string		204
+nim	columnBuilder	v2/query_builder/models/sqlite/query/sqlite_builder.html#columnBuilder,SqliteQuery	proc columnBuilder(self: SqliteQuery): string		224

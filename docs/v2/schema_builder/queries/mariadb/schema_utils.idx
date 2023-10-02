@@ -1,0 +1,8 @@
+nimTitle	schema_utils	v2/schema_builder/queries/mariadb/schema_utils.html	module src/allographer/v2/schema_builder/queries/mariadb/schema_utils		0
+nim	notAllowedOption	v2/schema_builder/queries/mariadb/schema_utils.html#notAllowedOption,string,string,string	proc notAllowedOption(option, typ, column: string)		14
+nim	notAllowedType	v2/schema_builder/queries/mariadb/schema_utils.html#notAllowedType,string	proc notAllowedType(typ: string)		18
+nim	shouldRun	v2/schema_builder/queries/mariadb/schema_utils.html#shouldRun,MariadbConnections,Table,string,bool	proc shouldRun(rdb: MariadbConnections; table: Table; checksum: string; isReset: bool): bool		27
+nim	exec	v2/schema_builder/queries/mariadb/schema_utils.html#exec,MariadbConnections,seq[string]	proc exec(rdb: MariadbConnections; queries: seq[string])		38
+nim	execThenSaveHistory	v2/schema_builder/queries/mariadb/schema_utils.html#execThenSaveHistory,MariadbConnections,string,seq[string],string	proc execThenSaveHistory(rdb: MariadbConnections; tableName: string;\n                    queries: seq[string]; checksum: string)		56
+nim	execThenSaveHistory	v2/schema_builder/queries/mariadb/schema_utils.html#execThenSaveHistory,MariadbConnections,string,string,string	proc execThenSaveHistory(rdb: MariadbConnections; tableName: string; query: string;\n                    checksum: string)		85
+nimgrp	execthensavehistory	v2/schema_builder/queries/mariadb/schema_utils.html#execThenSaveHistory-procs-all	proc		56

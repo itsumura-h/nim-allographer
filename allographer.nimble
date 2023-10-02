@@ -49,6 +49,22 @@ task docs, "Generate API documents":
     let srcFile = pkgDir / f & ".nim"
     exec &"nim doc --hints:off --project --out:{deployDir} --index:on {srcFile}"
 
+task docs_v1, "Generate API documents":
+  let
+    deployDir = "docs_v1"
+    pkgDir = srcDir / "allographer"
+    srcFiles = @[
+      "connection",
+      "query_builder",
+      "schema_builder",
+    ]
+
+  if dirExists(deployDir):
+    rmDir deployDir
+  for f in srcFiles:
+    let srcFile = pkgDir / f & ".nim"
+    exec &"nim doc --hints:off --project --out:{deployDir} --index:on {srcFile}"
+
 let toolImage = "basolato:tool"
 
 task setupTool, "Setup tool docker image":

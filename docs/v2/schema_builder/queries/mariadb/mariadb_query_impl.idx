@@ -1,0 +1,2 @@
+nimTitle	mariadb_query_impl	v2/schema_builder/queries/mariadb/mariadb_query_impl.html	module src/allographer/v2/schema_builder/queries/mariadb/mariadb_query_impl		0
+nim	toInterface	v2/schema_builder/queries/mariadb/mariadb_query_impl.html#toInterface,MariadbSchema	proc toInterface(self: MariadbSchema): ISchema		14

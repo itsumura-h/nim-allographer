@@ -1,0 +1,2 @@
+nimTitle	change_column	v2/schema_builder/queries/sqlite/change_column.html	module src/allographer/v2/schema_builder/queries/sqlite/change_column		0
+nim	changeColumn	v2/schema_builder/queries/sqlite/change_column.html#changeColumn,SqliteSchema,bool	proc changeColumn(self: SqliteSchema; isReset: bool)		16

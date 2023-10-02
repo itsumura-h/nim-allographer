@@ -1,0 +1,5 @@
+nimTitle	sqlite_query_type	v2/schema_builder/queries/sqlite/sqlite_query_type.html	module src/allographer/v2/schema_builder/queries/sqlite/sqlite_query_type		0
+nim	SqliteSchema	v2/schema_builder/queries/sqlite/sqlite_query_type.html#SqliteSchema	type SqliteSchema		5
+nim	new	v2/schema_builder/queries/sqlite/sqlite_query_type.html#new,typeSqliteSchema,SqliteConnections,Table	proc new(__2248146954: type SqliteSchema; rdb: SqliteConnections; table: Table): SqliteSchema		10
+nim	new	v2/schema_builder/queries/sqlite/sqlite_query_type.html#new,typeSqliteSchema,SqliteConnections,Table,Column	proc new(__2248146960: type SqliteSchema; rdb: SqliteConnections; table: Table;\n    column: Column): SqliteSchema		13
+nimgrp	new	v2/schema_builder/queries/sqlite/sqlite_query_type.html#new-procs-all	proc		10

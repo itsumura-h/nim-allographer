@@ -1,0 +1,9 @@
+nimTitle	mysql_lib	v2/query_builder/libs/mysql/mysql_lib.html	module src/allographer/v2/query_builder/libs/mysql/mysql_lib		0
+nim	dbError	v2/query_builder/libs/mysql/mysql_lib.html#dbError,PMySQL	proc dbError(db: PMySQL)		12
+nim	setColumnInfo	v2/query_builder/libs/mysql/mysql_lib.html#setColumnInfo,DbColumns,PRES,int	proc setColumnInfo(columns: var DbColumns; res: PRES; L: int)		80
+nim	dbFormat	v2/query_builder/libs/mysql/mysql_lib.html#dbFormat,string,seq[string]	proc dbFormat(formatstr: string; args: seq[string]): string		120
+nim	MysqlParamValue	v2/query_builder/libs/mysql/mysql_lib.html#MysqlParamValue	object MysqlParamValue		167
+nim	MysqlParams	v2/query_builder/libs/mysql/mysql_lib.html#MysqlParams	type MysqlParams		171
+nim	fromObj	v2/query_builder/libs/mysql/mysql_lib.html#fromObj,typeMysqlParams,JsonNode,seq[seq[string]]	proc fromObj(__4143972416: type MysqlParams; args: JsonNode;\n        columns: seq[seq[string]]): MysqlParams		173
+nim	dbFormat	v2/query_builder/libs/mysql/mysql_lib.html#dbFormat,PMySQL,string,MysqlParams	proc dbFormat(conn: PMySQL; query: string; args: MysqlParams): string		207
+nimgrp	dbformat	v2/query_builder/libs/mysql/mysql_lib.html#dbFormat-procs-all	proc		120

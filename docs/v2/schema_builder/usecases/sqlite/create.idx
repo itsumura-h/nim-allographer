@@ -1,0 +1,2 @@
+nimTitle	create	v2/schema_builder/usecases/sqlite/create.html	module src/allographer/v2/schema_builder/usecases/sqlite/create		0
+nim	create	v2/schema_builder/usecases/sqlite/create.html#create,SqliteConnections,varargs[Table]	proc create(rdb: SqliteConnections; tables: varargs[Table])		9

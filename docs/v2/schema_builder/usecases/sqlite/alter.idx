@@ -1,0 +1,2 @@
+nimTitle	alter	v2/schema_builder/usecases/sqlite/alter.html	module src/allographer/v2/schema_builder/usecases/sqlite/alter		0
+nim	alter	v2/schema_builder/usecases/sqlite/alter.html#alter,SqliteConnections,varargs[Table]	proc alter(rdb: SqliteConnections; tables: varargs[Table])		10

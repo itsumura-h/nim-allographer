@@ -183,7 +183,7 @@ proc exec*(db:PMySQL, query: string, args: JsonNode, timeout:int) {.async.} =
 
 
 proc exec*(db:PMySQL, query: string, args: JsonNode, columns:seq[seq[string]], timeout:int) {.async.} =
-  ## args is JArray [{"key":"id", "value": 1}, {"key": "name" "value": "alice"}] 
+  ## args is JArray `[{"key":"id", "value": 1}, {"key": "name" "value": "alice"}]`
   assert db.ping == 0
 
   let params = MariadbParams.fromObj(args, columns)

@@ -1,0 +1,2 @@
+nimTitle	drop_column	v2/schema_builder/queries/mysql/drop_column.html	module src/allographer/v2/schema_builder/queries/mysql/drop_column		0
+nim	dropColumn	v2/schema_builder/queries/mysql/drop_column.html#dropColumn,MysqlSchema,bool	proc dropColumn(self: MysqlSchema; isReset: bool)		10

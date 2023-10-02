@@ -1,0 +1,2 @@
+nimTitle	drop_table	v2/schema_builder/queries/surreal/drop_table.html	module src/allographer/v2/schema_builder/queries/surreal/drop_table		0
+nim	dropTable	v2/schema_builder/queries/surreal/drop_table.html#dropTable,SurrealSchema,bool	proc dropTable(self: SurrealSchema; isReset: bool)		9

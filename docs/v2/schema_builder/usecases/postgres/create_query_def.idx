@@ -1,0 +1,4 @@
+nimTitle	create_query_def	v2/schema_builder/usecases/postgres/create_query_def.html	module src/allographer/v2/schema_builder/usecases/postgres/create_query_def		0
+nim	createSchema	v2/schema_builder/usecases/postgres/create_query_def.html#createSchema,PostgresConnections,Table	proc createSchema(rdb: PostgresConnections; table: Table): ISchema		9
+nim	createSchema	v2/schema_builder/usecases/postgres/create_query_def.html#createSchema,PostgresConnections,Table,Column	proc createSchema(rdb: PostgresConnections; table: Table; column: Column): ISchema		12
+nimgrp	createschema	v2/schema_builder/usecases/postgres/create_query_def.html#createSchema-procs-all	proc		9

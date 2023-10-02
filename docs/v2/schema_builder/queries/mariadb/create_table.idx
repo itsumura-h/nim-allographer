@@ -1,0 +1,2 @@
+nimTitle	create_table	v2/schema_builder/queries/mariadb/create_table.html	module src/allographer/v2/schema_builder/queries/mariadb/create_table		0
+nim	createTable	v2/schema_builder/queries/mariadb/create_table.html#createTable,MariadbSchema,bool	proc createTable(self: MariadbSchema; isReset: bool)		14

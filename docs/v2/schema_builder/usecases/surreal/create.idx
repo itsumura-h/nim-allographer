@@ -1,0 +1,2 @@
+nimTitle	create	v2/schema_builder/usecases/surreal/create.html	module src/allographer/v2/schema_builder/usecases/surreal/create		0
+nim	create	v2/schema_builder/usecases/surreal/create.html#create,SurrealConnections,varargs[Table]	proc create(rdb: SurrealConnections; tables: varargs[Table])		10

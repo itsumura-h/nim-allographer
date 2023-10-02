@@ -1,0 +1,2 @@
+nimTitle	drop_table	v2/schema_builder/queries/mariadb/drop_table.html	module src/allographer/v2/schema_builder/queries/mariadb/drop_table		0
+nim	dropTable	v2/schema_builder/queries/mariadb/drop_table.html#dropTable,MariadbSchema,bool	proc dropTable(self: MariadbSchema; isReset: bool)		9

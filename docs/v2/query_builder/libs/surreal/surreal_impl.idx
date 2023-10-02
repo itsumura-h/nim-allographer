@@ -1,0 +1,11 @@
+nimTitle	surreal_impl	v2/query_builder/libs/surreal/surreal_impl.html	module src/allographer/v2/query_builder/libs/surreal/surreal_impl		0
+nim	SurrealImpl	v2/query_builder/libs/surreal/surreal_impl.html#SurrealImpl	type SurrealImpl		10
+nim	query	v2/query_builder/libs/surreal/surreal_impl.html#query,SurrealConn,string,seq[string],int	proc query(db: SurrealConn; query: string; args: seq[string]; timeout: int): Future[\n    JsonNode]		47
+nim	query	v2/query_builder/libs/surreal/surreal_impl.html#query,SurrealConn,string,JsonNode,int	proc query(db: SurrealConn; query: string; args: JsonNode; timeout: int): Future[\n    JsonNode]		60
+nim	exec	v2/query_builder/libs/surreal/surreal_impl.html#exec,SurrealConn,string,seq[string],int	proc exec(db: SurrealConn; query: string; args: seq[string]; timeout: int): owned(\n    Future[void])		73
+nim	exec	v2/query_builder/libs/surreal/surreal_impl.html#exec,SurrealConn,string,JsonNode,int	proc exec(db: SurrealConn; query: string; args: JsonNode; timeout: int): owned(\n    Future[void])		87
+nim	info	v2/query_builder/libs/surreal/surreal_impl.html#info,SurrealConn,string,seq[string],int	proc info(db: SurrealConn; query: string; args: seq[string]; timeout: int): Future[\n    JsonNode]		101
+nim	info	v2/query_builder/libs/surreal/surreal_impl.html#info,SurrealConn,string,JsonNode,int	proc info(db: SurrealConn; query: string; args: JsonNode; timeout: int): Future[\n    JsonNode]		108
+nimgrp	info	v2/query_builder/libs/surreal/surreal_impl.html#info-procs-all	proc		101
+nimgrp	query	v2/query_builder/libs/surreal/surreal_impl.html#query-procs-all	proc		47
+nimgrp	exec	v2/query_builder/libs/surreal/surreal_impl.html#exec-procs-all	proc		73

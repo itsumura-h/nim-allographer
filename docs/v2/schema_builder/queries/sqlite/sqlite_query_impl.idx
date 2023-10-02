@@ -1,0 +1,2 @@
+nimTitle	sqlite_query_impl	v2/schema_builder/queries/sqlite/sqlite_query_impl.html	module src/allographer/v2/schema_builder/queries/sqlite/sqlite_query_impl		0
+nim	toInterface	v2/schema_builder/queries/sqlite/sqlite_query_impl.html#toInterface,SqliteSchema	proc toInterface(self: SqliteSchema): ISchema		14

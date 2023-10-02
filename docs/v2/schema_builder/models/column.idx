@@ -1,0 +1,49 @@
+nimTitle	column	v2/schema_builder/models/column.html	module src/allographer/v2/schema_builder/models/column		0
+nim	Column	v2/schema_builder/models/column.html#Column	type Column		5
+nim	toSchema	v2/schema_builder/models/column.html#toSchema,Column	proc toSchema(self: Column): JsonNode		34
+nim	increments	v2/schema_builder/models/column.html#increments,typeColumn,string	proc increments(__2013266037: type Column; name: string): Column		59
+nim	integer	v2/schema_builder/models/column.html#integer,typeColumn,string	proc integer(__2013266043: type Column; name: string): Column		66
+nim	smallInteger	v2/schema_builder/models/column.html#smallInteger,typeColumn,string	proc smallInteger(__2013266049: type Column; name: string): Column		73
+nim	mediumInteger	v2/schema_builder/models/column.html#mediumInteger,typeColumn,string	proc mediumInteger(__2013266055: type Column; name: string): Column		80
+nim	bigInteger	v2/schema_builder/models/column.html#bigInteger,typeColumn,string	proc bigInteger(__2013266061: type Column; name: string): Column		87
+nim	decimal	v2/schema_builder/models/column.html#decimal,typeColumn,string,int,int	proc decimal(__2013266067: type Column; name: string; maximum: int; digit: int): Column		97
+nim	double	v2/schema_builder/models/column.html#double,typeColumn,string,int,int	proc double(__2013266075: type Column; name: string; maximum: int; digit: int): Column		108
+nim	float	v2/schema_builder/models/column.html#float,typeColumn,string	proc float(__2013266083: type Column; name: string): Column		119
+nim	char	v2/schema_builder/models/column.html#char,typeColumn,string,int	proc char(__2013266089: type Column; name: string; maxLength: int): Column		129
+nim	string	v2/schema_builder/models/column.html#string,typeColumn,string,int	proc string(__2013266096: type Column; name: string; length = 255): Column		139
+nim	uuid	v2/schema_builder/models/column.html#uuid,typeColumn,string	proc uuid(__2013266103: type Column; name: string): Column		147
+nim	text	v2/schema_builder/models/column.html#text,typeColumn,string	proc text(__2013266109: type Column; name: string): Column		156
+nim	mediumText	v2/schema_builder/models/column.html#mediumText,typeColumn,string	proc mediumText(__2013266115: type Column; name: string): Column		163
+nim	longText	v2/schema_builder/models/column.html#longText,typeColumn,string	proc longText(__2013266121: type Column; name: string): Column		170
+nim	date	v2/schema_builder/models/column.html#date,typeColumn,string	proc date(__2013266127: type Column; name: string): Column		180
+nim	datetime	v2/schema_builder/models/column.html#datetime,typeColumn,string	proc datetime(__2013266133: type Column; name: string): Column		187
+nim	time	v2/schema_builder/models/column.html#time,typeColumn,string	proc time(__2013266139: type Column; name: string): Column		194
+nim	timestamp	v2/schema_builder/models/column.html#timestamp,typeColumn,string	proc timestamp(__2013266145: type Column; name: string): Column		201
+nim	timestamps	v2/schema_builder/models/column.html#timestamps,typeColumn	proc timestamps(__2013266151: type Column): Column		208
+nim	softDelete	v2/schema_builder/models/column.html#softDelete,typeColumn	proc softDelete(__2013266156: type Column): Column		214
+nim	binary	v2/schema_builder/models/column.html#binary,typeColumn,string	proc binary(__2013266161: type Column; name: string): Column		223
+nim	boolean	v2/schema_builder/models/column.html#boolean,typeColumn,string	proc boolean(__2013266167: type Column; name: string): Column		230
+nim	enumField	v2/schema_builder/models/column.html#enumField,typeColumn,string,openArray[string]	proc enumField(__2013266173: type Column; name: string; options: openArray[string]): Column		237
+nim	json	v2/schema_builder/models/column.html#json,typeColumn,string	proc json(__2013266180: type Column; name: string): Column		247
+nim	foreign	v2/schema_builder/models/column.html#foreign,typeColumn,string	proc foreign(__2013266186: type Column; name: string): Column		257
+nim	strForeign	v2/schema_builder/models/column.html#strForeign,typeColumn,string,int	proc strForeign(__2013266192: type Column; name: string; length = 255): Column		266
+nim	reference	v2/schema_builder/models/column.html#reference,Column,string	proc reference(self: Column; column: string): Column		276
+nim	onTable	v2/schema_builder/models/column.html#onTable,Column,string	proc onTable(self: Column; table: string): Column		284
+nim	onDelete	v2/schema_builder/models/column.html#onDelete,Column,ForeignOnDelete	proc onDelete(self: Column; kind: ForeignOnDelete): Column		289
+nim	autoIncrement	v2/schema_builder/models/column.html#autoIncrement,Column	proc autoIncrement(c: Column): Column		297
+nim	default	v2/schema_builder/models/column.html#default,Column,bool	proc default(c: Column; value: bool): Column		304
+nim	default	v2/schema_builder/models/column.html#default,Column,int	proc default(c: Column; value: int): Column		311
+nim	default	v2/schema_builder/models/column.html#default,Column,float	proc default(c: Column; value: float): Column		318
+nim	default	v2/schema_builder/models/column.html#default,Column,string	proc default(c: Column; value: string): Column		325
+nim	default	v2/schema_builder/models/column.html#default,Column,JsonNode	proc default(c: Column; value: JsonNode): Column		332
+nim	default	v2/schema_builder/models/column.html#default,Column,DefaultDateTime	proc default(c: Column; value: DefaultDateTime): Column		339
+nim	default	v2/schema_builder/models/column.html#default,Column	proc default(c: Column): Column		346
+nim	index	v2/schema_builder/models/column.html#index,Column	proc index(c: Column): Column		352
+nim	nullable	v2/schema_builder/models/column.html#nullable,Column	proc nullable(c: Column): Column		358
+nim	unique	v2/schema_builder/models/column.html#unique,Column	proc unique(c: Column): Column		363
+nim	unsigned	v2/schema_builder/models/column.html#unsigned,Column	proc unsigned(c: Column): Column		369
+nim	add	v2/schema_builder/models/column.html#add,Column	proc add(c: Column): Column		377
+nim	change	v2/schema_builder/models/column.html#change,Column	proc change(c: Column): Column		381
+nim	renameColumn	v2/schema_builder/models/column.html#renameColumn,typeColumn,string,string	proc renameColumn(__2013266360: type Column; src, dest: string): Column		385
+nim	dropColumn	v2/schema_builder/models/column.html#dropColumn,typeColumn,string	proc dropColumn(__2013266367: type Column; name: string): Column		392
+nimgrp	default	v2/schema_builder/models/column.html#default-procs-all	proc		304

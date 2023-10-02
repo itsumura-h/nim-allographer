@@ -44,8 +44,8 @@ rdb.create([
   table("users", [
     Column.increments("id"),
     Column.string("name"),
-    Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
-    Column.strForeign("uuid").reference("uuid").on("auth").onDelete(SET_NULL)
+    Column.foreign("auth_id").reference("id").onTable("auth").onDelete(SET_NULL)
+    Column.strForeign("uuid").reference("uuid").onTable("auth").onDelete(SET_NULL)
   ])
 ])
 ```
@@ -60,7 +60,7 @@ rdb.alter(
   ]),
   table("users",[
     Column.string("email").unique().default("").add(),
-    Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL).add()
+    Column.foreign("auth_id").reference("id").onTable("auth").onDelete(SET_NULL).add()
   ])
 )
 ```
@@ -127,7 +127,7 @@ rdb.schema(
   table("users", [
     Column.increments("id"),
     Column.string("name"),
-    Column.foreign("auth_id").reference("id").in("auth").onDelete(SET_NULL)
+    Column.foreign("auth_id").reference("id").onTable("auth").onDelete(SET_NULL)
   ])
 )
 
@@ -231,12 +231,12 @@ For example, let's define a `user_id` column on the table that references the `i
 ```nim
 Column.foreign("user_id")
   .reference("id")
-  .on("users")
+  .onTable("users")
   .onDelete(SET_NULL)
 
 Column.strForeign("uuid")
   .reference("uuid")
-  .on("users")
+  .onTable("users")
   .onDelete(SET_NULL)
 ```
 

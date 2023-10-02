@@ -1,0 +1,3 @@
+nimTitle	create_sequence_table	v2/schema_builder/queries/surreal/create_sequence_table.html	module src/allographer/v2/schema_builder/queries/surreal/create_sequence_table		0
+nim	createSequenceTable	v2/schema_builder/queries/surreal/create_sequence_table.html#createSequenceTable,SurrealConnections	proc createSequenceTable(rdb: SurrealConnections)		10
+nim	resetSequence	v2/schema_builder/queries/surreal/create_sequence_table.html#resetSequence,SurrealConnections,Table	proc resetSequence(rdb: SurrealConnections; table: Table)		31

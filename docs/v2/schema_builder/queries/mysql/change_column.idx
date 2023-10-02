@@ -1,0 +1,2 @@
+nimTitle	change_column	v2/schema_builder/queries/mysql/change_column.html	module src/allographer/v2/schema_builder/queries/mysql/change_column		0
+nim	changeColumn	v2/schema_builder/queries/mysql/change_column.html#changeColumn,MysqlSchema,bool	proc changeColumn(self: MysqlSchema; isReset: bool)		13

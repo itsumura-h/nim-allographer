@@ -1,0 +1,3 @@
+nimTitle	error	v2/query_builder/error.html	module src/allographer/v2/query_builder/error		0
+nim	DbError	v2/query_builder/error.html#DbError	object DbError		2
+nim	dbError	v2/query_builder/error.html#dbError,string	proc dbError(msg: string)		4

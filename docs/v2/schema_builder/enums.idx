@@ -1,0 +1,51 @@
+nimTitle	enums	v2/schema_builder/enums.html	module src/allographer/v2/schema_builder/enums		0
+nim	rdbIncrements	v2/schema_builder/enums.html#rdbIncrements	RdbTypeKind.rdbIncrements		1
+nim	rdbInteger	v2/schema_builder/enums.html#rdbInteger	RdbTypeKind.rdbInteger		1
+nim	rdbSmallInteger	v2/schema_builder/enums.html#rdbSmallInteger	RdbTypeKind.rdbSmallInteger		1
+nim	rdbMediumInteger	v2/schema_builder/enums.html#rdbMediumInteger	RdbTypeKind.rdbMediumInteger		1
+nim	rdbBigInteger	v2/schema_builder/enums.html#rdbBigInteger	RdbTypeKind.rdbBigInteger		1
+nim	rdbDecimal	v2/schema_builder/enums.html#rdbDecimal	RdbTypeKind.rdbDecimal		1
+nim	rdbDouble	v2/schema_builder/enums.html#rdbDouble	RdbTypeKind.rdbDouble		1
+nim	rdbFloat	v2/schema_builder/enums.html#rdbFloat	RdbTypeKind.rdbFloat		1
+nim	rdbUuid	v2/schema_builder/enums.html#rdbUuid	RdbTypeKind.rdbUuid		1
+nim	rdbChar	v2/schema_builder/enums.html#rdbChar	RdbTypeKind.rdbChar		1
+nim	rdbString	v2/schema_builder/enums.html#rdbString	RdbTypeKind.rdbString		1
+nim	rdbText	v2/schema_builder/enums.html#rdbText	RdbTypeKind.rdbText		1
+nim	rdbMediumText	v2/schema_builder/enums.html#rdbMediumText	RdbTypeKind.rdbMediumText		1
+nim	rdbLongText	v2/schema_builder/enums.html#rdbLongText	RdbTypeKind.rdbLongText		1
+nim	rdbDate	v2/schema_builder/enums.html#rdbDate	RdbTypeKind.rdbDate		1
+nim	rdbDatetime	v2/schema_builder/enums.html#rdbDatetime	RdbTypeKind.rdbDatetime		1
+nim	rdbTime	v2/schema_builder/enums.html#rdbTime	RdbTypeKind.rdbTime		1
+nim	rdbTimestamp	v2/schema_builder/enums.html#rdbTimestamp	RdbTypeKind.rdbTimestamp		1
+nim	rdbTimestamps	v2/schema_builder/enums.html#rdbTimestamps	RdbTypeKind.rdbTimestamps		1
+nim	rdbSoftDelete	v2/schema_builder/enums.html#rdbSoftDelete	RdbTypeKind.rdbSoftDelete		1
+nim	rdbBinary	v2/schema_builder/enums.html#rdbBinary	RdbTypeKind.rdbBinary		1
+nim	rdbBoolean	v2/schema_builder/enums.html#rdbBoolean	RdbTypeKind.rdbBoolean		1
+nim	rdbEnumField	v2/schema_builder/enums.html#rdbEnumField	RdbTypeKind.rdbEnumField		1
+nim	rdbJson	v2/schema_builder/enums.html#rdbJson	RdbTypeKind.rdbJson		1
+nim	rdbForeign	v2/schema_builder/enums.html#rdbForeign	RdbTypeKind.rdbForeign		1
+nim	rdbStrForeign	v2/schema_builder/enums.html#rdbStrForeign	RdbTypeKind.rdbStrForeign		1
+nim	RdbTypeKind	v2/schema_builder/enums.html#RdbTypeKind	enum RdbTypeKind		1
+nim	RESTRICT	v2/schema_builder/enums.html#RESTRICT	ForeignOnDelete.RESTRICT		35
+nim	CASCADE	v2/schema_builder/enums.html#CASCADE	ForeignOnDelete.CASCADE		35
+nim	SET_NULL	v2/schema_builder/enums.html#SET_NULL	ForeignOnDelete.SET_NULL		35
+nim	NO_ACTION	v2/schema_builder/enums.html#NO_ACTION	ForeignOnDelete.NO_ACTION		35
+nim	ForeignOnDelete	v2/schema_builder/enums.html#ForeignOnDelete	enum ForeignOnDelete		35
+nim	None	v2/schema_builder/enums.html#None	DefaultDateTime.None		42
+nim	Current	v2/schema_builder/enums.html#Current	DefaultDateTime.Current		42
+nim	CurrentOnUpdate	v2/schema_builder/enums.html#CurrentOnUpdate	DefaultDateTime.CurrentOnUpdate		42
+nim	DefaultDateTime	v2/schema_builder/enums.html#DefaultDateTime	enum DefaultDateTime		42
+nim	Create	v2/schema_builder/enums.html#Create	UsecaseType.Create		47
+nim	Alter	v2/schema_builder/enums.html#Alter	UsecaseType.Alter		47
+nim	Drop	v2/schema_builder/enums.html#Drop	UsecaseType.Drop		47
+nim	UsecaseType	v2/schema_builder/enums.html#UsecaseType	enum UsecaseType		47
+nim	CreateTable	v2/schema_builder/enums.html#CreateTable	TableMigrationType.CreateTable		52
+nim	ChangeTable	v2/schema_builder/enums.html#ChangeTable	TableMigrationType.ChangeTable		52
+nim	RenameTable	v2/schema_builder/enums.html#RenameTable	TableMigrationType.RenameTable		52
+nim	DropTable	v2/schema_builder/enums.html#DropTable	TableMigrationType.DropTable		52
+nim	TableMigrationType	v2/schema_builder/enums.html#TableMigrationType	enum TableMigrationType		52
+nim	AddColumn	v2/schema_builder/enums.html#AddColumn	ColumnMigrationType.AddColumn		58
+nim	ChangeColumn	v2/schema_builder/enums.html#ChangeColumn	ColumnMigrationType.ChangeColumn		58
+nim	RenameColumn	v2/schema_builder/enums.html#RenameColumn	ColumnMigrationType.RenameColumn		58
+nim	DropColumn	v2/schema_builder/enums.html#DropColumn	ColumnMigrationType.DropColumn		58
+nim	ColumnMigrationType	v2/schema_builder/enums.html#ColumnMigrationType	enum ColumnMigrationType		58

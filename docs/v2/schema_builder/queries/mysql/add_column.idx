@@ -1,0 +1,2 @@
+nimTitle	add_column	v2/schema_builder/queries/mysql/add_column.html	module src/allographer/v2/schema_builder/queries/mysql/add_column		0
+nim	addColumn	v2/schema_builder/queries/mysql/add_column.html#addColumn,MysqlSchema,bool	proc addColumn(self: MysqlSchema; isReset: bool)		10

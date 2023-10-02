@@ -1,0 +1,5 @@
+nimTitle	log	v2/query_builder/log.html	module src/allographer/v2/query_builder/log		0
+nim	LogSetting	v2/query_builder/log.html#LogSetting	type LogSetting		10
+nim	logger	v2/query_builder/log.html#logger,LogSetting,auto	proc logger(self: LogSetting; output: auto)		15
+nim	echoErrorMsg	v2/query_builder/log.html#echoErrorMsg,LogSetting,string,seq[string]	proc echoErrorMsg(self: LogSetting; msg: string; args: seq[string] = @[])		33
+nim	echoWarningMsg	v2/query_builder/log.html#echoWarningMsg,LogSetting,string	proc echoWarningMsg(self: LogSetting; msg: string)		47

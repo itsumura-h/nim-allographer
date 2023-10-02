@@ -1,0 +1,3 @@
+nimTitle	is_exists	v2/schema_builder/queries/mysql/sub/is_exists.html	module src/allographer/v2/schema_builder/queries/mysql/sub/is_exists		0
+nim	isExistsIndex	v2/schema_builder/queries/mysql/sub/is_exists.html#isExistsIndex,MysqlConnections,Table,Column	proc isExistsIndex(rdb: MysqlConnections; table: Table; column: Column): Future[bool]		12
+nim	isExistsUnique	v2/schema_builder/queries/mysql/sub/is_exists.html#isExistsUnique,MysqlConnections,Table,Column	proc isExistsUnique(rdb: MysqlConnections; table: Table; column: Column): Future[bool]		24

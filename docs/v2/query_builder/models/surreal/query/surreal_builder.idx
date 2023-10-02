@@ -1,0 +1,13 @@
+nimTitle	surreal_builder	v2/query_builder/models/surreal/query/surreal_builder.html	module src/allographer/v2/query_builder/models/surreal/query/surreal_builder		0
+nim	selectBuilder	v2/query_builder/models/surreal/query/surreal_builder.html#selectBuilder,SurrealQuery	proc selectBuilder(self: SurrealQuery): string		8
+nim	selectFirstBuilder	v2/query_builder/models/surreal/query/surreal_builder.html#selectFirstBuilder,SurrealQuery	proc selectFirstBuilder(self: SurrealQuery): string		31
+nim	selectFindBuilder	v2/query_builder/models/surreal/query/surreal_builder.html#selectFindBuilder,SurrealQuery,SurrealId,string	proc selectFindBuilder(self: SurrealQuery; id: SurrealId; key: string): string		54
+nim	insertValueBuilder	v2/query_builder/models/surreal/query/surreal_builder.html#insertValueBuilder,SurrealQuery,JsonNode	proc insertValueBuilder(self: SurrealQuery; items: JsonNode): string		75
+nim	insertValuesBuilder	v2/query_builder/models/surreal/query/surreal_builder.html#insertValuesBuilder,SurrealQuery,openArray[JsonNode]	proc insertValuesBuilder(self: SurrealQuery; items: openArray[JsonNode]): string		82
+nim	updateBuilder	v2/query_builder/models/surreal/query/surreal_builder.html#updateBuilder,SurrealQuery,JsonNode	proc updateBuilder(self: SurrealQuery; items: JsonNode): string		92
+nim	updateMergeBuilder	v2/query_builder/models/surreal/query/surreal_builder.html#updateMergeBuilder,SurrealQuery,string,JsonNode	proc updateMergeBuilder(self: SurrealQuery; id: string; items: JsonNode): string		104
+nim	deleteBuilder	v2/query_builder/models/surreal/query/surreal_builder.html#deleteBuilder,SurrealQuery	proc deleteBuilder(self: SurrealQuery): string		117
+nim	deleteByIdBuilder	v2/query_builder/models/surreal/query/surreal_builder.html#deleteByIdBuilder,SurrealQuery,string	proc deleteByIdBuilder(self: SurrealQuery; id: string): string		127
+nim	countBuilder	v2/query_builder/models/surreal/query/surreal_builder.html#countBuilder,SurrealQuery	proc countBuilder(self: SurrealQuery): string		136
+nim	selectAvgBuilder	v2/query_builder/models/surreal/query/surreal_builder.html#selectAvgBuilder,SurrealQuery,string	proc selectAvgBuilder(self: SurrealQuery; column: string): string		157
+nim	selectSumBuilder	v2/query_builder/models/surreal/query/surreal_builder.html#selectSumBuilder,SurrealQuery,string	proc selectSumBuilder(self: SurrealQuery; column: string): string		178

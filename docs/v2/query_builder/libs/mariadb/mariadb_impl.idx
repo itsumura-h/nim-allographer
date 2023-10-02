@@ -1,0 +1,15 @@
+nimTitle	mariadb_impl	v2/query_builder/libs/mariadb/mariadb_impl.html	module src/allographer/v2/query_builder/libs/mariadb/mariadb_impl		0
+nim	query	v2/query_builder/libs/mariadb/mariadb_impl.html#query,PMySQL,string,seq[string],int	proc query(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[\n    (seq[database_types.Row], DbRows)]		57
+nim	query	v2/query_builder/libs/mariadb/mariadb_impl.html#query,PMySQL,string,JsonNode,int	proc query(db: PMySQL; query: string; args: JsonNode; timeout: int): Future[\n    (seq[database_types.Row], DbRows)]		91
+nim	queryPlain	v2/query_builder/libs/mariadb/mariadb_impl.html#queryPlain,PMySQL,string,seq[string],int	proc queryPlain(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[\n    seq[database_types.Row]]		113
+nim	queryPlain	v2/query_builder/libs/mariadb/mariadb_impl.html#queryPlain,PMySQL,string,JsonNode,int	proc queryPlain(db: PMySQL; query: string; args: JsonNode; timeout: int): Future[\n    seq[database_types.Row]]		135
+nim	exec	v2/query_builder/libs/mariadb/mariadb_impl.html#exec,PMySQL,string,seq[string],int	proc exec(db: PMySQL; query: string; args: seq[string]; timeout: int): owned(\n    Future[void])		157
+nim	exec	v2/query_builder/libs/mariadb/mariadb_impl.html#exec,PMySQL,string,JsonNode,int	proc exec(db: PMySQL; query: string; args: JsonNode; timeout: int): owned(\n    Future[void])		163
+nim	exec	v2/query_builder/libs/mariadb/mariadb_impl.html#exec,PMySQL,string,JsonNode,seq[seq[string]],int	proc exec(db: PMySQL; query: string; args: JsonNode; columns: seq[seq[string]];\n     timeout: int): owned(Future[void])		185
+nim	execGetValue	v2/query_builder/libs/mariadb/mariadb_impl.html#execGetValue,PMySQL,string,JsonNode,seq[seq[string]],int	proc execGetValue(db: PMySQL; query: string; args: JsonNode;\n             columns: seq[seq[string]]; timeout: int): Future[\n    (seq[database_types.Row], DbRows)]		193
+nim	rawQuery	v2/query_builder/libs/mariadb/mariadb_impl.html#rawQuery,PMySQL,string,JsonNode,int	proc rawQuery(db: PMySQL; query: string; args: JsonNode; timeout: int): Future[\n    (seq[database_types.Row], DbRows)]		228
+nim	getColumns	v2/query_builder/libs/mariadb/mariadb_impl.html#getColumns,PMySQL,string,seq[string],int	proc getColumns(db: PMySQL; query: string; args: seq[string]; timeout: int): Future[\n    seq[string]]		250
+nim	getColumnTypes	v2/query_builder/libs/mariadb/mariadb_impl.html#getColumnTypes,PMySQL,string,string,int	proc getColumnTypes(db: PMySQL; database, table: string; timeout: int): Future[\n    seq[database_types.Row]]		273
+nimgrp	query	v2/query_builder/libs/mariadb/mariadb_impl.html#query-procs-all	proc		57
+nimgrp	queryplain	v2/query_builder/libs/mariadb/mariadb_impl.html#queryPlain-procs-all	proc		113
+nimgrp	exec	v2/query_builder/libs/mariadb/mariadb_impl.html#exec-procs-all	proc		157

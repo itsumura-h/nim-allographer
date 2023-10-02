@@ -1,0 +1,2 @@
+nimTitle	rename_table	v2/schema_builder/queries/mysql/rename_table.html	module src/allographer/v2/schema_builder/queries/mysql/rename_table		0
+nim	renameTable	v2/schema_builder/queries/mysql/rename_table.html#renameTable,MysqlSchema,bool	proc renameTable(self: MysqlSchema; isReset: bool)		9

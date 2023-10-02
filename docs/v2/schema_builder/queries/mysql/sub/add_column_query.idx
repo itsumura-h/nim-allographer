@@ -1,0 +1,2 @@
+nimTitle	add_column_query	v2/schema_builder/queries/mysql/sub/add_column_query.html	module src/allographer/v2/schema_builder/queries/mysql/sub/add_column_query		0
+nim	addColumnString	v2/schema_builder/queries/mysql/sub/add_column_query.html#addColumnString,Table,Column	proc addColumnString(table: Table; column: Column): seq[string]		478

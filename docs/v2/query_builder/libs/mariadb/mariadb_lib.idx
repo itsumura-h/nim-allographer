@@ -1,0 +1,9 @@
+nimTitle	mariadb_lib	v2/query_builder/libs/mariadb/mariadb_lib.html	module src/allographer/v2/query_builder/libs/mariadb/mariadb_lib		0
+nim	dbError	v2/query_builder/libs/mariadb/mariadb_lib.html#dbError,PMySQL	proc dbError(db: PMySQL)		12
+nim	setColumnInfo	v2/query_builder/libs/mariadb/mariadb_lib.html#setColumnInfo,DbColumns,PRES,int	proc setColumnInfo(columns: var DbColumns; res: PRES; L: int)		80
+nim	dbFormat	v2/query_builder/libs/mariadb/mariadb_lib.html#dbFormat,string,seq[string]	proc dbFormat(formatstr: string; args: seq[string]): string		120
+nim	MariadbParamValue	v2/query_builder/libs/mariadb/mariadb_lib.html#MariadbParamValue	object MariadbParamValue		167
+nim	MariadbParams	v2/query_builder/libs/mariadb/mariadb_lib.html#MariadbParams	type MariadbParams		171
+nim	fromObj	v2/query_builder/libs/mariadb/mariadb_lib.html#fromObj,typeMariadbParams,JsonNode,seq[seq[string]]	proc fromObj(__3690987584: type MariadbParams; args: JsonNode;\n        columns: seq[seq[string]]): MariadbParams		173
+nim	dbFormat	v2/query_builder/libs/mariadb/mariadb_lib.html#dbFormat,PMySQL,string,MariadbParams	proc dbFormat(conn: PMySQL; query: string; args: MariadbParams): string		207
+nimgrp	dbformat	v2/query_builder/libs/mariadb/mariadb_lib.html#dbFormat-procs-all	proc		120

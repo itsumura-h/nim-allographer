@@ -1,0 +1,2 @@
+nimTitle	create_table	v2/schema_builder/queries/sqlite/create_table.html	module src/allographer/v2/schema_builder/queries/sqlite/create_table		0
+nim	createTable	v2/schema_builder/queries/sqlite/create_table.html#createTable,SqliteSchema,bool	proc createTable(self: SqliteSchema; isReset: bool)		14

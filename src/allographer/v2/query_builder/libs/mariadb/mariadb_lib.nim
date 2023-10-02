@@ -171,7 +171,7 @@ type MariadbParamValue* = object
 type MariadbParams* = seq[MariadbParamValue]
 
 proc fromObj*(_:type MariadbParams, args:JsonNode, columns:seq[seq[string]]):MariadbParams =
-  ## args is JArray [{"key":"id", "value": 1}, {"key": "name" "value": "alice"}] 
+  ## args is JArray `[{"key":"id", "value": 1}, {"key": "name" "value": "alice"}]`
   result = newSeq[MariadbParamValue](args.len)
   var i = 0
   for arg in args.items:

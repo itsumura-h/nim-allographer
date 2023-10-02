@@ -1,0 +1,196 @@
+nimTitle	sqlite_rdb	v2/query_builder/libs/sqlite/sqlite_rdb.html	module src/allographer/v2/query_builder/libs/sqlite/sqlite_rdb		0
+nim	SQLITE_INTEGER	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_INTEGER	const SQLITE_INTEGER		25
+nim	SQLITE_FLOAT	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_FLOAT	const SQLITE_FLOAT		26
+nim	SQLITE_BLOB	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_BLOB	const SQLITE_BLOB		27
+nim	SQLITE_NULL	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_NULL	const SQLITE_NULL		28
+nim	SQLITE_TEXT	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_TEXT	const SQLITE_TEXT		29
+nim	SQLITE_UTF8	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_UTF8	const SQLITE_UTF8		30
+nim	SQLITE_UTF16LE	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_UTF16LE	const SQLITE_UTF16LE		31
+nim	SQLITE_UTF16BE	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_UTF16BE	const SQLITE_UTF16BE		32
+nim	SQLITE_UTF16	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_UTF16	const SQLITE_UTF16		33
+nim	SQLITE_ANY	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_ANY	const SQLITE_ANY		34
+nim	SQLITE_OK	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_OK	const SQLITE_OK		35
+nim	SQLITE_ERROR	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_ERROR	const SQLITE_ERROR		36
+nim	SQLITE_INTERNAL	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_INTERNAL	const SQLITE_INTERNAL		37
+nim	SQLITE_PERM	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_PERM	const SQLITE_PERM		38
+nim	SQLITE_ABORT	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_ABORT	const SQLITE_ABORT		39
+nim	SQLITE_BUSY	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_BUSY	const SQLITE_BUSY		40
+nim	SQLITE_LOCKED	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_LOCKED	const SQLITE_LOCKED		41
+nim	SQLITE_NOMEM	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_NOMEM	const SQLITE_NOMEM		42
+nim	SQLITE_READONLY	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_READONLY	const SQLITE_READONLY		43
+nim	SQLITE_INTERRUPT	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_INTERRUPT	const SQLITE_INTERRUPT		44
+nim	SQLITE_IOERR	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_IOERR	const SQLITE_IOERR		45
+nim	SQLITE_CORRUPT	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_CORRUPT	const SQLITE_CORRUPT		46
+nim	SQLITE_NOTFOUND	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_NOTFOUND	const SQLITE_NOTFOUND		47
+nim	SQLITE_FULL	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_FULL	const SQLITE_FULL		48
+nim	SQLITE_CANTOPEN	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_CANTOPEN	const SQLITE_CANTOPEN		49
+nim	SQLITE_PROTOCOL	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_PROTOCOL	const SQLITE_PROTOCOL		50
+nim	SQLITE_EMPTY	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_EMPTY	const SQLITE_EMPTY		51
+nim	SQLITE_SCHEMA	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_SCHEMA	const SQLITE_SCHEMA		52
+nim	SQLITE_TOOBIG	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_TOOBIG	const SQLITE_TOOBIG		53
+nim	SQLITE_CONSTRAINT	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_CONSTRAINT	const SQLITE_CONSTRAINT		54
+nim	SQLITE_MISMATCH	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_MISMATCH	const SQLITE_MISMATCH		55
+nim	SQLITE_MISUSE	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_MISUSE	const SQLITE_MISUSE		56
+nim	SQLITE_NOLFS	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_NOLFS	const SQLITE_NOLFS		57
+nim	SQLITE_AUTH	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_AUTH	const SQLITE_AUTH		58
+nim	SQLITE_FORMAT	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_FORMAT	const SQLITE_FORMAT		59
+nim	SQLITE_RANGE	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_RANGE	const SQLITE_RANGE		60
+nim	SQLITE_NOTADB	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_NOTADB	const SQLITE_NOTADB		61
+nim	SQLITE_ROW	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_ROW	const SQLITE_ROW		62
+nim	SQLITE_DONE	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_DONE	const SQLITE_DONE		63
+nim	SQLITE_COPY	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_COPY	const SQLITE_COPY		64
+nim	SQLITE_CREATE_INDEX	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_CREATE_INDEX	const SQLITE_CREATE_INDEX		65
+nim	SQLITE_CREATE_TABLE	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_CREATE_TABLE	const SQLITE_CREATE_TABLE		66
+nim	SQLITE_CREATE_TEMP_INDEX	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_CREATE_TEMP_INDEX	const SQLITE_CREATE_TEMP_INDEX		67
+nim	SQLITE_CREATE_TEMP_TABLE	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_CREATE_TEMP_TABLE	const SQLITE_CREATE_TEMP_TABLE		68
+nim	SQLITE_CREATE_TEMP_TRIGGER	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_CREATE_TEMP_TRIGGER	const SQLITE_CREATE_TEMP_TRIGGER		69
+nim	SQLITE_CREATE_TEMP_VIEW	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_CREATE_TEMP_VIEW	const SQLITE_CREATE_TEMP_VIEW		70
+nim	SQLITE_CREATE_TRIGGER	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_CREATE_TRIGGER	const SQLITE_CREATE_TRIGGER		71
+nim	SQLITE_CREATE_VIEW	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_CREATE_VIEW	const SQLITE_CREATE_VIEW		72
+nim	SQLITE_DELETE	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_DELETE	const SQLITE_DELETE		73
+nim	SQLITE_DROP_INDEX	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_DROP_INDEX	const SQLITE_DROP_INDEX		74
+nim	SQLITE_DROP_TABLE	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_DROP_TABLE	const SQLITE_DROP_TABLE		75
+nim	SQLITE_DROP_TEMP_INDEX	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_DROP_TEMP_INDEX	const SQLITE_DROP_TEMP_INDEX		76
+nim	SQLITE_DROP_TEMP_TABLE	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_DROP_TEMP_TABLE	const SQLITE_DROP_TEMP_TABLE		77
+nim	SQLITE_DROP_TEMP_TRIGGER	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_DROP_TEMP_TRIGGER	const SQLITE_DROP_TEMP_TRIGGER		78
+nim	SQLITE_DROP_TEMP_VIEW	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_DROP_TEMP_VIEW	const SQLITE_DROP_TEMP_VIEW		79
+nim	SQLITE_DROP_TRIGGER	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_DROP_TRIGGER	const SQLITE_DROP_TRIGGER		80
+nim	SQLITE_DROP_VIEW	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_DROP_VIEW	const SQLITE_DROP_VIEW		81
+nim	SQLITE_INSERT	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_INSERT	const SQLITE_INSERT		82
+nim	SQLITE_PRAGMA	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_PRAGMA	const SQLITE_PRAGMA		83
+nim	SQLITE_READ	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_READ	const SQLITE_READ		84
+nim	SQLITE_SELECT	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_SELECT	const SQLITE_SELECT		85
+nim	SQLITE_TRANSACTION	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_TRANSACTION	const SQLITE_TRANSACTION		86
+nim	SQLITE_UPDATE	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_UPDATE	const SQLITE_UPDATE		87
+nim	SQLITE_ATTACH	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_ATTACH	const SQLITE_ATTACH		88
+nim	SQLITE_DETACH	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_DETACH	const SQLITE_DETACH		89
+nim	SQLITE_ALTER_TABLE	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_ALTER_TABLE	const SQLITE_ALTER_TABLE		90
+nim	SQLITE_REINDEX	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_REINDEX	const SQLITE_REINDEX		91
+nim	SQLITE_DENY	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_DENY	const SQLITE_DENY		92
+nim	SQLITE_IGNORE	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_IGNORE	const SQLITE_IGNORE		93
+nim	SQLITE_DETERMINISTIC	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_DETERMINISTIC	const SQLITE_DETERMINISTIC		96
+nim	PSqlite3	v2/query_builder/libs/sqlite/sqlite_rdb.html#PSqlite3	type PSqlite3		100
+nim	PPSqlite3	v2/query_builder/libs/sqlite/sqlite_rdb.html#PPSqlite3	type PPSqlite3		101
+nim	PSqlite3_Backup	v2/query_builder/libs/sqlite/sqlite_rdb.html#PSqlite3_Backup	type PSqlite3_Backup		103
+nim	PPSqlite3_Backup	v2/query_builder/libs/sqlite/sqlite_rdb.html#PPSqlite3_Backup	type PPSqlite3_Backup		104
+nim	Pcontext	v2/query_builder/libs/sqlite/sqlite_rdb.html#Pcontext	type Pcontext		106
+nim	PStmt	v2/query_builder/libs/sqlite/sqlite_rdb.html#PStmt	type PStmt		108
+nim	InstantRow	v2/query_builder/libs/sqlite/sqlite_rdb.html#InstantRow	type InstantRow		109
+nim	PValue	v2/query_builder/libs/sqlite/sqlite_rdb.html#PValue	type PValue		111
+nim	PValueArg	v2/query_builder/libs/sqlite/sqlite_rdb.html#PValueArg	type PValueArg		112
+nim	Callback	v2/query_builder/libs/sqlite/sqlite_rdb.html#Callback	type Callback		114
+nim	Tbind_destructor_func	v2/query_builder/libs/sqlite/sqlite_rdb.html#Tbind_destructor_func	type Tbind_destructor_func		116
+nim	Create_function_step_func	v2/query_builder/libs/sqlite/sqlite_rdb.html#Create_function_step_func	type Create_function_step_func		117
+nim	Create_function_func_func	v2/query_builder/libs/sqlite/sqlite_rdb.html#Create_function_func_func	type Create_function_func_func		119
+nim	Create_function_final_func	v2/query_builder/libs/sqlite/sqlite_rdb.html#Create_function_final_func	type Create_function_final_func		121
+nim	Result_func	v2/query_builder/libs/sqlite/sqlite_rdb.html#Result_func	type Result_func		122
+nim	Create_collation_func	v2/query_builder/libs/sqlite/sqlite_rdb.html#Create_collation_func	type Create_collation_func		123
+nim	Collation_needed_func	v2/query_builder/libs/sqlite/sqlite_rdb.html#Collation_needed_func	type Collation_needed_func		125
+nim	SQLITE_STATIC	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_STATIC	const SQLITE_STATIC		129
+nim	SQLITE_TRANSIENT	v2/query_builder/libs/sqlite/sqlite_rdb.html#SQLITE_TRANSIENT	const SQLITE_TRANSIENT		130
+nim	close	v2/query_builder/libs/sqlite/sqlite_rdb.html#close,PSqlite3	proc close(para1: PSqlite3): int32		132
+nim	exec	v2/query_builder/libs/sqlite/sqlite_rdb.html#exec,PSqlite3,cstring,Callback,pointer,cstring	proc exec(para1: PSqlite3; sql: cstring; para3: Callback; para4: pointer;\n     errmsg: var cstring): int32		133
+nim	last_insert_rowid	v2/query_builder/libs/sqlite/sqlite_rdb.html#last_insert_rowid,PSqlite3	proc last_insert_rowid(para1: PSqlite3): int64		136
+nim	changes	v2/query_builder/libs/sqlite/sqlite_rdb.html#changes,PSqlite3	proc changes(para1: PSqlite3): int32		138
+nim	total_changes	v2/query_builder/libs/sqlite/sqlite_rdb.html#total_changes,PSqlite3	proc total_changes(para1: PSqlite3): int32		139
+nim	interrupt	v2/query_builder/libs/sqlite/sqlite_rdb.html#interrupt,PSqlite3	proc interrupt(para1: PSqlite3)		141
+nim	complete	v2/query_builder/libs/sqlite/sqlite_rdb.html#complete,cstring	proc complete(sql: cstring): int32		142
+nim	complete16	v2/query_builder/libs/sqlite/sqlite_rdb.html#complete16,pointer	proc complete16(sql: pointer): int32		144
+nim	busy_handler	v2/query_builder/libs/sqlite/sqlite_rdb.html#busy_handler,PSqlite3,proc(pointer,int32),pointer	proc busy_handler(para1: PSqlite3;\n             para2: proc (para1: pointer; para2: int32): int32 {.cdecl.};\n             para3: pointer): int32		146
+nim	busy_timeout	v2/query_builder/libs/sqlite/sqlite_rdb.html#busy_timeout,PSqlite3,int32	proc busy_timeout(para1: PSqlite3; ms: int32): int32		150
+nim	get_table	v2/query_builder/libs/sqlite/sqlite_rdb.html#get_table,PSqlite3,cstring,cstringArray,cint,cint,ptr.cstring	proc get_table(para1: PSqlite3; sql: cstring; resultp: var cstringArray;\n          nrow, ncolumn: var cint; errmsg: ptr cstring): int32		152
+nim	free_table	v2/query_builder/libs/sqlite/sqlite_rdb.html#free_table,cstringArray	proc free_table(result: cstringArray)		155
+nim	mprintf	v2/query_builder/libs/sqlite/sqlite_rdb.html#mprintf,cstring	proc mprintf(para1: cstring): cstring		159
+nim	free	v2/query_builder/libs/sqlite/sqlite_rdb.html#free,cstring	proc free(z: cstring)		162
+nim	snprintf	v2/query_builder/libs/sqlite/sqlite_rdb.html#snprintf,int32,cstring,cstring	proc snprintf(para1: int32; para2: cstring; para3: cstring): cstring		164
+nim	set_authorizer	v2/query_builder/libs/sqlite/sqlite_rdb.html#set_authorizer,PSqlite3,proc(pointer,int32,cstring,cstring,cstring,cstring),pointer	proc set_authorizer(para1: PSqlite3; xAuth: proc (para1: pointer; para2: int32;\n    para3: cstring; para4: cstring; para5: cstring; para6: cstring): int32 {.\n    cdecl.}; pUserData: pointer): int32		166
+nim	trace	v2/query_builder/libs/sqlite/sqlite_rdb.html#trace,PSqlite3,proc(pointer,cstring),pointer	proc trace(para1: PSqlite3; xTrace: proc (para1: pointer; para2: cstring) {.cdecl.};\n      para3: pointer): pointer		170
+nim	progress_handler	v2/query_builder/libs/sqlite/sqlite_rdb.html#progress_handler,PSqlite3,int32,proc(pointer),pointer	proc progress_handler(para1: PSqlite3; para2: int32;\n                 para3: proc (para1: pointer): int32 {.cdecl.}; para4: pointer)		173
+nim	commit_hook	v2/query_builder/libs/sqlite/sqlite_rdb.html#commit_hook,PSqlite3,proc(pointer),pointer	proc commit_hook(para1: PSqlite3; para2: proc (para1: pointer): int32 {.cdecl.};\n            para3: pointer): pointer		177
+nim	open	v2/query_builder/libs/sqlite/sqlite_rdb.html#open,cstring,PSqlite3	proc open(filename: cstring; ppDb: var PSqlite3): int32		180
+nim	open16	v2/query_builder/libs/sqlite/sqlite_rdb.html#open16,pointer,PSqlite3	proc open16(filename: pointer; ppDb: var PSqlite3): int32		182
+nim	errcode	v2/query_builder/libs/sqlite/sqlite_rdb.html#errcode,PSqlite3	proc errcode(db: PSqlite3): int32		184
+nim	errmsg	v2/query_builder/libs/sqlite/sqlite_rdb.html#errmsg,PSqlite3	proc errmsg(para1: PSqlite3): cstring		185
+nim	errmsg16	v2/query_builder/libs/sqlite/sqlite_rdb.html#errmsg16,PSqlite3	proc errmsg16(para1: PSqlite3): pointer		186
+nim	prepare	v2/query_builder/libs/sqlite/sqlite_rdb.html#prepare,PSqlite3,cstring,int32,PStmt,ptr.cstring	proc prepare(db: PSqlite3; zSql: cstring; nBytes: int32; ppStmt: var PStmt;\n        pzTail: ptr cstring): int32		188
+nim	prepare_v2	v2/query_builder/libs/sqlite/sqlite_rdb.html#prepare_v2,PSqlite3,cstring,cint,PStmt,ptr.cstring	proc prepare_v2(db: PSqlite3; zSql: cstring; nByte: cint; ppStmt: var PStmt;\n           pzTail: ptr cstring): cint		192
+nim	prepare16	v2/query_builder/libs/sqlite/sqlite_rdb.html#prepare16,PSqlite3,pointer,int32,PStmt,pointer	proc prepare16(db: PSqlite3; zSql: pointer; nBytes: int32; ppStmt: var PStmt;\n          pzTail: var pointer): int32		196
+nim	bind_blob	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_blob,PStmt,int32,pointer,int32,Tbind_destructor_func	proc bind_blob(para1: PStmt; para2: int32; para3: pointer; n: int32;\n          para5: Tbind_destructor_func): int32		199
+nim	bind_double	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_double,PStmt,int32,float64	proc bind_double(para1: PStmt; para2: int32; para3: float64): int32		202
+nim	bind_int	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_int,PStmt,int32,int32	proc bind_int(para1: PStmt; para2: int32; para3: int32): int32		204
+nim	bind_int64	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_int64,PStmt,int32,int64	proc bind_int64(para1: PStmt; para2: int32; para3: int64): int32		206
+nim	bind_null	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_null,PStmt,int32	proc bind_null(para1: PStmt; para2: int32): int32		208
+nim	bind_text	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_text,PStmt,int32,cstring,int32,Tbind_destructor_func	proc bind_text(para1: PStmt; para2: int32; para3: cstring; n: int32;\n          para5: Tbind_destructor_func): int32		210
+nim	bind_text16	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_text16,PStmt,int32,pointer,int32,Tbind_destructor_func	proc bind_text16(para1: PStmt; para2: int32; para3: pointer; para4: int32;\n            para5: Tbind_destructor_func): int32		213
+nim	bind_blob	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_blob,PStmt,int32,pointer,int32,int32	proc bind_blob(para1: PStmt; para2: int32; para3: pointer; n: int32; para5: int32): int32		219
+nim	bind_text	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_text,PStmt,int32,cstring,int32,int32	proc bind_text(para1: PStmt; para2: int32; para3: cstring; n: int32; para5: int32): int32		222
+nim	bind_text16	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_text16,PStmt,int32,pointer,int32,int32	proc bind_text16(para1: PStmt; para2: int32; para3: pointer; para4: int32;\n            para5: int32): int32		225
+nim	bind_parameter_count	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_parameter_count,PStmt	proc bind_parameter_count(para1: PStmt): int32		228
+nim	bind_parameter_name	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_parameter_name,PStmt,int32	proc bind_parameter_name(para1: PStmt; para2: int32): cstring		230
+nim	bind_parameter_index	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_parameter_index,PStmt,cstring	proc bind_parameter_index(para1: PStmt; zName: cstring): int32		232
+nim	clear_bindings	v2/query_builder/libs/sqlite/sqlite_rdb.html#clear_bindings,PStmt	proc clear_bindings(para1: PStmt): int32		234
+nim	column_count	v2/query_builder/libs/sqlite/sqlite_rdb.html#column_count,PStmt	proc column_count(PStmt: PStmt): int32		236
+nim	column_name	v2/query_builder/libs/sqlite/sqlite_rdb.html#column_name,PStmt,int32	proc column_name(para1: PStmt; para2: int32): cstring		238
+nim	column_table_name	v2/query_builder/libs/sqlite/sqlite_rdb.html#column_table_name,PStmt,int32	proc column_table_name(para1: PStmt; para2: int32): cstring		240
+nim	column_name16	v2/query_builder/libs/sqlite/sqlite_rdb.html#column_name16,PStmt,int32	proc column_name16(para1: PStmt; para2: int32): pointer		242
+nim	column_decltype	v2/query_builder/libs/sqlite/sqlite_rdb.html#column_decltype,PStmt,int32	proc column_decltype(para1: PStmt; i: int32): cstring		244
+nim	column_decltype16	v2/query_builder/libs/sqlite/sqlite_rdb.html#column_decltype16,PStmt,int32	proc column_decltype16(para1: PStmt; para2: int32): pointer		246
+nim	step	v2/query_builder/libs/sqlite/sqlite_rdb.html#step,PStmt	proc step(para1: PStmt): int32		248
+nim	data_count	v2/query_builder/libs/sqlite/sqlite_rdb.html#data_count,PStmt	proc data_count(PStmt: PStmt): int32		249
+nim	column_blob	v2/query_builder/libs/sqlite/sqlite_rdb.html#column_blob,PStmt,int32	proc column_blob(para1: PStmt; iCol: int32): pointer		251
+nim	column_bytes	v2/query_builder/libs/sqlite/sqlite_rdb.html#column_bytes,PStmt,int32	proc column_bytes(para1: PStmt; iCol: int32): int32		253
+nim	column_bytes16	v2/query_builder/libs/sqlite/sqlite_rdb.html#column_bytes16,PStmt,int32	proc column_bytes16(para1: PStmt; iCol: int32): int32		255
+nim	column_double	v2/query_builder/libs/sqlite/sqlite_rdb.html#column_double,PStmt,int32	proc column_double(para1: PStmt; iCol: int32): float64		257
+nim	column_int	v2/query_builder/libs/sqlite/sqlite_rdb.html#column_int,PStmt,int32	proc column_int(para1: PStmt; iCol: int32): int32		259
+nim	column_int64	v2/query_builder/libs/sqlite/sqlite_rdb.html#column_int64,PStmt,int32	proc column_int64(para1: PStmt; iCol: int32): int64		261
+nim	column_text	v2/query_builder/libs/sqlite/sqlite_rdb.html#column_text,PStmt,int32	proc column_text(para1: PStmt; iCol: int32): cstring		263
+nim	column_text16	v2/query_builder/libs/sqlite/sqlite_rdb.html#column_text16,PStmt,int32	proc column_text16(para1: PStmt; iCol: int32): pointer		265
+nim	column_type	v2/query_builder/libs/sqlite/sqlite_rdb.html#column_type,PStmt,int32	proc column_type(para1: PStmt; iCol: int32): int32		267
+nim	finalize	v2/query_builder/libs/sqlite/sqlite_rdb.html#finalize,PStmt	proc finalize(PStmt: PStmt): int32		269
+nim	reset	v2/query_builder/libs/sqlite/sqlite_rdb.html#reset,PStmt	proc reset(PStmt: PStmt): int32		271
+nim	create_function	v2/query_builder/libs/sqlite/sqlite_rdb.html#create_function,PSqlite3,cstring,int32,int32,pointer,Create_function_func_func,Create_function_step_func,Create_function_final_func	proc create_function(para1: PSqlite3; zFunctionName: cstring; nArg: int32;\n                eTextRep: int32; para5: pointer;\n                xFunc: Create_function_func_func;\n                xStep: Create_function_step_func;\n                xFinal: Create_function_final_func): int32		272
+nim	create_function16	v2/query_builder/libs/sqlite/sqlite_rdb.html#create_function16,PSqlite3,pointer,int32,int32,pointer,Create_function_func_func,Create_function_step_func,Create_function_final_func	proc create_function16(para1: PSqlite3; zFunctionName: pointer; nArg: int32;\n                  eTextRep: int32; para5: pointer;\n                  xFunc: Create_function_func_func;\n                  xStep: Create_function_step_func;\n                  xFinal: Create_function_final_func): int32		278
+nim	aggregate_count	v2/query_builder/libs/sqlite/sqlite_rdb.html#aggregate_count,Pcontext	proc aggregate_count(para1: Pcontext): int32		284
+nim	value_blob	v2/query_builder/libs/sqlite/sqlite_rdb.html#value_blob,PValue	proc value_blob(para1: PValue): pointer		286
+nim	value_bytes	v2/query_builder/libs/sqlite/sqlite_rdb.html#value_bytes,PValue	proc value_bytes(para1: PValue): int32		288
+nim	value_bytes16	v2/query_builder/libs/sqlite/sqlite_rdb.html#value_bytes16,PValue	proc value_bytes16(para1: PValue): int32		290
+nim	value_double	v2/query_builder/libs/sqlite/sqlite_rdb.html#value_double,PValue	proc value_double(para1: PValue): float64		292
+nim	value_int	v2/query_builder/libs/sqlite/sqlite_rdb.html#value_int,PValue	proc value_int(para1: PValue): int32		294
+nim	value_int64	v2/query_builder/libs/sqlite/sqlite_rdb.html#value_int64,PValue	proc value_int64(para1: PValue): int64		296
+nim	value_text	v2/query_builder/libs/sqlite/sqlite_rdb.html#value_text,PValue	proc value_text(para1: PValue): cstring		298
+nim	value_text16	v2/query_builder/libs/sqlite/sqlite_rdb.html#value_text16,PValue	proc value_text16(para1: PValue): pointer		300
+nim	value_text16le	v2/query_builder/libs/sqlite/sqlite_rdb.html#value_text16le,PValue	proc value_text16le(para1: PValue): pointer		302
+nim	value_text16be	v2/query_builder/libs/sqlite/sqlite_rdb.html#value_text16be,PValue	proc value_text16be(para1: PValue): pointer		304
+nim	value_type	v2/query_builder/libs/sqlite/sqlite_rdb.html#value_type,PValue	proc value_type(para1: PValue): int32		306
+nim	aggregate_context	v2/query_builder/libs/sqlite/sqlite_rdb.html#aggregate_context,Pcontext,int32	proc aggregate_context(para1: Pcontext; nBytes: int32): pointer		308
+nim	user_data	v2/query_builder/libs/sqlite/sqlite_rdb.html#user_data,Pcontext	proc user_data(para1: Pcontext): pointer		310
+nim	get_auxdata	v2/query_builder/libs/sqlite/sqlite_rdb.html#get_auxdata,Pcontext,int32	proc get_auxdata(para1: Pcontext; para2: int32): pointer		312
+nim	set_auxdata	v2/query_builder/libs/sqlite/sqlite_rdb.html#set_auxdata,Pcontext,int32,pointer,proc(pointer)	proc set_auxdata(para1: Pcontext; para2: int32; para3: pointer;\n            para4: proc (para1: pointer) {.cdecl.})		314
+nim	result_blob	v2/query_builder/libs/sqlite/sqlite_rdb.html#result_blob,Pcontext,pointer,int32,Result_func	proc result_blob(para1: Pcontext; para2: pointer; para3: int32; para4: Result_func)		317
+nim	result_double	v2/query_builder/libs/sqlite/sqlite_rdb.html#result_double,Pcontext,float64	proc result_double(para1: Pcontext; para2: float64)		320
+nim	result_error	v2/query_builder/libs/sqlite/sqlite_rdb.html#result_error,Pcontext,cstring,int32	proc result_error(para1: Pcontext; para2: cstring; para3: int32)		322
+nim	result_error16	v2/query_builder/libs/sqlite/sqlite_rdb.html#result_error16,Pcontext,pointer,int32	proc result_error16(para1: Pcontext; para2: pointer; para3: int32)		324
+nim	result_int	v2/query_builder/libs/sqlite/sqlite_rdb.html#result_int,Pcontext,int32	proc result_int(para1: Pcontext; para2: int32)		326
+nim	result_int64	v2/query_builder/libs/sqlite/sqlite_rdb.html#result_int64,Pcontext,int64	proc result_int64(para1: Pcontext; para2: int64)		328
+nim	result_null	v2/query_builder/libs/sqlite/sqlite_rdb.html#result_null,Pcontext	proc result_null(para1: Pcontext)		330
+nim	result_text	v2/query_builder/libs/sqlite/sqlite_rdb.html#result_text,Pcontext,cstring,int32,Result_func	proc result_text(para1: Pcontext; para2: cstring; para3: int32; para4: Result_func)		332
+nim	result_text16	v2/query_builder/libs/sqlite/sqlite_rdb.html#result_text16,Pcontext,pointer,int32,Result_func	proc result_text16(para1: Pcontext; para2: pointer; para3: int32; para4: Result_func)		335
+nim	result_text16le	v2/query_builder/libs/sqlite/sqlite_rdb.html#result_text16le,Pcontext,pointer,int32,Result_func	proc result_text16le(para1: Pcontext; para2: pointer; para3: int32;\n                para4: Result_func)		338
+nim	result_text16be	v2/query_builder/libs/sqlite/sqlite_rdb.html#result_text16be,Pcontext,pointer,int32,Result_func	proc result_text16be(para1: Pcontext; para2: pointer; para3: int32;\n                para4: Result_func)		341
+nim	result_value	v2/query_builder/libs/sqlite/sqlite_rdb.html#result_value,Pcontext,PValue	proc result_value(para1: Pcontext; para2: PValue)		344
+nim	create_collation	v2/query_builder/libs/sqlite/sqlite_rdb.html#create_collation,PSqlite3,cstring,int32,pointer,Create_collation_func	proc create_collation(para1: PSqlite3; zName: cstring; eTextRep: int32;\n                 para4: pointer; xCompare: Create_collation_func): int32		346
+nim	create_collation16	v2/query_builder/libs/sqlite/sqlite_rdb.html#create_collation16,PSqlite3,cstring,int32,pointer,Create_collation_func	proc create_collation16(para1: PSqlite3; zName: cstring; eTextRep: int32;\n                   para4: pointer; xCompare: Create_collation_func): int32		349
+nim	collation_needed	v2/query_builder/libs/sqlite/sqlite_rdb.html#collation_needed,PSqlite3,pointer,Collation_needed_func	proc collation_needed(para1: PSqlite3; para2: pointer; para3: Collation_needed_func): int32		352
+nim	collation_needed16	v2/query_builder/libs/sqlite/sqlite_rdb.html#collation_needed16,PSqlite3,pointer,Collation_needed_func	proc collation_needed16(para1: PSqlite3; para2: pointer; para3: Collation_needed_func): int32		354
+nim	libversion	v2/query_builder/libs/sqlite/sqlite_rdb.html#libversion	proc libversion(): cstring		356
+nim	version	v2/query_builder/libs/sqlite/sqlite_rdb.html#version	proc version(): cstring		358
+nim	libversion_number	v2/query_builder/libs/sqlite/sqlite_rdb.html#libversion_number	proc libversion_number(): int32		360
+nim	backup_init	v2/query_builder/libs/sqlite/sqlite_rdb.html#backup_init,PSqlite3,cstring,PSqlite3,cstring	proc backup_init(pDest: PSqlite3; zDestName: cstring; pSource: PSqlite3;\n            zSourceName: cstring): PSqlite3_Backup		363
+nim	backup_step	v2/query_builder/libs/sqlite/sqlite_rdb.html#backup_step,PSqlite3_Backup,int32	proc backup_step(pBackup: PSqlite3_Backup; nPage: int32): int32		366
+nim	backup_finish	v2/query_builder/libs/sqlite/sqlite_rdb.html#backup_finish,PSqlite3_Backup	proc backup_finish(pBackup: PSqlite3_Backup): int32		368
+nim	backup_pagecount	v2/query_builder/libs/sqlite/sqlite_rdb.html#backup_pagecount,PSqlite3_Backup	proc backup_pagecount(pBackup: PSqlite3_Backup): int32		370
+nim	backup_remaining	v2/query_builder/libs/sqlite/sqlite_rdb.html#backup_remaining,PSqlite3_Backup	proc backup_remaining(pBackup: PSqlite3_Backup): int32		372
+nim	sqlite3_sleep	v2/query_builder/libs/sqlite/sqlite_rdb.html#sqlite3_sleep,int64	proc sqlite3_sleep(t: int64): int64		374
+nimgrp	bindblob	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_blob-procs-all	proc		199
+nimgrp	bindtext16	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_text16-procs-all	proc		213
+nimgrp	bindtext	v2/query_builder/libs/sqlite/sqlite_rdb.html#bind_text-procs-all	proc		210

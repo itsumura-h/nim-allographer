@@ -1,0 +1,187 @@
+nimTitle	postgres_rdb	v2/query_builder/libs/postgres/postgres_rdb.html	module src/allographer/v2/query_builder/libs/postgres/postgres_rdb		0
+nim	POid	v2/query_builder/libs/postgres/postgres_rdb.html#POid	type POid		14
+nim	Oid	v2/query_builder/libs/postgres/postgres_rdb.html#Oid	type Oid		15
+nim	ERROR_MSG_LENGTH	v2/query_builder/libs/postgres/postgres_rdb.html#ERROR_MSG_LENGTH	const ERROR_MSG_LENGTH		18
+nim	CMDSTATUS_LEN	v2/query_builder/libs/postgres/postgres_rdb.html#CMDSTATUS_LEN	const CMDSTATUS_LEN		19
+nim	SockAddr	v2/query_builder/libs/postgres/postgres_rdb.html#SockAddr	type SockAddr		22
+nim	PGresAttDesc	v2/query_builder/libs/postgres/postgres_rdb.html#PGresAttDesc	object PGresAttDesc		23
+nim	PPGresAttDesc	v2/query_builder/libs/postgres/postgres_rdb.html#PPGresAttDesc	type PPGresAttDesc		28
+nim	PPPGresAttDesc	v2/query_builder/libs/postgres/postgres_rdb.html#PPPGresAttDesc	type PPPGresAttDesc		29
+nim	PGresAttValue	v2/query_builder/libs/postgres/postgres_rdb.html#PGresAttValue	object PGresAttValue		30
+nim	PPGresAttValue	v2/query_builder/libs/postgres/postgres_rdb.html#PPGresAttValue	type PPGresAttValue		34
+nim	PPPGresAttValue	v2/query_builder/libs/postgres/postgres_rdb.html#PPPGresAttValue	type PPPGresAttValue		35
+nim	PExecStatusType	v2/query_builder/libs/postgres/postgres_rdb.html#PExecStatusType	type PExecStatusType		36
+nim	PGRES_EMPTY_QUERY	v2/query_builder/libs/postgres/postgres_rdb.html#PGRES_EMPTY_QUERY	ExecStatusType.PGRES_EMPTY_QUERY		37
+nim	PGRES_COMMAND_OK	v2/query_builder/libs/postgres/postgres_rdb.html#PGRES_COMMAND_OK	ExecStatusType.PGRES_COMMAND_OK		37
+nim	PGRES_TUPLES_OK	v2/query_builder/libs/postgres/postgres_rdb.html#PGRES_TUPLES_OK	ExecStatusType.PGRES_TUPLES_OK		37
+nim	PGRES_COPY_OUT	v2/query_builder/libs/postgres/postgres_rdb.html#PGRES_COPY_OUT	ExecStatusType.PGRES_COPY_OUT		37
+nim	PGRES_COPY_IN	v2/query_builder/libs/postgres/postgres_rdb.html#PGRES_COPY_IN	ExecStatusType.PGRES_COPY_IN		37
+nim	PGRES_BAD_RESPONSE	v2/query_builder/libs/postgres/postgres_rdb.html#PGRES_BAD_RESPONSE	ExecStatusType.PGRES_BAD_RESPONSE		37
+nim	PGRES_NONFATAL_ERROR	v2/query_builder/libs/postgres/postgres_rdb.html#PGRES_NONFATAL_ERROR	ExecStatusType.PGRES_NONFATAL_ERROR		37
+nim	PGRES_FATAL_ERROR	v2/query_builder/libs/postgres/postgres_rdb.html#PGRES_FATAL_ERROR	ExecStatusType.PGRES_FATAL_ERROR		37
+nim	PGRES_COPY_BOTH	v2/query_builder/libs/postgres/postgres_rdb.html#PGRES_COPY_BOTH	ExecStatusType.PGRES_COPY_BOTH		37
+nim	PGRES_SINGLE_TUPLE	v2/query_builder/libs/postgres/postgres_rdb.html#PGRES_SINGLE_TUPLE	ExecStatusType.PGRES_SINGLE_TUPLE		37
+nim	ExecStatusType	v2/query_builder/libs/postgres/postgres_rdb.html#ExecStatusType	enum ExecStatusType		37
+nim	PGlobjfuncs	v2/query_builder/libs/postgres/postgres_rdb.html#PGlobjfuncs	object PGlobjfuncs		41
+nim	PPGlobjfuncs	v2/query_builder/libs/postgres/postgres_rdb.html#PPGlobjfuncs	type PPGlobjfuncs		51
+nim	PConnStatusType	v2/query_builder/libs/postgres/postgres_rdb.html#PConnStatusType	type PConnStatusType		52
+nim	CONNECTION_OK	v2/query_builder/libs/postgres/postgres_rdb.html#CONNECTION_OK	ConnStatusType.CONNECTION_OK		53
+nim	CONNECTION_BAD	v2/query_builder/libs/postgres/postgres_rdb.html#CONNECTION_BAD	ConnStatusType.CONNECTION_BAD		53
+nim	CONNECTION_STARTED	v2/query_builder/libs/postgres/postgres_rdb.html#CONNECTION_STARTED	ConnStatusType.CONNECTION_STARTED		53
+nim	CONNECTION_MADE	v2/query_builder/libs/postgres/postgres_rdb.html#CONNECTION_MADE	ConnStatusType.CONNECTION_MADE		53
+nim	CONNECTION_AWAITING_RESPONSE	v2/query_builder/libs/postgres/postgres_rdb.html#CONNECTION_AWAITING_RESPONSE	ConnStatusType.CONNECTION_AWAITING_RESPONSE		53
+nim	CONNECTION_AUTH_OK	v2/query_builder/libs/postgres/postgres_rdb.html#CONNECTION_AUTH_OK	ConnStatusType.CONNECTION_AUTH_OK		53
+nim	CONNECTION_SETENV	v2/query_builder/libs/postgres/postgres_rdb.html#CONNECTION_SETENV	ConnStatusType.CONNECTION_SETENV		53
+nim	CONNECTION_SSL_STARTUP	v2/query_builder/libs/postgres/postgres_rdb.html#CONNECTION_SSL_STARTUP	ConnStatusType.CONNECTION_SSL_STARTUP		53
+nim	CONNECTION_NEEDED	v2/query_builder/libs/postgres/postgres_rdb.html#CONNECTION_NEEDED	ConnStatusType.CONNECTION_NEEDED		53
+nim	CONNECTION_CHECK_WRITABLE	v2/query_builder/libs/postgres/postgres_rdb.html#CONNECTION_CHECK_WRITABLE	ConnStatusType.CONNECTION_CHECK_WRITABLE		53
+nim	CONNECTION_CONSUME	v2/query_builder/libs/postgres/postgres_rdb.html#CONNECTION_CONSUME	ConnStatusType.CONNECTION_CONSUME		53
+nim	CONNECTION_GSS_STARTUP	v2/query_builder/libs/postgres/postgres_rdb.html#CONNECTION_GSS_STARTUP	ConnStatusType.CONNECTION_GSS_STARTUP		53
+nim	CONNECTION_CHECK_TARGET	v2/query_builder/libs/postgres/postgres_rdb.html#CONNECTION_CHECK_TARGET	ConnStatusType.CONNECTION_CHECK_TARGET		53
+nim	ConnStatusType	v2/query_builder/libs/postgres/postgres_rdb.html#ConnStatusType	enum ConnStatusType		53
+nim	PGconn	v2/query_builder/libs/postgres/postgres_rdb.html#PGconn	object PGconn		58
+nim	PPGconn	v2/query_builder/libs/postgres/postgres_rdb.html#PPGconn	type PPGconn		79
+nim	PGresult	v2/query_builder/libs/postgres/postgres_rdb.html#PGresult	object PGresult		80
+nim	PGCancel	v2/query_builder/libs/postgres/postgres_rdb.html#PGCancel	object PGCancel		91
+nim	PPGcancel	v2/query_builder/libs/postgres/postgres_rdb.html#PPGcancel	type PPGcancel		92
+nim	PPGresult	v2/query_builder/libs/postgres/postgres_rdb.html#PPGresult	type PPGresult		94
+nim	PPostgresPollingStatusType	v2/query_builder/libs/postgres/postgres_rdb.html#PPostgresPollingStatusType	type PPostgresPollingStatusType		95
+nim	PGRES_POLLING_FAILED	v2/query_builder/libs/postgres/postgres_rdb.html#PGRES_POLLING_FAILED	PostgresPollingStatusType.PGRES_POLLING_FAILED		96
+nim	PGRES_POLLING_READING	v2/query_builder/libs/postgres/postgres_rdb.html#PGRES_POLLING_READING	PostgresPollingStatusType.PGRES_POLLING_READING		96
+nim	PGRES_POLLING_WRITING	v2/query_builder/libs/postgres/postgres_rdb.html#PGRES_POLLING_WRITING	PostgresPollingStatusType.PGRES_POLLING_WRITING		96
+nim	PGRES_POLLING_OK	v2/query_builder/libs/postgres/postgres_rdb.html#PGRES_POLLING_OK	PostgresPollingStatusType.PGRES_POLLING_OK		96
+nim	PGRES_POLLING_ACTIVE	v2/query_builder/libs/postgres/postgres_rdb.html#PGRES_POLLING_ACTIVE	PostgresPollingStatusType.PGRES_POLLING_ACTIVE		96
+nim	PostgresPollingStatusType	v2/query_builder/libs/postgres/postgres_rdb.html#PostgresPollingStatusType	enum PostgresPollingStatusType		96
+nim	PPGTransactionStatusType	v2/query_builder/libs/postgres/postgres_rdb.html#PPGTransactionStatusType	type PPGTransactionStatusType		99
+nim	PQTRANS_IDLE	v2/query_builder/libs/postgres/postgres_rdb.html#PQTRANS_IDLE	PGTransactionStatusType.PQTRANS_IDLE		100
+nim	PQTRANS_ACTIVE	v2/query_builder/libs/postgres/postgres_rdb.html#PQTRANS_ACTIVE	PGTransactionStatusType.PQTRANS_ACTIVE		100
+nim	PQTRANS_INTRANS	v2/query_builder/libs/postgres/postgres_rdb.html#PQTRANS_INTRANS	PGTransactionStatusType.PQTRANS_INTRANS		100
+nim	PQTRANS_INERROR	v2/query_builder/libs/postgres/postgres_rdb.html#PQTRANS_INERROR	PGTransactionStatusType.PQTRANS_INERROR		100
+nim	PQTRANS_UNKNOWN	v2/query_builder/libs/postgres/postgres_rdb.html#PQTRANS_UNKNOWN	PGTransactionStatusType.PQTRANS_UNKNOWN		100
+nim	PGTransactionStatusType	v2/query_builder/libs/postgres/postgres_rdb.html#PGTransactionStatusType	enum PGTransactionStatusType		100
+nim	PPGVerbosity	v2/query_builder/libs/postgres/postgres_rdb.html#PPGVerbosity	type PPGVerbosity		103
+nim	PQERRORS_TERSE	v2/query_builder/libs/postgres/postgres_rdb.html#PQERRORS_TERSE	PGVerbosity.PQERRORS_TERSE		104
+nim	PQERRORS_DEFAULT	v2/query_builder/libs/postgres/postgres_rdb.html#PQERRORS_DEFAULT	PGVerbosity.PQERRORS_DEFAULT		104
+nim	PQERRORS_VERBOSE	v2/query_builder/libs/postgres/postgres_rdb.html#PQERRORS_VERBOSE	PGVerbosity.PQERRORS_VERBOSE		104
+nim	PQERRORS_SQLSTATE	v2/query_builder/libs/postgres/postgres_rdb.html#PQERRORS_SQLSTATE	PGVerbosity.PQERRORS_SQLSTATE		104
+nim	PGVerbosity	v2/query_builder/libs/postgres/postgres_rdb.html#PGVerbosity	enum PGVerbosity		104
+nim	PPGNotify	v2/query_builder/libs/postgres/postgres_rdb.html#PPGNotify	type PPGNotify		106
+nim	pgNotify	v2/query_builder/libs/postgres/postgres_rdb.html#pgNotify	object pgNotify		107
+nim	PQnoticeReceiver	v2/query_builder/libs/postgres/postgres_rdb.html#PQnoticeReceiver	type PQnoticeReceiver		112
+nim	PQnoticeProcessor	v2/query_builder/libs/postgres/postgres_rdb.html#PQnoticeProcessor	type PQnoticeProcessor		113
+nim	Ppqbool	v2/query_builder/libs/postgres/postgres_rdb.html#Ppqbool	type Ppqbool		114
+nim	pqbool	v2/query_builder/libs/postgres/postgres_rdb.html#pqbool	type pqbool		115
+nim	PPQprintOpt	v2/query_builder/libs/postgres/postgres_rdb.html#PPQprintOpt	type PPQprintOpt		116
+nim	PQprintOpt	v2/query_builder/libs/postgres/postgres_rdb.html#PQprintOpt	object PQprintOpt		117
+nim	PPQconninfoOption	v2/query_builder/libs/postgres/postgres_rdb.html#PPQconninfoOption	type PPQconninfoOption		129
+nim	PQconninfoOption	v2/query_builder/libs/postgres/postgres_rdb.html#PQconninfoOption	object PQconninfoOption		130
+nim	PPQArgBlock	v2/query_builder/libs/postgres/postgres_rdb.html#PPQArgBlock	type PPQArgBlock		139
+nim	PQArgBlock	v2/query_builder/libs/postgres/postgres_rdb.html#PQArgBlock	object PQArgBlock		140
+nim	pqinitOpenSSL	v2/query_builder/libs/postgres/postgres_rdb.html#pqinitOpenSSL,int32,int32	proc pqinitOpenSSL(do_ssl: int32; do_crypto: int32)		145
+nim	pqconnectStart	v2/query_builder/libs/postgres/postgres_rdb.html#pqconnectStart,cstring	proc pqconnectStart(conninfo: cstring): PPGconn		147
+nim	pqconnectPoll	v2/query_builder/libs/postgres/postgres_rdb.html#pqconnectPoll,PPGconn	proc pqconnectPoll(conn: PPGconn): PostgresPollingStatusType		149
+nim	pqconnectdb	v2/query_builder/libs/postgres/postgres_rdb.html#pqconnectdb,cstring	proc pqconnectdb(conninfo: cstring): PPGconn		151
+nim	pqsetdbLogin	v2/query_builder/libs/postgres/postgres_rdb.html#pqsetdbLogin,cstring,cstring,cstring,cstring,cstring,cstring,cstring	proc pqsetdbLogin(pghost: cstring; pgport: cstring; pgoptions: cstring;\n             pgtty: cstring; dbName: cstring; login: cstring; pwd: cstring): PPGconn		153
+nim	pqsetdb	v2/query_builder/libs/postgres/postgres_rdb.html#pqsetdb,cstring,cstring,cstring,cstring,cstring	proc pqsetdb(M_PGHOST, M_PGPORT, M_PGOPT, M_PGTTY, M_DBNAME: cstring): PPGconn		156
+nim	pqfinish	v2/query_builder/libs/postgres/postgres_rdb.html#pqfinish,PPGconn	proc pqfinish(conn: PPGconn)		157
+nim	pqconndefaults	v2/query_builder/libs/postgres/postgres_rdb.html#pqconndefaults	proc pqconndefaults(): PPQconninfoOption		158
+nim	pqconninfoFree	v2/query_builder/libs/postgres/postgres_rdb.html#pqconninfoFree,PPQconninfoOption	proc pqconninfoFree(connOptions: PPQconninfoOption)		160
+nim	pqresetStart	v2/query_builder/libs/postgres/postgres_rdb.html#pqresetStart,PPGconn	proc pqresetStart(conn: PPGconn): int32		162
+nim	pqresetPoll	v2/query_builder/libs/postgres/postgres_rdb.html#pqresetPoll,PPGconn	proc pqresetPoll(conn: PPGconn): PostgresPollingStatusType		164
+nim	pqreset	v2/query_builder/libs/postgres/postgres_rdb.html#pqreset,PPGconn	proc pqreset(conn: PPGconn)		166
+nim	pqGetCancel	v2/query_builder/libs/postgres/postgres_rdb.html#pqGetCancel,PPGconn	proc pqGetCancel(conn: PPGconn): PPGcancel		170
+nim	pqFreeCancel	v2/query_builder/libs/postgres/postgres_rdb.html#pqFreeCancel,PPGcancel	proc pqFreeCancel(cancel: PPGcancel)		171
+nim	pqCancel	v2/query_builder/libs/postgres/postgres_rdb.html#pqCancel,PPGcancel,cstring,int32	proc pqCancel(cancel: PPGcancel; errbuf: cstring; errbufsize: int32): int32		172
+nim	pqrequestCancel	v2/query_builder/libs/postgres/postgres_rdb.html#pqrequestCancel,PPGconn	proc pqrequestCancel(conn: PPGconn): int32		174
+nim	pqdb	v2/query_builder/libs/postgres/postgres_rdb.html#pqdb,PPGconn	proc pqdb(conn: PPGconn): cstring		176
+nim	pquser	v2/query_builder/libs/postgres/postgres_rdb.html#pquser,PPGconn	proc pquser(conn: PPGconn): cstring		177
+nim	pqpass	v2/query_builder/libs/postgres/postgres_rdb.html#pqpass,PPGconn	proc pqpass(conn: PPGconn): cstring		178
+nim	pqhost	v2/query_builder/libs/postgres/postgres_rdb.html#pqhost,PPGconn	proc pqhost(conn: PPGconn): cstring		179
+nim	pqport	v2/query_builder/libs/postgres/postgres_rdb.html#pqport,PPGconn	proc pqport(conn: PPGconn): cstring		180
+nim	pqtty	v2/query_builder/libs/postgres/postgres_rdb.html#pqtty,PPGconn	proc pqtty(conn: PPGconn): cstring		181
+nim	pqoptions	v2/query_builder/libs/postgres/postgres_rdb.html#pqoptions,PPGconn	proc pqoptions(conn: PPGconn): cstring		182
+nim	pqstatus	v2/query_builder/libs/postgres/postgres_rdb.html#pqstatus,PPGconn	proc pqstatus(conn: PPGconn): ConnStatusType		184
+nim	pqtransactionStatus	v2/query_builder/libs/postgres/postgres_rdb.html#pqtransactionStatus,PPGconn	proc pqtransactionStatus(conn: PPGconn): PGTransactionStatusType		186
+nim	pqparameterStatus	v2/query_builder/libs/postgres/postgres_rdb.html#pqparameterStatus,PPGconn,cstring	proc pqparameterStatus(conn: PPGconn; paramName: cstring): cstring		188
+nim	pqserverVersion	v2/query_builder/libs/postgres/postgres_rdb.html#pqserverVersion,PPGconn	proc pqserverVersion(conn: PPGconn): int32		190
+nim	pqprotocolVersion	v2/query_builder/libs/postgres/postgres_rdb.html#pqprotocolVersion,PPGconn	proc pqprotocolVersion(conn: PPGconn): int32		192
+nim	pqerrorMessage	v2/query_builder/libs/postgres/postgres_rdb.html#pqerrorMessage,PPGconn	proc pqerrorMessage(conn: PPGconn): cstring		194
+nim	pqsocket	v2/query_builder/libs/postgres/postgres_rdb.html#pqsocket,PPGconn	proc pqsocket(conn: PPGconn): int32		196
+nim	pqbackendPID	v2/query_builder/libs/postgres/postgres_rdb.html#pqbackendPID,PPGconn	proc pqbackendPID(conn: PPGconn): int32		198
+nim	pqconnectionNeedsPassword	v2/query_builder/libs/postgres/postgres_rdb.html#pqconnectionNeedsPassword,PPGconn	proc pqconnectionNeedsPassword(conn: PPGconn): int32		200
+nim	pqconnectionUsedPassword	v2/query_builder/libs/postgres/postgres_rdb.html#pqconnectionUsedPassword,PPGconn	proc pqconnectionUsedPassword(conn: PPGconn): int32		202
+nim	pqclientEncoding	v2/query_builder/libs/postgres/postgres_rdb.html#pqclientEncoding,PPGconn	proc pqclientEncoding(conn: PPGconn): int32		204
+nim	pqsetClientEncoding	v2/query_builder/libs/postgres/postgres_rdb.html#pqsetClientEncoding,PPGconn,cstring	proc pqsetClientEncoding(conn: PPGconn; encoding: cstring): int32		206
+nim	pqsetErrorVerbosity	v2/query_builder/libs/postgres/postgres_rdb.html#pqsetErrorVerbosity,PPGconn,PGVerbosity	proc pqsetErrorVerbosity(conn: PPGconn; verbosity: PGVerbosity): PGVerbosity		212
+nim	pqtrace	v2/query_builder/libs/postgres/postgres_rdb.html#pqtrace,PPGconn,File	proc pqtrace(conn: PPGconn; debug_port: File)		214
+nim	pquntrace	v2/query_builder/libs/postgres/postgres_rdb.html#pquntrace,PPGconn	proc pquntrace(conn: PPGconn)		216
+nim	pqsetNoticeReceiver	v2/query_builder/libs/postgres/postgres_rdb.html#pqsetNoticeReceiver,PPGconn,PQnoticeReceiver,pointer	proc pqsetNoticeReceiver(conn: PPGconn; theProc: PQnoticeReceiver; arg: pointer): PQnoticeReceiver		217
+nim	pqsetNoticeProcessor	v2/query_builder/libs/postgres/postgres_rdb.html#pqsetNoticeProcessor,PPGconn,PQnoticeProcessor,pointer	proc pqsetNoticeProcessor(conn: PPGconn; theProc: PQnoticeProcessor; arg: pointer): PQnoticeProcessor		219
+nim	pqexec	v2/query_builder/libs/postgres/postgres_rdb.html#pqexec,PPGconn,cstring	proc pqexec(conn: PPGconn; query: cstring): PPGresult		222
+nim	pqexecParams	v2/query_builder/libs/postgres/postgres_rdb.html#pqexecParams,PPGconn,cstring,int32,POid,cstringArray,ptr.int32,ptr.int32,int32	proc pqexecParams(conn: PPGconn; command: cstring; nParams: int32; paramTypes: POid;\n             paramValues: cstringArray; paramLengths, paramFormats: ptr int32;\n             resultFormat: int32): PPGresult		224
+nim	pqprepare	v2/query_builder/libs/postgres/postgres_rdb.html#pqprepare,PPGconn,cstring,cstring,int32,POid	proc pqprepare(conn: PPGconn; stmtName, query: cstring; nParams: int32;\n          paramTypes: POid): PPGresult		228
+nim	pqexecPrepared	v2/query_builder/libs/postgres/postgres_rdb.html#pqexecPrepared,PPGconn,cstring,int32,cstringArray,ptr.int32,ptr.int32,int32	proc pqexecPrepared(conn: PPGconn; stmtName: cstring; nParams: int32;\n               paramValues: cstringArray; paramLengths, paramFormats: ptr int32;\n               resultFormat: int32): PPGresult		230
+nim	pqsendQuery	v2/query_builder/libs/postgres/postgres_rdb.html#pqsendQuery,PPGconn,cstring	proc pqsendQuery(conn: PPGconn; query: cstring): int32		234
+nim	pqsendQueryParams	v2/query_builder/libs/postgres/postgres_rdb.html#pqsendQueryParams,PPGconn,cstring,int32,POid,cstringArray,ptr.int32,ptr.int32,int32	proc pqsendQueryParams(conn: PPGconn; command: cstring; nParams: int32;\n                  paramTypes: POid; paramValues: cstringArray;\n                  paramLengths, paramFormats: ptr int32; resultFormat: int32): int32		237
+nim	pqsendPrepare	v2/query_builder/libs/postgres/postgres_rdb.html#pqsendPrepare,PPGconn,cstring,cstring,int32,POid	proc pqsendPrepare(conn: PPGconn; stmtName: cstring; query: cstring; nParams: int32;\n              paramTypes: POid): int32		242
+nim	pqsendQueryPrepared	v2/query_builder/libs/postgres/postgres_rdb.html#pqsendQueryPrepared,PPGconn,cstring,int32,cstringArray,ptr.int32,ptr.int32,int32	proc pqsendQueryPrepared(conn: PPGconn; stmtName: cstring; nParams: int32;\n                    paramValues: cstringArray;\n                    paramLengths, paramFormats: ptr int32; resultFormat: int32): int32		245
+nim	pqSetSingleRowMode	v2/query_builder/libs/postgres/postgres_rdb.html#pqSetSingleRowMode,PPGconn	proc pqSetSingleRowMode(conn: PPGconn): int32		250
+nim	pqgetResult	v2/query_builder/libs/postgres/postgres_rdb.html#pqgetResult,PPGconn	proc pqgetResult(conn: PPGconn): PPGresult		253
+nim	pqisBusy	v2/query_builder/libs/postgres/postgres_rdb.html#pqisBusy,PPGconn	proc pqisBusy(conn: PPGconn): int32		255
+nim	pqconsumeInput	v2/query_builder/libs/postgres/postgres_rdb.html#pqconsumeInput,PPGconn	proc pqconsumeInput(conn: PPGconn): int32		257
+nim	pqnotifies	v2/query_builder/libs/postgres/postgres_rdb.html#pqnotifies,PPGconn	proc pqnotifies(conn: PPGconn): PPGNotify		259
+nim	pqputCopyData	v2/query_builder/libs/postgres/postgres_rdb.html#pqputCopyData,PPGconn,cstring,int32	proc pqputCopyData(conn: PPGconn; buffer: cstring; nbytes: int32): int32		261
+nim	pqputCopyEnd	v2/query_builder/libs/postgres/postgres_rdb.html#pqputCopyEnd,PPGconn,cstring	proc pqputCopyEnd(conn: PPGconn; errormsg: cstring): int32		263
+nim	pqgetCopyData	v2/query_builder/libs/postgres/postgres_rdb.html#pqgetCopyData,PPGconn,cstringArray,int32	proc pqgetCopyData(conn: PPGconn; buffer: cstringArray; async: int32): int32		265
+nim	pqgetline	v2/query_builder/libs/postgres/postgres_rdb.html#pqgetline,PPGconn,cstring,int32	proc pqgetline(conn: PPGconn; str: cstring; len: int32): int32		267
+nim	pqputline	v2/query_builder/libs/postgres/postgres_rdb.html#pqputline,PPGconn,cstring	proc pqputline(conn: PPGconn; str: cstring): int32		269
+nim	pqgetlineAsync	v2/query_builder/libs/postgres/postgres_rdb.html#pqgetlineAsync,PPGconn,cstring,int32	proc pqgetlineAsync(conn: PPGconn; buffer: cstring; bufsize: int32): int32		271
+nim	pqputnbytes	v2/query_builder/libs/postgres/postgres_rdb.html#pqputnbytes,PPGconn,cstring,int32	proc pqputnbytes(conn: PPGconn; buffer: cstring; nbytes: int32): int32		273
+nim	pqendcopy	v2/query_builder/libs/postgres/postgres_rdb.html#pqendcopy,PPGconn	proc pqendcopy(conn: PPGconn): int32		275
+nim	pqsetnonblocking	v2/query_builder/libs/postgres/postgres_rdb.html#pqsetnonblocking,PPGconn,int32	proc pqsetnonblocking(conn: PPGconn; arg: int32): int32		277
+nim	pqisnonblocking	v2/query_builder/libs/postgres/postgres_rdb.html#pqisnonblocking,PPGconn	proc pqisnonblocking(conn: PPGconn): int32		279
+nim	pqflush	v2/query_builder/libs/postgres/postgres_rdb.html#pqflush,PPGconn	proc pqflush(conn: PPGconn): int32		281
+nim	pqfn	v2/query_builder/libs/postgres/postgres_rdb.html#pqfn,PPGconn,int32,ptr.int32,ptr.int32,int32,PPQArgBlock,int32	proc pqfn(conn: PPGconn; fnid: int32; result_buf, result_len: ptr int32;\n     result_is_int: int32; args: PPQArgBlock; nargs: int32): PPGresult		282
+nim	pqresultStatus	v2/query_builder/libs/postgres/postgres_rdb.html#pqresultStatus,PPGresult	proc pqresultStatus(res: PPGresult): ExecStatusType		285
+nim	pqresStatus	v2/query_builder/libs/postgres/postgres_rdb.html#pqresStatus,ExecStatusType	proc pqresStatus(status: ExecStatusType): cstring		287
+nim	pqresultErrorMessage	v2/query_builder/libs/postgres/postgres_rdb.html#pqresultErrorMessage,PPGresult	proc pqresultErrorMessage(res: PPGresult): cstring		289
+nim	pqresultErrorField	v2/query_builder/libs/postgres/postgres_rdb.html#pqresultErrorField,PPGresult,int32	proc pqresultErrorField(res: PPGresult; fieldcode: int32): cstring		291
+nim	pqntuples	v2/query_builder/libs/postgres/postgres_rdb.html#pqntuples,PPGresult	proc pqntuples(res: PPGresult): int32		293
+nim	pqnfields	v2/query_builder/libs/postgres/postgres_rdb.html#pqnfields,PPGresult	proc pqnfields(res: PPGresult): int32		295
+nim	pqbinaryTuples	v2/query_builder/libs/postgres/postgres_rdb.html#pqbinaryTuples,PPGresult	proc pqbinaryTuples(res: PPGresult): int32		297
+nim	pqfname	v2/query_builder/libs/postgres/postgres_rdb.html#pqfname,PPGresult,int32	proc pqfname(res: PPGresult; field_num: int32): cstring		299
+nim	pqfnumber	v2/query_builder/libs/postgres/postgres_rdb.html#pqfnumber,PPGresult,cstring	proc pqfnumber(res: PPGresult; field_name: cstring): int32		301
+nim	pqftable	v2/query_builder/libs/postgres/postgres_rdb.html#pqftable,PPGresult,int32	proc pqftable(res: PPGresult; field_num: int32): Oid		303
+nim	pqftablecol	v2/query_builder/libs/postgres/postgres_rdb.html#pqftablecol,PPGresult,int32	proc pqftablecol(res: PPGresult; field_num: int32): int32		305
+nim	pqfformat	v2/query_builder/libs/postgres/postgres_rdb.html#pqfformat,PPGresult,int32	proc pqfformat(res: PPGresult; field_num: int32): int32		307
+nim	pqftype	v2/query_builder/libs/postgres/postgres_rdb.html#pqftype,PPGresult,int32	proc pqftype(res: PPGresult; field_num: int32): Oid		309
+nim	pqfsize	v2/query_builder/libs/postgres/postgres_rdb.html#pqfsize,PPGresult,int32	proc pqfsize(res: PPGresult; field_num: int32): int32		311
+nim	pqfmod	v2/query_builder/libs/postgres/postgres_rdb.html#pqfmod,PPGresult,int32	proc pqfmod(res: PPGresult; field_num: int32): int32		313
+nim	pqcmdStatus	v2/query_builder/libs/postgres/postgres_rdb.html#pqcmdStatus,PPGresult	proc pqcmdStatus(res: PPGresult): cstring		315
+nim	pqoidStatus	v2/query_builder/libs/postgres/postgres_rdb.html#pqoidStatus,PPGresult	proc pqoidStatus(res: PPGresult): cstring		317
+nim	pqoidValue	v2/query_builder/libs/postgres/postgres_rdb.html#pqoidValue,PPGresult	proc pqoidValue(res: PPGresult): Oid		319
+nim	pqcmdTuples	v2/query_builder/libs/postgres/postgres_rdb.html#pqcmdTuples,PPGresult	proc pqcmdTuples(res: PPGresult): cstring		321
+nim	pqgetvalue	v2/query_builder/libs/postgres/postgres_rdb.html#pqgetvalue,PPGresult,int32,int32	proc pqgetvalue(res: PPGresult; tup_num: int32; field_num: int32): cstring		323
+nim	pqgetlength	v2/query_builder/libs/postgres/postgres_rdb.html#pqgetlength,PPGresult,int32,int32	proc pqgetlength(res: PPGresult; tup_num: int32; field_num: int32): int32		325
+nim	pqgetisnull	v2/query_builder/libs/postgres/postgres_rdb.html#pqgetisnull,PPGresult,int32,int32	proc pqgetisnull(res: PPGresult; tup_num: int32; field_num: int32): int32		327
+nim	pqclear	v2/query_builder/libs/postgres/postgres_rdb.html#pqclear,PPGresult	proc pqclear(res: PPGresult)		329
+nim	pqfreemem	v2/query_builder/libs/postgres/postgres_rdb.html#pqfreemem,pointer	proc pqfreemem(p: pointer)		330
+nim	pqmakeEmptyPGresult	v2/query_builder/libs/postgres/postgres_rdb.html#pqmakeEmptyPGresult,PPGconn,ExecStatusType	proc pqmakeEmptyPGresult(conn: PPGconn; status: ExecStatusType): PPGresult		331
+nim	pqescapeString	v2/query_builder/libs/postgres/postgres_rdb.html#pqescapeString,cstring,cstring,int	proc pqescapeString(till, from: cstring; len: int): int		333
+nim	pqescapeBytea	v2/query_builder/libs/postgres/postgres_rdb.html#pqescapeBytea,cstring,int,int	proc pqescapeBytea(bintext: cstring; binlen: int; bytealen: var int): cstring		335
+nim	pqunescapeBytea	v2/query_builder/libs/postgres/postgres_rdb.html#pqunescapeBytea,cstring,int	proc pqunescapeBytea(strtext: cstring; retbuflen: var int): cstring		337
+nim	pqprint	v2/query_builder/libs/postgres/postgres_rdb.html#pqprint,File,PPGresult,PPQprintOpt	proc pqprint(fout: File; res: PPGresult; ps: PPQprintOpt)		339
+nim	pqdisplayTuples	v2/query_builder/libs/postgres/postgres_rdb.html#pqdisplayTuples,PPGresult,File,int32,cstring,int32,int32	proc pqdisplayTuples(res: PPGresult; fp: File; fillAlign: int32; fieldSep: cstring;\n                printHeader: int32; quiet: int32)		341
+nim	pqprintTuples	v2/query_builder/libs/postgres/postgres_rdb.html#pqprintTuples,PPGresult,File,int32,int32,int32	proc pqprintTuples(res: PPGresult; fout: File; printAttName: int32;\n              terseOutput: int32; width: int32)		344
+nim	lo_open	v2/query_builder/libs/postgres/postgres_rdb.html#lo_open,PPGconn,Oid,int32	proc lo_open(conn: PPGconn; lobjId: Oid; mode: int32): int32		347
+nim	lo_close	v2/query_builder/libs/postgres/postgres_rdb.html#lo_close,PPGconn,int32	proc lo_close(conn: PPGconn; fd: int32): int32		349
+nim	lo_read	v2/query_builder/libs/postgres/postgres_rdb.html#lo_read,PPGconn,int32,cstring,int	proc lo_read(conn: PPGconn; fd: int32; buf: cstring; length: int): int32		351
+nim	lo_write	v2/query_builder/libs/postgres/postgres_rdb.html#lo_write,PPGconn,int32,cstring,int	proc lo_write(conn: PPGconn; fd: int32; buf: cstring; length: int): int32		353
+nim	lo_lseek	v2/query_builder/libs/postgres/postgres_rdb.html#lo_lseek,PPGconn,int32,int32,int32	proc lo_lseek(conn: PPGconn; fd: int32; offset: int32; whence: int32): int32		355
+nim	lo_creat	v2/query_builder/libs/postgres/postgres_rdb.html#lo_creat,PPGconn,int32	proc lo_creat(conn: PPGconn; mode: int32): Oid		357
+nim	lo_tell	v2/query_builder/libs/postgres/postgres_rdb.html#lo_tell,PPGconn,int32	proc lo_tell(conn: PPGconn; fd: int32): int32		359
+nim	lo_unlink	v2/query_builder/libs/postgres/postgres_rdb.html#lo_unlink,PPGconn,Oid	proc lo_unlink(conn: PPGconn; lobjId: Oid): int32		361
+nim	lo_import	v2/query_builder/libs/postgres/postgres_rdb.html#lo_import,PPGconn,cstring	proc lo_import(conn: PPGconn; filename: cstring): Oid		363
+nim	lo_export	v2/query_builder/libs/postgres/postgres_rdb.html#lo_export,PPGconn,Oid,cstring	proc lo_export(conn: PPGconn; lobjId: Oid; filename: cstring): int32		365
+nim	pqmblen	v2/query_builder/libs/postgres/postgres_rdb.html#pqmblen,cstring,int32	proc pqmblen(s: cstring; encoding: int32): int32		367
+nim	pqenv2encoding	v2/query_builder/libs/postgres/postgres_rdb.html#pqenv2encoding	proc pqenv2encoding(): int32		369

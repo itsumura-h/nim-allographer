@@ -1,0 +1,5 @@
+nimTitle	surreal_connections	v2/query_builder/models/surreal/surreal_connections.html	module src/allographer/v2/query_builder/models/surreal/surreal_connections		0
+nim	`$`	v2/query_builder/models/surreal/surreal_connections.html#$	proc `$`(self: SurrealConnections | SurrealQuery): string		6
+nim	select	v2/query_builder/models/surreal/surreal_connections.html#select,SurrealConnections,varargs[string]	proc select(self: SurrealConnections; columnsArg: varargs[string]): SurrealQuery		10
+nim	table	v2/query_builder/models/surreal/surreal_connections.html#table,SurrealConnections,string	proc table(self: SurrealConnections; tableArg: string): SurrealQuery		27
+nim	raw	v2/query_builder/models/surreal/surreal_connections.html#raw,SurrealConnections,string	proc raw(self: SurrealConnections; sql: string; arges = newJArray()): RawSurrealQuery		40

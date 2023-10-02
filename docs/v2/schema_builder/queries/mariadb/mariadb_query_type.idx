@@ -1,0 +1,5 @@
+nimTitle	mariadb_query_type	v2/schema_builder/queries/mariadb/mariadb_query_type.html	module src/allographer/v2/schema_builder/queries/mariadb/mariadb_query_type		0
+nim	MariadbSchema	v2/schema_builder/queries/mariadb/mariadb_query_type.html#MariadbSchema	type MariadbSchema		6
+nim	new	v2/schema_builder/queries/mariadb/mariadb_query_type.html#new,typeMariadbSchema,MariadbConnections,Table	proc new(__3573547018: type MariadbSchema; rdb: MariadbConnections; table: Table): MariadbSchema		11
+nim	new	v2/schema_builder/queries/mariadb/mariadb_query_type.html#new,typeMariadbSchema,MariadbConnections,Table,Column	proc new(__3573547024: type MariadbSchema; rdb: MariadbConnections; table: Table;\n    column: Column): MariadbSchema		14
+nimgrp	new	v2/schema_builder/queries/mariadb/mariadb_query_type.html#new-procs-all	proc		11

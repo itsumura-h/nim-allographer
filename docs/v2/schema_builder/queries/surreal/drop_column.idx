@@ -1,0 +1,2 @@
+nimTitle	drop_column	v2/schema_builder/queries/surreal/drop_column.html	module src/allographer/v2/schema_builder/queries/surreal/drop_column		0
+nim	dropColumn	v2/schema_builder/queries/surreal/drop_column.html#dropColumn,SurrealSchema,bool	proc dropColumn(self: SurrealSchema; isReset: bool)		10

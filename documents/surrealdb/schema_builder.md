@@ -58,21 +58,33 @@ These query run.
 
 ```sql
 DEFINE TABLE `auth` SCHEMAFULL;
-DEFINE FIELD `index` ON TABLE `auth` TYPE int VALUE (SELECT `index` FROM `auth` ORDER BY `index` NUMERIC DESC LIMIT 1)[0].index + 1 || 1 ASSERT $value != NONE;
+INSERT INTO `_autoincrement_sequences` {table: "auth", column: "index", max_index: 0};
+DEFINE EVENT `autoincrement_auth_index` ON TABLE `auth` WHEN $event = "CREATE" THEN {
+  LET $val = (SELECT `max_index` FROM `_autoincrement_sequences` WHERE `table` = "auth" AND `column` = "index" LIMIT 1)[0].max_index + 1;
+  UPDATE `auth` MERGE {index: $val} WHERE id = $after.id;
+  UPDATE `_autoincrement_sequences` MERGE {max_index: $val} WHERE `table` = "auth" AND `column` = "index";
+};
+DEFINE FIELD `index` ON TABLE `auth` TYPE int;
 DEFINE INDEX `auth_index_unique` ON TABLE `auth` COLUMNS `index` UNIQUE;
 DEFINE FIELD `uuid` ON TABLE `auth` TYPE string VALUE $value OR rand::uuid() ASSERT $value != NONE;
 DEFINE INDEX `auth_uuid_unique` ON TABLE `auth` COLUMNS `uuid` UNIQUE;
-DEFINE FIELD `name` ON TABLE `auth` TYPE string ASSERT string::len($value) < 255 AND $value != NONE;
-DEFINE FIELD `created_at` ON TABLE `auth` TYPE datetime VALUE time::now();
+DEFINE FIELD `name` ON TABLE `auth` TYPE string ASSERT string::len($value) < 255 AND $value != NONE VALUE $value OR '';
+DEFINE FIELD `created_at` ON TABLE `auth` TYPE datetime VALUE $value OR time::now();
 DEFINE INDEX `auth_created_at_index` ON TABLE `auth` COLUMNS `created_at`;
 DEFINE FIELD `updated_at` ON TABLE `auth` TYPE datetime VALUE time::now();
-DEFINE INDEX `auth_updated_at_index` ON TABLE `auth` COLUMNS `updated_at`
+DEFINE INDEX `auth_updated_at_index` ON TABLE `auth` COLUMNS `updated_at`;
 
 DEFINE TABLE `user` SCHEMAFULL;
-DEFINE FIELD `index` ON TABLE `user` TYPE int VALUE (SELECT `index` FROM `user` ORDER BY `index` NUMERIC DESC LIMIT 1)[0].index + 1 || 1 ASSERT $value != NONE;
+INSERT INTO `_autoincrement_sequences` {table: "user", column: "index", max_index: 0};
+DEFINE EVENT `autoincrement_user_index` ON TABLE `user` WHEN $event = "CREATE" THEN {
+  LET $val = (SELECT `max_index` FROM `_autoincrement_sequences` WHERE `table` = "user" AND `column` = "index" LIMIT 1)[0].max_index + 1;
+  UPDATE `user` MERGE {index: $val} WHERE id = $after.id;
+  UPDATE `_autoincrement_sequences` MERGE {max_index: $val} WHERE `table` = "user" AND `column` = "index";
+};
+DEFINE FIELD `index` ON TABLE `user` TYPE int;
 DEFINE INDEX `user_index_unique` ON TABLE `user` COLUMNS `index` UNIQUE;
-DEFINE FIELD `name` ON TABLE `user` TYPE string ASSERT string::len($value) < 255 AND $value != NONE;
-DEFINE FIELD `auth` ON TABLE `user` TYPE record (`auth`) ASSERT $value != NONE
+DEFINE FIELD `name` ON TABLE `user` TYPE string ASSERT string::len($value) < 255 AND $value != NONE VALUE $value OR '';
+DEFINE FIELD `auth` ON TABLE `user` TYPE record (`auth`) ASSERT $value != NONE;
 ```
 
 
@@ -92,9 +104,15 @@ surreal.alter(
 ```
 
 ```sql
-DEFINE FIELD `index` ON TABLE `auth` TYPE int VALUE (SELECT `index` FROM `auth` ORDER BY `index` NUMERIC DESC LIMIT 1)[0].index + 1 || 1 ASSERT $value != NONE
+INSERT INTO `_autoincrement_sequences` {table: "auth", column: "index", max_index: 0};
+DEFINE EVENT `autoincrement_auth_index` ON TABLE `auth` WHEN $event = "CREATE" THEN {
+  LET $val = (SELECT `max_index` FROM `_autoincrement_sequences` WHERE `table` = "auth" AND `column` = "index" LIMIT 1)[0].max_index + 1;
+  UPDATE `auth` MERGE {index: $val} WHERE id = $after.id;
+  UPDATE `_autoincrement_sequences` MERGE {max_index: $val} WHERE `table` = "auth" AND `column` = "index";
+}
+DEFINE FIELD `index` ON TABLE `auth` TYPE int
 DEFINE INDEX `auth_index_unique` ON TABLE `auth` COLUMNS `index` UNIQUE
-DEFINE FIELD `name` ON TABLE `auth` TYPE string ASSERT string::len($value) < 255 AND $value != NONE
+DEFINE FIELD `name` ON TABLE `auth` TYPE string ASSERT string::len($value) < 255 AND $value != NONE VALUE $value OR ''
 DEFINE FIELD `email` ON TABLE `user` TYPE string ASSERT string::len($value) < 255 AND $value != NONE VALUE $value OR ''
 DEFINE INDEX `user_email_unique` ON TABLE `user` COLUMNS `email` UNIQUE
 DEFINE FIELD `auth` ON TABLE `user` TYPE record (`auth`) ASSERT $value != NONE

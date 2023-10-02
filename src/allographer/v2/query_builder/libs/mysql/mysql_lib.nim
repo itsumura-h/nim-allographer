@@ -171,7 +171,7 @@ type MysqlParamValue* = object
 type MysqlParams* = seq[MysqlParamValue]
 
 proc fromObj*(_:type MysqlParams, args:JsonNode, columns:seq[seq[string]]):MysqlParams =
-  ## args is JArray [{"key":"id", "value": 1}, {"key": "name" "value": "alice"}] 
+  ## args is JArray `[{"key":"id", "value": 1}, {"key": "name" "value": "alice"}]` 
   result = newSeq[MysqlParamValue](args.len)
   var i = 0
   for arg in args.items:
