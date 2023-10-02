@@ -1,1 +1,0 @@
-createMigrationTable	schema_builder/queries/mariadb/create_migration_table.html#createMigrationTable,MariadbSchema	create_migration_table: createMigrationTable(self: MariadbSchema)	

@@ -1,0 +1,1 @@
+addColumnString	v1/schema_builder/queries/sqlite/sub/add_column_query.html#addColumnString,SqliteConnections,Table,Column	add_column_query: addColumnString(rdb: SqliteConnections; table: Table; column: Column): seq[\n    string]	

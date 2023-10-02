@@ -1,0 +1,2 @@
+createSchema	v1/schema_builder/usecases/surreal/create_query_def.html#createSchema,SurrealConnections,Table	create_query_def: createSchema(rdb: SurrealConnections; table: Table): ISchema	
+createSchema	v1/schema_builder/usecases/surreal/create_query_def.html#createSchema,SurrealConnections,Table,Column	create_query_def: createSchema(rdb: SurrealConnections; table: Table; column: Column): ISchema	

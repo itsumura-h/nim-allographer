@@ -1,1 +1,0 @@
-addColumn	schema_builder/queries/surreal/add_column.html#addColumn,SurrealSchema,bool	add_column: addColumn(self: SurrealSchema; isReset: bool)	

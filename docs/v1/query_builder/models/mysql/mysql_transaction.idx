@@ -1,0 +1,1 @@
+transaction	v1/query_builder/models/mysql/mysql_transaction.html#transaction.t,MysqlConnections,untyped	mysql_transaction: transaction(rdb: MysqlConnections; callback: untyped)	

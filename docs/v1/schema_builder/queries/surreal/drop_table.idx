@@ -1,0 +1,1 @@
+dropTable	v1/schema_builder/queries/surreal/drop_table.html#dropTable,SurrealSchema,bool	drop_table: dropTable(self: SurrealSchema; isReset: bool)	

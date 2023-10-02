@@ -1,0 +1,6 @@
+notAllowedOption	v1/schema_builder/queries/mysql/schema_utils.html#notAllowedOption,string,string,string	schema_utils: notAllowedOption(option, typ, column: string)	
+notAllowedType	v1/schema_builder/queries/mysql/schema_utils.html#notAllowedType,string	schema_utils: notAllowedType(typ: string)	
+shouldRun	v1/schema_builder/queries/mysql/schema_utils.html#shouldRun,MysqlConnections,Table,string,bool	schema_utils: shouldRun(rdb: MysqlConnections; table: Table; checksum: string; isReset: bool): bool	
+exec	v1/schema_builder/queries/mysql/schema_utils.html#exec,MysqlConnections,seq[string]	schema_utils: exec(rdb: MysqlConnections; queries: seq[string])	
+execThenSaveHistory	v1/schema_builder/queries/mysql/schema_utils.html#execThenSaveHistory,MysqlConnections,string,seq[string],string	schema_utils: execThenSaveHistory(rdb: MysqlConnections; tableName: string;\n                    queries: seq[string]; checksum: string)	
+execThenSaveHistory	v1/schema_builder/queries/mysql/schema_utils.html#execThenSaveHistory,MysqlConnections,string,string,string	schema_utils: execThenSaveHistory(rdb: MysqlConnections; tableName: string; query: string;\n                    checksum: string)	

@@ -1,0 +1,1 @@
+createMigrationTable	v1/schema_builder/queries/sqlite/create_migration_table.html#createMigrationTable,SqliteSchema	create_migration_table: createMigrationTable(self: SqliteSchema)	

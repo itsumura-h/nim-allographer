@@ -1,3 +1,0 @@
-MysqlSchema	schema_builder/queries/mysql/mysql_query_type.html#MysqlSchema	mysql_query_type: MysqlSchema	
-new	schema_builder/queries/mysql/mysql_query_type.html#new,typeMysqlSchema,MysqlConnections,Table	mysql_query_type: new(_: type MysqlSchema; rdb: MysqlConnections; table: Table): MysqlSchema	
-new	schema_builder/queries/mysql/mysql_query_type.html#new,typeMysqlSchema,MysqlConnections,Table,Column	mysql_query_type: new(_: type MysqlSchema; rdb: MysqlConnections; table: Table; column: Column): MysqlSchema	

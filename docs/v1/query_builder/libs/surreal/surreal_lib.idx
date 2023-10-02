@@ -1,0 +1,4 @@
+dbFormat	v1/query_builder/libs/surreal/surreal_lib.html#dbFormat,string,varargs[string]	surreal_lib: dbFormat(formatstr: string; args: varargs[string]): string	
+numToAlphabet	v1/query_builder/libs/surreal/surreal_lib.html#numToAlphabet,int	surreal_lib: numToAlphabet(n: int): string	
+questionToDaller	v1/query_builder/libs/surreal/surreal_lib.html#questionToDaller,string	surreal_lib: questionToDaller(s: string): string	
+dbFormat	v1/query_builder/libs/surreal/surreal_lib.html#dbFormat,string,JsonNode	surreal_lib: dbFormat(queryString: string; args: JsonNode): string	

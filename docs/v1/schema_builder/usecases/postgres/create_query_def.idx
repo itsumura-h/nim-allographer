@@ -1,0 +1,2 @@
+createSchema	v1/schema_builder/usecases/postgres/create_query_def.html#createSchema,PostgresConnections,Table	create_query_def: createSchema(rdb: PostgresConnections; table: Table): ISchema	
+createSchema	v1/schema_builder/usecases/postgres/create_query_def.html#createSchema,PostgresConnections,Table,Column	create_query_def: createSchema(rdb: PostgresConnections; table: Table; column: Column): ISchema	

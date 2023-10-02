@@ -1,2 +1,0 @@
-createSchema	schema_builder/usecases/sqlite/create_query_def.html#createSchema,SqliteConnections,Table	create_query_def: createSchema(rdb: SqliteConnections; table: Table): ISchema	
-createSchema	schema_builder/usecases/sqlite/create_query_def.html#createSchema,SqliteConnections,Table,Column	create_query_def: createSchema(rdb: SqliteConnections; table: Table; column: Column): ISchema	

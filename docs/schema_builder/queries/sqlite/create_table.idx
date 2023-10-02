@@ -1,1 +1,0 @@
-createTable	schema_builder/queries/sqlite/create_table.html#createTable,SqliteSchema,bool	create_table: createTable(self: SqliteSchema; isReset: bool)	

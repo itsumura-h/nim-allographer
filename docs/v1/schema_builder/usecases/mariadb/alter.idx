@@ -1,0 +1,1 @@
+alter	v1/schema_builder/usecases/mariadb/alter.html#alter,MariadbConnections,varargs[Table]	alter: alter(rdb: MariadbConnections; tables: varargs[Table])	

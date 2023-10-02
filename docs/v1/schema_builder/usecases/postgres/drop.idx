@@ -1,0 +1,1 @@
+drop	v1/schema_builder/usecases/postgres/drop.html#drop,PostgresConnections,varargs[Table]	drop: drop(rdb: PostgresConnections; tables: varargs[Table])	

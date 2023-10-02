@@ -1,2 +1,0 @@
-DbError	query_builder/error.html#DbError	error: DbError	
-dbError	query_builder/error.html#dbError,string	error: dbError(msg: string)	

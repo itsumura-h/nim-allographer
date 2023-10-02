@@ -1,0 +1,32 @@
+selectSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#selectSql,MariadbQuery	mariadb_generator: selectSql(self: MariadbQuery): MariadbQuery	
+fromSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#fromSql,MariadbQuery	mariadb_generator: fromSql(self: MariadbQuery): MariadbQuery	
+selectFirstSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#selectFirstSql,MariadbQuery	mariadb_generator: selectFirstSql(self: MariadbQuery): MariadbQuery	
+selectByIdSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#selectByIdSql,MariadbQuery,string	mariadb_generator: selectByIdSql(self: MariadbQuery; key: string): MariadbQuery	
+joinSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#joinSql,MariadbQuery	mariadb_generator: joinSql(self: MariadbQuery): MariadbQuery	
+leftJoinSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#leftJoinSql,MariadbQuery	mariadb_generator: leftJoinSql(self: MariadbQuery): MariadbQuery	
+whereSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#whereSql,MariadbQuery	mariadb_generator: whereSql(self: MariadbQuery): MariadbQuery	
+orWhereSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#orWhereSql,MariadbQuery	mariadb_generator: orWhereSql(self: MariadbQuery): MariadbQuery	
+whereBetweenSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#whereBetweenSql,MariadbQuery	mariadb_generator: whereBetweenSql(self: MariadbQuery): MariadbQuery	
+whereBetweenStringSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#whereBetweenStringSql,MariadbQuery	mariadb_generator: whereBetweenStringSql(self: MariadbQuery): MariadbQuery	
+whereNotBetweenSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#whereNotBetweenSql,MariadbQuery	mariadb_generator: whereNotBetweenSql(self: MariadbQuery): MariadbQuery	
+whereNotBetweenStringSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#whereNotBetweenStringSql,MariadbQuery	mariadb_generator: whereNotBetweenStringSql(self: MariadbQuery): MariadbQuery	
+whereInSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#whereInSql,MariadbQuery	mariadb_generator: whereInSql(self: MariadbQuery): MariadbQuery	
+whereNotInSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#whereNotInSql,MariadbQuery	mariadb_generator: whereNotInSql(self: MariadbQuery): MariadbQuery	
+whereNullSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#whereNullSql,MariadbQuery	mariadb_generator: whereNullSql(self: MariadbQuery): MariadbQuery	
+groupBySql	v1/query_builder/models/mariadb/query/mariadb_generator.html#groupBySql,MariadbQuery	mariadb_generator: groupBySql(self: MariadbQuery): MariadbQuery	
+havingSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#havingSql,MariadbQuery	mariadb_generator: havingSql(self: MariadbQuery): MariadbQuery	
+orderBySql	v1/query_builder/models/mariadb/query/mariadb_generator.html#orderBySql,MariadbQuery	mariadb_generator: orderBySql(self: MariadbQuery): MariadbQuery	
+limitSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#limitSql,MariadbQuery	mariadb_generator: limitSql(self: MariadbQuery): MariadbQuery	
+offsetSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#offsetSql,MariadbQuery	mariadb_generator: offsetSql(self: MariadbQuery): MariadbQuery	
+insertSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#insertSql,MariadbQuery	mariadb_generator: insertSql(self: MariadbQuery): MariadbQuery	
+insertValueSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#insertValueSql,MariadbQuery,JsonNode	mariadb_generator: insertValueSql(self: MariadbQuery; items: JsonNode): MariadbQuery	
+insertValuesSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#insertValuesSql,MariadbQuery,openArray[JsonNode]	mariadb_generator: insertValuesSql(self: MariadbQuery; rows: openArray[JsonNode]): MariadbQuery	
+updateSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#updateSql,MariadbQuery	mariadb_generator: updateSql(self: MariadbQuery): MariadbQuery	
+updateValuesSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#updateValuesSql,MariadbQuery,JsonNode	mariadb_generator: updateValuesSql(self: MariadbQuery; items: JsonNode): MariadbQuery	
+deleteSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#deleteSql,MariadbQuery	mariadb_generator: deleteSql(self: MariadbQuery): MariadbQuery	
+deleteByIdSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#deleteByIdSql,MariadbQuery,int,string	mariadb_generator: deleteByIdSql(self: MariadbQuery; id: int; key: string): MariadbQuery	
+selectCountSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#selectCountSql,MariadbQuery	mariadb_generator: selectCountSql(self: MariadbQuery): MariadbQuery	
+selectMaxSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#selectMaxSql,MariadbQuery,string	mariadb_generator: selectMaxSql(self: MariadbQuery; column: string): MariadbQuery	
+selectMinSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#selectMinSql,MariadbQuery,string	mariadb_generator: selectMinSql(self: MariadbQuery; column: string): MariadbQuery	
+selectAvgSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#selectAvgSql,MariadbQuery,string	mariadb_generator: selectAvgSql(self: MariadbQuery; column: string): MariadbQuery	
+selectSumSql	v1/query_builder/models/mariadb/query/mariadb_generator.html#selectSumSql,MariadbQuery,string	mariadb_generator: selectSumSql(self: MariadbQuery; column: string): MariadbQuery	

@@ -1,0 +1,4 @@
+createForeignKey	v1/schema_builder/queries/mysql/sub/create_column_query.html#createForeignKey,Table,Column	create_column_query: createForeignKey(table: Table; column: Column): string	
+alterAddForeignKey	v1/schema_builder/queries/mysql/sub/create_column_query.html#alterAddForeignKey,Column,Table	create_column_query: alterAddForeignKey(column: Column; table: Table): string	
+createIndexString	v1/schema_builder/queries/mysql/sub/create_column_query.html#createIndexString,Table,Column	create_column_query: createIndexString(table: Table; column: Column): string	
+createColumnString	v1/schema_builder/queries/mysql/sub/create_column_query.html#createColumnString,Table,Column	create_column_query: createColumnString(table: Table; column: Column): string	

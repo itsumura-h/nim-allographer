@@ -1,1 +1,0 @@
-renameTable	schema_builder/queries/mariadb/rename_table.html#renameTable,MariadbSchema,bool	rename_table: renameTable(self: MariadbSchema; isReset: bool)	

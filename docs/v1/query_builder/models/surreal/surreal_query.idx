@@ -1,0 +1,43 @@
+table	v1/query_builder/models/surreal/surreal_query.html#table,SurrealQuery,string	surreal_query: table(self: SurrealQuery; tableArg: string): SurrealQuery	
+`distinct`	v1/query_builder/models/surreal/surreal_query.html#distinct,SurrealQuery	surreal_query: `distinct`(self: SurrealQuery): SurrealQuery	
+where	v1/query_builder/models/surreal/surreal_query.html#where,SurrealQuery,string,string,	surreal_query: where(self: SurrealQuery; column: string; symbol: string;\n      value: bool | int | float | string | SurrealId): SurrealQuery	
+where	v1/query_builder/models/surreal/surreal_query.html#where,SurrealQuery,string,string,_2	surreal_query: where(self: SurrealQuery; column: string; symbol: string; value: nil.type): SurrealQuery	
+orWhere	v1/query_builder/models/surreal/surreal_query.html#orWhere,SurrealQuery,string,string,	surreal_query: orWhere(self: SurrealQuery; column: string; symbol: string;\n        value: bool | int | float | string | SurrealId): SurrealQuery	
+orWhere	v1/query_builder/models/surreal/surreal_query.html#orWhere,SurrealQuery,string,string,_2	surreal_query: orWhere(self: SurrealQuery; column: string; symbol: string; value: nil.type): SurrealQuery	
+whereBetween	v1/query_builder/models/surreal/surreal_query.html#whereBetween,SurrealQuery,string,array[,]	surreal_query: whereBetween(self: SurrealQuery; column: string; width: array[2, int | float]): SurrealQuery	
+whereNotBetween	v1/query_builder/models/surreal/surreal_query.html#whereNotBetween,SurrealQuery,string,array[,]	surreal_query: whereNotBetween(self: SurrealQuery; column: string; width: array[2, int | float]): SurrealQuery	
+whereIn	v1/query_builder/models/surreal/surreal_query.html#whereIn,SurrealQuery,string,seq[]	surreal_query: whereIn(self: SurrealQuery; column: string; width: seq[int | float | string]): SurrealQuery	
+whereNotIn	v1/query_builder/models/surreal/surreal_query.html#whereNotIn,SurrealQuery,string,seq[]	surreal_query: whereNotIn(self: SurrealQuery; column: string; width: seq[int | float | string]): SurrealQuery	
+whereNull	v1/query_builder/models/surreal/surreal_query.html#whereNull,SurrealQuery,string	surreal_query: whereNull(self: SurrealQuery; column: string): SurrealQuery	
+groupBy	v1/query_builder/models/surreal/surreal_query.html#groupBy,SurrealQuery,string	surreal_query: groupBy(self: SurrealQuery; column: string): SurrealQuery	
+having	v1/query_builder/models/surreal/surreal_query.html#having,SurrealQuery,string,string,	surreal_query: having(self: SurrealQuery; column: string; symbol: string;\n       value: bool | int | float | string): SurrealQuery	
+having	v1/query_builder/models/surreal/surreal_query.html#having,SurrealQuery,string,string,_2	surreal_query: having(self: SurrealQuery; column: string; symbol: string; value: nil.type): SurrealQuery	
+fetch	v1/query_builder/models/surreal/surreal_query.html#fetch,SurrealQuery,varargs[string]	surreal_query: fetch(self: SurrealQuery; columnsArg: varargs[string]): SurrealQuery	
+orderBy	v1/query_builder/models/surreal/surreal_query.html#orderBy,SurrealQuery,string,Order	surreal_query: orderBy(self: SurrealQuery; column: string; order: Order): SurrealQuery	
+orderBy	v1/query_builder/models/surreal/surreal_query.html#orderBy,SurrealQuery,string,Collation,Order	surreal_query: orderBy(self: SurrealQuery; column: string; collation: Collation; order: Order): SurrealQuery	
+limit	v1/query_builder/models/surreal/surreal_query.html#limit,SurrealQuery,int	surreal_query: limit(self: SurrealQuery; num: int): SurrealQuery	
+start	v1/query_builder/models/surreal/surreal_query.html#start,SurrealQuery,int	surreal_query: start(self: SurrealQuery; num: int): SurrealQuery	
+parallel	v1/query_builder/models/surreal/surreal_query.html#parallel,SurrealQuery	surreal_query: parallel(self: SurrealQuery): SurrealQuery	
+get	v1/query_builder/models/surreal/surreal_query.html#get,SurrealQuery	surreal_query: get(self: SurrealQuery): Future[seq[JsonNode]]	
+first	v1/query_builder/models/surreal/surreal_query.html#first,SurrealQuery	surreal_query: first(self: SurrealQuery): Future[Option[JsonNode]]	
+find	v1/query_builder/models/surreal/surreal_query.html#find,SurrealQuery,SurrealId,string	surreal_query: find(self: SurrealQuery; id: SurrealId; key = &quot;id&quot;): Future[Option[JsonNode]]	
+insert	v1/query_builder/models/surreal/surreal_query.html#insert,SurrealQuery,JsonNode	surreal_query: insert(self: SurrealQuery; items: JsonNode): owned(Future[void])	
+insert	v1/query_builder/models/surreal/surreal_query.html#insert,SurrealQuery,seq[JsonNode]	surreal_query: insert(self: SurrealQuery; items: seq[JsonNode]): owned(Future[void])	
+insertId	v1/query_builder/models/surreal/surreal_query.html#insertId,SurrealQuery,JsonNode,string	surreal_query: insertId(self: SurrealQuery; items: JsonNode; key = &quot;id&quot;): Future[SurrealId]	
+insertId	v1/query_builder/models/surreal/surreal_query.html#insertId,SurrealQuery,seq[JsonNode],string	surreal_query: insertId(self: SurrealQuery; items: seq[JsonNode]; key = &quot;id&quot;): Future[\n    seq[SurrealId]]	
+update	v1/query_builder/models/surreal/surreal_query.html#update,SurrealQuery,JsonNode	surreal_query: update(self: SurrealQuery; items: JsonNode): owned(Future[void])	
+update	v1/query_builder/models/surreal/surreal_query.html#update,SurrealConnections,SurrealId,JsonNode	surreal_query: update(self: SurrealConnections; id: SurrealId; items: JsonNode): owned(\n    Future[void])	
+delete	v1/query_builder/models/surreal/surreal_query.html#delete,SurrealQuery	surreal_query: delete(self: SurrealQuery): owned(Future[void])	
+delete	v1/query_builder/models/surreal/surreal_query.html#delete,SurrealQuery,SurrealId	surreal_query: delete(self: SurrealQuery; id: SurrealId): owned(Future[void])	
+columns	v1/query_builder/models/surreal/surreal_query.html#columns,SurrealQuery	surreal_query: columns(self: SurrealQuery): Future[seq[string]]	
+count	v1/query_builder/models/surreal/surreal_query.html#count,SurrealQuery	surreal_query: count(self: SurrealQuery): Future[int]	
+min	v1/query_builder/models/surreal/surreal_query.html#min,SurrealQuery,string,Collation	surreal_query: min(self: SurrealQuery; column: string; collaction: Collation = None): Future[\n    string]	
+max	v1/query_builder/models/surreal/surreal_query.html#max,SurrealQuery,string,Collation	surreal_query: max(self: SurrealQuery; column: string; collaction: Collation = None): Future[\n    string]	
+avg	v1/query_builder/models/surreal/surreal_query.html#avg,SurrealQuery,string	surreal_query: avg(self: SurrealQuery; column: string): Future[float]	
+sum	v1/query_builder/models/surreal/surreal_query.html#sum,SurrealQuery,string	surreal_query: sum(self: SurrealQuery; column: string): Future[float]	
+get	v1/query_builder/models/surreal/surreal_query.html#get,RawSurrealQuery	surreal_query: get(self: RawSurrealQuery): Future[seq[JsonNode]]	
+exec	v1/query_builder/models/surreal/surreal_query.html#exec,RawSurrealQuery	surreal_query: exec(self: RawSurrealQuery): owned(Future[void])	
+info	v1/query_builder/models/surreal/surreal_query.html#info,RawSurrealQuery	surreal_query: info(self: RawSurrealQuery): Future[JsonNode]	
+first	v1/query_builder/models/surreal/surreal_query.html#first,RawSurrealQuery	surreal_query: first(self: RawSurrealQuery): Future[Option[JsonNode]]	
+seeder	v1/query_builder/models/surreal/surreal_query.html#seeder.t,SurrealConnections,string,untyped	surreal_query: seeder(rdb: SurrealConnections; tableName: string; body: untyped): untyped	
+seeder	v1/query_builder/models/surreal/surreal_query.html#seeder.t,SurrealConnections,string,string,untyped	surreal_query: seeder(rdb: SurrealConnections; tableName, column: string; body: untyped): untyped	

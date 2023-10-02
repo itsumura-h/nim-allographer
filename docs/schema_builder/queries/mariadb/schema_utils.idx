@@ -1,6 +1,0 @@
-notAllowedOption	schema_builder/queries/mariadb/schema_utils.html#notAllowedOption,string,string,string	schema_utils: notAllowedOption(option, typ, column: string)	
-notAllowedType	schema_builder/queries/mariadb/schema_utils.html#notAllowedType,string	schema_utils: notAllowedType(typ: string)	
-shouldRun	schema_builder/queries/mariadb/schema_utils.html#shouldRun,MariadbConnections,Table,string,bool	schema_utils: shouldRun(rdb: MariadbConnections; table: Table; checksum: string; isReset: bool): bool	
-exec	schema_builder/queries/mariadb/schema_utils.html#exec,MariadbConnections,seq[string]	schema_utils: exec(rdb: MariadbConnections; queries: seq[string])	
-execThenSaveHistory	schema_builder/queries/mariadb/schema_utils.html#execThenSaveHistory,MariadbConnections,string,seq[string],string	schema_utils: execThenSaveHistory(rdb: MariadbConnections; tableName: string;\n                    queries: seq[string]; checksum: string)	
-execThenSaveHistory	schema_builder/queries/mariadb/schema_utils.html#execThenSaveHistory,MariadbConnections,string,string,string	schema_utils: execThenSaveHistory(rdb: MariadbConnections; tableName: string; query: string;\n                    checksum: string)	

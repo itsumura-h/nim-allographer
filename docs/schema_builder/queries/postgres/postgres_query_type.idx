@@ -1,3 +1,0 @@
-PostgresSchema	schema_builder/queries/postgres/postgres_query_type.html#PostgresSchema	postgres_query_type: PostgresSchema	
-new	schema_builder/queries/postgres/postgres_query_type.html#new,typePostgresSchema,PostgresConnections,Table	postgres_query_type: new(_: type PostgresSchema; rdb: PostgresConnections; table: Table): PostgresSchema	
-new	schema_builder/queries/postgres/postgres_query_type.html#new,typePostgresSchema,PostgresConnections,Table,Column	postgres_query_type: new(_: type PostgresSchema; rdb: PostgresConnections; table: Table;\n    column: Column): PostgresSchema	

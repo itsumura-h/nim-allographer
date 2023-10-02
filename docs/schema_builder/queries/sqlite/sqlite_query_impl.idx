@@ -1,1 +1,0 @@
-toInterface	schema_builder/queries/sqlite/sqlite_query_impl.html#toInterface,SqliteSchema	sqlite_query_impl: toInterface(self: SqliteSchema): ISchema	

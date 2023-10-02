@@ -1,0 +1,1 @@
+addColumn	v1/schema_builder/queries/sqlite/add_column.html#addColumn,SqliteSchema,bool	add_column: addColumn(self: SqliteSchema; isReset: bool)	

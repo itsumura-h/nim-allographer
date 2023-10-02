@@ -1,0 +1,50 @@
+rdbIncrements	v1/schema_builder/enums.html#rdbIncrements	RdbTypeKind.rdbIncrements	
+rdbInteger	v1/schema_builder/enums.html#rdbInteger	RdbTypeKind.rdbInteger	
+rdbSmallInteger	v1/schema_builder/enums.html#rdbSmallInteger	RdbTypeKind.rdbSmallInteger	
+rdbMediumInteger	v1/schema_builder/enums.html#rdbMediumInteger	RdbTypeKind.rdbMediumInteger	
+rdbBigInteger	v1/schema_builder/enums.html#rdbBigInteger	RdbTypeKind.rdbBigInteger	
+rdbDecimal	v1/schema_builder/enums.html#rdbDecimal	RdbTypeKind.rdbDecimal	
+rdbDouble	v1/schema_builder/enums.html#rdbDouble	RdbTypeKind.rdbDouble	
+rdbFloat	v1/schema_builder/enums.html#rdbFloat	RdbTypeKind.rdbFloat	
+rdbUuid	v1/schema_builder/enums.html#rdbUuid	RdbTypeKind.rdbUuid	
+rdbChar	v1/schema_builder/enums.html#rdbChar	RdbTypeKind.rdbChar	
+rdbString	v1/schema_builder/enums.html#rdbString	RdbTypeKind.rdbString	
+rdbText	v1/schema_builder/enums.html#rdbText	RdbTypeKind.rdbText	
+rdbMediumText	v1/schema_builder/enums.html#rdbMediumText	RdbTypeKind.rdbMediumText	
+rdbLongText	v1/schema_builder/enums.html#rdbLongText	RdbTypeKind.rdbLongText	
+rdbDate	v1/schema_builder/enums.html#rdbDate	RdbTypeKind.rdbDate	
+rdbDatetime	v1/schema_builder/enums.html#rdbDatetime	RdbTypeKind.rdbDatetime	
+rdbTime	v1/schema_builder/enums.html#rdbTime	RdbTypeKind.rdbTime	
+rdbTimestamp	v1/schema_builder/enums.html#rdbTimestamp	RdbTypeKind.rdbTimestamp	
+rdbTimestamps	v1/schema_builder/enums.html#rdbTimestamps	RdbTypeKind.rdbTimestamps	
+rdbSoftDelete	v1/schema_builder/enums.html#rdbSoftDelete	RdbTypeKind.rdbSoftDelete	
+rdbBinary	v1/schema_builder/enums.html#rdbBinary	RdbTypeKind.rdbBinary	
+rdbBoolean	v1/schema_builder/enums.html#rdbBoolean	RdbTypeKind.rdbBoolean	
+rdbEnumField	v1/schema_builder/enums.html#rdbEnumField	RdbTypeKind.rdbEnumField	
+rdbJson	v1/schema_builder/enums.html#rdbJson	RdbTypeKind.rdbJson	
+rdbForeign	v1/schema_builder/enums.html#rdbForeign	RdbTypeKind.rdbForeign	
+rdbStrForeign	v1/schema_builder/enums.html#rdbStrForeign	RdbTypeKind.rdbStrForeign	
+RdbTypeKind	v1/schema_builder/enums.html#RdbTypeKind	enums: RdbTypeKind	
+RESTRICT	v1/schema_builder/enums.html#RESTRICT	ForeignOnDelete.RESTRICT	
+CASCADE	v1/schema_builder/enums.html#CASCADE	ForeignOnDelete.CASCADE	
+SET_NULL	v1/schema_builder/enums.html#SET_NULL	ForeignOnDelete.SET_NULL	
+NO_ACTION	v1/schema_builder/enums.html#NO_ACTION	ForeignOnDelete.NO_ACTION	
+ForeignOnDelete	v1/schema_builder/enums.html#ForeignOnDelete	enums: ForeignOnDelete	
+None	v1/schema_builder/enums.html#None	DefaultDateTime.None	
+Current	v1/schema_builder/enums.html#Current	DefaultDateTime.Current	
+CurrentOnUpdate	v1/schema_builder/enums.html#CurrentOnUpdate	DefaultDateTime.CurrentOnUpdate	
+DefaultDateTime	v1/schema_builder/enums.html#DefaultDateTime	enums: DefaultDateTime	
+Create	v1/schema_builder/enums.html#Create	UsecaseType.Create	
+Alter	v1/schema_builder/enums.html#Alter	UsecaseType.Alter	
+Drop	v1/schema_builder/enums.html#Drop	UsecaseType.Drop	
+UsecaseType	v1/schema_builder/enums.html#UsecaseType	enums: UsecaseType	
+CreateTable	v1/schema_builder/enums.html#CreateTable	TableMigrationType.CreateTable	
+ChangeTable	v1/schema_builder/enums.html#ChangeTable	TableMigrationType.ChangeTable	
+RenameTable	v1/schema_builder/enums.html#RenameTable	TableMigrationType.RenameTable	
+DropTable	v1/schema_builder/enums.html#DropTable	TableMigrationType.DropTable	
+TableMigrationType	v1/schema_builder/enums.html#TableMigrationType	enums: TableMigrationType	
+AddColumn	v1/schema_builder/enums.html#AddColumn	ColumnMigrationType.AddColumn	
+ChangeColumn	v1/schema_builder/enums.html#ChangeColumn	ColumnMigrationType.ChangeColumn	
+RenameColumn	v1/schema_builder/enums.html#RenameColumn	ColumnMigrationType.RenameColumn	
+DropColumn	v1/schema_builder/enums.html#DropColumn	ColumnMigrationType.DropColumn	
+ColumnMigrationType	v1/schema_builder/enums.html#ColumnMigrationType	enums: ColumnMigrationType	

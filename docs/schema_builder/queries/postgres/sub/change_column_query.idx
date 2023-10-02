@@ -1,2 +1,0 @@
-changeColumnString	schema_builder/queries/postgres/sub/change_column_query.html#changeColumnString,Table,Column	change_column_query: changeColumnString(table: Table; column: Column): seq[string]	
-changeIndexString	schema_builder/queries/postgres/sub/change_column_query.html#changeIndexString,Table,Column	change_column_query: changeIndexString(table: Table; column: Column): string	

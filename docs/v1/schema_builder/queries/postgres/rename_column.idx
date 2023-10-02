@@ -1,0 +1,1 @@
+renameColumn	v1/schema_builder/queries/postgres/rename_column.html#renameColumn,PostgresSchema,bool	rename_column: renameColumn(self: PostgresSchema; isReset: bool)	

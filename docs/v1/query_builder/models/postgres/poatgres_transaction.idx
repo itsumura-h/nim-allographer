@@ -1,0 +1,1 @@
+transaction	v1/query_builder/models/postgres/poatgres_transaction.html#transaction.t,PostgresConnections,untyped	poatgres_transaction: transaction(rdb: PostgresConnections; callback: untyped)	

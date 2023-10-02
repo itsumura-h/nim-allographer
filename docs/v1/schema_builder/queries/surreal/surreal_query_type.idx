@@ -1,0 +1,3 @@
+SurrealSchema	v1/schema_builder/queries/surreal/surreal_query_type.html#SurrealSchema	surreal_query_type: SurrealSchema	
+new	v1/schema_builder/queries/surreal/surreal_query_type.html#new,typeSurrealSchema,SurrealConnections,Table	surreal_query_type: new(_: type SurrealSchema; rdb: SurrealConnections; table: Table): SurrealSchema	
+new	v1/schema_builder/queries/surreal/surreal_query_type.html#new,typeSurrealSchema,SurrealConnections,Table,Column	surreal_query_type: new(_: type SurrealSchema; rdb: SurrealConnections; table: Table; column: Column): SurrealSchema	

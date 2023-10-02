@@ -1,0 +1,1 @@
+toInterface	v1/schema_builder/queries/postgres/postgres_query_impl.html#toInterface,PostgresSchema	postgres_query_impl: toInterface(self: PostgresSchema): ISchema	

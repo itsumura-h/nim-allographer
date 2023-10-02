@@ -1,0 +1,1 @@
+drop	v1/schema_builder/usecases/mysql/drop.html#drop,MysqlConnections,varargs[Table]	drop: drop(rdb: MysqlConnections; tables: varargs[Table])	

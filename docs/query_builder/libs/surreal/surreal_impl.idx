@@ -1,7 +1,0 @@
-SurrealImpl	query_builder/libs/surreal/surreal_impl.html#SurrealImpl	surreal_impl: SurrealImpl	
-query	query_builder/libs/surreal/surreal_impl.html#query,SurrealConn,string,seq[string],int	surreal_impl: query(db: SurrealConn; query: string; args: seq[string]; timeout: int): Future[\n    JsonNode]	
-query	query_builder/libs/surreal/surreal_impl.html#query,SurrealConn,string,JsonNode,int	surreal_impl: query(db: SurrealConn; query: string; args: JsonNode; timeout: int): Future[\n    JsonNode]	
-exec	query_builder/libs/surreal/surreal_impl.html#exec,SurrealConn,string,seq[string],int	surreal_impl: exec(db: SurrealConn; query: string; args: seq[string]; timeout: int): owned(\n    Future[void])	
-exec	query_builder/libs/surreal/surreal_impl.html#exec,SurrealConn,string,JsonNode,int	surreal_impl: exec(db: SurrealConn; query: string; args: JsonNode; timeout: int): owned(\n    Future[void])	
-info	query_builder/libs/surreal/surreal_impl.html#info,SurrealConn,string,seq[string],int	surreal_impl: info(db: SurrealConn; query: string; args: seq[string]; timeout: int): Future[\n    JsonNode]	
-info	query_builder/libs/surreal/surreal_impl.html#info,SurrealConn,string,JsonNode,int	surreal_impl: info(db: SurrealConn; query: string; args: JsonNode; timeout: int): Future[\n    JsonNode]	

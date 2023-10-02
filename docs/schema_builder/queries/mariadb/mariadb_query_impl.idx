@@ -1,1 +1,0 @@
-toInterface	schema_builder/queries/mariadb/mariadb_query_impl.html#toInterface,MariadbSchema	mariadb_query_impl: toInterface(self: MariadbSchema): ISchema	

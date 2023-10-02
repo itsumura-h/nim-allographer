@@ -1,0 +1,32 @@
+selectSql	v1/query_builder/models/mysql/query/mysql_generator.html#selectSql,MysqlQuery	mysql_generator: selectSql(self: MysqlQuery): MysqlQuery	
+fromSql	v1/query_builder/models/mysql/query/mysql_generator.html#fromSql,MysqlQuery	mysql_generator: fromSql(self: MysqlQuery): MysqlQuery	
+selectFirstSql	v1/query_builder/models/mysql/query/mysql_generator.html#selectFirstSql,MysqlQuery	mysql_generator: selectFirstSql(self: MysqlQuery): MysqlQuery	
+selectByIdSql	v1/query_builder/models/mysql/query/mysql_generator.html#selectByIdSql,MysqlQuery,string	mysql_generator: selectByIdSql(self: MysqlQuery; key: string): MysqlQuery	
+joinSql	v1/query_builder/models/mysql/query/mysql_generator.html#joinSql,MysqlQuery	mysql_generator: joinSql(self: MysqlQuery): MysqlQuery	
+leftJoinSql	v1/query_builder/models/mysql/query/mysql_generator.html#leftJoinSql,MysqlQuery	mysql_generator: leftJoinSql(self: MysqlQuery): MysqlQuery	
+whereSql	v1/query_builder/models/mysql/query/mysql_generator.html#whereSql,MysqlQuery	mysql_generator: whereSql(self: MysqlQuery): MysqlQuery	
+orWhereSql	v1/query_builder/models/mysql/query/mysql_generator.html#orWhereSql,MysqlQuery	mysql_generator: orWhereSql(self: MysqlQuery): MysqlQuery	
+whereBetweenSql	v1/query_builder/models/mysql/query/mysql_generator.html#whereBetweenSql,MysqlQuery	mysql_generator: whereBetweenSql(self: MysqlQuery): MysqlQuery	
+whereBetweenStringSql	v1/query_builder/models/mysql/query/mysql_generator.html#whereBetweenStringSql,MysqlQuery	mysql_generator: whereBetweenStringSql(self: MysqlQuery): MysqlQuery	
+whereNotBetweenSql	v1/query_builder/models/mysql/query/mysql_generator.html#whereNotBetweenSql,MysqlQuery	mysql_generator: whereNotBetweenSql(self: MysqlQuery): MysqlQuery	
+whereNotBetweenStringSql	v1/query_builder/models/mysql/query/mysql_generator.html#whereNotBetweenStringSql,MysqlQuery	mysql_generator: whereNotBetweenStringSql(self: MysqlQuery): MysqlQuery	
+whereInSql	v1/query_builder/models/mysql/query/mysql_generator.html#whereInSql,MysqlQuery	mysql_generator: whereInSql(self: MysqlQuery): MysqlQuery	
+whereNotInSql	v1/query_builder/models/mysql/query/mysql_generator.html#whereNotInSql,MysqlQuery	mysql_generator: whereNotInSql(self: MysqlQuery): MysqlQuery	
+whereNullSql	v1/query_builder/models/mysql/query/mysql_generator.html#whereNullSql,MysqlQuery	mysql_generator: whereNullSql(self: MysqlQuery): MysqlQuery	
+groupBySql	v1/query_builder/models/mysql/query/mysql_generator.html#groupBySql,MysqlQuery	mysql_generator: groupBySql(self: MysqlQuery): MysqlQuery	
+havingSql	v1/query_builder/models/mysql/query/mysql_generator.html#havingSql,MysqlQuery	mysql_generator: havingSql(self: MysqlQuery): MysqlQuery	
+orderBySql	v1/query_builder/models/mysql/query/mysql_generator.html#orderBySql,MysqlQuery	mysql_generator: orderBySql(self: MysqlQuery): MysqlQuery	
+limitSql	v1/query_builder/models/mysql/query/mysql_generator.html#limitSql,MysqlQuery	mysql_generator: limitSql(self: MysqlQuery): MysqlQuery	
+offsetSql	v1/query_builder/models/mysql/query/mysql_generator.html#offsetSql,MysqlQuery	mysql_generator: offsetSql(self: MysqlQuery): MysqlQuery	
+insertSql	v1/query_builder/models/mysql/query/mysql_generator.html#insertSql,MysqlQuery	mysql_generator: insertSql(self: MysqlQuery): MysqlQuery	
+insertValueSql	v1/query_builder/models/mysql/query/mysql_generator.html#insertValueSql,MysqlQuery,JsonNode	mysql_generator: insertValueSql(self: MysqlQuery; items: JsonNode): MysqlQuery	
+insertValuesSql	v1/query_builder/models/mysql/query/mysql_generator.html#insertValuesSql,MysqlQuery,openArray[JsonNode]	mysql_generator: insertValuesSql(self: MysqlQuery; rows: openArray[JsonNode]): MysqlQuery	
+updateSql	v1/query_builder/models/mysql/query/mysql_generator.html#updateSql,MysqlQuery	mysql_generator: updateSql(self: MysqlQuery): MysqlQuery	
+updateValuesSql	v1/query_builder/models/mysql/query/mysql_generator.html#updateValuesSql,MysqlQuery,JsonNode	mysql_generator: updateValuesSql(self: MysqlQuery; items: JsonNode): MysqlQuery	
+deleteSql	v1/query_builder/models/mysql/query/mysql_generator.html#deleteSql,MysqlQuery	mysql_generator: deleteSql(self: MysqlQuery): MysqlQuery	
+deleteByIdSql	v1/query_builder/models/mysql/query/mysql_generator.html#deleteByIdSql,MysqlQuery,int,string	mysql_generator: deleteByIdSql(self: MysqlQuery; id: int; key: string): MysqlQuery	
+selectCountSql	v1/query_builder/models/mysql/query/mysql_generator.html#selectCountSql,MysqlQuery	mysql_generator: selectCountSql(self: MysqlQuery): MysqlQuery	
+selectMaxSql	v1/query_builder/models/mysql/query/mysql_generator.html#selectMaxSql,MysqlQuery,string	mysql_generator: selectMaxSql(self: MysqlQuery; column: string): MysqlQuery	
+selectMinSql	v1/query_builder/models/mysql/query/mysql_generator.html#selectMinSql,MysqlQuery,string	mysql_generator: selectMinSql(self: MysqlQuery; column: string): MysqlQuery	
+selectAvgSql	v1/query_builder/models/mysql/query/mysql_generator.html#selectAvgSql,MysqlQuery,string	mysql_generator: selectAvgSql(self: MysqlQuery; column: string): MysqlQuery	
+selectSumSql	v1/query_builder/models/mysql/query/mysql_generator.html#selectSumSql,MysqlQuery,string	mysql_generator: selectSumSql(self: MysqlQuery; column: string): MysqlQuery	

@@ -1,0 +1,1 @@
+renameColumn	v1/schema_builder/queries/mariadb/rename_column.html#renameColumn,MariadbSchema,bool	rename_column: renameColumn(self: MariadbSchema; isReset: bool)	

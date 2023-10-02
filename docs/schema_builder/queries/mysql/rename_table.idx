@@ -1,1 +1,0 @@
-renameTable	schema_builder/queries/mysql/rename_table.html#renameTable,MysqlSchema,bool	rename_table: renameTable(self: MysqlSchema; isReset: bool)	
