@@ -22,20 +22,14 @@ when (NimMajor, NimMinor) > (1, 6):
 import strformat, os
 
 task test, "run testament test v2":
-  exec "testament p 'tests/v2/*/test_*.nim'"
-  for kind, path in walkDir(getCurrentDir() / "tests"):
-    if not path.contains(".") and path.fileExists():
-      exec "rm -f " & path
-
-task test_v1, "run testament test v1":
-  exec "testament p 'tests/v1/*/test_*.nim'"
+  exec &"testament p 'tests/v{NimMajor}/*/test_*.nim'"
   for kind, path in walkDir(getCurrentDir() / "tests"):
     if not path.contains(".") and path.fileExists():
       exec "rm -f " & path
 
 task docs, "Generate API documents":
   let
-    deployDir = "docs"
+    deployDir = &"docs/v{NimMajor}"
     pkgDir = srcDir / "allographer"
     srcFiles = @[
       "connection",
@@ -49,21 +43,6 @@ task docs, "Generate API documents":
     let srcFile = pkgDir / f & ".nim"
     exec &"nim doc --hints:off --project --out:{deployDir} --index:on {srcFile}"
 
-task docs_v1, "Generate API documents":
-  let
-    deployDir = "docs_v1"
-    pkgDir = srcDir / "allographer"
-    srcFiles = @[
-      "connection",
-      "query_builder",
-      "schema_builder",
-    ]
-
-  if dirExists(deployDir):
-    rmDir deployDir
-  for f in srcFiles:
-    let srcFile = pkgDir / f & ".nim"
-    exec &"nim doc --hints:off --project --out:{deployDir} --index:on {srcFile}"
 
 let toolImage = "basolato:tool"
 

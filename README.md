@@ -180,30 +180,12 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 [Schema Builder for SurrealDB](./documents/surrealdb/schema_builder.md)  
 [Query Builder for SurrealDB](./documents/surrealdb/query_builder.md)  
 
+
 ## Nim API Documents
-### v1
 [connection](https://itsumura-h.github.io/nim-allographer/connection.html)  
+[Schema Builder](https://itsumura-h.github.io/nim-allographer/schema_builder.html)  
+[Query Builder](https://itsumura-h.github.io/nim-allographer/query_builder.html)
 
-### v2
-
-
-### Schema Builder
-[usecases/create](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/create.html)  
-[usecases/alter](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/alter.html)  
-[usecases/drop](https://itsumura-h.github.io/nim-allographer/schema_builder/usecases/drop.html)  
-[models/table](https://itsumura-h.github.io/nim-allographer/schema_builder/models/table.html)  
-[models/column](https://itsumura-h.github.io/nim-allographer/schema_builder/models/column.html)  
-[queries/query_interface](https://itsumura-h.github.io/nim-allographer/schema_builder/queries/query_interface.html)  
-
-### Query Builder for RDB
-[rdb_types](https://itsumura-h.github.io/nim-allographer/query_builder/rdb/rdb_types.html)  
-[rdb_interface](https://itsumura-h.github.io/nim-allographer/query_builder/rdb/rdb_interface.html)  
-[grammars](https://itsumura-h.github.io/nim-allographer/query_builder/rdb/query/grammar.html)
-
-### Query Builder for SurrealDB
-[surreal_types](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/surreal_types.html)  
-[surreal_interface](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/surreal_interface.html)  
-[grammars](https://itsumura-h.github.io/nim-allographer/query_builder/surreal/query/grammar.html)  
 
 ## Development
 ### Branch naming rule
