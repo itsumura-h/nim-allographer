@@ -182,9 +182,15 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 
 
 ## Nim API Documents
-[connection](https://itsumura-h.github.io/nim-allographer/connection.html)  
-[Schema Builder](https://itsumura-h.github.io/nim-allographer/schema_builder.html)  
-[Query Builder](https://itsumura-h.github.io/nim-allographer/query_builder.html)
+### v2
+[connection](https://itsumura-h.github.io/nim-allographer/v2/connection.html)  
+[Schema Builder](https://itsumura-h.github.io/nim-allographer/v2/schema_builder.html)  
+[Query Builder](https://itsumura-h.github.io/nim-allographer/v2/query_builder.html)
+
+### v1
+[connection](https://itsumura-h.github.io/nim-allographer/v1/connection.html)  
+[Schema Builder](https://itsumura-h.github.io/nim-allographer/v1/schema_builder.html)  
+[Query Builder](https://itsumura-h.github.io/nim-allographer/v1/query_builder.html)
 
 
 ## Development

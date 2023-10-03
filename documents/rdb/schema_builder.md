@@ -45,7 +45,7 @@ rdb.create([
     Column.increments("id"),
     Column.string("name"),
     Column.foreign("auth_id").reference("id").onTable("auth").onDelete(SET_NULL)
-    Column.strForeign("uuid").reference("uuid").onTable("auth").onDelete(SET_NULL)
+    Column.strForeign("uuid").reference("uuid")..onDelete(SET_NULL)
   ])
 ])
 ```
@@ -238,6 +238,9 @@ Column.strForeign("uuid")
   .reference("uuid")
   .onTable("users")
   .onDelete(SET_NULL)
+
+# use `on("users")` in Nim v1
+# use `onTable("users")` in Nim v2
 ```
 
 arg of `onDelete` is enum
