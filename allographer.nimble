@@ -21,7 +21,7 @@ when (NimMajor, NimMinor) > (1, 6):
 
 import strformat, os
 
-task test, "run testament test v2":
+task test, "run testament test":
   exec &"testament p 'tests/v{NimMajor}/*/test_*.nim'"
   for kind, path in walkDir(getCurrentDir() / "tests"):
     if not path.contains(".") and path.fileExists():
