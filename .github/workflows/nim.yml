@@ -29,7 +29,7 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - name: Test
-      run: docker compose -f compose.test.yaml run app-ubuntu-v1 nimble test_v1
+      run: docker compose -f compose.test.yaml run app-ubuntu-v1 nimble test
 
   test-on-docker-nim-v2:
     runs-on: ubuntu-latest
