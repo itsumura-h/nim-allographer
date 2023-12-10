@@ -1,5 +1,9 @@
 import std/asyncdispatch
-import std/db_postgres
+when NimMajor == 2:
+  import db_connector/db_postgres
+else:
+  import std/db_postgres
+
 import std/json
 import std/random
 import std/os
@@ -80,7 +84,7 @@ proc queryRaw():Future[seq[JsonNode]] {.async.} =
   var futures = newSeq[Future[seq[string]]](countNum)
   for i in 1..countNum:
     let n = rand(range1_10000)
-    futures[i-1] = rdb.raw(""" SELECT * from "World" WHERE id = ? LIMIT 1 """, $n).firstPlain()
+    futures[i-1] = rdb.raw(""" SELECT * from "World" WHERE id = ? LIMIT 1 """, %[n]).firstPlain()
   let resp = all(futures).await
   let response = resp.map(
     proc(x:seq[string]):JsonNode =
@@ -110,7 +114,7 @@ proc update():Future[seq[JsonNode]] {.async.} =
     let index = rand(range1_10000)
     let number = rand(range1_10000)
     futures[i-1] = (proc():Future[void] =
-      discard rdb.table("World").select("id", "randomNumber").findPlain(index)
+      discard rdb.select("id", "randomNumber").table("World").findPlain(index)
       rdb.table("World").where("id", "=", index).update(%*{"randomNumber": number})
     )()
     response[i-1] = %*{"id":index, "randomNumber": number}
@@ -126,8 +130,8 @@ proc updateRaw():Future[seq[JsonNode]] {.async.} =
     let index = rand(range1_10000)
     let number = rand(range1_10000)
     futures[i-1] = (proc():Future[void] =
-      discard rdb.raw(""" SELECT FROM "World" WHERE id = ? LIMIT 1 """, $index).firstPlain()
-      rdb.raw(""" UPDATE "World" SET "randomNumber" = ? WHERE id = ? """, $number, $index).exec()
+      discard rdb.raw(""" SELECT FROM "World" WHERE id = ? LIMIT 1 """, %[index]).firstPlain()
+      rdb.raw(""" UPDATE "World" SET "randomNumber" = ? WHERE id = ? """, %[number, index]).exec()
     )()
     response[i-1] = %*{"id":index, "randomNumber": number}
   await all(futures)
@@ -143,7 +147,7 @@ proc updateRawStd():Future[seq[JsonNode]] {.async.} =
     let number = rand(range1_10000)
     futures[i-1] = (proc():Future[void] =
       discard stdRdb.getRow(getFirstPrepare, $index)
-      rdb.raw(""" UPDATE "World" SET "randomNumber" = ? WHERE id = ? """, $number, $index).exec()
+      rdb.raw(""" UPDATE "World" SET "randomNumber" = ? WHERE id = ? """, %[number, index]).exec()
     )()
     response[i-1] = %*{"id":index, "randomNumber": number}
   await all(futures)
@@ -178,7 +182,7 @@ proc main() =
   migrate().waitFor
 
   timeProcess("query", query).waitFor
-  timeProcess("queryTime", queryTime).waitFor
+  # timeProcess("queryTime", queryTime).waitFor
   timeProcess("queryRaw", queryRaw).waitFor
   timeProcess("queryStd", queryStd).waitFor
   timeProcess("update", update).waitFor
