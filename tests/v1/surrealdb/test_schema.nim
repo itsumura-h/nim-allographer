@@ -43,7 +43,7 @@ suite("SurrealDB create table"):
         Column.boolean("boolean").index().default(true),
         Column.enumField("enumField", ["A", "B", "C"]).index().default("A"),
         Column.json("json").index().default(%*{"key":"value"}),
-        Column.foreign("relation").reference("id").on("relation").onDelete(SET_NULL).nullable(),
+        Column.foreign("relation").reference("id").onTable("relation").onDelete(SET_NULL).nullable(),
       ]),
       table("TypeUnique", [
         Column.increments("index"),
@@ -70,7 +70,7 @@ suite("SurrealDB create table"):
         Column.boolean("boolean").index().unique().unique().default(true),
         Column.enumField("enumField", ["A", "B", "C"]).index().unique().default("A"),
         Column.json("json").index().unique().default(%*{"key":"value"}),
-        Column.foreign("relation").reference("id").on("relation").onDelete(SET_NULL).nullable(),
+        Column.foreign("relation").reference("id").onTable("relation").onDelete(SET_NULL).nullable(),
       ]),
     )
 
@@ -313,7 +313,7 @@ suite("SurrealDB alter table"):
         Column.boolean("boolean").index().default(true).add(),
         Column.enumField("enumField", ["A", "B", "C"]).index().default("A").add(),
         Column.json("json").index().default(%*{"key":"value"}).add(),
-        Column.foreign("relation").reference("id").on("relation").onDelete(SET_NULL).nullable().add(),
+        Column.foreign("relation").reference("id").onTable("relation").onDelete(SET_NULL).nullable().add(),
       ]),
       table("TypeUnique", [
         Column.increments("index").add(),
@@ -340,7 +340,7 @@ suite("SurrealDB alter table"):
         Column.boolean("boolean").index().unique().unique().default(true).add(),
         Column.enumField("enumField", ["A", "B", "C"]).index().unique().default("A").add(),
         Column.json("json").index().unique().default(%*{"key":"value"}).add(),
-        Column.foreign("relation").reference("id").on("relation").onDelete(SET_NULL).nullable().add(),
+        Column.foreign("relation").reference("id").onTable("relation").onDelete(SET_NULL).nullable().add(),
       ]),
     )
 

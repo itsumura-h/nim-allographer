@@ -33,7 +33,7 @@ proc setup(rdb:SurrealConnections) =
       Column.string("address").nullable(),
       Column.date("submit_on"),
       Column.datetime("submit_at"),
-      Column.foreign("auth").reference("id").on("auth").onDelete(SET_NULL).nullable()
+      Column.foreign("auth").reference("id").onTable("auth").onDelete(SET_NULL).nullable()
     ])
   ])
 

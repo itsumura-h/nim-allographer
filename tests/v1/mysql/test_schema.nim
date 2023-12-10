@@ -47,8 +47,8 @@ suite("MySQL create table"):
         Column.boolean("boolean").index().default(true),
         Column.enumField("enumField", ["A", "B", "C"]).index().default("A"),
         Column.json("json"),
-        Column.foreign("int_relation_id").reference("id").on("IntRelation").onDelete(SET_NULL),
-        Column.strForeign("str_relation_id").reference("uuid").on("StrRelation").onDelete(SET_NULL)
+        Column.foreign("int_relation_id").reference("id").onTable("IntRelation").onDelete(SET_NULL),
+        Column.strForeign("str_relation_id").reference("uuid").onTable("StrRelation").onDelete(SET_NULL)
       ]),
       # text, binary, json column can't use default value, index and unique
       table("TypeUnique", [
@@ -76,8 +76,8 @@ suite("MySQL create table"):
         Column.boolean("boolean").unique().index().default(true),
         Column.enumField("enumField", ["A", "B", "C"]).unique().index().default("A"),
         Column.json("json"),
-        Column.foreign("int_relation_id").reference("id").on("IntRelation").onDelete(SET_NULL),
-        Column.strForeign("str_relation_id").reference("uuid").on("StrRelation").onDelete(SET_NULL)
+        Column.foreign("int_relation_id").reference("id").onTable("IntRelation").onDelete(SET_NULL),
+        Column.strForeign("str_relation_id").reference("uuid").onTable("StrRelation").onDelete(SET_NULL)
       ])
     )
 
@@ -487,8 +487,8 @@ suite("MySQL alter table"):
         Column.boolean("boolean").index().default(true).add(),
         Column.enumField("enumField", ["A", "B", "C"]).index().default("A").add(),
         Column.json("json").add(),
-        Column.foreign("int_relation_id").reference("id").on("IntRelation").onDelete(SET_NULL).add(),
-        Column.strForeign("str_relation_id").reference("uuid").on("StrRelation").onDelete(SET_NULL).add()
+        Column.foreign("int_relation_id").reference("id").onTable("IntRelation").onDelete(SET_NULL).add(),
+        Column.strForeign("str_relation_id").reference("uuid").onTable("StrRelation").onDelete(SET_NULL).add()
       ]),
       table("TypeUnique", [
         Column.increments("id").add(),
@@ -595,7 +595,7 @@ suite($rdb & " primary"):
           Column.integer("index1"),
           Column.integer("index2"),
           Column.string("string"),
-          Column.foreign("relation_id").reference("id").on("relation").onDelete(SET_NULL)
+          Column.foreign("relation_id").reference("id").onTable("relation").onDelete(SET_NULL)
         ],
         primary = @["index1", "index2"]
       )
