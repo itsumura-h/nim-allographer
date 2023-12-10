@@ -7,7 +7,7 @@ let
   user = getEnv("DB_USER")
   password = getEnv("DB_PASSWORD")
   mysqlHost = getEnv("MY_HOST")
-  mysqlPort = getEnv("MY_PORT").parseInt.int32
+  mysqlPort = getEnv("MY_PORT").parseInt
   maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
   timeout = getEnv("DB_TIMEOUT").parseInt
 

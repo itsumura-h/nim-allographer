@@ -7,7 +7,7 @@ let
   user = getEnv("DB_USER")
   password = getEnv("DB_PASSWORD")
   pgHost = getEnv("PG_HOST")
-  pgPort = getEnv("PG_PORT").parseInt.int32
+  pgPort = getEnv("PG_PORT").parseInt
   maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
   timeout = getEnv("DB_TIMEOUT").parseInt
 
