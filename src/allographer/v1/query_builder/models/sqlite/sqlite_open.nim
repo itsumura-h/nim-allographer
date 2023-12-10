@@ -4,8 +4,8 @@ import ../../log
 import ./sqlite_types
 
 
-proc dbOpen*(_:type SQLite3, database: string = "", user: string = "", password: string = "",
-              host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30,
+proc dbOpen*(_:type SQLite3, database: string = "",
+              maxConnections: int = 1, timeout=30,
               shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): SqliteConnections =
   var pools = newSeq[SqliteConnection](maxConnections)
   for i in 0..<maxConnections:

@@ -9,27 +9,6 @@ import ./mariadb_rdb
 import ./mariadb_lib
 
 
-# proc dbopen*(database: string = "", user: string = "", password: string = "", host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30): Connections =
-#   var pools = newSeq[Pool](maxConnections)
-#   for i in 0..<maxConnections:
-#     var res = mariadb_rdb.init(nil)
-#     if res == nil:
-#       dbError("could not open database connection")
-#     if mariadb_rdb.realConnect(res, host, user, password, database, port, nil, 0) == nil:
-#       var errmsg = $mariadb_rdb.error(res)
-#       mariadb_rdb.close(res)
-#       dbError(errmsg)
-#     pools[i] = Pool(
-#       mariadbConn: res,
-#       isBusy: false,
-#       createdAt: getTime().toUnix(),
-#     )
-#   result = Connections(
-#     pools: pools,
-#     timeout: timeout
-#   )
-
-
 proc rawExec(conn:PMySQL, query: string, args: seq[string]) =
   assert conn.ping == 0
 

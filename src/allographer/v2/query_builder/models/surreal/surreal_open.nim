@@ -11,7 +11,7 @@ import ./surreal_types
 
 
 proc dbOpen*(_:type SurrealDB, namespace:string = "", database: string = "", user: string = "", password: string = "",
-              host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30,
+              host: string = "", port: int = 0, maxConnections: int = 1, timeout=30,
               shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): Future[SurrealConnections] {.async.} =
   var pools = newSeq[SurrealConnection](maxConnections)
   for i in 0..<maxConnections:
