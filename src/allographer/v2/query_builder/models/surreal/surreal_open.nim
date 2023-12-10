@@ -36,7 +36,7 @@ proc dbOpen*(_:type SurrealDB, namespace:string = "", database: string = "", use
     let conn = SurrealConn(
       client: client,
       host: host,
-      port: port
+      port: port.int32
     )
 
     pools[i] = SurrealConnection(
