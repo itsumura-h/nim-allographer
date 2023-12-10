@@ -22,7 +22,7 @@ for rdb in dbConnections:
       Column.string("name").nullable(),
       Column.string("email").nullable(),
       Column.string("address").nullable(),
-      Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+      Column.foreign("auth_id").reference("id").onTable("auth").onDelete(SET_NULL)
     ])
   ])
 

@@ -25,7 +25,7 @@ proc setUp(rdb:Rdb) =
       Column.string("salt").nullable(),
       Column.string("address").nullable(),
       Column.date("birth_date").nullable(),
-      Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+      Column.foreign("auth_id").reference("id").onTable("auth").onDelete(SET_NULL)
     ])
   )
 

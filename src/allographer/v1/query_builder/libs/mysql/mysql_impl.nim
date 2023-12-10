@@ -9,27 +9,6 @@ import ./mysql_rdb
 import ./mysql_lib
 
 
-# proc dbopen*(database: string = "", user: string = "", password: string = "", host: string = "", port: int32 = 0, maxConnections: int = 1, timeout=30): Connections =
-#   var pools = newSeq[Pool](maxConnections)
-#   for i in 0..<maxConnections:
-#     var res = mysql_rdb.init(nil)
-#     if res == nil:
-#       dbError("could not open database connection")
-#     if mysql_rdb.realConnect(res, host, user, password, database, port, nil, 0) == nil:
-#       var errmsg = $mysql_rdb.error(res)
-#       mysql_rdb.close(res)
-#       dbError(errmsg)
-#     pools[i] = Pool(
-#       mysqlConn: res,
-#       isBusy: false,
-#       createdAt: getTime().toUnix(),
-#     )
-#   result = Connections(
-#     pools: pools,
-#     timeout: timeout
-#   )
-
-
 proc rawExec(conn:PMySQL, query: string, args: seq[string]) =
   assert conn.ping == 0
 

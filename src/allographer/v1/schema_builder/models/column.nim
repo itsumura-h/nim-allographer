@@ -286,6 +286,11 @@ proc on*(self:Column, table:string):Column {.deprecated: "Use `onTable` instead 
   return self
 
 
+proc onTable*(self:Column, table:string):Column =
+  self.info["table"] = %*table
+  return self
+
+
 proc onDelete*(self:Column, kind:ForeignOnDelete):Column =
   self.foreignOnDelete = kind
   return self

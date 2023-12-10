@@ -8,7 +8,7 @@ let
   user = getEnv("DB_USER")
   password = getEnv("DB_PASSWORD")
   surrealHost = getEnv("SURREAL_HOST")
-  surrealPort = getEnv("SURREAL_PORT").parseInt.int32
+  surrealPort = getEnv("SURREAL_PORT").parseInt
   maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
   timeout = getEnv("DB_TIMEOUT").parseInt
 

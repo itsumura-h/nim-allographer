@@ -42,7 +42,7 @@ proc setUp(rdb:SqliteConnections) =
     table("user",[
       Column.increments("id"),
       Column.string("name"),
-      Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL),
+      Column.foreign("auth_id").reference("id").onTable("auth").onDelete(SET_NULL),
       Column.boolean("bool"),
       Column.float("float"),
     ])

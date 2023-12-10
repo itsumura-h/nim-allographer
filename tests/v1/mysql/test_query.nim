@@ -27,7 +27,7 @@ proc setup(rdb:MysqlConnections) =
       Column.string("address").nullable(),
       Column.date("submit_on").nullable(),
       Column.datetime("submit_at").nullable(),
-      Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL).nullable()
+      Column.foreign("auth_id").reference("id").onTable("auth").onDelete(SET_NULL).nullable()
     ])
   ])
 
