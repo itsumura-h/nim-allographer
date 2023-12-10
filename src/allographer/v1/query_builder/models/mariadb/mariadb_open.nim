@@ -14,7 +14,7 @@ proc dbOpen*(_: type MariaDB, database: string = "", user: string = "", password
     if conn == nil:
       mariadb_rdb.close(conn)
       dbError("mariadb_rdb.init() failed")
-    if mariadb_rdb.real_connect(conn, host, user, password, database, port, nil, 0) == nil:
+    if mariadb_rdb.real_connect(conn, host, user, password, database, port.int32, nil, 0) == nil:
       var errmsg = $mariadb_rdb.error(conn)
       mariadb_rdb.close(conn)
       dbError(errmsg)

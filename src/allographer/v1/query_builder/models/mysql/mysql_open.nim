@@ -14,7 +14,7 @@ proc dbOpen*(_:type MySQL, database: string = "", user: string = "", password: s
     if conn == nil:
       mysql_rdb.close(conn)
       dbError("mysql_rdb.init() failed")
-    if mysql_rdb.real_connect(conn, host, user, password, database, port, nil, 0) == nil:
+    if mysql_rdb.real_connect(conn, host, user, password, database, port.int32, nil, 0) == nil:
       var errmsg = $mysql_rdb.error(conn)
       mysql_rdb.close(conn)
       dbError(errmsg)
