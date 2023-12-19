@@ -1,4 +1,4 @@
-query_builder/models/xx/xx_query.nim
+query_builder/models/xx/xx_exec.nim
 
 ```nim
 # public exec

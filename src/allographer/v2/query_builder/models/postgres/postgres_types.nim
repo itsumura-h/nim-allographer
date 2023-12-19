@@ -43,7 +43,7 @@ type RawPostgresQuery* = ref object
   pools*:Connections
   query*: JsonNode
   queryString*: string
-  placeHolder*: JsonNode # ["user1", "user1@example.com"]
+  placeHolder*: JsonNode # JArray ["user1", "user1@example.com"]
   # for transaction
   isInTransaction*: bool
   transactionConn*: int

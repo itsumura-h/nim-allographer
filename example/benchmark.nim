@@ -71,7 +71,7 @@ proc query():Future[seq[JsonNode]] {.async.} =
   var futures = newSeq[Future[seq[string]]](countNum)
   for i in 1..countNum:
     let n = rand(range1_10000)
-    futures[i-1] = rdb.table("World").findPlain(n)
+    futures[i-1] = rdb.select().table("World").findPlain(n)
   let resp = all(futures).await
   let response = resp.map(
     proc(x:seq[string]):JsonNode =

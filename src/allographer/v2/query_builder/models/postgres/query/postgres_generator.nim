@@ -13,7 +13,10 @@ proc quote(input:string):string =
       let c = row.split(" as ")
       tmp.add(&"\"{c[0]}\" as \"{c[1]}\"")
     else:
-      tmp.add(&"\"{row}\"")
+      if row == "*":
+        tmp.add(&"*")
+      else:
+        tmp.add(&"\"{row}\"")
   return tmp.join(".")
 
 

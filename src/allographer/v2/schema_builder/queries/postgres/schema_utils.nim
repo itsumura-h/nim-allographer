@@ -6,6 +6,7 @@ import std/strutils
 import std/times
 import ../../../query_builder/models/postgres/postgres_types
 import ../../../query_builder/models/postgres/postgres_query
+import ../../../query_builder/models/postgres/postgres_exec
 import ../../../query_builder/error
 import ../../models/table
 
