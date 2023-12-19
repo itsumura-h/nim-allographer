@@ -35,7 +35,7 @@ proc migrate() {.async.} =
     ])
   )
 
-  seeder rdb, "World":
+  seeder(rdb, "World"):
     var data = newSeq[JsonNode]()
     for i in 1..10000:
       data.add(
@@ -43,7 +43,7 @@ proc migrate() {.async.} =
       )
     await rdb.table("World").insert(data)
 
-  seeder rdb, "Fortune":
+  seeder(rdb, "Fortune"):
     data = @[
       %*{"id": 1, "message": "fortune: No such file or directory"},
       %*{"id": 2, "message": "A computer scientist is someone who fixes things that aren''t broken."},

@@ -120,18 +120,15 @@ proc getAllRowsPlain(self:PostgresQuery, queryString:string, args:JsonNode):Futu
   return rows
 
 
-proc getRow(self:PostgresQuery, queryString:string, connI:int=0):Future[Option[JsonNode]] {.async.} =
+proc getRow(self:PostgresQuery, queryString:string):Future[Option[JsonNode]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
   defer:
     if not self.isInTransaction:
       self.returnConn(connI).await
-
   if connI == errorConnectionNum:
     return
-
-  sleepAsync(0).await
 
   let (rows, dbRows) = postgres_impl.query(
     self.pools.conns[connI].conn,
@@ -298,7 +295,6 @@ proc exec(self:RawPostgresQuery, queryString:string) {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
-
   defer:
     if not self.isInTransaction:
       self.returnConn(connI).await
@@ -347,7 +343,7 @@ proc getColumn(self:PostgresQuery, queryString:string):Future[seq[string]] {.asy
   return postgres_impl.getColumns(self.pools.conns[connI].conn, queryString, strArgs, self.pools.timeout).await
 
 
-proc transactionStart(self:PostgresConnections|PostgresQuery) {.async.} =
+proc transactionStart(self:PostgresConnections) {.async.} =
   let connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
@@ -357,7 +353,7 @@ proc transactionStart(self:PostgresConnections|PostgresQuery) {.async.} =
   postgres_impl.exec(self.pools.conns[connI].conn, "BEGIN", newJArray(), newSeq[Row](), self.pools.timeout).await
 
 
-proc transactionEnd(self:PostgresConnections|PostgresQuery, query:string) {.async.} =
+proc transactionEnd(self:PostgresConnections, query:string) {.async.} =
   postgres_impl.exec(self.pools.conns[self.transactionConn].conn, query, newJArray(), newSeq[Row](), self.pools.timeout).await
   self.returnConn(self.transactionConn).await
   self.transactionConn = 0
@@ -375,7 +371,7 @@ proc get*(self: PostgresQuery):Future[seq[JsonNode]] {.async.} =
   try:
     self.log.logger(sql)
     return self.getAllRows(sql).await
-  except CatchableError:
+  except Exception:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -387,7 +383,7 @@ proc first*(self: PostgresQuery):Future[Option[JsonNode]] {.async.} =
   try:
     self.log.logger(sql)
     return self.getRow(sql).await
-  except CatchableError:
+  except Exception:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -400,7 +396,7 @@ proc find*(self: PostgresQuery, id:string, key="id"):Future[Option[JsonNode]] {.
   try:
     self.log.logger(sql)
     return self.getRow(sql).await
-  except CatchableError:
+  except Exception:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -417,7 +413,7 @@ proc getPlain*(self:PostgresQuery):Future[seq[seq[string]]] {.async.} =
   try:
     self.log.logger(sql)
     return self.getAllRowsPlain(sql, self.placeHolder).await
-  except CatchableError:
+  except Exception:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -429,7 +425,7 @@ proc firstPlain*(self:PostgresQuery):Future[seq[string]] {.async.} =
   try:
     self.log.logger(sql)
     return self.getRowPlain(sql, self.placeHolder).await
-  except CatchableError:
+  except Exception:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -442,7 +438,7 @@ proc findPlain*(self:PostgresQuery, id: string, key="id"):Future[seq[string]] {.
   try:
     self.log.logger(sql)
     return self.getRowPlain(sql, self.placeHolder).await
-  except CatchableError:
+  except Exception:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -461,7 +457,7 @@ proc get*[T](self: PostgresQuery, typ:typedesc[T]):Future[seq[T]] {.async.} =
     let rows = self.getAllRows(sql).await
     for row in rows:
       result.add(row.to(typ))
-  except CatchableError:
+  except Exception:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -477,7 +473,7 @@ proc first*[T](self: PostgresQuery, typ:typedesc[T]):Future[Option[T]] {.async.}
       return row.get().to(typ).some()
     else:
       return none(typ)
-  except CatchableError:
+  except Exception:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -494,7 +490,7 @@ proc find*[T](self: PostgresQuery, id:string, typ:typedesc[T], key="id"):Future[
       return row.get().to(typ).some()
     else:
       return none(typ)
-  except CatchableError:
+  except Exception:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -568,7 +564,7 @@ proc columns*(self:PostgresQuery):Future[seq[string]] {.async.} =
   try:
     self.log.logger(sql)
     return self.getColumn(sql).await
-  except CatchableError:
+  except Exception:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -641,17 +637,17 @@ proc sum*(self:PostgresQuery, column:string):Future[Option[float]]{.async.} =
     return none(float)
 
 
-proc begin*(self:PostgresQuery) {.async.} =
+proc begin*(self:PostgresConnections) {.async.} =
   self.log.logger("BEGIN")
   self.transactionStart().await
 
 
-proc rollback*(self:PostgresQuery) {.async.} =
+proc rollback*(self:PostgresConnections) {.async.} =
   self.log.logger("ROLLBACK")
   self.transactionEnd("ROLLBACK").await
 
 
-proc commit*(self:PostgresQuery) {.async.} =
+proc commit*(self:PostgresConnections) {.async.} =
   self.log.logger("COMMIT")
   self.transactionEnd("COMMIT").await
 
