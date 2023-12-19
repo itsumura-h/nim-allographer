@@ -18,24 +18,24 @@ import ../src/allographer/query_builder
 
 
 randomize()
-# let rdb = dbOpen(PostgreSQL, "database", "user", "pass", "postgres", 5432, 95, 30, shouldDisplayLog=false)
+let rdb = dbOpen(PostgreSQL, "database", "user", "pass", "postgres", 5432, 95, 30, shouldDisplayLog=false)
 # let rdb = dbOpen(MariaDB, "database", "user", "pass", "mariadb", 3306, 95, 30, shouldDisplayLog=false)
 # let rdb = dbOpen(SQLite3, "db.sqlite3", 95, 30, shouldDisplayLog=false)
-let rdb = dbOpen(SurrealDB, "test", "test", "user", "pass", "http://surreal", 8000, 500, 30, shouldDisplayLog=false).waitFor()
-# let stdRdb = open("postgres:5432", "user", "pass", "database")
-const range1_10000 = 1..1000
+# let rdb = dbOpen(SurrealDB, "test", "test", "user", "pass", "http://surreal", 8000, 500, 30, shouldDisplayLog=false).waitFor()
+let stdRdb = open("postgres:5432", "user", "pass", "database")
+const range1_10000 = 1..10000
 
 proc migrate() {.async.} =
   echo "=== start migration"
   rdb.create(
     table("World", [
-      # Column.increments("id"),
-      Column.increments("index"), # for surreal
+      Column.increments("id"),
+      # Column.increments("index"), # for surreal
       Column.integer("randomNumber").default(0)
     ]),
     table("Fortune", [
-      # Column.increments("id"),
-      Column.increments("index"), # for surreal
+      Column.increments("id"),
+      # Column.increments("index"), # for surreal
       Column.string("message")
     ])
   )
@@ -67,47 +67,47 @@ proc migrate() {.async.} =
   echo "=== finish migration"
 
 
-# let getFirstPrepare = stdRdb.prepare("getFirst", sql""" SELECT * FROM "World" WHERE id = $1 LIMIT 1 """, 1)
-# let updatePrepare = stdRdb.prepare("updatePrepare", sql""" UPDATE "World" SET "randomNumber" = $1 WHERE id = $2 """, 2)
+let getFirstPrepare = stdRdb.prepare("getFirst", sql""" SELECT * FROM "World" WHERE id = $1 LIMIT 1 """, 1)
+let updatePrepare = stdRdb.prepare("updatePrepare", sql""" UPDATE "World" SET "randomNumber" = $1 WHERE id = $2 """, 2)
 
 const countNum = 500
 
-# proc query():Future[seq[JsonNode]] {.async.} =
-#   var futures = newSeq[Future[seq[string]]](countNum)
-#   for i in 1..countNum:
-#     let n = rand(range1_10000)
-#     futures[i-1] = rdb.select().table("World").findPlain(n)
-#   let resp = all(futures).await
-#   let response = resp.map(
-#     proc(x:seq[string]):JsonNode =
-#       if x.len > 0: %*{"id": x[0].parseInt, "randomNumber": x[1].parseInt}
-#       else: newJObject()
-#   )
-#   return response
+proc query():Future[seq[JsonNode]] {.async.} =
+  var futures = newSeq[Future[seq[string]]](countNum)
+  for i in 1..countNum:
+    let n = rand(range1_10000)
+    futures[i-1] = rdb.select().table("World").findPlain(n)
+  let resp = all(futures).await
+  let response = resp.map(
+    proc(x:seq[string]):JsonNode =
+      if x.len > 0: %*{"id": x[0].parseInt, "randomNumber": x[1].parseInt}
+      else: newJObject()
+  )
+  return response
 
-# proc queryRaw():Future[seq[JsonNode]] {.async.} =
-#   var futures = newSeq[Future[seq[string]]](countNum)
-#   for i in 1..countNum:
-#     let n = rand(range1_10000)
-#     futures[i-1] = rdb.raw(""" SELECT * from "World" WHERE id = ? LIMIT 1 """, %[n]).firstPlain()
-#   let resp = all(futures).await
-#   let response = resp.map(
-#     proc(x:seq[string]):JsonNode =
-#       if x.len > 0: %*{"id": x[0].parseInt, "randomNumber": x[1].parseInt}
-#       else: newJObject()
-#   )
-#   return response
+proc queryRaw():Future[seq[JsonNode]] {.async.} =
+  var futures = newSeq[Future[seq[string]]](countNum)
+  for i in 1..countNum:
+    let n = rand(range1_10000)
+    futures[i-1] = rdb.raw(""" SELECT * from "World" WHERE id = ? LIMIT 1 """, %[n]).firstPlain()
+  let resp = all(futures).await
+  let response = resp.map(
+    proc(x:seq[string]):JsonNode =
+      if x.len > 0: %*{"id": x[0].parseInt, "randomNumber": x[1].parseInt}
+      else: newJObject()
+  )
+  return response
 
 
-# proc queryStd():Future[seq[JsonNode]] {.async.} =
-#   var resp:seq[Row]
-#   for i in 1..countNum:
-#     resp.add(stdRdb.getRow(getFirstPrepare, i))
-#   let response = resp.map(
-#     proc(x:seq[string]):JsonNode =
-#       %*{"id": x[0].parseInt, "randomNumber": x[1]}
-#     )
-#   return response
+proc queryStd():Future[seq[JsonNode]] {.async.} =
+  var resp:seq[Row]
+  for i in 1..countNum:
+    resp.add(stdRdb.getRow(getFirstPrepare, i))
+  let response = resp.map(
+    proc(x:seq[string]):JsonNode =
+      %*{"id": x[0].parseInt, "randomNumber": x[1]}
+    )
+  return response
 
 
 proc update():Future[seq[JsonNode]] {.async.} =
@@ -117,46 +117,46 @@ proc update():Future[seq[JsonNode]] {.async.} =
     let index = rand(range1_10000)
     let number = rand(range1_10000)
     futures[i-1] = (proc():Future[void] {.async.} =
-      # discard rdb.select("id", "randomNumber").table("World").findPlain(index).await
-      # rdb.table("World").where("id", "=", index).update(%*{"randomNumber": number}).await
+      discard rdb.select("id", "randomNumber").table("World").findPlain(index).await
+      rdb.table("World").where("id", "=", index).update(%*{"randomNumber": number}).await
 
       # for surreal
-      discard rdb.select("id", "randomNumber").table("World").where("index", "=", index).first().await
-      rdb.table("World").where("index", "=", index).update(%*{"randomNumber": number}).await
+      # discard rdb.select("id", "randomNumber").table("World").where("index", "=", index).first().await
+      # rdb.table("World").where("index", "=", index).update(%*{"randomNumber": number}).await
     )()
     response[i-1] = %*{"id":index, "randomNumber": number}
   await all(futures)
   return response
 
 
-# proc updateRaw():Future[seq[JsonNode]] {.async.} =
-#   var response = newSeq[JsonNode](countNum)
-#   var futures = newSeq[Future[void]](countNum)
-#   for i in 1..countNum:
-#     let index = rand(range1_10000)
-#     let number = rand(range1_10000)
-#     futures[i-1] = (proc():Future[void] =
-#       discard rdb.raw(""" SELECT FROM "World" WHERE id = ? LIMIT 1 """, %[index]).firstPlain()
-#       rdb.raw(""" UPDATE "World" SET "randomNumber" = ? WHERE id = ? """, %[number, index]).exec()
-#     )()
-#     response[i-1] = %*{"id":index, "randomNumber": number}
-#   await all(futures)
-#   return response
+proc updateRaw():Future[seq[JsonNode]] {.async.} =
+  var response = newSeq[JsonNode](countNum)
+  var futures = newSeq[Future[void]](countNum)
+  for i in 1..countNum:
+    let index = rand(range1_10000)
+    let number = rand(range1_10000)
+    futures[i-1] = (proc():Future[void] =
+      discard rdb.raw(""" SELECT FROM "World" WHERE id = ? LIMIT 1 """, %[index]).firstPlain()
+      rdb.raw(""" UPDATE "World" SET "randomNumber" = ? WHERE id = ? """, %[number, index]).exec()
+    )()
+    response[i-1] = %*{"id":index, "randomNumber": number}
+  await all(futures)
+  return response
 
 
-# proc updateRawStd():Future[seq[JsonNode]] {.async.} =
-#   var response = newSeq[JsonNode](countNum)
-#   var futures = newSeq[Future[void]](countNum)
-#   for i in 1..countNum:
-#     let index = rand(range1_10000)
-#     let number = rand(range1_10000)
-#     futures[i-1] = (proc():Future[void] =
-#       discard stdRdb.getRow(getFirstPrepare, $index)
-#       rdb.raw(""" UPDATE "World" SET "randomNumber" = ? WHERE id = ? """, %[number, index]).exec()
-#     )()
-#     response[i-1] = %*{"id":index, "randomNumber": number}
-#   await all(futures)
-#   return response
+proc updateRawStd():Future[seq[JsonNode]] {.async.} =
+  var response = newSeq[JsonNode](countNum)
+  var futures = newSeq[Future[void]](countNum)
+  for i in 1..countNum:
+    let index = rand(range1_10000)
+    let number = rand(range1_10000)
+    futures[i-1] = (proc():Future[void] =
+      discard stdRdb.getRow(getFirstPrepare, $index)
+      rdb.raw(""" UPDATE "World" SET "randomNumber" = ? WHERE id = ? """, %[number, index]).exec()
+    )()
+    response[i-1] = %*{"id":index, "randomNumber": number}
+  await all(futures)
+  return response
 
 
 proc timeProcess[T](name:string, cb:proc():Future[T]) {.async.}=
@@ -185,12 +185,12 @@ proc timeProcess[T](name:string, cb:proc():Future[T]) {.async.}=
 proc main() =
   migrate().waitFor
 
-  # timeProcess("query", query).waitFor
-  # timeProcess("queryRaw", queryRaw).waitFor
-  # timeProcess("queryStd", queryStd).waitFor
+  timeProcess("query", query).waitFor
+  timeProcess("queryRaw", queryRaw).waitFor
+  timeProcess("queryStd", queryStd).waitFor
   timeProcess("update", update).waitFor
-  # timeProcess("updateRaw", updateRaw).waitFor
-  # timeProcess("updateRawStd", updateRawStd).waitFor
+  timeProcess("updateRaw", updateRaw).waitFor
+  timeProcess("updateRawStd", updateRawStd).waitFor
 
 
 main()
