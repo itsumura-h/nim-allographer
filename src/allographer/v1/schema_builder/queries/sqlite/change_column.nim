@@ -3,8 +3,8 @@ import std/strformat
 import std/re
 import std/sha1
 import std/json
-import ../../../query_builder/models/sqlite/sqlite_connections
 import ../../../query_builder/models/sqlite/sqlite_query
+import ../../../query_builder/models/sqlite/sqlite_exec
 import ../../models/table
 import ../../models/column
 import ../../enums
@@ -35,7 +35,7 @@ proc changeColumn*(self:SqliteSchema, isReset:bool) =
     discard
 
   let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND tbl_name = '{self.table.name}'"
-  var rows = self.rdb.raw(tableDifinitionSql).get.waitFor
+  var rows = self.rdb.raw(tableDifinitionSql).get().waitFor
   var schema = replace(rows[0]["sql"].getStr, re"\)$", ",)")
   let columnQuery = createColumnString(self.column)
 
@@ -70,7 +70,7 @@ proc changeColumn*(self:SqliteSchema, isReset:bool) =
     queries.add(query)
   # recreate index
   let indexDinifitionSql = &"SELECT sql, name FROM sqlite_master WHERE type = 'index' AND tbl_name = '{self.table.name}'"
-  rows = self.rdb.raw(indexDinifitionSql).get.waitFor
+  rows = self.rdb.raw(indexDinifitionSql).get().waitFor
   for row in rows:
     if row["name"].getStr != &"{self.table.name}_{self.column.name}_index" and row["sql"].kind != JNull:
       queries.add(row["sql"].getStr)

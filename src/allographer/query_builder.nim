@@ -38,8 +38,8 @@ elif NimMajor == 1:
 
   when isExistsSqlite:
     import ./v1/query_builder/models/sqlite/sqlite_types; export sqlite_types
-    import ./v1/query_builder/models/sqlite/sqlite_connections; export sqlite_connections
     import ./v1/query_builder/models/sqlite/sqlite_query; export sqlite_query
+    import ./v1/query_builder/models/sqlite/sqlite_exec; export sqlite_exec
     import ./v1/query_builder/models/sqlite/sqlite_transaction; export sqlite_transaction
 
   when isExistsPostgres:

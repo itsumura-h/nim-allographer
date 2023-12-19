@@ -6,8 +6,8 @@ import std/strformat
 import std/strutils
 import std/re
 import ../../../../query_builder/models/sqlite/sqlite_types
-import ../../../../query_builder/models/sqlite/sqlite_connections
 import ../../../../query_builder/models/sqlite/sqlite_query
+import ../../../../query_builder/models/sqlite/sqlite_exec
 import ../../../models/table
 import ../../../models/column
 import ../../../enums
@@ -20,7 +20,7 @@ import ./create_column_query
 proc addSerialColumn(rdb:SqliteConnections, table:Table, column:Column, query:string):seq[string] =
   # get culumn definition
   let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '{table.name}'"
-  var rows = rdb.raw(tableDifinitionSql).get.waitFor
+  var rows = rdb.raw(tableDifinitionSql).get().waitFor
   let schema = replace(rows[0]["sql"].getStr, re"\)$", ",)")
   var query = schema.replace(re",\)", &", {query},)")
   query = query.replace(re",\)", ")")
