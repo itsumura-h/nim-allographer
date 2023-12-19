@@ -36,7 +36,6 @@ proc dbOpen*(_:type MySQL, database: string = "", user: string = "", password: s
   )
   result = MysqlConnections(
     pools: pools,
-    timeout: timeout,
     info: info,
     log: LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)
   )
