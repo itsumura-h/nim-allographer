@@ -22,7 +22,8 @@ proc getFreeConn(self:PostgresConnections | PostgresQuery | RawPostgresQuery):Fu
     for i in 0..<self.pools.conns.len:
       if not self.pools.conns[i].isBusy:
         self.pools.conns[i].isBusy = true
-        echo "=== getFreeConn ", i
+        when defined(check_pool):
+          echo "=== getFreeConn ", i
         return i
     await sleepAsync(10)
     if getTime().toUnix() >= calledAt + self.pools.timeout:
