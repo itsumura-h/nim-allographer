@@ -26,7 +26,7 @@ proc query*(db:PPGconn, query: string, args: JsonNode, timeout:int):Future[(seq[
   var dbRows: DbRows
   var rows = newSeq[Row]()
   let calledAt = getTime().toUnix()
-  # await sleepAsync(0)
+  # sleepAsync(0).await
   while true:
     let success = pqconsumeInput(db)
     if success != 1: dbError(db) # never seen to fail when async
@@ -209,7 +209,7 @@ proc rawExec*(db:PPGconn, query: string, args: JsonNode, timeout:int) {.async.} 
 
   if status != 1: dbError(db) # never seen to fail when async
   let calledAt = getTime().toUnix()
-  # await sleepAsync(0)
+  # sleepAsync(0).await
   while true:
     let success = pqconsumeInput(db)
     if success != 1: dbError(db) # never seen to fail when async
@@ -235,6 +235,45 @@ proc rawExec*(db:PPGconn, query: string, args: JsonNode, timeout:int) {.async.} 
 # ==================================================
 # Old functions
 # ==================================================
+
+proc query*(db:PPGconn, query: string, args: seq[string], timeout:int):Future[(seq[Row], DbRows)] {.async.} =
+  assert db.status == CONNECTION_OK
+  let status = pqsendQuery(db, dbFormat(query, args).cstring)
+  if status != 1: dbError(db) # never seen to fail when async
+  var dbRows: DbRows
+  var rows = newSeq[Row]()
+  let calledAt = getTime().toUnix()
+  await sleepAsync(0)
+  while true:
+    let success = pqconsumeInput(db)
+    if success != 1: dbError(db) # never seen to fail when async
+    if pqisBusy(db) == 1:
+      if getTime().toUnix() >= calledAt + timeout:
+        # exec cancel
+        # https://www.postgresql.jp/document/12.0/html/libpq-cancel.html
+        let cancel = pqGetCancel(db)
+        var err = ""
+        let res = pqCancel(cancel, err.cstring, 0)
+        if res == 0:
+          raise newException(DbError, err)
+        return
+      await sleepAsync(10)
+      continue
+    var pqresult = pqgetResult(db)
+    if pqresult == nil:
+      # Check if its a real error or just end of results
+      db.checkError()
+      break
+
+    var cols = pqnfields(pqresult)
+    var row = newRow(cols)
+    for i in 0'i32..pqNtuples(pqresult)-1:
+      setRow(pqresult, row, i, cols)
+      setColumnInfo(pqresult, dbRows, i, cols)
+      rows.add(row)
+    pqclear(pqresult)
+
+  return (rows, dbRows)
 
 proc queryPlain*(db:PPGconn, query: string, args: seq[string], timeout:int):Future[seq[Row]] {.async.} =
   assert db.status == CONNECTION_OK

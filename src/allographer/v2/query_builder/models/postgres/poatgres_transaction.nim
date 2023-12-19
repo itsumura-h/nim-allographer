@@ -4,7 +4,7 @@ import std/strformat
 import ../../models/postgres/postgres_types
 
 
-macro rdbTransaction(rdb:PostgresConnections, callback: untyped):untyped =
+macro rdbTransaction(rdb:PostgresQuery, callback: untyped):untyped =
   var callbackStr = callback.repr
   callbackStr.removePrefix
   callbackStr = callbackStr.indent(4)
@@ -20,5 +20,5 @@ block:
   let body = callbackStr.parseStmt()
   return body
 
-template transaction*(rdb:PostgresConnections, callback: untyped) =
+template transaction*(rdb:PostgresQuery, callback: untyped) =
   rdbTransaction(rdb, callback)

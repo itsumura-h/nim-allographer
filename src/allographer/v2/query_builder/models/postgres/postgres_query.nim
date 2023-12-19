@@ -13,6 +13,69 @@ import ./query/postgres_builder
 import ./postgres_types
 
 
+# ================================================================================
+# connection
+# ================================================================================
+
+proc getFreeConn(self:PostgresConnections | PostgresQuery | RawPostgresQuery):Future[int] {.async.} =
+  let calledAt = getTime().toUnix()
+  while true:
+    for i in 0..<self.pools.conns.len:
+      if not self.pools.conns[i].isBusy:
+        self.pools.conns[i].isBusy = true
+        echo "=== getFreeConn ", i
+        return i
+    await sleepAsync(10)
+    if getTime().toUnix() >= calledAt + self.pools.timeout:
+      return errorConnectionNum
+
+
+proc returnConn(self:PostgresConnections | PostgresQuery | RawPostgresQuery, i: int) {.async.} =
+  if i != errorConnectionNum:
+    self.pools.conns[i].isBusy = false
+
+
+# ================================================================================
+# query
+# ================================================================================
+
+
+proc select*(self:PostgresConnections, columnsArg:varargs[string]):PostgresQuery =
+  let query = newJObject()
+  
+  if columnsArg.len == 0:
+    query["select"] = %["*"]
+  else:
+    query["select"] = %columnsArg
+  
+  let postgresQuery = PostgresQuery(
+    log: self.log,
+    pools: self.pools,
+    query: query,
+    queryString: "",
+    placeHolder: newJArray(),
+    isInTransaction: self.isInTransaction,
+    transactionConn: self.transactionConn,
+  )
+  return postgresQuery
+
+
+proc table*(self:PostgresConnections, tableArg: string): PostgresQuery =
+  let query = newJObject()
+  query["table"] = %tableArg
+
+  let postgresQuery = PostgresQuery(
+    log: self.log,
+    pools: self.pools,
+    query: query,
+    queryString: "",
+    placeHolder: newJArray(),
+    isInTransaction: self.isInTransaction,
+    transactionConn: self.transactionConn,
+  )
+  return postgresQuery
+
+
 proc table*(self:PostgresQuery, tableArg: string): PostgresQuery =
   self.query["table"] = %tableArg
   return self
@@ -390,26 +453,20 @@ proc offset*(self: PostgresQuery, num: int): PostgresQuery =
   return self
 
 
-# ================================================================================
-# connection
-# ================================================================================
-
-proc getFreeConn(self:PostgresConnections | PostgresQuery | RawPostgresQuery):Future[int] {.async.} =
-  let calledAt = getTime().toUnix()
-  while true:
-    for i in 0..<self.pools.len:
-      if not self.pools[i].isBusy:
-        self.pools[i].isBusy = true
-        # echo "=== getFreeConn ", i
-        return i
-    await sleepAsync(10)
-    if getTime().toUnix() >= calledAt + self.timeout:
-      return errorConnectionNum
-
-
-proc returnConn(self:PostgresConnections | PostgresQuery | RawPostgresQuery, i: int) {.async.} =
-  if i != errorConnectionNum:
-    self.pools[i].isBusy = false
+proc raw*(self:PostgresConnections, sql:string, arges=newJArray()): RawPostgresQuery =
+  ## arges is `JArray`
+  ## 
+  ## can't use BLOB data.
+  let rawQueryRdb = RawPostgresQuery(
+    log: self.log,
+    pools: self.pools,
+    query: newJObject(),
+    queryString: sql,
+    placeHolder: arges,
+    isInTransaction: false,
+    transactionConn: 0
+  )
+  return rawQueryRdb
 
 
 # ================================================================================
@@ -466,10 +523,10 @@ proc getAllRows(self:PostgresQuery, queryString:string):Future[seq[JsonNode]] {.
     return
 
   let (rows, dbRows) = postgres_impl.query(
-    self.pools[connI].conn,
+    self.pools.conns[connI].conn,
     queryString,
     self.placeHolder,
-    self.timeout
+    self.pools.timeout
   ).await
 
   if rows.len == 0:
@@ -489,30 +546,33 @@ proc getAllRowsPlain(self:PostgresQuery, queryString:string, args:JsonNode):Futu
     return
 
   let (rows, _) = postgres_impl.query(
-    self.pools[connI].conn,
+    self.pools.conns[connI].conn,
     queryString,
     self.placeHolder,
-    self.timeout
+    self.pools.timeout
   ).await
   
   return rows
 
 
-proc getRow(self:PostgresQuery, queryString:string):Future[Option[JsonNode]] {.async.} =
+proc getRow(self:PostgresQuery, queryString:string, connI:int=0):Future[Option[JsonNode]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
   defer:
     if not self.isInTransaction:
       self.returnConn(connI).await
+
   if connI == errorConnectionNum:
     return
 
+  sleepAsync(0).await
+
   let (rows, dbRows) = postgres_impl.query(
-    self.pools[connI].conn,
+    self.pools.conns[connI].conn,
     queryString,
     self.placeHolder,
-    self.timeout
+    self.pools.timeout
   ).await
 
   if rows.len == 0:
@@ -532,10 +592,10 @@ proc getRowPlain(self:PostgresQuery, queryString:string, args:JsonNode):Future[s
     return
   
   let (rows, _) = postgres_impl.query(
-    self.pools[connI].conn,
+    self.pools.conns[connI].conn,
     queryString,
     self.placeHolder,
-    self.timeout
+    self.pools.timeout
   ).await
   return rows[0]
 
@@ -553,9 +613,9 @@ proc exec(self:PostgresQuery, queryString:string) {.async.} =
 
   let table = self.query["table"].getStr
   let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
-  let (columns, _) = postgres_impl.query(self.pools[connI].conn, columnGetQuery, newJArray(), self.timeout).await
+  let (columns, _) = postgres_impl.query(self.pools.conns[connI].conn, columnGetQuery, newJArray(), self.pools.timeout).await
 
-  postgres_impl.exec(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
+  postgres_impl.exec(self.pools.conns[connI].conn, queryString, self.placeHolder, columns, self.pools.timeout).await
 
 
 proc insertId(self:PostgresQuery, queryString:string, key:string):Future[string] {.async.} =
@@ -570,9 +630,9 @@ proc insertId(self:PostgresQuery, queryString:string, key:string):Future[string]
 
   let table = self.query["table"].getStr
   let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
-  let (columns, _) = postgres_impl.query(self.pools[connI].conn, columnGetQuery, newJArray(), self.timeout).await
+  let (columns, _) = postgres_impl.query(self.pools.conns[connI].conn, columnGetQuery, newJArray(), self.pools.timeout).await
 
-  let (rows, _) = postgres_impl.execGetValue(self.pools[connI].conn, queryString, self.placeHolder, columns, self.timeout).await
+  let (rows, _) = postgres_impl.execGetValue(self.pools.conns[connI].conn, queryString, self.placeHolder, columns, self.pools.timeout).await
   return rows[0][0]
 
 
@@ -589,10 +649,10 @@ proc getAllRows(self:RawPostgresQuery, queryString:string):Future[seq[JsonNode]]
   let queryString = queryString.questionToDaller()
 
   let (rows, dbRows) = postgres_impl.rawQuery(
-    self.pools[connI].conn,
+    self.pools.conns[connI].conn,
     queryString,
     self.placeHolder,
-    self.timeout
+    self.pools.timeout
   ).await
 
   if rows.len == 0:
@@ -614,10 +674,10 @@ proc getAllRowsPlain(self:RawPostgresQuery, queryString:string, args:JsonNode):F
   let queryString = queryString.questionToDaller()
 
   let (rows, _) = postgres_impl.rawQuery(
-    self.pools[connI].conn,
+    self.pools.conns[connI].conn,
     queryString,
     self.placeHolder,
-    self.timeout
+    self.pools.timeout
   ).await
   
   return rows
@@ -636,10 +696,10 @@ proc getRow(self:RawPostgresQuery, queryString:string):Future[Option[JsonNode]] 
   let queryString = queryString.questionToDaller()
 
   let (rows, dbRows) = postgres_impl.rawQuery(
-    self.pools[connI].conn,
+    self.pools.conns[connI].conn,
     queryString,
     self.placeHolder,
-    self.timeout
+    self.pools.timeout
   ).await
 
   if rows.len == 0:
@@ -661,10 +721,10 @@ proc getRowPlain(self:RawPostgresQuery, queryString:string, args:JsonNode):Futur
   let queryString = queryString.questionToDaller()
   
   let (rows, _) = postgres_impl.rawQuery(
-    self.pools[connI].conn,
+    self.pools.conns[connI].conn,
     queryString,
     self.placeHolder,
-    self.timeout
+    self.pools.timeout
   ).await
   return rows[0]
 
@@ -673,6 +733,7 @@ proc exec(self:RawPostgresQuery, queryString:string) {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
     connI = getFreeConn(self).await
+
   defer:
     if not self.isInTransaction:
       self.returnConn(connI).await
@@ -682,10 +743,10 @@ proc exec(self:RawPostgresQuery, queryString:string) {.async.} =
   let queryString = queryString.questionToDaller()
 
   postgres_impl.rawExec(
-    self.pools[connI].conn,
+    self.pools.conns[connI].conn,
     queryString,
     self.placeHolder,
-    self.timeout
+    self.pools.timeout
   ).await
 
 
@@ -718,26 +779,24 @@ proc getColumn(self:PostgresQuery, queryString:string):Future[seq[string]] {.asy
     else:
       strArgs.add(arg["value"].pretty)
 
-  return postgres_impl.getColumns(self.pools[connI].conn, queryString, strArgs, self.timeout).await
+  return postgres_impl.getColumns(self.pools.conns[connI].conn, queryString, strArgs, self.pools.timeout).await
 
 
-proc transactionStart(self:PostgresConnections) {.async.} =
+proc transactionStart(self:PostgresConnections|PostgresQuery) {.async.} =
   let connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     return
   self.isInTransaction = true
   self.transactionConn = connI
 
-  postgres_impl.exec(self.pools[connI].conn, "BEGIN", newJArray(), newSeq[Row](), self.timeout).await
+  postgres_impl.exec(self.pools.conns[connI].conn, "BEGIN", newJArray(), newSeq[Row](), self.pools.timeout).await
 
 
-proc transactionEnd(self:PostgresConnections, query:string) {.async.} =
-  defer:
-    self.returnConn(self.transactionConn).await
-    self.transactionConn = 0
-    self.isInTransaction = false
-
-  postgres_impl.exec(self.pools[self.transactionConn].conn, query, newJArray(), newSeq[Row](), self.timeout).await
+proc transactionEnd(self:PostgresConnections|PostgresQuery, query:string) {.async.} =
+  postgres_impl.exec(self.pools.conns[self.transactionConn].conn, query, newJArray(), newSeq[Row](), self.pools.timeout).await
+  self.returnConn(self.transactionConn).await
+  self.transactionConn = 0
+  self.isInTransaction = false
 
 
 # ================================================================================
@@ -1017,17 +1076,17 @@ proc sum*(self:PostgresQuery, column:string):Future[Option[float]]{.async.} =
     return none(float)
 
 
-proc begin*(self:PostgresConnections) {.async.} =
+proc begin*(self:PostgresQuery) {.async.} =
   self.log.logger("BEGIN")
   self.transactionStart().await
 
 
-proc rollback*(self:PostgresConnections) {.async.} =
+proc rollback*(self:PostgresQuery) {.async.} =
   self.log.logger("ROLLBACK")
   self.transactionEnd("ROLLBACK").await
 
 
-proc commit*(self:PostgresConnections) {.async.} =
+proc commit*(self:PostgresQuery) {.async.} =
   self.log.logger("COMMIT")
   self.transactionEnd("COMMIT").await
 

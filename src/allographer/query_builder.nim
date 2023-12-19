@@ -12,7 +12,7 @@ when NimMajor == 2:
 
   when isExistsPostgres:
     import ./v2/query_builder/models/postgres/postgres_types; export postgres_types
-    import ./v2/query_builder/models/postgres/postgres_connections; export postgres_connections
+    # import ./v2/query_builder/models/postgres/postgres_connections; export postgres_connections
     import ./v2/query_builder/models/postgres/postgres_query; export postgres_query
     import ./v2/query_builder/models/postgres/poatgres_transaction; export poatgres_transaction
 

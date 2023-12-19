@@ -65,8 +65,9 @@ proc migrate() {.async.} =
 let getFirstPrepare = stdRdb.prepare("getFirst", sql""" SELECT * FROM "World" WHERE id = $1 LIMIT 1 """, 1)
 let updatePrepare = stdRdb.prepare("updatePrepare", sql""" UPDATE "World" SET "randomNumber" = $1 WHERE id = $2 """, 2)
 
+const countNum = 500
+
 proc query():Future[seq[JsonNode]] {.async.} =
-  const countNum = 500
   var futures = newSeq[Future[seq[string]]](countNum)
   for i in 1..countNum:
     let n = rand(range1_10000)
@@ -80,7 +81,6 @@ proc query():Future[seq[JsonNode]] {.async.} =
   return response
 
 proc queryRaw():Future[seq[JsonNode]] {.async.} =
-  const countNum = 500
   var futures = newSeq[Future[seq[string]]](countNum)
   for i in 1..countNum:
     let n = rand(range1_10000)
@@ -95,7 +95,6 @@ proc queryRaw():Future[seq[JsonNode]] {.async.} =
 
 
 proc queryStd():Future[seq[JsonNode]] {.async.} =
-  const countNum = 500
   var resp:seq[Row]
   for i in 1..countNum:
     resp.add(stdRdb.getRow(getFirstPrepare, i))
@@ -107,7 +106,6 @@ proc queryStd():Future[seq[JsonNode]] {.async.} =
 
 
 proc update():Future[seq[JsonNode]] {.async.} =
-  const countNum = 500
   var response = newSeq[JsonNode](countNum)
   var futures = newSeq[Future[void]](countNum)
   for i in 1..countNum:
@@ -123,7 +121,6 @@ proc update():Future[seq[JsonNode]] {.async.} =
 
 
 proc updateRaw():Future[seq[JsonNode]] {.async.} =
-  const countNum = 500
   var response = newSeq[JsonNode](countNum)
   var futures = newSeq[Future[void]](countNum)
   for i in 1..countNum:
@@ -139,7 +136,6 @@ proc updateRaw():Future[seq[JsonNode]] {.async.} =
 
 
 proc updateRawStd():Future[seq[JsonNode]] {.async.} =
-  const countNum = 500
   var response = newSeq[JsonNode](countNum)
   var futures = newSeq[Future[void]](countNum)
   for i in 1..countNum:
@@ -162,10 +158,9 @@ proc timeProcess[T](name:string, cb:proc():Future[T]) {.async.}=
   var resultStr = ""
 
   for i in 1..times:
-    sleep(500)
+    sleep(100)
     start = cpuTime()
-    for _ in 1..20:
-      discard cb().await
+    discard cb().await
     eachTime = cpuTime() - start
     sumTime += eachTime
     if i > 1: resultStr.add("\n")
@@ -182,12 +177,11 @@ proc main() =
   migrate().waitFor
 
   timeProcess("query", query).waitFor
-  # timeProcess("queryTime", queryTime).waitFor
-  timeProcess("queryRaw", queryRaw).waitFor
-  timeProcess("queryStd", queryStd).waitFor
-  timeProcess("update", update).waitFor
-  timeProcess("updateRaw", updateRaw).waitFor
-  timeProcess("updateRawStd", updateRawStd).waitFor
+  # timeProcess("queryRaw", queryRaw).waitFor
+  # timeProcess("queryStd", queryStd).waitFor
+  # timeProcess("update", update).waitFor
+  # timeProcess("updateRaw", updateRaw).waitFor
+  # timeProcess("updateRawStd", updateRawStd).waitFor
 
 
 main()
