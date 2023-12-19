@@ -1,7 +1,7 @@
 import std/asyncdispatch
 import std/strformat
-import ../../../query_builder/models/mariadb/mariadb_connections
 import ../../../query_builder/models/mariadb/mariadb_query
+import ../../../query_builder/models/mariadb/mariadb_exec
 import ../../models/table
 import ./mariadb_query_type
 

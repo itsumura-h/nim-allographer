@@ -5,8 +5,8 @@ import std/strformat
 import std/strutils
 import std/times
 import ../../../query_builder/models/mariadb/mariadb_types
-import ../../../query_builder/models/mariadb/mariadb_connections
 import ../../../query_builder/models/mariadb/mariadb_query
+import ../../../query_builder/models/mariadb/mariadb_exec
 import ../../../query_builder/error
 import ../../models/table
 

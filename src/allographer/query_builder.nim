@@ -50,8 +50,8 @@ elif NimMajor == 1:
 
   when isExistsMariadb:
     import ./v1/query_builder/models/mariadb/mariadb_types; export mariadb_types
-    import ./v1/query_builder/models/mariadb/mariadb_connections; export mariadb_connections
     import ./v1/query_builder/models/mariadb/mariadb_query; export mariadb_query
+    import ./v1/query_builder/models/mariadb/mariadb_exec; export mariadb_exec
     import ./v1/query_builder/models/mariadb/mariadb_transaction; export mariadb_transaction
 
   when isExistsMysql:

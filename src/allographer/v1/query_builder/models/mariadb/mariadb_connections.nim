@@ -15,10 +15,9 @@ proc select*(self:MariadbConnections, columnsArg:varargs[string]):MariadbQuery =
   else:
     query["select"] = %columnsArg
   
-  let MariadbQuery = MariadbQuery(
+  let mariadbQuery = MariadbQuery(
     log: self.log,
     pools: self.pools,
-    timeout: self.timeout,
     info: self.info,
     query: query,
     queryString: "",
@@ -26,24 +25,23 @@ proc select*(self:MariadbConnections, columnsArg:varargs[string]):MariadbQuery =
     isInTransaction: self.isInTransaction,
     transactionConn: self.transactionConn,
   )
-  return MariadbQuery
+  return mariadbQuery
 
 
 proc table*(self:MariadbConnections, tableArg: string): MariadbQuery =
   let query = newJObject()
   query["table"] = %tableArg
 
-  let MariadbQuery = MariadbQuery(
+  let mariadbQuery = MariadbQuery(
     log: self.log,
     pools: self.pools,
-    timeout: self.timeout,
     query: query,
     queryString: "",
     placeHolder: newJArray(),
     isInTransaction: self.isInTransaction,
     transactionConn: self.transactionConn,
   )
-  return MariadbQuery
+  return mariadbQuery
 
 
 proc raw*(self:MariadbConnections, sql:string, arges=newJArray()): RawMariadbQuery =
@@ -53,7 +51,6 @@ proc raw*(self:MariadbConnections, sql:string, arges=newJArray()): RawMariadbQue
   let rawQueryRdb = RawMariadbQuery(
     log: self.log,
     pools: self.pools,
-    timeout: self.timeout,
     info: self.info,
     query: newJObject(),
     queryString: sql.strip(),
