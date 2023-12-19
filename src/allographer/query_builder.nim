@@ -18,8 +18,8 @@ when NimMajor == 2:
 
   when isExistsMariadb:
     import ./v2/query_builder/models/mariadb/mariadb_types; export mariadb_types
-    import ./v2/query_builder/models/mariadb/mariadb_connections; export mariadb_connections
     import ./v2/query_builder/models/mariadb/mariadb_query; export mariadb_query
+    import ./v2/query_builder/models/mariadb/mariadb_exec; export mariadb_exec
     import ./v2/query_builder/models/mariadb/mariadb_transaction; export mariadb_transaction
 
   when isExistsMysql:
