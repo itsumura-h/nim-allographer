@@ -30,8 +30,8 @@ when NimMajor == 2:
 
   when isExistsSurrealdb:
     import ./v2/query_builder/models/surreal/surreal_types; export surreal_types
-    import ./v2/query_builder/models/surreal/surreal_connections; export surreal_connections
     import ./v2/query_builder/models/surreal/surreal_query; export surreal_query
+    import ./v2/query_builder/models/surreal/surreal_exec; export surreal_exec
 elif NimMajor == 1:
   import ./v1/query_builder/enums; export enums
   import ./v1/query_builder/error; export error
