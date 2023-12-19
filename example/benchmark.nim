@@ -20,28 +20,31 @@ import ../src/allographer/query_builder
 randomize()
 # let rdb = dbOpen(PostgreSQL, "database", "user", "pass", "postgres", 5432, 95, 30, shouldDisplayLog=false)
 # let rdb = dbOpen(MariaDB, "database", "user", "pass", "mariadb", 3306, 95, 30, shouldDisplayLog=false)
-let rdb = dbOpen(SQLite3, "db.sqlite3", 95, 30, shouldDisplayLog=false)
+# let rdb = dbOpen(SQLite3, "db.sqlite3", 95, 30, shouldDisplayLog=false)
+let rdb = dbOpen(SurrealDB, "test", "test", "user", "pass", "http://surreal", 8000, 500, 30, shouldDisplayLog=false).waitFor()
 # let stdRdb = open("postgres:5432", "user", "pass", "database")
-const range1_10000 = 1..10000
+const range1_10000 = 1..1000
 
 proc migrate() {.async.} =
   echo "=== start migration"
   rdb.create(
     table("World", [
-      Column.increments("id"),
+      # Column.increments("id"),
+      Column.increments("index"), # for surreal
       Column.integer("randomNumber").default(0)
     ]),
     table("Fortune", [
-      Column.increments("id"),
+      # Column.increments("id"),
+      Column.increments("index"), # for surreal
       Column.string("message")
     ])
   )
 
   seeder(rdb, "World"):
     var data = newSeq[JsonNode]()
-    for i in 1..10000:
+    for i in range1_10000:
       data.add(
-        %*{"randomNumber": rand(1..10000)}
+        %*{"randomNumber": rand(range1_10000)}
       )
     await rdb.table("World").insert(data)
 
@@ -114,8 +117,12 @@ proc update():Future[seq[JsonNode]] {.async.} =
     let index = rand(range1_10000)
     let number = rand(range1_10000)
     futures[i-1] = (proc():Future[void] {.async.} =
-      discard rdb.select("id", "randomNumber").table("World").findPlain(index).await
-      rdb.table("World").where("id", "=", index).update(%*{"randomNumber": number}).await
+      # discard rdb.select("id", "randomNumber").table("World").findPlain(index).await
+      # rdb.table("World").where("id", "=", index).update(%*{"randomNumber": number}).await
+
+      # for surreal
+      discard rdb.select("id", "randomNumber").table("World").where("index", "=", index).first().await
+      rdb.table("World").where("index", "=", index).update(%*{"randomNumber": number}).await
     )()
     response[i-1] = %*{"id":index, "randomNumber": number}
   await all(futures)

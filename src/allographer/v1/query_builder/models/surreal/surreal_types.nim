@@ -8,37 +8,37 @@ import ../../error
 type SurrealDB* = object
 
 
-type SurrealConnection* = object
+type Connection* = object
   conn*:SurrealConn
   isBusy*:bool
   createdAt*:int64
 
+
+type Connections* = ref object
+  conns*: seq[Connection]
+  timeout*:int
+
+
 ## created by `let rdb = dbOpen(SurrealDB, "ns", "database", "user", "pass", "http://surreal", 8000)`
 type SurrealConnections* = ref object
   log*: LogSetting
-  pools*:seq[SurrealConnection]
-  timeout*:int
-
-proc `$`*(self:SurrealConnections):string =
-  return "SurrealDB"
+  pools*:Connections
 
 
 type SurrealQuery* = ref object
   ## created by `rdb.select("columnName")` or `rdb.table("tableName")`
   log*: LogSetting
-  pools*:seq[SurrealConnection]
-  timeout*:int
+  pools*:Connections
   query*: JsonNode
   queryString*: string
   # placeHolder*: JsonNode # JArray [{"key":"user", "value":"user1"}]
   placeHolder*: JsonNode # JArray [true, 1, 1.1, "str"]
 
 
-proc new*(_:type SurrealQuery, log:LogSetting, pools:seq[SurrealConnection], timeout:int, query:JsonNode):SurrealQuery =
+proc new*(_:type SurrealQuery, log:LogSetting, pools:Connections, query:JsonNode):SurrealQuery =
   return SurrealQuery(
     log:log,
     pools:pools,
-    timeout:timeout,
     query:query,
     queryString:"",
     placeHolder: newJArray()
@@ -47,11 +47,14 @@ proc new*(_:type SurrealQuery, log:LogSetting, pools:seq[SurrealConnection], tim
 
 type RawSurrealQuery* = ref object
   log*: LogSetting
-  pools*:seq[SurrealConnection]
-  timeout*:int
+  pools*:Connections
   query*: JsonNode
   queryString*: string
   placeHolder*: JsonNode # JArray ["user1", "user1@example.com"]
+
+
+proc `$`*(self:SurrealConnections|SurrealQuery|RawSurrealQuery):string =
+  return "SurrealDB"
 
 
 type SurrealId* = object
