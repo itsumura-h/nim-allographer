@@ -40,9 +40,9 @@ type MariadbQuery* = ref object
   log*: LogSetting
   pools*:Connections
   info*:ConnectionInfo
-  query*: JsonNode
+  query*: JsonNode # JObject
   queryString*: string
-  placeHolder*: JsonNode # [{"key":"user", "value":"user1"}]
+  placeHolder*: JsonNode # JArray [{"key":"user", "value":"user1"}]
   # for transaction
   isInTransaction*: bool
   transactionConn*: int
@@ -52,9 +52,9 @@ type RawMariadbQuery* = ref object
   log*: LogSetting
   pools*:Connections
   info*:ConnectionInfo
-  query*: JsonNode
+  query*: JsonNode # JObject
   queryString*: string
-  placeHolder*: JsonNode # ["user1", "user1@example.com"]
+  placeHolder*: JsonNode # JArray ["user1", "user1@example.com"]
   # for transaction
   isInTransaction*: bool
   transactionConn*: int

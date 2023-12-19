@@ -24,8 +24,8 @@ when NimMajor == 2:
 
   when isExistsMysql:
     import ./v2/query_builder/models/mysql/mysql_types; export mysql_types
-    import ./v2/query_builder/models/mysql/mysql_connections; export mysql_connections
     import ./v2/query_builder/models/mysql/mysql_query; export mysql_query
+    import ./v2/query_builder/models/mysql/mysql_exec; export mysql_exec
     import ./v2/query_builder/models/mysql/mysql_transaction; export mysql_transaction
 
   when isExistsSurrealdb:
@@ -56,8 +56,8 @@ elif NimMajor == 1:
 
   when isExistsMysql:
     import ./v1/query_builder/models/mysql/mysql_types; export mysql_types
-    import ./v1/query_builder/models/mysql/mysql_connections; export mysql_connections
     import ./v1/query_builder/models/mysql/mysql_query; export mysql_query
+    import ./v1/query_builder/models/mysql/mysql_exec; export mysql_exec
     import ./v1/query_builder/models/mysql/mysql_transaction; export mysql_transaction
 
   when isExistsSurrealdb:
