@@ -6,7 +6,6 @@ import std/strutils
 import std/times
 import ../../libs/mysql/mysql_impl
 import ../../log
-import ../../enums
 import ../database_types
 import ./query/mysql_builder
 import ./mysql_types

@@ -6,7 +6,6 @@ import std/strutils
 import std/times
 import ../../libs/mariadb/mariadb_impl
 import ../../log
-import ../../enums
 import ../database_types
 import ./query/mariadb_builder
 import ./mariadb_types
