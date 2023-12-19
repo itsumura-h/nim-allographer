@@ -8,6 +8,7 @@ import ./sqlite_lib
 
 proc query*(db:PSqlite3, query:string, args:seq[string], timeout:int):Future[(seq[Row], DbRows)] {.async.} =
   assert(not db.isNil, "Database not connected.")
+  sleepAsync(0).await
   var dbRows: DbRows
   var rows = newSeq[seq[string]]()
   for row in db.instantRows(dbRows, query, args):
@@ -20,6 +21,7 @@ proc query*(db:PSqlite3, query:string, args:seq[string], timeout:int):Future[(se
 
 proc queryPlain*(db:PSqlite3, query:string, args:seq[string], timeout:int):Future[seq[Row]] {.async.} =
   assert(not db.isNil, "Database not connected.")
+  sleepAsync(0).await
   var rows = newSeq[seq[string]]()
   for row in db.instantRowsPlain(query, args):
     var columns = newSeq[string](row.len)
@@ -30,6 +32,7 @@ proc queryPlain*(db:PSqlite3, query:string, args:seq[string], timeout:int):Futur
 
 
 proc getColumnTypes*(db:PSqlite3, query: string):Future[seq[(string, string)]] {.async.} =
+  sleepAsync(0).await
   var dbRows: DbRows
   var columns = newSeq[(string, string)]()
   for row in db.instantRows(dbRows, query, newSeq[string]()):
@@ -40,6 +43,7 @@ proc getColumnTypes*(db:PSqlite3, query: string):Future[seq[(string, string)]] {
 proc exec*(db:PSqlite3, query: string, args: JsonNode, columns:seq[(string, string)], timeout:int) {.async.} =
   ## args is `JArray`
   assert(not db.isNil, "Database not connected.")
+  sleepAsync(0).await
   # var q = dbFormat(query, strArges)
   var stmt: PStmt
   var res:bool
@@ -93,6 +97,7 @@ proc exec*(db:PSqlite3, query: string, args: JsonNode, timeout:int) {.async.} =
   ## used for rdb.raw().exec()
   ## args are `JArray`
   assert(not db.isNil, "Database not connected.")
+  sleepAsync(0).await
   var stmt: PStmt
   var res:bool
   if prepare_v2(db, query.cstring, query.len.cint, stmt, nil) == SQLITE_OK:
@@ -132,6 +137,7 @@ proc exec*(db:PSqlite3, query: string, args: JsonNode, timeout:int) {.async.} =
 proc exec*(db:PSqlite3, query: string, args: seq[string], timeout:int) {.async.} =
   ## Not used anymore
   assert(not db.isNil, "Database not connected.")
+  sleepAsync(0).await
   var q = dbFormat(query, args)
   var stmt: PStmt
   var res:bool
@@ -164,6 +170,7 @@ proc preparedQuery*(db:PSqlite3, args:seq[string] = @[], sqliteStmt:PStmt):Futur
     sqliteStmt.bindParam(i+1, row)
   # run query
   assert(not db.isNil, "Database not connected.")
+  sleepAsync(0).await
   var dbRows: DbRows
   var rows = newSeq[seq[string]]()
   for row in db.instantRows(dbRows, sqliteStmt):
@@ -180,7 +187,7 @@ proc preparedExec*(db:PSqlite3, args:seq[string] = @[], sqliteStmt:PStmt) {.asyn
   for i, row in args:
     sqliteStmt.bindParam(i+1, row)
   # run query
-  await sleepAsync(0)
+  sleepAsync(0).await
   let x = step(sqliteStmt)
   var res:bool
   if x in {SQLITE_DONE, SQLITE_ROW}:

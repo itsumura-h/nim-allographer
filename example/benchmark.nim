@@ -19,7 +19,8 @@ import ../src/allographer/query_builder
 
 randomize()
 # let rdb = dbOpen(PostgreSQL, "database", "user", "pass", "postgres", 5432, 95, 30, shouldDisplayLog=false)
-let rdb = dbOpen(MariaDB, "database", "user", "pass", "mariadb", 3306, 95, 30, shouldDisplayLog=false)
+# let rdb = dbOpen(MariaDB, "database", "user", "pass", "mariadb", 3306, 95, 30, shouldDisplayLog=false)
+let rdb = dbOpen(SQLite3, "db.sqlite3", 95, 30, shouldDisplayLog=false)
 # let stdRdb = open("postgres:5432", "user", "pass", "database")
 const range1_10000 = 1..10000
 
@@ -68,18 +69,18 @@ proc migrate() {.async.} =
 
 const countNum = 500
 
-proc query():Future[seq[JsonNode]] {.async.} =
-  var futures = newSeq[Future[seq[string]]](countNum)
-  for i in 1..countNum:
-    let n = rand(range1_10000)
-    futures[i-1] = rdb.select().table("World").findPlain(n)
-  let resp = all(futures).await
-  let response = resp.map(
-    proc(x:seq[string]):JsonNode =
-      if x.len > 0: %*{"id": x[0].parseInt, "randomNumber": x[1].parseInt}
-      else: newJObject()
-  )
-  return response
+# proc query():Future[seq[JsonNode]] {.async.} =
+#   var futures = newSeq[Future[seq[string]]](countNum)
+#   for i in 1..countNum:
+#     let n = rand(range1_10000)
+#     futures[i-1] = rdb.select().table("World").findPlain(n)
+#   let resp = all(futures).await
+#   let response = resp.map(
+#     proc(x:seq[string]):JsonNode =
+#       if x.len > 0: %*{"id": x[0].parseInt, "randomNumber": x[1].parseInt}
+#       else: newJObject()
+#   )
+#   return response
 
 # proc queryRaw():Future[seq[JsonNode]] {.async.} =
 #   var futures = newSeq[Future[seq[string]]](countNum)
@@ -106,19 +107,19 @@ proc query():Future[seq[JsonNode]] {.async.} =
 #   return response
 
 
-# proc update():Future[seq[JsonNode]] {.async.} =
-#   var response = newSeq[JsonNode](countNum)
-#   var futures = newSeq[Future[void]](countNum)
-#   for i in 1..countNum:
-#     let index = rand(range1_10000)
-#     let number = rand(range1_10000)
-#     futures[i-1] = (proc():Future[void] =
-#       discard rdb.select("id", "randomNumber").table("World").findPlain(index)
-#       rdb.table("World").where("id", "=", index).update(%*{"randomNumber": number})
-#     )()
-#     response[i-1] = %*{"id":index, "randomNumber": number}
-#   await all(futures)
-#   return response
+proc update():Future[seq[JsonNode]] {.async.} =
+  var response = newSeq[JsonNode](countNum)
+  var futures = newSeq[Future[void]](countNum)
+  for i in 1..countNum:
+    let index = rand(range1_10000)
+    let number = rand(range1_10000)
+    futures[i-1] = (proc():Future[void] {.async.} =
+      discard rdb.select("id", "randomNumber").table("World").findPlain(index).await
+      rdb.table("World").where("id", "=", index).update(%*{"randomNumber": number}).await
+    )()
+    response[i-1] = %*{"id":index, "randomNumber": number}
+  await all(futures)
+  return response
 
 
 # proc updateRaw():Future[seq[JsonNode]] {.async.} =
@@ -177,10 +178,10 @@ proc timeProcess[T](name:string, cb:proc():Future[T]) {.async.}=
 proc main() =
   migrate().waitFor
 
-  timeProcess("query", query).waitFor
+  # timeProcess("query", query).waitFor
   # timeProcess("queryRaw", queryRaw).waitFor
   # timeProcess("queryStd", queryStd).waitFor
-  # timeProcess("update", update).waitFor
+  timeProcess("update", update).waitFor
   # timeProcess("updateRaw", updateRaw).waitFor
   # timeProcess("updateRawStd", updateRawStd).waitFor
 
