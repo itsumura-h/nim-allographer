@@ -187,7 +187,10 @@ proc insertId(self:MysqlQuery, queryString:string, key:string):Future[string] {.
   let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
   let (columns, _) = mysql_impl.query(self.pools.conns[connI].conn, columnGetQuery, newJArray(), self.pools.timeout).await
 
-  let (rows, _) = mysql_impl.execGetValue(self.pools.conns[connI].conn, queryString, self.placeHolder, columns, self.pools.timeout).await
+  # let (rows, _) = mysql_impl.execGetValue(self.pools.conns[connI].conn, queryString, self.placeHolder, columns, self.pools.timeout).await
+  # return rows[0][0]
+  mysql_impl.exec(self.pools.conns[connI].conn, queryString, self.placeHolder, columns, self.pools.timeout).await
+  let (rows, _) = mysql_impl.query(self.pools.conns[connI].conn, "SELECT LAST_INSERT_ID()", self.placeHolder, self.pools.timeout).await
   return rows[0][0]
 
 
@@ -490,7 +493,7 @@ proc insert*(self:MysqlQuery, items:seq[JsonNode]) {.async.} =
 
 proc insertId*(self:MysqlQuery, items:JsonNode, key="id"):Future[string] {.async.} =
   var sql = self.insertValueBuilder(items)
-  sql.add(&" RETURNING `{key}`")
+  # sql.add(&" RETURNING `{key}`")
   self.log.logger(sql)
   return self.insertId(sql, key).await
 
@@ -499,7 +502,7 @@ proc insertId*(self: MysqlQuery, items: seq[JsonNode], key="id"):Future[seq[stri
   result = newSeq[string](items.len)
   for i, item in items:
     var sql = self.insertValueBuilder(item)
-    sql.add(&" RETURNING `{key}`")
+    # sql.add(&" RETURNING `{key}`")
     self.log.logger(sql)
     result[i] = self.insertId(sql, key).await
     self.placeHolder = newJArray()
