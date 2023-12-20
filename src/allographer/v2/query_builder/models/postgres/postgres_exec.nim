@@ -642,17 +642,17 @@ proc sum*(self:PostgresQuery, column:string):Future[Option[float]]{.async.} =
     return none(float)
 
 
-proc begin*(self:PostgresQuery) {.async.} =
+proc begin*(self:PostgresConnections) {.async.} =
   self.log.logger("BEGIN")
   self.transactionStart().await
 
 
-proc rollback*(self:PostgresQuery) {.async.} =
+proc rollback*(self:PostgresConnections) {.async.} =
   self.log.logger("ROLLBACK")
   self.transactionEnd("ROLLBACK").await
 
 
-proc commit*(self:PostgresQuery) {.async.} =
+proc commit*(self:PostgresConnections) {.async.} =
   self.log.logger("COMMIT")
   self.transactionEnd("COMMIT").await
 
