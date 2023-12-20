@@ -30,13 +30,7 @@ proc selectSql*(self: SqliteQuery): SqliteQuery =
     for i, item in self.query["select"].getElems():
       if i > 0: queryString.add(",")
       var column = item.getStr()
-      # if column.contains("as"):
-      #   let original = column.split("as")[0].strip()
-      #   let renamed = column.split("as")[1].strip()
-      #   queryString.add(&" \"{original}\" as \"{renamed}\"")
-      # else:
-      #   queryString.add(&" {column}")
-      column = quote(column)
+      if column != "*": column = quote(column)
       queryString.add(&" {column}")
   else:
     queryString.add(" *")

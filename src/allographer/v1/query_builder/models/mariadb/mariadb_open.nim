@@ -8,7 +8,7 @@ import ./mariadb_types
 proc dbOpen*(_: type MariaDB, database: string = "", user: string = "", password: string = "",
                   host: string = "", port: int = 0, maxConnections: int = 1, timeout=30,
                   shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): MariadbConnections =
-  var pools = newSeq[MariadbConnection](maxConnections)
+  var conns = newSeq[Connection](maxConnections)
   for i in 0..<maxConnections:
     let conn = mariadb_rdb.init(nil)
     if conn == nil:
@@ -18,12 +18,16 @@ proc dbOpen*(_: type MariaDB, database: string = "", user: string = "", password
       var errmsg = $mariadb_rdb.error(conn)
       mariadb_rdb.close(conn)
       dbError(errmsg)
-    pools[i] = MariadbConnection(
+    conns[i] = Connection(
       conn: conn,
       isBusy: false,
       createdAt: getTime().toUnix()
     )
-  let info = MariadbConnectionInfo(
+  let pools = Connections(
+    conns: conns,
+    timeout: timeout
+  )
+  let info = ConnectionInfo(
     database:database,
     user:user,
     password:password,
@@ -32,7 +36,6 @@ proc dbOpen*(_: type MariaDB, database: string = "", user: string = "", password
   )
   result = MariadbConnections(
     pools: pools,
-    timeout: timeout,
     info: info,
     log: LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)
   )

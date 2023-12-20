@@ -5,8 +5,8 @@ import std/strformat
 import std/strutils
 import std/times
 import ../../../query_builder/models/mysql/mysql_types
-import ../../../query_builder/models/mysql/mysql_connections
 import ../../../query_builder/models/mysql/mysql_query
+import ../../../query_builder/models/mysql/mysql_exec
 import ../../../query_builder/error
 import ../../models/table
 

@@ -7,42 +7,6 @@ import ../../error
 import ./surreal_rdb
 import ./surreal_lib
 
-type SurrealImpl* = ref object
-
-# proc open*(_:type SurrealImpl, namespace="", database="",user="", password="",
-#             host="", port:int32 = 0, maxConnections=1, timeout=30):Future[SurrealConnections] {.async.} =
-#   var pools = newSeq[SurrealConn](maxConnections)
-#   for i in 0..<maxConnections:
-#     let client = newAsyncHttpClient()
-#     var headers = newHttpHeaders(true)
-#     headers["NS"] = namespace
-#     headers["DB"] = database
-#     headers["Accept"] = "application/json"
-#     headers["Authorization"] = "Basic " & base64.encode(user & ":" & password)
-#     client.headers = headers
-
-#     var url = &"{host}:{port}/status"
-#     var resp = client.get(url).await
-#     if(resp.status != $Http200):
-#       dbError(&"Cannot connect to SurrealDb {host}:{port}")
-
-#     url = &"{host}:{port}/sql"
-#     resp = client.post(url, &"DEFINE NAMESPACE `{namespace}`; USE NS `{namespace}`; DEFINE DATABASE `{database}`").await
-#     if(resp.status != $Http200):
-#       dbError(&"Cannot connect to SurrealDb {host}:{port}")
-
-#     pools[i] = SurrealConn(
-#       conn: client,
-#       host:host,
-#       port:port,
-#       isBusy: false,
-#       createdAt: getTime().toUnix(),
-#     )
-#   return SurrealConnections(
-#     pools: pools,
-#     timeout: timeout
-#   )
-
 
 proc query*(db:SurrealConn, query: string, args: seq[string], timeout:int):Future[JsonNode] {.async.} =
   ## return JArray

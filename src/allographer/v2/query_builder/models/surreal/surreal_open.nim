@@ -13,7 +13,7 @@ import ./surreal_types
 proc dbOpen*(_:type SurrealDB, namespace:string = "", database: string = "", user: string = "", password: string = "",
               host: string = "", port: int = 0, maxConnections: int = 1, timeout=30,
               shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): Future[SurrealConnections] {.async.} =
-  var pools = newSeq[SurrealConnection](maxConnections)
+  var conns = newSeq[Connection](maxConnections)
   for i in 0..<maxConnections:
     let client = newAsyncHttpClient()
     var headers = newHttpHeaders(true)
@@ -39,14 +39,16 @@ proc dbOpen*(_:type SurrealDB, namespace:string = "", database: string = "", use
       port: port.int32
     )
 
-    pools[i] = SurrealConnection(
+    conns[i] = Connection(
       conn: conn,
       isBusy: false,
       createdAt: getTime().toUnix(),
     )
-
+  let pools = Connections(
+    conns:conns,
+    timeout:timeout
+  )
   return SurrealConnections(
     pools: pools,
-    timeout: timeout,
     log: LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)
   )

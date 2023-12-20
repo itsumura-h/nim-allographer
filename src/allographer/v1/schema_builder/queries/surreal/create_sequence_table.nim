@@ -2,8 +2,8 @@ import std/asyncdispatch
 import std/strformat
 import std/json
 import ../../../query_builder/models/surreal/surreal_types
-import ../../../query_builder/models/surreal/surreal_connections
 import ../../../query_builder/models/surreal/surreal_query
+import ../../../query_builder/models/surreal/surreal_exec
 import ../../models/table
 
 

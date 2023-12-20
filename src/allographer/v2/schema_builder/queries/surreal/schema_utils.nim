@@ -5,8 +5,8 @@ import std/strformat
 import std/strutils
 import std/times
 import ../../../query_builder/models/surreal/surreal_types
-import ../../../query_builder/models/surreal/surreal_connections
 import ../../../query_builder/models/surreal/surreal_query
+import ../../../query_builder/models/surreal/surreal_exec
 import ../../../query_builder/error
 import ../../models/table
 
@@ -47,7 +47,7 @@ proc exec*(rdb:SurrealConnections, queries:seq[string]) =
 
   try:
     for query in queries:
-      rdb.raw(query).exec.waitFor
+      rdb.raw(query).exec().waitFor
     isSuccess = true
   except DbError:
     echo getCurrentExceptionMsg()

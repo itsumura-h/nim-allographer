@@ -5,8 +5,8 @@ import std/strformat
 import std/strutils
 import std/times
 import ../../../query_builder/models/sqlite/sqlite_types
-import ../../../query_builder/models/sqlite/sqlite_connections
 import ../../../query_builder/models/sqlite/sqlite_query
+import ../../../query_builder/models/sqlite/sqlite_exec
 import ../../../query_builder/error
 import ../../models/table
 
@@ -44,7 +44,7 @@ proc exec*(rdb:SqliteConnections, queries:seq[string]) =
 
   try:
     for query in queries:
-      rdb.raw(query).exec.waitFor
+      rdb.raw(query).exec().waitFor
     isSuccess = true
   except DbError:
     echo getCurrentExceptionMsg()
@@ -57,7 +57,7 @@ proc execThenSaveHistory*(rdb:SqliteConnections, tableName:string, queries:seq[s
   var isSuccess = false
   try:
     for query in queries:
-      rdb.raw(query).exec.waitFor
+      rdb.raw(query).exec().waitFor
     isSuccess = true
   except DbError:
     echo getCurrentExceptionMsg()
@@ -85,7 +85,7 @@ proc execThenSaveHistory*(rdb:SqliteConnections, tableName:string, queries:seq[s
 proc execThenSaveHistory*(rdb:SqliteConnections, tableName:string, query:string, checksum:string) =
   var isSuccess = false
   try:
-    rdb.raw(query).exec.waitFor
+    rdb.raw(query).exec().waitFor
     isSuccess = true
   except DbError:
     echo getCurrentExceptionMsg()

@@ -5,41 +5,44 @@ import ../../libs/mariadb/mariadb_rdb
 
 type MariaDB* = object
 
-type MariadbConnectionInfo* = object
+
+type ConnectionInfo* = object
   database*:string
   user*:string
   password*:string
   host*:string
   port*:int
 
-type MariadbConnection* = object
+
+type Connection* = object
   conn*: PMySQL
   isBusy*: bool
   createdAt*: int64
 
+
+type Connections* = ref object
+  conns*: seq[Connection]
+  timeout*:int
+
+
 ## created by `let rdb = dbOpen(MySQL, "localhost", 3306)`
 type MariadbConnections* = ref object
   log*: LogSetting
-  pools*:seq[MariadbConnection]
-  timeout*:int
-  info*:MariadbConnectionInfo
+  pools*:Connections
+  info*:ConnectionInfo
   # for transaction
   isInTransaction*: bool
   transactionConn*: int
-
-proc `$`*(self:MariadbConnections):string =
-  return "MariaDB"
 
 
 ## created by `rdb.select("columnName")` or `rdb.table("tableName")`
 type MariadbQuery* = ref object
   log*: LogSetting
-  pools*:seq[MariadbConnection]
-  timeout*:int
-  info*:MariadbConnectionInfo
-  query*: JsonNode
+  pools*:Connections
+  info*:ConnectionInfo
+  query*: JsonNode # JObject
   queryString*: string
-  placeHolder*: JsonNode # [{"key":"user", "value":"user1"}]
+  placeHolder*: JsonNode # JArray [{"key":"user", "value":"user1"}]
   # for transaction
   isInTransaction*: bool
   transactionConn*: int
@@ -47,12 +50,15 @@ type MariadbQuery* = ref object
 
 type RawMariadbQuery* = ref object
   log*: LogSetting
-  pools*:seq[MariadbConnection]
-  timeout*:int
-  info*:MariadbConnectionInfo
-  query*: JsonNode
+  pools*:Connections
+  info*:ConnectionInfo
+  query*: JsonNode # JObject
   queryString*: string
-  placeHolder*: JsonNode # ["user1", "user1@example.com"]
+  placeHolder*: JsonNode # JArray ["user1", "user1@example.com"]
   # for transaction
   isInTransaction*: bool
   transactionConn*: int
+
+
+proc `$`*(self:MariadbConnections|MariadbQuery|RawMariadbQuery):string =
+  return "MariaDB"

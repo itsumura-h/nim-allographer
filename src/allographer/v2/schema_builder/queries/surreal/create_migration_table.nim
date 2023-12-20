@@ -5,8 +5,8 @@ import std/strformat
 import std/strutils
 import std/json
 import ../../../query_builder/models/surreal/surreal_types
-import ../../../query_builder/models/surreal/surreal_connections
 import ../../../query_builder/models/surreal/surreal_query
+import ../../../query_builder/models/surreal/surreal_exec
 import ../../models/table
 import ./schema_utils
 import ./surreal_query_type

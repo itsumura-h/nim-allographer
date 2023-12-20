@@ -5,8 +5,8 @@ import std/sequtils
 import std/re
 import std/sha1
 import std/json
-import ../../../query_builder/models/sqlite/sqlite_connections
 import ../../../query_builder/models/sqlite/sqlite_query
+import ../../../query_builder/models/sqlite/sqlite_exec
 import ../../models/table
 import ../../models/column
 import  ./schema_utils
@@ -20,7 +20,7 @@ proc dropColumn*(self:SqliteSchema, isReset:bool) =
   ## - rename tmp table name to old table name
   
   let tableDifinitionSql = &"SELECT sql FROM sqlite_master WHERE type = 'table' AND name = '{self.table.name}'"
-  var rows = self.rdb.raw(tableDifinitionSql).get.waitFor
+  var rows = self.rdb.raw(tableDifinitionSql).get().waitFor
   let schema = replace(rows[0]["sql"].getStr, re"\)$", ",)")
 
   var queries:seq[string] = @[]
