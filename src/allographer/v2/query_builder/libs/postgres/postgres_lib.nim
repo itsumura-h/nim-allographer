@@ -337,7 +337,7 @@ proc fromObjArray*(_:type PGParams, args: JsonNode):PGParams =
 
 
 proc fromArray*(_:type PGParams, args: JsonNode):PGParams =
-  ## `args` is JArray `{true, 1, 1.1, "alice"}`
+  ## `args` is JArray `[true, 1, 1.1, "alice"]`
   if args.len == 0:
     return
   result.nParams = args.len.int32

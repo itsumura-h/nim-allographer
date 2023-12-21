@@ -232,6 +232,33 @@ proc rawExec*(db:PPGconn, query: string, args: JsonNode, timeout:int) {.async.} 
       break
 
 
+proc multiExec*(db:PPGconn, query: string, timeout:int) {.async.} =
+  assert db.status == CONNECTION_OK
+  let success = pqsendQuery(db, dbFormat(query).cstring)
+  if success != 1: dbError(db)
+  let calledAt = getTime().toUnix()
+  # await sleepAsync(0)
+  while true:
+    let success = pqconsumeInput(db)
+    if success != 1: dbError(db) # never seen to fail when async
+    if pqisBusy(db) == 1:
+      if getTime().toUnix() >= calledAt + timeout:
+        let cancel = pqGetCancel(db)
+        var err = ""
+        let res = pqCancel(cancel, err.cstring, 0)
+        if res == 0:
+          raise newException(DbError, err)
+        return
+      await sleepAsync(10)
+      continue
+    var pqresult = pqgetResult(db)
+    if pqresult == nil:
+      # Check if its a real error or just end of results
+      db.checkError()
+      break
+    pqclear(pqresult)
+
+
 # ==================================================
 # Old functions
 # ==================================================
