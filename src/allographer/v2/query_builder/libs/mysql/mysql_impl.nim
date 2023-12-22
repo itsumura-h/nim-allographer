@@ -161,6 +161,12 @@ proc exec*(db:PMySQL, query: string, args: JsonNode, timeout:int) {.async.} =
   exec(db, query, strArgs, timeout).await
 
 
+proc multiExec*(db:PMySQL, query: string, timeout:int) {.async.} =
+  var q = dbFormat(query, @[])
+  await sleepAsync(0)
+  rawExec(db, q, newSeq[string]()) # mysql_real_query
+
+
 proc exec*(db:PMySQL, query: string, args: JsonNode, columns:seq[seq[string]], timeout:int) {.async.} =
   ## args is JArray `[{"key":"id", "value": 1}, {"key": "name" "value": "alice"}]`
   assert db.ping == 0

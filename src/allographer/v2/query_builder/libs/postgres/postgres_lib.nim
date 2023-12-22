@@ -237,6 +237,7 @@ type PGParams* = object
 
 
 proc fromObjArray*(_:type PGParams, args: JsonNode, columns:seq[Row]):PGParams =
+  ## `args` is JArray `[{"key": "bool", "value": true},{"key": "int", "value": 1}]`
   if args.len == 0:
     return
   result.nParams = args.len.int32
@@ -338,6 +339,8 @@ proc fromObjArray*(_:type PGParams, args: JsonNode):PGParams =
 
 proc fromArray*(_:type PGParams, args: JsonNode):PGParams =
   ## `args` is JArray `[true, 1, 1.1, "alice"]`
+  ## 
+  ## used by rawQuery, rawExec
   if args.len == 0:
     return
   result.nParams = args.len.int32

@@ -298,6 +298,23 @@ proc exec(self:RawMysqlQuery, queryString:string) {.async.} =
   ).await
 
 
+proc multiExec(self:RawMysqlQuery, queryString:string) {.async.} =
+  var connI = self.transactionConn
+  if not self.isInTransaction:
+    connI = getFreeConn(self).await
+  defer:
+    if not self.isInTransaction:
+      self.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  mysql_impl.multiExec(
+    self.pools.conns[connI].conn,
+    queryString,
+    self.pools.timeout
+  ).await
+
+
 proc getColumns(self:MysqlQuery, queryString:string):Future[seq[string]] {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
@@ -632,6 +649,12 @@ proc exec*(self: RawMysqlQuery) {.async.} =
   ## It is only used with raw()
   self.log.logger(self.queryString)
   self.exec(self.queryString).await
+
+
+proc multiExec*(self: RawMysqlQuery) {.async.} =
+  ## It is only used with raw()
+  self.log.logger(self.queryString)
+  self.multiExec(self.queryString).await
 
 
 proc first*(self: RawMysqlQuery):Future[Option[JsonNode]] {.async.} =
