@@ -1,12 +1,12 @@
 nimTitle	sqlite_impl	v2/query_builder/libs/sqlite/sqlite_impl.html	module src/allographer/v2/query_builder/libs/sqlite/sqlite_impl		0
 nim	query	v2/query_builder/libs/sqlite/sqlite_impl.html#query,PSqlite3,string,seq[string],int	proc query(db: PSqlite3; query: string; args: seq[string]; timeout: int): Future[\n    (seq[Row], DbRows)]		9
-nim	queryPlain	v2/query_builder/libs/sqlite/sqlite_impl.html#queryPlain,PSqlite3,string,seq[string],int	proc queryPlain(db: PSqlite3; query: string; args: seq[string]; timeout: int): Future[\n    seq[Row]]		21
-nim	getColumnTypes	v2/query_builder/libs/sqlite/sqlite_impl.html#getColumnTypes,PSqlite3,string	proc getColumnTypes(db: PSqlite3; query: string): Future[seq[(string, string)]]		32
-nim	exec	v2/query_builder/libs/sqlite/sqlite_impl.html#exec,PSqlite3,string,JsonNode,seq[],int	proc exec(db: PSqlite3; query: string; args: JsonNode;\n     columns: seq[(string, string)]; timeout: int): owned(Future[void])		40
-nim	exec	v2/query_builder/libs/sqlite/sqlite_impl.html#exec,PSqlite3,string,JsonNode,int	proc exec(db: PSqlite3; query: string; args: JsonNode; timeout: int): owned(\n    Future[void])		92
-nim	exec	v2/query_builder/libs/sqlite/sqlite_impl.html#exec,PSqlite3,string,seq[string],int	proc exec(db: PSqlite3; query: string; args: seq[string]; timeout: int): owned(\n    Future[void])		132
-nim	getColumns	v2/query_builder/libs/sqlite/sqlite_impl.html#getColumns,PSqlite3,string,seq[string],int	proc getColumns(db: PSqlite3; query: string; args: seq[string]; timeout: int): Future[\n    seq[string]]		149
-nim	prepare	v2/query_builder/libs/sqlite/sqlite_impl.html#prepare,PSqlite3,string,int	proc prepare(db: PSqlite3; query: string; timeout: int): Future[PStmt]		155
-nim	preparedQuery	v2/query_builder/libs/sqlite/sqlite_impl.html#preparedQuery,PSqlite3,seq[string],PStmt	proc preparedQuery(db: PSqlite3; args: seq[string] = @[]; sqliteStmt: PStmt): Future[\n    (seq[Row], DbRows)]		161
-nim	preparedExec	v2/query_builder/libs/sqlite/sqlite_impl.html#preparedExec,PSqlite3,seq[string],PStmt	proc preparedExec(db: PSqlite3; args: seq[string] = @[]; sqliteStmt: PStmt): owned(\n    Future[void])		178
-nimgrp	exec	v2/query_builder/libs/sqlite/sqlite_impl.html#exec-procs-all	proc		40
+nim	queryPlain	v2/query_builder/libs/sqlite/sqlite_impl.html#queryPlain,PSqlite3,string,seq[string],int	proc queryPlain(db: PSqlite3; query: string; args: seq[string]; timeout: int): Future[\n    seq[Row]]		22
+nim	getColumnTypes	v2/query_builder/libs/sqlite/sqlite_impl.html#getColumnTypes,PSqlite3,string	proc getColumnTypes(db: PSqlite3; query: string): Future[seq[(string, string)]]		34
+nim	exec	v2/query_builder/libs/sqlite/sqlite_impl.html#exec,PSqlite3,string,JsonNode,seq[],int	proc exec(db: PSqlite3; query: string; args: JsonNode;\n     columns: seq[(string, string)]; timeout: int): owned(Future[void])		43
+nim	exec	v2/query_builder/libs/sqlite/sqlite_impl.html#exec,PSqlite3,string,JsonNode,int	proc exec(db: PSqlite3; query: string; args: JsonNode; timeout: int): owned(\n    Future[void])		96
+nim	exec	v2/query_builder/libs/sqlite/sqlite_impl.html#exec,PSqlite3,string,seq[string],int	proc exec(db: PSqlite3; query: string; args: seq[string]; timeout: int): owned(\n    Future[void])		137
+nim	getColumns	v2/query_builder/libs/sqlite/sqlite_impl.html#getColumns,PSqlite3,string,seq[string],int	proc getColumns(db: PSqlite3; query: string; args: seq[string]; timeout: int): Future[\n    seq[string]]		155
+nim	prepare	v2/query_builder/libs/sqlite/sqlite_impl.html#prepare,PSqlite3,string,int	proc prepare(db: PSqlite3; query: string; timeout: int): Future[PStmt]		161
+nim	preparedQuery	v2/query_builder/libs/sqlite/sqlite_impl.html#preparedQuery,PSqlite3,seq[string],PStmt	proc preparedQuery(db: PSqlite3; args: seq[string] = @[]; sqliteStmt: PStmt): Future[\n    (seq[Row], DbRows)]		167
+nim	preparedExec	v2/query_builder/libs/sqlite/sqlite_impl.html#preparedExec,PSqlite3,seq[string],PStmt	proc preparedExec(db: PSqlite3; args: seq[string] = @[]; sqliteStmt: PStmt): owned(\n    Future[void])		185
+nimgrp	exec	v2/query_builder/libs/sqlite/sqlite_impl.html#exec-procs-all	proc		43

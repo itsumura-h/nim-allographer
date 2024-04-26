@@ -101,7 +101,7 @@ proc where*(self: MariadbQuery, column: string, symbol: string,
             value: string|int|float): MariadbQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -128,7 +128,7 @@ proc where*(self: MariadbQuery, column: string, symbol: string,
             value: bool): MariadbQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -154,7 +154,7 @@ proc where*(self: MariadbQuery, column: string, symbol: string,
 proc where*(self: MariadbQuery, column: string, symbol: string, value: nil.type): MariadbQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -179,7 +179,7 @@ proc orWhere*(self: MariadbQuery, column: string, symbol: string,
               value: string|int|float|bool): MariadbQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -205,7 +205,7 @@ proc orWhere*(self: MariadbQuery, column: string, symbol: string,
 proc orWhere*(self: MariadbQuery, column: string, symbol: string, value: nil.type): MariadbQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -352,7 +352,7 @@ proc having*(self: MariadbQuery, column: string, symbol: string,
               value: string|int|float|bool): MariadbQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -377,7 +377,7 @@ proc having*(self: MariadbQuery, column: string, symbol: string,
 proc having*(self: MariadbQuery, column: string, symbol: string, value: nil.type): MariadbQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 

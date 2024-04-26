@@ -1,0 +1,42 @@
+nimTitle	mariadb_exec	v2/query_builder/models/mariadb/mariadb_exec.html	module src/allographer/v2/query_builder/models/mariadb/mariadb_exec		0
+nim	get	v2/query_builder/models/mariadb/mariadb_exec.html#get,MariadbQuery	proc get(self: MariadbQuery): Future[seq[JsonNode]]		353
+nim	first	v2/query_builder/models/mariadb/mariadb_exec.html#first,MariadbQuery	proc first(self: MariadbQuery): Future[Option[JsonNode]]		364
+nim	find	v2/query_builder/models/mariadb/mariadb_exec.html#find,MariadbQuery,string,string	proc find(self: MariadbQuery; id: string; key = "id"): Future[Option[JsonNode]]		375
+nim	find	v2/query_builder/models/mariadb/mariadb_exec.html#find,MariadbQuery,int,string	proc find(self: MariadbQuery; id: int; key = "id"): Future[Option[JsonNode]]		387
+nim	getPlain	v2/query_builder/models/mariadb/mariadb_exec.html#getPlain,MariadbQuery	proc getPlain(self: MariadbQuery): Future[seq[seq[string]]]		391
+nim	firstPlain	v2/query_builder/models/mariadb/mariadb_exec.html#firstPlain,MariadbQuery	proc firstPlain(self: MariadbQuery): Future[seq[string]]		402
+nim	findPlain	v2/query_builder/models/mariadb/mariadb_exec.html#findPlain,MariadbQuery,string,string	proc findPlain(self: MariadbQuery; id: string; key = "id"): Future[seq[string]]		413
+nim	findPlain	v2/query_builder/models/mariadb/mariadb_exec.html#findPlain,MariadbQuery,int,string	proc findPlain(self: MariadbQuery; id: int; key = "id"): Future[seq[string]]		425
+nim	insert	v2/query_builder/models/mariadb/mariadb_exec.html#insert,MariadbQuery,JsonNode	proc insert(self: MariadbQuery; items: JsonNode): owned(Future[void])		430
+nim	insert	v2/query_builder/models/mariadb/mariadb_exec.html#insert,MariadbQuery,seq[JsonNode]	proc insert(self: MariadbQuery; items: seq[JsonNode]): owned(Future[void])		437
+nim	insertId	v2/query_builder/models/mariadb/mariadb_exec.html#insertId,MariadbQuery,JsonNode,string	proc insertId(self: MariadbQuery; items: JsonNode; key = "id"): Future[string]		443
+nim	insertId	v2/query_builder/models/mariadb/mariadb_exec.html#insertId,MariadbQuery,seq[JsonNode],string	proc insertId(self: MariadbQuery; items: seq[JsonNode]; key = "id"): Future[\n    seq[string]]		450
+nim	update	v2/query_builder/models/mariadb/mariadb_exec.html#update,MariadbQuery,JsonNode	proc update(self: MariadbQuery; items: JsonNode): owned(Future[void])		460
+nim	delete	v2/query_builder/models/mariadb/mariadb_exec.html#delete,MariadbQuery	proc delete(self: MariadbQuery): owned(Future[void])		466
+nim	delete	v2/query_builder/models/mariadb/mariadb_exec.html#delete,MariadbQuery,int,string	proc delete(self: MariadbQuery; id: int; key = "id"): owned(Future[void])		472
+nim	columns	v2/query_builder/models/mariadb/mariadb_exec.html#columns,MariadbQuery	proc columns(self: MariadbQuery): Future[seq[string]]		479
+nim	count	v2/query_builder/models/mariadb/mariadb_exec.html#count,MariadbQuery	proc count(self: MariadbQuery): Future[int]		491
+nim	min	v2/query_builder/models/mariadb/mariadb_exec.html#min,MariadbQuery,string	proc min(self: MariadbQuery; column: string): Future[Option[string]]		501
+nim	max	v2/query_builder/models/mariadb/mariadb_exec.html#max,MariadbQuery,string	proc max(self: MariadbQuery; column: string): Future[Option[string]]		517
+nim	avg	v2/query_builder/models/mariadb/mariadb_exec.html#avg,MariadbQuery,string	proc avg(self: MariadbQuery; column: string): Future[Option[float]]		533
+nim	sum	v2/query_builder/models/mariadb/mariadb_exec.html#sum,MariadbQuery,string	proc sum(self: MariadbQuery; column: string): Future[Option[float]]		543
+nim	begin	v2/query_builder/models/mariadb/mariadb_exec.html#begin,MariadbConnections	proc begin(self: MariadbConnections): owned(Future[void])		553
+nim	rollback	v2/query_builder/models/mariadb/mariadb_exec.html#rollback,MariadbConnections	proc rollback(self: MariadbConnections): owned(Future[void])		558
+nim	commit	v2/query_builder/models/mariadb/mariadb_exec.html#commit,MariadbConnections	proc commit(self: MariadbConnections): owned(Future[void])		563
+nim	get	v2/query_builder/models/mariadb/mariadb_exec.html#get,RawMariadbQuery	proc get(self: RawMariadbQuery): Future[seq[JsonNode]]		568
+nim	getPlain	v2/query_builder/models/mariadb/mariadb_exec.html#getPlain,RawMariadbQuery	proc getPlain(self: RawMariadbQuery): Future[seq[seq[string]]]		574
+nim	exec	v2/query_builder/models/mariadb/mariadb_exec.html#exec,RawMariadbQuery	proc exec(self: RawMariadbQuery): owned(Future[void])		580
+nim	first	v2/query_builder/models/mariadb/mariadb_exec.html#first,RawMariadbQuery	proc first(self: RawMariadbQuery): Future[Option[JsonNode]]		586
+nim	firstPlain	v2/query_builder/models/mariadb/mariadb_exec.html#firstPlain,RawMariadbQuery	proc firstPlain(self: RawMariadbQuery): Future[seq[string]]		592
+nim	seeder	v2/query_builder/models/mariadb/mariadb_exec.html#seeder.t,MariadbConnections,string,untyped	template seeder(rdb: MariadbConnections; tableName: string; body: untyped): untyped		598
+nim	seeder	v2/query_builder/models/mariadb/mariadb_exec.html#seeder.t,MariadbConnections,string,string,untyped	template seeder(rdb: MariadbConnections; tableName, column: string; body: untyped): untyped		605
+nimgrp	firstplain	v2/query_builder/models/mariadb/mariadb_exec.html#firstPlain-procs-all	proc		402
+nimgrp	findplain	v2/query_builder/models/mariadb/mariadb_exec.html#findPlain-procs-all	proc		413
+nimgrp	first	v2/query_builder/models/mariadb/mariadb_exec.html#first-procs-all	proc		364
+nimgrp	insertid	v2/query_builder/models/mariadb/mariadb_exec.html#insertId-procs-all	proc		443
+nimgrp	get	v2/query_builder/models/mariadb/mariadb_exec.html#get-procs-all	proc		353
+nimgrp	insert	v2/query_builder/models/mariadb/mariadb_exec.html#insert-procs-all	proc		430
+nimgrp	delete	v2/query_builder/models/mariadb/mariadb_exec.html#delete-procs-all	proc		466
+nimgrp	getplain	v2/query_builder/models/mariadb/mariadb_exec.html#getPlain-procs-all	proc		391
+nimgrp	find	v2/query_builder/models/mariadb/mariadb_exec.html#find-procs-all	proc		375
+nimgrp	seeder	v2/query_builder/models/mariadb/mariadb_exec.html#seeder-templates-all	template		598

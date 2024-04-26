@@ -1,0 +1,42 @@
+nimTitle	sqlite_exec	v2/query_builder/models/sqlite/sqlite_exec.html	module src/allographer/v2/query_builder/models/sqlite/sqlite_exec		0
+nim	get	v2/query_builder/models/sqlite/sqlite_exec.html#get,SqliteQuery	proc get(self: SqliteQuery): Future[seq[JsonNode]]		474
+nim	first	v2/query_builder/models/sqlite/sqlite_exec.html#first,SqliteQuery	proc first(self: SqliteQuery): Future[Option[JsonNode]]		485
+nim	find	v2/query_builder/models/sqlite/sqlite_exec.html#find,SqliteQuery,string,string	proc find(self: SqliteQuery; id: string; key = "id"): Future[Option[JsonNode]]		496
+nim	find	v2/query_builder/models/sqlite/sqlite_exec.html#find,SqliteQuery,int,string	proc find(self: SqliteQuery; id: int; key = "id"): Future[Option[JsonNode]]		508
+nim	getPlain	v2/query_builder/models/sqlite/sqlite_exec.html#getPlain,SqliteQuery	proc getPlain(self: SqliteQuery): Future[seq[seq[string]]]		513
+nim	firstPlain	v2/query_builder/models/sqlite/sqlite_exec.html#firstPlain,SqliteQuery	proc firstPlain(self: SqliteQuery): Future[seq[string]]		524
+nim	findPlain	v2/query_builder/models/sqlite/sqlite_exec.html#findPlain,SqliteQuery,string,string	proc findPlain(self: SqliteQuery; id: string; key = "id"): Future[seq[string]]		535
+nim	findPlain	v2/query_builder/models/sqlite/sqlite_exec.html#findPlain,SqliteQuery,int,string	proc findPlain(self: SqliteQuery; id: int; key = "id"): Future[seq[string]]		547
+nim	insert	v2/query_builder/models/sqlite/sqlite_exec.html#insert,SqliteQuery,JsonNode	proc insert(self: SqliteQuery; items: JsonNode): owned(Future[void])		601
+nim	insert	v2/query_builder/models/sqlite/sqlite_exec.html#insert,SqliteQuery,seq[JsonNode]	proc insert(self: SqliteQuery; items: seq[JsonNode]): owned(Future[void])		607
+nim	insertId	v2/query_builder/models/sqlite/sqlite_exec.html#insertId,SqliteQuery,JsonNode,string	proc insertId(self: SqliteQuery; items: JsonNode; key = "id"): Future[string]		613
+nim	insertId	v2/query_builder/models/sqlite/sqlite_exec.html#insertId,SqliteQuery,seq[JsonNode],string	proc insertId(self: SqliteQuery; items: seq[JsonNode]; key = "id"): Future[\n    seq[string]]		619
+nim	update	v2/query_builder/models/sqlite/sqlite_exec.html#update,SqliteQuery,JsonNode	proc update(self: SqliteQuery; items: JsonNode): owned(Future[void])		628
+nim	delete	v2/query_builder/models/sqlite/sqlite_exec.html#delete,SqliteQuery	proc delete(self: SqliteQuery): owned(Future[void])		634
+nim	delete	v2/query_builder/models/sqlite/sqlite_exec.html#delete,SqliteQuery,int,string	proc delete(self: SqliteQuery; id: int; key = "id"): owned(Future[void])		640
+nim	columns	v2/query_builder/models/sqlite/sqlite_exec.html#columns,SqliteQuery	proc columns(self: SqliteQuery): Future[seq[string]]		647
+nim	count	v2/query_builder/models/sqlite/sqlite_exec.html#count,SqliteQuery	proc count(self: SqliteQuery): Future[int]		653
+nim	min	v2/query_builder/models/sqlite/sqlite_exec.html#min,SqliteQuery,string	proc min(self: SqliteQuery; column: string): Future[Option[string]]		663
+nim	max	v2/query_builder/models/sqlite/sqlite_exec.html#max,SqliteQuery,string	proc max(self: SqliteQuery; column: string): Future[Option[string]]		679
+nim	avg	v2/query_builder/models/sqlite/sqlite_exec.html#avg,SqliteQuery,string	proc avg(self: SqliteQuery; column: string): Future[Option[float]]		695
+nim	sum	v2/query_builder/models/sqlite/sqlite_exec.html#sum,SqliteQuery,string	proc sum(self: SqliteQuery; column: string): Future[Option[float]]		705
+nim	begin	v2/query_builder/models/sqlite/sqlite_exec.html#begin,SqliteConnections	proc begin(self: SqliteConnections): owned(Future[void])		715
+nim	rollback	v2/query_builder/models/sqlite/sqlite_exec.html#rollback,SqliteConnections	proc rollback(self: SqliteConnections): owned(Future[void])		720
+nim	commit	v2/query_builder/models/sqlite/sqlite_exec.html#commit,SqliteConnections	proc commit(self: SqliteConnections): owned(Future[void])		725
+nim	get	v2/query_builder/models/sqlite/sqlite_exec.html#get,RawSqliteQuery	proc get(self: RawSqliteQuery): Future[seq[JsonNode]]		730
+nim	getPlain	v2/query_builder/models/sqlite/sqlite_exec.html#getPlain,RawSqliteQuery	proc getPlain(self: RawSqliteQuery): Future[seq[seq[string]]]		736
+nim	exec	v2/query_builder/models/sqlite/sqlite_exec.html#exec,RawSqliteQuery	proc exec(self: RawSqliteQuery): owned(Future[void])		742
+nim	first	v2/query_builder/models/sqlite/sqlite_exec.html#first,RawSqliteQuery	proc first(self: RawSqliteQuery): Future[Option[JsonNode]]		748
+nim	firstPlain	v2/query_builder/models/sqlite/sqlite_exec.html#firstPlain,RawSqliteQuery	proc firstPlain(self: RawSqliteQuery): Future[seq[string]]		754
+nim	seeder	v2/query_builder/models/sqlite/sqlite_exec.html#seeder.t,SqliteConnections,string,untyped	template seeder(rdb: SqliteConnections; tableName: string; body: untyped): untyped		760
+nim	seeder	v2/query_builder/models/sqlite/sqlite_exec.html#seeder.t,SqliteConnections,string,string,untyped	template seeder(rdb: SqliteConnections; tableName, column: string; body: untyped): untyped		767
+nimgrp	firstplain	v2/query_builder/models/sqlite/sqlite_exec.html#firstPlain-procs-all	proc		524
+nimgrp	findplain	v2/query_builder/models/sqlite/sqlite_exec.html#findPlain-procs-all	proc		535
+nimgrp	first	v2/query_builder/models/sqlite/sqlite_exec.html#first-procs-all	proc		485
+nimgrp	insertid	v2/query_builder/models/sqlite/sqlite_exec.html#insertId-procs-all	proc		613
+nimgrp	get	v2/query_builder/models/sqlite/sqlite_exec.html#get-procs-all	proc		474
+nimgrp	insert	v2/query_builder/models/sqlite/sqlite_exec.html#insert-procs-all	proc		601
+nimgrp	delete	v2/query_builder/models/sqlite/sqlite_exec.html#delete-procs-all	proc		634
+nimgrp	getplain	v2/query_builder/models/sqlite/sqlite_exec.html#getPlain-procs-all	proc		513
+nimgrp	find	v2/query_builder/models/sqlite/sqlite_exec.html#find-procs-all	proc		496
+nimgrp	seeder	v2/query_builder/models/sqlite/sqlite_exec.html#seeder-templates-all	template		760

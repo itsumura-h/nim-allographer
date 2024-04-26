@@ -89,7 +89,7 @@ echo rdb.table("test")
 ```
 
 ### return Object
-If object is defined and set arg of get/getRaw/first/find, response will be object as ORM
+If object is defined and set arg for `orm`, response will be an object as ORM
 
 ```nim
 import allographer/query_builder
@@ -104,7 +104,8 @@ type Typ = ref object
 
 var rows = rdb.table("test")
           .select("id", "float", "char", "datetime", "null", "is_admin")
-          .get(Typ)
+          .get()
+          .orm(Typ)
           .await
 ```
 
@@ -128,19 +129,19 @@ echo rows[0].is_admin
 >> true                         # bool
 ```
 
-If DB response is empty, `get` and `getRaw` return empty seq, `find` and `first` return optional object.
+If DB response is empty, `get` return empty seq, `find` and `first` return optional object.
 ```nim
-let response = await rdb.table("test").get(Typ)
+let response = await rdb.table("test").get().orm(Typ).await
 assert response.len == 0
 
-let response = await rdb.raw("select * from users").getRaw(Typ)
+let response = await rdb.raw("select * from users").get().orm(Typ).await
 assert response.len == 0
 
-let response = await rdb.table("test").find(1, Typ)
+let response = await rdb.table("test").find(1).orm(Typ).await
 assert response.type == Option[Typ]
 assert response.isSome == false
 
-let response = await rdb.table("test").first(Typ)
+let response = await rdb.table("test").first().orm(Typ).await
 assert response.type == Option[Typ]
 assert response.isSome == false
 ```

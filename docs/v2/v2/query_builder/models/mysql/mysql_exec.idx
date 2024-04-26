@@ -1,0 +1,42 @@
+nimTitle	mysql_exec	v2/query_builder/models/mysql/mysql_exec.html	module src/allographer/v2/query_builder/models/mysql/mysql_exec		0
+nim	get	v2/query_builder/models/mysql/mysql_exec.html#get,MysqlQuery	proc get(self: MysqlQuery): Future[seq[JsonNode]]		356
+nim	first	v2/query_builder/models/mysql/mysql_exec.html#first,MysqlQuery	proc first(self: MysqlQuery): Future[Option[JsonNode]]		367
+nim	find	v2/query_builder/models/mysql/mysql_exec.html#find,MysqlQuery,string,string	proc find(self: MysqlQuery; id: string; key = "id"): Future[Option[JsonNode]]		378
+nim	find	v2/query_builder/models/mysql/mysql_exec.html#find,MysqlQuery,int,string	proc find(self: MysqlQuery; id: int; key = "id"): Future[Option[JsonNode]]		390
+nim	getPlain	v2/query_builder/models/mysql/mysql_exec.html#getPlain,MysqlQuery	proc getPlain(self: MysqlQuery): Future[seq[seq[string]]]		394
+nim	firstPlain	v2/query_builder/models/mysql/mysql_exec.html#firstPlain,MysqlQuery	proc firstPlain(self: MysqlQuery): Future[seq[string]]		405
+nim	findPlain	v2/query_builder/models/mysql/mysql_exec.html#findPlain,MysqlQuery,string,string	proc findPlain(self: MysqlQuery; id: string; key = "id"): Future[seq[string]]		416
+nim	findPlain	v2/query_builder/models/mysql/mysql_exec.html#findPlain,MysqlQuery,int,string	proc findPlain(self: MysqlQuery; id: int; key = "id"): Future[seq[string]]		428
+nim	insert	v2/query_builder/models/mysql/mysql_exec.html#insert,MysqlQuery,JsonNode	proc insert(self: MysqlQuery; items: JsonNode): owned(Future[void])		433
+nim	insert	v2/query_builder/models/mysql/mysql_exec.html#insert,MysqlQuery,seq[JsonNode]	proc insert(self: MysqlQuery; items: seq[JsonNode]): owned(Future[void])		440
+nim	insertId	v2/query_builder/models/mysql/mysql_exec.html#insertId,MysqlQuery,JsonNode,string	proc insertId(self: MysqlQuery; items: JsonNode; key = "id"): Future[string]		446
+nim	insertId	v2/query_builder/models/mysql/mysql_exec.html#insertId,MysqlQuery,seq[JsonNode],string	proc insertId(self: MysqlQuery; items: seq[JsonNode]; key = "id"): Future[seq[string]]		453
+nim	update	v2/query_builder/models/mysql/mysql_exec.html#update,MysqlQuery,JsonNode	proc update(self: MysqlQuery; items: JsonNode): owned(Future[void])		463
+nim	delete	v2/query_builder/models/mysql/mysql_exec.html#delete,MysqlQuery	proc delete(self: MysqlQuery): owned(Future[void])		469
+nim	delete	v2/query_builder/models/mysql/mysql_exec.html#delete,MysqlQuery,int,string	proc delete(self: MysqlQuery; id: int; key = "id"): owned(Future[void])		475
+nim	columns	v2/query_builder/models/mysql/mysql_exec.html#columns,MysqlQuery	proc columns(self: MysqlQuery): Future[seq[string]]		482
+nim	count	v2/query_builder/models/mysql/mysql_exec.html#count,MysqlQuery	proc count(self: MysqlQuery): Future[int]		494
+nim	min	v2/query_builder/models/mysql/mysql_exec.html#min,MysqlQuery,string	proc min(self: MysqlQuery; column: string): Future[Option[string]]		504
+nim	max	v2/query_builder/models/mysql/mysql_exec.html#max,MysqlQuery,string	proc max(self: MysqlQuery; column: string): Future[Option[string]]		520
+nim	avg	v2/query_builder/models/mysql/mysql_exec.html#avg,MysqlQuery,string	proc avg(self: MysqlQuery; column: string): Future[Option[float]]		536
+nim	sum	v2/query_builder/models/mysql/mysql_exec.html#sum,MysqlQuery,string	proc sum(self: MysqlQuery; column: string): Future[Option[float]]		546
+nim	begin	v2/query_builder/models/mysql/mysql_exec.html#begin,MysqlConnections	proc begin(self: MysqlConnections): owned(Future[void])		556
+nim	rollback	v2/query_builder/models/mysql/mysql_exec.html#rollback,MysqlConnections	proc rollback(self: MysqlConnections): owned(Future[void])		561
+nim	commit	v2/query_builder/models/mysql/mysql_exec.html#commit,MysqlConnections	proc commit(self: MysqlConnections): owned(Future[void])		566
+nim	get	v2/query_builder/models/mysql/mysql_exec.html#get,RawMysqlQuery	proc get(self: RawMysqlQuery): Future[seq[JsonNode]]		571
+nim	getPlain	v2/query_builder/models/mysql/mysql_exec.html#getPlain,RawMysqlQuery	proc getPlain(self: RawMysqlQuery): Future[seq[seq[string]]]		577
+nim	exec	v2/query_builder/models/mysql/mysql_exec.html#exec,RawMysqlQuery	proc exec(self: RawMysqlQuery): owned(Future[void])		583
+nim	first	v2/query_builder/models/mysql/mysql_exec.html#first,RawMysqlQuery	proc first(self: RawMysqlQuery): Future[Option[JsonNode]]		589
+nim	firstPlain	v2/query_builder/models/mysql/mysql_exec.html#firstPlain,RawMysqlQuery	proc firstPlain(self: RawMysqlQuery): Future[seq[string]]		595
+nim	seeder	v2/query_builder/models/mysql/mysql_exec.html#seeder.t,MysqlConnections,string,untyped	template seeder(rdb: MysqlConnections; tableName: string; body: untyped): untyped		601
+nim	seeder	v2/query_builder/models/mysql/mysql_exec.html#seeder.t,MysqlConnections,string,string,untyped	template seeder(rdb: MysqlConnections; tableName, column: string; body: untyped): untyped		608
+nimgrp	firstplain	v2/query_builder/models/mysql/mysql_exec.html#firstPlain-procs-all	proc		405
+nimgrp	findplain	v2/query_builder/models/mysql/mysql_exec.html#findPlain-procs-all	proc		416
+nimgrp	first	v2/query_builder/models/mysql/mysql_exec.html#first-procs-all	proc		367
+nimgrp	insertid	v2/query_builder/models/mysql/mysql_exec.html#insertId-procs-all	proc		446
+nimgrp	get	v2/query_builder/models/mysql/mysql_exec.html#get-procs-all	proc		356
+nimgrp	insert	v2/query_builder/models/mysql/mysql_exec.html#insert-procs-all	proc		433
+nimgrp	delete	v2/query_builder/models/mysql/mysql_exec.html#delete-procs-all	proc		469
+nimgrp	getplain	v2/query_builder/models/mysql/mysql_exec.html#getPlain-procs-all	proc		394
+nimgrp	find	v2/query_builder/models/mysql/mysql_exec.html#find-procs-all	proc		378
+nimgrp	seeder	v2/query_builder/models/mysql/mysql_exec.html#seeder-templates-all	template		601

@@ -1,33 +1,33 @@
 nimTitle	sqlite_generator	v2/query_builder/models/sqlite/query/sqlite_generator.html	module src/allographer/v2/query_builder/models/sqlite/query/sqlite_generator		0
 nim	selectSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#selectSql,SqliteQuery	proc selectSql(self: SqliteQuery): SqliteQuery		21
-nim	fromSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#fromSql,SqliteQuery	proc fromSql(self: SqliteQuery): SqliteQuery		48
-nim	selectFirstSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#selectFirstSql,SqliteQuery	proc selectFirstSql(self: SqliteQuery): SqliteQuery		54
-nim	selectByIdSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#selectByIdSql,SqliteQuery,string	proc selectByIdSql(self: SqliteQuery; key: string): SqliteQuery		59
-nim	joinSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#joinSql,SqliteQuery	proc joinSql(self: SqliteQuery): SqliteQuery		68
-nim	leftJoinSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#leftJoinSql,SqliteQuery	proc leftJoinSql(self: SqliteQuery): SqliteQuery		80
-nim	whereSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereSql,SqliteQuery	proc whereSql(self: SqliteQuery): SqliteQuery		92
-nim	orWhereSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#orWhereSql,SqliteQuery	proc orWhereSql(self: SqliteQuery): SqliteQuery		106
-nim	whereBetweenSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereBetweenSql,SqliteQuery	proc whereBetweenSql(self: SqliteQuery): SqliteQuery		120
-nim	whereBetweenStringSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereBetweenStringSql,SqliteQuery	proc whereBetweenStringSql(self: SqliteQuery): SqliteQuery		134
-nim	whereNotBetweenSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereNotBetweenSql,SqliteQuery	proc whereNotBetweenSql(self: SqliteQuery): SqliteQuery		148
-nim	whereNotBetweenStringSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereNotBetweenStringSql,SqliteQuery	proc whereNotBetweenStringSql(self: SqliteQuery): SqliteQuery		162
-nim	whereInSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereInSql,SqliteQuery	proc whereInSql(self: SqliteQuery): SqliteQuery		176
-nim	whereNotInSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereNotInSql,SqliteQuery	proc whereNotInSql(self: SqliteQuery): SqliteQuery		197
-nim	whereNullSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereNullSql,SqliteQuery	proc whereNullSql(self: SqliteQuery): SqliteQuery		218
-nim	groupBySql	v2/query_builder/models/sqlite/query/sqlite_generator.html#groupBySql,SqliteQuery	proc groupBySql(self: SqliteQuery): SqliteQuery		229
-nim	havingSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#havingSql,SqliteQuery	proc havingSql(self: SqliteQuery): SqliteQuery		240
-nim	orderBySql	v2/query_builder/models/sqlite/query/sqlite_generator.html#orderBySql,SqliteQuery	proc orderBySql(self: SqliteQuery): SqliteQuery		255
-nim	limitSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#limitSql,SqliteQuery	proc limitSql(self: SqliteQuery): SqliteQuery		268
-nim	offsetSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#offsetSql,SqliteQuery	proc offsetSql(self: SqliteQuery): SqliteQuery		276
-nim	insertSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#insertSql,SqliteQuery	proc insertSql(self: SqliteQuery): SqliteQuery		286
-nim	insertValueSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#insertValueSql,SqliteQuery,JsonNode	proc insertValueSql(self: SqliteQuery; items: JsonNode): SqliteQuery		292
-nim	insertValuesSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#insertValuesSql,SqliteQuery,openArray[JsonNode]	proc insertValuesSql(self: SqliteQuery; rows: openArray[JsonNode]): SqliteQuery		313
-nim	updateSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#updateSql,SqliteQuery	proc updateSql(self: SqliteQuery): SqliteQuery		345
-nim	updateValuesSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#updateValuesSql,SqliteQuery,JsonNode	proc updateValuesSql(self: SqliteQuery; items: JsonNode): SqliteQuery		355
-nim	deleteSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#deleteSql,SqliteQuery	proc deleteSql(self: SqliteQuery): SqliteQuery		377
-nim	deleteByIdSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#deleteByIdSql,SqliteQuery,int,string	proc deleteByIdSql(self: SqliteQuery; id: int; key: string): SqliteQuery		382
-nim	selectCountSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#selectCountSql,SqliteQuery	proc selectCountSql(self: SqliteQuery): SqliteQuery		388
-nim	selectMaxSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#selectMaxSql,SqliteQuery,string	proc selectMaxSql(self: SqliteQuery; column: string): SqliteQuery		399
-nim	selectMinSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#selectMinSql,SqliteQuery,string	proc selectMinSql(self: SqliteQuery; column: string): SqliteQuery		404
-nim	selectAvgSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#selectAvgSql,SqliteQuery,string	proc selectAvgSql(self: SqliteQuery; column: string): SqliteQuery		409
-nim	selectSumSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#selectSumSql,SqliteQuery,string	proc selectSumSql(self: SqliteQuery; column: string): SqliteQuery		414
+nim	fromSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#fromSql,SqliteQuery	proc fromSql(self: SqliteQuery): SqliteQuery		42
+nim	selectFirstSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#selectFirstSql,SqliteQuery	proc selectFirstSql(self: SqliteQuery): SqliteQuery		48
+nim	selectByIdSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#selectByIdSql,SqliteQuery,string	proc selectByIdSql(self: SqliteQuery; key: string): SqliteQuery		53
+nim	joinSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#joinSql,SqliteQuery	proc joinSql(self: SqliteQuery): SqliteQuery		62
+nim	leftJoinSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#leftJoinSql,SqliteQuery	proc leftJoinSql(self: SqliteQuery): SqliteQuery		74
+nim	whereSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereSql,SqliteQuery	proc whereSql(self: SqliteQuery): SqliteQuery		86
+nim	orWhereSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#orWhereSql,SqliteQuery	proc orWhereSql(self: SqliteQuery): SqliteQuery		100
+nim	whereBetweenSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereBetweenSql,SqliteQuery	proc whereBetweenSql(self: SqliteQuery): SqliteQuery		114
+nim	whereBetweenStringSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereBetweenStringSql,SqliteQuery	proc whereBetweenStringSql(self: SqliteQuery): SqliteQuery		128
+nim	whereNotBetweenSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereNotBetweenSql,SqliteQuery	proc whereNotBetweenSql(self: SqliteQuery): SqliteQuery		142
+nim	whereNotBetweenStringSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereNotBetweenStringSql,SqliteQuery	proc whereNotBetweenStringSql(self: SqliteQuery): SqliteQuery		156
+nim	whereInSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereInSql,SqliteQuery	proc whereInSql(self: SqliteQuery): SqliteQuery		170
+nim	whereNotInSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereNotInSql,SqliteQuery	proc whereNotInSql(self: SqliteQuery): SqliteQuery		191
+nim	whereNullSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#whereNullSql,SqliteQuery	proc whereNullSql(self: SqliteQuery): SqliteQuery		212
+nim	groupBySql	v2/query_builder/models/sqlite/query/sqlite_generator.html#groupBySql,SqliteQuery	proc groupBySql(self: SqliteQuery): SqliteQuery		223
+nim	havingSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#havingSql,SqliteQuery	proc havingSql(self: SqliteQuery): SqliteQuery		234
+nim	orderBySql	v2/query_builder/models/sqlite/query/sqlite_generator.html#orderBySql,SqliteQuery	proc orderBySql(self: SqliteQuery): SqliteQuery		249
+nim	limitSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#limitSql,SqliteQuery	proc limitSql(self: SqliteQuery): SqliteQuery		262
+nim	offsetSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#offsetSql,SqliteQuery	proc offsetSql(self: SqliteQuery): SqliteQuery		270
+nim	insertSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#insertSql,SqliteQuery	proc insertSql(self: SqliteQuery): SqliteQuery		280
+nim	insertValueSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#insertValueSql,SqliteQuery,JsonNode	proc insertValueSql(self: SqliteQuery; items: JsonNode): SqliteQuery		286
+nim	insertValuesSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#insertValuesSql,SqliteQuery,openArray[JsonNode]	proc insertValuesSql(self: SqliteQuery; rows: openArray[JsonNode]): SqliteQuery		307
+nim	updateSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#updateSql,SqliteQuery	proc updateSql(self: SqliteQuery): SqliteQuery		339
+nim	updateValuesSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#updateValuesSql,SqliteQuery,JsonNode	proc updateValuesSql(self: SqliteQuery; items: JsonNode): SqliteQuery		349
+nim	deleteSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#deleteSql,SqliteQuery	proc deleteSql(self: SqliteQuery): SqliteQuery		371
+nim	deleteByIdSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#deleteByIdSql,SqliteQuery,int,string	proc deleteByIdSql(self: SqliteQuery; id: int; key: string): SqliteQuery		376
+nim	selectCountSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#selectCountSql,SqliteQuery	proc selectCountSql(self: SqliteQuery): SqliteQuery		382
+nim	selectMaxSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#selectMaxSql,SqliteQuery,string	proc selectMaxSql(self: SqliteQuery; column: string): SqliteQuery		393
+nim	selectMinSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#selectMinSql,SqliteQuery,string	proc selectMinSql(self: SqliteQuery; column: string): SqliteQuery		398
+nim	selectAvgSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#selectAvgSql,SqliteQuery,string	proc selectAvgSql(self: SqliteQuery; column: string): SqliteQuery		403
+nim	selectSumSql	v2/query_builder/models/sqlite/query/sqlite_generator.html#selectSumSql,SqliteQuery,string	proc selectSumSql(self: SqliteQuery; column: string): SqliteQuery		408

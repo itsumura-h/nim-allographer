@@ -453,58 +453,6 @@ proc findPlain*(self:PostgresQuery, id: int, key="id"):Future[seq[string]] {.asy
   return self.findPlain($id, key).await
 
 
-# ==================== return Object ====================
-proc get*[T](self: PostgresQuery, typ:typedesc[T]):Future[seq[T]] {.async.} =
-  var sql = self.selectBuilder()
-  sql = questionToDaller(sql)
-  try:
-    self.log.logger(sql)
-    let rows = self.getAllRows(sql).await
-    for row in rows:
-      result.add(row.to(typ))
-  except CatchableError:
-    self.log.echoErrorMsg(sql)
-    self.log.echoErrorMsg( getCurrentExceptionMsg() )
-    raise getCurrentException()
-
-
-proc first*[T](self: PostgresQuery, typ:typedesc[T]):Future[Option[T]] {.async.} =
-  var sql = self.selectFirstBuilder()
-  sql = questionToDaller(sql)
-  try:
-    self.log.logger(sql)
-    let row = self.getRow(sql).await
-    if row.isSome():
-      return row.get().to(typ).some()
-    else:
-      return none(typ)
-  except CatchableError:
-    self.log.echoErrorMsg(sql)
-    self.log.echoErrorMsg( getCurrentExceptionMsg() )
-    raise getCurrentException()
-
-
-proc find*[T](self: PostgresQuery, id:string, typ:typedesc[T], key="id"):Future[Option[T]] {.async.} =
-  self.placeHolder.add(%*{"key":key, "value": id})
-  var sql = self.selectFindBuilder(key)
-  sql = questionToDaller(sql)
-  try:
-    self.log.logger(sql)
-    let row = self.getRow(sql).await
-    if row.isSome():
-      return row.get().to(typ).some()
-    else:
-      return none(typ)
-  except CatchableError:
-    self.log.echoErrorMsg(sql)
-    self.log.echoErrorMsg( getCurrentExceptionMsg() )
-    raise getCurrentException()
-
-
-proc find*[T](self: PostgresQuery, id:int, typ:typedesc[T], key="id"):Future[Option[T]] {.async.} =
-  return self.find($id, typ, key).await
-
-
 # ==================== insert ====================
 proc insert*(self:PostgresQuery, items:JsonNode) {.async.} =
   ## items is `JObject`

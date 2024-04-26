@@ -1,73 +1,32 @@
 nimTitle	mariadb_query	v2/query_builder/models/mariadb/mariadb_query.html	module src/allographer/v2/query_builder/models/mariadb/mariadb_query		0
-nim	table	v2/query_builder/models/mariadb/mariadb_query.html#table,MariadbQuery,string	proc table(self: MariadbQuery; tableArg: string): MariadbQuery		15
-nim	`distinct`	v2/query_builder/models/mariadb/mariadb_query.html#distinct,MariadbQuery	proc `distinct`(self: MariadbQuery): MariadbQuery		20
-nim	join	v2/query_builder/models/mariadb/mariadb_query.html#join,MariadbQuery,string,string,string,string	proc join(self: MariadbQuery; table: string; column1: string; symbol: string;\n     column2: string): MariadbQuery		26
-nim	leftJoin	v2/query_builder/models/mariadb/mariadb_query.html#leftJoin,MariadbQuery,string,string,string,string	proc leftJoin(self: MariadbQuery; table: string; column1: string; symbol: string;\n         column2: string): MariadbQuery		45
-nim	where	v2/query_builder/models/mariadb/mariadb_query.html#where,MariadbQuery,string,string,	proc where(self: MariadbQuery; column: string; symbol: string;\n      value: string | int | float): MariadbQuery		67
-nim	where	v2/query_builder/models/mariadb/mariadb_query.html#where,MariadbQuery,string,string,bool	proc where(self: MariadbQuery; column: string; symbol: string; value: bool): MariadbQuery		94
-nim	where	v2/query_builder/models/mariadb/mariadb_query.html#where,MariadbQuery,string,string,_2	proc where(self: MariadbQuery; column: string; symbol: string; value: nil.type): MariadbQuery		121
-nim	orWhere	v2/query_builder/models/mariadb/mariadb_query.html#orWhere,MariadbQuery,string,string,	proc orWhere(self: MariadbQuery; column: string; symbol: string;\n        value: string | int | float | bool): MariadbQuery		145
-nim	orWhere	v2/query_builder/models/mariadb/mariadb_query.html#orWhere,MariadbQuery,string,string,_2	proc orWhere(self: MariadbQuery; column: string; symbol: string; value: nil.type): MariadbQuery		172
-nim	whereBetween	v2/query_builder/models/mariadb/mariadb_query.html#whereBetween,MariadbQuery,string,array[,]	proc whereBetween(self: MariadbQuery; column: string; width: array[2, int | float]): MariadbQuery		194
-nim	whereBetween	v2/query_builder/models/mariadb/mariadb_query.html#whereBetween,MariadbQuery,string,array[,string]	proc whereBetween(self: MariadbQuery; column: string; width: array[2, string]): MariadbQuery		211
-nim	whereNotBetween	v2/query_builder/models/mariadb/mariadb_query.html#whereNotBetween,MariadbQuery,string,array[,]	proc whereNotBetween(self: MariadbQuery; column: string; width: array[2, int | float]): MariadbQuery		228
-nim	whereNotBetween	v2/query_builder/models/mariadb/mariadb_query.html#whereNotBetween,MariadbQuery,string,array[,string]	proc whereNotBetween(self: MariadbQuery; column: string; width: array[2, string]): MariadbQuery		245
-nim	whereIn	v2/query_builder/models/mariadb/mariadb_query.html#whereIn,MariadbQuery,string,seq[]	proc whereIn(self: MariadbQuery; column: string; width: seq[int | float | string]): MariadbQuery		262
-nim	whereNotIn	v2/query_builder/models/mariadb/mariadb_query.html#whereNotIn,MariadbQuery,string,seq[]	proc whereNotIn(self: MariadbQuery; column: string; width: seq[int | float | string]): MariadbQuery		279
-nim	whereNull	v2/query_builder/models/mariadb/mariadb_query.html#whereNull,MariadbQuery,string	proc whereNull(self: MariadbQuery; column: string): MariadbQuery		296
-nim	groupBy	v2/query_builder/models/mariadb/mariadb_query.html#groupBy,MariadbQuery,string	proc groupBy(self: MariadbQuery; column: string): MariadbQuery		310
-nim	having	v2/query_builder/models/mariadb/mariadb_query.html#having,MariadbQuery,string,string,	proc having(self: MariadbQuery; column: string; symbol: string;\n       value: string | int | float | bool): MariadbQuery		318
-nim	having	v2/query_builder/models/mariadb/mariadb_query.html#having,MariadbQuery,string,string,_2	proc having(self: MariadbQuery; column: string; symbol: string; value: nil.type): MariadbQuery		344
-nim	orderBy	v2/query_builder/models/mariadb/mariadb_query.html#orderBy,MariadbQuery,string,Order	proc orderBy(self: MariadbQuery; column: string; order: Order): MariadbQuery		368
-nim	limit	v2/query_builder/models/mariadb/mariadb_query.html#limit,MariadbQuery,int	proc limit(self: MariadbQuery; num: int): MariadbQuery		382
-nim	offset	v2/query_builder/models/mariadb/mariadb_query.html#offset,MariadbQuery,int	proc offset(self: MariadbQuery; num: int): MariadbQuery		387
-nim	get	v2/query_builder/models/mariadb/mariadb_query.html#get,MariadbQuery	proc get(self: MariadbQuery): Future[seq[JsonNode]]		729
-nim	first	v2/query_builder/models/mariadb/mariadb_query.html#first,MariadbQuery	proc first(self: MariadbQuery): Future[Option[JsonNode]]		740
-nim	find	v2/query_builder/models/mariadb/mariadb_query.html#find,MariadbQuery,string,string	proc find(self: MariadbQuery; id: string; key = "id"): Future[Option[JsonNode]]		751
-nim	find	v2/query_builder/models/mariadb/mariadb_query.html#find,MariadbQuery,int,string	proc find(self: MariadbQuery; id: int; key = "id"): Future[Option[JsonNode]]		763
-nim	getPlain	v2/query_builder/models/mariadb/mariadb_query.html#getPlain,MariadbQuery	proc getPlain(self: MariadbQuery): Future[seq[seq[string]]]		767
-nim	firstPlain	v2/query_builder/models/mariadb/mariadb_query.html#firstPlain,MariadbQuery	proc firstPlain(self: MariadbQuery): Future[seq[string]]		778
-nim	findPlain	v2/query_builder/models/mariadb/mariadb_query.html#findPlain,MariadbQuery,string,string	proc findPlain(self: MariadbQuery; id: string; key = "id"): Future[seq[string]]		789
-nim	findPlain	v2/query_builder/models/mariadb/mariadb_query.html#findPlain,MariadbQuery,int,string	proc findPlain(self: MariadbQuery; id: int; key = "id"): Future[seq[string]]		801
-nim	get	v2/query_builder/models/mariadb/mariadb_query.html#get,MariadbQuery,typedesc[T]	proc get[T](self: MariadbQuery; typ: typedesc[T]): Future[seq[T]]		806
-nim	first	v2/query_builder/models/mariadb/mariadb_query.html#first,MariadbQuery,typedesc[T]	proc first[T](self: MariadbQuery; typ: typedesc[T]): Future[Option[T]]		819
-nim	find	v2/query_builder/models/mariadb/mariadb_query.html#find,MariadbQuery,string,typedesc[T],string	proc find[T](self: MariadbQuery; id: string; typ: typedesc[T]; key = "id"): Future[\n    Option[T]]		834
-nim	find	v2/query_builder/models/mariadb/mariadb_query.html#find,MariadbQuery,int,typedesc[T],string	proc find[T](self: MariadbQuery; id: int; typ: typedesc[T]; key = "id"): Future[\n    Option[T]]		850
-nim	insert	v2/query_builder/models/mariadb/mariadb_query.html#insert,MariadbQuery,JsonNode	proc insert(self: MariadbQuery; items: JsonNode): owned(Future[void])		854
-nim	insert	v2/query_builder/models/mariadb/mariadb_query.html#insert,MariadbQuery,seq[JsonNode]	proc insert(self: MariadbQuery; items: seq[JsonNode]): owned(Future[void])		861
-nim	insertId	v2/query_builder/models/mariadb/mariadb_query.html#insertId,MariadbQuery,JsonNode,string	proc insertId(self: MariadbQuery; items: JsonNode; key = "id"): Future[string]		867
-nim	insertId	v2/query_builder/models/mariadb/mariadb_query.html#insertId,MariadbQuery,seq[JsonNode],string	proc insertId(self: MariadbQuery; items: seq[JsonNode]; key = "id"): Future[\n    seq[string]]		874
-nim	update	v2/query_builder/models/mariadb/mariadb_query.html#update,MariadbQuery,JsonNode	proc update(self: MariadbQuery; items: JsonNode): owned(Future[void])		884
-nim	delete	v2/query_builder/models/mariadb/mariadb_query.html#delete,MariadbQuery	proc delete(self: MariadbQuery): owned(Future[void])		890
-nim	delete	v2/query_builder/models/mariadb/mariadb_query.html#delete,MariadbQuery,int,string	proc delete(self: MariadbQuery; id: int; key = "id"): owned(Future[void])		896
-nim	columns	v2/query_builder/models/mariadb/mariadb_query.html#columns,MariadbQuery	proc columns(self: MariadbQuery): Future[seq[string]]		903
-nim	count	v2/query_builder/models/mariadb/mariadb_query.html#count,MariadbQuery	proc count(self: MariadbQuery): Future[int]		915
-nim	min	v2/query_builder/models/mariadb/mariadb_query.html#min,MariadbQuery,string	proc min(self: MariadbQuery; column: string): Future[Option[string]]		925
-nim	max	v2/query_builder/models/mariadb/mariadb_query.html#max,MariadbQuery,string	proc max(self: MariadbQuery; column: string): Future[Option[string]]		941
-nim	avg	v2/query_builder/models/mariadb/mariadb_query.html#avg,MariadbQuery,string	proc avg(self: MariadbQuery; column: string): Future[Option[float]]		957
-nim	sum	v2/query_builder/models/mariadb/mariadb_query.html#sum,MariadbQuery,string	proc sum(self: MariadbQuery; column: string): Future[Option[float]]		967
-nim	begin	v2/query_builder/models/mariadb/mariadb_query.html#begin,MariadbConnections	proc begin(self: MariadbConnections): owned(Future[void])		977
-nim	rollback	v2/query_builder/models/mariadb/mariadb_query.html#rollback,MariadbConnections	proc rollback(self: MariadbConnections): owned(Future[void])		982
-nim	commit	v2/query_builder/models/mariadb/mariadb_query.html#commit,MariadbConnections	proc commit(self: MariadbConnections): owned(Future[void])		987
-nim	get	v2/query_builder/models/mariadb/mariadb_query.html#get,RawMariadbQuery	proc get(self: RawMariadbQuery): Future[seq[JsonNode]]		992
-nim	getPlain	v2/query_builder/models/mariadb/mariadb_query.html#getPlain,RawMariadbQuery	proc getPlain(self: RawMariadbQuery): Future[seq[seq[string]]]		998
-nim	exec	v2/query_builder/models/mariadb/mariadb_query.html#exec,RawMariadbQuery	proc exec(self: RawMariadbQuery): owned(Future[void])		1004
-nim	first	v2/query_builder/models/mariadb/mariadb_query.html#first,RawMariadbQuery	proc first(self: RawMariadbQuery): Future[Option[JsonNode]]		1010
-nim	firstPlain	v2/query_builder/models/mariadb/mariadb_query.html#firstPlain,RawMariadbQuery	proc firstPlain(self: RawMariadbQuery): Future[seq[string]]		1016
-nim	seeder	v2/query_builder/models/mariadb/mariadb_query.html#seeder.t,MariadbConnections,string,untyped	template seeder(rdb: MariadbConnections; tableName: string; body: untyped): untyped		1022
-nim	seeder	v2/query_builder/models/mariadb/mariadb_query.html#seeder.t,MariadbConnections,string,string,untyped	template seeder(rdb: MariadbConnections; tableName, column: string; body: untyped): untyped		1029
-nimgrp	firstplain	v2/query_builder/models/mariadb/mariadb_query.html#firstPlain-procs-all	proc		778
-nimgrp	findplain	v2/query_builder/models/mariadb/mariadb_query.html#findPlain-procs-all	proc		789
-nimgrp	wherenotbetween	v2/query_builder/models/mariadb/mariadb_query.html#whereNotBetween-procs-all	proc		228
-nimgrp	wherebetween	v2/query_builder/models/mariadb/mariadb_query.html#whereBetween-procs-all	proc		194
-nimgrp	having	v2/query_builder/models/mariadb/mariadb_query.html#having-procs-all	proc		318
-nimgrp	orwhere	v2/query_builder/models/mariadb/mariadb_query.html#orWhere-procs-all	proc		145
-nimgrp	first	v2/query_builder/models/mariadb/mariadb_query.html#first-procs-all	proc		740
-nimgrp	get	v2/query_builder/models/mariadb/mariadb_query.html#get-procs-all	proc		729
-nimgrp	insertid	v2/query_builder/models/mariadb/mariadb_query.html#insertId-procs-all	proc		867
-nimgrp	insert	v2/query_builder/models/mariadb/mariadb_query.html#insert-procs-all	proc		854
-nimgrp	where	v2/query_builder/models/mariadb/mariadb_query.html#where-procs-all	proc		67
-nimgrp	delete	v2/query_builder/models/mariadb/mariadb_query.html#delete-procs-all	proc		890
-nimgrp	getplain	v2/query_builder/models/mariadb/mariadb_query.html#getPlain-procs-all	proc		767
-nimgrp	find	v2/query_builder/models/mariadb/mariadb_query.html#find-procs-all	proc		751
-nimgrp	seeder	v2/query_builder/models/mariadb/mariadb_query.html#seeder-templates-all	template		1022
+nim	select	v2/query_builder/models/mariadb/mariadb_query.html#select,MariadbConnections,varargs[string]	proc select(self: MariadbConnections; columnsArg: varargs[string]): MariadbQuery		11
+nim	table	v2/query_builder/models/mariadb/mariadb_query.html#table,MariadbConnections,string	proc table(self: MariadbConnections; tableArg: string): MariadbQuery		32
+nim	table	v2/query_builder/models/mariadb/mariadb_query.html#table,MariadbQuery,string	proc table(self: MariadbQuery; tableArg: string): MariadbQuery		48
+nim	`distinct`	v2/query_builder/models/mariadb/mariadb_query.html#distinct,MariadbQuery	proc `distinct`(self: MariadbQuery): MariadbQuery		53
+nim	join	v2/query_builder/models/mariadb/mariadb_query.html#join,MariadbQuery,string,string,string,string	proc join(self: MariadbQuery; table: string; column1: string; symbol: string;\n     column2: string): MariadbQuery		59
+nim	leftJoin	v2/query_builder/models/mariadb/mariadb_query.html#leftJoin,MariadbQuery,string,string,string,string	proc leftJoin(self: MariadbQuery; table: string; column1: string; symbol: string;\n         column2: string): MariadbQuery		78
+nim	where	v2/query_builder/models/mariadb/mariadb_query.html#where,MariadbQuery,string,string,	proc where(self: MariadbQuery; column: string; symbol: string;\n      value: string | int | float): MariadbQuery		100
+nim	where	v2/query_builder/models/mariadb/mariadb_query.html#where,MariadbQuery,string,string,bool	proc where(self: MariadbQuery; column: string; symbol: string; value: bool): MariadbQuery		127
+nim	where	v2/query_builder/models/mariadb/mariadb_query.html#where,MariadbQuery,string,string,_2	proc where(self: MariadbQuery; column: string; symbol: string; value: nil.type): MariadbQuery		154
+nim	orWhere	v2/query_builder/models/mariadb/mariadb_query.html#orWhere,MariadbQuery,string,string,	proc orWhere(self: MariadbQuery; column: string; symbol: string;\n        value: string | int | float | bool): MariadbQuery		178
+nim	orWhere	v2/query_builder/models/mariadb/mariadb_query.html#orWhere,MariadbQuery,string,string,_2	proc orWhere(self: MariadbQuery; column: string; symbol: string; value: nil.type): MariadbQuery		205
+nim	whereBetween	v2/query_builder/models/mariadb/mariadb_query.html#whereBetween,MariadbQuery,string,array[,]	proc whereBetween(self: MariadbQuery; column: string; width: array[2, int | float]): MariadbQuery		227
+nim	whereBetween	v2/query_builder/models/mariadb/mariadb_query.html#whereBetween,MariadbQuery,string,array[,string]	proc whereBetween(self: MariadbQuery; column: string; width: array[2, string]): MariadbQuery		244
+nim	whereNotBetween	v2/query_builder/models/mariadb/mariadb_query.html#whereNotBetween,MariadbQuery,string,array[,]	proc whereNotBetween(self: MariadbQuery; column: string; width: array[2, int | float]): MariadbQuery		261
+nim	whereNotBetween	v2/query_builder/models/mariadb/mariadb_query.html#whereNotBetween,MariadbQuery,string,array[,string]	proc whereNotBetween(self: MariadbQuery; column: string; width: array[2, string]): MariadbQuery		278
+nim	whereIn	v2/query_builder/models/mariadb/mariadb_query.html#whereIn,MariadbQuery,string,seq[]	proc whereIn(self: MariadbQuery; column: string; width: seq[int | float | string]): MariadbQuery		295
+nim	whereNotIn	v2/query_builder/models/mariadb/mariadb_query.html#whereNotIn,MariadbQuery,string,seq[]	proc whereNotIn(self: MariadbQuery; column: string; width: seq[int | float | string]): MariadbQuery		312
+nim	whereNull	v2/query_builder/models/mariadb/mariadb_query.html#whereNull,MariadbQuery,string	proc whereNull(self: MariadbQuery; column: string): MariadbQuery		329
+nim	groupBy	v2/query_builder/models/mariadb/mariadb_query.html#groupBy,MariadbQuery,string	proc groupBy(self: MariadbQuery; column: string): MariadbQuery		343
+nim	having	v2/query_builder/models/mariadb/mariadb_query.html#having,MariadbQuery,string,string,	proc having(self: MariadbQuery; column: string; symbol: string;\n       value: string | int | float | bool): MariadbQuery		351
+nim	having	v2/query_builder/models/mariadb/mariadb_query.html#having,MariadbQuery,string,string,_2	proc having(self: MariadbQuery; column: string; symbol: string; value: nil.type): MariadbQuery		377
+nim	orderBy	v2/query_builder/models/mariadb/mariadb_query.html#orderBy,MariadbQuery,string,Order	proc orderBy(self: MariadbQuery; column: string; order: Order): MariadbQuery		401
+nim	limit	v2/query_builder/models/mariadb/mariadb_query.html#limit,MariadbQuery,int	proc limit(self: MariadbQuery; num: int): MariadbQuery		415
+nim	offset	v2/query_builder/models/mariadb/mariadb_query.html#offset,MariadbQuery,int	proc offset(self: MariadbQuery; num: int): MariadbQuery		420
+nim	raw	v2/query_builder/models/mariadb/mariadb_query.html#raw,MariadbConnections,string	proc raw(self: MariadbConnections; sql: string; arges = newJArray()): RawMariadbQuery		425
+nimgrp	wherenotbetween	v2/query_builder/models/mariadb/mariadb_query.html#whereNotBetween-procs-all	proc		261
+nimgrp	wherebetween	v2/query_builder/models/mariadb/mariadb_query.html#whereBetween-procs-all	proc		227
+nimgrp	having	v2/query_builder/models/mariadb/mariadb_query.html#having-procs-all	proc		351
+nimgrp	orwhere	v2/query_builder/models/mariadb/mariadb_query.html#orWhere-procs-all	proc		178
+nimgrp	table	v2/query_builder/models/mariadb/mariadb_query.html#table-procs-all	proc		32
+nimgrp	where	v2/query_builder/models/mariadb/mariadb_query.html#where-procs-all	proc		100

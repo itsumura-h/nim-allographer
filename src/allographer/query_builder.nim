@@ -3,6 +3,7 @@ import ./env
 when NimMajor == 2:
   import ./v2/query_builder/enums; export enums
   import ./v2/query_builder/error; export error
+  import ./v2/query_builder/models/orm; export orm
   
   when isExistsSqlite:
     import ./v2/query_builder/models/sqlite/sqlite_types; export sqlite_types
@@ -35,6 +36,7 @@ when NimMajor == 2:
 elif NimMajor == 1:
   import ./v1/query_builder/enums; export enums
   import ./v1/query_builder/error; export error
+  import ./v1/query_builder/models/orm; export orm
 
   when isExistsSqlite:
     import ./v1/query_builder/models/sqlite/sqlite_types; export sqlite_types

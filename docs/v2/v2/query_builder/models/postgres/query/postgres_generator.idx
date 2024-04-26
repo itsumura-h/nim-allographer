@@ -1,33 +1,33 @@
 nimTitle	postgres_generator	v2/query_builder/models/postgres/query/postgres_generator.html	module src/allographer/v2/query_builder/models/postgres/query/postgres_generator		0
-nim	selectSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectSql,PostgresQuery	proc selectSql(self: PostgresQuery): PostgresQuery		22
-nim	fromSql	v2/query_builder/models/postgres/query/postgres_generator.html#fromSql,PostgresQuery	proc fromSql(self: PostgresQuery): PostgresQuery		49
-nim	selectFirstSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectFirstSql,PostgresQuery	proc selectFirstSql(self: PostgresQuery): PostgresQuery		55
-nim	selectByIdSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectByIdSql,PostgresQuery,string	proc selectByIdSql(self: PostgresQuery; key: string): PostgresQuery		60
-nim	joinSql	v2/query_builder/models/postgres/query/postgres_generator.html#joinSql,PostgresQuery	proc joinSql(self: PostgresQuery): PostgresQuery		69
-nim	leftJoinSql	v2/query_builder/models/postgres/query/postgres_generator.html#leftJoinSql,PostgresQuery	proc leftJoinSql(self: PostgresQuery): PostgresQuery		81
-nim	whereSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereSql,PostgresQuery	proc whereSql(self: PostgresQuery): PostgresQuery		93
-nim	orWhereSql	v2/query_builder/models/postgres/query/postgres_generator.html#orWhereSql,PostgresQuery	proc orWhereSql(self: PostgresQuery): PostgresQuery		106
-nim	whereBetweenSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereBetweenSql,PostgresQuery	proc whereBetweenSql(self: PostgresQuery): PostgresQuery		120
-nim	whereBetweenStringSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereBetweenStringSql,PostgresQuery	proc whereBetweenStringSql(self: PostgresQuery): PostgresQuery		136
-nim	whereNotBetweenSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereNotBetweenSql,PostgresQuery	proc whereNotBetweenSql(self: PostgresQuery): PostgresQuery		152
-nim	whereNotBetweenStringSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereNotBetweenStringSql,PostgresQuery	proc whereNotBetweenStringSql(self: PostgresQuery): PostgresQuery		168
-nim	whereInSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereInSql,PostgresQuery	proc whereInSql(self: PostgresQuery): PostgresQuery		184
-nim	whereNotInSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereNotInSql,PostgresQuery	proc whereNotInSql(self: PostgresQuery): PostgresQuery		200
-nim	whereNullSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereNullSql,PostgresQuery	proc whereNullSql(self: PostgresQuery): PostgresQuery		216
-nim	groupBySql	v2/query_builder/models/postgres/query/postgres_generator.html#groupBySql,PostgresQuery	proc groupBySql(self: PostgresQuery): PostgresQuery		228
-nim	havingSql	v2/query_builder/models/postgres/query/postgres_generator.html#havingSql,PostgresQuery	proc havingSql(self: PostgresQuery): PostgresQuery		239
-nim	orderBySql	v2/query_builder/models/postgres/query/postgres_generator.html#orderBySql,PostgresQuery	proc orderBySql(self: PostgresQuery): PostgresQuery		254
-nim	limitSql	v2/query_builder/models/postgres/query/postgres_generator.html#limitSql,PostgresQuery	proc limitSql(self: PostgresQuery): PostgresQuery		267
-nim	offsetSql	v2/query_builder/models/postgres/query/postgres_generator.html#offsetSql,PostgresQuery	proc offsetSql(self: PostgresQuery): PostgresQuery		275
-nim	insertSql	v2/query_builder/models/postgres/query/postgres_generator.html#insertSql,PostgresQuery	proc insertSql(self: PostgresQuery): PostgresQuery		285
-nim	insertValueSql	v2/query_builder/models/postgres/query/postgres_generator.html#insertValueSql,PostgresQuery,JsonNode	proc insertValueSql(self: PostgresQuery; items: JsonNode): PostgresQuery		291
-nim	insertValuesSql	v2/query_builder/models/postgres/query/postgres_generator.html#insertValuesSql,PostgresQuery,openArray[JsonNode]	proc insertValuesSql(self: PostgresQuery; rows: openArray[JsonNode]): PostgresQuery		311
-nim	updateSql	v2/query_builder/models/postgres/query/postgres_generator.html#updateSql,PostgresQuery	proc updateSql(self: PostgresQuery): PostgresQuery		343
-nim	updateValuesSql	v2/query_builder/models/postgres/query/postgres_generator.html#updateValuesSql,PostgresQuery,JsonNode	proc updateValuesSql(self: PostgresQuery; items: JsonNode): PostgresQuery		353
-nim	deleteSql	v2/query_builder/models/postgres/query/postgres_generator.html#deleteSql,PostgresQuery	proc deleteSql(self: PostgresQuery): PostgresQuery		375
-nim	deleteByIdSql	v2/query_builder/models/postgres/query/postgres_generator.html#deleteByIdSql,PostgresQuery,int,string	proc deleteByIdSql(self: PostgresQuery; id: int; key: string): PostgresQuery		380
-nim	selectCountSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectCountSql,PostgresQuery	proc selectCountSql(self: PostgresQuery): PostgresQuery		386
-nim	selectMaxSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectMaxSql,PostgresQuery,string	proc selectMaxSql(self: PostgresQuery; column: string): PostgresQuery		397
-nim	selectMinSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectMinSql,PostgresQuery,string	proc selectMinSql(self: PostgresQuery; column: string): PostgresQuery		402
-nim	selectAvgSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectAvgSql,PostgresQuery,string	proc selectAvgSql(self: PostgresQuery; column: string): PostgresQuery		407
-nim	selectSumSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectSumSql,PostgresQuery,string	proc selectSumSql(self: PostgresQuery; column: string): PostgresQuery		412
+nim	selectSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectSql,PostgresQuery	proc selectSql(self: PostgresQuery): PostgresQuery		21
+nim	fromSql	v2/query_builder/models/postgres/query/postgres_generator.html#fromSql,PostgresQuery	proc fromSql(self: PostgresQuery): PostgresQuery		43
+nim	selectFirstSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectFirstSql,PostgresQuery	proc selectFirstSql(self: PostgresQuery): PostgresQuery		49
+nim	selectByIdSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectByIdSql,PostgresQuery,string	proc selectByIdSql(self: PostgresQuery; key: string): PostgresQuery		54
+nim	joinSql	v2/query_builder/models/postgres/query/postgres_generator.html#joinSql,PostgresQuery	proc joinSql(self: PostgresQuery): PostgresQuery		63
+nim	leftJoinSql	v2/query_builder/models/postgres/query/postgres_generator.html#leftJoinSql,PostgresQuery	proc leftJoinSql(self: PostgresQuery): PostgresQuery		75
+nim	whereSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereSql,PostgresQuery	proc whereSql(self: PostgresQuery): PostgresQuery		87
+nim	orWhereSql	v2/query_builder/models/postgres/query/postgres_generator.html#orWhereSql,PostgresQuery	proc orWhereSql(self: PostgresQuery): PostgresQuery		100
+nim	whereBetweenSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereBetweenSql,PostgresQuery	proc whereBetweenSql(self: PostgresQuery): PostgresQuery		114
+nim	whereBetweenStringSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereBetweenStringSql,PostgresQuery	proc whereBetweenStringSql(self: PostgresQuery): PostgresQuery		130
+nim	whereNotBetweenSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereNotBetweenSql,PostgresQuery	proc whereNotBetweenSql(self: PostgresQuery): PostgresQuery		146
+nim	whereNotBetweenStringSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereNotBetweenStringSql,PostgresQuery	proc whereNotBetweenStringSql(self: PostgresQuery): PostgresQuery		162
+nim	whereInSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereInSql,PostgresQuery	proc whereInSql(self: PostgresQuery): PostgresQuery		178
+nim	whereNotInSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereNotInSql,PostgresQuery	proc whereNotInSql(self: PostgresQuery): PostgresQuery		194
+nim	whereNullSql	v2/query_builder/models/postgres/query/postgres_generator.html#whereNullSql,PostgresQuery	proc whereNullSql(self: PostgresQuery): PostgresQuery		210
+nim	groupBySql	v2/query_builder/models/postgres/query/postgres_generator.html#groupBySql,PostgresQuery	proc groupBySql(self: PostgresQuery): PostgresQuery		222
+nim	havingSql	v2/query_builder/models/postgres/query/postgres_generator.html#havingSql,PostgresQuery	proc havingSql(self: PostgresQuery): PostgresQuery		233
+nim	orderBySql	v2/query_builder/models/postgres/query/postgres_generator.html#orderBySql,PostgresQuery	proc orderBySql(self: PostgresQuery): PostgresQuery		248
+nim	limitSql	v2/query_builder/models/postgres/query/postgres_generator.html#limitSql,PostgresQuery	proc limitSql(self: PostgresQuery): PostgresQuery		261
+nim	offsetSql	v2/query_builder/models/postgres/query/postgres_generator.html#offsetSql,PostgresQuery	proc offsetSql(self: PostgresQuery): PostgresQuery		269
+nim	insertSql	v2/query_builder/models/postgres/query/postgres_generator.html#insertSql,PostgresQuery	proc insertSql(self: PostgresQuery): PostgresQuery		279
+nim	insertValueSql	v2/query_builder/models/postgres/query/postgres_generator.html#insertValueSql,PostgresQuery,JsonNode	proc insertValueSql(self: PostgresQuery; items: JsonNode): PostgresQuery		285
+nim	insertValuesSql	v2/query_builder/models/postgres/query/postgres_generator.html#insertValuesSql,PostgresQuery,openArray[JsonNode]	proc insertValuesSql(self: PostgresQuery; rows: openArray[JsonNode]): PostgresQuery		305
+nim	updateSql	v2/query_builder/models/postgres/query/postgres_generator.html#updateSql,PostgresQuery	proc updateSql(self: PostgresQuery): PostgresQuery		337
+nim	updateValuesSql	v2/query_builder/models/postgres/query/postgres_generator.html#updateValuesSql,PostgresQuery,JsonNode	proc updateValuesSql(self: PostgresQuery; items: JsonNode): PostgresQuery		347
+nim	deleteSql	v2/query_builder/models/postgres/query/postgres_generator.html#deleteSql,PostgresQuery	proc deleteSql(self: PostgresQuery): PostgresQuery		369
+nim	deleteByIdSql	v2/query_builder/models/postgres/query/postgres_generator.html#deleteByIdSql,PostgresQuery,int,string	proc deleteByIdSql(self: PostgresQuery; id: int; key: string): PostgresQuery		374
+nim	selectCountSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectCountSql,PostgresQuery	proc selectCountSql(self: PostgresQuery): PostgresQuery		380
+nim	selectMaxSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectMaxSql,PostgresQuery,string	proc selectMaxSql(self: PostgresQuery; column: string): PostgresQuery		391
+nim	selectMinSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectMinSql,PostgresQuery,string	proc selectMinSql(self: PostgresQuery; column: string): PostgresQuery		396
+nim	selectAvgSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectAvgSql,PostgresQuery,string	proc selectAvgSql(self: PostgresQuery; column: string): PostgresQuery		401
+nim	selectSumSql	v2/query_builder/models/postgres/query/postgres_generator.html#selectSumSql,PostgresQuery,string	proc selectSumSql(self: PostgresQuery; column: string): PostgresQuery		406

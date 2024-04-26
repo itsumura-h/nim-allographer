@@ -93,7 +93,7 @@ proc where*(self: SurrealQuery, column: string, symbol: string,
             value: bool|int|float|string|SurrealId): SurrealQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -117,7 +117,7 @@ proc where*(self: SurrealQuery, column: string, symbol: string,
 proc where*(self: SurrealQuery, column: string, symbol: string, value: nil.type): SurrealQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -142,7 +142,7 @@ proc orWhere*(self: SurrealQuery, column: string, symbol: string,
               value: bool|int|float|string|SurrealId): SurrealQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -166,7 +166,7 @@ proc orWhere*(self: SurrealQuery, column: string, symbol: string,
 proc orWhere*(self: SurrealQuery, column: string, symbol: string, value: nil.type): SurrealQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -324,7 +324,7 @@ proc having*(self: SurrealQuery, column: string, symbol: string,
               value: bool|int|float|string): SurrealQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -348,7 +348,7 @@ proc having*(self: SurrealQuery, column: string, symbol: string,
 proc having*(self: SurrealQuery, column: string, symbol: string, value: nil.type): SurrealQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 

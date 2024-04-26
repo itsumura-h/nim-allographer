@@ -1,0 +1,4 @@
+nimTitle	orm	v2/query_builder/models/orm.html	module src/allographer/v2/query_builder/models/orm		0
+nim	orm	v2/query_builder/models/orm.html#orm,Future[seq[JsonNode]],typedesc[T]	proc orm[T](response: Future[seq[JsonNode]]; typ: typedesc[T]): Future[seq[T]]		5
+nim	orm	v2/query_builder/models/orm.html#orm,Future[Option[JsonNode]],typedesc[T]	proc orm[T](response: Future[Option[JsonNode]]; typ: typedesc[T]): Future[Option[T]]		13
+nimgrp	orm	v2/query_builder/models/orm.html#orm-procs-all	proc		5

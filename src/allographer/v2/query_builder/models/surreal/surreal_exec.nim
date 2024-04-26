@@ -309,7 +309,7 @@ proc get*(self: SurrealQuery):Future[seq[JsonNode]] {.async.} =
   try:
     self.log.logger(sql)
     return self.getAllRows(sql).await
-  except Exception:
+  except CatchableError:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return newSeq[JsonNode]()
@@ -320,7 +320,7 @@ proc first*(self: SurrealQuery):Future[Option[JsonNode]] {.async.} =
   try:
     self.log.logger(sql)
     return self.getRow(sql).await
-  except Exception:
+  except CatchableError:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return none(JsonNode)
@@ -332,7 +332,7 @@ proc find*(self: SurrealQuery, id:SurrealId, key="id"):Future[Option[JsonNode]] 
   try:
     self.log.logger(sql)
     return self.getRow(sql).await
-  except Exception:
+  except CatchableError:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -417,7 +417,7 @@ proc columns*(self: SurrealQuery):Future[seq[string]] {.async.} =
     for (key, value) in resp[0]["result"]["fd"].pairs:
       columns.add(key)
     return columns
-  except Exception:
+  except CatchableError:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     return @[]
@@ -504,7 +504,7 @@ proc exec*(self: RawSurrealQuery) {.async.} =
   try:
     self.log.logger(self.queryString)
     self.exec(self.queryString).await
-  except Exception:
+  except CatchableError:
     self.log.echoErrorMsg(self.queryString)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
 
@@ -518,7 +518,7 @@ proc info*(self: RawSurrealQuery):Future[JsonNode] {.async.} =
   try:
     self.log.logger(self.queryString)
     return self.info(self.queryString).await
-  except Exception:
+  except CatchableError:
     self.log.echoErrorMsg(self.queryString)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
 

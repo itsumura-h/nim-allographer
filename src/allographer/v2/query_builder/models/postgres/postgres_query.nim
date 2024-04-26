@@ -104,7 +104,7 @@ proc where*(self: PostgresQuery, column: string, symbol: string,
             value: string|int|float): PostgresQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -131,7 +131,7 @@ proc where*(self: PostgresQuery, column: string, symbol: string,
             value: bool): PostgresQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -157,7 +157,7 @@ proc where*(self: PostgresQuery, column: string, symbol: string,
 proc where*(self: PostgresQuery, column: string, symbol: string, value: nil.type): PostgresQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -182,7 +182,7 @@ proc orWhere*(self: PostgresQuery, column: string, symbol: string,
               value: string|int|float|bool): PostgresQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -208,7 +208,7 @@ proc orWhere*(self: PostgresQuery, column: string, symbol: string,
 proc orWhere*(self: PostgresQuery, column: string, symbol: string, value: nil.type): PostgresQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -355,7 +355,7 @@ proc having*(self: PostgresQuery, column: string, symbol: string,
               value: string|int|float|bool): PostgresQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -380,7 +380,7 @@ proc having*(self: PostgresQuery, column: string, symbol: string,
 proc having*(self: PostgresQuery, column: string, symbol: string, value: nil.type): PostgresQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 

@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.29.1"
+version       = "0.30.0"
 author        = "Hidenobu Itsumura @dumblepytech1 as 'medy'"
 description   = "A Nim query builder library inspired by Laravel/PHP and Orator/Python"
 license       = "MIT"
@@ -23,6 +23,7 @@ import strformat, os
 
 task test, "run testament test":
   exec &"testament p 'tests/v{NimMajor}/*/test_*.nim'"
+  exec &"testament p 'tests/v2/test_*.nim'"
   for kind, path in walkDir(getCurrentDir() / "tests"):
     if not path.contains(".") and path.fileExists():
       exec "rm -f " & path

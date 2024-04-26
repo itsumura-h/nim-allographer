@@ -1,5 +1,5 @@
 nimTitle	mysql_query_type	v2/schema_builder/queries/mysql/mysql_query_type.html	module src/allographer/v2/schema_builder/queries/mysql/mysql_query_type		0
 nim	MysqlSchema	v2/schema_builder/queries/mysql/mysql_query_type.html#MysqlSchema	type MysqlSchema		6
-nim	new	v2/schema_builder/queries/mysql/mysql_query_type.html#new,typeMysqlSchema,MysqlConnections,Table	proc new(__4026531850: type MysqlSchema; rdb: MysqlConnections; table: Table): MysqlSchema		11
-nim	new	v2/schema_builder/queries/mysql/mysql_query_type.html#new,typeMysqlSchema,MysqlConnections,Table,Column	proc new(__4026531856: type MysqlSchema; rdb: MysqlConnections; table: Table;\n    column: Column): MysqlSchema		14
+nim	new	v2/schema_builder/queries/mysql/mysql_query_type.html#new,typeMysqlSchema,MysqlConnections,Table	proc new(__4043309066: type MysqlSchema; rdb: MysqlConnections; table: Table): MysqlSchema		11
+nim	new	v2/schema_builder/queries/mysql/mysql_query_type.html#new,typeMysqlSchema,MysqlConnections,Table,Column	proc new(__4043309072: type MysqlSchema; rdb: MysqlConnections; table: Table;\n    column: Column): MysqlSchema		14
 nimgrp	new	v2/schema_builder/queries/mysql/mysql_query_type.html#new-procs-all	proc		11

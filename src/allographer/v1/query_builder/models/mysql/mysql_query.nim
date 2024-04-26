@@ -100,7 +100,7 @@ proc where*(self: MysqlQuery, column: string, symbol: string,
             value: string|int|float): MysqlQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -127,7 +127,7 @@ proc where*(self: MysqlQuery, column: string, symbol: string,
             value: bool): MysqlQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -153,7 +153,7 @@ proc where*(self: MysqlQuery, column: string, symbol: string,
 proc where*(self: MysqlQuery, column: string, symbol: string, value: nil.type): MysqlQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -178,7 +178,7 @@ proc orWhere*(self: MysqlQuery, column: string, symbol: string,
               value: string|int|float|bool): MysqlQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -204,7 +204,7 @@ proc orWhere*(self: MysqlQuery, column: string, symbol: string,
 proc orWhere*(self: MysqlQuery, column: string, symbol: string, value: nil.type): MysqlQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -351,7 +351,7 @@ proc having*(self: MysqlQuery, column: string, symbol: string,
               value: string|int|float|bool): MysqlQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -376,7 +376,7 @@ proc having*(self: MysqlQuery, column: string, symbol: string,
 proc having*(self: MysqlQuery, column: string, symbol: string, value: nil.type): MysqlQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 

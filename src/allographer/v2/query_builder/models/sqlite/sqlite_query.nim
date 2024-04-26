@@ -100,7 +100,7 @@ proc where*(self: SqliteQuery, column: string, symbol: string,
             value: string|int|float): SqliteQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -127,7 +127,7 @@ proc where*(self: SqliteQuery, column: string, symbol: string,
             value: bool): SqliteQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -153,7 +153,7 @@ proc where*(self: SqliteQuery, column: string, symbol: string,
 proc where*(self: SqliteQuery, column: string, symbol: string, value: nil.type): SqliteQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -178,7 +178,7 @@ proc orWhere*(self: SqliteQuery, column: string, symbol: string,
               value: string|int|float|bool): SqliteQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -203,7 +203,7 @@ proc orWhere*(self: SqliteQuery, column: string, symbol: string,
 proc orWhere*(self: SqliteQuery, column: string, symbol: string, value: nil.type): SqliteQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -325,7 +325,7 @@ proc having*(self: SqliteQuery, column: string, symbol: string,
               value: string|int|float|bool): SqliteQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 
@@ -350,7 +350,7 @@ proc having*(self: SqliteQuery, column: string, symbol: string,
 proc having*(self: SqliteQuery, column: string, symbol: string, value: nil.type): SqliteQuery =
   if not whereSymbols.contains(symbol):
     raise newException(
-      Exception,
+      CatchableError,
       whereSymbolsError
     )
 

@@ -1,5 +1,0 @@
-nimTitle	postgres_connections	v2/query_builder/models/postgres/postgres_connections.html	module src/allographer/v2/query_builder/models/postgres/postgres_connections		0
-nim	`$`	v2/query_builder/models/postgres/postgres_connections.html#$	proc `$`(self: PostgresConnections | PostgresQuery): string		5
-nim	select	v2/query_builder/models/postgres/postgres_connections.html#select,PostgresConnections,varargs[string]	proc select(self: PostgresConnections; columnsArg: varargs[string]): PostgresQuery		9
-nim	table	v2/query_builder/models/postgres/postgres_connections.html#table,PostgresConnections,string	proc table(self: PostgresConnections; tableArg: string): PostgresQuery		30
-nim	raw	v2/query_builder/models/postgres/postgres_connections.html#raw,PostgresConnections,string	proc raw(self: PostgresConnections; sql: string; arges = newJArray()): RawPostgresQuery		47
