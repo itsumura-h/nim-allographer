@@ -83,7 +83,8 @@ suite("return type"):
       let auths = rdb
                   .table("auth")
                   .orderBy("id", Asc)
-                  .get(Auth)
+                  .get()
+                  .orm(Auth)
                   .waitFor()
       check auths[0].id == 1
       check auths[0].name == "admin"
@@ -96,7 +97,8 @@ suite("return type"):
                   .select("id", "name", "auth_id as authId", "bool", "float")
                   .table("user")
                   .orderBy("id", Asc)
-                  .get(User)
+                  .get()
+                  .orm(User)
                   .waitFor()
       check users[0].id == 1
       check users[0].name == "user1"
@@ -118,7 +120,8 @@ suite("return type"):
                   .table("user")
                   .join("auth", "auth.id", "=", "user.auth_id")
                   .orderBy("user.id", Asc)
-                  .get(JoinedUser)
+                  .get()
+                  .orm(JoinedUser)
                   .waitFor()
       check joinedUsers[0].userId == 1
       check joinedUsers[0].userName == "user1"
@@ -133,7 +136,8 @@ suite("return type"):
       let auth = rdb
                   .table("auth")
                   .orderBy("id", Asc)
-                  .first(Auth)
+                  .first()
+                  .orm(Auth)
                   .waitFor()
                   .get()
       check auth.id == 1
@@ -145,7 +149,8 @@ suite("return type"):
                   .select("id", "name", "auth_id as authId", "bool", "float")
                   .table("user")
                   .orderBy("id", Asc)
-                  .first(User)
+                  .first()
+                  .orm(User)
                   .waitFor()
                   .get()
       check user.id == 1
@@ -168,7 +173,8 @@ suite("return type"):
                   .table("user")
                   .join("auth", "auth.id", "=", "user.auth_id")
                   .orderBy("user.id", Asc)
-                  .first(JoinedUser)
+                  .first()
+                  .orm(JoinedUser)
                   .waitFor()
                   .get()
       check user.userId == 1
@@ -184,7 +190,8 @@ suite("return type"):
       let auth = rdb
                   .table("auth")
                   .orderBy("id", Asc)
-                  .find(1, Auth)
+                  .find(1)
+                  .orm(Auth)
                   .waitFor()
                   .get()
       check auth.id == 1
@@ -196,7 +203,8 @@ suite("return type"):
                   .select("id", "name", "auth_id as authId", "bool", "float")
                   .table("user")
                   .orderBy("id", Asc)
-                  .find(1, User)
+                  .find(1)
+                  .orm(User)
                   .waitFor()
                   .get()
       check user.id == 1
@@ -219,7 +227,8 @@ suite("return type"):
                   .table("user")
                   .join("auth", "auth.id", "=", "user.auth_id")
                   .orderBy("user.id", Asc)
-                  .find(1, JoinedUser, key="user.id")
+                  .find(1, key="user.id")
+                  .orm(JoinedUser)
                   .waitFor()
                   .get()
       check user.userId == 1
