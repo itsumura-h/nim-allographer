@@ -1,73 +1,32 @@
 nimTitle	postgres_query	v2/query_builder/models/postgres/postgres_query.html	module src/allographer/v2/query_builder/models/postgres/postgres_query		0
-nim	table	v2/query_builder/models/postgres/postgres_query.html#table,PostgresQuery,string	proc table(self: PostgresQuery; tableArg: string): PostgresQuery		16
-nim	`distinct`	v2/query_builder/models/postgres/postgres_query.html#distinct,PostgresQuery	proc `distinct`(self: PostgresQuery): PostgresQuery		21
-nim	join	v2/query_builder/models/postgres/postgres_query.html#join,PostgresQuery,string,string,string,string	proc join(self: PostgresQuery; table: string; column1: string; symbol: string;\n     column2: string): PostgresQuery		27
-nim	leftJoin	v2/query_builder/models/postgres/postgres_query.html#leftJoin,PostgresQuery,string,string,string,string	proc leftJoin(self: PostgresQuery; table: string; column1: string; symbol: string;\n         column2: string): PostgresQuery		46
-nim	where	v2/query_builder/models/postgres/postgres_query.html#where,PostgresQuery,string,string,	proc where(self: PostgresQuery; column: string; symbol: string;\n      value: string | int | float): PostgresQuery		68
-nim	where	v2/query_builder/models/postgres/postgres_query.html#where,PostgresQuery,string,string,bool	proc where(self: PostgresQuery; column: string; symbol: string; value: bool): PostgresQuery		95
-nim	where	v2/query_builder/models/postgres/postgres_query.html#where,PostgresQuery,string,string,_2	proc where(self: PostgresQuery; column: string; symbol: string; value: nil.type): PostgresQuery		122
-nim	orWhere	v2/query_builder/models/postgres/postgres_query.html#orWhere,PostgresQuery,string,string,	proc orWhere(self: PostgresQuery; column: string; symbol: string;\n        value: string | int | float | bool): PostgresQuery		146
-nim	orWhere	v2/query_builder/models/postgres/postgres_query.html#orWhere,PostgresQuery,string,string,_2	proc orWhere(self: PostgresQuery; column: string; symbol: string; value: nil.type): PostgresQuery		173
-nim	whereBetween	v2/query_builder/models/postgres/postgres_query.html#whereBetween,PostgresQuery,string,array[,]	proc whereBetween(self: PostgresQuery; column: string; width: array[2, int | float]): PostgresQuery		195
-nim	whereBetween	v2/query_builder/models/postgres/postgres_query.html#whereBetween,PostgresQuery,string,array[,string]	proc whereBetween(self: PostgresQuery; column: string; width: array[2, string]): PostgresQuery		212
-nim	whereNotBetween	v2/query_builder/models/postgres/postgres_query.html#whereNotBetween,PostgresQuery,string,array[,]	proc whereNotBetween(self: PostgresQuery; column: string;\n                width: array[2, int | float]): PostgresQuery		229
-nim	whereNotBetween	v2/query_builder/models/postgres/postgres_query.html#whereNotBetween,PostgresQuery,string,array[,string]	proc whereNotBetween(self: PostgresQuery; column: string; width: array[2, string]): PostgresQuery		246
-nim	whereIn	v2/query_builder/models/postgres/postgres_query.html#whereIn,PostgresQuery,string,seq[]	proc whereIn(self: PostgresQuery; column: string; width: seq[int | float | string]): PostgresQuery		263
-nim	whereNotIn	v2/query_builder/models/postgres/postgres_query.html#whereNotIn,PostgresQuery,string,seq[]	proc whereNotIn(self: PostgresQuery; column: string; width: seq[int | float | string]): PostgresQuery		280
-nim	whereNull	v2/query_builder/models/postgres/postgres_query.html#whereNull,PostgresQuery,string	proc whereNull(self: PostgresQuery; column: string): PostgresQuery		297
-nim	groupBy	v2/query_builder/models/postgres/postgres_query.html#groupBy,PostgresQuery,string	proc groupBy(self: PostgresQuery; column: string): PostgresQuery		311
-nim	having	v2/query_builder/models/postgres/postgres_query.html#having,PostgresQuery,string,string,	proc having(self: PostgresQuery; column: string; symbol: string;\n       value: string | int | float | bool): PostgresQuery		319
-nim	having	v2/query_builder/models/postgres/postgres_query.html#having,PostgresQuery,string,string,_2	proc having(self: PostgresQuery; column: string; symbol: string; value: nil.type): PostgresQuery		345
-nim	orderBy	v2/query_builder/models/postgres/postgres_query.html#orderBy,PostgresQuery,string,Order	proc orderBy(self: PostgresQuery; column: string; order: Order): PostgresQuery		369
-nim	limit	v2/query_builder/models/postgres/postgres_query.html#limit,PostgresQuery,int	proc limit(self: PostgresQuery; num: int): PostgresQuery		383
-nim	offset	v2/query_builder/models/postgres/postgres_query.html#offset,PostgresQuery,int	proc offset(self: PostgresQuery; num: int): PostgresQuery		388
-nim	get	v2/query_builder/models/postgres/postgres_query.html#get,PostgresQuery	proc get(self: PostgresQuery): Future[seq[JsonNode]]		748
-nim	first	v2/query_builder/models/postgres/postgres_query.html#first,PostgresQuery	proc first(self: PostgresQuery): Future[Option[JsonNode]]		760
-nim	find	v2/query_builder/models/postgres/postgres_query.html#find,PostgresQuery,string,string	proc find(self: PostgresQuery; id: string; key = "id"): Future[Option[JsonNode]]		772
-nim	find	v2/query_builder/models/postgres/postgres_query.html#find,PostgresQuery,int,string	proc find(self: PostgresQuery; id: int; key = "id"): Future[Option[JsonNode]]		785
-nim	getPlain	v2/query_builder/models/postgres/postgres_query.html#getPlain,PostgresQuery	proc getPlain(self: PostgresQuery): Future[seq[seq[string]]]		790
-nim	firstPlain	v2/query_builder/models/postgres/postgres_query.html#firstPlain,PostgresQuery	proc firstPlain(self: PostgresQuery): Future[seq[string]]		802
-nim	findPlain	v2/query_builder/models/postgres/postgres_query.html#findPlain,PostgresQuery,string,string	proc findPlain(self: PostgresQuery; id: string; key = "id"): Future[seq[string]]		814
-nim	findPlain	v2/query_builder/models/postgres/postgres_query.html#findPlain,PostgresQuery,int,string	proc findPlain(self: PostgresQuery; id: int; key = "id"): Future[seq[string]]		827
-nim	get	v2/query_builder/models/postgres/postgres_query.html#get,PostgresQuery,typedesc[T]	proc get[T](self: PostgresQuery; typ: typedesc[T]): Future[seq[T]]		832
-nim	first	v2/query_builder/models/postgres/postgres_query.html#first,PostgresQuery,typedesc[T]	proc first[T](self: PostgresQuery; typ: typedesc[T]): Future[Option[T]]		846
-nim	find	v2/query_builder/models/postgres/postgres_query.html#find,PostgresQuery,string,typedesc[T],string	proc find[T](self: PostgresQuery; id: string; typ: typedesc[T]; key = "id"): Future[\n    Option[T]]		862
-nim	find	v2/query_builder/models/postgres/postgres_query.html#find,PostgresQuery,int,typedesc[T],string	proc find[T](self: PostgresQuery; id: int; typ: typedesc[T]; key = "id"): Future[\n    Option[T]]		879
-nim	insert	v2/query_builder/models/postgres/postgres_query.html#insert,PostgresQuery,JsonNode	proc insert(self: PostgresQuery; items: JsonNode): owned(Future[void])		884
-nim	insert	v2/query_builder/models/postgres/postgres_query.html#insert,PostgresQuery,seq[JsonNode]	proc insert(self: PostgresQuery; items: seq[JsonNode]): owned(Future[void])		892
-nim	insertId	v2/query_builder/models/postgres/postgres_query.html#insertId,PostgresQuery,JsonNode,string	proc insertId(self: PostgresQuery; items: JsonNode; key = "id"): Future[string]		899
-nim	insertId	v2/query_builder/models/postgres/postgres_query.html#insertId,PostgresQuery,seq[JsonNode],string	proc insertId(self: PostgresQuery; items: seq[JsonNode]; key = "id"): Future[\n    seq[string]]		907
-nim	update	v2/query_builder/models/postgres/postgres_query.html#update,PostgresQuery,JsonNode	proc update(self: PostgresQuery; items: JsonNode): owned(Future[void])		918
-nim	delete	v2/query_builder/models/postgres/postgres_query.html#delete,PostgresQuery	proc delete(self: PostgresQuery): owned(Future[void])		925
-nim	delete	v2/query_builder/models/postgres/postgres_query.html#delete,PostgresQuery,int,string	proc delete(self: PostgresQuery; id: int; key = "id"): owned(Future[void])		932
-nim	columns	v2/query_builder/models/postgres/postgres_query.html#columns,PostgresQuery	proc columns(self: PostgresQuery): Future[seq[string]]		940
-nim	count	v2/query_builder/models/postgres/postgres_query.html#count,PostgresQuery	proc count(self: PostgresQuery): Future[int]		953
-nim	min	v2/query_builder/models/postgres/postgres_query.html#min,PostgresQuery,string	proc min(self: PostgresQuery; column: string): Future[Option[string]]		964
-nim	max	v2/query_builder/models/postgres/postgres_query.html#max,PostgresQuery,string	proc max(self: PostgresQuery; column: string): Future[Option[string]]		981
-nim	avg	v2/query_builder/models/postgres/postgres_query.html#avg,PostgresQuery,string	proc avg(self: PostgresQuery; column: string): Future[Option[float]]		998
-nim	sum	v2/query_builder/models/postgres/postgres_query.html#sum,PostgresQuery,string	proc sum(self: PostgresQuery; column: string): Future[Option[float]]		1009
-nim	begin	v2/query_builder/models/postgres/postgres_query.html#begin,PostgresConnections	proc begin(self: PostgresConnections): owned(Future[void])		1020
-nim	rollback	v2/query_builder/models/postgres/postgres_query.html#rollback,PostgresConnections	proc rollback(self: PostgresConnections): owned(Future[void])		1025
-nim	commit	v2/query_builder/models/postgres/postgres_query.html#commit,PostgresConnections	proc commit(self: PostgresConnections): owned(Future[void])		1030
-nim	get	v2/query_builder/models/postgres/postgres_query.html#get,RawPostgresQuery	proc get(self: RawPostgresQuery): Future[seq[JsonNode]]		1035
-nim	getPlain	v2/query_builder/models/postgres/postgres_query.html#getPlain,RawPostgresQuery	proc getPlain(self: RawPostgresQuery): Future[seq[seq[string]]]		1041
-nim	exec	v2/query_builder/models/postgres/postgres_query.html#exec,RawPostgresQuery	proc exec(self: RawPostgresQuery): owned(Future[void])		1047
-nim	first	v2/query_builder/models/postgres/postgres_query.html#first,RawPostgresQuery	proc first(self: RawPostgresQuery): Future[Option[JsonNode]]		1053
-nim	firstPlain	v2/query_builder/models/postgres/postgres_query.html#firstPlain,RawPostgresQuery	proc firstPlain(self: RawPostgresQuery): Future[seq[string]]		1059
-nim	seeder	v2/query_builder/models/postgres/postgres_query.html#seeder.t,PostgresConnections,string,untyped	template seeder(rdb: PostgresConnections; tableName: string; body: untyped): untyped		1065
-nim	seeder	v2/query_builder/models/postgres/postgres_query.html#seeder.t,PostgresConnections,string,string,untyped	template seeder(rdb: PostgresConnections; tableName, column: string; body: untyped): untyped		1072
-nimgrp	firstplain	v2/query_builder/models/postgres/postgres_query.html#firstPlain-procs-all	proc		802
-nimgrp	findplain	v2/query_builder/models/postgres/postgres_query.html#findPlain-procs-all	proc		814
-nimgrp	wherenotbetween	v2/query_builder/models/postgres/postgres_query.html#whereNotBetween-procs-all	proc		229
-nimgrp	wherebetween	v2/query_builder/models/postgres/postgres_query.html#whereBetween-procs-all	proc		195
-nimgrp	having	v2/query_builder/models/postgres/postgres_query.html#having-procs-all	proc		319
-nimgrp	orwhere	v2/query_builder/models/postgres/postgres_query.html#orWhere-procs-all	proc		146
-nimgrp	first	v2/query_builder/models/postgres/postgres_query.html#first-procs-all	proc		760
-nimgrp	get	v2/query_builder/models/postgres/postgres_query.html#get-procs-all	proc		748
-nimgrp	insertid	v2/query_builder/models/postgres/postgres_query.html#insertId-procs-all	proc		899
-nimgrp	insert	v2/query_builder/models/postgres/postgres_query.html#insert-procs-all	proc		884
-nimgrp	where	v2/query_builder/models/postgres/postgres_query.html#where-procs-all	proc		68
-nimgrp	delete	v2/query_builder/models/postgres/postgres_query.html#delete-procs-all	proc		925
-nimgrp	getplain	v2/query_builder/models/postgres/postgres_query.html#getPlain-procs-all	proc		790
-nimgrp	find	v2/query_builder/models/postgres/postgres_query.html#find-procs-all	proc		772
-nimgrp	seeder	v2/query_builder/models/postgres/postgres_query.html#seeder-templates-all	template		1065
+nim	select	v2/query_builder/models/postgres/postgres_query.html#select,PostgresConnections,varargs[string]	proc select(self: PostgresConnections; columnsArg: varargs[string]): PostgresQuery		15
+nim	table	v2/query_builder/models/postgres/postgres_query.html#table,PostgresConnections,string	proc table(self: PostgresConnections; tableArg: string): PostgresQuery		35
+nim	table	v2/query_builder/models/postgres/postgres_query.html#table,PostgresQuery,string	proc table(self: PostgresQuery; tableArg: string): PostgresQuery		51
+nim	`distinct`	v2/query_builder/models/postgres/postgres_query.html#distinct,PostgresQuery	proc `distinct`(self: PostgresQuery): PostgresQuery		56
+nim	join	v2/query_builder/models/postgres/postgres_query.html#join,PostgresQuery,string,string,string,string	proc join(self: PostgresQuery; table: string; column1: string; symbol: string;\n     column2: string): PostgresQuery		62
+nim	leftJoin	v2/query_builder/models/postgres/postgres_query.html#leftJoin,PostgresQuery,string,string,string,string	proc leftJoin(self: PostgresQuery; table: string; column1: string; symbol: string;\n         column2: string): PostgresQuery		81
+nim	where	v2/query_builder/models/postgres/postgres_query.html#where,PostgresQuery,string,string,	proc where(self: PostgresQuery; column: string; symbol: string;\n      value: string | int | float): PostgresQuery		103
+nim	where	v2/query_builder/models/postgres/postgres_query.html#where,PostgresQuery,string,string,bool	proc where(self: PostgresQuery; column: string; symbol: string; value: bool): PostgresQuery		130
+nim	where	v2/query_builder/models/postgres/postgres_query.html#where,PostgresQuery,string,string,_2	proc where(self: PostgresQuery; column: string; symbol: string; value: nil.type): PostgresQuery		157
+nim	orWhere	v2/query_builder/models/postgres/postgres_query.html#orWhere,PostgresQuery,string,string,	proc orWhere(self: PostgresQuery; column: string; symbol: string;\n        value: string | int | float | bool): PostgresQuery		181
+nim	orWhere	v2/query_builder/models/postgres/postgres_query.html#orWhere,PostgresQuery,string,string,_2	proc orWhere(self: PostgresQuery; column: string; symbol: string; value: nil.type): PostgresQuery		208
+nim	whereBetween	v2/query_builder/models/postgres/postgres_query.html#whereBetween,PostgresQuery,string,array[,]	proc whereBetween(self: PostgresQuery; column: string; width: array[2, int | float]): PostgresQuery		230
+nim	whereBetween	v2/query_builder/models/postgres/postgres_query.html#whereBetween,PostgresQuery,string,array[,string]	proc whereBetween(self: PostgresQuery; column: string; width: array[2, string]): PostgresQuery		247
+nim	whereNotBetween	v2/query_builder/models/postgres/postgres_query.html#whereNotBetween,PostgresQuery,string,array[,]	proc whereNotBetween(self: PostgresQuery; column: string;\n                width: array[2, int | float]): PostgresQuery		264
+nim	whereNotBetween	v2/query_builder/models/postgres/postgres_query.html#whereNotBetween,PostgresQuery,string,array[,string]	proc whereNotBetween(self: PostgresQuery; column: string; width: array[2, string]): PostgresQuery		281
+nim	whereIn	v2/query_builder/models/postgres/postgres_query.html#whereIn,PostgresQuery,string,seq[]	proc whereIn(self: PostgresQuery; column: string; width: seq[int | float | string]): PostgresQuery		298
+nim	whereNotIn	v2/query_builder/models/postgres/postgres_query.html#whereNotIn,PostgresQuery,string,seq[]	proc whereNotIn(self: PostgresQuery; column: string; width: seq[int | float | string]): PostgresQuery		315
+nim	whereNull	v2/query_builder/models/postgres/postgres_query.html#whereNull,PostgresQuery,string	proc whereNull(self: PostgresQuery; column: string): PostgresQuery		332
+nim	groupBy	v2/query_builder/models/postgres/postgres_query.html#groupBy,PostgresQuery,string	proc groupBy(self: PostgresQuery; column: string): PostgresQuery		346
+nim	having	v2/query_builder/models/postgres/postgres_query.html#having,PostgresQuery,string,string,	proc having(self: PostgresQuery; column: string; symbol: string;\n       value: string | int | float | bool): PostgresQuery		354
+nim	having	v2/query_builder/models/postgres/postgres_query.html#having,PostgresQuery,string,string,_2	proc having(self: PostgresQuery; column: string; symbol: string; value: nil.type): PostgresQuery		380
+nim	orderBy	v2/query_builder/models/postgres/postgres_query.html#orderBy,PostgresQuery,string,Order	proc orderBy(self: PostgresQuery; column: string; order: Order): PostgresQuery		404
+nim	limit	v2/query_builder/models/postgres/postgres_query.html#limit,PostgresQuery,int	proc limit(self: PostgresQuery; num: int): PostgresQuery		418
+nim	offset	v2/query_builder/models/postgres/postgres_query.html#offset,PostgresQuery,int	proc offset(self: PostgresQuery; num: int): PostgresQuery		423
+nim	raw	v2/query_builder/models/postgres/postgres_query.html#raw,PostgresConnections,string	proc raw(self: PostgresConnections; sql: string; arges = newJArray()): RawPostgresQuery		428
+nimgrp	wherenotbetween	v2/query_builder/models/postgres/postgres_query.html#whereNotBetween-procs-all	proc		264
+nimgrp	wherebetween	v2/query_builder/models/postgres/postgres_query.html#whereBetween-procs-all	proc		230
+nimgrp	having	v2/query_builder/models/postgres/postgres_query.html#having-procs-all	proc		354
+nimgrp	orwhere	v2/query_builder/models/postgres/postgres_query.html#orWhere-procs-all	proc		181
+nimgrp	table	v2/query_builder/models/postgres/postgres_query.html#table-procs-all	proc		35
+nimgrp	where	v2/query_builder/models/postgres/postgres_query.html#where-procs-all	proc		103

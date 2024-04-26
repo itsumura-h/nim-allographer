@@ -1,73 +1,32 @@
 nimTitle	mysql_query	v2/query_builder/models/mysql/mysql_query.html	module src/allographer/v2/query_builder/models/mysql/mysql_query		0
-nim	table	v2/query_builder/models/mysql/mysql_query.html#table,MysqlQuery,string	proc table(self: MysqlQuery; tableArg: string): MysqlQuery		15
-nim	`distinct`	v2/query_builder/models/mysql/mysql_query.html#distinct,MysqlQuery	proc `distinct`(self: MysqlQuery): MysqlQuery		20
-nim	join	v2/query_builder/models/mysql/mysql_query.html#join,MysqlQuery,string,string,string,string	proc join(self: MysqlQuery; table: string; column1: string; symbol: string;\n     column2: string): MysqlQuery		26
-nim	leftJoin	v2/query_builder/models/mysql/mysql_query.html#leftJoin,MysqlQuery,string,string,string,string	proc leftJoin(self: MysqlQuery; table: string; column1: string; symbol: string;\n         column2: string): MysqlQuery		45
-nim	where	v2/query_builder/models/mysql/mysql_query.html#where,MysqlQuery,string,string,	proc where(self: MysqlQuery; column: string; symbol: string;\n      value: string | int | float): MysqlQuery		67
-nim	where	v2/query_builder/models/mysql/mysql_query.html#where,MysqlQuery,string,string,bool	proc where(self: MysqlQuery; column: string; symbol: string; value: bool): MysqlQuery		94
-nim	where	v2/query_builder/models/mysql/mysql_query.html#where,MysqlQuery,string,string,_2	proc where(self: MysqlQuery; column: string; symbol: string; value: nil.type): MysqlQuery		121
-nim	orWhere	v2/query_builder/models/mysql/mysql_query.html#orWhere,MysqlQuery,string,string,	proc orWhere(self: MysqlQuery; column: string; symbol: string;\n        value: string | int | float | bool): MysqlQuery		145
-nim	orWhere	v2/query_builder/models/mysql/mysql_query.html#orWhere,MysqlQuery,string,string,_2	proc orWhere(self: MysqlQuery; column: string; symbol: string; value: nil.type): MysqlQuery		172
-nim	whereBetween	v2/query_builder/models/mysql/mysql_query.html#whereBetween,MysqlQuery,string,array[,]	proc whereBetween(self: MysqlQuery; column: string; width: array[2, int | float]): MysqlQuery		194
-nim	whereBetween	v2/query_builder/models/mysql/mysql_query.html#whereBetween,MysqlQuery,string,array[,string]	proc whereBetween(self: MysqlQuery; column: string; width: array[2, string]): MysqlQuery		211
-nim	whereNotBetween	v2/query_builder/models/mysql/mysql_query.html#whereNotBetween,MysqlQuery,string,array[,]	proc whereNotBetween(self: MysqlQuery; column: string; width: array[2, int | float]): MysqlQuery		228
-nim	whereNotBetween	v2/query_builder/models/mysql/mysql_query.html#whereNotBetween,MysqlQuery,string,array[,string]	proc whereNotBetween(self: MysqlQuery; column: string; width: array[2, string]): MysqlQuery		245
-nim	whereIn	v2/query_builder/models/mysql/mysql_query.html#whereIn,MysqlQuery,string,seq[]	proc whereIn(self: MysqlQuery; column: string; width: seq[int | float | string]): MysqlQuery		262
-nim	whereNotIn	v2/query_builder/models/mysql/mysql_query.html#whereNotIn,MysqlQuery,string,seq[]	proc whereNotIn(self: MysqlQuery; column: string; width: seq[int | float | string]): MysqlQuery		279
-nim	whereNull	v2/query_builder/models/mysql/mysql_query.html#whereNull,MysqlQuery,string	proc whereNull(self: MysqlQuery; column: string): MysqlQuery		296
-nim	groupBy	v2/query_builder/models/mysql/mysql_query.html#groupBy,MysqlQuery,string	proc groupBy(self: MysqlQuery; column: string): MysqlQuery		310
-nim	having	v2/query_builder/models/mysql/mysql_query.html#having,MysqlQuery,string,string,	proc having(self: MysqlQuery; column: string; symbol: string;\n       value: string | int | float | bool): MysqlQuery		318
-nim	having	v2/query_builder/models/mysql/mysql_query.html#having,MysqlQuery,string,string,_2	proc having(self: MysqlQuery; column: string; symbol: string; value: nil.type): MysqlQuery		344
-nim	orderBy	v2/query_builder/models/mysql/mysql_query.html#orderBy,MysqlQuery,string,Order	proc orderBy(self: MysqlQuery; column: string; order: Order): MysqlQuery		368
-nim	limit	v2/query_builder/models/mysql/mysql_query.html#limit,MysqlQuery,int	proc limit(self: MysqlQuery; num: int): MysqlQuery		382
-nim	offset	v2/query_builder/models/mysql/mysql_query.html#offset,MysqlQuery,int	proc offset(self: MysqlQuery; num: int): MysqlQuery		387
-nim	get	v2/query_builder/models/mysql/mysql_query.html#get,MysqlQuery	proc get(self: MysqlQuery): Future[seq[JsonNode]]		729
-nim	first	v2/query_builder/models/mysql/mysql_query.html#first,MysqlQuery	proc first(self: MysqlQuery): Future[Option[JsonNode]]		740
-nim	find	v2/query_builder/models/mysql/mysql_query.html#find,MysqlQuery,string,string	proc find(self: MysqlQuery; id: string; key = "id"): Future[Option[JsonNode]]		751
-nim	find	v2/query_builder/models/mysql/mysql_query.html#find,MysqlQuery,int,string	proc find(self: MysqlQuery; id: int; key = "id"): Future[Option[JsonNode]]		763
-nim	getPlain	v2/query_builder/models/mysql/mysql_query.html#getPlain,MysqlQuery	proc getPlain(self: MysqlQuery): Future[seq[seq[string]]]		767
-nim	firstPlain	v2/query_builder/models/mysql/mysql_query.html#firstPlain,MysqlQuery	proc firstPlain(self: MysqlQuery): Future[seq[string]]		778
-nim	findPlain	v2/query_builder/models/mysql/mysql_query.html#findPlain,MysqlQuery,string,string	proc findPlain(self: MysqlQuery; id: string; key = "id"): Future[seq[string]]		789
-nim	findPlain	v2/query_builder/models/mysql/mysql_query.html#findPlain,MysqlQuery,int,string	proc findPlain(self: MysqlQuery; id: int; key = "id"): Future[seq[string]]		801
-nim	get	v2/query_builder/models/mysql/mysql_query.html#get,MysqlQuery,typedesc[T]	proc get[T](self: MysqlQuery; typ: typedesc[T]): Future[seq[T]]		806
-nim	first	v2/query_builder/models/mysql/mysql_query.html#first,MysqlQuery,typedesc[T]	proc first[T](self: MysqlQuery; typ: typedesc[T]): Future[Option[T]]		819
-nim	find	v2/query_builder/models/mysql/mysql_query.html#find,MysqlQuery,string,typedesc[T],string	proc find[T](self: MysqlQuery; id: string; typ: typedesc[T]; key = "id"): Future[\n    Option[T]]		834
-nim	find	v2/query_builder/models/mysql/mysql_query.html#find,MysqlQuery,int,typedesc[T],string	proc find[T](self: MysqlQuery; id: int; typ: typedesc[T]; key = "id"): Future[\n    Option[T]]		850
-nim	insert	v2/query_builder/models/mysql/mysql_query.html#insert,MysqlQuery,JsonNode	proc insert(self: MysqlQuery; items: JsonNode): owned(Future[void])		854
-nim	insert	v2/query_builder/models/mysql/mysql_query.html#insert,MysqlQuery,seq[JsonNode]	proc insert(self: MysqlQuery; items: seq[JsonNode]): owned(Future[void])		861
-nim	insertId	v2/query_builder/models/mysql/mysql_query.html#insertId,MysqlQuery,JsonNode,string	proc insertId(self: MysqlQuery; items: JsonNode; key = "id"): Future[string]		867
-nim	insertId	v2/query_builder/models/mysql/mysql_query.html#insertId,MysqlQuery,seq[JsonNode],string	proc insertId(self: MysqlQuery; items: seq[JsonNode]; key = "id"): Future[seq[string]]		882
-nim	update	v2/query_builder/models/mysql/mysql_query.html#update,MysqlQuery,JsonNode	proc update(self: MysqlQuery; items: JsonNode): owned(Future[void])		900
-nim	delete	v2/query_builder/models/mysql/mysql_query.html#delete,MysqlQuery	proc delete(self: MysqlQuery): owned(Future[void])		906
-nim	delete	v2/query_builder/models/mysql/mysql_query.html#delete,MysqlQuery,int,string	proc delete(self: MysqlQuery; id: int; key = "id"): owned(Future[void])		912
-nim	columns	v2/query_builder/models/mysql/mysql_query.html#columns,MysqlQuery	proc columns(self: MysqlQuery): Future[seq[string]]		919
-nim	count	v2/query_builder/models/mysql/mysql_query.html#count,MysqlQuery	proc count(self: MysqlQuery): Future[int]		931
-nim	min	v2/query_builder/models/mysql/mysql_query.html#min,MysqlQuery,string	proc min(self: MysqlQuery; column: string): Future[Option[string]]		941
-nim	max	v2/query_builder/models/mysql/mysql_query.html#max,MysqlQuery,string	proc max(self: MysqlQuery; column: string): Future[Option[string]]		957
-nim	avg	v2/query_builder/models/mysql/mysql_query.html#avg,MysqlQuery,string	proc avg(self: MysqlQuery; column: string): Future[Option[float]]		973
-nim	sum	v2/query_builder/models/mysql/mysql_query.html#sum,MysqlQuery,string	proc sum(self: MysqlQuery; column: string): Future[Option[float]]		983
-nim	begin	v2/query_builder/models/mysql/mysql_query.html#begin,MysqlConnections	proc begin(self: MysqlConnections): owned(Future[void])		993
-nim	rollback	v2/query_builder/models/mysql/mysql_query.html#rollback,MysqlConnections	proc rollback(self: MysqlConnections): owned(Future[void])		998
-nim	commit	v2/query_builder/models/mysql/mysql_query.html#commit,MysqlConnections	proc commit(self: MysqlConnections): owned(Future[void])		1003
-nim	get	v2/query_builder/models/mysql/mysql_query.html#get,RawMysqlQuery	proc get(self: RawMysqlQuery): Future[seq[JsonNode]]		1008
-nim	getPlain	v2/query_builder/models/mysql/mysql_query.html#getPlain,RawMysqlQuery	proc getPlain(self: RawMysqlQuery): Future[seq[seq[string]]]		1014
-nim	exec	v2/query_builder/models/mysql/mysql_query.html#exec,RawMysqlQuery	proc exec(self: RawMysqlQuery): owned(Future[void])		1020
-nim	first	v2/query_builder/models/mysql/mysql_query.html#first,RawMysqlQuery	proc first(self: RawMysqlQuery): Future[Option[JsonNode]]		1026
-nim	firstPlain	v2/query_builder/models/mysql/mysql_query.html#firstPlain,RawMysqlQuery	proc firstPlain(self: RawMysqlQuery): Future[seq[string]]		1032
-nim	seeder	v2/query_builder/models/mysql/mysql_query.html#seeder.t,MysqlConnections,string,untyped	template seeder(rdb: MysqlConnections; tableName: string; body: untyped): untyped		1038
-nim	seeder	v2/query_builder/models/mysql/mysql_query.html#seeder.t,MysqlConnections,string,string,untyped	template seeder(rdb: MysqlConnections; tableName, column: string; body: untyped): untyped		1045
-nimgrp	firstplain	v2/query_builder/models/mysql/mysql_query.html#firstPlain-procs-all	proc		778
-nimgrp	findplain	v2/query_builder/models/mysql/mysql_query.html#findPlain-procs-all	proc		789
-nimgrp	wherenotbetween	v2/query_builder/models/mysql/mysql_query.html#whereNotBetween-procs-all	proc		228
-nimgrp	wherebetween	v2/query_builder/models/mysql/mysql_query.html#whereBetween-procs-all	proc		194
-nimgrp	having	v2/query_builder/models/mysql/mysql_query.html#having-procs-all	proc		318
-nimgrp	orwhere	v2/query_builder/models/mysql/mysql_query.html#orWhere-procs-all	proc		145
-nimgrp	first	v2/query_builder/models/mysql/mysql_query.html#first-procs-all	proc		740
-nimgrp	get	v2/query_builder/models/mysql/mysql_query.html#get-procs-all	proc		729
-nimgrp	insertid	v2/query_builder/models/mysql/mysql_query.html#insertId-procs-all	proc		867
-nimgrp	insert	v2/query_builder/models/mysql/mysql_query.html#insert-procs-all	proc		854
-nimgrp	where	v2/query_builder/models/mysql/mysql_query.html#where-procs-all	proc		67
-nimgrp	delete	v2/query_builder/models/mysql/mysql_query.html#delete-procs-all	proc		906
-nimgrp	getplain	v2/query_builder/models/mysql/mysql_query.html#getPlain-procs-all	proc		767
-nimgrp	find	v2/query_builder/models/mysql/mysql_query.html#find-procs-all	proc		751
-nimgrp	seeder	v2/query_builder/models/mysql/mysql_query.html#seeder-templates-all	template		1038
+nim	select	v2/query_builder/models/mysql/mysql_query.html#select,MysqlConnections,varargs[string]	proc select(self: MysqlConnections; columnsArg: varargs[string]): MysqlQuery		11
+nim	table	v2/query_builder/models/mysql/mysql_query.html#table,MysqlConnections,string	proc table(self: MysqlConnections; tableArg: string): MysqlQuery		31
+nim	table	v2/query_builder/models/mysql/mysql_query.html#table,MysqlQuery,string	proc table(self: MysqlQuery; tableArg: string): MysqlQuery		47
+nim	`distinct`	v2/query_builder/models/mysql/mysql_query.html#distinct,MysqlQuery	proc `distinct`(self: MysqlQuery): MysqlQuery		52
+nim	join	v2/query_builder/models/mysql/mysql_query.html#join,MysqlQuery,string,string,string,string	proc join(self: MysqlQuery; table: string; column1: string; symbol: string;\n     column2: string): MysqlQuery		58
+nim	leftJoin	v2/query_builder/models/mysql/mysql_query.html#leftJoin,MysqlQuery,string,string,string,string	proc leftJoin(self: MysqlQuery; table: string; column1: string; symbol: string;\n         column2: string): MysqlQuery		77
+nim	where	v2/query_builder/models/mysql/mysql_query.html#where,MysqlQuery,string,string,	proc where(self: MysqlQuery; column: string; symbol: string;\n      value: string | int | float): MysqlQuery		99
+nim	where	v2/query_builder/models/mysql/mysql_query.html#where,MysqlQuery,string,string,bool	proc where(self: MysqlQuery; column: string; symbol: string; value: bool): MysqlQuery		126
+nim	where	v2/query_builder/models/mysql/mysql_query.html#where,MysqlQuery,string,string,_2	proc where(self: MysqlQuery; column: string; symbol: string; value: nil.type): MysqlQuery		153
+nim	orWhere	v2/query_builder/models/mysql/mysql_query.html#orWhere,MysqlQuery,string,string,	proc orWhere(self: MysqlQuery; column: string; symbol: string;\n        value: string | int | float | bool): MysqlQuery		177
+nim	orWhere	v2/query_builder/models/mysql/mysql_query.html#orWhere,MysqlQuery,string,string,_2	proc orWhere(self: MysqlQuery; column: string; symbol: string; value: nil.type): MysqlQuery		204
+nim	whereBetween	v2/query_builder/models/mysql/mysql_query.html#whereBetween,MysqlQuery,string,array[,]	proc whereBetween(self: MysqlQuery; column: string; width: array[2, int | float]): MysqlQuery		226
+nim	whereBetween	v2/query_builder/models/mysql/mysql_query.html#whereBetween,MysqlQuery,string,array[,string]	proc whereBetween(self: MysqlQuery; column: string; width: array[2, string]): MysqlQuery		243
+nim	whereNotBetween	v2/query_builder/models/mysql/mysql_query.html#whereNotBetween,MysqlQuery,string,array[,]	proc whereNotBetween(self: MysqlQuery; column: string; width: array[2, int | float]): MysqlQuery		260
+nim	whereNotBetween	v2/query_builder/models/mysql/mysql_query.html#whereNotBetween,MysqlQuery,string,array[,string]	proc whereNotBetween(self: MysqlQuery; column: string; width: array[2, string]): MysqlQuery		277
+nim	whereIn	v2/query_builder/models/mysql/mysql_query.html#whereIn,MysqlQuery,string,seq[]	proc whereIn(self: MysqlQuery; column: string; width: seq[int | float | string]): MysqlQuery		294
+nim	whereNotIn	v2/query_builder/models/mysql/mysql_query.html#whereNotIn,MysqlQuery,string,seq[]	proc whereNotIn(self: MysqlQuery; column: string; width: seq[int | float | string]): MysqlQuery		311
+nim	whereNull	v2/query_builder/models/mysql/mysql_query.html#whereNull,MysqlQuery,string	proc whereNull(self: MysqlQuery; column: string): MysqlQuery		328
+nim	groupBy	v2/query_builder/models/mysql/mysql_query.html#groupBy,MysqlQuery,string	proc groupBy(self: MysqlQuery; column: string): MysqlQuery		342
+nim	having	v2/query_builder/models/mysql/mysql_query.html#having,MysqlQuery,string,string,	proc having(self: MysqlQuery; column: string; symbol: string;\n       value: string | int | float | bool): MysqlQuery		350
+nim	having	v2/query_builder/models/mysql/mysql_query.html#having,MysqlQuery,string,string,_2	proc having(self: MysqlQuery; column: string; symbol: string; value: nil.type): MysqlQuery		376
+nim	orderBy	v2/query_builder/models/mysql/mysql_query.html#orderBy,MysqlQuery,string,Order	proc orderBy(self: MysqlQuery; column: string; order: Order): MysqlQuery		400
+nim	limit	v2/query_builder/models/mysql/mysql_query.html#limit,MysqlQuery,int	proc limit(self: MysqlQuery; num: int): MysqlQuery		414
+nim	offset	v2/query_builder/models/mysql/mysql_query.html#offset,MysqlQuery,int	proc offset(self: MysqlQuery; num: int): MysqlQuery		419
+nim	raw	v2/query_builder/models/mysql/mysql_query.html#raw,MysqlConnections,string	proc raw(self: MysqlConnections; sql: string; arges = newJArray()): RawMysqlQuery		424
+nimgrp	wherenotbetween	v2/query_builder/models/mysql/mysql_query.html#whereNotBetween-procs-all	proc		260
+nimgrp	wherebetween	v2/query_builder/models/mysql/mysql_query.html#whereBetween-procs-all	proc		226
+nimgrp	having	v2/query_builder/models/mysql/mysql_query.html#having-procs-all	proc		350
+nimgrp	orwhere	v2/query_builder/models/mysql/mysql_query.html#orWhere-procs-all	proc		177
+nimgrp	table	v2/query_builder/models/mysql/mysql_query.html#table-procs-all	proc		31
+nimgrp	where	v2/query_builder/models/mysql/mysql_query.html#where-procs-all	proc		99

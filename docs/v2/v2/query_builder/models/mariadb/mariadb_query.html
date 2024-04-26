@@ -54,75 +54,8 @@
   <details open>
     <summary><a class="reference reference-toplevel" href="#12" id="62">Procs</a></summary>
     <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">avg
-  <li><a class="reference" href="#avg%2CMariadbQuery%2Cstring" title="avg(self: MariadbQuery; column: string): Future[Option[float]]">avg(self: MariadbQuery; column: string): Future[Option[float]]</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">begin
-  <li><a class="reference" href="#begin%2CMariadbConnections" title="begin(self: MariadbConnections): owned(Future[void])">begin(self: MariadbConnections): owned(Future[void])</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">columns
-  <li><a class="reference" href="#columns%2CMariadbQuery" title="columns(self: MariadbQuery): Future[seq[string]]">columns(self: MariadbQuery): Future[seq[string]]</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">commit
-  <li><a class="reference" href="#commit%2CMariadbConnections" title="commit(self: MariadbConnections): owned(Future[void])">commit(self: MariadbConnections): owned(Future[void])</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">count
-  <li><a class="reference" href="#count%2CMariadbQuery" title="count(self: MariadbQuery): Future[int]">count(self: MariadbQuery): Future[int]</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">delete
-  <li><a class="reference" href="#delete%2CMariadbQuery" title="delete(self: MariadbQuery): owned(Future[void])">delete(self: MariadbQuery): owned(Future[void])</a></li>
-<li><a class="reference" href="#delete%2CMariadbQuery%2Cint%2Cstring" title="delete(self: MariadbQuery; id: int; key = &quot;id&quot;): owned(Future[void])">delete(self: MariadbQuery; id: int; key = &quot;id&quot;): owned(Future[void])</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">distinct
+      <ul class="simple nested-toc-section">distinct
   <li><a class="reference" href="#distinct%2CMariadbQuery" title="`distinct`(self: MariadbQuery): MariadbQuery">`distinct`(self: MariadbQuery): MariadbQuery</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">exec
-  <li><a class="reference" href="#exec%2CRawMariadbQuery" title="exec(self: RawMariadbQuery): owned(Future[void])">exec(self: RawMariadbQuery): owned(Future[void])</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">find
-  <li><a class="reference" href="#find%2CMariadbQuery%2Cint%2Cstring" title="find(self: MariadbQuery; id: int; key = &quot;id&quot;): Future[Option[JsonNode]]">find(self: MariadbQuery; id: int; key = &quot;id&quot;): Future[Option[JsonNode]]</a></li>
-<li><a class="reference" href="#find%2CMariadbQuery%2Cstring%2Cstring" title="find(self: MariadbQuery; id: string; key = &quot;id&quot;): Future[Option[JsonNode]]">find(self: MariadbQuery; id: string; key = &quot;id&quot;): Future[Option[JsonNode]]</a></li>
-<li><a class="reference" href="#find%2CMariadbQuery%2Cint%2Ctypedesc%5BT%5D%2Cstring" title="find[T](self: MariadbQuery; id: int; typ: typedesc[T]; key = &quot;id&quot;): Future[
-    Option[T]]">find[T](self: MariadbQuery; id: int; typ: typedesc[T]; key = &quot;id&quot;): Future[
-    Option[T]]</a></li>
-<li><a class="reference" href="#find%2CMariadbQuery%2Cstring%2Ctypedesc%5BT%5D%2Cstring" title="find[T](self: MariadbQuery; id: string; typ: typedesc[T]; key = &quot;id&quot;): Future[
-    Option[T]]">find[T](self: MariadbQuery; id: string; typ: typedesc[T]; key = &quot;id&quot;): Future[
-    Option[T]]</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">findPlain
-  <li><a class="reference" href="#findPlain%2CMariadbQuery%2Cint%2Cstring" title="findPlain(self: MariadbQuery; id: int; key = &quot;id&quot;): Future[seq[string]]">findPlain(self: MariadbQuery; id: int; key = &quot;id&quot;): Future[seq[string]]</a></li>
-<li><a class="reference" href="#findPlain%2CMariadbQuery%2Cstring%2Cstring" title="findPlain(self: MariadbQuery; id: string; key = &quot;id&quot;): Future[seq[string]]">findPlain(self: MariadbQuery; id: string; key = &quot;id&quot;): Future[seq[string]]</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">first
-  <li><a class="reference" href="#first%2CMariadbQuery" title="first(self: MariadbQuery): Future[Option[JsonNode]]">first(self: MariadbQuery): Future[Option[JsonNode]]</a></li>
-<li><a class="reference" href="#first%2CRawMariadbQuery" title="first(self: RawMariadbQuery): Future[Option[JsonNode]]">first(self: RawMariadbQuery): Future[Option[JsonNode]]</a></li>
-<li><a class="reference" href="#first%2CMariadbQuery%2Ctypedesc%5BT%5D" title="first[T](self: MariadbQuery; typ: typedesc[T]): Future[Option[T]]">first[T](self: MariadbQuery; typ: typedesc[T]): Future[Option[T]]</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">firstPlain
-  <li><a class="reference" href="#firstPlain%2CMariadbQuery" title="firstPlain(self: MariadbQuery): Future[seq[string]]">firstPlain(self: MariadbQuery): Future[seq[string]]</a></li>
-<li><a class="reference" href="#firstPlain%2CRawMariadbQuery" title="firstPlain(self: RawMariadbQuery): Future[seq[string]]">firstPlain(self: RawMariadbQuery): Future[seq[string]]</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">get
-  <li><a class="reference" href="#get%2CMariadbQuery" title="get(self: MariadbQuery): Future[seq[JsonNode]]">get(self: MariadbQuery): Future[seq[JsonNode]]</a></li>
-<li><a class="reference" href="#get%2CRawMariadbQuery" title="get(self: RawMariadbQuery): Future[seq[JsonNode]]">get(self: RawMariadbQuery): Future[seq[JsonNode]]</a></li>
-<li><a class="reference" href="#get%2CMariadbQuery%2Ctypedesc%5BT%5D" title="get[T](self: MariadbQuery; typ: typedesc[T]): Future[seq[T]]">get[T](self: MariadbQuery; typ: typedesc[T]): Future[seq[T]]</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">getPlain
-  <li><a class="reference" href="#getPlain%2CMariadbQuery" title="getPlain(self: MariadbQuery): Future[seq[seq[string]]]">getPlain(self: MariadbQuery): Future[seq[seq[string]]]</a></li>
-<li><a class="reference" href="#getPlain%2CRawMariadbQuery" title="getPlain(self: RawMariadbQuery): Future[seq[seq[string]]]">getPlain(self: RawMariadbQuery): Future[seq[seq[string]]]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">groupBy
@@ -134,18 +67,6 @@
        value: string | int | float | bool): MariadbQuery">having(self: MariadbQuery; column: string; symbol: string;
        value: string | int | float | bool): MariadbQuery</a></li>
 <li><a class="reference" href="#having%2CMariadbQuery%2Cstring%2Cstring%2C_2" title="having(self: MariadbQuery; column: string; symbol: string; value: nil.type): MariadbQuery">having(self: MariadbQuery; column: string; symbol: string; value: nil.type): MariadbQuery</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">insert
-  <li><a class="reference" href="#insert%2CMariadbQuery%2CJsonNode" title="insert(self: MariadbQuery; items: JsonNode): owned(Future[void])">insert(self: MariadbQuery; items: JsonNode): owned(Future[void])</a></li>
-<li><a class="reference" href="#insert%2CMariadbQuery%2Cseq%5BJsonNode%5D" title="insert(self: MariadbQuery; items: seq[JsonNode]): owned(Future[void])">insert(self: MariadbQuery; items: seq[JsonNode]): owned(Future[void])</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">insertId
-  <li><a class="reference" href="#insertId%2CMariadbQuery%2CJsonNode%2Cstring" title="insertId(self: MariadbQuery; items: JsonNode; key = &quot;id&quot;): Future[string]">insertId(self: MariadbQuery; items: JsonNode; key = &quot;id&quot;): Future[string]</a></li>
-<li><a class="reference" href="#insertId%2CMariadbQuery%2Cseq%5BJsonNode%5D%2Cstring" title="insertId(self: MariadbQuery; items: seq[JsonNode]; key = &quot;id&quot;): Future[
-    seq[string]]">insertId(self: MariadbQuery; items: seq[JsonNode]; key = &quot;id&quot;): Future[
-    seq[string]]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">join
@@ -164,14 +85,6 @@
   <li><a class="reference" href="#limit%2CMariadbQuery%2Cint" title="limit(self: MariadbQuery; num: int): MariadbQuery">limit(self: MariadbQuery; num: int): MariadbQuery</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">max
-  <li><a class="reference" href="#max%2CMariadbQuery%2Cstring" title="max(self: MariadbQuery; column: string): Future[Option[string]]">max(self: MariadbQuery; column: string): Future[Option[string]]</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">min
-  <li><a class="reference" href="#min%2CMariadbQuery%2Cstring" title="min(self: MariadbQuery; column: string): Future[Option[string]]">min(self: MariadbQuery; column: string): Future[Option[string]]</a></li>
-
-</ul>
 <ul class="simple nested-toc-section">offset
   <li><a class="reference" href="#offset%2CMariadbQuery%2Cint" title="offset(self: MariadbQuery; num: int): MariadbQuery">offset(self: MariadbQuery; num: int): MariadbQuery</a></li>
 
@@ -187,20 +100,17 @@
 <li><a class="reference" href="#orWhere%2CMariadbQuery%2Cstring%2Cstring%2C_2" title="orWhere(self: MariadbQuery; column: string; symbol: string; value: nil.type): MariadbQuery">orWhere(self: MariadbQuery; column: string; symbol: string; value: nil.type): MariadbQuery</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">rollback
-  <li><a class="reference" href="#rollback%2CMariadbConnections" title="rollback(self: MariadbConnections): owned(Future[void])">rollback(self: MariadbConnections): owned(Future[void])</a></li>
+<ul class="simple nested-toc-section">raw
+  <li><a class="reference" href="#raw%2CMariadbConnections%2Cstring" title="raw(self: MariadbConnections; sql: string; arges = newJArray()): RawMariadbQuery">raw(self: MariadbConnections; sql: string; arges = newJArray()): RawMariadbQuery</a></li>
 
 </ul>
-<ul class="simple nested-toc-section">sum
-  <li><a class="reference" href="#sum%2CMariadbQuery%2Cstring" title="sum(self: MariadbQuery; column: string): Future[Option[float]]">sum(self: MariadbQuery; column: string): Future[Option[float]]</a></li>
+<ul class="simple nested-toc-section">select
+  <li><a class="reference" href="#select%2CMariadbConnections%2Cvarargs%5Bstring%5D" title="select(self: MariadbConnections; columnsArg: varargs[string]): MariadbQuery">select(self: MariadbConnections; columnsArg: varargs[string]): MariadbQuery</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">table
-  <li><a class="reference" href="#table%2CMariadbQuery%2Cstring" title="table(self: MariadbQuery; tableArg: string): MariadbQuery">table(self: MariadbQuery; tableArg: string): MariadbQuery</a></li>
-
-</ul>
-<ul class="simple nested-toc-section">update
-  <li><a class="reference" href="#update%2CMariadbQuery%2CJsonNode" title="update(self: MariadbQuery; items: JsonNode): owned(Future[void])">update(self: MariadbQuery; items: JsonNode): owned(Future[void])</a></li>
+  <li><a class="reference" href="#table%2CMariadbConnections%2Cstring" title="table(self: MariadbConnections; tableArg: string): MariadbQuery">table(self: MariadbConnections; tableArg: string): MariadbQuery</a></li>
+<li><a class="reference" href="#table%2CMariadbQuery%2Cstring" title="table(self: MariadbQuery; tableArg: string): MariadbQuery">table(self: MariadbQuery; tableArg: string): MariadbQuery</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">where
@@ -237,19 +147,6 @@
     </ul>
   </details>
 </li>
-<li>
-  <details open>
-    <summary><a class="reference reference-toplevel" href="#18" id="68">Templates</a></summary>
-    <ul class="simple simple-toc-section">
-      <ul class="simple nested-toc-section">seeder
-  <li><a class="reference" href="#seeder.t%2CMariadbConnections%2Cstring%2Cstring%2Cuntyped" title="seeder(rdb: MariadbConnections; tableName, column: string; body: untyped): untyped">seeder(rdb: MariadbConnections; tableName, column: string; body: untyped): untyped</a></li>
-<li><a class="reference" href="#seeder.t%2CMariadbConnections%2Cstring%2Cuntyped" title="seeder(rdb: MariadbConnections; tableName: string; body: untyped): untyped">seeder(rdb: MariadbConnections; tableName: string; body: untyped): untyped</a></li>
-
-</ul>
-
-    </ul>
-  </details>
-</li>
 
 </ul>
 
@@ -262,303 +159,19 @@
     <div class="section" id="6">
   <h1><a class="toc-backref" href="#6">Imports</a></h1>
   <dl class="item">
-    <a class="reference external" href="../../libs/mariadb/mariadb_impl.html">../../libs/mariadb/mariadb_impl</a>, <a class="reference external" href="../../log.html">../../log</a>, <a class="reference external" href="../../enums.html">../../enums</a>, <a class="reference external" href="../database_types.html">../database_types</a>, <a class="reference external" href="query/mariadb_builder.html">query/mariadb_builder</a>, <a class="reference external" href="mariadb_types.html">mariadb_types</a>
+    <a class="reference external" href="../../libs/mariadb/mariadb_impl.html">../../libs/mariadb/mariadb_impl</a>, <a class="reference external" href="../../enums.html">../../enums</a>, <a class="reference external" href="mariadb_types.html">mariadb_types</a>
   </dl>
 </div>
 <div class="section" id="12">
   <h1><a class="toc-backref" href="#12">Procs</a></h1>
   <dl class="item">
-    <div id="avg-procs-all">
-  <div id="avg,MariadbQuery,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#avg%2CMariadbQuery%2Cstring"><span class="Identifier">avg</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">float</span><span class="Other">]</span><span class="Other">]</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-
-</div>
-<div id="begin-procs-all">
-  <div id="begin,MariadbConnections">
-  <dt><pre><span class="Keyword">proc</span> <a href="#begin%2CMariadbConnections"><span class="Identifier">begin</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbConnections"><span class="Identifier">MariadbConnections</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span>
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span>
-                                <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-
-</div>
-<div id="columns-procs-all">
-  <div id="columns,MariadbQuery">
-  <dt><pre><span class="Keyword">proc</span> <a href="#columns%2CMariadbQuery"><span class="Identifier">columns</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span>
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    get columns sequence from table
-    
-  </dd>
-</div>
-
-</div>
-<div id="commit-procs-all">
-  <div id="commit,MariadbConnections">
-  <dt><pre><span class="Keyword">proc</span> <a href="#commit%2CMariadbConnections"><span class="Identifier">commit</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbConnections"><span class="Identifier">MariadbConnections</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span>
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span>
-                                <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-
-</div>
-<div id="count-procs-all">
-  <div id="count,MariadbQuery">
-  <dt><pre><span class="Keyword">proc</span> <a href="#count%2CMariadbQuery"><span class="Identifier">count</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">int</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span>
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-
-</div>
-<div id="delete-procs-all">
-  <div id="delete,MariadbQuery">
-  <dt><pre><span class="Keyword">proc</span> <a href="#delete%2CMariadbQuery"><span class="Identifier">delete</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span>
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span>
-                                <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-<div id="delete,MariadbQuery,int,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#delete%2CMariadbQuery%2Cint%2Cstring"><span class="Identifier">delete</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-
-</div>
-<div id="distinct-procs-all">
+    <div id="distinct-procs-all">
   <div id="distinct,MariadbQuery">
   <dt><pre><span class="Keyword">proc</span> <a href="#distinct%2CMariadbQuery"><span class="Identifier">`distinct`</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">)</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
     <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
-    
-  </dd>
-</div>
-
-</div>
-<div id="exec-procs-all">
-  <div id="exec,RawMariadbQuery">
-  <dt><pre><span class="Keyword">proc</span> <a href="#exec%2CRawMariadbQuery"><span class="Identifier">exec</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#RawMariadbQuery"><span class="Identifier">RawMariadbQuery</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span>
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span>
-                                <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    It is only used with raw()
-    
-  </dd>
-</div>
-
-</div>
-<div id="find-procs-all">
-  <div id="find,MariadbQuery,int,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#find%2CMariadbQuery%2Cint%2Cstring"><span class="Identifier">find</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">]</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-<div id="find,MariadbQuery,string,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#find%2CMariadbQuery%2Cstring%2Cstring"><span class="Identifier">find</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">]</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-<div id="find,MariadbQuery,int,typedesc[T],string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#find%2CMariadbQuery%2Cint%2Ctypedesc%5BT%5D%2Cstring"><span class="Identifier">find</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span>
-    <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-<div id="find,MariadbQuery,string,typedesc[T],string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#find%2CMariadbQuery%2Cstring%2Ctypedesc%5BT%5D%2Cstring"><span class="Identifier">find</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span>
-    <span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-
-</div>
-<div id="findPlain-procs-all">
-  <div id="findPlain,MariadbQuery,int,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#findPlain%2CMariadbQuery%2Cint%2Cstring"><span class="Identifier">findPlain</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-<div id="findPlain,MariadbQuery,string,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#findPlain%2CMariadbQuery%2Cstring%2Cstring"><span class="Identifier">findPlain</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">id</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-
-</div>
-<div id="first-procs-all">
-  <div id="first,MariadbQuery">
-  <dt><pre><span class="Keyword">proc</span> <a href="#first%2CMariadbQuery"><span class="Identifier">first</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span>
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-<div id="first,RawMariadbQuery">
-  <dt><pre><span class="Keyword">proc</span> <a href="#first%2CRawMariadbQuery"><span class="Identifier">first</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#RawMariadbQuery"><span class="Identifier">RawMariadbQuery</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span>
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    It is only used with raw()
-    
-  </dd>
-</div>
-<div id="first,MariadbQuery,typedesc[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#first%2CMariadbQuery%2Ctypedesc%5BT%5D"><span class="Identifier">first</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">]</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-
-</div>
-<div id="firstPlain-procs-all">
-  <div id="firstPlain,MariadbQuery">
-  <dt><pre><span class="Keyword">proc</span> <a href="#firstPlain%2CMariadbQuery"><span class="Identifier">firstPlain</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span>
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-<div id="firstPlain,RawMariadbQuery">
-  <dt><pre><span class="Keyword">proc</span> <a href="#firstPlain%2CRawMariadbQuery"><span class="Identifier">firstPlain</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#RawMariadbQuery"><span class="Identifier">RawMariadbQuery</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span>
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    It is only used with raw()
-    
-  </dd>
-</div>
-
-</div>
-<div id="get-procs-all">
-  <div id="get,MariadbQuery">
-  <dt><pre><span class="Keyword">proc</span> <a href="#get%2CMariadbQuery"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span>
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-<div id="get,RawMariadbQuery">
-  <dt><pre><span class="Keyword">proc</span> <a href="#get%2CRawMariadbQuery"><span class="Identifier">get</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#RawMariadbQuery"><span class="Identifier">RawMariadbQuery</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span>
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    It is only used with raw()
-    
-  </dd>
-</div>
-<div id="get,MariadbQuery,typedesc[T]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#get%2CMariadbQuery%2Ctypedesc%5BT%5D"><span class="Identifier">get</span></a><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">typ</span><span class="Other">:</span> <span class="Identifier">typedesc</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">T</span><span class="Other">]</span><span class="Other">]</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-
-</div>
-<div id="getPlain-procs-all">
-  <div id="getPlain,MariadbQuery">
-  <dt><pre><span class="Keyword">proc</span> <a href="#getPlain%2CMariadbQuery"><span class="Identifier">getPlain</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span>
-    <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-<div id="getPlain,RawMariadbQuery">
-  <dt><pre><span class="Keyword">proc</span> <a href="#getPlain%2CRawMariadbQuery"><span class="Identifier">getPlain</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#RawMariadbQuery"><span class="Identifier">RawMariadbQuery</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span><span class="Other">]</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    It is only used with raw()
     
   </dd>
 </div>
@@ -588,55 +201,7 @@
 </div>
 <div id="having,MariadbQuery,string,string,_2">
   <dt><pre><span class="Keyword">proc</span> <a href="#having%2CMariadbQuery%2Cstring%2Cstring%2C_2"><span class="Identifier">having</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">symbol</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">nil</span><span class="Other">.</span><span class="Keyword">type</span><span class="Other">)</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-
-</div>
-<div id="insert-procs-all">
-  <div id="insert,MariadbQuery,JsonNode">
-  <dt><pre><span class="Keyword">proc</span> <a href="#insert%2CMariadbQuery%2CJsonNode"><span class="Identifier">insert</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    items is <tt class="docutils literal"><span class="pre"><span class="Identifier">JObject</span></span></tt>
-    
-  </dd>
-</div>
-<div id="insert,MariadbQuery,seq[JsonNode]">
-  <dt><pre><span class="Keyword">proc</span> <a href="#insert%2CMariadbQuery%2Cseq%5BJsonNode%5D"><span class="Identifier">insert</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-
-</div>
-<div id="insertId-procs-all">
-  <div id="insertId,MariadbQuery,JsonNode,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#insertId%2CMariadbQuery%2CJsonNode%2Cstring"><span class="Identifier">insertId</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-<div id="insertId,MariadbQuery,seq[JsonNode],string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#insertId%2CMariadbQuery%2Cseq%5BJsonNode%5D%2Cstring"><span class="Identifier">insertId</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">JsonNode</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">key</span> <span class="Other">=</span> <span class="StringLit">&quot;id&quot;</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span>
-    <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span>
-    <span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span>
-    <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">CatchableError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -683,34 +248,6 @@
 </div>
 
 </div>
-<div id="max-procs-all">
-  <div id="max,MariadbQuery,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#max%2CMariadbQuery%2Cstring"><span class="Identifier">max</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-
-</div>
-<div id="min-procs-all">
-  <div id="min,MariadbQuery,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#min%2CMariadbQuery%2Cstring"><span class="Identifier">min</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">]</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
-  <dd>
-    
-    
-    
-  </dd>
-</div>
-
-</div>
 <div id="offset-procs-all">
   <div id="offset,MariadbQuery,int">
   <dt><pre><span class="Keyword">proc</span> <a href="#offset%2CMariadbQuery%2Cint"><span class="Identifier">offset</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">num</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
@@ -747,7 +284,7 @@
 </div>
 <div id="orWhere,MariadbQuery,string,string,_2">
   <dt><pre><span class="Keyword">proc</span> <a href="#orWhere%2CMariadbQuery%2Cstring%2Cstring%2C_2"><span class="Identifier">orWhere</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">symbol</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">nil</span><span class="Other">.</span><span class="Keyword">type</span><span class="Other">)</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">CatchableError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -756,25 +293,24 @@
 </div>
 
 </div>
-<div id="rollback-procs-all">
-  <div id="rollback,MariadbConnections">
-  <dt><pre><span class="Keyword">proc</span> <a href="#rollback%2CMariadbConnections"><span class="Identifier">rollback</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbConnections"><span class="Identifier">MariadbConnections</span></a><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<div id="raw-procs-all">
+  <div id="raw,MariadbConnections,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#raw%2CMariadbConnections%2Cstring"><span class="Identifier">raw</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbConnections"><span class="Identifier">MariadbConnections</span></a><span class="Other">;</span> <span class="Identifier">sql</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">arges</span> <span class="Other">=</span> <span class="Identifier">newJArray</span><span class="Other">(</span><span class="Other">)</span><span class="Other">)</span><span class="Other">:</span> <a href="mariadb_types.html#RawMariadbQuery"><span class="Identifier">RawMariadbQuery</span></a> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
-    
+    <p>arges is <tt class="docutils literal"><span class="pre"><span class="Identifier">JArray</span></span></tt> <tt class="docutils literal"><span class="pre"><span class="Punctuation">[</span><span class="Identifier">true</span><span class="Punctuation">,</span> <span class="DecNumber">1</span><span class="Punctuation">,</span> <span class="FloatNumber">1.1</span><span class="Punctuation">,</span> <span class="StringLit">&quot;str&quot;</span><span class="Punctuation">]</span></span></tt></p>
+<p>can't use BLOB data.</p>
+
     
   </dd>
 </div>
 
 </div>
-<div id="sum-procs-all">
-  <div id="sum,MariadbQuery,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#sum%2CMariadbQuery%2Cstring"><span class="Identifier">sum</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">Option</span><span class="Other">[</span><span class="Identifier">float</span><span class="Other">]</span><span class="Other">]</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span>
-    <span class="Identifier">WriteDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<div id="select-procs-all">
+  <div id="select,MariadbConnections,varargs[string]">
+  <dt><pre><span class="Keyword">proc</span> <a href="#select%2CMariadbConnections%2Cvarargs%5Bstring%5D"><span class="Identifier">select</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbConnections"><span class="Identifier">MariadbConnections</span></a><span class="Other">;</span> <span class="Identifier">columnsArg</span><span class="Other">:</span> <span class="Identifier">varargs</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">)</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -784,22 +320,18 @@
 
 </div>
 <div id="table-procs-all">
-  <div id="table,MariadbQuery,string">
-  <dt><pre><span class="Keyword">proc</span> <a href="#table%2CMariadbQuery%2Cstring"><span class="Identifier">table</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">tableArg</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
-    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <div id="table,MariadbConnections,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#table%2CMariadbConnections%2Cstring"><span class="Identifier">table</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbConnections"><span class="Identifier">MariadbConnections</span></a><span class="Other">;</span> <span class="Identifier">tableArg</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a> {.
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
     
   </dd>
 </div>
-
-</div>
-<div id="update-procs-all">
-  <div id="update,MariadbQuery,JsonNode">
-  <dt><pre><span class="Keyword">proc</span> <a href="#update%2CMariadbQuery%2CJsonNode"><span class="Identifier">update</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">items</span><span class="Other">:</span> <span class="Identifier">JsonNode</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">owned</span><span class="Other">(</span><span class="Identifier">Future</span><span class="Other">[</span><span class="Identifier">void</span><span class="Other">]</span><span class="Other">)</span> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">RootEffect</span><span class="Other">,</span> <span class="Identifier">WriteDirEffect</span><span class="Other">,</span>
-    <span class="Identifier">ReadDirEffect</span><span class="Other">,</span> <span class="Identifier">ReadIOEffect</span><span class="Other">,</span> <span class="Identifier">WriteIOEffect</span><span class="Other">,</span> <span class="Identifier">TimeEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+<div id="table,MariadbQuery,string">
+  <dt><pre><span class="Keyword">proc</span> <a href="#table%2CMariadbQuery%2Cstring"><span class="Identifier">table</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">tableArg</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">)</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span>
+    <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -820,7 +352,7 @@
 </div>
 <div id="where,MariadbQuery,string,string,bool">
   <dt><pre><span class="Keyword">proc</span> <a href="#where%2CMariadbQuery%2Cstring%2Cstring%2Cbool"><span class="Identifier">where</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">symbol</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Identifier">bool</span><span class="Other">)</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">CatchableError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -829,7 +361,7 @@
 </div>
 <div id="where,MariadbQuery,string,string,_2">
   <dt><pre><span class="Keyword">proc</span> <a href="#where%2CMariadbQuery%2Cstring%2Cstring%2C_2"><span class="Identifier">where</span></a><span class="Other">(</span><span class="Identifier">self</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a><span class="Other">;</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">symbol</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">value</span><span class="Other">:</span> <span class="Keyword">nil</span><span class="Other">.</span><span class="Keyword">type</span><span class="Other">)</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbQuery"><span class="Identifier">MariadbQuery</span></a> {.
-    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+    <span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">CatchableError</span><span class="Other">,</span> <span class="Identifier">KeyError</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
   <dd>
     
     
@@ -919,32 +451,6 @@
 
   </dl>
 </div>
-<div class="section" id="18">
-  <h1><a class="toc-backref" href="#18">Templates</a></h1>
-  <dl class="item">
-    <div id="seeder-templates-all">
-  <div id="seeder.t,MariadbConnections,string,string,untyped">
-  <dt><pre><span class="Keyword">template</span> <a href="#seeder.t%2CMariadbConnections%2Cstring%2Cstring%2Cuntyped"><span class="Identifier">seeder</span></a><span class="Other">(</span><span class="Identifier">rdb</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbConnections"><span class="Identifier">MariadbConnections</span></a><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">,</span> <span class="Identifier">column</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span>
-                <span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
-  <dd>
-    
-    The <tt class="docutils literal"><span class="pre"><span class="Identifier">seeder</span></span></tt> block allows the code in the block to work only when the table or specified column is empty.
-    
-  </dd>
-</div>
-<div id="seeder.t,MariadbConnections,string,untyped">
-  <dt><pre><span class="Keyword">template</span> <a href="#seeder.t%2CMariadbConnections%2Cstring%2Cuntyped"><span class="Identifier">seeder</span></a><span class="Other">(</span><span class="Identifier">rdb</span><span class="Other">:</span> <a href="mariadb_types.html#MariadbConnections"><span class="Identifier">MariadbConnections</span></a><span class="Other">;</span> <span class="Identifier">tableName</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">body</span><span class="Other">:</span> <span class="Identifier">untyped</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">untyped</span></pre></dt>
-  <dd>
-    
-    The <tt class="docutils literal"><span class="pre"><span class="Identifier">seeder</span></span></tt> block allows the code in the block to work only when the table is empty.
-    
-  </dd>
-</div>
-
-</div>
-
-  </dl>
-</div>
 
   </div>
 </div>
@@ -952,7 +458,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-10-02 23:57:39 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-04-26 16:50:31 UTC</small>
       </div>
     </div>
   </div>

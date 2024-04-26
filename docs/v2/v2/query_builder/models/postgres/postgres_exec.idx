@@ -1,0 +1,42 @@
+nimTitle	postgres_exec	v2/query_builder/models/postgres/postgres_exec.html	module src/allographer/v2/query_builder/models/postgres/postgres_exec		0
+nim	get	v2/query_builder/models/postgres/postgres_exec.html#get,PostgresQuery	proc get(self: PostgresQuery): Future[seq[JsonNode]]		373
+nim	first	v2/query_builder/models/postgres/postgres_exec.html#first,PostgresQuery	proc first(self: PostgresQuery): Future[Option[JsonNode]]		385
+nim	find	v2/query_builder/models/postgres/postgres_exec.html#find,PostgresQuery,string,string	proc find(self: PostgresQuery; id: string; key = "id"): Future[Option[JsonNode]]		397
+nim	find	v2/query_builder/models/postgres/postgres_exec.html#find,PostgresQuery,int,string	proc find(self: PostgresQuery; id: int; key = "id"): Future[Option[JsonNode]]		410
+nim	getPlain	v2/query_builder/models/postgres/postgres_exec.html#getPlain,PostgresQuery	proc getPlain(self: PostgresQuery): Future[seq[seq[string]]]		415
+nim	firstPlain	v2/query_builder/models/postgres/postgres_exec.html#firstPlain,PostgresQuery	proc firstPlain(self: PostgresQuery): Future[seq[string]]		427
+nim	findPlain	v2/query_builder/models/postgres/postgres_exec.html#findPlain,PostgresQuery,string,string	proc findPlain(self: PostgresQuery; id: string; key = "id"): Future[seq[string]]		439
+nim	findPlain	v2/query_builder/models/postgres/postgres_exec.html#findPlain,PostgresQuery,int,string	proc findPlain(self: PostgresQuery; id: int; key = "id"): Future[seq[string]]		452
+nim	insert	v2/query_builder/models/postgres/postgres_exec.html#insert,PostgresQuery,JsonNode	proc insert(self: PostgresQuery; items: JsonNode): owned(Future[void])		457
+nim	insert	v2/query_builder/models/postgres/postgres_exec.html#insert,PostgresQuery,seq[JsonNode]	proc insert(self: PostgresQuery; items: seq[JsonNode]): owned(Future[void])		465
+nim	insertId	v2/query_builder/models/postgres/postgres_exec.html#insertId,PostgresQuery,JsonNode,string	proc insertId(self: PostgresQuery; items: JsonNode; key = "id"): Future[string]		472
+nim	insertId	v2/query_builder/models/postgres/postgres_exec.html#insertId,PostgresQuery,seq[JsonNode],string	proc insertId(self: PostgresQuery; items: seq[JsonNode]; key = "id"): Future[\n    seq[string]]		480
+nim	update	v2/query_builder/models/postgres/postgres_exec.html#update,PostgresQuery,JsonNode	proc update(self: PostgresQuery; items: JsonNode): owned(Future[void])		491
+nim	delete	v2/query_builder/models/postgres/postgres_exec.html#delete,PostgresQuery	proc delete(self: PostgresQuery): owned(Future[void])		498
+nim	delete	v2/query_builder/models/postgres/postgres_exec.html#delete,PostgresQuery,int,string	proc delete(self: PostgresQuery; id: int; key = "id"): owned(Future[void])		505
+nim	columns	v2/query_builder/models/postgres/postgres_exec.html#columns,PostgresQuery	proc columns(self: PostgresQuery): Future[seq[string]]		513
+nim	count	v2/query_builder/models/postgres/postgres_exec.html#count,PostgresQuery	proc count(self: PostgresQuery): Future[int]		526
+nim	min	v2/query_builder/models/postgres/postgres_exec.html#min,PostgresQuery,string	proc min(self: PostgresQuery; column: string): Future[Option[string]]		537
+nim	max	v2/query_builder/models/postgres/postgres_exec.html#max,PostgresQuery,string	proc max(self: PostgresQuery; column: string): Future[Option[string]]		554
+nim	avg	v2/query_builder/models/postgres/postgres_exec.html#avg,PostgresQuery,string	proc avg(self: PostgresQuery; column: string): Future[Option[float]]		571
+nim	sum	v2/query_builder/models/postgres/postgres_exec.html#sum,PostgresQuery,string	proc sum(self: PostgresQuery; column: string): Future[Option[float]]		582
+nim	begin	v2/query_builder/models/postgres/postgres_exec.html#begin,PostgresConnections	proc begin(self: PostgresConnections): owned(Future[void])		593
+nim	rollback	v2/query_builder/models/postgres/postgres_exec.html#rollback,PostgresConnections	proc rollback(self: PostgresConnections): owned(Future[void])		598
+nim	commit	v2/query_builder/models/postgres/postgres_exec.html#commit,PostgresConnections	proc commit(self: PostgresConnections): owned(Future[void])		603
+nim	get	v2/query_builder/models/postgres/postgres_exec.html#get,RawPostgresQuery	proc get(self: RawPostgresQuery): Future[seq[JsonNode]]		608
+nim	getPlain	v2/query_builder/models/postgres/postgres_exec.html#getPlain,RawPostgresQuery	proc getPlain(self: RawPostgresQuery): Future[seq[seq[string]]]		614
+nim	exec	v2/query_builder/models/postgres/postgres_exec.html#exec,RawPostgresQuery	proc exec(self: RawPostgresQuery): owned(Future[void])		620
+nim	first	v2/query_builder/models/postgres/postgres_exec.html#first,RawPostgresQuery	proc first(self: RawPostgresQuery): Future[Option[JsonNode]]		626
+nim	firstPlain	v2/query_builder/models/postgres/postgres_exec.html#firstPlain,RawPostgresQuery	proc firstPlain(self: RawPostgresQuery): Future[seq[string]]		632
+nim	seeder	v2/query_builder/models/postgres/postgres_exec.html#seeder.t,PostgresConnections,string,untyped	template seeder(rdb: PostgresConnections; tableName: string; body: untyped): untyped		638
+nim	seeder	v2/query_builder/models/postgres/postgres_exec.html#seeder.t,PostgresConnections,string,string,untyped	template seeder(rdb: PostgresConnections; tableName, column: string; body: untyped): untyped		645
+nimgrp	firstplain	v2/query_builder/models/postgres/postgres_exec.html#firstPlain-procs-all	proc		427
+nimgrp	findplain	v2/query_builder/models/postgres/postgres_exec.html#findPlain-procs-all	proc		439
+nimgrp	first	v2/query_builder/models/postgres/postgres_exec.html#first-procs-all	proc		385
+nimgrp	insertid	v2/query_builder/models/postgres/postgres_exec.html#insertId-procs-all	proc		472
+nimgrp	get	v2/query_builder/models/postgres/postgres_exec.html#get-procs-all	proc		373
+nimgrp	insert	v2/query_builder/models/postgres/postgres_exec.html#insert-procs-all	proc		457
+nimgrp	delete	v2/query_builder/models/postgres/postgres_exec.html#delete-procs-all	proc		498
+nimgrp	getplain	v2/query_builder/models/postgres/postgres_exec.html#getPlain-procs-all	proc		415
+nimgrp	find	v2/query_builder/models/postgres/postgres_exec.html#find-procs-all	proc		397
+nimgrp	seeder	v2/query_builder/models/postgres/postgres_exec.html#seeder-templates-all	template		638

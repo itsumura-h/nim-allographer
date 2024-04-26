@@ -1,5 +1,5 @@
 nimTitle	surreal_query_type	v2/schema_builder/queries/surreal/surreal_query_type.html	module src/allographer/v2/schema_builder/queries/surreal/surreal_query_type		0
 nim	SurrealSchema	v2/schema_builder/queries/surreal/surreal_query_type.html#SurrealSchema	type SurrealSchema		6
-nim	new	v2/schema_builder/queries/surreal/surreal_query_type.html#new,typeSurrealSchema,SurrealConnections,Table	proc new(__4848615434: type SurrealSchema; rdb: SurrealConnections; table: Table): SurrealSchema		11
-nim	new	v2/schema_builder/queries/surreal/surreal_query_type.html#new,typeSurrealSchema,SurrealConnections,Table,Column	proc new(__4848615440: type SurrealSchema; rdb: SurrealConnections; table: Table;\n    column: Column): SurrealSchema		14
+nim	new	v2/schema_builder/queries/surreal/surreal_query_type.html#new,typeSurrealSchema,SurrealConnections,Table	proc new(__4882169866: type SurrealSchema; rdb: SurrealConnections; table: Table): SurrealSchema		11
+nim	new	v2/schema_builder/queries/surreal/surreal_query_type.html#new,typeSurrealSchema,SurrealConnections,Table,Column	proc new(__4882169872: type SurrealSchema; rdb: SurrealConnections; table: Table;\n    column: Column): SurrealSchema		14
 nimgrp	new	v2/schema_builder/queries/surreal/surreal_query_type.html#new-procs-all	proc		11

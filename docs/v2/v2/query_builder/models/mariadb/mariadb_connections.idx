@@ -1,5 +1,0 @@
-nimTitle	mariadb_connections	v2/query_builder/models/mariadb/mariadb_connections.html	module src/allographer/v2/query_builder/models/mariadb/mariadb_connections		0
-nim	`$`	v2/query_builder/models/mariadb/mariadb_connections.html#$	proc `$`(self: MariadbConnections | MariadbQuery): string		6
-nim	select	v2/query_builder/models/mariadb/mariadb_connections.html#select,MariadbConnections,varargs[string]	proc select(self: MariadbConnections; columnsArg: varargs[string]): MariadbQuery		10
-nim	table	v2/query_builder/models/mariadb/mariadb_connections.html#table,MariadbConnections,string	proc table(self: MariadbConnections; tableArg: string): MariadbQuery		32
-nim	raw	v2/query_builder/models/mariadb/mariadb_connections.html#raw,MariadbConnections,string	proc raw(self: MariadbConnections; sql: string; arges = newJArray()): RawMariadbQuery		49

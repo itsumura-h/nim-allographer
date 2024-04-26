@@ -1,540 +1,539 @@
 nimTitle	mysql_rdb	v2/query_builder/libs/mysql/mysql_rdb.html	module src/allographer/v2/query_builder/libs/mysql/mysql_rdb		0
-nim	getOsName	v2/query_builder/libs/mysql/mysql_rdb.html#getOsName	proc getOsName(): string		3
-nim	false	v2/query_builder/libs/mysql/mysql_rdb.html#false	my_bool.false		32
-nim	true	v2/query_builder/libs/mysql/mysql_rdb.html#true	my_bool.true		32
-nim	my_bool	v2/query_builder/libs/mysql/mysql_rdb.html#my_bool	type my_bool		32
-nim	Pmy_bool	v2/query_builder/libs/mysql/mysql_rdb.html#Pmy_bool	type Pmy_bool		33
-nim	PVIO	v2/query_builder/libs/mysql/mysql_rdb.html#PVIO	type PVIO		34
-nim	Pgptr	v2/query_builder/libs/mysql/mysql_rdb.html#Pgptr	type Pgptr		35
-nim	gptr	v2/query_builder/libs/mysql/mysql_rdb.html#gptr	type gptr		36
-nim	Pmy_socket	v2/query_builder/libs/mysql/mysql_rdb.html#Pmy_socket	type Pmy_socket		37
-nim	my_socket	v2/query_builder/libs/mysql/mysql_rdb.html#my_socket	type my_socket		38
-nim	PPByte	v2/query_builder/libs/mysql/mysql_rdb.html#PPByte	type PPByte		39
-nim	cuint	v2/query_builder/libs/mysql/mysql_rdb.html#cuint	type cuint		40
-nim	NET_ASYNC_COMPLETE	v2/query_builder/libs/mysql/mysql_rdb.html#NET_ASYNC_COMPLETE	NetAsyncStatus.NET_ASYNC_COMPLETE		42
-nim	NET_ASYNC_NOT_READY	v2/query_builder/libs/mysql/mysql_rdb.html#NET_ASYNC_NOT_READY	NetAsyncStatus.NET_ASYNC_NOT_READY		42
-nim	NET_ASYNC_ERROR	v2/query_builder/libs/mysql/mysql_rdb.html#NET_ASYNC_ERROR	NetAsyncStatus.NET_ASYNC_ERROR		42
-nim	NET_ASYNC_COMPLETE_NO_MORE_RESULTS	v2/query_builder/libs/mysql/mysql_rdb.html#NET_ASYNC_COMPLETE_NO_MORE_RESULTS	NetAsyncStatus.NET_ASYNC_COMPLETE_NO_MORE_RESULTS		42
-nim	NetAsyncStatus	v2/query_builder/libs/mysql/mysql_rdb.html#NetAsyncStatus	enum NetAsyncStatus		42
-nim	NAME_LEN	v2/query_builder/libs/mysql/mysql_rdb.html#NAME_LEN	const NAME_LEN		55
-nim	HOSTNAME_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#HOSTNAME_LENGTH	const HOSTNAME_LENGTH		56
-nim	USERNAME_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#USERNAME_LENGTH	const USERNAME_LENGTH		57
-nim	SERVER_VERSION_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_VERSION_LENGTH	const SERVER_VERSION_LENGTH		58
-nim	SQLSTATE_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#SQLSTATE_LENGTH	const SQLSTATE_LENGTH		59
-nim	LOCAL_HOST	v2/query_builder/libs/mysql/mysql_rdb.html#LOCAL_HOST	const LOCAL_HOST		60
-nim	LOCAL_HOST_NAMEDPIPE	v2/query_builder/libs/mysql/mysql_rdb.html#LOCAL_HOST_NAMEDPIPE	const LOCAL_HOST_NAMEDPIPE		61
-nim	NAMEDPIPE	v2/query_builder/libs/mysql/mysql_rdb.html#NAMEDPIPE	const NAMEDPIPE		64
-nim	SERVICENAME	v2/query_builder/libs/mysql/mysql_rdb.html#SERVICENAME	const SERVICENAME		65
-nim	COM_SLEEP	v2/query_builder/libs/mysql/mysql_rdb.html#COM_SLEEP	Enum_server_command.COM_SLEEP		68
-nim	COM_QUIT	v2/query_builder/libs/mysql/mysql_rdb.html#COM_QUIT	Enum_server_command.COM_QUIT		68
-nim	COM_INIT_DB	v2/query_builder/libs/mysql/mysql_rdb.html#COM_INIT_DB	Enum_server_command.COM_INIT_DB		68
-nim	COM_QUERY	v2/query_builder/libs/mysql/mysql_rdb.html#COM_QUERY	Enum_server_command.COM_QUERY		68
-nim	COM_FIELD_LIST	v2/query_builder/libs/mysql/mysql_rdb.html#COM_FIELD_LIST	Enum_server_command.COM_FIELD_LIST		68
-nim	COM_CREATE_DB	v2/query_builder/libs/mysql/mysql_rdb.html#COM_CREATE_DB	Enum_server_command.COM_CREATE_DB		68
-nim	COM_DROP_DB	v2/query_builder/libs/mysql/mysql_rdb.html#COM_DROP_DB	Enum_server_command.COM_DROP_DB		68
-nim	COM_REFRESH	v2/query_builder/libs/mysql/mysql_rdb.html#COM_REFRESH	Enum_server_command.COM_REFRESH		68
-nim	COM_SHUTDOWN	v2/query_builder/libs/mysql/mysql_rdb.html#COM_SHUTDOWN	Enum_server_command.COM_SHUTDOWN		68
-nim	COM_STATISTICS	v2/query_builder/libs/mysql/mysql_rdb.html#COM_STATISTICS	Enum_server_command.COM_STATISTICS		68
-nim	COM_PROCESS_INFO	v2/query_builder/libs/mysql/mysql_rdb.html#COM_PROCESS_INFO	Enum_server_command.COM_PROCESS_INFO		68
-nim	COM_CONNECT	v2/query_builder/libs/mysql/mysql_rdb.html#COM_CONNECT	Enum_server_command.COM_CONNECT		68
-nim	COM_PROCESS_KILL	v2/query_builder/libs/mysql/mysql_rdb.html#COM_PROCESS_KILL	Enum_server_command.COM_PROCESS_KILL		68
-nim	COM_DEBUG	v2/query_builder/libs/mysql/mysql_rdb.html#COM_DEBUG	Enum_server_command.COM_DEBUG		68
-nim	COM_PING	v2/query_builder/libs/mysql/mysql_rdb.html#COM_PING	Enum_server_command.COM_PING		68
-nim	COM_TIME	v2/query_builder/libs/mysql/mysql_rdb.html#COM_TIME	Enum_server_command.COM_TIME		68
-nim	COM_DELAYED_INSERT	v2/query_builder/libs/mysql/mysql_rdb.html#COM_DELAYED_INSERT	Enum_server_command.COM_DELAYED_INSERT		68
-nim	COM_CHANGE_USER	v2/query_builder/libs/mysql/mysql_rdb.html#COM_CHANGE_USER	Enum_server_command.COM_CHANGE_USER		68
-nim	COM_BINLOG_DUMP	v2/query_builder/libs/mysql/mysql_rdb.html#COM_BINLOG_DUMP	Enum_server_command.COM_BINLOG_DUMP		68
-nim	COM_TABLE_DUMP	v2/query_builder/libs/mysql/mysql_rdb.html#COM_TABLE_DUMP	Enum_server_command.COM_TABLE_DUMP		68
-nim	COM_CONNECT_OUT	v2/query_builder/libs/mysql/mysql_rdb.html#COM_CONNECT_OUT	Enum_server_command.COM_CONNECT_OUT		68
-nim	COM_REGISTER_SLAVE	v2/query_builder/libs/mysql/mysql_rdb.html#COM_REGISTER_SLAVE	Enum_server_command.COM_REGISTER_SLAVE		68
-nim	COM_STMT_PREPARE	v2/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_PREPARE	Enum_server_command.COM_STMT_PREPARE		68
-nim	COM_STMT_EXECUTE	v2/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_EXECUTE	Enum_server_command.COM_STMT_EXECUTE		68
-nim	COM_STMT_SEND_LONG_DATA	v2/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_SEND_LONG_DATA	Enum_server_command.COM_STMT_SEND_LONG_DATA		68
-nim	COM_STMT_CLOSE	v2/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_CLOSE	Enum_server_command.COM_STMT_CLOSE		68
-nim	COM_STMT_RESET	v2/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_RESET	Enum_server_command.COM_STMT_RESET		68
-nim	COM_SET_OPTION	v2/query_builder/libs/mysql/mysql_rdb.html#COM_SET_OPTION	Enum_server_command.COM_SET_OPTION		68
-nim	COM_STMT_FETCH	v2/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_FETCH	Enum_server_command.COM_STMT_FETCH		68
-nim	COM_END	v2/query_builder/libs/mysql/mysql_rdb.html#COM_END	Enum_server_command.COM_END		68
-nim	Enum_server_command	v2/query_builder/libs/mysql/mysql_rdb.html#Enum_server_command	enum Enum_server_command		68
-nim	SCRAMBLE_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#SCRAMBLE_LENGTH	const SCRAMBLE_LENGTH		79
-nim	SCRAMBLE_LENGTH_323	v2/query_builder/libs/mysql/mysql_rdb.html#SCRAMBLE_LENGTH_323	const SCRAMBLE_LENGTH_323		82
-nim	SCRAMBLED_PASSWORD_CHAR_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#SCRAMBLED_PASSWORD_CHAR_LENGTH	const SCRAMBLED_PASSWORD_CHAR_LENGTH		84
-nim	SCRAMBLED_PASSWORD_CHAR_LENGTH_323	v2/query_builder/libs/mysql/mysql_rdb.html#SCRAMBLED_PASSWORD_CHAR_LENGTH_323	const SCRAMBLED_PASSWORD_CHAR_LENGTH_323		85
-nim	NOT_NULL_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#NOT_NULL_FLAG	const NOT_NULL_FLAG		86
-nim	PRI_KEY_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#PRI_KEY_FLAG	const PRI_KEY_FLAG		87
-nim	UNIQUE_KEY_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#UNIQUE_KEY_FLAG	const UNIQUE_KEY_FLAG		88
-nim	MULTIPLE_KEY_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#MULTIPLE_KEY_FLAG	const MULTIPLE_KEY_FLAG		89
-nim	BLOB_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#BLOB_FLAG	const BLOB_FLAG		90
-nim	UNSIGNED_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#UNSIGNED_FLAG	const UNSIGNED_FLAG		91
-nim	ZEROFILL_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#ZEROFILL_FLAG	const ZEROFILL_FLAG		92
-nim	BINARY_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#BINARY_FLAG	const BINARY_FLAG		93
-nim	ENUM_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#ENUM_FLAG	const ENUM_FLAG		95
-nim	AUTO_INCREMENT_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#AUTO_INCREMENT_FLAG	const AUTO_INCREMENT_FLAG		96
-nim	TIMESTAMP_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#TIMESTAMP_FLAG	const TIMESTAMP_FLAG		97
-nim	SET_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#SET_FLAG	const SET_FLAG		98
-nim	NO_DEFAULT_VALUE_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#NO_DEFAULT_VALUE_FLAG	const NO_DEFAULT_VALUE_FLAG		99
-nim	NUM_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#NUM_FLAG	const NUM_FLAG		100
-nim	PART_KEY_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#PART_KEY_FLAG	const PART_KEY_FLAG		101
-nim	GROUP_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#GROUP_FLAG	const GROUP_FLAG		102
-nim	UNIQUE_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#UNIQUE_FLAG	const UNIQUE_FLAG		103
-nim	BINCMP_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#BINCMP_FLAG	const BINCMP_FLAG		104
-nim	REFRESH_GRANT	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_GRANT	const REFRESH_GRANT		105
-nim	REFRESH_LOG	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_LOG	const REFRESH_LOG		106
-nim	REFRESH_TABLES	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_TABLES	const REFRESH_TABLES		107
-nim	REFRESH_HOSTS	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_HOSTS	const REFRESH_HOSTS		108
-nim	REFRESH_STATUS	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_STATUS	const REFRESH_STATUS		109
-nim	REFRESH_THREADS	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_THREADS	const REFRESH_THREADS		110
-nim	REFRESH_SLAVE	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_SLAVE	const REFRESH_SLAVE		111
-nim	REFRESH_MASTER	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_MASTER	const REFRESH_MASTER		112
-nim	REFRESH_READ_LOCK	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_READ_LOCK	const REFRESH_READ_LOCK		114
-nim	REFRESH_FAST	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_FAST	const REFRESH_FAST		115
-nim	REFRESH_QUERY_CACHE	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_QUERY_CACHE	const REFRESH_QUERY_CACHE		116
-nim	REFRESH_QUERY_CACHE_FREE	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_QUERY_CACHE_FREE	const REFRESH_QUERY_CACHE_FREE		117
-nim	REFRESH_DES_KEY_FILE	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_DES_KEY_FILE	const REFRESH_DES_KEY_FILE		118
-nim	REFRESH_USER_RESOURCES	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_USER_RESOURCES	const REFRESH_USER_RESOURCES		119
-nim	CLIENT_LONG_PASSWORD	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_LONG_PASSWORD	const CLIENT_LONG_PASSWORD		120
-nim	CLIENT_FOUND_ROWS	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_FOUND_ROWS	const CLIENT_FOUND_ROWS		121
-nim	CLIENT_LONG_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_LONG_FLAG	const CLIENT_LONG_FLAG		122
-nim	CLIENT_CONNECT_WITH_DB	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_CONNECT_WITH_DB	const CLIENT_CONNECT_WITH_DB		123
-nim	CLIENT_NO_SCHEMA	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_NO_SCHEMA	const CLIENT_NO_SCHEMA		124
-nim	CLIENT_COMPRESS	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_COMPRESS	const CLIENT_COMPRESS		125
-nim	CLIENT_ODBC	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_ODBC	const CLIENT_ODBC		126
-nim	CLIENT_LOCAL_FILES	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_LOCAL_FILES	const CLIENT_LOCAL_FILES		127
-nim	CLIENT_IGNORE_SPACE	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_IGNORE_SPACE	const CLIENT_IGNORE_SPACE		128
-nim	CLIENT_PROTOCOL_41	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_PROTOCOL_41	const CLIENT_PROTOCOL_41		129
-nim	CLIENT_INTERACTIVE	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_INTERACTIVE	const CLIENT_INTERACTIVE		130
-nim	CLIENT_SSL	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_SSL	const CLIENT_SSL		131
-nim	CLIENT_IGNORE_SIGPIPE	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_IGNORE_SIGPIPE	const CLIENT_IGNORE_SIGPIPE		132
-nim	CLIENT_TRANSACTIONS	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_TRANSACTIONS	const CLIENT_TRANSACTIONS		133
-nim	CLIENT_RESERVED	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_RESERVED	const CLIENT_RESERVED		134
-nim	CLIENT_SECURE_CONNECTION	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_SECURE_CONNECTION	const CLIENT_SECURE_CONNECTION		135
-nim	CLIENT_MULTI_STATEMENTS	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_MULTI_STATEMENTS	const CLIENT_MULTI_STATEMENTS		136
-nim	CLIENT_MULTI_RESULTS	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_MULTI_RESULTS	const CLIENT_MULTI_RESULTS		137
-nim	CLIENT_REMEMBER_OPTIONS	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_REMEMBER_OPTIONS	const CLIENT_REMEMBER_OPTIONS		138
-nim	SERVER_STATUS_IN_TRANS	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_IN_TRANS	const SERVER_STATUS_IN_TRANS		139
-nim	SERVER_STATUS_AUTOCOMMIT	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_AUTOCOMMIT	const SERVER_STATUS_AUTOCOMMIT		140
-nim	SERVER_STATUS_MORE_RESULTS	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_MORE_RESULTS	const SERVER_STATUS_MORE_RESULTS		141
-nim	SERVER_MORE_RESULTS_EXISTS	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_MORE_RESULTS_EXISTS	const SERVER_MORE_RESULTS_EXISTS		142
-nim	SERVER_QUERY_NO_GOOD_INDEX_USED	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_QUERY_NO_GOOD_INDEX_USED	const SERVER_QUERY_NO_GOOD_INDEX_USED		143
-nim	SERVER_QUERY_NO_INDEX_USED	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_QUERY_NO_INDEX_USED	const SERVER_QUERY_NO_INDEX_USED		144
-nim	SERVER_STATUS_CURSOR_EXISTS	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_CURSOR_EXISTS	const SERVER_STATUS_CURSOR_EXISTS		147
-nim	SERVER_STATUS_LAST_ROW_SENT	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_LAST_ROW_SENT	const SERVER_STATUS_LAST_ROW_SENT		149
-nim	SERVER_STATUS_DB_DROPPED	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_DB_DROPPED	const SERVER_STATUS_DB_DROPPED		150
-nim	SERVER_STATUS_NO_BACKSLASH_ESCAPES	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_NO_BACKSLASH_ESCAPES	const SERVER_STATUS_NO_BACKSLASH_ESCAPES		151
-nim	ERRMSG_SIZE	v2/query_builder/libs/mysql/mysql_rdb.html#ERRMSG_SIZE	const ERRMSG_SIZE		152
-nim	NET_READ_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#NET_READ_TIMEOUT	const NET_READ_TIMEOUT		153
-nim	NET_WRITE_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#NET_WRITE_TIMEOUT	const NET_WRITE_TIMEOUT		154
-nim	NET_WAIT_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#NET_WAIT_TIMEOUT	const NET_WAIT_TIMEOUT		155
-nim	ONLY_KILL_QUERY	v2/query_builder/libs/mysql/mysql_rdb.html#ONLY_KILL_QUERY	const ONLY_KILL_QUERY		156
-nim	MAX_TINYINT_WIDTH	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_TINYINT_WIDTH	const MAX_TINYINT_WIDTH		159
-nim	MAX_SMALLINT_WIDTH	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_SMALLINT_WIDTH	const MAX_SMALLINT_WIDTH		160
-nim	MAX_MEDIUMINT_WIDTH	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_MEDIUMINT_WIDTH	const MAX_MEDIUMINT_WIDTH		161
-nim	MAX_INT_WIDTH	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_INT_WIDTH	const MAX_INT_WIDTH		162
-nim	MAX_BIGINT_WIDTH	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_BIGINT_WIDTH	const MAX_BIGINT_WIDTH		163
-nim	MAX_CHAR_WIDTH	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_CHAR_WIDTH	const MAX_CHAR_WIDTH		164
-nim	MAX_BLOB_WIDTH	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_BLOB_WIDTH	const MAX_BLOB_WIDTH		165
-nim	Pst_net	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_net	type Pst_net		168
-nim	St_net	v2/query_builder/libs/mysql/mysql_rdb.html#St_net	object St_net		169
-nim	NET	v2/query_builder/libs/mysql/mysql_rdb.html#NET	type NET		209
-nim	PNET	v2/query_builder/libs/mysql/mysql_rdb.html#PNET	type PNET		210
-nim	packet_error	v2/query_builder/libs/mysql/mysql_rdb.html#packet_error	const packet_error		214
-nim	TYPE_DECIMAL	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_DECIMAL	Enum_field_types.TYPE_DECIMAL		217
-nim	TYPE_TINY	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_TINY	Enum_field_types.TYPE_TINY		217
-nim	TYPE_SHORT	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_SHORT	Enum_field_types.TYPE_SHORT		217
-nim	TYPE_LONG	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_LONG	Enum_field_types.TYPE_LONG		217
-nim	TYPE_FLOAT	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_FLOAT	Enum_field_types.TYPE_FLOAT		217
-nim	TYPE_DOUBLE	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_DOUBLE	Enum_field_types.TYPE_DOUBLE		217
-nim	TYPE_NULL	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_NULL	Enum_field_types.TYPE_NULL		217
-nim	TYPE_TIMESTAMP	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_TIMESTAMP	Enum_field_types.TYPE_TIMESTAMP		217
-nim	TYPE_LONGLONG	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_LONGLONG	Enum_field_types.TYPE_LONGLONG		217
-nim	TYPE_INT24	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_INT24	Enum_field_types.TYPE_INT24		217
-nim	TYPE_DATE	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_DATE	Enum_field_types.TYPE_DATE		217
-nim	TYPE_TIME	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_TIME	Enum_field_types.TYPE_TIME		217
-nim	TYPE_DATETIME	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_DATETIME	Enum_field_types.TYPE_DATETIME		217
-nim	TYPE_YEAR	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_YEAR	Enum_field_types.TYPE_YEAR		217
-nim	TYPE_NEWDATE	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_NEWDATE	Enum_field_types.TYPE_NEWDATE		217
-nim	TYPE_VARCHAR	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_VARCHAR	Enum_field_types.TYPE_VARCHAR		217
-nim	TYPE_BIT	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_BIT	Enum_field_types.TYPE_BIT		217
-nim	TYPE_NEWDECIMAL	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_NEWDECIMAL	Enum_field_types.TYPE_NEWDECIMAL		217
-nim	TYPE_ENUM	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_ENUM	Enum_field_types.TYPE_ENUM		217
-nim	TYPE_SET	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_SET	Enum_field_types.TYPE_SET		217
-nim	TYPE_TINY_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_TINY_BLOB	Enum_field_types.TYPE_TINY_BLOB		217
-nim	TYPE_MEDIUM_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_MEDIUM_BLOB	Enum_field_types.TYPE_MEDIUM_BLOB		217
-nim	TYPE_LONG_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_LONG_BLOB	Enum_field_types.TYPE_LONG_BLOB		217
-nim	TYPE_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_BLOB	Enum_field_types.TYPE_BLOB		217
-nim	TYPE_VAR_STRING	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_VAR_STRING	Enum_field_types.TYPE_VAR_STRING		217
-nim	TYPE_STRING	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_STRING	Enum_field_types.TYPE_STRING		217
-nim	TYPE_GEOMETRY	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_GEOMETRY	Enum_field_types.TYPE_GEOMETRY		217
-nim	Enum_field_types	v2/query_builder/libs/mysql/mysql_rdb.html#Enum_field_types	enum Enum_field_types		217
-nim	CLIENT_MULTI_QUERIES	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_MULTI_QUERIES	const CLIENT_MULTI_QUERIES		228
-nim	FIELD_TYPE_DECIMAL	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_DECIMAL	const FIELD_TYPE_DECIMAL		229
-nim	FIELD_TYPE_NEWDECIMAL	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_NEWDECIMAL	const FIELD_TYPE_NEWDECIMAL		230
-nim	FIELD_TYPE_TINY	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_TINY	const FIELD_TYPE_TINY		231
-nim	FIELD_TYPE_SHORT	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_SHORT	const FIELD_TYPE_SHORT		232
-nim	FIELD_TYPE_LONG	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_LONG	const FIELD_TYPE_LONG		233
-nim	FIELD_TYPE_FLOAT	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_FLOAT	const FIELD_TYPE_FLOAT		234
-nim	FIELD_TYPE_DOUBLE	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_DOUBLE	const FIELD_TYPE_DOUBLE		235
-nim	FIELD_TYPE_NULL	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_NULL	const FIELD_TYPE_NULL		236
-nim	FIELD_TYPE_TIMESTAMP	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_TIMESTAMP	const FIELD_TYPE_TIMESTAMP		237
-nim	FIELD_TYPE_LONGLONG	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_LONGLONG	const FIELD_TYPE_LONGLONG		238
-nim	FIELD_TYPE_INT24	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_INT24	const FIELD_TYPE_INT24		239
-nim	FIELD_TYPE_DATE	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_DATE	const FIELD_TYPE_DATE		240
-nim	FIELD_TYPE_TIME	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_TIME	const FIELD_TYPE_TIME		241
-nim	FIELD_TYPE_DATETIME	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_DATETIME	const FIELD_TYPE_DATETIME		242
-nim	FIELD_TYPE_YEAR	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_YEAR	const FIELD_TYPE_YEAR		243
-nim	FIELD_TYPE_NEWDATE	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_NEWDATE	const FIELD_TYPE_NEWDATE		244
-nim	FIELD_TYPE_ENUM	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_ENUM	const FIELD_TYPE_ENUM		245
-nim	FIELD_TYPE_SET	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_SET	const FIELD_TYPE_SET		246
-nim	FIELD_TYPE_TINY_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_TINY_BLOB	const FIELD_TYPE_TINY_BLOB		247
-nim	FIELD_TYPE_MEDIUM_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_MEDIUM_BLOB	const FIELD_TYPE_MEDIUM_BLOB		248
-nim	FIELD_TYPE_LONG_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_LONG_BLOB	const FIELD_TYPE_LONG_BLOB		249
-nim	FIELD_TYPE_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_BLOB	const FIELD_TYPE_BLOB		250
-nim	FIELD_TYPE_VAR_STRING	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_VAR_STRING	const FIELD_TYPE_VAR_STRING		251
-nim	FIELD_TYPE_STRING	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_STRING	const FIELD_TYPE_STRING		252
-nim	FIELD_TYPE_CHAR	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_CHAR	const FIELD_TYPE_CHAR		253
-nim	FIELD_TYPE_INTERVAL	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_INTERVAL	const FIELD_TYPE_INTERVAL		254
-nim	FIELD_TYPE_GEOMETRY	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_GEOMETRY	const FIELD_TYPE_GEOMETRY		255
-nim	FIELD_TYPE_BIT	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_BIT	const FIELD_TYPE_BIT		256
-nim	SHUTDOWN_KILLABLE_CONNECT	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_KILLABLE_CONNECT	const SHUTDOWN_KILLABLE_CONNECT		258
-nim	SHUTDOWN_KILLABLE_TRANS	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_KILLABLE_TRANS	const SHUTDOWN_KILLABLE_TRANS		259
-nim	SHUTDOWN_KILLABLE_LOCK_TABLE	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_KILLABLE_LOCK_TABLE	const SHUTDOWN_KILLABLE_LOCK_TABLE		260
-nim	SHUTDOWN_KILLABLE_UPDATE	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_KILLABLE_UPDATE	const SHUTDOWN_KILLABLE_UPDATE		261
-nim	SHUTDOWN_DEFAULT	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_DEFAULT	Enum_shutdown_level.SHUTDOWN_DEFAULT		264
-nim	SHUTDOWN_WAIT_CONNECTIONS	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_WAIT_CONNECTIONS	Enum_shutdown_level.SHUTDOWN_WAIT_CONNECTIONS		264
-nim	SHUTDOWN_WAIT_TRANSACTIONS	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_WAIT_TRANSACTIONS	Enum_shutdown_level.SHUTDOWN_WAIT_TRANSACTIONS		264
-nim	SHUTDOWN_WAIT_UPDATES	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_WAIT_UPDATES	Enum_shutdown_level.SHUTDOWN_WAIT_UPDATES		264
-nim	SHUTDOWN_WAIT_ALL_BUFFERS	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_WAIT_ALL_BUFFERS	Enum_shutdown_level.SHUTDOWN_WAIT_ALL_BUFFERS		264
-nim	SHUTDOWN_WAIT_CRITICAL_BUFFERS	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_WAIT_CRITICAL_BUFFERS	Enum_shutdown_level.SHUTDOWN_WAIT_CRITICAL_BUFFERS		264
-nim	KILL_QUERY	v2/query_builder/libs/mysql/mysql_rdb.html#KILL_QUERY	Enum_shutdown_level.KILL_QUERY		264
-nim	KILL_CONNECTION	v2/query_builder/libs/mysql/mysql_rdb.html#KILL_CONNECTION	Enum_shutdown_level.KILL_CONNECTION		264
-nim	Enum_shutdown_level	v2/query_builder/libs/mysql/mysql_rdb.html#Enum_shutdown_level	enum Enum_shutdown_level		264
-nim	CURSOR_TYPE_NO_CURSOR	v2/query_builder/libs/mysql/mysql_rdb.html#CURSOR_TYPE_NO_CURSOR	Enum_cursor_type.CURSOR_TYPE_NO_CURSOR		269
-nim	CURSOR_TYPE_READ_ONLY	v2/query_builder/libs/mysql/mysql_rdb.html#CURSOR_TYPE_READ_ONLY	Enum_cursor_type.CURSOR_TYPE_READ_ONLY		269
-nim	CURSOR_TYPE_FOR_UPDATE	v2/query_builder/libs/mysql/mysql_rdb.html#CURSOR_TYPE_FOR_UPDATE	Enum_cursor_type.CURSOR_TYPE_FOR_UPDATE		269
-nim	CURSOR_TYPE_SCROLLABLE	v2/query_builder/libs/mysql/mysql_rdb.html#CURSOR_TYPE_SCROLLABLE	Enum_cursor_type.CURSOR_TYPE_SCROLLABLE		269
-nim	Enum_cursor_type	v2/query_builder/libs/mysql/mysql_rdb.html#Enum_cursor_type	enum Enum_cursor_type		269
-nim	OPTION_MULTI_STATEMENTS_ON	v2/query_builder/libs/mysql/mysql_rdb.html#OPTION_MULTI_STATEMENTS_ON	Enum_mysql_set_option.OPTION_MULTI_STATEMENTS_ON		272
-nim	OPTION_MULTI_STATEMENTS_OFF	v2/query_builder/libs/mysql/mysql_rdb.html#OPTION_MULTI_STATEMENTS_OFF	Enum_mysql_set_option.OPTION_MULTI_STATEMENTS_OFF		272
-nim	Enum_mysql_set_option	v2/query_builder/libs/mysql/mysql_rdb.html#Enum_mysql_set_option	enum Enum_mysql_set_option		272
-nim	my_net_init	v2/query_builder/libs/mysql/mysql_rdb.html#my_net_init,PNET,PVIO	proc my_net_init(net: PNET; vio: PVIO): my_bool		278
-nim	my_net_local_init	v2/query_builder/libs/mysql/mysql_rdb.html#my_net_local_init,PNET	proc my_net_local_init(net: PNET)		280
-nim	net_end	v2/query_builder/libs/mysql/mysql_rdb.html#net_end,PNET	proc net_end(net: PNET)		282
-nim	net_clear	v2/query_builder/libs/mysql/mysql_rdb.html#net_clear,PNET	proc net_clear(net: PNET)		283
-nim	net_realloc	v2/query_builder/libs/mysql/mysql_rdb.html#net_realloc,PNET,int	proc net_realloc(net: PNET; len: int): my_bool		284
-nim	net_flush	v2/query_builder/libs/mysql/mysql_rdb.html#net_flush,PNET	proc net_flush(net: PNET): my_bool		286
-nim	my_net_write	v2/query_builder/libs/mysql/mysql_rdb.html#my_net_write,PNET,cstring,int	proc my_net_write(net: PNET; packet: cstring; length: int): my_bool		287
-nim	net_write_command	v2/query_builder/libs/mysql/mysql_rdb.html#net_write_command,PNET,char,cstring,int,cstring,int	proc net_write_command(net: PNET; command: char; header: cstring; head_len: int;\n                  packet: cstring; length: int): my_bool		289
-nim	net_real_write	v2/query_builder/libs/mysql/mysql_rdb.html#net_real_write,PNET,cstring,int	proc net_real_write(net: PNET; packet: cstring; length: int): cint		292
-nim	my_net_read	v2/query_builder/libs/mysql/mysql_rdb.html#my_net_read,PNET	proc my_net_read(net: PNET): int		294
-nim	Psockaddr	v2/query_builder/libs/mysql/mysql_rdb.html#Psockaddr	type Psockaddr		298
-nim	Sockaddr	v2/query_builder/libs/mysql/mysql_rdb.html#Sockaddr	object Sockaddr		299
-nim	my_connect	v2/query_builder/libs/mysql/mysql_rdb.html#my_connect,my_socket,Psockaddr,cuint,cuint	proc my_connect(s: my_socket; name: Psockaddr; namelen: cuint; timeout: cuint): cint		302
-nim	Prand_struct	v2/query_builder/libs/mysql/mysql_rdb.html#Prand_struct	type Prand_struct		305
-nim	Rand_struct	v2/query_builder/libs/mysql/mysql_rdb.html#Rand_struct	object Rand_struct		306
-nim	STRING_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#STRING_RESULT	Item_result.STRING_RESULT		312
-nim	REAL_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#REAL_RESULT	Item_result.REAL_RESULT		312
-nim	INT_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#INT_RESULT	Item_result.INT_RESULT		312
-nim	ROW_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#ROW_RESULT	Item_result.ROW_RESULT		312
-nim	DECIMAL_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#DECIMAL_RESULT	Item_result.DECIMAL_RESULT		312
-nim	Item_result	v2/query_builder/libs/mysql/mysql_rdb.html#Item_result	enum Item_result		312
-nim	PItem_result	v2/query_builder/libs/mysql/mysql_rdb.html#PItem_result	type PItem_result		314
-nim	Pst_udf_args	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_udf_args	type Pst_udf_args		315
-nim	St_udf_args	v2/query_builder/libs/mysql/mysql_rdb.html#St_udf_args	object St_udf_args		316
-nim	UDF_ARGS	v2/query_builder/libs/mysql/mysql_rdb.html#UDF_ARGS	type UDF_ARGS		325
-nim	PUDF_ARGS	v2/query_builder/libs/mysql/mysql_rdb.html#PUDF_ARGS	type PUDF_ARGS		326
-nim	Pst_udf_init	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_udf_init	type Pst_udf_init		327
-nim	St_udf_init	v2/query_builder/libs/mysql/mysql_rdb.html#St_udf_init	object St_udf_init		328
-nim	UDF_INIT	v2/query_builder/libs/mysql/mysql_rdb.html#UDF_INIT	type UDF_INIT		335
-nim	PUDF_INIT	v2/query_builder/libs/mysql/mysql_rdb.html#PUDF_INIT	type PUDF_INIT		336
-nim	NET_HEADER_SIZE	v2/query_builder/libs/mysql/mysql_rdb.html#NET_HEADER_SIZE	const NET_HEADER_SIZE		342
-nim	COMP_HEADER_SIZE	v2/query_builder/libs/mysql/mysql_rdb.html#COMP_HEADER_SIZE	const COMP_HEADER_SIZE		343
-nim	randominit	v2/query_builder/libs/mysql/mysql_rdb.html#randominit,Prand_struct,int,int	proc randominit(para1: Prand_struct; seed1: int; seed2: int)		348
-nim	my_rnd	v2/query_builder/libs/mysql/mysql_rdb.html#my_rnd,Prand_struct	proc my_rnd(para1: Prand_struct): cdouble		350
-nim	create_random_string	v2/query_builder/libs/mysql/mysql_rdb.html#create_random_string,cstring,cuint,Prand_struct	proc create_random_string(fto: cstring; len: cuint; rand_st: Prand_struct)		352
-nim	hash_password	v2/query_builder/libs/mysql/mysql_rdb.html#hash_password,int,cstring,cuint	proc hash_password(fto: int; password: cstring; password_len: cuint)		354
-nim	make_scrambled_password_323	v2/query_builder/libs/mysql/mysql_rdb.html#make_scrambled_password_323,cstring,cstring	proc make_scrambled_password_323(fto: cstring; password: cstring)		356
-nim	scramble_323	v2/query_builder/libs/mysql/mysql_rdb.html#scramble_323,cstring,cstring,cstring	proc scramble_323(fto: cstring; message: cstring; password: cstring)		358
-nim	check_scramble_323	v2/query_builder/libs/mysql/mysql_rdb.html#check_scramble_323,cstring,cstring,int	proc check_scramble_323(para1: cstring; message: cstring; salt: int): my_bool		360
-nim	get_salt_from_password_323	v2/query_builder/libs/mysql/mysql_rdb.html#get_salt_from_password_323,ptr.int,cstring	proc get_salt_from_password_323(res: ptr int; password: cstring)		362
-nim	make_password_from_salt_323	v2/query_builder/libs/mysql/mysql_rdb.html#make_password_from_salt_323,cstring,ptr.int	proc make_password_from_salt_323(fto: cstring; salt: ptr int)		364
-nim	octet2hex	v2/query_builder/libs/mysql/mysql_rdb.html#octet2hex,cstring,cstring,cuint	proc octet2hex(fto: cstring; str: cstring; length: cuint): cstring		366
-nim	make_scrambled_password	v2/query_builder/libs/mysql/mysql_rdb.html#make_scrambled_password,cstring,cstring	proc make_scrambled_password(fto: cstring; password: cstring)		368
-nim	scramble	v2/query_builder/libs/mysql/mysql_rdb.html#scramble,cstring,cstring,cstring	proc scramble(fto: cstring; message: cstring; password: cstring)		370
-nim	check_scramble	v2/query_builder/libs/mysql/mysql_rdb.html#check_scramble,cstring,cstring,pointer	proc check_scramble(reply: cstring; message: cstring; hash_stage2: pointer): my_bool		372
-nim	get_salt_from_password	v2/query_builder/libs/mysql/mysql_rdb.html#get_salt_from_password,pointer,cstring	proc get_salt_from_password(res: pointer; password: cstring)		374
-nim	make_password_from_salt	v2/query_builder/libs/mysql/mysql_rdb.html#make_password_from_salt,cstring,pointer	proc make_password_from_salt(fto: cstring; hash_stage2: pointer)		376
-nim	get_tty_password	v2/query_builder/libs/mysql/mysql_rdb.html#get_tty_password,cstring	proc get_tty_password(opt_message: cstring): cstring		379
-nim	errno_to_sqlstate	v2/query_builder/libs/mysql/mysql_rdb.html#errno_to_sqlstate,cuint	proc errno_to_sqlstate(errno: cuint): cstring		381
-nim	modify_defaults_file	v2/query_builder/libs/mysql/mysql_rdb.html#modify_defaults_file,cstring,cstring,cstring,cstring,cint	proc modify_defaults_file(file_location: cstring; option: cstring;\n                     option_value: cstring; section_name: cstring;\n                     remove_option: cint): cint		384
-nim	load_defaults	v2/query_builder/libs/mysql/mysql_rdb.html#load_defaults,cstring,cstringArray,ptr.cint,ptr.cstringArray	proc load_defaults(conf_file: cstring; groups: cstringArray; argc: ptr cint;\n              argv: ptr cstringArray): cint		388
-nim	my_init	v2/query_builder/libs/mysql/mysql_rdb.html#my_init	proc my_init(): my_bool		391
-nim	my_thread_init	v2/query_builder/libs/mysql/mysql_rdb.html#my_thread_init	proc my_thread_init(): my_bool		392
-nim	my_thread_end	v2/query_builder/libs/mysql/mysql_rdb.html#my_thread_end	proc my_thread_end()		393
-nim	NULL_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#NULL_LENGTH	const NULL_LENGTH		395
-nim	STMT_HEADER	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_HEADER	const STMT_HEADER		398
-nim	LONG_DATA_HEADER	v2/query_builder/libs/mysql/mysql_rdb.html#LONG_DATA_HEADER	const LONG_DATA_HEADER		399
-nim	CLIENT_NET_READ_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_NET_READ_TIMEOUT	const CLIENT_NET_READ_TIMEOUT		409
-nim	CLIENT_NET_WRITE_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_NET_WRITE_TIMEOUT	const CLIENT_NET_WRITE_TIMEOUT		410
-nim	Pst_mysql_field	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_field	type Pst_mysql_field		413
-nim	St_mysql_field	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_field	object St_mysql_field		414
-nim	FIELD	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD	type FIELD		437
-nim	PFIELD	v2/query_builder/libs/mysql/mysql_rdb.html#PFIELD	type PFIELD		438
-nim	PROW	v2/query_builder/libs/mysql/mysql_rdb.html#PROW	type PROW		439
-nim	ROW	v2/query_builder/libs/mysql/mysql_rdb.html#ROW	type ROW		440
-nim	PFIELD_OFFSET	v2/query_builder/libs/mysql/mysql_rdb.html#PFIELD_OFFSET	type PFIELD_OFFSET		441
-nim	FIELD_OFFSET	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_OFFSET	type FIELD_OFFSET		442
-nim	IS_PRI_KEY	v2/query_builder/libs/mysql/mysql_rdb.html#IS_PRI_KEY,int32	proc IS_PRI_KEY(n: int32): bool		446
-nim	IS_NOT_NULL	v2/query_builder/libs/mysql/mysql_rdb.html#IS_NOT_NULL,int32	proc IS_NOT_NULL(n: int32): bool		447
-nim	IS_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#IS_BLOB,int32	proc IS_BLOB(n: int32): bool		448
-nim	IS_NUM	v2/query_builder/libs/mysql/mysql_rdb.html#IS_NUM,Enum_field_types	proc IS_NUM(t: Enum_field_types): bool		449
-nim	INTERNAL_NUM_FIELD	v2/query_builder/libs/mysql/mysql_rdb.html#INTERNAL_NUM_FIELD,Pst_mysql_field	proc INTERNAL_NUM_FIELD(f: Pst_mysql_field): bool		450
-nim	IS_NUM_FIELD	v2/query_builder/libs/mysql/mysql_rdb.html#IS_NUM_FIELD,Pst_mysql_field	proc IS_NUM_FIELD(f: Pst_mysql_field): bool		451
-nim	my_ulonglong	v2/query_builder/libs/mysql/mysql_rdb.html#my_ulonglong	type my_ulonglong		453
-nim	Pmy_ulonglong	v2/query_builder/libs/mysql/mysql_rdb.html#Pmy_ulonglong	type Pmy_ulonglong		454
-nim	COUNT_ERROR	v2/query_builder/libs/mysql/mysql_rdb.html#COUNT_ERROR	const COUNT_ERROR		457
-nim	Pst_mysql_rows	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_rows	type Pst_mysql_rows		460
-nim	St_mysql_rows	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_rows	object St_mysql_rows		461
-nim	ROWS	v2/query_builder/libs/mysql/mysql_rdb.html#ROWS	type ROWS		466
-nim	PROWS	v2/query_builder/libs/mysql/mysql_rdb.html#PROWS	type PROWS		467
-nim	PROW_OFFSET	v2/query_builder/libs/mysql/mysql_rdb.html#PROW_OFFSET	type PROW_OFFSET		468
-nim	ROW_OFFSET	v2/query_builder/libs/mysql/mysql_rdb.html#ROW_OFFSET	type ROW_OFFSET		469
-nim	ALLOC_MAX_BLOCK_TO_DROP	v2/query_builder/libs/mysql/mysql_rdb.html#ALLOC_MAX_BLOCK_TO_DROP	const ALLOC_MAX_BLOCK_TO_DROP		474
-nim	ALLOC_MAX_BLOCK_USAGE_BEFORE_DROP	v2/query_builder/libs/mysql/mysql_rdb.html#ALLOC_MAX_BLOCK_USAGE_BEFORE_DROP	const ALLOC_MAX_BLOCK_USAGE_BEFORE_DROP		475
-nim	Pst_used_mem	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_used_mem	type Pst_used_mem		478
-nim	St_used_mem	v2/query_builder/libs/mysql/mysql_rdb.html#St_used_mem	object St_used_mem		479
-nim	USED_MEM	v2/query_builder/libs/mysql/mysql_rdb.html#USED_MEM	type USED_MEM		484
-nim	PUSED_MEM	v2/query_builder/libs/mysql/mysql_rdb.html#PUSED_MEM	type PUSED_MEM		485
-nim	Pst_mem_root	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mem_root	type Pst_mem_root		486
-nim	St_mem_root	v2/query_builder/libs/mysql/mysql_rdb.html#St_mem_root	object St_mem_root		487
-nim	MEM_ROOT	v2/query_builder/libs/mysql/mysql_rdb.html#MEM_ROOT	type MEM_ROOT		499
-nim	PMEM_ROOT	v2/query_builder/libs/mysql/mysql_rdb.html#PMEM_ROOT	type PMEM_ROOT		500
-nim	Pst_mysql_data	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_data	type Pst_mysql_data		505
-nim	St_mysql_data	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_data	object St_mysql_data		506
-nim	DATA	v2/query_builder/libs/mysql/mysql_rdb.html#DATA	type DATA		513
-nim	PDATA	v2/query_builder/libs/mysql/mysql_rdb.html#PDATA	type PDATA		514
-nim	OPT_CONNECT_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_CONNECT_TIMEOUT	Option.OPT_CONNECT_TIMEOUT		515
-nim	OPT_COMPRESS	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_COMPRESS	Option.OPT_COMPRESS		515
-nim	OPT_NAMED_PIPE	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_NAMED_PIPE	Option.OPT_NAMED_PIPE		515
-nim	INIT_COMMAND	v2/query_builder/libs/mysql/mysql_rdb.html#INIT_COMMAND	Option.INIT_COMMAND		515
-nim	READ_DEFAULT_FILE	v2/query_builder/libs/mysql/mysql_rdb.html#READ_DEFAULT_FILE	Option.READ_DEFAULT_FILE		515
-nim	READ_DEFAULT_GROUP	v2/query_builder/libs/mysql/mysql_rdb.html#READ_DEFAULT_GROUP	Option.READ_DEFAULT_GROUP		515
-nim	SET_CHARSET_DIR	v2/query_builder/libs/mysql/mysql_rdb.html#SET_CHARSET_DIR	Option.SET_CHARSET_DIR		515
-nim	SET_CHARSET_NAME	v2/query_builder/libs/mysql/mysql_rdb.html#SET_CHARSET_NAME	Option.SET_CHARSET_NAME		515
-nim	OPT_LOCAL_INFILE	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_LOCAL_INFILE	Option.OPT_LOCAL_INFILE		515
-nim	OPT_PROTOCOL	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_PROTOCOL	Option.OPT_PROTOCOL		515
-nim	SHARED_MEMORY_BASE_NAME	v2/query_builder/libs/mysql/mysql_rdb.html#SHARED_MEMORY_BASE_NAME	Option.SHARED_MEMORY_BASE_NAME		515
-nim	OPT_READ_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_READ_TIMEOUT	Option.OPT_READ_TIMEOUT		515
-nim	OPT_WRITE_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_WRITE_TIMEOUT	Option.OPT_WRITE_TIMEOUT		515
-nim	OPT_USE_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_USE_RESULT	Option.OPT_USE_RESULT		515
-nim	OPT_USE_REMOTE_CONNECTION	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_USE_REMOTE_CONNECTION	Option.OPT_USE_REMOTE_CONNECTION		515
-nim	OPT_USE_EMBEDDED_CONNECTION	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_USE_EMBEDDED_CONNECTION	Option.OPT_USE_EMBEDDED_CONNECTION		515
-nim	OPT_GUESS_CONNECTION	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_GUESS_CONNECTION	Option.OPT_GUESS_CONNECTION		515
-nim	SET_CLIENT_IP	v2/query_builder/libs/mysql/mysql_rdb.html#SET_CLIENT_IP	Option.SET_CLIENT_IP		515
-nim	SECURE_AUTH	v2/query_builder/libs/mysql/mysql_rdb.html#SECURE_AUTH	Option.SECURE_AUTH		515
-nim	REPORT_DATA_TRUNCATION	v2/query_builder/libs/mysql/mysql_rdb.html#REPORT_DATA_TRUNCATION	Option.REPORT_DATA_TRUNCATION		515
-nim	OPT_RECONNECT	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_RECONNECT	Option.OPT_RECONNECT		515
-nim	MYSQL_OPT_NONBLOCK	v2/query_builder/libs/mysql/mysql_rdb.html#MYSQL_OPT_NONBLOCK	Option.MYSQL_OPT_NONBLOCK		515
-nim	Option	v2/query_builder/libs/mysql/mysql_rdb.html#Option	enum Option		515
-nim	MAX_MYSQL_MANAGER_ERR	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_MYSQL_MANAGER_ERR	const MAX_MYSQL_MANAGER_ERR		526
-nim	MAX_MYSQL_MANAGER_MSG	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_MYSQL_MANAGER_MSG	const MAX_MYSQL_MANAGER_MSG		527
-nim	MANAGER_OK	v2/query_builder/libs/mysql/mysql_rdb.html#MANAGER_OK	const MANAGER_OK		528
-nim	MANAGER_INFO	v2/query_builder/libs/mysql/mysql_rdb.html#MANAGER_INFO	const MANAGER_INFO		529
-nim	MANAGER_ACCESS	v2/query_builder/libs/mysql/mysql_rdb.html#MANAGER_ACCESS	const MANAGER_ACCESS		530
-nim	MANAGER_CLIENT_ERR	v2/query_builder/libs/mysql/mysql_rdb.html#MANAGER_CLIENT_ERR	const MANAGER_CLIENT_ERR		531
-nim	MANAGER_INTERNAL_ERR	v2/query_builder/libs/mysql/mysql_rdb.html#MANAGER_INTERNAL_ERR	const MANAGER_INTERNAL_ERR		532
-nim	St_dynamic_array	v2/query_builder/libs/mysql/mysql_rdb.html#St_dynamic_array	object St_dynamic_array		535
-nim	DYNAMIC_ARRAY	v2/query_builder/libs/mysql/mysql_rdb.html#DYNAMIC_ARRAY	type DYNAMIC_ARRAY		542
-nim	Pst_dynamic_array	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_dynamic_array	type Pst_dynamic_array		543
-nim	Pst_mysql_options	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_options	type Pst_mysql_options		544
-nim	St_mysql_options	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_options	object St_mysql_options		545
-nim	STATUS_READY	v2/query_builder/libs/mysql/mysql_rdb.html#STATUS_READY	Status.STATUS_READY		591
-nim	STATUS_GET_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#STATUS_GET_RESULT	Status.STATUS_GET_RESULT		591
-nim	STATUS_USE_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#STATUS_USE_RESULT	Status.STATUS_USE_RESULT		591
-nim	Status	v2/query_builder/libs/mysql/mysql_rdb.html#Status	enum Status		591
-nim	PROTOCOL_DEFAULT	v2/query_builder/libs/mysql/mysql_rdb.html#PROTOCOL_DEFAULT	Protocol_type.PROTOCOL_DEFAULT		593
-nim	PROTOCOL_TCP	v2/query_builder/libs/mysql/mysql_rdb.html#PROTOCOL_TCP	Protocol_type.PROTOCOL_TCP		593
-nim	PROTOCOL_SOCKET	v2/query_builder/libs/mysql/mysql_rdb.html#PROTOCOL_SOCKET	Protocol_type.PROTOCOL_SOCKET		593
-nim	PROTOCOL_PIPE	v2/query_builder/libs/mysql/mysql_rdb.html#PROTOCOL_PIPE	Protocol_type.PROTOCOL_PIPE		593
-nim	PROTOCOL_MEMORY	v2/query_builder/libs/mysql/mysql_rdb.html#PROTOCOL_MEMORY	Protocol_type.PROTOCOL_MEMORY		593
-nim	Protocol_type	v2/query_builder/libs/mysql/mysql_rdb.html#Protocol_type	enum Protocol_type		593
-nim	RPL_MASTER	v2/query_builder/libs/mysql/mysql_rdb.html#RPL_MASTER	Rpl_type.RPL_MASTER		598
-nim	RPL_SLAVE	v2/query_builder/libs/mysql/mysql_rdb.html#RPL_SLAVE	Rpl_type.RPL_SLAVE		598
-nim	RPL_ADMIN	v2/query_builder/libs/mysql/mysql_rdb.html#RPL_ADMIN	Rpl_type.RPL_ADMIN		598
-nim	Rpl_type	v2/query_builder/libs/mysql/mysql_rdb.html#Rpl_type	enum Rpl_type		598
-nim	Charset_info_st	v2/query_builder/libs/mysql/mysql_rdb.html#Charset_info_st	object Charset_info_st		600
-nim	CHARSET_INFO	v2/query_builder/libs/mysql/mysql_rdb.html#CHARSET_INFO	type CHARSET_INFO		628
-nim	Pcharset_info_st	v2/query_builder/libs/mysql/mysql_rdb.html#Pcharset_info_st	type Pcharset_info_st		629
-nim	Pcharacter_set	v2/query_builder/libs/mysql/mysql_rdb.html#Pcharacter_set	type Pcharacter_set		630
-nim	Character_set	v2/query_builder/libs/mysql/mysql_rdb.html#Character_set	object Character_set		631
-nim	MY_CHARSET_INFO	v2/query_builder/libs/mysql/mysql_rdb.html#MY_CHARSET_INFO	type MY_CHARSET_INFO		641
-nim	PMY_CHARSET_INFO	v2/query_builder/libs/mysql/mysql_rdb.html#PMY_CHARSET_INFO	type PMY_CHARSET_INFO		642
-nim	Pst_mysql_methods	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_methods	type Pst_mysql_methods		643
-nim	Pst_mysql	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql	type Pst_mysql		644
-nim	St_mysql	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql	object St_mysql		645
-nim	PMySQL	v2/query_builder/libs/mysql/mysql_rdb.html#PMySQL	type PMySQL		692
-nim	Pst_mysql_res	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_res	type Pst_mysql_res		693
-nim	St_mysql_res	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_res	object St_mysql_res		694
-nim	RES	v2/query_builder/libs/mysql/mysql_rdb.html#RES	type RES		710
-nim	PRES	v2/query_builder/libs/mysql/mysql_rdb.html#PRES	type PRES		711
-nim	Pst_mysql_stmt	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_stmt	type Pst_mysql_stmt		712
-nim	PSTMT	v2/query_builder/libs/mysql/mysql_rdb.html#PSTMT	type PSTMT		713
-nim	St_mysql_methods	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_methods	object St_mysql_methods		714
-nim	METHODS	v2/query_builder/libs/mysql/mysql_rdb.html#METHODS	type METHODS		734
-nim	PMETHODS	v2/query_builder/libs/mysql/mysql_rdb.html#PMETHODS	type PMETHODS		735
-nim	Pst_mysql_manager	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_manager	type Pst_mysql_manager		736
-nim	St_mysql_manager	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_manager	object St_mysql_manager		737
-nim	MANAGER	v2/query_builder/libs/mysql/mysql_rdb.html#MANAGER	type MANAGER		753
-nim	PMANAGER	v2/query_builder/libs/mysql/mysql_rdb.html#PMANAGER	type PMANAGER		754
-nim	Pst_mysql_parameters	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_parameters	type Pst_mysql_parameters		755
-nim	St_mysql_parameters	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_parameters	object St_mysql_parameters		756
-nim	PARAMETERS	v2/query_builder/libs/mysql/mysql_rdb.html#PARAMETERS	type PARAMETERS		760
-nim	PPARAMETERS	v2/query_builder/libs/mysql/mysql_rdb.html#PPARAMETERS	type PPARAMETERS		761
-nim	STMT_INIT_DONE	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_INIT_DONE	Enum_mysql_stmt_state.STMT_INIT_DONE		762
-nim	STMT_PREPARE_DONE	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_PREPARE_DONE	Enum_mysql_stmt_state.STMT_PREPARE_DONE		762
-nim	STMT_EXECUTE_DONE	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_EXECUTE_DONE	Enum_mysql_stmt_state.STMT_EXECUTE_DONE		762
-nim	STMT_FETCH_DONE	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_FETCH_DONE	Enum_mysql_stmt_state.STMT_FETCH_DONE		762
-nim	Enum_mysql_stmt_state	v2/query_builder/libs/mysql/mysql_rdb.html#Enum_mysql_stmt_state	enum Enum_mysql_stmt_state		762
-nim	Pst_mysql_bind	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_bind	type Pst_mysql_bind		764
-nim	U	v2/query_builder/libs/mysql/mysql_rdb.html#U	object U		786
-nim	St_mysql_bind	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_bind	object St_mysql_bind		790
-nim	BIND	v2/query_builder/libs/mysql/mysql_rdb.html#BIND	type BIND		811
-nim	PBIND	v2/query_builder/libs/mysql/mysql_rdb.html#PBIND	type PBIND		812
-nim	St_mysql_stmt	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_stmt	object St_mysql_stmt		813
-nim	STMT	v2/query_builder/libs/mysql/mysql_rdb.html#STMT	type STMT		841
-nim	STMT_ATTR_UPDATE_MAX_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_ATTR_UPDATE_MAX_LENGTH	Enum_stmt_attr_type.STMT_ATTR_UPDATE_MAX_LENGTH		843
-nim	STMT_ATTR_CURSOR_TYPE	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_ATTR_CURSOR_TYPE	Enum_stmt_attr_type.STMT_ATTR_CURSOR_TYPE		843
-nim	STMT_ATTR_PREFETCH_ROWS	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_ATTR_PREFETCH_ROWS	Enum_stmt_attr_type.STMT_ATTR_PREFETCH_ROWS		843
-nim	Enum_stmt_attr_type	v2/query_builder/libs/mysql/mysql_rdb.html#Enum_stmt_attr_type	enum Enum_stmt_attr_type		843
-nim	server_init	v2/query_builder/libs/mysql/mysql_rdb.html#server_init,cint,cstringArray,cstringArray	proc server_init(argc: cint; argv: cstringArray; groups: cstringArray): cint		859
-nim	server_end	v2/query_builder/libs/mysql/mysql_rdb.html#server_end	proc server_end()		861
-nim	library_init	v2/query_builder/libs/mysql/mysql_rdb.html#library_init,cint,cstringArray,cstringArray	proc library_init(argc: cint; argv: cstringArray; groups: cstringArray): cint		869
-nim	library_end	v2/query_builder/libs/mysql/mysql_rdb.html#library_end	proc library_end()		871
-nim	get_parameters	v2/query_builder/libs/mysql/mysql_rdb.html#get_parameters	proc get_parameters(): PPARAMETERS		872
-nim	thread_init	v2/query_builder/libs/mysql/mysql_rdb.html#thread_init	proc thread_init(): my_bool		878
-nim	thread_end	v2/query_builder/libs/mysql/mysql_rdb.html#thread_end	proc thread_end()		879
-nim	num_rows	v2/query_builder/libs/mysql/mysql_rdb.html#num_rows,PRES	proc num_rows(res: PRES): my_ulonglong		882
-nim	num_fields	v2/query_builder/libs/mysql/mysql_rdb.html#num_fields,PRES	proc num_fields(res: PRES): cuint		884
-nim	eof	v2/query_builder/libs/mysql/mysql_rdb.html#eof,PRES	proc eof(res: PRES): my_bool		886
-nim	fetch_field_direct	v2/query_builder/libs/mysql/mysql_rdb.html#fetch_field_direct,PRES,cuint	proc fetch_field_direct(res: PRES; fieldnr: cuint): PFIELD		887
-nim	fetch_fields	v2/query_builder/libs/mysql/mysql_rdb.html#fetch_fields,PRES	proc fetch_fields(res: PRES): PFIELD		889
-nim	row_tell	v2/query_builder/libs/mysql/mysql_rdb.html#row_tell,PRES	proc row_tell(res: PRES): ROW_OFFSET		891
-nim	field_tell	v2/query_builder/libs/mysql/mysql_rdb.html#field_tell,PRES	proc field_tell(res: PRES): FIELD_OFFSET		893
-nim	field_count	v2/query_builder/libs/mysql/mysql_rdb.html#field_count,PMySQL	proc field_count(MySQL: PMySQL): cuint		895
-nim	affected_rows	v2/query_builder/libs/mysql/mysql_rdb.html#affected_rows,PMySQL	proc affected_rows(MySQL: PMySQL): my_ulonglong		897
-nim	insert_id	v2/query_builder/libs/mysql/mysql_rdb.html#insert_id,PMySQL	proc insert_id(MySQL: PMySQL): my_ulonglong		899
-nim	errno	v2/query_builder/libs/mysql/mysql_rdb.html#errno,PMySQL	proc errno(MySQL: PMySQL): cuint		901
-nim	error	v2/query_builder/libs/mysql/mysql_rdb.html#error,PMySQL	proc error(MySQL: PMySQL): cstring		902
-nim	sqlstate	v2/query_builder/libs/mysql/mysql_rdb.html#sqlstate,PMySQL	proc sqlstate(MySQL: PMySQL): cstring		903
-nim	warning_count	v2/query_builder/libs/mysql/mysql_rdb.html#warning_count,PMySQL	proc warning_count(MySQL: PMySQL): cuint		904
-nim	info	v2/query_builder/libs/mysql/mysql_rdb.html#info,PMySQL	proc info(MySQL: PMySQL): cstring		906
-nim	thread_id	v2/query_builder/libs/mysql/mysql_rdb.html#thread_id,PMySQL	proc thread_id(MySQL: PMySQL): int		907
-nim	character_set_name	v2/query_builder/libs/mysql/mysql_rdb.html#character_set_name,PMySQL	proc character_set_name(MySQL: PMySQL): cstring		908
-nim	set_character_set	v2/query_builder/libs/mysql/mysql_rdb.html#set_character_set,PMySQL,cstring	proc set_character_set(MySQL: PMySQL; csname: cstring): int32		910
-nim	init	v2/query_builder/libs/mysql/mysql_rdb.html#init,PMySQL	proc init(MySQL: PMySQL): PMySQL		912
-nim	ssl_set	v2/query_builder/libs/mysql/mysql_rdb.html#ssl_set,PMySQL,cstring,cstring,cstring,cstring,cstring	proc ssl_set(MySQL: PMySQL; key: cstring; cert: cstring; ca: cstring;\n        capath: cstring; cipher: cstring): my_bool		914
-nim	change_user	v2/query_builder/libs/mysql/mysql_rdb.html#change_user,PMySQL,cstring,cstring,cstring	proc change_user(MySQL: PMySQL; user: cstring; passwd: cstring; db: cstring): my_bool		917
-nim	real_connect	v2/query_builder/libs/mysql/mysql_rdb.html#real_connect,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,int	proc real_connect(MySQL: PMySQL; host: cstring; user: cstring; passwd: cstring;\n             db: cstring; port: cuint; unix_socket: cstring; clientflag: int): PMySQL		919
-nim	real_connect_start	v2/query_builder/libs/mysql/mysql_rdb.html#real_connect_start,ptr.PMySQL,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,culong	proc real_connect_start(ret: ptr PMySQL; mysql: PMySQL; host: cstring; user: cstring;\n                   passwd: cstring; db: cstring; port: cuint;\n                   unix_socket: cstring; clientflag: culong): cint		923
-nim	fetch_row_nonblocking	v2/query_builder/libs/mysql/mysql_rdb.html#fetch_row_nonblocking,PRES,PROW	proc fetch_row_nonblocking(MYSQL_RES: PRES; MYSQL_ROW: PROW): NetAsyncStatus		927
-nim	free_result_nonblocking	v2/query_builder/libs/mysql/mysql_rdb.html#free_result_nonblocking,PRES	proc free_result_nonblocking(MYSQL_RES: PRES): NetAsyncStatus		929
-nim	fetch_next_result_nonblocking	v2/query_builder/libs/mysql/mysql_rdb.html#fetch_next_result_nonblocking,PMySQL	proc fetch_next_result_nonblocking(MySQL: PMySQL): NetAsyncStatus		931
-nim	real_query_nonblocking	v2/query_builder/libs/mysql/mysql_rdb.html#real_query_nonblocking,PMySQL,cstring,int	proc real_query_nonblocking(MySQL: PMySQL; q: cstring; length: int): NetAsyncStatus		933
-nim	store_result_nonblocking	v2/query_builder/libs/mysql/mysql_rdb.html#store_result_nonblocking,PMySQL,ptr.PRES	proc store_result_nonblocking(MySQL: PMySQL; MYSQL_RES: ptr PRES): NetAsyncStatus		935
-nim	select_db	v2/query_builder/libs/mysql/mysql_rdb.html#select_db,PMySQL,cstring	proc select_db(MySQL: PMySQL; db: cstring): cint		937
-nim	query	v2/query_builder/libs/mysql/mysql_rdb.html#query,PMySQL,cstring	proc query(MySQL: PMySQL; q: cstring): cint		939
-nim	send_query	v2/query_builder/libs/mysql/mysql_rdb.html#send_query,PMySQL,cstring,int	proc send_query(MySQL: PMySQL; q: cstring; len: int): cint		940
-nim	real_query	v2/query_builder/libs/mysql/mysql_rdb.html#real_query,PMySQL,cstring,int	proc real_query(MySQL: PMySQL; q: cstring; len: int): cint		942
-nim	store_result	v2/query_builder/libs/mysql/mysql_rdb.html#store_result,PMySQL	proc store_result(MySQL: PMySQL): PRES		944
-nim	use_result	v2/query_builder/libs/mysql/mysql_rdb.html#use_result,PMySQL	proc use_result(MySQL: PMySQL): PRES		946
-nim	master_query	v2/query_builder/libs/mysql/mysql_rdb.html#master_query,PMySQL,cstring,int	proc master_query(MySQL: PMySQL; q: cstring; len: int): my_bool		948
-nim	master_send_query	v2/query_builder/libs/mysql/mysql_rdb.html#master_send_query,PMySQL,cstring,int	proc master_send_query(MySQL: PMySQL; q: cstring; len: int): my_bool		950
-nim	slave_query	v2/query_builder/libs/mysql/mysql_rdb.html#slave_query,PMySQL,cstring,int	proc slave_query(MySQL: PMySQL; q: cstring; len: int): my_bool		953
-nim	slave_send_query	v2/query_builder/libs/mysql/mysql_rdb.html#slave_send_query,PMySQL,cstring,int	proc slave_send_query(MySQL: PMySQL; q: cstring; len: int): my_bool		955
-nim	get_character_set_info	v2/query_builder/libs/mysql/mysql_rdb.html#get_character_set_info,PMySQL,PMY_CHARSET_INFO	proc get_character_set_info(MySQL: PMySQL; charset: PMY_CHARSET_INFO)		957
-nim	LOCAL_INFILE_ERROR_LEN	v2/query_builder/libs/mysql/mysql_rdb.html#LOCAL_INFILE_ERROR_LEN	const LOCAL_INFILE_ERROR_LEN		961
-nim	set_local_infile_default	v2/query_builder/libs/mysql/mysql_rdb.html#set_local_infile_default,PMySQL	proc set_local_infile_default(MySQL: PMySQL)		966
-nim	enable_rpl_parse	v2/query_builder/libs/mysql/mysql_rdb.html#enable_rpl_parse,PMySQL	proc enable_rpl_parse(MySQL: PMySQL)		970
-nim	disable_rpl_parse	v2/query_builder/libs/mysql/mysql_rdb.html#disable_rpl_parse,PMySQL	proc disable_rpl_parse(MySQL: PMySQL)		972
-nim	rpl_parse_enabled	v2/query_builder/libs/mysql/mysql_rdb.html#rpl_parse_enabled,PMySQL	proc rpl_parse_enabled(MySQL: PMySQL): cint		975
-nim	enable_reads_from_master	v2/query_builder/libs/mysql/mysql_rdb.html#enable_reads_from_master,PMySQL	proc enable_reads_from_master(MySQL: PMySQL)		978
-nim	disable_reads_from_master	v2/query_builder/libs/mysql/mysql_rdb.html#disable_reads_from_master,PMySQL	proc disable_reads_from_master(MySQL: PMySQL)		980
-nim	reads_from_master_enabled	v2/query_builder/libs/mysql/mysql_rdb.html#reads_from_master_enabled,PMySQL	proc reads_from_master_enabled(MySQL: PMySQL): my_bool		982
-nim	rpl_query_type	v2/query_builder/libs/mysql/mysql_rdb.html#rpl_query_type,cstring,cint	proc rpl_query_type(q: cstring; length: cint): Rpl_type		984
-nim	rpl_probe	v2/query_builder/libs/mysql/mysql_rdb.html#rpl_probe,PMySQL	proc rpl_probe(MySQL: PMySQL): my_bool		987
-nim	set_master	v2/query_builder/libs/mysql/mysql_rdb.html#set_master,PMySQL,cstring,cuint,cstring,cstring	proc set_master(MySQL: PMySQL; host: cstring; port: cuint; user: cstring;\n           passwd: cstring): cint		989
-nim	add_slave	v2/query_builder/libs/mysql/mysql_rdb.html#add_slave,PMySQL,cstring,cuint,cstring,cstring	proc add_slave(MySQL: PMySQL; host: cstring; port: cuint; user: cstring;\n          passwd: cstring): cint		991
-nim	shutdown	v2/query_builder/libs/mysql/mysql_rdb.html#shutdown,PMySQL,Enum_shutdown_level	proc shutdown(MySQL: PMySQL; shutdown_level: Enum_shutdown_level): cint		993
-nim	dump_debug_info	v2/query_builder/libs/mysql/mysql_rdb.html#dump_debug_info,PMySQL	proc dump_debug_info(MySQL: PMySQL): cint		995
-nim	refresh	v2/query_builder/libs/mysql/mysql_rdb.html#refresh,PMySQL,cuint	proc refresh(sql: PMySQL; refresh_options: cuint): cint		997
-nim	kill	v2/query_builder/libs/mysql/mysql_rdb.html#kill,PMySQL,int	proc kill(MySQL: PMySQL; pid: int): cint		999
-nim	set_server_option	v2/query_builder/libs/mysql/mysql_rdb.html#set_server_option,PMySQL,Enum_mysql_set_option	proc set_server_option(MySQL: PMySQL; option: Enum_mysql_set_option): cint		1000
-nim	ping	v2/query_builder/libs/mysql/mysql_rdb.html#ping,PMySQL	proc ping(MySQL: PMySQL): cint		1002
-nim	stat	v2/query_builder/libs/mysql/mysql_rdb.html#stat,PMySQL	proc stat(MySQL: PMySQL): cstring		1003
-nim	get_server_info	v2/query_builder/libs/mysql/mysql_rdb.html#get_server_info,PMySQL	proc get_server_info(MySQL: PMySQL): cstring		1004
-nim	get_client_info	v2/query_builder/libs/mysql/mysql_rdb.html#get_client_info	proc get_client_info(): cstring		1006
-nim	get_client_version	v2/query_builder/libs/mysql/mysql_rdb.html#get_client_version	proc get_client_version(): int		1008
-nim	get_host_info	v2/query_builder/libs/mysql/mysql_rdb.html#get_host_info,PMySQL	proc get_host_info(MySQL: PMySQL): cstring		1010
-nim	get_server_version	v2/query_builder/libs/mysql/mysql_rdb.html#get_server_version,PMySQL	proc get_server_version(MySQL: PMySQL): int		1012
-nim	get_proto_info	v2/query_builder/libs/mysql/mysql_rdb.html#get_proto_info,PMySQL	proc get_proto_info(MySQL: PMySQL): cuint		1014
-nim	list_dbs	v2/query_builder/libs/mysql/mysql_rdb.html#list_dbs,PMySQL,cstring	proc list_dbs(MySQL: PMySQL; wild: cstring): PRES		1016
-nim	list_tables	v2/query_builder/libs/mysql/mysql_rdb.html#list_tables,PMySQL,cstring	proc list_tables(MySQL: PMySQL; wild: cstring): PRES		1018
-nim	list_processes	v2/query_builder/libs/mysql/mysql_rdb.html#list_processes,PMySQL	proc list_processes(MySQL: PMySQL): PRES		1020
-nim	options	v2/query_builder/libs/mysql/mysql_rdb.html#options,PMySQL,Option,cstring	proc options(MySQL: PMySQL; option: Option; arg: cstring): cint		1022
-nim	free_result	v2/query_builder/libs/mysql/mysql_rdb.html#free_result,PRES	proc free_result(result: PRES)		1024
-nim	data_seek	v2/query_builder/libs/mysql/mysql_rdb.html#data_seek,PRES,my_ulonglong	proc data_seek(result: PRES; offset: my_ulonglong)		1026
-nim	row_seek	v2/query_builder/libs/mysql/mysql_rdb.html#row_seek,PRES,St_mysql_rows	proc row_seek(result: PRES; offset: ROW_OFFSET): ROW_OFFSET		1028
-nim	field_seek	v2/query_builder/libs/mysql/mysql_rdb.html#field_seek,PRES,FIELD_OFFSET	proc field_seek(result: PRES; offset: FIELD_OFFSET): FIELD_OFFSET		1030
-nim	fetch_row	v2/query_builder/libs/mysql/mysql_rdb.html#fetch_row,PRES	proc fetch_row(result: PRES): ROW		1032
-nim	fetch_lengths	v2/query_builder/libs/mysql/mysql_rdb.html#fetch_lengths,PRES	proc fetch_lengths(result: PRES): ptr int		1034
-nim	fetch_field	v2/query_builder/libs/mysql/mysql_rdb.html#fetch_field,PRES	proc fetch_field(result: PRES): PFIELD		1036
-nim	list_fields	v2/query_builder/libs/mysql/mysql_rdb.html#list_fields,PMySQL,cstring,cstring	proc list_fields(MySQL: PMySQL; table: cstring; wild: cstring): PRES		1038
-nim	escape_string	v2/query_builder/libs/mysql/mysql_rdb.html#escape_string,cstring,cstring,int	proc escape_string(fto: cstring; from: cstring; from_length: int): int		1040
-nim	hex_string	v2/query_builder/libs/mysql/mysql_rdb.html#hex_string,cstring,cstring,int	proc hex_string(fto: cstring; from: cstring; from_length: int): int		1042
-nim	real_escape_string	v2/query_builder/libs/mysql/mysql_rdb.html#real_escape_string,PMySQL,cstring,cstring,int	proc real_escape_string(MySQL: PMySQL; fto: cstring; from: cstring; len: int): int		1044
-nim	debug	v2/query_builder/libs/mysql/mysql_rdb.html#debug,cstring	proc debug(debug: cstring)		1046
-nim	myodbc_remove_escape	v2/query_builder/libs/mysql/mysql_rdb.html#myodbc_remove_escape,PMySQL,cstring	proc myodbc_remove_escape(MySQL: PMySQL; name: cstring)		1049
-nim	thread_safe	v2/query_builder/libs/mysql/mysql_rdb.html#thread_safe	proc thread_safe(): cuint		1051
-nim	embedded	v2/query_builder/libs/mysql/mysql_rdb.html#embedded	proc embedded(): my_bool		1052
-nim	manager_init	v2/query_builder/libs/mysql/mysql_rdb.html#manager_init,PMANAGER	proc manager_init(con: PMANAGER): PMANAGER		1053
-nim	manager_connect	v2/query_builder/libs/mysql/mysql_rdb.html#manager_connect,PMANAGER,cstring,cstring,cstring,cuint	proc manager_connect(con: PMANAGER; host: cstring; user: cstring; passwd: cstring;\n                port: cuint): PMANAGER		1055
-nim	manager_close	v2/query_builder/libs/mysql/mysql_rdb.html#manager_close,PMANAGER	proc manager_close(con: PMANAGER)		1058
-nim	manager_command	v2/query_builder/libs/mysql/mysql_rdb.html#manager_command,PMANAGER,cstring,cint	proc manager_command(con: PMANAGER; cmd: cstring; cmd_len: cint): cint		1060
-nim	manager_fetch_line	v2/query_builder/libs/mysql/mysql_rdb.html#manager_fetch_line,PMANAGER,cstring,cint	proc manager_fetch_line(con: PMANAGER; res_buf: cstring; res_buf_size: cint): cint		1062
-nim	read_query_result	v2/query_builder/libs/mysql/mysql_rdb.html#read_query_result,PMySQL	proc read_query_result(MySQL: PMySQL): my_bool		1064
-nim	stmt_init	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_init,PMySQL	proc stmt_init(MySQL: PMySQL): PSTMT		1066
-nim	stmt_prepare	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_prepare,PSTMT,cstring,int	proc stmt_prepare(stmt: PSTMT; query: cstring; len: int): cint		1067
-nim	stmt_execute	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_execute,PSTMT	proc stmt_execute(stmt: PSTMT): cint		1069
-nim	stmt_fetch	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_fetch,PSTMT	proc stmt_fetch(stmt: PSTMT): cint		1071
-nim	stmt_fetch_column	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_fetch_column,PSTMT,PBIND,cuint,int	proc stmt_fetch_column(stmt: PSTMT; bind: PBIND; column: cuint; offset: int): cint		1073
-nim	stmt_store_result	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_store_result,PSTMT	proc stmt_store_result(stmt: PSTMT): cint		1075
-nim	stmt_param_count	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_param_count,PSTMT	proc stmt_param_count(stmt: PSTMT): int		1077
-nim	stmt_attr_set	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_attr_set,PSTMT,Enum_stmt_attr_type,pointer	proc stmt_attr_set(stmt: PSTMT; attr_type: Enum_stmt_attr_type; attr: pointer): my_bool		1079
-nim	stmt_attr_get	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_attr_get,PSTMT,Enum_stmt_attr_type,pointer	proc stmt_attr_get(stmt: PSTMT; attr_type: Enum_stmt_attr_type; attr: pointer): my_bool		1081
-nim	stmt_bind_param	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_bind_param,PSTMT,PBIND	proc stmt_bind_param(stmt: PSTMT; bnd: PBIND): my_bool		1083
-nim	stmt_bind_result	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_bind_result,PSTMT,PBIND	proc stmt_bind_result(stmt: PSTMT; bnd: PBIND): my_bool		1085
-nim	stmt_close	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_close,PSTMT	proc stmt_close(stmt: PSTMT): my_bool		1087
-nim	stmt_reset	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_reset,PSTMT	proc stmt_reset(stmt: PSTMT): my_bool		1089
-nim	stmt_free_result	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_free_result,PSTMT	proc stmt_free_result(stmt: PSTMT): my_bool		1091
-nim	stmt_send_long_data	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_send_long_data,PSTMT,cuint,cstring,int	proc stmt_send_long_data(stmt: PSTMT; param_number: cuint; data: cstring; len: int): my_bool		1093
-nim	stmt_result_metadata	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_result_metadata,PSTMT	proc stmt_result_metadata(stmt: PSTMT): PRES		1096
-nim	stmt_param_metadata	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_param_metadata,PSTMT	proc stmt_param_metadata(stmt: PSTMT): PRES		1098
-nim	stmt_errno	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_errno,PSTMT	proc stmt_errno(stmt: PSTMT): cuint		1100
-nim	stmt_error	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_error,PSTMT	proc stmt_error(stmt: PSTMT): cstring		1102
-nim	stmt_sqlstate	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_sqlstate,PSTMT	proc stmt_sqlstate(stmt: PSTMT): cstring		1104
-nim	stmt_row_seek	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_row_seek,PSTMT,St_mysql_rows	proc stmt_row_seek(stmt: PSTMT; offset: ROW_OFFSET): ROW_OFFSET		1106
-nim	stmt_row_tell	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_row_tell,PSTMT	proc stmt_row_tell(stmt: PSTMT): ROW_OFFSET		1108
-nim	stmt_data_seek	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_data_seek,PSTMT,my_ulonglong	proc stmt_data_seek(stmt: PSTMT; offset: my_ulonglong)		1110
-nim	stmt_num_rows	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_num_rows,PSTMT	proc stmt_num_rows(stmt: PSTMT): my_ulonglong		1112
-nim	stmt_affected_rows	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_affected_rows,PSTMT	proc stmt_affected_rows(stmt: PSTMT): my_ulonglong		1114
-nim	stmt_insert_id	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_insert_id,PSTMT	proc stmt_insert_id(stmt: PSTMT): my_ulonglong		1116
-nim	stmt_field_count	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_field_count,PSTMT	proc stmt_field_count(stmt: PSTMT): cuint		1118
-nim	commit	v2/query_builder/libs/mysql/mysql_rdb.html#commit,PMySQL	proc commit(MySQL: PMySQL): my_bool		1120
-nim	rollback	v2/query_builder/libs/mysql/mysql_rdb.html#rollback,PMySQL	proc rollback(MySQL: PMySQL): my_bool		1121
-nim	autocommit	v2/query_builder/libs/mysql/mysql_rdb.html#autocommit,PMySQL,my_bool	proc autocommit(MySQL: PMySQL; auto_mode: my_bool): my_bool		1122
-nim	more_results	v2/query_builder/libs/mysql/mysql_rdb.html#more_results,PMySQL	proc more_results(MySQL: PMySQL): my_bool		1124
-nim	next_result	v2/query_builder/libs/mysql/mysql_rdb.html#next_result,PMySQL	proc next_result(MySQL: PMySQL): cint		1126
-nim	close	v2/query_builder/libs/mysql/mysql_rdb.html#close,PMySQL	proc close(sock: PMySQL)		1127
-nim	NO_DATA	v2/query_builder/libs/mysql/mysql_rdb.html#NO_DATA	const NO_DATA		1130
-nim	DATA_TRUNCATED	v2/query_builder/libs/mysql/mysql_rdb.html#DATA_TRUNCATED	const DATA_TRUNCATED		1131
-nim	reload	v2/query_builder/libs/mysql/mysql_rdb.html#reload,PMySQL	proc reload(x: PMySQL): cint		1133
-nim	net_safe_read	v2/query_builder/libs/mysql/mysql_rdb.html#net_safe_read,PMySQL	proc net_safe_read(MySQL: PMySQL): cuint		1141
+nim	false	v2/query_builder/libs/mysql/mysql_rdb.html#false	my_bool.false		20
+nim	true	v2/query_builder/libs/mysql/mysql_rdb.html#true	my_bool.true		20
+nim	my_bool	v2/query_builder/libs/mysql/mysql_rdb.html#my_bool	type my_bool		20
+nim	Pmy_bool	v2/query_builder/libs/mysql/mysql_rdb.html#Pmy_bool	type Pmy_bool		21
+nim	PVIO	v2/query_builder/libs/mysql/mysql_rdb.html#PVIO	type PVIO		22
+nim	Pgptr	v2/query_builder/libs/mysql/mysql_rdb.html#Pgptr	type Pgptr		23
+nim	gptr	v2/query_builder/libs/mysql/mysql_rdb.html#gptr	type gptr		24
+nim	Pmy_socket	v2/query_builder/libs/mysql/mysql_rdb.html#Pmy_socket	type Pmy_socket		25
+nim	my_socket	v2/query_builder/libs/mysql/mysql_rdb.html#my_socket	type my_socket		26
+nim	PPByte	v2/query_builder/libs/mysql/mysql_rdb.html#PPByte	type PPByte		27
+nim	cuint	v2/query_builder/libs/mysql/mysql_rdb.html#cuint	type cuint		28
+nim	NET_ASYNC_COMPLETE	v2/query_builder/libs/mysql/mysql_rdb.html#NET_ASYNC_COMPLETE	NetAsyncStatus.NET_ASYNC_COMPLETE		30
+nim	NET_ASYNC_NOT_READY	v2/query_builder/libs/mysql/mysql_rdb.html#NET_ASYNC_NOT_READY	NetAsyncStatus.NET_ASYNC_NOT_READY		30
+nim	NET_ASYNC_ERROR	v2/query_builder/libs/mysql/mysql_rdb.html#NET_ASYNC_ERROR	NetAsyncStatus.NET_ASYNC_ERROR		30
+nim	NET_ASYNC_COMPLETE_NO_MORE_RESULTS	v2/query_builder/libs/mysql/mysql_rdb.html#NET_ASYNC_COMPLETE_NO_MORE_RESULTS	NetAsyncStatus.NET_ASYNC_COMPLETE_NO_MORE_RESULTS		30
+nim	NetAsyncStatus	v2/query_builder/libs/mysql/mysql_rdb.html#NetAsyncStatus	enum NetAsyncStatus		30
+nim	NAME_LEN	v2/query_builder/libs/mysql/mysql_rdb.html#NAME_LEN	const NAME_LEN		43
+nim	HOSTNAME_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#HOSTNAME_LENGTH	const HOSTNAME_LENGTH		44
+nim	USERNAME_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#USERNAME_LENGTH	const USERNAME_LENGTH		45
+nim	SERVER_VERSION_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_VERSION_LENGTH	const SERVER_VERSION_LENGTH		46
+nim	SQLSTATE_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#SQLSTATE_LENGTH	const SQLSTATE_LENGTH		47
+nim	LOCAL_HOST	v2/query_builder/libs/mysql/mysql_rdb.html#LOCAL_HOST	const LOCAL_HOST		48
+nim	LOCAL_HOST_NAMEDPIPE	v2/query_builder/libs/mysql/mysql_rdb.html#LOCAL_HOST_NAMEDPIPE	const LOCAL_HOST_NAMEDPIPE		49
+nim	NAMEDPIPE	v2/query_builder/libs/mysql/mysql_rdb.html#NAMEDPIPE	const NAMEDPIPE		52
+nim	SERVICENAME	v2/query_builder/libs/mysql/mysql_rdb.html#SERVICENAME	const SERVICENAME		53
+nim	COM_SLEEP	v2/query_builder/libs/mysql/mysql_rdb.html#COM_SLEEP	Enum_server_command.COM_SLEEP		56
+nim	COM_QUIT	v2/query_builder/libs/mysql/mysql_rdb.html#COM_QUIT	Enum_server_command.COM_QUIT		56
+nim	COM_INIT_DB	v2/query_builder/libs/mysql/mysql_rdb.html#COM_INIT_DB	Enum_server_command.COM_INIT_DB		56
+nim	COM_QUERY	v2/query_builder/libs/mysql/mysql_rdb.html#COM_QUERY	Enum_server_command.COM_QUERY		56
+nim	COM_FIELD_LIST	v2/query_builder/libs/mysql/mysql_rdb.html#COM_FIELD_LIST	Enum_server_command.COM_FIELD_LIST		56
+nim	COM_CREATE_DB	v2/query_builder/libs/mysql/mysql_rdb.html#COM_CREATE_DB	Enum_server_command.COM_CREATE_DB		56
+nim	COM_DROP_DB	v2/query_builder/libs/mysql/mysql_rdb.html#COM_DROP_DB	Enum_server_command.COM_DROP_DB		56
+nim	COM_REFRESH	v2/query_builder/libs/mysql/mysql_rdb.html#COM_REFRESH	Enum_server_command.COM_REFRESH		56
+nim	COM_SHUTDOWN	v2/query_builder/libs/mysql/mysql_rdb.html#COM_SHUTDOWN	Enum_server_command.COM_SHUTDOWN		56
+nim	COM_STATISTICS	v2/query_builder/libs/mysql/mysql_rdb.html#COM_STATISTICS	Enum_server_command.COM_STATISTICS		56
+nim	COM_PROCESS_INFO	v2/query_builder/libs/mysql/mysql_rdb.html#COM_PROCESS_INFO	Enum_server_command.COM_PROCESS_INFO		56
+nim	COM_CONNECT	v2/query_builder/libs/mysql/mysql_rdb.html#COM_CONNECT	Enum_server_command.COM_CONNECT		56
+nim	COM_PROCESS_KILL	v2/query_builder/libs/mysql/mysql_rdb.html#COM_PROCESS_KILL	Enum_server_command.COM_PROCESS_KILL		56
+nim	COM_DEBUG	v2/query_builder/libs/mysql/mysql_rdb.html#COM_DEBUG	Enum_server_command.COM_DEBUG		56
+nim	COM_PING	v2/query_builder/libs/mysql/mysql_rdb.html#COM_PING	Enum_server_command.COM_PING		56
+nim	COM_TIME	v2/query_builder/libs/mysql/mysql_rdb.html#COM_TIME	Enum_server_command.COM_TIME		56
+nim	COM_DELAYED_INSERT	v2/query_builder/libs/mysql/mysql_rdb.html#COM_DELAYED_INSERT	Enum_server_command.COM_DELAYED_INSERT		56
+nim	COM_CHANGE_USER	v2/query_builder/libs/mysql/mysql_rdb.html#COM_CHANGE_USER	Enum_server_command.COM_CHANGE_USER		56
+nim	COM_BINLOG_DUMP	v2/query_builder/libs/mysql/mysql_rdb.html#COM_BINLOG_DUMP	Enum_server_command.COM_BINLOG_DUMP		56
+nim	COM_TABLE_DUMP	v2/query_builder/libs/mysql/mysql_rdb.html#COM_TABLE_DUMP	Enum_server_command.COM_TABLE_DUMP		56
+nim	COM_CONNECT_OUT	v2/query_builder/libs/mysql/mysql_rdb.html#COM_CONNECT_OUT	Enum_server_command.COM_CONNECT_OUT		56
+nim	COM_REGISTER_SLAVE	v2/query_builder/libs/mysql/mysql_rdb.html#COM_REGISTER_SLAVE	Enum_server_command.COM_REGISTER_SLAVE		56
+nim	COM_STMT_PREPARE	v2/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_PREPARE	Enum_server_command.COM_STMT_PREPARE		56
+nim	COM_STMT_EXECUTE	v2/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_EXECUTE	Enum_server_command.COM_STMT_EXECUTE		56
+nim	COM_STMT_SEND_LONG_DATA	v2/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_SEND_LONG_DATA	Enum_server_command.COM_STMT_SEND_LONG_DATA		56
+nim	COM_STMT_CLOSE	v2/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_CLOSE	Enum_server_command.COM_STMT_CLOSE		56
+nim	COM_STMT_RESET	v2/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_RESET	Enum_server_command.COM_STMT_RESET		56
+nim	COM_SET_OPTION	v2/query_builder/libs/mysql/mysql_rdb.html#COM_SET_OPTION	Enum_server_command.COM_SET_OPTION		56
+nim	COM_STMT_FETCH	v2/query_builder/libs/mysql/mysql_rdb.html#COM_STMT_FETCH	Enum_server_command.COM_STMT_FETCH		56
+nim	COM_END	v2/query_builder/libs/mysql/mysql_rdb.html#COM_END	Enum_server_command.COM_END		56
+nim	Enum_server_command	v2/query_builder/libs/mysql/mysql_rdb.html#Enum_server_command	enum Enum_server_command		56
+nim	SCRAMBLE_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#SCRAMBLE_LENGTH	const SCRAMBLE_LENGTH		67
+nim	SCRAMBLE_LENGTH_323	v2/query_builder/libs/mysql/mysql_rdb.html#SCRAMBLE_LENGTH_323	const SCRAMBLE_LENGTH_323		70
+nim	SCRAMBLED_PASSWORD_CHAR_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#SCRAMBLED_PASSWORD_CHAR_LENGTH	const SCRAMBLED_PASSWORD_CHAR_LENGTH		72
+nim	SCRAMBLED_PASSWORD_CHAR_LENGTH_323	v2/query_builder/libs/mysql/mysql_rdb.html#SCRAMBLED_PASSWORD_CHAR_LENGTH_323	const SCRAMBLED_PASSWORD_CHAR_LENGTH_323		73
+nim	NOT_NULL_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#NOT_NULL_FLAG	const NOT_NULL_FLAG		74
+nim	PRI_KEY_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#PRI_KEY_FLAG	const PRI_KEY_FLAG		75
+nim	UNIQUE_KEY_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#UNIQUE_KEY_FLAG	const UNIQUE_KEY_FLAG		76
+nim	MULTIPLE_KEY_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#MULTIPLE_KEY_FLAG	const MULTIPLE_KEY_FLAG		77
+nim	BLOB_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#BLOB_FLAG	const BLOB_FLAG		78
+nim	UNSIGNED_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#UNSIGNED_FLAG	const UNSIGNED_FLAG		79
+nim	ZEROFILL_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#ZEROFILL_FLAG	const ZEROFILL_FLAG		80
+nim	BINARY_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#BINARY_FLAG	const BINARY_FLAG		81
+nim	ENUM_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#ENUM_FLAG	const ENUM_FLAG		83
+nim	AUTO_INCREMENT_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#AUTO_INCREMENT_FLAG	const AUTO_INCREMENT_FLAG		84
+nim	TIMESTAMP_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#TIMESTAMP_FLAG	const TIMESTAMP_FLAG		85
+nim	SET_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#SET_FLAG	const SET_FLAG		86
+nim	NO_DEFAULT_VALUE_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#NO_DEFAULT_VALUE_FLAG	const NO_DEFAULT_VALUE_FLAG		87
+nim	NUM_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#NUM_FLAG	const NUM_FLAG		88
+nim	PART_KEY_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#PART_KEY_FLAG	const PART_KEY_FLAG		89
+nim	GROUP_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#GROUP_FLAG	const GROUP_FLAG		90
+nim	UNIQUE_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#UNIQUE_FLAG	const UNIQUE_FLAG		91
+nim	BINCMP_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#BINCMP_FLAG	const BINCMP_FLAG		92
+nim	REFRESH_GRANT	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_GRANT	const REFRESH_GRANT		93
+nim	REFRESH_LOG	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_LOG	const REFRESH_LOG		94
+nim	REFRESH_TABLES	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_TABLES	const REFRESH_TABLES		95
+nim	REFRESH_HOSTS	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_HOSTS	const REFRESH_HOSTS		96
+nim	REFRESH_STATUS	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_STATUS	const REFRESH_STATUS		97
+nim	REFRESH_THREADS	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_THREADS	const REFRESH_THREADS		98
+nim	REFRESH_SLAVE	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_SLAVE	const REFRESH_SLAVE		99
+nim	REFRESH_MASTER	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_MASTER	const REFRESH_MASTER		100
+nim	REFRESH_READ_LOCK	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_READ_LOCK	const REFRESH_READ_LOCK		102
+nim	REFRESH_FAST	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_FAST	const REFRESH_FAST		103
+nim	REFRESH_QUERY_CACHE	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_QUERY_CACHE	const REFRESH_QUERY_CACHE		104
+nim	REFRESH_QUERY_CACHE_FREE	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_QUERY_CACHE_FREE	const REFRESH_QUERY_CACHE_FREE		105
+nim	REFRESH_DES_KEY_FILE	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_DES_KEY_FILE	const REFRESH_DES_KEY_FILE		106
+nim	REFRESH_USER_RESOURCES	v2/query_builder/libs/mysql/mysql_rdb.html#REFRESH_USER_RESOURCES	const REFRESH_USER_RESOURCES		107
+nim	CLIENT_LONG_PASSWORD	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_LONG_PASSWORD	const CLIENT_LONG_PASSWORD		108
+nim	CLIENT_FOUND_ROWS	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_FOUND_ROWS	const CLIENT_FOUND_ROWS		109
+nim	CLIENT_LONG_FLAG	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_LONG_FLAG	const CLIENT_LONG_FLAG		110
+nim	CLIENT_CONNECT_WITH_DB	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_CONNECT_WITH_DB	const CLIENT_CONNECT_WITH_DB		111
+nim	CLIENT_NO_SCHEMA	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_NO_SCHEMA	const CLIENT_NO_SCHEMA		112
+nim	CLIENT_COMPRESS	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_COMPRESS	const CLIENT_COMPRESS		113
+nim	CLIENT_ODBC	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_ODBC	const CLIENT_ODBC		114
+nim	CLIENT_LOCAL_FILES	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_LOCAL_FILES	const CLIENT_LOCAL_FILES		115
+nim	CLIENT_IGNORE_SPACE	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_IGNORE_SPACE	const CLIENT_IGNORE_SPACE		116
+nim	CLIENT_PROTOCOL_41	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_PROTOCOL_41	const CLIENT_PROTOCOL_41		117
+nim	CLIENT_INTERACTIVE	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_INTERACTIVE	const CLIENT_INTERACTIVE		118
+nim	CLIENT_SSL	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_SSL	const CLIENT_SSL		119
+nim	CLIENT_IGNORE_SIGPIPE	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_IGNORE_SIGPIPE	const CLIENT_IGNORE_SIGPIPE		120
+nim	CLIENT_TRANSACTIONS	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_TRANSACTIONS	const CLIENT_TRANSACTIONS		121
+nim	CLIENT_RESERVED	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_RESERVED	const CLIENT_RESERVED		122
+nim	CLIENT_SECURE_CONNECTION	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_SECURE_CONNECTION	const CLIENT_SECURE_CONNECTION		123
+nim	CLIENT_MULTI_STATEMENTS	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_MULTI_STATEMENTS	const CLIENT_MULTI_STATEMENTS		124
+nim	CLIENT_MULTI_RESULTS	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_MULTI_RESULTS	const CLIENT_MULTI_RESULTS		125
+nim	CLIENT_REMEMBER_OPTIONS	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_REMEMBER_OPTIONS	const CLIENT_REMEMBER_OPTIONS		126
+nim	SERVER_STATUS_IN_TRANS	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_IN_TRANS	const SERVER_STATUS_IN_TRANS		127
+nim	SERVER_STATUS_AUTOCOMMIT	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_AUTOCOMMIT	const SERVER_STATUS_AUTOCOMMIT		128
+nim	SERVER_STATUS_MORE_RESULTS	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_MORE_RESULTS	const SERVER_STATUS_MORE_RESULTS		129
+nim	SERVER_MORE_RESULTS_EXISTS	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_MORE_RESULTS_EXISTS	const SERVER_MORE_RESULTS_EXISTS		130
+nim	SERVER_QUERY_NO_GOOD_INDEX_USED	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_QUERY_NO_GOOD_INDEX_USED	const SERVER_QUERY_NO_GOOD_INDEX_USED		131
+nim	SERVER_QUERY_NO_INDEX_USED	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_QUERY_NO_INDEX_USED	const SERVER_QUERY_NO_INDEX_USED		132
+nim	SERVER_STATUS_CURSOR_EXISTS	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_CURSOR_EXISTS	const SERVER_STATUS_CURSOR_EXISTS		135
+nim	SERVER_STATUS_LAST_ROW_SENT	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_LAST_ROW_SENT	const SERVER_STATUS_LAST_ROW_SENT		137
+nim	SERVER_STATUS_DB_DROPPED	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_DB_DROPPED	const SERVER_STATUS_DB_DROPPED		138
+nim	SERVER_STATUS_NO_BACKSLASH_ESCAPES	v2/query_builder/libs/mysql/mysql_rdb.html#SERVER_STATUS_NO_BACKSLASH_ESCAPES	const SERVER_STATUS_NO_BACKSLASH_ESCAPES		139
+nim	ERRMSG_SIZE	v2/query_builder/libs/mysql/mysql_rdb.html#ERRMSG_SIZE	const ERRMSG_SIZE		140
+nim	NET_READ_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#NET_READ_TIMEOUT	const NET_READ_TIMEOUT		141
+nim	NET_WRITE_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#NET_WRITE_TIMEOUT	const NET_WRITE_TIMEOUT		142
+nim	NET_WAIT_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#NET_WAIT_TIMEOUT	const NET_WAIT_TIMEOUT		143
+nim	ONLY_KILL_QUERY	v2/query_builder/libs/mysql/mysql_rdb.html#ONLY_KILL_QUERY	const ONLY_KILL_QUERY		144
+nim	MAX_TINYINT_WIDTH	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_TINYINT_WIDTH	const MAX_TINYINT_WIDTH		147
+nim	MAX_SMALLINT_WIDTH	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_SMALLINT_WIDTH	const MAX_SMALLINT_WIDTH		148
+nim	MAX_MEDIUMINT_WIDTH	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_MEDIUMINT_WIDTH	const MAX_MEDIUMINT_WIDTH		149
+nim	MAX_INT_WIDTH	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_INT_WIDTH	const MAX_INT_WIDTH		150
+nim	MAX_BIGINT_WIDTH	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_BIGINT_WIDTH	const MAX_BIGINT_WIDTH		151
+nim	MAX_CHAR_WIDTH	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_CHAR_WIDTH	const MAX_CHAR_WIDTH		152
+nim	MAX_BLOB_WIDTH	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_BLOB_WIDTH	const MAX_BLOB_WIDTH		153
+nim	Pst_net	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_net	type Pst_net		156
+nim	St_net	v2/query_builder/libs/mysql/mysql_rdb.html#St_net	object St_net		157
+nim	NET	v2/query_builder/libs/mysql/mysql_rdb.html#NET	type NET		197
+nim	PNET	v2/query_builder/libs/mysql/mysql_rdb.html#PNET	type PNET		198
+nim	packet_error	v2/query_builder/libs/mysql/mysql_rdb.html#packet_error	const packet_error		202
+nim	TYPE_DECIMAL	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_DECIMAL	Enum_field_types.TYPE_DECIMAL		205
+nim	TYPE_TINY	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_TINY	Enum_field_types.TYPE_TINY		205
+nim	TYPE_SHORT	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_SHORT	Enum_field_types.TYPE_SHORT		205
+nim	TYPE_LONG	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_LONG	Enum_field_types.TYPE_LONG		205
+nim	TYPE_FLOAT	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_FLOAT	Enum_field_types.TYPE_FLOAT		205
+nim	TYPE_DOUBLE	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_DOUBLE	Enum_field_types.TYPE_DOUBLE		205
+nim	TYPE_NULL	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_NULL	Enum_field_types.TYPE_NULL		205
+nim	TYPE_TIMESTAMP	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_TIMESTAMP	Enum_field_types.TYPE_TIMESTAMP		205
+nim	TYPE_LONGLONG	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_LONGLONG	Enum_field_types.TYPE_LONGLONG		205
+nim	TYPE_INT24	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_INT24	Enum_field_types.TYPE_INT24		205
+nim	TYPE_DATE	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_DATE	Enum_field_types.TYPE_DATE		205
+nim	TYPE_TIME	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_TIME	Enum_field_types.TYPE_TIME		205
+nim	TYPE_DATETIME	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_DATETIME	Enum_field_types.TYPE_DATETIME		205
+nim	TYPE_YEAR	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_YEAR	Enum_field_types.TYPE_YEAR		205
+nim	TYPE_NEWDATE	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_NEWDATE	Enum_field_types.TYPE_NEWDATE		205
+nim	TYPE_VARCHAR	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_VARCHAR	Enum_field_types.TYPE_VARCHAR		205
+nim	TYPE_BIT	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_BIT	Enum_field_types.TYPE_BIT		205
+nim	TYPE_NEWDECIMAL	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_NEWDECIMAL	Enum_field_types.TYPE_NEWDECIMAL		205
+nim	TYPE_ENUM	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_ENUM	Enum_field_types.TYPE_ENUM		205
+nim	TYPE_SET	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_SET	Enum_field_types.TYPE_SET		205
+nim	TYPE_TINY_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_TINY_BLOB	Enum_field_types.TYPE_TINY_BLOB		205
+nim	TYPE_MEDIUM_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_MEDIUM_BLOB	Enum_field_types.TYPE_MEDIUM_BLOB		205
+nim	TYPE_LONG_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_LONG_BLOB	Enum_field_types.TYPE_LONG_BLOB		205
+nim	TYPE_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_BLOB	Enum_field_types.TYPE_BLOB		205
+nim	TYPE_VAR_STRING	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_VAR_STRING	Enum_field_types.TYPE_VAR_STRING		205
+nim	TYPE_STRING	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_STRING	Enum_field_types.TYPE_STRING		205
+nim	TYPE_GEOMETRY	v2/query_builder/libs/mysql/mysql_rdb.html#TYPE_GEOMETRY	Enum_field_types.TYPE_GEOMETRY		205
+nim	Enum_field_types	v2/query_builder/libs/mysql/mysql_rdb.html#Enum_field_types	enum Enum_field_types		205
+nim	CLIENT_MULTI_QUERIES	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_MULTI_QUERIES	const CLIENT_MULTI_QUERIES		216
+nim	FIELD_TYPE_DECIMAL	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_DECIMAL	const FIELD_TYPE_DECIMAL		217
+nim	FIELD_TYPE_NEWDECIMAL	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_NEWDECIMAL	const FIELD_TYPE_NEWDECIMAL		218
+nim	FIELD_TYPE_TINY	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_TINY	const FIELD_TYPE_TINY		219
+nim	FIELD_TYPE_SHORT	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_SHORT	const FIELD_TYPE_SHORT		220
+nim	FIELD_TYPE_LONG	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_LONG	const FIELD_TYPE_LONG		221
+nim	FIELD_TYPE_FLOAT	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_FLOAT	const FIELD_TYPE_FLOAT		222
+nim	FIELD_TYPE_DOUBLE	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_DOUBLE	const FIELD_TYPE_DOUBLE		223
+nim	FIELD_TYPE_NULL	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_NULL	const FIELD_TYPE_NULL		224
+nim	FIELD_TYPE_TIMESTAMP	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_TIMESTAMP	const FIELD_TYPE_TIMESTAMP		225
+nim	FIELD_TYPE_LONGLONG	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_LONGLONG	const FIELD_TYPE_LONGLONG		226
+nim	FIELD_TYPE_INT24	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_INT24	const FIELD_TYPE_INT24		227
+nim	FIELD_TYPE_DATE	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_DATE	const FIELD_TYPE_DATE		228
+nim	FIELD_TYPE_TIME	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_TIME	const FIELD_TYPE_TIME		229
+nim	FIELD_TYPE_DATETIME	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_DATETIME	const FIELD_TYPE_DATETIME		230
+nim	FIELD_TYPE_YEAR	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_YEAR	const FIELD_TYPE_YEAR		231
+nim	FIELD_TYPE_NEWDATE	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_NEWDATE	const FIELD_TYPE_NEWDATE		232
+nim	FIELD_TYPE_ENUM	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_ENUM	const FIELD_TYPE_ENUM		233
+nim	FIELD_TYPE_SET	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_SET	const FIELD_TYPE_SET		234
+nim	FIELD_TYPE_TINY_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_TINY_BLOB	const FIELD_TYPE_TINY_BLOB		235
+nim	FIELD_TYPE_MEDIUM_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_MEDIUM_BLOB	const FIELD_TYPE_MEDIUM_BLOB		236
+nim	FIELD_TYPE_LONG_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_LONG_BLOB	const FIELD_TYPE_LONG_BLOB		237
+nim	FIELD_TYPE_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_BLOB	const FIELD_TYPE_BLOB		238
+nim	FIELD_TYPE_VAR_STRING	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_VAR_STRING	const FIELD_TYPE_VAR_STRING		239
+nim	FIELD_TYPE_STRING	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_STRING	const FIELD_TYPE_STRING		240
+nim	FIELD_TYPE_CHAR	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_CHAR	const FIELD_TYPE_CHAR		241
+nim	FIELD_TYPE_INTERVAL	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_INTERVAL	const FIELD_TYPE_INTERVAL		242
+nim	FIELD_TYPE_GEOMETRY	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_GEOMETRY	const FIELD_TYPE_GEOMETRY		243
+nim	FIELD_TYPE_BIT	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_TYPE_BIT	const FIELD_TYPE_BIT		244
+nim	SHUTDOWN_KILLABLE_CONNECT	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_KILLABLE_CONNECT	const SHUTDOWN_KILLABLE_CONNECT		246
+nim	SHUTDOWN_KILLABLE_TRANS	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_KILLABLE_TRANS	const SHUTDOWN_KILLABLE_TRANS		247
+nim	SHUTDOWN_KILLABLE_LOCK_TABLE	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_KILLABLE_LOCK_TABLE	const SHUTDOWN_KILLABLE_LOCK_TABLE		248
+nim	SHUTDOWN_KILLABLE_UPDATE	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_KILLABLE_UPDATE	const SHUTDOWN_KILLABLE_UPDATE		249
+nim	SHUTDOWN_DEFAULT	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_DEFAULT	Enum_shutdown_level.SHUTDOWN_DEFAULT		252
+nim	SHUTDOWN_WAIT_CONNECTIONS	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_WAIT_CONNECTIONS	Enum_shutdown_level.SHUTDOWN_WAIT_CONNECTIONS		252
+nim	SHUTDOWN_WAIT_TRANSACTIONS	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_WAIT_TRANSACTIONS	Enum_shutdown_level.SHUTDOWN_WAIT_TRANSACTIONS		252
+nim	SHUTDOWN_WAIT_UPDATES	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_WAIT_UPDATES	Enum_shutdown_level.SHUTDOWN_WAIT_UPDATES		252
+nim	SHUTDOWN_WAIT_ALL_BUFFERS	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_WAIT_ALL_BUFFERS	Enum_shutdown_level.SHUTDOWN_WAIT_ALL_BUFFERS		252
+nim	SHUTDOWN_WAIT_CRITICAL_BUFFERS	v2/query_builder/libs/mysql/mysql_rdb.html#SHUTDOWN_WAIT_CRITICAL_BUFFERS	Enum_shutdown_level.SHUTDOWN_WAIT_CRITICAL_BUFFERS		252
+nim	KILL_QUERY	v2/query_builder/libs/mysql/mysql_rdb.html#KILL_QUERY	Enum_shutdown_level.KILL_QUERY		252
+nim	KILL_CONNECTION	v2/query_builder/libs/mysql/mysql_rdb.html#KILL_CONNECTION	Enum_shutdown_level.KILL_CONNECTION		252
+nim	Enum_shutdown_level	v2/query_builder/libs/mysql/mysql_rdb.html#Enum_shutdown_level	enum Enum_shutdown_level		252
+nim	CURSOR_TYPE_NO_CURSOR	v2/query_builder/libs/mysql/mysql_rdb.html#CURSOR_TYPE_NO_CURSOR	Enum_cursor_type.CURSOR_TYPE_NO_CURSOR		257
+nim	CURSOR_TYPE_READ_ONLY	v2/query_builder/libs/mysql/mysql_rdb.html#CURSOR_TYPE_READ_ONLY	Enum_cursor_type.CURSOR_TYPE_READ_ONLY		257
+nim	CURSOR_TYPE_FOR_UPDATE	v2/query_builder/libs/mysql/mysql_rdb.html#CURSOR_TYPE_FOR_UPDATE	Enum_cursor_type.CURSOR_TYPE_FOR_UPDATE		257
+nim	CURSOR_TYPE_SCROLLABLE	v2/query_builder/libs/mysql/mysql_rdb.html#CURSOR_TYPE_SCROLLABLE	Enum_cursor_type.CURSOR_TYPE_SCROLLABLE		257
+nim	Enum_cursor_type	v2/query_builder/libs/mysql/mysql_rdb.html#Enum_cursor_type	enum Enum_cursor_type		257
+nim	OPTION_MULTI_STATEMENTS_ON	v2/query_builder/libs/mysql/mysql_rdb.html#OPTION_MULTI_STATEMENTS_ON	Enum_mysql_set_option.OPTION_MULTI_STATEMENTS_ON		260
+nim	OPTION_MULTI_STATEMENTS_OFF	v2/query_builder/libs/mysql/mysql_rdb.html#OPTION_MULTI_STATEMENTS_OFF	Enum_mysql_set_option.OPTION_MULTI_STATEMENTS_OFF		260
+nim	Enum_mysql_set_option	v2/query_builder/libs/mysql/mysql_rdb.html#Enum_mysql_set_option	enum Enum_mysql_set_option		260
+nim	my_net_init	v2/query_builder/libs/mysql/mysql_rdb.html#my_net_init,PNET,PVIO	proc my_net_init(net: PNET; vio: PVIO): my_bool		266
+nim	my_net_local_init	v2/query_builder/libs/mysql/mysql_rdb.html#my_net_local_init,PNET	proc my_net_local_init(net: PNET)		268
+nim	net_end	v2/query_builder/libs/mysql/mysql_rdb.html#net_end,PNET	proc net_end(net: PNET)		270
+nim	net_clear	v2/query_builder/libs/mysql/mysql_rdb.html#net_clear,PNET	proc net_clear(net: PNET)		271
+nim	net_realloc	v2/query_builder/libs/mysql/mysql_rdb.html#net_realloc,PNET,int	proc net_realloc(net: PNET; len: int): my_bool		272
+nim	net_flush	v2/query_builder/libs/mysql/mysql_rdb.html#net_flush,PNET	proc net_flush(net: PNET): my_bool		274
+nim	my_net_write	v2/query_builder/libs/mysql/mysql_rdb.html#my_net_write,PNET,cstring,int	proc my_net_write(net: PNET; packet: cstring; length: int): my_bool		275
+nim	net_write_command	v2/query_builder/libs/mysql/mysql_rdb.html#net_write_command,PNET,char,cstring,int,cstring,int	proc net_write_command(net: PNET; command: char; header: cstring; head_len: int;\n                  packet: cstring; length: int): my_bool		277
+nim	net_real_write	v2/query_builder/libs/mysql/mysql_rdb.html#net_real_write,PNET,cstring,int	proc net_real_write(net: PNET; packet: cstring; length: int): cint		280
+nim	my_net_read	v2/query_builder/libs/mysql/mysql_rdb.html#my_net_read,PNET	proc my_net_read(net: PNET): int		282
+nim	Psockaddr	v2/query_builder/libs/mysql/mysql_rdb.html#Psockaddr	type Psockaddr		286
+nim	Sockaddr	v2/query_builder/libs/mysql/mysql_rdb.html#Sockaddr	object Sockaddr		287
+nim	my_connect	v2/query_builder/libs/mysql/mysql_rdb.html#my_connect,my_socket,Psockaddr,cuint,cuint	proc my_connect(s: my_socket; name: Psockaddr; namelen: cuint; timeout: cuint): cint		290
+nim	Prand_struct	v2/query_builder/libs/mysql/mysql_rdb.html#Prand_struct	type Prand_struct		293
+nim	Rand_struct	v2/query_builder/libs/mysql/mysql_rdb.html#Rand_struct	object Rand_struct		294
+nim	STRING_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#STRING_RESULT	Item_result.STRING_RESULT		300
+nim	REAL_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#REAL_RESULT	Item_result.REAL_RESULT		300
+nim	INT_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#INT_RESULT	Item_result.INT_RESULT		300
+nim	ROW_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#ROW_RESULT	Item_result.ROW_RESULT		300
+nim	DECIMAL_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#DECIMAL_RESULT	Item_result.DECIMAL_RESULT		300
+nim	Item_result	v2/query_builder/libs/mysql/mysql_rdb.html#Item_result	enum Item_result		300
+nim	PItem_result	v2/query_builder/libs/mysql/mysql_rdb.html#PItem_result	type PItem_result		302
+nim	Pst_udf_args	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_udf_args	type Pst_udf_args		303
+nim	St_udf_args	v2/query_builder/libs/mysql/mysql_rdb.html#St_udf_args	object St_udf_args		304
+nim	UDF_ARGS	v2/query_builder/libs/mysql/mysql_rdb.html#UDF_ARGS	type UDF_ARGS		313
+nim	PUDF_ARGS	v2/query_builder/libs/mysql/mysql_rdb.html#PUDF_ARGS	type PUDF_ARGS		314
+nim	Pst_udf_init	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_udf_init	type Pst_udf_init		315
+nim	St_udf_init	v2/query_builder/libs/mysql/mysql_rdb.html#St_udf_init	object St_udf_init		316
+nim	UDF_INIT	v2/query_builder/libs/mysql/mysql_rdb.html#UDF_INIT	type UDF_INIT		323
+nim	PUDF_INIT	v2/query_builder/libs/mysql/mysql_rdb.html#PUDF_INIT	type PUDF_INIT		324
+nim	NET_HEADER_SIZE	v2/query_builder/libs/mysql/mysql_rdb.html#NET_HEADER_SIZE	const NET_HEADER_SIZE		330
+nim	COMP_HEADER_SIZE	v2/query_builder/libs/mysql/mysql_rdb.html#COMP_HEADER_SIZE	const COMP_HEADER_SIZE		331
+nim	randominit	v2/query_builder/libs/mysql/mysql_rdb.html#randominit,Prand_struct,int,int	proc randominit(para1: Prand_struct; seed1: int; seed2: int)		336
+nim	my_rnd	v2/query_builder/libs/mysql/mysql_rdb.html#my_rnd,Prand_struct	proc my_rnd(para1: Prand_struct): cdouble		338
+nim	create_random_string	v2/query_builder/libs/mysql/mysql_rdb.html#create_random_string,cstring,cuint,Prand_struct	proc create_random_string(fto: cstring; len: cuint; rand_st: Prand_struct)		340
+nim	hash_password	v2/query_builder/libs/mysql/mysql_rdb.html#hash_password,int,cstring,cuint	proc hash_password(fto: int; password: cstring; password_len: cuint)		342
+nim	make_scrambled_password_323	v2/query_builder/libs/mysql/mysql_rdb.html#make_scrambled_password_323,cstring,cstring	proc make_scrambled_password_323(fto: cstring; password: cstring)		344
+nim	scramble_323	v2/query_builder/libs/mysql/mysql_rdb.html#scramble_323,cstring,cstring,cstring	proc scramble_323(fto: cstring; message: cstring; password: cstring)		346
+nim	check_scramble_323	v2/query_builder/libs/mysql/mysql_rdb.html#check_scramble_323,cstring,cstring,int	proc check_scramble_323(para1: cstring; message: cstring; salt: int): my_bool		348
+nim	get_salt_from_password_323	v2/query_builder/libs/mysql/mysql_rdb.html#get_salt_from_password_323,ptr.int,cstring	proc get_salt_from_password_323(res: ptr int; password: cstring)		350
+nim	make_password_from_salt_323	v2/query_builder/libs/mysql/mysql_rdb.html#make_password_from_salt_323,cstring,ptr.int	proc make_password_from_salt_323(fto: cstring; salt: ptr int)		352
+nim	octet2hex	v2/query_builder/libs/mysql/mysql_rdb.html#octet2hex,cstring,cstring,cuint	proc octet2hex(fto: cstring; str: cstring; length: cuint): cstring		354
+nim	make_scrambled_password	v2/query_builder/libs/mysql/mysql_rdb.html#make_scrambled_password,cstring,cstring	proc make_scrambled_password(fto: cstring; password: cstring)		356
+nim	scramble	v2/query_builder/libs/mysql/mysql_rdb.html#scramble,cstring,cstring,cstring	proc scramble(fto: cstring; message: cstring; password: cstring)		358
+nim	check_scramble	v2/query_builder/libs/mysql/mysql_rdb.html#check_scramble,cstring,cstring,pointer	proc check_scramble(reply: cstring; message: cstring; hash_stage2: pointer): my_bool		360
+nim	get_salt_from_password	v2/query_builder/libs/mysql/mysql_rdb.html#get_salt_from_password,pointer,cstring	proc get_salt_from_password(res: pointer; password: cstring)		362
+nim	make_password_from_salt	v2/query_builder/libs/mysql/mysql_rdb.html#make_password_from_salt,cstring,pointer	proc make_password_from_salt(fto: cstring; hash_stage2: pointer)		364
+nim	get_tty_password	v2/query_builder/libs/mysql/mysql_rdb.html#get_tty_password,cstring	proc get_tty_password(opt_message: cstring): cstring		367
+nim	errno_to_sqlstate	v2/query_builder/libs/mysql/mysql_rdb.html#errno_to_sqlstate,cuint	proc errno_to_sqlstate(errno: cuint): cstring		369
+nim	modify_defaults_file	v2/query_builder/libs/mysql/mysql_rdb.html#modify_defaults_file,cstring,cstring,cstring,cstring,cint	proc modify_defaults_file(file_location: cstring; option: cstring;\n                     option_value: cstring; section_name: cstring;\n                     remove_option: cint): cint		372
+nim	load_defaults	v2/query_builder/libs/mysql/mysql_rdb.html#load_defaults,cstring,cstringArray,ptr.cint,ptr.cstringArray	proc load_defaults(conf_file: cstring; groups: cstringArray; argc: ptr cint;\n              argv: ptr cstringArray): cint		376
+nim	my_init	v2/query_builder/libs/mysql/mysql_rdb.html#my_init	proc my_init(): my_bool		379
+nim	my_thread_init	v2/query_builder/libs/mysql/mysql_rdb.html#my_thread_init	proc my_thread_init(): my_bool		380
+nim	my_thread_end	v2/query_builder/libs/mysql/mysql_rdb.html#my_thread_end	proc my_thread_end()		381
+nim	NULL_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#NULL_LENGTH	const NULL_LENGTH		383
+nim	STMT_HEADER	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_HEADER	const STMT_HEADER		386
+nim	LONG_DATA_HEADER	v2/query_builder/libs/mysql/mysql_rdb.html#LONG_DATA_HEADER	const LONG_DATA_HEADER		387
+nim	CLIENT_NET_READ_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_NET_READ_TIMEOUT	const CLIENT_NET_READ_TIMEOUT		397
+nim	CLIENT_NET_WRITE_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#CLIENT_NET_WRITE_TIMEOUT	const CLIENT_NET_WRITE_TIMEOUT		398
+nim	Pst_mysql_field	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_field	type Pst_mysql_field		401
+nim	St_mysql_field	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_field	object St_mysql_field		402
+nim	FIELD	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD	type FIELD		425
+nim	PFIELD	v2/query_builder/libs/mysql/mysql_rdb.html#PFIELD	type PFIELD		426
+nim	PROW	v2/query_builder/libs/mysql/mysql_rdb.html#PROW	type PROW		427
+nim	ROW	v2/query_builder/libs/mysql/mysql_rdb.html#ROW	type ROW		428
+nim	PFIELD_OFFSET	v2/query_builder/libs/mysql/mysql_rdb.html#PFIELD_OFFSET	type PFIELD_OFFSET		429
+nim	FIELD_OFFSET	v2/query_builder/libs/mysql/mysql_rdb.html#FIELD_OFFSET	type FIELD_OFFSET		430
+nim	IS_PRI_KEY	v2/query_builder/libs/mysql/mysql_rdb.html#IS_PRI_KEY,int32	proc IS_PRI_KEY(n: int32): bool		434
+nim	IS_NOT_NULL	v2/query_builder/libs/mysql/mysql_rdb.html#IS_NOT_NULL,int32	proc IS_NOT_NULL(n: int32): bool		435
+nim	IS_BLOB	v2/query_builder/libs/mysql/mysql_rdb.html#IS_BLOB,int32	proc IS_BLOB(n: int32): bool		436
+nim	IS_NUM	v2/query_builder/libs/mysql/mysql_rdb.html#IS_NUM,Enum_field_types	proc IS_NUM(t: Enum_field_types): bool		437
+nim	INTERNAL_NUM_FIELD	v2/query_builder/libs/mysql/mysql_rdb.html#INTERNAL_NUM_FIELD,Pst_mysql_field	proc INTERNAL_NUM_FIELD(f: Pst_mysql_field): bool		438
+nim	IS_NUM_FIELD	v2/query_builder/libs/mysql/mysql_rdb.html#IS_NUM_FIELD,Pst_mysql_field	proc IS_NUM_FIELD(f: Pst_mysql_field): bool		439
+nim	my_ulonglong	v2/query_builder/libs/mysql/mysql_rdb.html#my_ulonglong	type my_ulonglong		441
+nim	Pmy_ulonglong	v2/query_builder/libs/mysql/mysql_rdb.html#Pmy_ulonglong	type Pmy_ulonglong		442
+nim	COUNT_ERROR	v2/query_builder/libs/mysql/mysql_rdb.html#COUNT_ERROR	const COUNT_ERROR		445
+nim	Pst_mysql_rows	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_rows	type Pst_mysql_rows		448
+nim	St_mysql_rows	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_rows	object St_mysql_rows		449
+nim	ROWS	v2/query_builder/libs/mysql/mysql_rdb.html#ROWS	type ROWS		454
+nim	PROWS	v2/query_builder/libs/mysql/mysql_rdb.html#PROWS	type PROWS		455
+nim	PROW_OFFSET	v2/query_builder/libs/mysql/mysql_rdb.html#PROW_OFFSET	type PROW_OFFSET		456
+nim	ROW_OFFSET	v2/query_builder/libs/mysql/mysql_rdb.html#ROW_OFFSET	type ROW_OFFSET		457
+nim	ALLOC_MAX_BLOCK_TO_DROP	v2/query_builder/libs/mysql/mysql_rdb.html#ALLOC_MAX_BLOCK_TO_DROP	const ALLOC_MAX_BLOCK_TO_DROP		462
+nim	ALLOC_MAX_BLOCK_USAGE_BEFORE_DROP	v2/query_builder/libs/mysql/mysql_rdb.html#ALLOC_MAX_BLOCK_USAGE_BEFORE_DROP	const ALLOC_MAX_BLOCK_USAGE_BEFORE_DROP		463
+nim	Pst_used_mem	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_used_mem	type Pst_used_mem		466
+nim	St_used_mem	v2/query_builder/libs/mysql/mysql_rdb.html#St_used_mem	object St_used_mem		467
+nim	USED_MEM	v2/query_builder/libs/mysql/mysql_rdb.html#USED_MEM	type USED_MEM		472
+nim	PUSED_MEM	v2/query_builder/libs/mysql/mysql_rdb.html#PUSED_MEM	type PUSED_MEM		473
+nim	Pst_mem_root	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mem_root	type Pst_mem_root		474
+nim	St_mem_root	v2/query_builder/libs/mysql/mysql_rdb.html#St_mem_root	object St_mem_root		475
+nim	MEM_ROOT	v2/query_builder/libs/mysql/mysql_rdb.html#MEM_ROOT	type MEM_ROOT		487
+nim	PMEM_ROOT	v2/query_builder/libs/mysql/mysql_rdb.html#PMEM_ROOT	type PMEM_ROOT		488
+nim	Pst_mysql_data	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_data	type Pst_mysql_data		493
+nim	St_mysql_data	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_data	object St_mysql_data		494
+nim	DATA	v2/query_builder/libs/mysql/mysql_rdb.html#DATA	type DATA		501
+nim	PDATA	v2/query_builder/libs/mysql/mysql_rdb.html#PDATA	type PDATA		502
+nim	OPT_CONNECT_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_CONNECT_TIMEOUT	Option.OPT_CONNECT_TIMEOUT		503
+nim	OPT_COMPRESS	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_COMPRESS	Option.OPT_COMPRESS		503
+nim	OPT_NAMED_PIPE	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_NAMED_PIPE	Option.OPT_NAMED_PIPE		503
+nim	INIT_COMMAND	v2/query_builder/libs/mysql/mysql_rdb.html#INIT_COMMAND	Option.INIT_COMMAND		503
+nim	READ_DEFAULT_FILE	v2/query_builder/libs/mysql/mysql_rdb.html#READ_DEFAULT_FILE	Option.READ_DEFAULT_FILE		503
+nim	READ_DEFAULT_GROUP	v2/query_builder/libs/mysql/mysql_rdb.html#READ_DEFAULT_GROUP	Option.READ_DEFAULT_GROUP		503
+nim	SET_CHARSET_DIR	v2/query_builder/libs/mysql/mysql_rdb.html#SET_CHARSET_DIR	Option.SET_CHARSET_DIR		503
+nim	SET_CHARSET_NAME	v2/query_builder/libs/mysql/mysql_rdb.html#SET_CHARSET_NAME	Option.SET_CHARSET_NAME		503
+nim	OPT_LOCAL_INFILE	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_LOCAL_INFILE	Option.OPT_LOCAL_INFILE		503
+nim	OPT_PROTOCOL	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_PROTOCOL	Option.OPT_PROTOCOL		503
+nim	SHARED_MEMORY_BASE_NAME	v2/query_builder/libs/mysql/mysql_rdb.html#SHARED_MEMORY_BASE_NAME	Option.SHARED_MEMORY_BASE_NAME		503
+nim	OPT_READ_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_READ_TIMEOUT	Option.OPT_READ_TIMEOUT		503
+nim	OPT_WRITE_TIMEOUT	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_WRITE_TIMEOUT	Option.OPT_WRITE_TIMEOUT		503
+nim	OPT_USE_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_USE_RESULT	Option.OPT_USE_RESULT		503
+nim	OPT_USE_REMOTE_CONNECTION	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_USE_REMOTE_CONNECTION	Option.OPT_USE_REMOTE_CONNECTION		503
+nim	OPT_USE_EMBEDDED_CONNECTION	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_USE_EMBEDDED_CONNECTION	Option.OPT_USE_EMBEDDED_CONNECTION		503
+nim	OPT_GUESS_CONNECTION	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_GUESS_CONNECTION	Option.OPT_GUESS_CONNECTION		503
+nim	SET_CLIENT_IP	v2/query_builder/libs/mysql/mysql_rdb.html#SET_CLIENT_IP	Option.SET_CLIENT_IP		503
+nim	SECURE_AUTH	v2/query_builder/libs/mysql/mysql_rdb.html#SECURE_AUTH	Option.SECURE_AUTH		503
+nim	REPORT_DATA_TRUNCATION	v2/query_builder/libs/mysql/mysql_rdb.html#REPORT_DATA_TRUNCATION	Option.REPORT_DATA_TRUNCATION		503
+nim	OPT_RECONNECT	v2/query_builder/libs/mysql/mysql_rdb.html#OPT_RECONNECT	Option.OPT_RECONNECT		503
+nim	MYSQL_OPT_NONBLOCK	v2/query_builder/libs/mysql/mysql_rdb.html#MYSQL_OPT_NONBLOCK	Option.MYSQL_OPT_NONBLOCK		503
+nim	Option	v2/query_builder/libs/mysql/mysql_rdb.html#Option	enum Option		503
+nim	MAX_MYSQL_MANAGER_ERR	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_MYSQL_MANAGER_ERR	const MAX_MYSQL_MANAGER_ERR		514
+nim	MAX_MYSQL_MANAGER_MSG	v2/query_builder/libs/mysql/mysql_rdb.html#MAX_MYSQL_MANAGER_MSG	const MAX_MYSQL_MANAGER_MSG		515
+nim	MANAGER_OK	v2/query_builder/libs/mysql/mysql_rdb.html#MANAGER_OK	const MANAGER_OK		516
+nim	MANAGER_INFO	v2/query_builder/libs/mysql/mysql_rdb.html#MANAGER_INFO	const MANAGER_INFO		517
+nim	MANAGER_ACCESS	v2/query_builder/libs/mysql/mysql_rdb.html#MANAGER_ACCESS	const MANAGER_ACCESS		518
+nim	MANAGER_CLIENT_ERR	v2/query_builder/libs/mysql/mysql_rdb.html#MANAGER_CLIENT_ERR	const MANAGER_CLIENT_ERR		519
+nim	MANAGER_INTERNAL_ERR	v2/query_builder/libs/mysql/mysql_rdb.html#MANAGER_INTERNAL_ERR	const MANAGER_INTERNAL_ERR		520
+nim	St_dynamic_array	v2/query_builder/libs/mysql/mysql_rdb.html#St_dynamic_array	object St_dynamic_array		523
+nim	DYNAMIC_ARRAY	v2/query_builder/libs/mysql/mysql_rdb.html#DYNAMIC_ARRAY	type DYNAMIC_ARRAY		530
+nim	Pst_dynamic_array	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_dynamic_array	type Pst_dynamic_array		531
+nim	Pst_mysql_options	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_options	type Pst_mysql_options		532
+nim	St_mysql_options	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_options	object St_mysql_options		533
+nim	STATUS_READY	v2/query_builder/libs/mysql/mysql_rdb.html#STATUS_READY	Status.STATUS_READY		579
+nim	STATUS_GET_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#STATUS_GET_RESULT	Status.STATUS_GET_RESULT		579
+nim	STATUS_USE_RESULT	v2/query_builder/libs/mysql/mysql_rdb.html#STATUS_USE_RESULT	Status.STATUS_USE_RESULT		579
+nim	Status	v2/query_builder/libs/mysql/mysql_rdb.html#Status	enum Status		579
+nim	PROTOCOL_DEFAULT	v2/query_builder/libs/mysql/mysql_rdb.html#PROTOCOL_DEFAULT	Protocol_type.PROTOCOL_DEFAULT		581
+nim	PROTOCOL_TCP	v2/query_builder/libs/mysql/mysql_rdb.html#PROTOCOL_TCP	Protocol_type.PROTOCOL_TCP		581
+nim	PROTOCOL_SOCKET	v2/query_builder/libs/mysql/mysql_rdb.html#PROTOCOL_SOCKET	Protocol_type.PROTOCOL_SOCKET		581
+nim	PROTOCOL_PIPE	v2/query_builder/libs/mysql/mysql_rdb.html#PROTOCOL_PIPE	Protocol_type.PROTOCOL_PIPE		581
+nim	PROTOCOL_MEMORY	v2/query_builder/libs/mysql/mysql_rdb.html#PROTOCOL_MEMORY	Protocol_type.PROTOCOL_MEMORY		581
+nim	Protocol_type	v2/query_builder/libs/mysql/mysql_rdb.html#Protocol_type	enum Protocol_type		581
+nim	RPL_MASTER	v2/query_builder/libs/mysql/mysql_rdb.html#RPL_MASTER	Rpl_type.RPL_MASTER		586
+nim	RPL_SLAVE	v2/query_builder/libs/mysql/mysql_rdb.html#RPL_SLAVE	Rpl_type.RPL_SLAVE		586
+nim	RPL_ADMIN	v2/query_builder/libs/mysql/mysql_rdb.html#RPL_ADMIN	Rpl_type.RPL_ADMIN		586
+nim	Rpl_type	v2/query_builder/libs/mysql/mysql_rdb.html#Rpl_type	enum Rpl_type		586
+nim	Charset_info_st	v2/query_builder/libs/mysql/mysql_rdb.html#Charset_info_st	object Charset_info_st		588
+nim	CHARSET_INFO	v2/query_builder/libs/mysql/mysql_rdb.html#CHARSET_INFO	type CHARSET_INFO		616
+nim	Pcharset_info_st	v2/query_builder/libs/mysql/mysql_rdb.html#Pcharset_info_st	type Pcharset_info_st		617
+nim	Pcharacter_set	v2/query_builder/libs/mysql/mysql_rdb.html#Pcharacter_set	type Pcharacter_set		618
+nim	Character_set	v2/query_builder/libs/mysql/mysql_rdb.html#Character_set	object Character_set		619
+nim	MY_CHARSET_INFO	v2/query_builder/libs/mysql/mysql_rdb.html#MY_CHARSET_INFO	type MY_CHARSET_INFO		629
+nim	PMY_CHARSET_INFO	v2/query_builder/libs/mysql/mysql_rdb.html#PMY_CHARSET_INFO	type PMY_CHARSET_INFO		630
+nim	Pst_mysql_methods	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_methods	type Pst_mysql_methods		631
+nim	Pst_mysql	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql	type Pst_mysql		632
+nim	St_mysql	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql	object St_mysql		633
+nim	PMySQL	v2/query_builder/libs/mysql/mysql_rdb.html#PMySQL	type PMySQL		680
+nim	Pst_mysql_res	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_res	type Pst_mysql_res		681
+nim	St_mysql_res	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_res	object St_mysql_res		682
+nim	RES	v2/query_builder/libs/mysql/mysql_rdb.html#RES	type RES		698
+nim	PRES	v2/query_builder/libs/mysql/mysql_rdb.html#PRES	type PRES		699
+nim	Pst_mysql_stmt	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_stmt	type Pst_mysql_stmt		700
+nim	PSTMT	v2/query_builder/libs/mysql/mysql_rdb.html#PSTMT	type PSTMT		701
+nim	St_mysql_methods	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_methods	object St_mysql_methods		702
+nim	METHODS	v2/query_builder/libs/mysql/mysql_rdb.html#METHODS	type METHODS		722
+nim	PMETHODS	v2/query_builder/libs/mysql/mysql_rdb.html#PMETHODS	type PMETHODS		723
+nim	Pst_mysql_manager	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_manager	type Pst_mysql_manager		724
+nim	St_mysql_manager	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_manager	object St_mysql_manager		725
+nim	MANAGER	v2/query_builder/libs/mysql/mysql_rdb.html#MANAGER	type MANAGER		741
+nim	PMANAGER	v2/query_builder/libs/mysql/mysql_rdb.html#PMANAGER	type PMANAGER		742
+nim	Pst_mysql_parameters	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_parameters	type Pst_mysql_parameters		743
+nim	St_mysql_parameters	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_parameters	object St_mysql_parameters		744
+nim	PARAMETERS	v2/query_builder/libs/mysql/mysql_rdb.html#PARAMETERS	type PARAMETERS		748
+nim	PPARAMETERS	v2/query_builder/libs/mysql/mysql_rdb.html#PPARAMETERS	type PPARAMETERS		749
+nim	STMT_INIT_DONE	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_INIT_DONE	Enum_mysql_stmt_state.STMT_INIT_DONE		750
+nim	STMT_PREPARE_DONE	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_PREPARE_DONE	Enum_mysql_stmt_state.STMT_PREPARE_DONE		750
+nim	STMT_EXECUTE_DONE	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_EXECUTE_DONE	Enum_mysql_stmt_state.STMT_EXECUTE_DONE		750
+nim	STMT_FETCH_DONE	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_FETCH_DONE	Enum_mysql_stmt_state.STMT_FETCH_DONE		750
+nim	Enum_mysql_stmt_state	v2/query_builder/libs/mysql/mysql_rdb.html#Enum_mysql_stmt_state	enum Enum_mysql_stmt_state		750
+nim	Pst_mysql_bind	v2/query_builder/libs/mysql/mysql_rdb.html#Pst_mysql_bind	type Pst_mysql_bind		752
+nim	U	v2/query_builder/libs/mysql/mysql_rdb.html#U	object U		774
+nim	St_mysql_bind	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_bind	object St_mysql_bind		778
+nim	BIND	v2/query_builder/libs/mysql/mysql_rdb.html#BIND	type BIND		799
+nim	PBIND	v2/query_builder/libs/mysql/mysql_rdb.html#PBIND	type PBIND		800
+nim	St_mysql_stmt	v2/query_builder/libs/mysql/mysql_rdb.html#St_mysql_stmt	object St_mysql_stmt		801
+nim	STMT	v2/query_builder/libs/mysql/mysql_rdb.html#STMT	type STMT		829
+nim	STMT_ATTR_UPDATE_MAX_LENGTH	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_ATTR_UPDATE_MAX_LENGTH	Enum_stmt_attr_type.STMT_ATTR_UPDATE_MAX_LENGTH		831
+nim	STMT_ATTR_CURSOR_TYPE	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_ATTR_CURSOR_TYPE	Enum_stmt_attr_type.STMT_ATTR_CURSOR_TYPE		831
+nim	STMT_ATTR_PREFETCH_ROWS	v2/query_builder/libs/mysql/mysql_rdb.html#STMT_ATTR_PREFETCH_ROWS	Enum_stmt_attr_type.STMT_ATTR_PREFETCH_ROWS		831
+nim	Enum_stmt_attr_type	v2/query_builder/libs/mysql/mysql_rdb.html#Enum_stmt_attr_type	enum Enum_stmt_attr_type		831
+nim	server_init	v2/query_builder/libs/mysql/mysql_rdb.html#server_init,cint,cstringArray,cstringArray	proc server_init(argc: cint; argv: cstringArray; groups: cstringArray): cint		847
+nim	server_end	v2/query_builder/libs/mysql/mysql_rdb.html#server_end	proc server_end()		849
+nim	library_init	v2/query_builder/libs/mysql/mysql_rdb.html#library_init,cint,cstringArray,cstringArray	proc library_init(argc: cint; argv: cstringArray; groups: cstringArray): cint		857
+nim	library_end	v2/query_builder/libs/mysql/mysql_rdb.html#library_end	proc library_end()		859
+nim	get_parameters	v2/query_builder/libs/mysql/mysql_rdb.html#get_parameters	proc get_parameters(): PPARAMETERS		860
+nim	thread_init	v2/query_builder/libs/mysql/mysql_rdb.html#thread_init	proc thread_init(): my_bool		866
+nim	thread_end	v2/query_builder/libs/mysql/mysql_rdb.html#thread_end	proc thread_end()		867
+nim	num_rows	v2/query_builder/libs/mysql/mysql_rdb.html#num_rows,PRES	proc num_rows(res: PRES): my_ulonglong		870
+nim	num_fields	v2/query_builder/libs/mysql/mysql_rdb.html#num_fields,PRES	proc num_fields(res: PRES): cuint		872
+nim	eof	v2/query_builder/libs/mysql/mysql_rdb.html#eof,PRES	proc eof(res: PRES): my_bool		874
+nim	fetch_field_direct	v2/query_builder/libs/mysql/mysql_rdb.html#fetch_field_direct,PRES,cuint	proc fetch_field_direct(res: PRES; fieldnr: cuint): PFIELD		875
+nim	fetch_fields	v2/query_builder/libs/mysql/mysql_rdb.html#fetch_fields,PRES	proc fetch_fields(res: PRES): PFIELD		877
+nim	row_tell	v2/query_builder/libs/mysql/mysql_rdb.html#row_tell,PRES	proc row_tell(res: PRES): ROW_OFFSET		879
+nim	field_tell	v2/query_builder/libs/mysql/mysql_rdb.html#field_tell,PRES	proc field_tell(res: PRES): FIELD_OFFSET		881
+nim	field_count	v2/query_builder/libs/mysql/mysql_rdb.html#field_count,PMySQL	proc field_count(MySQL: PMySQL): cuint		883
+nim	affected_rows	v2/query_builder/libs/mysql/mysql_rdb.html#affected_rows,PMySQL	proc affected_rows(MySQL: PMySQL): my_ulonglong		885
+nim	insert_id	v2/query_builder/libs/mysql/mysql_rdb.html#insert_id,PMySQL	proc insert_id(MySQL: PMySQL): my_ulonglong		887
+nim	errno	v2/query_builder/libs/mysql/mysql_rdb.html#errno,PMySQL	proc errno(MySQL: PMySQL): cuint		889
+nim	error	v2/query_builder/libs/mysql/mysql_rdb.html#error,PMySQL	proc error(MySQL: PMySQL): cstring		890
+nim	sqlstate	v2/query_builder/libs/mysql/mysql_rdb.html#sqlstate,PMySQL	proc sqlstate(MySQL: PMySQL): cstring		891
+nim	warning_count	v2/query_builder/libs/mysql/mysql_rdb.html#warning_count,PMySQL	proc warning_count(MySQL: PMySQL): cuint		892
+nim	info	v2/query_builder/libs/mysql/mysql_rdb.html#info,PMySQL	proc info(MySQL: PMySQL): cstring		894
+nim	thread_id	v2/query_builder/libs/mysql/mysql_rdb.html#thread_id,PMySQL	proc thread_id(MySQL: PMySQL): int		895
+nim	character_set_name	v2/query_builder/libs/mysql/mysql_rdb.html#character_set_name,PMySQL	proc character_set_name(MySQL: PMySQL): cstring		896
+nim	set_character_set	v2/query_builder/libs/mysql/mysql_rdb.html#set_character_set,PMySQL,cstring	proc set_character_set(MySQL: PMySQL; csname: cstring): int32		898
+nim	init	v2/query_builder/libs/mysql/mysql_rdb.html#init,PMySQL	proc init(MySQL: PMySQL): PMySQL		900
+nim	ssl_set	v2/query_builder/libs/mysql/mysql_rdb.html#ssl_set,PMySQL,cstring,cstring,cstring,cstring,cstring	proc ssl_set(MySQL: PMySQL; key: cstring; cert: cstring; ca: cstring;\n        capath: cstring; cipher: cstring): my_bool		902
+nim	change_user	v2/query_builder/libs/mysql/mysql_rdb.html#change_user,PMySQL,cstring,cstring,cstring	proc change_user(MySQL: PMySQL; user: cstring; passwd: cstring; db: cstring): my_bool		905
+nim	real_connect	v2/query_builder/libs/mysql/mysql_rdb.html#real_connect,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,int	proc real_connect(MySQL: PMySQL; host: cstring; user: cstring; passwd: cstring;\n             db: cstring; port: cuint; unix_socket: cstring; clientflag: int): PMySQL		907
+nim	real_connect_start	v2/query_builder/libs/mysql/mysql_rdb.html#real_connect_start,ptr.PMySQL,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,culong	proc real_connect_start(ret: ptr PMySQL; mysql: PMySQL; host: cstring; user: cstring;\n                   passwd: cstring; db: cstring; port: cuint;\n                   unix_socket: cstring; clientflag: culong): cint		911
+nim	fetch_row_nonblocking	v2/query_builder/libs/mysql/mysql_rdb.html#fetch_row_nonblocking,PRES,PROW	proc fetch_row_nonblocking(MYSQL_RES: PRES; MYSQL_ROW: PROW): NetAsyncStatus		915
+nim	free_result_nonblocking	v2/query_builder/libs/mysql/mysql_rdb.html#free_result_nonblocking,PRES	proc free_result_nonblocking(MYSQL_RES: PRES): NetAsyncStatus		917
+nim	fetch_next_result_nonblocking	v2/query_builder/libs/mysql/mysql_rdb.html#fetch_next_result_nonblocking,PMySQL	proc fetch_next_result_nonblocking(MySQL: PMySQL): NetAsyncStatus		919
+nim	real_query_nonblocking	v2/query_builder/libs/mysql/mysql_rdb.html#real_query_nonblocking,PMySQL,cstring,int	proc real_query_nonblocking(MySQL: PMySQL; q: cstring; length: int): NetAsyncStatus		921
+nim	store_result_nonblocking	v2/query_builder/libs/mysql/mysql_rdb.html#store_result_nonblocking,PMySQL,ptr.PRES	proc store_result_nonblocking(MySQL: PMySQL; MYSQL_RES: ptr PRES): NetAsyncStatus		923
+nim	select_db	v2/query_builder/libs/mysql/mysql_rdb.html#select_db,PMySQL,cstring	proc select_db(MySQL: PMySQL; db: cstring): cint		925
+nim	query	v2/query_builder/libs/mysql/mysql_rdb.html#query,PMySQL,cstring	proc query(MySQL: PMySQL; q: cstring): cint		927
+nim	send_query	v2/query_builder/libs/mysql/mysql_rdb.html#send_query,PMySQL,cstring,int	proc send_query(MySQL: PMySQL; q: cstring; len: int): cint		928
+nim	real_query	v2/query_builder/libs/mysql/mysql_rdb.html#real_query,PMySQL,cstring,int	proc real_query(MySQL: PMySQL; q: cstring; len: int): cint		930
+nim	store_result	v2/query_builder/libs/mysql/mysql_rdb.html#store_result,PMySQL	proc store_result(MySQL: PMySQL): PRES		932
+nim	use_result	v2/query_builder/libs/mysql/mysql_rdb.html#use_result,PMySQL	proc use_result(MySQL: PMySQL): PRES		934
+nim	master_query	v2/query_builder/libs/mysql/mysql_rdb.html#master_query,PMySQL,cstring,int	proc master_query(MySQL: PMySQL; q: cstring; len: int): my_bool		936
+nim	master_send_query	v2/query_builder/libs/mysql/mysql_rdb.html#master_send_query,PMySQL,cstring,int	proc master_send_query(MySQL: PMySQL; q: cstring; len: int): my_bool		938
+nim	slave_query	v2/query_builder/libs/mysql/mysql_rdb.html#slave_query,PMySQL,cstring,int	proc slave_query(MySQL: PMySQL; q: cstring; len: int): my_bool		941
+nim	slave_send_query	v2/query_builder/libs/mysql/mysql_rdb.html#slave_send_query,PMySQL,cstring,int	proc slave_send_query(MySQL: PMySQL; q: cstring; len: int): my_bool		943
+nim	get_character_set_info	v2/query_builder/libs/mysql/mysql_rdb.html#get_character_set_info,PMySQL,PMY_CHARSET_INFO	proc get_character_set_info(MySQL: PMySQL; charset: PMY_CHARSET_INFO)		945
+nim	LOCAL_INFILE_ERROR_LEN	v2/query_builder/libs/mysql/mysql_rdb.html#LOCAL_INFILE_ERROR_LEN	const LOCAL_INFILE_ERROR_LEN		949
+nim	set_local_infile_default	v2/query_builder/libs/mysql/mysql_rdb.html#set_local_infile_default,PMySQL	proc set_local_infile_default(MySQL: PMySQL)		954
+nim	enable_rpl_parse	v2/query_builder/libs/mysql/mysql_rdb.html#enable_rpl_parse,PMySQL	proc enable_rpl_parse(MySQL: PMySQL)		958
+nim	disable_rpl_parse	v2/query_builder/libs/mysql/mysql_rdb.html#disable_rpl_parse,PMySQL	proc disable_rpl_parse(MySQL: PMySQL)		960
+nim	rpl_parse_enabled	v2/query_builder/libs/mysql/mysql_rdb.html#rpl_parse_enabled,PMySQL	proc rpl_parse_enabled(MySQL: PMySQL): cint		963
+nim	enable_reads_from_master	v2/query_builder/libs/mysql/mysql_rdb.html#enable_reads_from_master,PMySQL	proc enable_reads_from_master(MySQL: PMySQL)		966
+nim	disable_reads_from_master	v2/query_builder/libs/mysql/mysql_rdb.html#disable_reads_from_master,PMySQL	proc disable_reads_from_master(MySQL: PMySQL)		968
+nim	reads_from_master_enabled	v2/query_builder/libs/mysql/mysql_rdb.html#reads_from_master_enabled,PMySQL	proc reads_from_master_enabled(MySQL: PMySQL): my_bool		970
+nim	rpl_query_type	v2/query_builder/libs/mysql/mysql_rdb.html#rpl_query_type,cstring,cint	proc rpl_query_type(q: cstring; length: cint): Rpl_type		972
+nim	rpl_probe	v2/query_builder/libs/mysql/mysql_rdb.html#rpl_probe,PMySQL	proc rpl_probe(MySQL: PMySQL): my_bool		975
+nim	set_master	v2/query_builder/libs/mysql/mysql_rdb.html#set_master,PMySQL,cstring,cuint,cstring,cstring	proc set_master(MySQL: PMySQL; host: cstring; port: cuint; user: cstring;\n           passwd: cstring): cint		977
+nim	add_slave	v2/query_builder/libs/mysql/mysql_rdb.html#add_slave,PMySQL,cstring,cuint,cstring,cstring	proc add_slave(MySQL: PMySQL; host: cstring; port: cuint; user: cstring;\n          passwd: cstring): cint		979
+nim	shutdown	v2/query_builder/libs/mysql/mysql_rdb.html#shutdown,PMySQL,Enum_shutdown_level	proc shutdown(MySQL: PMySQL; shutdown_level: Enum_shutdown_level): cint		981
+nim	dump_debug_info	v2/query_builder/libs/mysql/mysql_rdb.html#dump_debug_info,PMySQL	proc dump_debug_info(MySQL: PMySQL): cint		983
+nim	refresh	v2/query_builder/libs/mysql/mysql_rdb.html#refresh,PMySQL,cuint	proc refresh(sql: PMySQL; refresh_options: cuint): cint		985
+nim	kill	v2/query_builder/libs/mysql/mysql_rdb.html#kill,PMySQL,int	proc kill(MySQL: PMySQL; pid: int): cint		987
+nim	set_server_option	v2/query_builder/libs/mysql/mysql_rdb.html#set_server_option,PMySQL,Enum_mysql_set_option	proc set_server_option(MySQL: PMySQL; option: Enum_mysql_set_option): cint		988
+nim	ping	v2/query_builder/libs/mysql/mysql_rdb.html#ping,PMySQL	proc ping(MySQL: PMySQL): cint		990
+nim	stat	v2/query_builder/libs/mysql/mysql_rdb.html#stat,PMySQL	proc stat(MySQL: PMySQL): cstring		991
+nim	get_server_info	v2/query_builder/libs/mysql/mysql_rdb.html#get_server_info,PMySQL	proc get_server_info(MySQL: PMySQL): cstring		992
+nim	get_client_info	v2/query_builder/libs/mysql/mysql_rdb.html#get_client_info	proc get_client_info(): cstring		994
+nim	get_client_version	v2/query_builder/libs/mysql/mysql_rdb.html#get_client_version	proc get_client_version(): int		996
+nim	get_host_info	v2/query_builder/libs/mysql/mysql_rdb.html#get_host_info,PMySQL	proc get_host_info(MySQL: PMySQL): cstring		998
+nim	get_server_version	v2/query_builder/libs/mysql/mysql_rdb.html#get_server_version,PMySQL	proc get_server_version(MySQL: PMySQL): int		1000
+nim	get_proto_info	v2/query_builder/libs/mysql/mysql_rdb.html#get_proto_info,PMySQL	proc get_proto_info(MySQL: PMySQL): cuint		1002
+nim	list_dbs	v2/query_builder/libs/mysql/mysql_rdb.html#list_dbs,PMySQL,cstring	proc list_dbs(MySQL: PMySQL; wild: cstring): PRES		1004
+nim	list_tables	v2/query_builder/libs/mysql/mysql_rdb.html#list_tables,PMySQL,cstring	proc list_tables(MySQL: PMySQL; wild: cstring): PRES		1006
+nim	list_processes	v2/query_builder/libs/mysql/mysql_rdb.html#list_processes,PMySQL	proc list_processes(MySQL: PMySQL): PRES		1008
+nim	options	v2/query_builder/libs/mysql/mysql_rdb.html#options,PMySQL,Option,cstring	proc options(MySQL: PMySQL; option: Option; arg: cstring): cint		1010
+nim	free_result	v2/query_builder/libs/mysql/mysql_rdb.html#free_result,PRES	proc free_result(result: PRES)		1012
+nim	data_seek	v2/query_builder/libs/mysql/mysql_rdb.html#data_seek,PRES,my_ulonglong	proc data_seek(result: PRES; offset: my_ulonglong)		1014
+nim	row_seek	v2/query_builder/libs/mysql/mysql_rdb.html#row_seek,PRES,St_mysql_rows	proc row_seek(result: PRES; offset: ROW_OFFSET): ROW_OFFSET		1016
+nim	field_seek	v2/query_builder/libs/mysql/mysql_rdb.html#field_seek,PRES,FIELD_OFFSET	proc field_seek(result: PRES; offset: FIELD_OFFSET): FIELD_OFFSET		1018
+nim	fetch_row	v2/query_builder/libs/mysql/mysql_rdb.html#fetch_row,PRES	proc fetch_row(result: PRES): ROW		1020
+nim	fetch_lengths	v2/query_builder/libs/mysql/mysql_rdb.html#fetch_lengths,PRES	proc fetch_lengths(result: PRES): ptr int		1022
+nim	fetch_field	v2/query_builder/libs/mysql/mysql_rdb.html#fetch_field,PRES	proc fetch_field(result: PRES): PFIELD		1024
+nim	list_fields	v2/query_builder/libs/mysql/mysql_rdb.html#list_fields,PMySQL,cstring,cstring	proc list_fields(MySQL: PMySQL; table: cstring; wild: cstring): PRES		1026
+nim	escape_string	v2/query_builder/libs/mysql/mysql_rdb.html#escape_string,cstring,cstring,int	proc escape_string(fto: cstring; from: cstring; from_length: int): int		1028
+nim	hex_string	v2/query_builder/libs/mysql/mysql_rdb.html#hex_string,cstring,cstring,int	proc hex_string(fto: cstring; from: cstring; from_length: int): int		1030
+nim	real_escape_string	v2/query_builder/libs/mysql/mysql_rdb.html#real_escape_string,PMySQL,cstring,cstring,int	proc real_escape_string(MySQL: PMySQL; fto: cstring; from: cstring; len: int): int		1032
+nim	debug	v2/query_builder/libs/mysql/mysql_rdb.html#debug,cstring	proc debug(debug: cstring)		1034
+nim	myodbc_remove_escape	v2/query_builder/libs/mysql/mysql_rdb.html#myodbc_remove_escape,PMySQL,cstring	proc myodbc_remove_escape(MySQL: PMySQL; name: cstring)		1037
+nim	thread_safe	v2/query_builder/libs/mysql/mysql_rdb.html#thread_safe	proc thread_safe(): cuint		1039
+nim	embedded	v2/query_builder/libs/mysql/mysql_rdb.html#embedded	proc embedded(): my_bool		1040
+nim	manager_init	v2/query_builder/libs/mysql/mysql_rdb.html#manager_init,PMANAGER	proc manager_init(con: PMANAGER): PMANAGER		1041
+nim	manager_connect	v2/query_builder/libs/mysql/mysql_rdb.html#manager_connect,PMANAGER,cstring,cstring,cstring,cuint	proc manager_connect(con: PMANAGER; host: cstring; user: cstring; passwd: cstring;\n                port: cuint): PMANAGER		1043
+nim	manager_close	v2/query_builder/libs/mysql/mysql_rdb.html#manager_close,PMANAGER	proc manager_close(con: PMANAGER)		1046
+nim	manager_command	v2/query_builder/libs/mysql/mysql_rdb.html#manager_command,PMANAGER,cstring,cint	proc manager_command(con: PMANAGER; cmd: cstring; cmd_len: cint): cint		1048
+nim	manager_fetch_line	v2/query_builder/libs/mysql/mysql_rdb.html#manager_fetch_line,PMANAGER,cstring,cint	proc manager_fetch_line(con: PMANAGER; res_buf: cstring; res_buf_size: cint): cint		1050
+nim	read_query_result	v2/query_builder/libs/mysql/mysql_rdb.html#read_query_result,PMySQL	proc read_query_result(MySQL: PMySQL): my_bool		1052
+nim	stmt_init	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_init,PMySQL	proc stmt_init(MySQL: PMySQL): PSTMT		1054
+nim	stmt_prepare	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_prepare,PSTMT,cstring,int	proc stmt_prepare(stmt: PSTMT; query: cstring; len: int): cint		1055
+nim	stmt_execute	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_execute,PSTMT	proc stmt_execute(stmt: PSTMT): cint		1057
+nim	stmt_fetch	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_fetch,PSTMT	proc stmt_fetch(stmt: PSTMT): cint		1059
+nim	stmt_fetch_column	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_fetch_column,PSTMT,PBIND,cuint,int	proc stmt_fetch_column(stmt: PSTMT; bind: PBIND; column: cuint; offset: int): cint		1061
+nim	stmt_store_result	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_store_result,PSTMT	proc stmt_store_result(stmt: PSTMT): cint		1063
+nim	stmt_param_count	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_param_count,PSTMT	proc stmt_param_count(stmt: PSTMT): int		1065
+nim	stmt_attr_set	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_attr_set,PSTMT,Enum_stmt_attr_type,pointer	proc stmt_attr_set(stmt: PSTMT; attr_type: Enum_stmt_attr_type; attr: pointer): my_bool		1067
+nim	stmt_attr_get	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_attr_get,PSTMT,Enum_stmt_attr_type,pointer	proc stmt_attr_get(stmt: PSTMT; attr_type: Enum_stmt_attr_type; attr: pointer): my_bool		1069
+nim	stmt_bind_param	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_bind_param,PSTMT,PBIND	proc stmt_bind_param(stmt: PSTMT; bnd: PBIND): my_bool		1071
+nim	stmt_bind_result	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_bind_result,PSTMT,PBIND	proc stmt_bind_result(stmt: PSTMT; bnd: PBIND): my_bool		1073
+nim	stmt_close	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_close,PSTMT	proc stmt_close(stmt: PSTMT): my_bool		1075
+nim	stmt_reset	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_reset,PSTMT	proc stmt_reset(stmt: PSTMT): my_bool		1077
+nim	stmt_free_result	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_free_result,PSTMT	proc stmt_free_result(stmt: PSTMT): my_bool		1079
+nim	stmt_send_long_data	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_send_long_data,PSTMT,cuint,cstring,int	proc stmt_send_long_data(stmt: PSTMT; param_number: cuint; data: cstring; len: int): my_bool		1081
+nim	stmt_result_metadata	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_result_metadata,PSTMT	proc stmt_result_metadata(stmt: PSTMT): PRES		1084
+nim	stmt_param_metadata	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_param_metadata,PSTMT	proc stmt_param_metadata(stmt: PSTMT): PRES		1086
+nim	stmt_errno	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_errno,PSTMT	proc stmt_errno(stmt: PSTMT): cuint		1088
+nim	stmt_error	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_error,PSTMT	proc stmt_error(stmt: PSTMT): cstring		1090
+nim	stmt_sqlstate	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_sqlstate,PSTMT	proc stmt_sqlstate(stmt: PSTMT): cstring		1092
+nim	stmt_row_seek	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_row_seek,PSTMT,St_mysql_rows	proc stmt_row_seek(stmt: PSTMT; offset: ROW_OFFSET): ROW_OFFSET		1094
+nim	stmt_row_tell	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_row_tell,PSTMT	proc stmt_row_tell(stmt: PSTMT): ROW_OFFSET		1096
+nim	stmt_data_seek	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_data_seek,PSTMT,my_ulonglong	proc stmt_data_seek(stmt: PSTMT; offset: my_ulonglong)		1098
+nim	stmt_num_rows	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_num_rows,PSTMT	proc stmt_num_rows(stmt: PSTMT): my_ulonglong		1100
+nim	stmt_affected_rows	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_affected_rows,PSTMT	proc stmt_affected_rows(stmt: PSTMT): my_ulonglong		1102
+nim	stmt_insert_id	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_insert_id,PSTMT	proc stmt_insert_id(stmt: PSTMT): my_ulonglong		1104
+nim	stmt_field_count	v2/query_builder/libs/mysql/mysql_rdb.html#stmt_field_count,PSTMT	proc stmt_field_count(stmt: PSTMT): cuint		1106
+nim	commit	v2/query_builder/libs/mysql/mysql_rdb.html#commit,PMySQL	proc commit(MySQL: PMySQL): my_bool		1108
+nim	rollback	v2/query_builder/libs/mysql/mysql_rdb.html#rollback,PMySQL	proc rollback(MySQL: PMySQL): my_bool		1109
+nim	autocommit	v2/query_builder/libs/mysql/mysql_rdb.html#autocommit,PMySQL,my_bool	proc autocommit(MySQL: PMySQL; auto_mode: my_bool): my_bool		1110
+nim	more_results	v2/query_builder/libs/mysql/mysql_rdb.html#more_results,PMySQL	proc more_results(MySQL: PMySQL): my_bool		1112
+nim	next_result	v2/query_builder/libs/mysql/mysql_rdb.html#next_result,PMySQL	proc next_result(MySQL: PMySQL): cint		1114
+nim	close	v2/query_builder/libs/mysql/mysql_rdb.html#close,PMySQL	proc close(sock: PMySQL)		1115
+nim	NO_DATA	v2/query_builder/libs/mysql/mysql_rdb.html#NO_DATA	const NO_DATA		1118
+nim	DATA_TRUNCATED	v2/query_builder/libs/mysql/mysql_rdb.html#DATA_TRUNCATED	const DATA_TRUNCATED		1119
+nim	reload	v2/query_builder/libs/mysql/mysql_rdb.html#reload,PMySQL	proc reload(x: PMySQL): cint		1121
+nim	net_safe_read	v2/query_builder/libs/mysql/mysql_rdb.html#net_safe_read,PMySQL	proc net_safe_read(MySQL: PMySQL): cuint		1129

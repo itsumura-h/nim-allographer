@@ -95,6 +95,9 @@
   <li><a class="reference" href="#query%2CPPGconn%2Cstring%2CJsonNode%2Cint" title="query(db: PPGconn; query: string; args: JsonNode; timeout: int): Future[
     (seq[Row], DbRows)]">query(db: PPGconn; query: string; args: JsonNode; timeout: int): Future[
     (seq[Row], DbRows)]</a></li>
+<li><a class="reference" href="#query%2CPPGconn%2Cstring%2Cseq%5Bstring%5D%2Cint" title="query(db: PPGconn; query: string; args: seq[string]; timeout: int): Future[
+    (seq[Row], DbRows)]">query(db: PPGconn; query: string; args: seq[string]; timeout: int): Future[
+    (seq[Row], DbRows)]</a></li>
 
 </ul>
 <ul class="simple nested-toc-section">queryPlain
@@ -237,6 +240,16 @@
     
   </dd>
 </div>
+<div id="query,PPGconn,string,seq[string],int">
+  <dt><pre><span class="Keyword">proc</span> <a href="#query%2CPPGconn%2Cstring%2Cseq%5Bstring%5D%2Cint"><span class="Identifier">query</span></a><span class="Other">(</span><span class="Identifier">db</span><span class="Other">:</span> <a href="postgres_rdb.html#PPGconn"><span class="Identifier">PPGconn</span></a><span class="Other">;</span> <span class="Identifier">query</span><span class="Other">:</span> <span class="Identifier">string</span><span class="Other">;</span> <span class="Identifier">args</span><span class="Other">:</span> <span class="Identifier">seq</span><span class="Other">[</span><span class="Identifier">string</span><span class="Other">]</span><span class="Other">;</span> <span class="Identifier">timeout</span><span class="Other">:</span> <span class="Identifier">int</span><span class="Other">)</span><span class="Other">:</span> <span class="Identifier">Future</span><span class="Other">[</span>
+    <span class="Other">(</span><span class="Identifier">seq</span><span class="Other">[</span><a href="../../models/database_types.html#Row"><span class="Identifier">Row</span></a><span class="Other">]</span><span class="Other">,</span> <a href="../../models/database_types.html#DbRows"><span class="Identifier">DbRows</span></a><span class="Other">)</span><span class="Other">]</span> {.<span><span class="Other pragmadots">...</span></span><span class="pragmawrap"><span class="Identifier">stackTrace</span><span class="Other">:</span> <span class="DecNumber">false</span><span class="Other">,</span> <span class="Identifier">raises</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">Exception</span><span class="Other">,</span> <span class="Identifier">ValueError</span><span class="Other">]</span><span class="Other">,</span>
+                          <span class="Identifier">tags</span><span class="Other">:</span> <span class="Other">[</span><span class="Identifier">TimeEffect</span><span class="Other">,</span> <span class="Identifier">RootEffect</span><span class="Other">]</span><span class="Other">,</span> <span class="Identifier">forbids</span><span class="Other">:</span> <span class="Other">[</span><span class="Other">]</span></span>.}</pre></dt>
+  <dd>
+    
+    
+    
+  </dd>
+</div>
 
 </div>
 <div id="queryPlain-procs-all">
@@ -288,7 +301,7 @@
       <div class="twelve-columns footer">
         <span class="nim-sprite"></span>
         <br>
-        <small style="color: var(--hint);">Made with Nim. Generated: 2023-10-02 23:57:38 UTC</small>
+        <small style="color: var(--hint);">Made with Nim. Generated: 2024-04-26 16:50:30 UTC</small>
       </div>
     </div>
   </div>

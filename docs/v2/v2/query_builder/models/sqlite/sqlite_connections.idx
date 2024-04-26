@@ -1,5 +1,0 @@
-nimTitle	sqlite_connections	v2/query_builder/models/sqlite/sqlite_connections.html	module src/allographer/v2/query_builder/models/sqlite/sqlite_connections		0
-nim	`$`	v2/query_builder/models/sqlite/sqlite_connections.html#$	proc `$`(self: SqliteConnections | SqliteQuery): string		5
-nim	select	v2/query_builder/models/sqlite/sqlite_connections.html#select,SqliteConnections,varargs[string]	proc select(self: SqliteConnections; columnsArg: varargs[string]): SqliteQuery		9
-nim	table	v2/query_builder/models/sqlite/sqlite_connections.html#table,SqliteConnections,string	proc table(self: SqliteConnections; tableArg: string): SqliteQuery		30
-nim	raw	v2/query_builder/models/sqlite/sqlite_connections.html#raw,SqliteConnections,string	proc raw(self: SqliteConnections; sql: string; arges = newJArray()): RawSqliteQuery		47

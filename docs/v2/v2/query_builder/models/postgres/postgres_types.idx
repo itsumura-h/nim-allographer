@@ -1,7 +1,8 @@
 nimTitle	postgres_types	v2/query_builder/models/postgres/postgres_types.html	module src/allographer/v2/query_builder/models/postgres/postgres_types		0
 nim	PostgreSQL	v2/query_builder/models/postgres/postgres_types.html#PostgreSQL	object PostgreSQL		6
-nim	PostgresConnection	v2/query_builder/models/postgres/postgres_types.html#PostgresConnection	object PostgresConnection		9
-nim	PostgresConnections	v2/query_builder/models/postgres/postgres_types.html#PostgresConnections	type PostgresConnections		16
-nim	`$`	v2/query_builder/models/postgres/postgres_types.html#$,PostgresConnections	proc `$`(self: PostgresConnections): string		24
-nim	PostgresQuery	v2/query_builder/models/postgres/postgres_types.html#PostgresQuery	type PostgresQuery		29
+nim	Connection	v2/query_builder/models/postgres/postgres_types.html#Connection	type Connection		9
+nim	Connections	v2/query_builder/models/postgres/postgres_types.html#Connections	type Connections		15
+nim	PostgresConnections	v2/query_builder/models/postgres/postgres_types.html#PostgresConnections	type PostgresConnections		21
+nim	PostgresQuery	v2/query_builder/models/postgres/postgres_types.html#PostgresQuery	type PostgresQuery		30
 nim	RawPostgresQuery	v2/query_builder/models/postgres/postgres_types.html#RawPostgresQuery	type RawPostgresQuery		41
+nim	`$`	v2/query_builder/models/postgres/postgres_types.html#$	proc `$`(self: PostgresConnections | PostgresQuery | RawPostgresQuery): string		52
