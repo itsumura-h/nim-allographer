@@ -129,12 +129,12 @@ echo rows[0].is_admin
 >> true                         # bool
 ```
 
-If DB response is empty, `get` and `getRaw` return empty seq, `find` and `first` return optional object.
+If DB response is empty, `get` return empty seq, `find` and `first` return optional object.
 ```nim
 let response = await rdb.table("test").get().orm(Typ).await
 assert response.len == 0
 
-let response = await rdb.raw("select * from users").getRaw().orm(Typ).await
+let response = await rdb.raw("select * from users").get().orm(Typ).await
 assert response.len == 0
 
 let response = await rdb.table("test").find(1).orm(Typ).await
