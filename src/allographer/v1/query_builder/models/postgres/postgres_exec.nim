@@ -372,7 +372,7 @@ proc get*(self: PostgresQuery):Future[seq[JsonNode]] {.async.} =
   try:
     self.log.logger(sql)
     return self.getAllRows(sql).await
-  except Exception:
+  except CatchableError:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -384,7 +384,7 @@ proc first*(self: PostgresQuery):Future[Option[JsonNode]] {.async.} =
   try:
     self.log.logger(sql)
     return self.getRow(sql).await
-  except Exception:
+  except CatchableError:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -397,7 +397,7 @@ proc find*(self: PostgresQuery, id:string, key="id"):Future[Option[JsonNode]] {.
   try:
     self.log.logger(sql)
     return self.getRow(sql).await
-  except Exception:
+  except CatchableError:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -414,7 +414,7 @@ proc getPlain*(self:PostgresQuery):Future[seq[seq[string]]] {.async.} =
   try:
     self.log.logger(sql)
     return self.getAllRowsPlain(sql, self.placeHolder).await
-  except Exception:
+  except CatchableError:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -426,7 +426,7 @@ proc firstPlain*(self:PostgresQuery):Future[seq[string]] {.async.} =
   try:
     self.log.logger(sql)
     return self.getRowPlain(sql, self.placeHolder).await
-  except Exception:
+  except CatchableError:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -439,7 +439,7 @@ proc findPlain*(self:PostgresQuery, id: string, key="id"):Future[seq[string]] {.
   try:
     self.log.logger(sql)
     return self.getRowPlain(sql, self.placeHolder).await
-  except Exception:
+  except CatchableError:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
@@ -513,7 +513,7 @@ proc columns*(self:PostgresQuery):Future[seq[string]] {.async.} =
   try:
     self.log.logger(sql)
     return self.getColumn(sql).await
-  except Exception:
+  except CatchableError:
     self.log.echoErrorMsg(sql)
     self.log.echoErrorMsg( getCurrentExceptionMsg() )
     raise getCurrentException()
