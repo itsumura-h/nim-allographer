@@ -5,13 +5,14 @@ author        = "Hidenobu Itsumura @dumblepytech1 as 'medy'"
 description   = "A Nim query builder library inspired by Laravel/PHP and Orator/Python"
 license       = "MIT"
 srcDir        = "src"
-# backend       = "c"
-# bin           = @["allographer/cli/dbtool"]
+backend       = "c"
+bin           = @["allographer/cli/allographer"]
 # binDir        = "src/bin"
-# installExt    = @["nim"]
-# skipDirs      = @["allographer/cli"]
+installExt    = @["nim"]
+skipDirs      = @["allographer/cli"]
 
 # Dependencies
+requires "cligen >= 1.7.0"
 
 requires "nim >= 1.2.0"
 when (NimMajor, NimMinor) > (1, 6):
