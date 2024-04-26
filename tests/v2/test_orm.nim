@@ -6,7 +6,7 @@ import std/unittest
 import std/asyncdispatch
 import std/json
 import std/options
-import ../src/allographer/query_builder
+import ../../src/allographer/query_builder
 
 suite("test orm"):
   test("seq[JsonNode]"):
