@@ -5,6 +5,7 @@ services:
       dockerfile: ./docker/ubuntu/test.Dockerfile
       args:
         NIM_VERSION: 1.6.20
+    tty: true
     volumes:
       - .:/root/project
     depends_on:
@@ -19,6 +20,7 @@ services:
       dockerfile: ./docker/ubuntu/test.Dockerfile
       args:
         NIM_VERSION: 2.2.0
+    tty: true
     volumes:
       - .:/root/project
     depends_on:
