@@ -9,8 +9,6 @@ RUN apt install -y \
     gcc \
     xz-utils \
     ca-certificates \
-    vim \
-    curl \
     git \
     sqlite3 \
     libpq-dev \
@@ -25,15 +23,10 @@ RUN rm -f init.sh
 ENV PATH $PATH:/root/.nimble/bin
 RUN choosenim ${NIM_VERSION}
 
-# nimlangserver
-WORKDIR /root
-RUN curl -o nimlangserver.tar.gz -L https://github.com/nim-lang/langserver/releases/download/v1.6.0/nimlangserver-1.6.0-linux-amd64.tar.gz
-RUN tar zxf nimlangserver.tar.gz
-RUN rm -f nimlangserver.tar.gz
-RUN mv nimlangserver /root/.nimble/bin/
-
 WORKDIR /root/project
 COPY ./allographer.nimble .
 RUN nimble install -y -d
 
 RUN git config --global --add safe.directory /root/project
+
+WORKDIR /root/project

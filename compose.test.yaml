@@ -1,12 +1,10 @@
-version: '3'
 services:
   app-ubuntu-v1:
     build:
       context: .
-      dockerfile: ./docker/ubuntu/Dockerfile
+      dockerfile: ./docker/ubuntu/test.Dockerfile
       args:
-        VERSION: 1.6.16
-    tty: true
+        NIM_VERSION: 1.6.20
     volumes:
       - .:/root/project
     depends_on:
@@ -15,13 +13,12 @@ services:
       - mariadb
       - surreal
 
-  app-ubuntu:
+  app-ubuntu-v2:
     build:
       context: .
-      dockerfile: ./docker/ubuntu/Dockerfile
+      dockerfile: ./docker/ubuntu/test.Dockerfile
       args:
-        VERSION: 2.0.0
-    tty: true
+        NIM_VERSION: 2.2.0
     volumes:
       - .:/root/project
     depends_on:
