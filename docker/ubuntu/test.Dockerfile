@@ -9,6 +9,7 @@ RUN apt install -y \
     gcc \
     xz-utils \
     ca-certificates \
+    curl \
     git \
     sqlite3 \
     libpq-dev \
