@@ -2,6 +2,8 @@ discard """
   cmd: "nim c -d:reset -d:ssl -r $file"
 """
 
+# nim c -d:reset -d:ssl -r tests/v2/mysql/test_query.nim
+
 import std/unittest
 import std/asyncdispatch
 import std/httpclient
