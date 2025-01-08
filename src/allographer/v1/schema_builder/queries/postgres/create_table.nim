@@ -16,6 +16,7 @@ proc createTable*(self: PostgresSchema, isReset:bool) =
   var query = ""
   var foreignQuery = ""
   var indexQuery:seq[string] = @[]
+  var updatedAtQuery:seq[string] = @[]
 
   for i, column in self.table.columns:
     if query.len > 0: query.add(", ")
@@ -27,6 +28,9 @@ proc createTable*(self: PostgresSchema, isReset:bool) =
     
     if column.isIndex:
       indexQuery.add(createIndexString(self.table, column))
+
+    if column.isUpdatedAt:
+      updatedAtQuery.add(createUpdatedAtString(self.table, column))
 
   if self.table.primary.len > 0:
     let primary = self.table.primary.map(
@@ -47,6 +51,9 @@ proc createTable*(self: PostgresSchema, isReset:bool) =
 
   if indexQuery.len > 0:
     queries.add(indexQuery)
+
+  if updatedAtQuery.len > 0:
+    queries.add(updatedAtQuery)
 
   let schema = $self.table.toSchema()
   let checksum = $schema.secureHash()

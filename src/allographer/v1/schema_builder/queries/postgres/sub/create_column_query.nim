@@ -247,8 +247,8 @@ proc createTimestampColumn(column:Column, table:Table):string =
 
 
 proc createTimestampsColumn(column:Column, table:Table):string =
-  result = "\"created_at\" TIMESTAMP, "
-  result.add("\"updated_at\" TIMESTAMP DEFAULT (NOW())")
+  result = "\"created_at\" TIMESTAMP DEFAULT CURRENT_TIMESTAMP, "
+  result.add("\"updated_at\" TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
 
 
 proc createSoftDeleteColumn(column:Column, table:Table):string =
@@ -370,6 +370,23 @@ proc indexColumn(column:Column, table:Table):string =
   return &"CREATE INDEX IF NOT EXISTS \"{table.name}_{column.name}_index\" ON \"{table.name}\"(\"{column.name}\")"
 
 
+proc updatedAtColumn(column:Column, table:Table):seq[string] =
+  return @[
+    &"""CREATE OR REPLACE FUNCTION {table.name}_updated_at_column()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        NEW.updated_at = CURRENT_TIMESTAMP;
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;""",
+    
+    &"""CREATE TRIGGER set_{table.name}_updated_at
+    BEFORE UPDATE ON "{table.name}"
+    FOR EACH ROW
+    EXECUTE FUNCTION {table.name}_updated_at_column();"""
+  ]
+
+
 proc createColumnString*(table:Table, column:Column):string =
   case column.typ:
     # int
@@ -439,3 +456,6 @@ proc createForeignString*(table:Table, column:Column):string =
 
 proc createIndexString*(table:Table, column:Column):string =
   return column.indexColumn(table)
+
+proc createUpdatedAtString*(table:Table, column:Column):seq[string] =
+  return column.updatedAtColumn(table)

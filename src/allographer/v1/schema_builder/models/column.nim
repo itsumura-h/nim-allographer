@@ -11,6 +11,7 @@ type Column* = ref object
   isUnique*: bool
   isAutoIncrement*:bool
   isDefault*: bool
+  isUpdatedAt*: bool
   defaultBool*: bool
   defaultInt*: int
   defaultFloat*: float
@@ -41,6 +42,7 @@ proc toSchema*(self:Column):JsonNode =
     "isUnique": self.isUnique,
     "isAutoIncrement": self.isAutoIncrement,
     "isDefault": self.isDefault,
+    "isUpdatedAt": self.isUpdatedAt,
     "defaultBool": self.defaultBool,
     "defaultInt": self.defaultInt,
     "defaultFloat": self.defaultFloat,
