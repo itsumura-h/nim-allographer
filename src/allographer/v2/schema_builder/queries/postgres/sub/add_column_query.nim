@@ -400,6 +400,23 @@ proc addForeignKey(column:Column, table:Table):string =
   return &"ALTER TABLE \"{table.name}\" ADD FOREIGN KEY (\"{column.name}\") REFERENCES \"{refTable}\"(\"{refColumn}\") ON DELETE {onDeleteString}"
 
 
+proc addUpdatedAtColumn(column:Column, table:Table):seq[string] =
+  return @[
+    &"""CREATE OR REPLACE FUNCTION {table.name}_updated_at_column()
+    RETURNS TRIGGER AS $$
+    BEGIN
+        NEW.updated_at = CURRENT_TIMESTAMP;
+        RETURN NEW;
+    END;
+    $$ LANGUAGE plpgsql;""",
+
+    &"""CREATE TRIGGER set_{table.name}_updated_at
+    BEFORE UPDATE ON "{table.name}"
+    FOR EACH ROW
+    EXECUTE FUNCTION {table.name}_updated_at_column();"""
+  ]
+
+
 proc addIndexColumn(column:Column, table:Table):string =
   return &"CREATE INDEX IF NOT EXISTS \"{table.name}_{column.name}_index\" ON \"{table.name}\"(\"{column.name}\")"
 
@@ -471,5 +488,8 @@ proc addColumnString*(table:Table, column:Column):seq[string] =
 
   if column.isIndex:
     queries.add(column.addIndexColumn(table))
+
+  if column.isUpdatedAt:
+    queries.add(column.addUpdatedAtColumn(table))
 
   return queries

@@ -22,9 +22,10 @@ RUN apt install -y \
 # ca-certificates... for https
 # libpcre3-dev... for nim regex
 
+WORKDIR /root
+
 # Nim
 ARG NIM_VERSION="2.0.0"
-WORKDIR /root
 RUN curl https://nim-lang.org/choosenim/init.sh -o init.sh
 RUN sh init.sh -y
 RUN rm -f init.sh
@@ -32,7 +33,7 @@ ENV PATH $PATH:/root/.nimble/bin
 RUN choosenim ${NIM_VERSION}
 
 # nimlangserver
-WORKDIR /root
+# https://github.com/nim-lang/langserver/releases
 RUN curl -o nimlangserver.tar.gz -L https://github.com/nim-lang/langserver/releases/download/v1.6.0/nimlangserver-1.6.0-linux-amd64.tar.gz
 RUN tar zxf nimlangserver.tar.gz
 RUN rm -f nimlangserver.tar.gz
