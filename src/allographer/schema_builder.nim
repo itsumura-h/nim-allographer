@@ -24,6 +24,7 @@ when NimMajor == 2:
     import ./v2/schema_builder/usecases/mariadb/create as mariadb_crate; export mariadb_crate
     import ./v2/schema_builder/usecases/mariadb/alter as mariadb_alter; export mariadb_alter
     import ./v2/schema_builder/usecases/mariadb/drop as mariadb_drop; export mariadb_drop
+    import ./v2/schema_builder/usecases/mariadb/create_schema as mariadb_create_schema; export mariadb_create_schema
 
   when isExistsMysql:
     import ./v2/query_builder/models/mysql/mysql_types; export MySql, MysqlConnections
