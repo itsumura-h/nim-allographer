@@ -85,6 +85,7 @@ proc query():Future[seq[JsonNode]] {.async.} =
   )
   return response
 
+
 proc queryRaw():Future[seq[JsonNode]] {.async.} =
   var futures = newSeq[Future[seq[string]]](countNum)
   for i in 1..countNum:
@@ -181,6 +182,7 @@ proc timeProcess[T](name:string, cb:proc():Future[T]) {.async.}=
   echo resultStr
   echo fmt"|Avg|{sumTime / times}|"
   echo ""
+
 
 proc main() =
   migrate().waitFor

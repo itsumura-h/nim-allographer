@@ -16,17 +16,16 @@ proc main(){.async.} =
       Column.string("name").nullable(),
       Column.string("email").nullable(),
       Column.string("address").nullable(),
-      Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+      Column.foreign("auth_id").reference("id").onTable("auth").onDelete(SET_NULL)
     ])
   )
 
   # seeder
   seeder rdb, "auth":
-    rdb.table("auth").inserts(@[
+    rdb.table("auth").insert(@[
       %*{"auth": "admin"},
       %*{"auth": "user"}
-    ])
-    .waitFor
+    ]).waitFor
 
   seeder rdb, "users":
     var users: seq[JsonNode]
@@ -42,9 +41,9 @@ proc main(){.async.} =
     rdb.table("users").insert(users).waitFor
 
   echo "====="
-  transaction rdb:
+  transaction(rdb):
     assert rdb.isInTransaction == true
-    echo rdb.table("users").select("name", "email").where("id", "=", 2).get().await
+    echo rdb.select("name", "email").table("users").where("id", "=", 2).get().await
 
   echo "====="
   transaction rdb:
