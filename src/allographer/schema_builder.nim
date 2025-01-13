@@ -16,6 +16,7 @@ when NimMajor == 2:
     import ./v2/schema_builder/usecases/postgres/create as postgres_crate; export postgres_crate
     import ./v2/schema_builder/usecases/postgres/alter as postgres_alter; export postgres_alter
     import ./v2/schema_builder/usecases/postgres/drop as postgres_drop; export postgres_drop
+    import ./v2/schema_builder/usecases/postgres/create_schema as postgres_create_schema; export postgres_create_schema
 
   when isExistsMariadb:
     import ./v2/query_builder/models/mariadb/mariadb_types; export MariaDB, MariadbConnections
