@@ -16,16 +16,16 @@ proc postSeeder*() {.async.} =
   if users.len == 0:
     raise newException(ValueError, "No users found in database")
 
-  var posts: seq[JsonNode]
-  for i in 0..<users.len:
+  var postList: seq[JsonNode]
+  for i in 1..users.len:
     let row = PostTable(
       id: $genOid(),
       title: &"post {i}",
       content: &"content {i}",
-      user_id: users[i].id,
-      created_at: now().format("yyyy-MM-dd HH:mm:ss"),
-      updated_at: now().format("yyyy-MM-dd HH:mm:ss")
+      userId: users[i-1].id,
+      createdAt: now().toTime().toUnix(),
+      updatedAt: now().toTime().toUnix()
     )
-    posts.add(%row)
+    postList.add(%row)
   
-  rdb.table("post").insert(posts).await
+  rdb.table("post").insert(postList).await

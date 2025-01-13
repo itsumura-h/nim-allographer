@@ -9,13 +9,15 @@ proc init_databaase*() =
       Column.string("name"),
       Column.string("email"),
       Column.string("password"),
-      Column.timestamps(),
+      Column.integer("created_at").index(),
+      Column.integer("updated_at").index(),
     ]),
     table("post", [
       Column.uuid("id").index(),
       Column.string("title"),
       Column.string("content"),
       Column.strForeign("user_id").reference("id").onTable("user"),
-      Column.timestamps(),
+      Column.integer("created_at").index(),
+      Column.integer("updated_at").index(),
     ])
   ])
