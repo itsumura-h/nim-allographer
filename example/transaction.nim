@@ -21,13 +21,13 @@ proc main(){.async.} =
   )
 
   # seeder
-  seeder rdb, "auth":
+  seeder(rdb, "auth"):
     rdb.table("auth").insert(@[
       %*{"auth": "admin"},
       %*{"auth": "user"}
     ]).waitFor
 
-  seeder rdb, "users":
+  seeder(rdb, "users"):
     var users: seq[JsonNode]
     for i in 1..10:
       let authId = if i mod 2 == 0: 2 else: 1
@@ -46,7 +46,7 @@ proc main(){.async.} =
     echo rdb.select("name", "email").table("users").where("id", "=", 2).get().await
 
   echo "====="
-  transaction rdb:
+  transaction(rdb):
     assert rdb.isInTransaction == true
     rdb.table("table").insert(%*{"aaa": "bbb"}).await
     echo rdb.table("aaa").get().await
