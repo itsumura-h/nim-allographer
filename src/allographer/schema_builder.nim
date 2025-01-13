@@ -10,6 +10,7 @@ when NimMajor == 2:
     import ./v2/schema_builder/usecases/sqlite/create as sqlite_crate; export sqlite_crate
     import ./v2/schema_builder/usecases/sqlite/alter as sqlite_alter; export sqlite_alter
     import ./v2/schema_builder/usecases/sqlite/drop as sqlite_drop; export sqlite_drop
+    import ./v2/schema_builder/usecases/sqlite/create_schema as sqlite_create_schema; export sqlite_create_schema
 
   when isExistsPostgres:
     import ./v2/query_builder/models/postgres/postgres_types; export PostgreSQL, PostgresConnections

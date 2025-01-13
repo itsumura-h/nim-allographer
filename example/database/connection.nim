@@ -11,5 +11,5 @@ let
   maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
   timeout = getEnv("DB_TIMEOUT").parseInt
 
-# let rdb* = dbOpen(SQLite3, "./db.sqlite3", shouldDisplayLog=true)
-let rdb* = dbOpen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=true)
+let rdb* = dbOpen(SQLite3, "./db.sqlite3", shouldDisplayLog=true)
+# let rdb* = dbOpen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=true)
