@@ -31,6 +31,7 @@ when NimMajor == 2:
     import ./v2/schema_builder/usecases/mysql/create as mysql_crate; export mysql_crate
     import ./v2/schema_builder/usecases/mysql/alter as mysql_alter; export mysql_alter
     import ./v2/schema_builder/usecases/mysql/drop as mysql_drop; export mysql_drop
+    import ./v2/schema_builder/usecases/mysql/create_schema as mysql_create_schema; export mysql_create_schema
 
   when isExistsSurrealdb:
     import ./v2/query_builder/models/surreal/surreal_types; export SurrealDB, SurrealConnections
