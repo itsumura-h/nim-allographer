@@ -292,6 +292,7 @@ suite($rdb & " primary"):
       )
     )
 
+
 rdb.raw("DROP TABLE IF EXISTS \"TypeIndex\"").exec().waitFor()
 rdb.raw("DROP TABLE IF EXISTS \"TypeUnique\"").exec().waitFor()
 rdb.raw("DROP TABLE IF EXISTS \"StrRelation\"").exec().waitFor()

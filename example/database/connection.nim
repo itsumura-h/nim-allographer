@@ -15,7 +15,7 @@ let
   timeout = getEnv("DB_TIMEOUT").parseInt
 
 # let rdb* = dbOpen(SQLite3, "./db.sqlite3", shouldDisplayLog=true)
-# let rdb* = dbOpen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=true)
+let rdb* = dbOpen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=true)
 # let rdb* = dbOpen(Mariadb, database, user, password, mariaHost, myPort, maxConnections, timeout, shouldDisplayLog=true)
 # let rdb* = dbOpen(Mariadb, database, user, password, mariaHost, myPort, maxConnections, timeout, shouldDisplayLog=true)
-let rdb* = dbOpen(SurrealDB, "test", "test", "user", "pass", "http://surreal", 8000, 5, 30, shouldDisplayLog=true).waitFor()
+# let rdb* = dbOpen(SurrealDB, "test", "test", "user", "pass", "http://surreal", 8000, 5, 30, shouldDisplayLog=true).waitFor()
