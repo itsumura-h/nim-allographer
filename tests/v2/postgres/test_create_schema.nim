@@ -67,7 +67,7 @@ suite "Schema output after migration":
     # ファイル内容の検証
     let schemaContent = readFile(schemaFilePath)
     echo "schemaContent: ", schemaContent
-    check schemaContent.contains("type TestSchemaOutput* = object")
+    check schemaContent.contains("type TestSchemaOutputTable* = object")
     check schemaContent.contains("integer*: int")
     check schemaContent.contains("smallInteger*: int")
     check schemaContent.contains("mediumInteger*: int")
