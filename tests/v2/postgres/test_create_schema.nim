@@ -9,7 +9,7 @@ import std/strutils
 import std/json
 import ../../../src/allographer/schema_builder
 import ./connection
-
+import ./clear_tables
 let rdb = postgres
 let schemaFilePath = getCurrentDir() / "schema.nim"
 
@@ -96,11 +96,7 @@ suite "Schema output after migration":
     check schemaContent.contains("str_relation_id*: string")
 
 
-rdb.drop(
-  table("TestSchemaOutput"),
-  table("IntRelation"),
-  table("StrRelation")
-)
+clearTables(rdb).waitFor()
 # schema.nim ファイルの削除
 if fileExists(schemaFilePath):
   removeFile(schemaFilePath)
