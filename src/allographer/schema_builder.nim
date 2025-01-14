@@ -38,6 +38,7 @@ when NimMajor == 2:
     import ./v2/schema_builder/usecases/surreal/create as surreal_crate; export surreal_crate
     import ./v2/schema_builder/usecases/surreal/alter as surreal_alter; export surreal_alter
     import ./v2/schema_builder/usecases/surreal/drop as surreal_drop; export surreal_drop
+    import ./v2/schema_builder/usecases/surreal/create_schema as surreal_create_schema; export surreal_create_schema
 elif NimMajor == 1:
   import ./v1/schema_builder/enums; export enums
   import ./v1/schema_builder/models/table; export table

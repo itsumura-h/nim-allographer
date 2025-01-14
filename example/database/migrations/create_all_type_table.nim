@@ -28,7 +28,7 @@ proc createAllTypeTable*() =
       Column.longText("longText").index().default("A"),
       Column.date("date").index().default(),
       Column.datetime("datetime").index().default(),
-      Column.time("time").index().default(),
+      # Column.time("time").index().default(),
       Column.timestamp("timestamp").index().default(),
       Column.timestamps(),
       Column.softDelete(),
