@@ -294,4 +294,4 @@ suite($rdb & " primary"):
     )
 
  
- clearTables(rdb).waitFor()
+clearTables(rdb).waitFor()
