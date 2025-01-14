@@ -21,9 +21,10 @@ RUN apt install -y \
 # ca-certificates... for https
 # libpcre3-dev... for nim regex
 
+WORKDIR /root
+
 # Nim
 ARG NIM_VERSION="2.0.0"
-WORKDIR /root
 RUN curl https://nim-lang.org/choosenim/init.sh -o init.sh
 RUN sh init.sh -y
 RUN rm -f init.sh

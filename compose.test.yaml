@@ -33,10 +33,10 @@ services:
     image: mysql:8
     tty: true
     environment:
+      MYSQL_ROOT_PASSWORD: root
       MYSQL_DATABASE: database
       MYSQL_USER: user
       MYSQL_PASSWORD: pass
-      MYSQL_ROOT_PASSWORD: pass
 
   mariadb:
     image: mariadb
