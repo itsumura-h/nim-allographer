@@ -49,13 +49,11 @@ proc generateSchemaCode(tablesInfo: Table[string, seq[tuple[name: string, typ: s
       continue
     if tableName == "sqlite_sequence":
       continue
-    echo "=".repeat(20)
-    
+
     code.add("\n\n")
     code.add(&"type {tableName.capitalizeAscii}* = object\n")
     code.add(&"  ## {tableName}\n")
     for col in columns:
-      echo col.name, ": ", col.typ.toLower()
       let nimType = 
         case col.typ.toLower()
         of "integer":

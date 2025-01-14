@@ -19,7 +19,6 @@ proc getTableInfo(rdb: MysqlConnections): Future[Table[string, seq[tuple[name: s
     
     for table in tables:
       let tableName = table["table_name"].getStr()
-      echo "tableName: ", tableName
 
       if tableName == "_allographer_migrations":
         continue
@@ -36,8 +35,7 @@ proc getTableInfo(rdb: MysqlConnections): Future[Table[string, seq[tuple[name: s
       )
       .get()
       .await
-      echo "columns: ", columns
-      
+
       var columnInfo: seq[tuple[name: string, typ: string]]
       for col in columns:
         columnInfo.add((
@@ -62,7 +60,6 @@ proc generateSchemaCode(tablesInfo: Table[string, seq[tuple[name: string, typ: s
     code.add(&"type {tableName.capitalizeAscii}* = object\n")
     code.add(&"  ## {tableName}\n")
     for col in columns:
-      echo col.name, ": ", col.typ.toLower()
       let nimType = 
         case col.typ.toLower()
         of "tinyint":

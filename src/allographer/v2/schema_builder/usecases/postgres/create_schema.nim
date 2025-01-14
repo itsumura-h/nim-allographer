@@ -61,7 +61,6 @@ proc generateSchemaCode(tablesInfo: Table[string, seq[tuple[name: string, typ: s
     code.add(&"type {tableName.capitalizeAscii}* = object\n")
     code .add(&"  ## {tableName}\n")
     for col in columns:
-      echo col.name, ": ", col.typ.toLower()
       let nimType = 
         case col.typ.toLower()
         of "smallint", "integer", "bigint":
