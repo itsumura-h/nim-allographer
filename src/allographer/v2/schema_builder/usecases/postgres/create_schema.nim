@@ -3,6 +3,7 @@ import std/strutils
 import std/strformat
 import std/json
 import std/tables
+import std/re
 import ../../../query_builder/models/postgres/postgres_types
 import ../../../query_builder/models/postgres/postgres_query
 import ../../../query_builder/models/postgres/postgres_exec
@@ -11,41 +12,35 @@ import ../../../query_builder/models/postgres/postgres_exec
 proc getTableInfo(rdb: PostgresConnections): Future[Table[string, seq[tuple[name: string, typ: string]]]] {.async.} =
   ## get table info
   var tablesInfo = initTable[string, seq[tuple[name: string, typ: string]]]()
+
+  # get table list
+  let tables = await rdb.raw(
+    "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"
+  ).get()
   
-  try:
-    # get table list
-    let tables = await rdb.raw(
-      "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"
-    ).get()
+  for table in tables:
+    let tableName = table["table_name"].getStr()
     
-    for table in tables:
-      let tableName = table["table_name"].getStr()
-      
-      # get column info
-      let columns = rdb.raw("""
-          SELECT column_name, data_type 
-          FROM information_schema.columns 
-          WHERE table_name = ? 
-          ORDER BY ordinal_position
-        """,
-        %*[tableName]
-      )
-      .get()
-      .await
-      
-      var columnInfo: seq[tuple[name: string, typ: string]]
-      for col in columns:
-        columnInfo.add((
-          name: col["column_name"].getStr(),
-          typ: col["data_type"].getStr()
-        ))
-      
-      tablesInfo[tableName] = columnInfo
-  
-  except Exception as e:
-    echo "Error fetching table info: ", e.msg
-    raise
-  
+    # get column info
+    let query = 
+      """SELECT column_name, data_type 
+        FROM information_schema.columns 
+        WHERE table_name = ? 
+        ORDER BY ordinal_position
+      """
+      .replace(re"\s{2,}", " ")
+    
+    let columns = rdb.raw(query, %*[tableName]).get().await
+    
+    var columnInfo: seq[tuple[name: string, typ: string]]
+    for col in columns:
+      columnInfo.add((
+        name: col["column_name"].getStr(),
+        typ: col["data_type"].getStr()
+      ))
+    
+    tablesInfo[tableName] = columnInfo
+
   return tablesInfo
 
 
@@ -82,13 +77,8 @@ proc generateSchemaCode(tablesInfo: Table[string, seq[tuple[name: string, typ: s
 
 proc createSchema*(rdb: PostgresConnections) {.async.} =
   ## create schema.nim
-  try:
-    let tablesInfo = await rdb.getTableInfo()
-    let schemaCode = generateSchemaCode(tablesInfo)
-    
-    writeFile("schema.nim", schemaCode)
-    echo "schema.nim generated successfully"
-    
-  except Exception as e:
-    echo "Error generating schema: ", e.msg
-    raise
+  let tablesInfo = rdb.getTableInfo().await
+  let schemaCode = generateSchemaCode(tablesInfo)
+  
+  writeFile("schema.nim", schemaCode)
+  echo "schema.nim generated successfully"
