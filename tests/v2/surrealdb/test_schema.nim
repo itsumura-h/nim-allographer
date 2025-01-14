@@ -2,6 +2,8 @@ discard """
   cmd: "nim c -d:reset -r $file"
 """
 
+# nim c -r -d:reset tests/v2/surrealdb/test_schema.nim
+
 import std/unittest
 import std/asyncdispatch
 import std/json
@@ -28,7 +30,7 @@ suite("SurrealDB create table"):
         Column.double("double", 10, 3).unsigned().index().default(1.1),
         Column.float("float").unsigned().index().default(1.1),
         Column.uuid("uuid").index().default("A"),
-        Column.char("char", 255).index().default("A"),
+        Column.char("char", 256).index().default("A"),
         Column.string("string").index().default("A"),
         Column.text("text").index().default("A"),
         Column.mediumText("mediumText").index().default("A"),
@@ -55,7 +57,7 @@ suite("SurrealDB create table"):
         Column.double("double", 10, 3).unsigned().index().unique().unique().default(1.1),
         Column.float("float").unsigned().index().unique().unique().default(1.1),
         Column.uuid("uuid").index().unique().unique().default("A"),
-        Column.char("char", 255).index().unique().unique().default("A"),
+        Column.char("char", 256).index().unique().unique().default("A"),
         Column.string("string").index().unique().unique().default("A"),
         Column.text("text").index().unique().unique().default("A"),
         Column.mediumText("mediumText").index().unique().unique().default("A"),
@@ -86,8 +88,8 @@ suite("SurrealDB create table"):
       check fields["double"].getStr ==        "DEFINE FIELD double ON TypeIndex TYPE decimal VALUE $value OR 1.1 ASSERT $value != NONE AND $value >= 0"
       check fields["float"].getStr ==         "DEFINE FIELD float ON TypeIndex TYPE float VALUE $value OR 1.1 ASSERT $value != NONE AND $value >= 0"
       check fields["uuid"].getStr ==          "DEFINE FIELD uuid ON TypeIndex TYPE string VALUE $value OR rand::uuid() ASSERT $value != NONE"
-      check fields["char"].getStr ==          "DEFINE FIELD char ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 255 AND $value != NONE"
-      check fields["string"].getStr ==        "DEFINE FIELD string ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 255 AND $value != NONE"
+      check fields["char"].getStr ==          "DEFINE FIELD char ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 256 AND $value != NONE"
+      check fields["string"].getStr ==        "DEFINE FIELD string ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 256 AND $value != NONE"
       check fields["text"].getStr ==          "DEFINE FIELD text ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["mediumText"].getStr ==    "DEFINE FIELD mediumText ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["longText"].getStr ==      "DEFINE FIELD longText ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
@@ -142,8 +144,8 @@ suite("SurrealDB create table"):
       check fields["double"].getStr ==        "DEFINE FIELD double ON TypeUnique TYPE decimal VALUE $value OR 1.1 ASSERT $value != NONE AND $value >= 0"
       check fields["float"].getStr ==         "DEFINE FIELD float ON TypeUnique TYPE float VALUE $value OR 1.1 ASSERT $value != NONE AND $value >= 0"
       check fields["uuid"].getStr ==          "DEFINE FIELD uuid ON TypeUnique TYPE string VALUE $value OR rand::uuid() ASSERT $value != NONE"
-      check fields["char"].getStr ==          "DEFINE FIELD char ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 255 AND $value != NONE"
-      check fields["string"].getStr ==        "DEFINE FIELD string ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 255 AND $value != NONE"
+      check fields["char"].getStr ==          "DEFINE FIELD char ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 256 AND $value != NONE"
+      check fields["string"].getStr ==        "DEFINE FIELD string ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 256 AND $value != NONE"
       check fields["text"].getStr ==          "DEFINE FIELD text ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["mediumText"].getStr ==    "DEFINE FIELD mediumText ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["longText"].getStr ==      "DEFINE FIELD longText ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
@@ -298,7 +300,7 @@ suite("SurrealDB alter table"):
         Column.double("double", 10, 3).unsigned().index().default(1.1).add(),
         Column.float("float").unsigned().index().default(1.1).add(),
         Column.uuid("uuid").index().default("A").add(),
-        Column.char("char", 255).index().default("A").add(),
+        Column.char("char", 256).index().default("A").add(),
         Column.string("string").index().default("A").add(),
         Column.text("text").index().default("A").add(),
         Column.mediumText("mediumText").index().default("A").add(),
@@ -325,7 +327,7 @@ suite("SurrealDB alter table"):
         Column.double("double", 10, 3).unsigned().index().unique().unique().default(1.1).add(),
         Column.float("float").unsigned().index().unique().unique().default(1.1).add(),
         Column.uuid("uuid").index().unique().unique().default("A").add(),
-        Column.char("char", 255).index().unique().unique().default("A").add(),
+        Column.char("char", 256).index().unique().unique().default("A").add(),
         Column.string("string").index().unique().unique().default("A").add(),
         Column.text("text").index().unique().unique().default("A").add(),
         Column.mediumText("mediumText").index().unique().unique().default("A").add(),
@@ -356,8 +358,8 @@ suite("SurrealDB alter table"):
       check fields["double"].getStr ==        "DEFINE FIELD double ON TypeIndex TYPE decimal VALUE $value OR 1.1 ASSERT $value != NONE AND $value >= 0"
       check fields["float"].getStr ==         "DEFINE FIELD float ON TypeIndex TYPE float VALUE $value OR 1.1 ASSERT $value != NONE AND $value >= 0"
       check fields["uuid"].getStr ==          "DEFINE FIELD uuid ON TypeIndex TYPE string VALUE $value OR rand::uuid() ASSERT $value != NONE"
-      check fields["char"].getStr ==          "DEFINE FIELD char ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 255 AND $value != NONE"
-      check fields["string"].getStr ==        "DEFINE FIELD string ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 255 AND $value != NONE"
+      check fields["char"].getStr ==          "DEFINE FIELD char ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 256 AND $value != NONE"
+      check fields["string"].getStr ==        "DEFINE FIELD string ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 256 AND $value != NONE"
       check fields["text"].getStr ==          "DEFINE FIELD text ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["mediumText"].getStr ==    "DEFINE FIELD mediumText ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["longText"].getStr ==      "DEFINE FIELD longText ON TypeIndex TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
@@ -412,8 +414,8 @@ suite("SurrealDB alter table"):
       check fields["double"].getStr ==        "DEFINE FIELD double ON TypeUnique TYPE decimal VALUE $value OR 1.1 ASSERT $value != NONE AND $value >= 0"
       check fields["float"].getStr ==         "DEFINE FIELD float ON TypeUnique TYPE float VALUE $value OR 1.1 ASSERT $value != NONE AND $value >= 0"
       check fields["uuid"].getStr ==          "DEFINE FIELD uuid ON TypeUnique TYPE string VALUE $value OR rand::uuid() ASSERT $value != NONE"
-      check fields["char"].getStr ==          "DEFINE FIELD char ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 255 AND $value != NONE"
-      check fields["string"].getStr ==        "DEFINE FIELD string ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 255 AND $value != NONE"
+      check fields["char"].getStr ==          "DEFINE FIELD char ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 256 AND $value != NONE"
+      check fields["string"].getStr ==        "DEFINE FIELD string ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT string::len($value) < 256 AND $value != NONE"
       check fields["text"].getStr ==          "DEFINE FIELD text ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["mediumText"].getStr ==    "DEFINE FIELD mediumText ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
       check fields["longText"].getStr ==      "DEFINE FIELD longText ON TypeUnique TYPE string VALUE $value OR 'A' ASSERT $value != NONE"
