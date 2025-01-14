@@ -11,4 +11,5 @@ proc seed() {.async.} =
   userSeeder().await
   postSeeder().await
 
+
 seed().waitFor()

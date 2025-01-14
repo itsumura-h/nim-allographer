@@ -1,60 +1,60 @@
 import std/json
 
-type IntRelation* = object
+type IntRelationTable* = object
   ## IntRelation
   id*: int
 
 
-type StrRelation* = object
+type StrRelationTable* = object
   ## StrRelation
   uuid*: string
 
 
-type User* = object
+type UserTable* = object
   ## user
-  created_at*: int
-  email*: string
   id*: string
   name*: string
+  email*: string
   password*: string
+  created_at*: int
   updated_at*: int
 
 
-type Types* = object
-  ## Types
-  bigInteger*: int
-  binary*: string
-  boolean*: bool
-  char*: string
-  created_at*: string
-  date*: string
-  datetime*: string
-  decimal*: float
-  deleted_at*: string
-  double*: float
-  enumField*: string
-  float*: float
-  id*: int
-  int_relation_id*: string
-  integer*: int
-  json*: JsonNode
-  longText*: string
-  mediumInteger*: int
-  mediumText*: string
-  smallInteger*: int
-  str_relation_id*: string
-  string*: string
-  text*: string
-  timestamp*: string
-  updated_at*: string
-  uuid*: string
-
-
-type Post* = object
+type PostTable* = object
   ## post
-  content*: string
-  created_at*: int
   id*: string
   title*: string
-  updated_at*: int
+  content*: string
   user_id*: string
+  created_at*: int
+  updated_at*: int
+
+
+type TypesTable* = object
+  ## Types
+  id*: int
+  integer*: int
+  smallInteger*: int
+  mediumInteger*: int
+  bigInteger*: int
+  decimal*: float
+  double*: float
+  float*: float
+  uuid*: string
+  char*: string
+  string*: string
+  text*: string
+  mediumText*: string
+  longText*: string
+  date*: string
+  datetime*: string
+  timestamp*: string
+  created_at*: string
+  updated_at*: string
+  deleted_at*: string
+  binary*: string
+  boolean*: bool
+  enumField*: string
+  json*: JsonNode
+  int_relation_id*: int
+  str_relation_id*: string
