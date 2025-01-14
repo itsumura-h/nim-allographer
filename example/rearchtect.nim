@@ -31,17 +31,17 @@ proc main() {.async.} =
 
   rdb.table("test").insert(%*{"blob":binaryImage, "int": 1, "float": 1.1, "str": "alice"}).await
 
-  let res = rdb.table("test").select("id", "int", "float", "str").get().await
+  let res = rdb.select("id", "int", "float", "str").table("test").get().await
   for row in res:
     echo row
 
-  var row = rdb.table("test").select("id", "int", "float", "str").first().await
+  var row = rdb.select("id", "int", "float", "str").table("test").first().await
   if row.isSome:
     echo row.get
 
   rdb.table("test").where("id", "=", 1).update(%*{"str": "bob"}).await
 
-  row = rdb.table("test").select("id", "int", "float", "str").find(1).await
+  row = rdb.select("id", "int", "float", "str").table("test").find(1).await
   if row.isSome:
     echo row.get
 

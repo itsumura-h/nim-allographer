@@ -767,5 +767,5 @@ template seeder*(rdb:SqliteConnections, tableName:string, body:untyped):untyped 
 template seeder*(rdb:SqliteConnections, tableName, column:string, body:untyped):untyped =
   ## The `seeder` block allows the code in the block to work only when the table or specified column is empty.
   block:
-    if rdb.table(tableName).select(column).count().waitFor == 0:
+    if rdb.select(column).table(tableName).count().waitFor == 0:
       body

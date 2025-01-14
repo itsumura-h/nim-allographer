@@ -138,7 +138,7 @@ proc char*(_:type Column, name:string, maxLength:int): Column =
   return column
 
 
-proc string*(_:type Column, name:string, length=255):Column =
+proc string*(_:type Column, name:string, length=256):Column =
   let column = Column.new()
   column.name = name
   column.typ = rdbString
@@ -151,7 +151,7 @@ proc uuid*(_:type Column, name:string):Column =
   column.name = name
   column.typ = rdbUuid
   column.isUnique = true
-  column.info = %*{"maxLength": 255}
+  column.info = %*{"maxLength": 256}
   return column
 
 
@@ -265,7 +265,7 @@ proc foreign*(_:type Column, name:string):Column =
   return column
 
 
-proc strForeign*(_:type Column, name:string, length=255):Column =
+proc strForeign*(_:type Column, name:string, length=256):Column =
   let column = Column.new()
   column.name = name
   column.previousName = name

@@ -11,6 +11,7 @@ import std/asyncdispatch
 import ../../../src/allographer/schema_builder
 import ../../../src/allographer/query_builder
 import ./connection
+import ./clear_tables
 
 
 proc setUp(rdb:MysqlConnections) =
@@ -121,5 +122,4 @@ suite("transaction"):
       )().waitFor()
 
 
-rdb.raw("DROP TABLE `user`").exec().waitFor()
-rdb.raw("DROP TABLE `auth`").exec().waitFor()
+clearTables(rdb).waitFor()
