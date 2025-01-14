@@ -8,8 +8,8 @@ import std/os
 import std/strutils
 import std/json
 import ../../../src/allographer/schema_builder
-import ../../../src/allographer/query_builder
 import ./connection
+
 
 let rdb = mariadb
 let schemaFilePath = getCurrentDir() / "schema.nim"

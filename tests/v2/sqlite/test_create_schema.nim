@@ -10,7 +10,7 @@ import std/json
 import ../../../src/allographer/schema_builder
 import ./connection
 
-let rdb = postgres
+let rdb = sqlite
 let schemaFilePath = getCurrentDir() / "schema.nim"
 
 suite "Schema output after migration":

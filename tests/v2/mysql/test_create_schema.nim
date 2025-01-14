@@ -10,7 +10,7 @@ import std/json
 import ../../../src/allographer/schema_builder
 import ./connection
 
-let rdb = postgres
+let rdb = mysql
 let schemaFilePath = getCurrentDir() / "schema.nim"
 
 suite "Schema output after migration":
@@ -91,7 +91,7 @@ suite "Schema output after migration":
     check schemaContent.contains("binary*: string")
     check schemaContent.contains("boolean*: bool")
     check schemaContent.contains("enumField*: string")
-    check schemaContent.contains("json*: JsonNode")
+    check schemaContent.contains("json*: string")
     check schemaContent.contains("int_relation_id*: int")
     check schemaContent.contains("str_relation_id*: string")
 
