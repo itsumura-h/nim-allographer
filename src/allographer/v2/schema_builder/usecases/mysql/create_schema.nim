@@ -18,7 +18,7 @@ proc getTableInfo(rdb: MysqlConnections): Future[Table[string, seq[tuple[name: s
   ).get()
   
   for table in tables:
-    let tableName = table["table_name"].getStr()
+    let tableName = table["TABLE_NAME"].getStr()
 
     if tableName == "_allographer_migrations":
       continue
@@ -38,8 +38,8 @@ proc getTableInfo(rdb: MysqlConnections): Future[Table[string, seq[tuple[name: s
     var columnInfo: seq[tuple[name: string, typ: string]]
     for col in columns:
       columnInfo.add((
-        name: col["column_name"].getStr(),
-        typ: col["data_type"].getStr()
+        name: col["COLUMN_NAME"].getStr(),
+        typ: col["DATA_TYPE"].getStr()
       ))
     
     tablesInfo[tableName] = columnInfo
