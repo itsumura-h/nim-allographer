@@ -125,6 +125,18 @@ suite($rdb & " get"):
     check user10.get()["email"].getStr() == "user10@example.com"
 
 
+  test("select count"):
+    var t = rdb.raw("SELECT count(`id`) as `count` FROM `user` GROUP ALL").get().waitFor
+    echo t
+    check t[0]["count"].getInt() == 10
+
+
+  test("select max"):
+    var t = rdb.raw("SELECT math::max(`index`) as `max` FROM `user` GROUP ALL").get().waitFor
+    echo t
+    check t[0]["max"].getInt() == 10
+
+
   test("where string"):
     let admin = rdb.table("auth").where("name", "=", "admin").first().waitFor().get()
     let adminId = SurrealId.new(admin["id"].getStr())

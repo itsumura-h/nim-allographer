@@ -7,6 +7,11 @@ import ../mariadb_types
 
 proc quote(input:string):string =
   ## "User.id as userId" => ```User```.```id``` as ```userId```
+  ##
+  ## "COUNT(id) as count" => ```COUNT(id)``` as ```count```
+  ##
+  ## "MAX(id) as maxId" => ```MAX(id)``` as ```maxId```
+  ## 
   var tmp = newSeq[string]()
   for segment in input.split("."):
     if segment.contains(" as "):

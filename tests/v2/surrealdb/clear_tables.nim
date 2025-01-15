@@ -14,3 +14,6 @@ proc clearTables*(rdb:SurrealConnections) {.async.} =
   for (table, _) in tables.pairs:
     if not table.startsWith("_"):
       rdb.raw(&"REMOVE TABLE {table}").exec().await
+  
+  rdb.raw(&"REMOVE TABLE _allographer_migrations").exec().await
+  rdb.raw(&"REMOVE TABLE _autoincrement_sequences").exec().await
