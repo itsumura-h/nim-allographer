@@ -2,6 +2,8 @@ discard """
   cmd: "nim c -d:reset -r $file"
 """
 
+# nim c -r -d:reset tests/v2/surrealdb/test_query.nim
+
 import std/unittest
 import std/asyncdispatch
 import std/json
@@ -123,6 +125,18 @@ suite($rdb & " get"):
 
     user10 = rdb.raw("SELECT * FROM user WHERE string::endsWith(email, \"10@example.com\")").first().waitFor()
     check user10.get()["email"].getStr() == "user10@example.com"
+
+
+  test("select count"):
+    var t = rdb.raw("SELECT count(`id`) as `count` FROM `user` GROUP ALL").get().waitFor
+    echo t
+    check t[0]["count"].getInt() == 10
+
+
+  test("select max"):
+    var t = rdb.raw("SELECT math::max(`index`) as `max` FROM `user` GROUP ALL").get().waitFor
+    echo t
+    check t[0]["max"].getInt() == 10
 
 
   test("where string"):

@@ -7,13 +7,34 @@ import ../sqlite_types
 
 proc quote(input:string):string =
   ## `User.id as userId` => `"User"."id" as "userId"`
+  ##
+  ## `COUNT(id) as count` => `COUNT("id") as "count"`
+  ##
+  ## `MAX(id) as maxId` => `MAX("id") as "maxId"`
+  ##
   var tmp = newSeq[string]()
-  for row in input.split("."):
-    if row.contains(" as "):
-      let c = row.split(" as ")
-      tmp.add(&"\"{c[0]}\" as \"{c[1]}\"")
+  for segment in input.split("."):
+    if segment.contains(" as "):
+      # Split once on ' as ' to separate the expression and its alias
+      let parts = segment.split(" as ", maxsplit = 1)
+      let expression = parts[0]
+      let alias = parts[1]
+      if expression.contains("("):
+        # Extract function name and column name using index-based slicing
+        let funcStart = expression.find('(')
+        let funcEnd = expression.find(')', funcStart)
+        let funcName = expression[0 ..< funcStart]
+        let columnName = expression[funcStart + 1 ..< funcEnd]
+        tmp.add(&"{funcName}(\"{columnName}\") as \"{alias}\"")
+      else:
+        # Quote the expression and alias
+        tmp.add(&"\"{expression}\" as \"{alias}\"")
+    elif segment.contains("("):
+      # Leave functions without alias as is
+      tmp.add(segment)
     else:
-      tmp.add(&"\"{row}\"")
+      # Quote standalone identifiers
+      tmp.add(&"\"{segment}\"")
   return tmp.join(".")
 
 # ==================== SELECT ====================
