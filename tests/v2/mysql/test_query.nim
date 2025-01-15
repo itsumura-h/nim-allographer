@@ -127,6 +127,16 @@ suite($rdb & " get"):
     check t == @[%*{"email":"user10@example.com"}]
 
 
+  test("select count"):
+    var t = rdb.select("COUNT(id) as count").table("user").get().waitFor
+    check t[0]["count"].getInt() == 10
+
+
+  test("select max"):
+    var t = rdb.select("MAX(id) as max").table("user").get().waitFor
+    check t[0]["max"].getInt() == 10
+
+
   test("where"):
     var t = rdb.table("user").where("auth_id", "=", "1").get().waitFor
     check t == @[
