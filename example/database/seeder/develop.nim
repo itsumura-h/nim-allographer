@@ -3,6 +3,7 @@ import std/os
 import ./data/user_seeder
 import ./data/post_seeder
 
+
 proc seed() {.async.} =
   let env = getEnv("APP_ENV")
   if env != "develop":
