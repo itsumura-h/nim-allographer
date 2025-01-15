@@ -2,6 +2,9 @@ discard """
   cmd: "nim c -d:reset -d:ssl -r $file"
 """
 
+# nim c -d:reset -d:ssl -r tests/v1/sqlite/test_query.nim
+
+
 import std/unittest
 import std/asyncdispatch
 import std/httpclient
@@ -9,6 +12,7 @@ import std/json
 import std/options
 import std/streams
 import std/strformat
+import std/strutils
 import ../../../src/allographer/schema_builder
 import ../../../src/allographer/query_builder
 import ./connection
@@ -126,6 +130,16 @@ suite($rdb & " get"):
     check t == @[%*{"email":"user10@example.com"}]
     t = rdb.select("email").table("user").where("email", "LIKE", "%10@example.com%").get().waitFor
     check t == @[%*{"email":"user10@example.com"}]
+
+
+  test("select count"):
+    var t = rdb.select("COUNT(id) as count").table("user").get().waitFor
+    check t[0]["count"].getStr() == "10"
+
+
+  test("select max"):
+    var t = rdb.select("MAX(id) as max").table("user").get().waitFor
+    check t[0]["max"].getStr() == "10"
 
 
   test("where"):
