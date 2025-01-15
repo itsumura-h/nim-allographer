@@ -1,12 +1,13 @@
 import std/times
+import std/strutils
 import ../../libs/mysql/mysql_rdb
 import ../../error
 import ../../log
 import ./mysql_types
 
 
-proc dbOpen*(_:type MySQL, database: string = "", user: string = "", password: string = "",
-              host: string = "", port: int = 0, maxConnections: int = 1, timeout=30,
+proc dbOpen*(_:type MySQL, database: string, user: string, password: string,
+              host: string, port: int, maxConnections: int = 1, timeout=30,
               shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): MysqlConnections =
   var conns = newSeq[Connection](maxConnections)
   for i in 0..<maxConnections:
@@ -39,3 +40,19 @@ proc dbOpen*(_:type MySQL, database: string = "", user: string = "", password: s
     info: info,
     log: LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)
   )
+
+
+proc dbOpen*(_:type MySQL, url: string, maxConnections: int = 1, timeout=30,
+              shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): MysqlConnections =
+  ## url: "mysql://username:password@localhost:3306/DB_Name"
+  let isMariadb = url.startsWith("mysql://")
+  if not isMariadb:
+    raise newException(ValueError, "Invalid URL format. Expected a MariaDB URL starting with 'mariadb://'.")
+
+  let user = url.split("://")[1].split(":")[0]
+  let password = url.split(":")[2].split("@")[0]
+  let host = url.split("@")[1].split(":")[0]
+  let port = url.split(":")[3].split("/")[0]
+  let database = url.split("/")[^1]
+
+  return dbOpen(MySQL, database, user, password, host, port.parseInt, maxConnections, timeout, shouldDisplayLog, shouldOutputLogFile, logDir)

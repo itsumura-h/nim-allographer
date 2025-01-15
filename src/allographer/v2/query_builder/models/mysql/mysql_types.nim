@@ -62,3 +62,7 @@ type RawMysqlQuery* = ref object
 
 proc `$`*(self:MysqlConnections|MysqlQuery|RawMysqlQuery):string =
   return "MySQL"
+
+
+proc isConnected*(self:MysqlConnections|MysqlQuery|RawMysqlQuery):bool =
+  return self.pools.conns.len > 0
