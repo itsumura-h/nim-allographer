@@ -1,4 +1,5 @@
 import std/times
+import std/strutils
 import ../../libs/postgres/postgres_rdb
 import ../../libs/postgres/postgres_lib
 import ../../log

@@ -1,4 +1,5 @@
 import std/times
+import std/strutils
 import ../../libs/mariadb/mariadb_rdb
 import ../../error
 import ../../log
@@ -6,7 +7,7 @@ import ./mariadb_types
 
 
 proc dbOpen*(_: type MariaDB, database: string, user: string, password: string,
-                  host: string, port: int, maxConnections: int = 1, timeout=30,
+                  host: string, port: int, maxConnections=1, timeout=30,
                   shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): MariadbConnections =
   var conns = newSeq[Connection](maxConnections)
   for i in 0..<maxConnections:
@@ -41,7 +42,7 @@ proc dbOpen*(_: type MariaDB, database: string, user: string, password: string,
   )
 
 
-proc dbOpen*(_:type MariaDB, url: string, maxConnections: int = 1, timeout=30,
+proc dbOpen*(_:type MariaDB, url: string, maxConnections=1, timeout=30,
               shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): MariadbConnections =
   ## url: "mariadb://username:password@localhost:3306/DB_Name"
   let isMariadb = url.startsWith("mariadb://")

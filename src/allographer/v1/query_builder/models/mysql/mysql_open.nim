@@ -6,8 +6,8 @@ import ../../log
 import ./mysql_types
 
 
-proc dbOpen*(_:type MySQL, database: string = "", user: string = "", password: string = "",
-              host: string = "", port: int = 0, maxConnections: int = 1, timeout=30,
+proc dbOpen*(_:type MySQL, database: string, user: string, password: string,
+              host: string, port: int, maxConnections: int = 1, timeout=30,
               shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): MysqlConnections =
   var conns = newSeq[Connection](maxConnections)
   for i in 0..<maxConnections:
@@ -42,7 +42,7 @@ proc dbOpen*(_:type MySQL, database: string = "", user: string = "", password: s
   )
 
 
-proc dbOpen*(_:type MySQL, url: string, maxConnections: int = 1, timeout=30,
+proc dbOpen*(_:type MySQL, url: string, maxConnections=1, timeout=30,
               shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): MysqlConnections =
   ## url: "mysql://username:password@localhost:3306/DB_Name"
   let isMariadb = url.startsWith("mysql://")
