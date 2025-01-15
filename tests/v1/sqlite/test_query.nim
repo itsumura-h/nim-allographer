@@ -16,6 +16,7 @@ import std/strutils
 import ../../../src/allographer/schema_builder
 import ../../../src/allographer/query_builder
 import ./connection
+import ./clear_tables
 
 
 # =============================================================================
@@ -528,6 +529,5 @@ suite($rdb & " insert binary"):
     res = rdb.table("test").find(id).waitFor().get()
     check res["pic"].getStr().len > 0
 
-rdb.raw("DROP TABLE IF EXISTS \"test\"").exec().waitFor()
-rdb.raw("DROP TABLE IF EXISTS \"user\"").exec().waitFor()
-rdb.raw("DROP TABLE IF EXISTS \"auth\"").exec().waitFor()
+
+clearTables(rdb).waitFor()

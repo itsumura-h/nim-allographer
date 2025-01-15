@@ -9,6 +9,8 @@ import std/options
 import ../../../src/allographer/schema_builder
 import ../../../src/allographer/query_builder
 import ./connection
+import ./clear_tables
+
 
 let rdb = postgres
 
@@ -292,10 +294,5 @@ suite($rdb & " primary"):
       )
     )
 
-rdb.raw("DROP TABLE IF EXISTS \"TypeIndex\"").exec().waitFor()
-rdb.raw("DROP TABLE IF EXISTS \"TypeUnique\"").exec().waitFor()
-rdb.raw("DROP TABLE IF EXISTS \"StrRelation\"").exec().waitFor()
-rdb.raw("DROP TABLE IF EXISTS \"IntRelation\"").exec().waitFor()
-rdb.raw("DROP TABLE IF EXISTS \"TypeIndex_renamed\"").exec().waitFor()
-rdb.raw("DROP TABLE IF EXISTS \"relation\"").exec().waitFor()
- 
+
+clearTables(rdb).waitFor()

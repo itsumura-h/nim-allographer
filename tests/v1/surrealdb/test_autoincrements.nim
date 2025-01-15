@@ -91,4 +91,5 @@ suite("autoincrements"):
 
     echo rdb.table("user").orderBy("index", Asc).limit(20).get().waitFor()
 
+
 clearTables(rdb).waitFor()

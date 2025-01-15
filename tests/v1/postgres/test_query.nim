@@ -12,6 +12,7 @@ import std/strformat
 import ../../../src/allographer/schema_builder
 import ../../../src/allographer/query_builder
 import ./connection
+import ./clear_tables
 
 
 # =============================================================================
@@ -519,6 +520,4 @@ suite($rdb & " binary data"):
     check res["pic"].getStr().len > 0
 
 
-rdb.raw("DROP TABLE IF EXISTS \"test\"").exec().waitFor()
-rdb.raw("DROP TABLE IF EXISTS \"user\"").exec().waitFor()
-rdb.raw("DROP TABLE IF EXISTS \"auth\"").exec().waitFor()
+clearTables(rdb).waitFor()

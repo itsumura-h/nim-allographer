@@ -9,6 +9,8 @@ import std/options
 import ../../../src/allographer/schema_builder
 import ../../../src/allographer/query_builder
 import ./connection
+import ./clear_tables
+
 
 let rdb = sqlite
 
@@ -291,3 +293,6 @@ suite($rdb & " primary"):
         primary = @["index1", "index2"]
       )
     )
+
+
+clearTables(rdb).waitFor()
