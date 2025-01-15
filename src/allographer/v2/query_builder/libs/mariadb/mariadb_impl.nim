@@ -10,7 +10,7 @@ import ./mariadb_lib
 
 
 proc rawExec(conn:PMySQL, query: string, args: seq[string]) =
-  assert conn.ping == 0
+  assert conn.ping() == 0
 
   var stmt = mariadb_rdb.stmt_init(conn)
   if stmt.isNil:

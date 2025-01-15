@@ -20,6 +20,18 @@ type UserTable* = object
   updated_at*: int
 
 
+type AuthTable* = object
+  ## auth
+  id*: int
+  auth*: string
+
+
+type TypeUniqueTable* = object
+  ## TypeUnique
+  num*: int
+  str*: string
+
+
 type TypesTable* = object
   ## Types
   id*: int
@@ -46,7 +58,7 @@ type TypesTable* = object
   binary*: string
   boolean*: bool
   enumField*: string
-  json*: JsonNode
+  json*: string
   int_relation_id*: int
   str_relation_id*: string
 
@@ -59,3 +71,16 @@ type PostTable* = object
   user_id*: string
   created_at*: int
   updated_at*: int
+
+
+type TypeIndexTable* = object
+  ## TypeIndex
+  index1*: int
+  index2*: int
+  string*: string
+  relation_id*: int
+
+
+type RelationTable* = object
+  ## relation
+  id*: int
