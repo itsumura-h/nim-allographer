@@ -34,7 +34,7 @@ RUN choosenim ${NIM_VERSION}
 
 # nimlangserver
 # https://github.com/nim-lang/langserver/releases
-RUN curl -o nimlangserver.tar.gz -L https://github.com/nim-lang/langserver/releases/download/v1.6.0/nimlangserver-1.6.0-linux-amd64.tar.gz
+RUN curl -o nimlangserver.tar.gz -L https://github.com/nim-lang/langserver/releases/download/v1.8.0/nimlangserver-linux-amd64.tar.gz
 RUN tar zxf nimlangserver.tar.gz
 RUN rm -f nimlangserver.tar.gz
 RUN mv nimlangserver /root/.nimble/bin/
