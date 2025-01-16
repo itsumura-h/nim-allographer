@@ -460,3 +460,7 @@ proc createIndexString*(table:Table, column:Column):string =
 
 proc createUpdatedAtString*(table:Table, column:Column):seq[string] =
   return column.updatedAtColumn(table)
+
+
+proc createCommentColumn*(table:Table, column:Column):string =
+  return &"COMMENT ON COLUMN \"{table.name}\".\"{column.name}\" IS '{column.commentContent}'"

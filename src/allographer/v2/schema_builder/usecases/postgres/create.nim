@@ -6,7 +6,7 @@ import ../sub/migration_table_def
 import ./create_query_def
 
 
-proc create*(rdb:PostgresConnections, tables:varargs[Table]) =
+proc create*(rdb:PostgresConnections, tables:openArray[Table]) =
   let cmd = commandLineParams()
   let isReset = defined(reset) or cmd.contains("--reset")
 

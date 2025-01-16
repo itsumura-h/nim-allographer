@@ -17,10 +17,14 @@ proc createTable*(self: PostgresSchema, isReset:bool) =
   var foreignQuery = ""
   var indexQuery:seq[string] = @[]
   var updatedAtQuery:seq[string] = @[]
+  var commentQuery:seq[string] = @[]
 
   for i, column in self.table.columns:
     if query.len > 0: query.add(", ")
     query.add(createColumnString(self.table, column))
+
+    if column.commentContent.len > 0:
+      commentQuery.add(createCommentColumn(self.table, column))
     
     if column.typ == rdbForeign or column.typ == rdbStrForeign:
       if foreignQuery.len > 0:  foreignQuery.add(", ")
@@ -49,11 +53,19 @@ proc createTable*(self: PostgresSchema, isReset:bool) =
       &"CREATE TABLE IF NOT EXISTS \"{self.table.name}\" ({query})"
     )
 
+  if self.table.commentContent.len > 0:
+    commentQuery.add(
+      &"COMMENT ON TABLE \"{self.table.name}\" IS '{self.table.commentContent}'"
+    )
+
   if indexQuery.len > 0:
     queries.add(indexQuery)
 
   if updatedAtQuery.len > 0:
     queries.add(updatedAtQuery)
+
+  if commentQuery.len > 0:
+    queries.add(commentQuery)
 
   let schema = $self.table.toSchema()
   let checksum = $schema.secureHash()

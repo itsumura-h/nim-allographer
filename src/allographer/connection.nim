@@ -40,5 +40,4 @@ elif NimMajor == 1:
   when isExistsSurrealdb:
     import ./v1/query_builder/models/surreal/surreal_types; export SurrealDB, SurrealConnections
     import ./v1/query_builder/models/surreal/surreal_open; export surreal_open
-else:
-  discard
+
