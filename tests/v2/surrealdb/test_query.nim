@@ -12,9 +12,11 @@ import std/strformat
 import std/times
 import ../../../src/allographer/schema_builder
 import ../../../src/allographer/query_builder
-import ./connection
-import ./clear_tables
+import ../../connections
+import ../../clear_tables
 
+
+let rdb = surreal
 
 # =============================================================================
 # test
@@ -62,8 +64,6 @@ proc setup(rdb:SurrealConnections) =
 
     rdb.table("user").insert(users).waitFor()
 
-
-let rdb = surreal
 
 setup(rdb)
 

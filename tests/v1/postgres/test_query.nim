@@ -11,9 +11,11 @@ import std/streams
 import std/strformat
 import ../../../src/allographer/schema_builder
 import ../../../src/allographer/query_builder
-import ./connection
-import ./clear_tables
+import ../../connections
+import ../../clear_tables
 
+
+let rdb = postgres
 
 # =============================================================================
 # test
@@ -61,8 +63,6 @@ proc setup(rdb:PostgresConnections) =
 
     rdb.table("user").insert(users).waitFor
 
-
-let rdb = postgres
 
 setup(rdb)
 

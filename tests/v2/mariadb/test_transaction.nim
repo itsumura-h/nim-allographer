@@ -10,9 +10,11 @@ import std/options
 import std/asyncdispatch
 import ../../../src/allographer/schema_builder
 import ../../../src/allographer/query_builder
-import ./connection
+import ../../connections
 import ./clear_tables
 
+
+let rdb = mariadb
 
 proc setUp(rdb:MariadbConnections) =
   rdb.create([
@@ -51,8 +53,6 @@ proc setUp(rdb:MariadbConnections) =
 
     rdb.table("user").insert(users).waitFor()
 
-
-let rdb = mariadb
 
 suite("transaction"):
   setup:

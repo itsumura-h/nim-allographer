@@ -8,8 +8,9 @@ import std/json
 import std/options
 import ../../../src/allographer/schema_builder
 import ../../../src/allographer/query_builder
-import ./connection
-import ./clear_tables
+import ../../connections
+import ../../clear_tables
+
 
 let rdb = postgres
 

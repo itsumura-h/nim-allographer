@@ -10,9 +10,11 @@ import std/options
 import std/asyncdispatch
 import ../../../src/allographer/schema_builder
 import ../../../src/allographer/query_builder
-import ./connection
-import ./clear_tables
+import ../../connections
+import ../../clear_tables
 
+
+let rdb = sqlite
 
 proc setUp(rdb:SqliteConnections) =
   rdb.create([
@@ -51,8 +53,6 @@ proc setUp(rdb:SqliteConnections) =
 
     rdb.table("user").insert(users).waitFor()
 
-
-let rdb = sqlite
 
 suite("transaction"):
   suite("raw code"):

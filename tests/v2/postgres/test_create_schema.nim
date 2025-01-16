@@ -8,8 +8,10 @@ import std/os
 import std/strutils
 import std/json
 import ../../../src/allographer/schema_builder
-import ./connection
-import ./clear_tables
+import ../../connections
+import ../../clear_tables
+
+
 let rdb = postgres
 let schemaFilePath = getCurrentDir() / "schema.nim"
 

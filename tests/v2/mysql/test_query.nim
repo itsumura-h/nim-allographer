@@ -13,9 +13,11 @@ import std/streams
 import std/strformat
 import ../../../src/allographer/schema_builder
 import ../../../src/allographer/query_builder
-import ./connection
-import ./clear_tables
+import ../../connections
+import ../../clear_tables
 
+
+let rdb = mysql
 
 proc setup(rdb:MysqlConnections) =
   rdb.create([
@@ -58,8 +60,6 @@ proc setup(rdb:MysqlConnections) =
       )
 
     rdb.table("user").insert(users).waitFor
-
-let rdb = mysql
 
 
 setup(rdb)
