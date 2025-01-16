@@ -14,7 +14,7 @@ import std/strformat
 import ../../../src/allographer/schema_builder
 import ../../../src/allographer/query_builder
 import ../../connections
-import ./clear_tables
+import ../../clear_tables
 
 
 let rdb = mariadb

@@ -9,7 +9,7 @@ import std/strutils
 import std/json
 import ../../../src/allographer/schema_builder
 import ../../connections
-import ./clear_tables
+import ../../clear_tables
 
 
 let rdb = mariadb
