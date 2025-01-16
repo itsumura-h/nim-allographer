@@ -8,13 +8,15 @@ import std/json
 import std/options
 import ../../../src/allographer/schema_builder
 import ../../../src/allographer/query_builder
-import ./connection
-import ./clear_tables
+import ../../connections
+import ../../clear_tables
 
+
+let rdb = surreal
 
 suite("SurrealDB create table"):
   test("create table"):
-    surreal.create(
+    rdb.create(
       table("relation", [
         Column.uuid("uuid").unique(),
       ]),
@@ -75,7 +77,7 @@ suite("SurrealDB create table"):
     )
 
     block:
-      let info = surreal.raw(""" INFO FOR TABLE TypeIndex """).info().waitFor()
+      let info = rdb.raw(""" INFO FOR TABLE TypeIndex """).info().waitFor()
       let fields = info[0]["result"]["fd"]
       check fields["index"].getStr ==         "DEFINE FIELD index ON TypeIndex TYPE int"
       check fields["integer"].getStr ==       "DEFINE FIELD integer ON TypeIndex TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
@@ -131,7 +133,7 @@ suite("SurrealDB create table"):
       check indexs["TypeIndex_json_index"].getStr ==          "DEFINE INDEX TypeIndex_json_index ON TypeIndex FIELDS json"
 
     block:
-      let info = surreal.raw(""" INFO FOR TABLE TypeUnique """).info().waitFor()
+      let info = rdb.raw(""" INFO FOR TABLE TypeUnique """).info().waitFor()
       let fields = info[0]["result"]["fd"]
       check fields["index"].getStr ==         "DEFINE FIELD index ON TypeUnique TYPE int"
       check fields["integer"].getStr ==       "DEFINE FIELD integer ON TypeUnique TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
@@ -188,7 +190,7 @@ suite("SurrealDB create table"):
 
 
   test("autoincrement"):
-    surreal.create(
+    rdb.create(
       table("test",[
         Column.increments("index"),
         Column.integer("index2").autoIncrement(),
@@ -196,13 +198,13 @@ suite("SurrealDB create table"):
       ])
     )
 
-    surreal.table("test").insert(%*{"string": "a"}).waitFor
-    surreal.table("test").insert(%*{"string": "b"}).waitFor
-    surreal.table("test").insert(%*{"string": "c"}).waitFor
-    surreal.table("test").where("string", "=", "b").delete().waitFor
-    surreal.table("test").insert(%*{"string": "d"}).waitFor
+    rdb.table("test").insert(%*{"string": "a"}).waitFor
+    rdb.table("test").insert(%*{"string": "b"}).waitFor
+    rdb.table("test").insert(%*{"string": "c"}).waitFor
+    rdb.table("test").where("string", "=", "b").delete().waitFor
+    rdb.table("test").insert(%*{"string": "d"}).waitFor
 
-    let data = surreal.table("test").orderBy("index", Asc).get().waitFor
+    let data = rdb.table("test").orderBy("index", Asc).get().waitFor
     for row in data:
       if row["string"].getStr == "a":
         check row["index"].getInt == 1
@@ -218,7 +220,7 @@ suite("SurrealDB create table"):
 
   suite("Datetime"):
     test("datetime default"):
-      surreal.create(
+      rdb.create(
         table("test", [
           Column.string("name"),
           Column.datetime("created_at").default(Current),
@@ -226,16 +228,16 @@ suite("SurrealDB create table"):
         ])
       )
 
-      let aliceId = surreal.table("test").insertId(%*{"name": "alice"}).waitFor()
+      let aliceId = rdb.table("test").insertId(%*{"name": "alice"}).waitFor()
       
-      var alice = surreal.table("test").find(aliceId).waitFor().get()
+      var alice = rdb.table("test").find(aliceId).waitFor().get()
       echo alice
       let aliceCreatedAt1 = alice["created_at"].getStr()
       let aliceUpdatedAt1 = alice["updated_at"].getStr()
 
-      surreal.table("test").where("id", "=", aliceId).update(%*{"name": "updated"}).waitFor()
+      rdb.table("test").where("id", "=", aliceId).update(%*{"name": "updated"}).waitFor()
 
-      alice = surreal.table("test").find(aliceId).waitFor().get()
+      alice = rdb.table("test").find(aliceId).waitFor().get()
       echo alice
       let aliceCreatedAt2 = alice["created_at"].getStr()
       let aliceUpdatedAt2 = alice["updated_at"].getStr()
@@ -245,22 +247,22 @@ suite("SurrealDB create table"):
 
 
     test("timestamps"):
-      surreal.create(
+      rdb.create(
         table("test", [
           Column.string("name"),
           Column.timestamps()
         ])
       )
 
-      let aliceId = surreal.table("test").insertId(%*{"name": "alice"}).waitFor()
+      let aliceId = rdb.table("test").insertId(%*{"name": "alice"}).waitFor()
       
-      var alice = surreal.table("test").find(aliceId).waitFor().get()
+      var alice = rdb.table("test").find(aliceId).waitFor().get()
       let aliceCreatedAt1 = alice["created_at"].getStr()
       let aliceUpdatedAt1 = alice["updated_at"].getStr()
 
-      surreal.table("test").where("id", "=", aliceId).update(%*{"name": "updated"}).waitFor()
+      rdb.table("test").where("id", "=", aliceId).update(%*{"name": "updated"}).waitFor()
 
-      alice = surreal.table("test").find(aliceId).waitFor().get()
+      alice = rdb.table("test").find(aliceId).waitFor().get()
       let aliceCreatedAt2 = alice["created_at"].getStr()
       let aliceUpdatedAt2 = alice["updated_at"].getStr()
 
@@ -271,7 +273,7 @@ suite("SurrealDB create table"):
 
 suite("SurrealDB alter table"):
   setup:
-    surreal.create(
+    rdb.create(
       table("relation", [
         Column.uuid("uuid").unique(),
       ]),
@@ -287,7 +289,7 @@ suite("SurrealDB alter table"):
 
 
   test("add column"):
-    surreal.alter(
+    rdb.alter(
       table("TypeIndex", [
         Column.increments("index").add(),
         Column.integer("integer").unsigned().index().default(1).add(),
@@ -345,7 +347,7 @@ suite("SurrealDB alter table"):
     )
 
     block:
-      let info = surreal.raw(""" INFO FOR TABLE TypeIndex """).info().waitFor()
+      let info = rdb.raw(""" INFO FOR TABLE TypeIndex """).info().waitFor()
       let fields = info[0]["result"]["fd"]
       check fields["index"].getStr ==         "DEFINE FIELD index ON TypeIndex TYPE int"
       check fields["integer"].getStr ==       "DEFINE FIELD integer ON TypeIndex TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
@@ -401,7 +403,7 @@ suite("SurrealDB alter table"):
       check indexs["TypeIndex_json_index"].getStr ==          "DEFINE INDEX TypeIndex_json_index ON TypeIndex FIELDS json"
 
     block:
-      let info = surreal.raw(""" INFO FOR TABLE TypeUnique """).info().waitFor()
+      let info = rdb.raw(""" INFO FOR TABLE TypeUnique """).info().waitFor()
       let fields = info[0]["result"]["fd"]
       check fields["index"].getStr ==         "DEFINE FIELD index ON TypeUnique TYPE int"
       check fields["integer"].getStr ==       "DEFINE FIELD integer ON TypeUnique TYPE int VALUE $value OR 1 ASSERT $value != NONE AND $value >= 0"
@@ -458,28 +460,28 @@ suite("SurrealDB alter table"):
 
 
   test("drop column"):
-    surreal.alter(
+    rdb.alter(
       table("TypeIndex", [
         Column.dropColumn("str")
       ])
     )
 
-    let columns = surreal.table("TypeIndex").columns().waitFor
+    let columns = rdb.table("TypeIndex").columns().waitFor
     check not columns.contains("str")
 
 
   test("drop table"):
-    surreal.create(
+    rdb.create(
       table("TypeIndex", [
         Column.integer("num")
       ])
     )
 
-    surreal.drop(
+    rdb.drop(
       table("TypeIndex")
     )
 
-    let res = surreal.table("TypeIndex").first().waitFor()
+    let res = rdb.table("TypeIndex").first().waitFor()
     check not res.isSome
 
 

@@ -22,8 +22,9 @@ when (NimMajor, NimMinor) > (1, 6):
 import strformat, os
 
 task test, "run testament test":
-  exec &"testament p 'tests/v{NimMajor}/*/test_*.nim'"
-  exec &"testament p 'tests/v2/test_*.nim'"
+  exec &"testament p tests/v{NimMajor}/test*"
+  exec &"testament p tests/v{NimMajor}/*/test*"
+
   for kind, path in walkDir(getCurrentDir() / "tests"):
     if not path.contains(".") and path.fileExists():
       exec "rm -f " & path

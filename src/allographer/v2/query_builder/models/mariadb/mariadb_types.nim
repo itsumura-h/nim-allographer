@@ -62,3 +62,7 @@ type RawMariadbQuery* = ref object
 
 proc `$`*(self:MariadbConnections|MariadbQuery|RawMariadbQuery):string =
   return "MariaDB"
+
+
+proc isConnected*(self:MariadbConnections|MariadbQuery|RawMariadbQuery):bool =
+  return self.pools.conns.len > 0

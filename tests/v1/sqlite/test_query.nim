@@ -15,9 +15,11 @@ import std/strformat
 import std/strutils
 import ../../../src/allographer/schema_builder
 import ../../../src/allographer/query_builder
-import ./connection
-import ./clear_tables
+import ../../connections
+import ../../clear_tables
 
+
+let rdb = sqlite
 
 # =============================================================================
 # test
@@ -65,8 +67,6 @@ proc setup(rdb:SqliteConnections) =
 
     rdb.table("user").insert(users).waitFor
 
-
-let rdb = sqlite
 
 setup(rdb)
 

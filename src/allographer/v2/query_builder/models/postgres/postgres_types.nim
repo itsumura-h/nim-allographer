@@ -51,3 +51,7 @@ type RawPostgresQuery* = ref object
 
 proc `$`*(self:PostgresConnections|PostgresQuery|RawPostgresQuery):string =
   return "PostgreSQL"
+
+
+proc isConnected*(self:PostgresConnections|PostgresQuery|RawPostgresQuery):bool =
+  return self.pools.conns.len > 0
