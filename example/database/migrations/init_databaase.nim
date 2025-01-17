@@ -1,7 +1,7 @@
 import ../../../src/allographer/schema_builder
 import ../connection
 
-proc init_databaase*() =
+proc initDatabaase*() =
   ## 0001
   rdb.create([
     table("user", [

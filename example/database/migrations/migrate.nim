@@ -5,7 +5,7 @@ import ./init_databaase
 import ./create_all_type_table
 
 proc migrate*() =
-  init_databaase()
+  initDatabaase()
   createAllTypeTable()
 
 migrate()
