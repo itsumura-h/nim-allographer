@@ -225,6 +225,7 @@ template seeder*(rdb:Rdb, tableName, column:string, body:untyped):untyped
 |`.unsigned()`|Set INTEGER to UNSIGNED|
 |`.unique()`|Adding an unique index|
 |`.index()`|Adding an index|
+|`.comment("value")`|Adding a comment to a column. Only for Postgres, Mariadb and Mysql|
 
 ## Foreign Key Constraints
 For example, let's define a `user_id` column on the table that references the `id` column on a `users` table:
