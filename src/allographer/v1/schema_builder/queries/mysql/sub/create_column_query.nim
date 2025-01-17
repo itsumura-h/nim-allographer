@@ -15,6 +15,10 @@ import ../schema_utils
 proc createSerialColumn(column:Column):string =
   result = &"`{column.name}` BIGINT NOT NULL PRIMARY KEY AUTO_INCREMENT"
 
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
+
+
 proc createIntColumn(column:Column):string =
   result = &"`{column.name}` INT"
 
@@ -32,6 +36,9 @@ proc createIntColumn(column:Column):string =
 
   if not column.isNullable:
     result.add(" NOT NULL")
+
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
 
 
 proc createSmallIntColumn(column:Column):string =
@@ -52,6 +59,9 @@ proc createSmallIntColumn(column:Column):string =
     if not column.isNullable:
       result.add(" NOT NULL")
 
+    if column.commentContent.len > 0:
+      result.add(&" COMMENT '{column.commentContent}'")
+
 
 proc createMediumIntColumn(column:Column):string =
     result = &"`{column.name}` MEDIUMINT"
@@ -71,6 +81,9 @@ proc createMediumIntColumn(column:Column):string =
     if not column.isNullable:
       result.add(" NOT NULL")
 
+    if column.commentContent.len > 0:
+      result.add(&" COMMENT '{column.commentContent}'")
+
 
 proc createBigIntColumn(column:Column):string =
     result = &"`{column.name}` BIGINT"
@@ -89,6 +102,9 @@ proc createBigIntColumn(column:Column):string =
 
     if not column.isNullable:
       result.add(" NOT NULL")
+
+    if column.commentContent.len > 0:
+      result.add(&" COMMENT '{column.commentContent}'")
 
 
 # =============================================================================
@@ -111,6 +127,9 @@ proc createDecimalColumn(column:Column):string =
   if not column.isNullable:
     result.add(" NOT NULL")
 
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
+
 
 proc createDoubleColumn(column:Column):string =
   let maximum = column.info["maximum"].getInt
@@ -129,6 +148,9 @@ proc createDoubleColumn(column:Column):string =
   if not column.isNullable:
     result.add(" NOT NULL")
 
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
+
 
 proc createFloatColumn(column:Column):string =
   result = &"`{column.name}` DOUBLE"
@@ -144,6 +166,9 @@ proc createFloatColumn(column:Column):string =
 
   if not column.isNullable:
     result.add(" NOT NULL")
+
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
 
 
 # =============================================================================
@@ -165,6 +190,9 @@ proc createCharColumn(column:Column):string =
   if not column.isNullable:
     result.add(" NOT NULL")
 
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
+
 
 proc createStringColumn(column:Column):string =
   let maxLength = column.info["maxLength"].getInt
@@ -181,6 +209,9 @@ proc createStringColumn(column:Column):string =
 
   if not column.isNullable:
     result.add(" NOT NULL")
+
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
 
 
 proc createTextColumn(column:Column):string =
@@ -201,6 +232,9 @@ proc createTextColumn(column:Column):string =
   if not column.isNullable:
     result.add(" NOT NULL")
 
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
+
 
 proc createMediumTextColumn(column:Column):string =
   result = &"`{column.name}` MEDIUMTEXT"
@@ -219,6 +253,9 @@ proc createMediumTextColumn(column:Column):string =
 
   if not column.isNullable:
     result.add(" NOT NULL")
+
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
 
 
 proc createLongTextColumn(column:Column):string =
@@ -239,6 +276,9 @@ proc createLongTextColumn(column:Column):string =
   if not column.isNullable:
     result.add(" NOT NULL")
 
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
+
 
 # =============================================================================
 # date
@@ -258,6 +298,9 @@ proc createDateColumn(column:Column):string =
   if column.isDefault:
     result.add(&" DEFAULT (NOW())")
 
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
+
 
 proc createDatetimeColumn(column:Column):string =
   # result = &"`{column.name}` DATETIME(3)"
@@ -275,6 +318,9 @@ proc createDatetimeColumn(column:Column):string =
   if not column.isNullable:
     result.add(" NOT NULL")
 
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
+
 
 proc createTimeColumn(column:Column):string =
   result = &"`{column.name}` TIME"
@@ -291,6 +337,9 @@ proc createTimeColumn(column:Column):string =
   if not column.isNullable:
     result.add(" NOT NULL")
 
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
+
 
 proc createTimestampColumn(column:Column):string =
   result = &"`{column.name}` DATETIME(3)"
@@ -305,15 +354,29 @@ proc createTimestampColumn(column:Column):string =
     result.add(&" DEFAULT (NOW())")
 
   if not column.isNullable:
-      result.add(" NOT NULL")
+    result.add(" NOT NULL")
+
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
 
 
 proc createTimestampsColumn(column:Column):string =
-  result = "`created_at` DATETIME(3), "
+  result = "`created_at` DATETIME(3)"
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
+
+  result.add(", ")
+
   result.add("`updated_at` DATETIME(3) DEFAULT (NOW())")
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
+
 
 proc createSoftDeleteColumn(column:Column):string =
   result = "`deleted_at` DATETIME(3)"
+
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
 
 
 # =============================================================================
@@ -335,7 +398,10 @@ proc createBlobColumn(column:Column):string =
     notAllowedOption("index", "binary", column.name)
 
   if not column.isNullable:
-      result.add(" NOT NULL")
+    result.add(" NOT NULL")
+
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
 
 
 proc createBoolColumn(column:Column):string =
@@ -385,6 +451,9 @@ proc createEnumColumn(column:Column):string =
   if column.isDefault:
     result.add(&" DEFAULT '{column.defaultString}'")
 
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
+
 
 proc createJsonColumn(column:Column):string =
   result = &"`{column.name}` JSON"
@@ -404,6 +473,9 @@ proc createJsonColumn(column:Column):string =
   if column.isIndex:
     notAllowedOption("index", "json", column.name)
 
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
+
 
 # =============================================================================
 # foreign key
@@ -413,11 +485,19 @@ proc createForeignColumn(column:Column):string =
   if column.isDefault:
     result.add(&" DEFAULT {column.defaultInt}")
 
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
+
 proc createStrForeignColumn(column:Column):string =
   let maxLength = column.info["maxLength"].getInt
   result = &"`{column.name}` VARCHAR({maxLength})"
+  
   if column.isDefault:
     result.add(&" DEFAULT {column.defaultString}")
+
+  if column.commentContent.len > 0:
+    result.add(&" COMMENT '{column.commentContent}'")
+
 
 proc createForeignKey*(table:Table, column:Column):string =
   let onDeleteString =
