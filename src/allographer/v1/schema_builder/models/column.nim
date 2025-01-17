@@ -285,7 +285,7 @@ proc reference*(self:Column, column:string):Column =
   return self
 
 
-proc on*(self:Column, table:string):Column {.deprecated: "Use `onTable` instead after Nim v2".} =
+proc on*(self:Column, table:string):Column {.deprecated: "Use `onTable` instead".} =
   self.info["table"] = %*table
   return self
 

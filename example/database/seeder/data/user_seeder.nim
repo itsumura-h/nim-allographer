@@ -19,8 +19,8 @@ proc userSeeder*() {.async.} =
         name: &"user {i}",
         email: &"user{i}@example.com",
         password: hash(&"password{i}", salt),
-        createdAt: now().toTime().toUnix(),
-        updatedAt: now().toTime().toUnix(),
+        createdAt: now().toTime().toUnix().int,
+        updatedAt: now().toTime().toUnix().int,
       )
       userList.add(%row)
 
