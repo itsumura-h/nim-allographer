@@ -280,7 +280,7 @@ suite($rdb & " alter table"):
 
 suite($rdb & " primary"):
   test("primary key"):
-    rdb.create(
+    rdb.create([
       table("relation", [
         Column.increments("id"),
       ]),
@@ -292,7 +292,17 @@ suite($rdb & " primary"):
         ],
         primary = @["index1", "index2"]
       )
+    ])
+
+
+suite("Comment"):
+  test("column comment"):
+    rdb.create(
+      table("Comment", [
+        Column.integer("index1").comment("index1 comment"),
+        Column.string("string").comment("string comment")
+      ])
     )
 
- 
+
 clearTables(rdb).waitFor()
