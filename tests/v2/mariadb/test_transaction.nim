@@ -54,72 +54,75 @@ proc setUp(rdb:MariadbConnections) =
     rdb.table("user").insert(users).waitFor()
 
 
-suite("transaction"):
+suite("raw code transaction"):
   setup:
     setUp(rdb)
   
-  suite("raw code"):
-    test("commit"):
-      (proc() {.async.} =
-        var user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "user1"
+  test("commit"):
+    (proc() {.async.} =
+      var user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "user1"
 
-        block:
-          rdb.begin().await
-          try:
-            rdb.table("user").where("id", "=", 1).update(%*{"name": "updated"}).await
-            rdb.commit().await
-          except CatchableError:
-            rdb.rollback().await
-
-        user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "updated"
-      )().waitFor
-
-
-    test("rollback"):
-      (proc() {.async.} =
-        var user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "user1"
-        
-        block:
-          rdb.begin().await
-          try:
-            rdb.table("user").where("id", "=", 1).update(%*{"name": "updated"}).await
-            raise newException(CatchableError, "")
-          except DbError, CatchableError:
-            rdb.rollback().await
-
-        user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "user1"
-      )().waitFor
-
-  suite("transaction template"):
-    test("commit"):
-      (proc(){.async.} =
-        var user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "user1"
-
-        transaction(rdb):
+      block:
+        rdb.begin().await
+        try:
           rdb.table("user").where("id", "=", 1).update(%*{"name": "updated"}).await
+          rdb.commit().await
+        except CatchableError:
+          rdb.rollback().await
 
-        user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "updated"
-      )().waitFor()
+      user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "updated"
+    )().waitFor
 
 
-    test("rollback"):
-      (proc(){.async.} =
-        var user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "user1"
-
-        transaction(rdb):
+  test("rollback"):
+    (proc() {.async.} =
+      var user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "user1"
+      
+      block:
+        rdb.begin().await
+        try:
           rdb.table("user").where("id", "=", 1).update(%*{"name": "updated"}).await
           raise newException(CatchableError, "")
+        except:
+          rdb.rollback().await
 
-        user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "user1"
-      )().waitFor()
+      user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "user1"
+    )().waitFor
+
+
+suite("transaction template"):
+  setup:
+    setUp(rdb)
+
+  test("commit"):
+    (proc(){.async.} =
+      var user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "user1"
+
+      transaction(rdb):
+        rdb.table("user").where("id", "=", 1).update(%*{"name": "updated"}).await
+
+      user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "updated"
+    )().waitFor()
+
+
+  test("rollback"):
+    (proc(){.async.} =
+      var user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "user1"
+
+      transaction(rdb):
+        rdb.table("user").where("id", "=", 1).update(%*{"name": "updated"}).await
+        raise newException(DbError, "")
+
+      user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "user1"
+    )().waitFor()
 
 
 clearTables(rdb).waitFor()

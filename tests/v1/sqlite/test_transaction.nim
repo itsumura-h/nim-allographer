@@ -1,6 +1,8 @@
 discard """
-  cmd: "nim c --mm:orc -d:reset -r $file"
+  cmd: "nim c --mm:orc -d:reset $file"
 """
+
+# nim c -r -d:reset tests/v1/sqlite/test_transaction.nim
 
 import std/unittest
 import std/json
@@ -58,68 +60,71 @@ suite("transaction"):
   setup:
     setUp(rdb)
   
-  suite("raw code"):
-    test("commit"):
-      (proc() {.async.} =
-        var user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "user1"
+  test("raw code commit"):
+    (proc() {.async.} =
+      var user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "user1"
 
-        block:
-          rdb.begin().await
-          try:
-            rdb.table("user").where("id", "=", 1).update(%*{"name": "updated"}).await
-            rdb.commit().await
-          except:
-            rdb.rollback().await
-
-        user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "updated"
-      )().waitFor
-
-
-    test("rollback"):
-      (proc() {.async.} =
-        var user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "user1"
-        
-        block:
-          rdb.begin().await
-          try:
-            rdb.table("user").where("id", "=", 1).update(%*{"name": "updated"}).await
-            raise newException(Exception, "")
-          except:
-            rdb.rollback().await
-
-        user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "user1"
-      )().waitFor
-
-  suite("transaction template"):
-    test("commit"):
-      (proc(){.async.} =
-        var user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "user1"
-
-        transaction(rdb):
+      block:
+        rdb.begin().await
+        try:
           rdb.table("user").where("id", "=", 1).update(%*{"name": "updated"}).await
+          rdb.commit().await
+        except:
+          rdb.rollback().await
 
-        user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "updated"
-      )().waitFor()
+      user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "updated"
+    )().waitFor
 
 
-    test("rollback"):
-      (proc(){.async.} =
-        var user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "user1"
-
-        transaction(rdb):
+  test("raw code rollback"):
+    (proc() {.async.} =
+      var user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "user1"
+      
+      block:
+        rdb.begin().await
+        try:
           rdb.table("user").where("id", "=", 1).update(%*{"name": "updated"}).await
           raise newException(Exception, "")
+        except:
+          rdb.rollback().await
 
-        user1 = rdb.table("user").find(1).await.get()
-        check user1["name"].getStr() == "user1"
-      )().waitFor()
+      user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "user1"
+    )().waitFor
+
+
+suite("transaction template"):
+  setup:
+    setUp(rdb)
+
+  test("commit"):
+    (proc(){.async.} =
+      var user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "user1"
+
+      transaction(rdb):
+        rdb.table("user").where("id", "=", 1).update(%*{"name": "updated"}).await
+
+      user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "updated"
+    )().waitFor()
+
+
+  test("rollback"):
+    (proc(){.async.} =
+      var user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "user1"
+
+      transaction(rdb):
+        rdb.table("user").where("id", "=", 1).update(%*{"name": "updated"}).await
+        raise newException(Exception, "")
+
+      user1 = rdb.table("user").find(1).await.get()
+      check user1["name"].getStr() == "user1"
+    )().waitFor()
 
 
 clearTables(rdb).waitFor()
