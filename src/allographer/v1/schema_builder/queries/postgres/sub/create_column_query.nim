@@ -457,5 +457,10 @@ proc createForeignString*(table:Table, column:Column):string =
 proc createIndexString*(table:Table, column:Column):string =
   return column.indexColumn(table)
 
+
 proc createUpdatedAtString*(table:Table, column:Column):seq[string] =
   return column.updatedAtColumn(table)
+
+
+proc createCommentColumn*(table:Table, column:Column):string =
+  return &"COMMENT ON COLUMN \"{table.name}\".\"{column.name}\" IS '{column.commentContent}'"

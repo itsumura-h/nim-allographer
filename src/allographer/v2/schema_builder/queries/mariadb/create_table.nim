@@ -16,6 +16,7 @@ proc createTable*(self: MariadbSchema, isReset:bool) =
   var query = ""
   var foreignQuery = ""
   var indexQuery:seq[string] = @[]
+
   for i, column in self.table.columns:
     if query.len > 0: query.add(", ")
     query.add(createColumnString(self.table, column))
@@ -42,6 +43,11 @@ proc createTable*(self: MariadbSchema, isReset:bool) =
   else:
     queries.add(
       &"CREATE TABLE IF NOT EXISTS `{self.table.name}` ({query})"
+    )
+  
+  if self.table.commentContent.len > 0:
+    queries[^1].add(
+      &" COMMENT = '{self.table.commentContent}'"
     )
 
   if indexQuery.len > 0:

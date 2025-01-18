@@ -604,4 +604,14 @@ suite($rdb & " primary"):
     )
 
 
+suite("Comment"):
+  test("column comment"):
+    rdb.create(
+      table("Comment", [
+        Column.integer("index1").comment("index1 comment"),
+        Column.string("string").comment("string comment")
+      ])
+    )
+
+
 clearTables(rdb).waitFor()

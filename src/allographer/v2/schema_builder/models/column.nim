@@ -19,6 +19,7 @@ type Column* = ref object
   defaultJson*: JsonNode
   defaultDatetime*: DefaultDateTime
   foreignOnDelete*: ForeignOnDelete
+  commentContent*:string
   info*: JsonNode
   checksum*:string
   # alter table
@@ -49,10 +50,11 @@ proc toSchema*(self:Column):JsonNode =
     "defaultString": self.defaultString,
     "defaultJson": self.defaultJson,
     "foreignOnDelete": self.foreignOnDelete,
+    "comment": self.commentContent,
     "info": self.info,
     "previousName":self.previousName,
     "migrationType":self.migrationType,
-    "usecaseType": self.usecaseType
+    "usecaseType": self.usecaseType,
   }
 
 # =============================================================================
@@ -371,6 +373,11 @@ proc unique*(c: Column): Column =
 
 proc unsigned*(c: Column): Column =
   c.isUnsigned = true
+  return c
+
+
+proc comment*(c: Column, value:string): Column =
+  c.commentContent = value
   return c
 
 

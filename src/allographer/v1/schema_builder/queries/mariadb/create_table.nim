@@ -44,6 +44,11 @@ proc createTable*(self: MariadbSchema, isReset:bool) =
       &"CREATE TABLE IF NOT EXISTS `{self.table.name}` ({query})"
     )
 
+  if self.table.commentContent.len > 0:
+    queries[^1].add(
+      &" COMMENT = '{self.table.commentContent}'"
+    )
+
   if indexQuery.len > 0:
     queries.add(indexQuery)
 

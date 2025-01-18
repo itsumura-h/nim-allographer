@@ -19,6 +19,7 @@ type Column* = ref object
   defaultJson*: JsonNode
   defaultDatetime*: DefaultDateTime
   foreignOnDelete*: ForeignOnDelete
+  commentContent*:string
   info*: JsonNode
   checksum*:string
   # alter table
@@ -49,6 +50,7 @@ proc toSchema*(self:Column):JsonNode =
     "defaultString": self.defaultString,
     "defaultJson": self.defaultJson,
     "foreignOnDelete": self.foreignOnDelete,
+    "comment": self.commentContent,
     "info": self.info,
     "previousName":self.previousName,
     "migrationType":self.migrationType,
@@ -283,7 +285,7 @@ proc reference*(self:Column, column:string):Column =
   return self
 
 
-proc on*(self:Column, table:string):Column {.deprecated: "Use `onTable` instead after Nim v2".} =
+proc on*(self:Column, table:string):Column {.deprecated: "Use `onTable` instead".} =
   self.info["table"] = %*table
   return self
 
@@ -375,6 +377,11 @@ proc unique*(c: Column): Column =
 
 proc unsigned*(c: Column): Column =
   c.isUnsigned = true
+  return c
+
+
+proc comment*(c: Column, value:string): Column =
+  c.commentContent = value
   return c
 
 

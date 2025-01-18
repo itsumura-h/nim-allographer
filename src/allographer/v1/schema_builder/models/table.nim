@@ -10,23 +10,34 @@ type Table* = ref object
   columns*: seq[Column]
   primary*: seq[string]
   query*:seq[string]
+  commentContent*:string
   checksum*:string
   previousName*:string
   migrationType*: TableMigrationType
   usecaseType*:UsecaseType
 
 
-proc table*(name:string, columns:varargs[Column]):Table =
+proc table*(name:string):Table =
   return Table(
     name: name,
+    query: newSeq[string](),
+    migrationType: CreateTable,
+  )
+
+
+proc table*(name:string, columns:varargs[Column], comment=""):Table =
+  return Table(
+    name: name,
+    commentContent: comment,
     columns: @columns,
     query: newSeq[string](),
     migrationType: CreateTable
   )
 
-proc table*(name:string, columns:seq[Column], primary:seq[string] = @[]):Table =
+proc table*(name:string, columns:seq[Column], primary:seq[string] = @[], comment=""):Table =
   return Table(
     name: name,
+    commentContent: comment,
     columns: @columns,
     primary: @primary,
     query: newSeq[string](),
@@ -41,6 +52,7 @@ proc toSchema*(self:Table):JsonNode =
   )
   return %*{
     "name":self.name,
+    "comment": self.commentContent,
     "columns": columns,
     "primary": self.primary,
     "previousName": self.previousName,
