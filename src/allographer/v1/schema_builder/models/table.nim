@@ -17,6 +17,14 @@ type Table* = ref object
   usecaseType*:UsecaseType
 
 
+proc table*(name:string):Table =
+  return Table(
+    name: name,
+    query: newSeq[string](),
+    migrationType: CreateTable,
+  )
+
+
 proc table*(name:string, columns:varargs[Column], comment=""):Table =
   return Table(
     name: name,
