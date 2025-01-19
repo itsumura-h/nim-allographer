@@ -5,6 +5,9 @@ import ../../models/table
 import ../../enums
 import ../sub/migration_table_def
 import ./create_query_def
+import ../../queries/surreal/create_migration_table
+import ../../queries/surreal/create_table
+import ../../queries/surreal/reset_table
 
 
 proc create*(rdb:SurrealConnections, tables:varargs[Table]) =
