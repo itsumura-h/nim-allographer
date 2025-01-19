@@ -4,6 +4,9 @@ import ../../models/table
 import ../../enums
 import ../sub/migration_table_def
 import ./create_query_def
+import ../../queries/postgres/create_migration_table
+import ../../queries/postgres/reset_table
+import ../../queries/postgres/create_table
 
 
 proc create*(rdb:PostgresConnections, tables:varargs[Table]) =

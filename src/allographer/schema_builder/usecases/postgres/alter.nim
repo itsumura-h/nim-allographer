@@ -5,6 +5,12 @@ import ../../models/column
 import ../../enums
 import ../sub/migration_table_def
 import ./create_query_def
+import ../../queries/postgres/create_migration_table
+import ../../queries/postgres/add_column
+import ../../queries/postgres/change_column
+import ../../queries/postgres/rename_column
+import ../../queries/postgres/drop_column
+import ../../queries/postgres/rename_table
 
 
 proc alter*(rdb:PostgresConnections, tables:varargs[Table]) =
