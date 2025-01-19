@@ -1,4 +1,8 @@
-from db_connector/db_common import DbError
+when NimMajor >= 2:
+  from db_connector/db_common import DbError
+else:
+  from std/db_common import DbError
+
 import std/strformat
 # import checksums/sha1
 # import std/json
