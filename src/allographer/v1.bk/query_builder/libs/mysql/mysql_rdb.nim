@@ -16,6 +16,7 @@ when defined(unix):
 when defined(windows):
   const lib = "(libmysql.dll|libmariadb.dll)"
 
+
 type
   my_bool* = bool
   Pmy_bool* = ptr my_bool

@@ -34,11 +34,11 @@ type
 #   NET_ASYNC_ERROR
 #   NET_ASYNC_COMPLETE_NO_MORE_RESULTS
 
-# #  ------------ Start of declaration in "mysql_com.h"   ---------------------
-# #
-# #  ** Common definition between mysql server & client
-# #
-# # Field/table name length
+#  ------------ Start of declaration in "mysql_com.h"   ---------------------
+#
+#  ** Common definition between mysql server & client
+#
+# Field/table name length
 
 const
 #   NAME_LEN* = 64

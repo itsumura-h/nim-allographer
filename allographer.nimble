@@ -22,6 +22,7 @@ when NimMajor > 1:
 import strformat, os
 
 task test, "run testament test":
+  sleep(3000)
   exec &"testament p 'tests/sqlite/test*.nim'"
   exec &"testament p 'tests/postgres/test*.nim'"
   exec &"testament p 'tests/mariadb/test*.nim'"
