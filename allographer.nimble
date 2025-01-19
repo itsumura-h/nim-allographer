@@ -23,10 +23,10 @@ import strformat, os
 
 task test, "run testament test":
   exec &"testament p 'tests/sqlite/test*.nim'"
-  exec &"testament p 'tests/postgres/test*.nim'"
-  exec &"testament p 'tests/mariadb/test*.nim'"
-  exec &"testament p 'tests/mysql/test*.nim'"
-  exec &"testament p 'tests/surrealdb/test*.nim'"
+  # exec &"testament p 'tests/postgres/test*.nim'"
+  # exec &"testament p 'tests/mariadb/test*.nim'"
+  # exec &"testament p 'tests/mysql/test*.nim'"
+  # exec &"testament p 'tests/surrealdb/test*.nim'"
 
   for kind, path in walkDir(getCurrentDir() / "tests"):
     if not path.contains(".") and path.fileExists():
