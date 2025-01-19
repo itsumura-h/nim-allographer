@@ -14,7 +14,7 @@ srcDir        = "src"
 # Dependencies
 
 requires "nim >= 1.2.0"
-when (NimMajor, NimMinor) > (1, 6):
+when NimMajor > 1:
   requires "db_connector >= 0.1.0"
   requires "checksums >= 0.1.0"
 
@@ -22,8 +22,11 @@ when (NimMajor, NimMinor) > (1, 6):
 import strformat, os
 
 task test, "run testament test":
-  exec &"testament p tests/v{NimMajor}/test*"
-  exec &"testament p tests/v{NimMajor}/*/test*"
+  exec &"testament p 'tests/sqlite/test*.nim'"
+  exec &"testament p 'tests/postgres/test*.nim'"
+  exec &"testament p 'tests/mariadb/test*.nim'"
+  exec &"testament p 'tests/mysql/test*.nim'"
+  exec &"testament p 'tests/surrealdb/test*.nim'"
 
   for kind, path in walkDir(getCurrentDir() / "tests"):
     if not path.contains(".") and path.fileExists():
