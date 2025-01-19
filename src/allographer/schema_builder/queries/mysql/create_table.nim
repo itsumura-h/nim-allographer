@@ -1,8 +1,12 @@
+when NimMajor >= 2:
+  import checksums/sha1
+else:
+  import std/sha1
+
 import std/asyncdispatch
 import std/strformat
 import std/strutils
 import std/sequtils
-import checksums/sha1
 import std/json
 import ../../../query_builder
 import ../../enums

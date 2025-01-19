@@ -1,6 +1,10 @@
+when NimMajor >= 2:
+  import checksums/sha1
+else:
+  import std/sha1
+
 import std/json
 import std/strformat
-import checksums/sha1
 import ../../models/table
 import ./schema_utils
 import ./surreal_query_type

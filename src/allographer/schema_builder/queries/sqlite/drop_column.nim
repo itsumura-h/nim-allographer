@@ -1,9 +1,13 @@
+when NimMajor >= 2:
+  import checksums/sha1
+else:
+  import std/sha1
+
 import std/asyncdispatch
 import std/strutils
 import std/strformat
 import std/sequtils
 import std/re
-import checksums/sha1
 import std/json
 import ../../../query_builder/models/sqlite/sqlite_query
 import ../../../query_builder/models/sqlite/sqlite_exec

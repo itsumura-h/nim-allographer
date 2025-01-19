@@ -1,8 +1,12 @@
 ## https://surrealdb.com/docs/surrealql/statements/define/table
 
+when NimMajor >= 2:
+  import checksums/sha1
+else:
+  import std/sha1
+
 import std/strformat
 import std/strutils
-import checksums/sha1
 import std/json
 import ../../models/table
 import ./schema_utils

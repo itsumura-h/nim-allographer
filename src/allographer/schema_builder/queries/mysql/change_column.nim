@@ -1,7 +1,11 @@
+when NimMajor >= 2:
+  import checksums/sha1
+else:
+  import std/sha1
+
 import std/asyncdispatch
 import std/json
 import std/strformat
-import checksums/sha1
 import ../../models/table
 import ../../models/column
 import ./schema_utils

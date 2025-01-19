@@ -1,6 +1,10 @@
+when NimMajor >= 2:
+  import checksums/sha1
+else:
+  import std/sha1
+
 import std/strformat
 import std/strutils
-import checksums/sha1
 import std/sequtils
 import std/json
 import ../../enums

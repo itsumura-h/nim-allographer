@@ -1,6 +1,10 @@
+when NimMajor >= 2:
+  import checksums/sha1
+else:
+  import std/sha1
+
 import std/strformat
 import std/json
-import checksums/sha1
 import ../../models/table
 import ./schema_utils
 import ./postgres_query_type

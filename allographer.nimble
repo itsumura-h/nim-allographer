@@ -14,10 +14,9 @@ srcDir        = "src"
 # Dependencies
 
 requires "nim >= 1.2.0"
-requires "checksums >= 0.1.0"
-
-# when (NimMajor, NimMinor) > (1, 6):
-#   requires "db_connector >= 0.1.0"
+when NimMajor > 1:
+  requires "db_connector >= 0.1.0"
+  requires "checksums >= 0.1.0"
 
 
 import strformat, os
