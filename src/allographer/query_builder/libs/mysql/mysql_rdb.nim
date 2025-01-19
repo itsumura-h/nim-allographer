@@ -1,4 +1,4 @@
-import ../../../../utils
+import ../../../utils
 
 {.push, callconv: cdecl.}
 when defined(nimHasStyleChecks):

@@ -4,7 +4,7 @@ import std/strutils
 import std/sequtils
 import checksums/sha1
 import std/json
-import ../../../../query_builder
+import ../../../query_builder
 import ../../enums
 import ../../models/table
 import ../../models/column
