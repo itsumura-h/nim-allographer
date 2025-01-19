@@ -1,5 +1,5 @@
 discard """
-  cmd: "nim c -d:reset -r $file"
+  cmd: "nim c -d:reset $file"
 """
 
 import std/unittest

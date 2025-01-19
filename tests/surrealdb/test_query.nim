@@ -1,5 +1,5 @@
 discard """
-  cmd: "nim c -d:reset -r $file"
+  cmd: "nim c -d:reset $file"
 """
 
 # nim c -r -d:reset tests/v2/surrealdb/test_query.nim
