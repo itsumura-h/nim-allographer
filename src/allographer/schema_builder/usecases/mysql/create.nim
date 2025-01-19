@@ -4,6 +4,9 @@ import ../../../query_builder/models/mysql/mysql_types
 import ../../models/table
 import ../sub/migration_table_def
 import ./create_query_def
+import ../../queries/mysql/create_migration_table
+import ../../queries/mysql/create_table
+import ../../queries/mysql/reset_table
 
 
 proc create*(rdb:MysqlConnections, tables:varargs[Table]) =
