@@ -1,5 +1,9 @@
+when NimMajor >= 2:
+  import checksums/sha1
+else:
+  import std/sha1
+
 import std/json
-import checksums/sha1
 import ../../models/table
 import ../../models/column
 import ./schema_utils
