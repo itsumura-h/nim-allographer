@@ -4,6 +4,8 @@ import ../../models/table
 import ../../enums
 import ../sub/migration_table_def
 import ./create_query_def
+import ../../queries/mariadb/create_migration_table
+import ../../queries/mariadb/drop_table
 
 
 proc drop*(rdb:MariadbConnections, tables:varargs[Table]) =

@@ -29,19 +29,15 @@ proc alter*(rdb:SqliteConnections, tables:varargs[Table]) =
         column.usecaseType = Alter 
         case column.migrationType
         of AddColumn:
-          discard
           query = createSchema(rdb, table, column)
           query.addColumn(isReset)
         of ChangeColumn:
-          discard
           query = createSchema(rdb, table, column)
           query.changeColumn(isReset)
         of RenameColumn:
-          discard
           query = createSchema(rdb, table, column)
           query.renameColumn(isReset)
         of DropColumn:
-          discard
           query = createSchema(rdb, table, column)
           query.dropColumn(isReset)
     of ChangeTable:
