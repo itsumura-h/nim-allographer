@@ -47,9 +47,6 @@ proc clearTables*(rdb:SqliteConnections) {.async.} =
 
 proc clearTables*(rdb:SurrealConnections) {.async.} =
   let dbInfo = rdb.raw("INFO FOR DB").info().await
-  echo "=".repeat(30)
-  echo "dbInfo: ", dbInfo
-  
   let tables = dbInfo[0]["result"]["tb"]
   for (table, _) in tables.pairs:
     if not table.startsWith("_"):

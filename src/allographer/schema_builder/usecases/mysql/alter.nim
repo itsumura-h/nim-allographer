@@ -5,6 +5,12 @@ import ../../models/column
 import ../../enums
 import ../sub/migration_table_def
 import ./create_query_def
+import ../../queries/mysql/create_migration_table
+import ../../queries/mysql/add_column
+import ../../queries/mysql/change_column
+import ../../queries/mysql/rename_column
+import ../../queries/mysql/drop_column
+import ../../queries/mysql/rename_table
 
 
 proc alter*(rdb:MysqlConnections, tables:varargs[Table]) =

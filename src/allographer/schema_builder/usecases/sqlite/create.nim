@@ -4,6 +4,9 @@ import ../../../query_builder/models/sqlite/sqlite_types
 import ../../models/table
 import ../sub/migration_table_def
 import ./create_query_def
+import ../../queries/sqlite/create_migration_table
+import ../../queries/sqlite/reset_table
+import ../../queries/sqlite/create_table
 
 
 proc create*(rdb:SqliteConnections, tables:varargs[Table]) =

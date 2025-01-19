@@ -5,6 +5,12 @@ import ../../models/column
 import ../../enums
 import ../sub/migration_table_def
 import ./create_query_def
+import ../../queries/mariadb/create_migration_table
+import ../../queries/mariadb/add_column
+import ../../queries/mariadb/change_column
+import ../../queries/mariadb/rename_column
+import ../../queries/mariadb/drop_column
+import ../../queries/mariadb/rename_table
 
 
 proc alter*(rdb:MariadbConnections, tables:varargs[Table]) =
@@ -23,19 +29,15 @@ proc alter*(rdb:MariadbConnections, tables:varargs[Table]) =
         column.usecaseType = Alter 
         case column.migrationType
         of AddColumn:
-          discard
           query = createSchema(rdb, table, column)
           query.addColumn(isReset)
         of ChangeColumn:
-          discard
           query = createSchema(rdb, table, column)
           query.changeColumn(isReset)
         of RenameColumn:
-          discard
           query = createSchema(rdb, table, column)
           query.renameColumn(isReset)
         of DropColumn:
-          discard
           query = createSchema(rdb, table, column)
           query.dropColumn(isReset)
     of ChangeTable:

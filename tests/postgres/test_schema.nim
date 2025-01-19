@@ -2,6 +2,8 @@ discard """
   cmd: "nim c -d:reset $file"
 """
 
+# nim c -d:reset -r tests/postgres/test_schema.nim
+
 import std/unittest
 import std/asyncdispatch
 import std/json
