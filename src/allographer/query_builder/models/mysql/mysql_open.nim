@@ -23,7 +23,7 @@ proc dbOpen*(_:type MySQL, database: string, user: string, password: string,
         "user": user,
         "password": password,
         "host": host,
-        "port": port
+        "port": $port
       }
       dbError(errmsg, info)
     conns[i] = Connection(
