@@ -18,7 +18,14 @@ proc dbOpen*(_:type MySQL, database: string, user: string, password: string,
     if mysql_rdb.real_connect(conn, host, user, password, database, port.int32, nil, 0) == nil:
       var errmsg = $mysql_rdb.error(conn)
       mysql_rdb.close(conn)
-      dbError(errmsg)
+      let info = {
+        "database": database,
+        "user": user,
+        "password": password,
+        "host": host,
+        "port": port
+      }
+      dbError(errmsg, info)
     conns[i] = Connection(
       conn: conn,
       isBusy: false,
