@@ -338,6 +338,7 @@ proc find*(self: SurrealQuery, id:SurrealId, key="id"):Future[Option[JsonNode]] 
     raise getCurrentException()
 
 
+# ==================== insert JsonNode ====================
 proc insert*(self:SurrealQuery, items:JsonNode) {.async.} =
   ## https://surrealdb.com/docs/surrealql/statements/insert
   let sql = self.insertValueBuilder(items)
@@ -374,6 +375,45 @@ proc insertId*(self: SurrealQuery, items: seq[JsonNode], key="id"):Future[seq[Su
     result[i] = SurrealId.new(row[key].getStr)
 
 
+# ==================== insert Object ====================
+proc insert*[T](self:SurrealQuery, items:T) {.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/insert
+  let sql = self.insertValueBuilder(%items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc insert*[T](self:SurrealQuery, items:seq[T]) {.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/insert
+  let items = items.mapIt(%it)
+  var sql = self.insertValuesBuilder(items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc insertId*[T](self:SurrealQuery, items:T, key="id"):Future[SurrealId] {.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/insert
+  let sql = self.insertValueBuilder(%items)
+  self.log.logger(sql)
+  let res = self.getRow(sql).await
+  if res.isSome():
+    return SurrealId.new(res.get()[key].getStr())
+  else:
+    return SurrealId.new()
+
+
+proc insertId*[T](self: SurrealQuery, items: seq[T], key="id"):Future[seq[SurrealId]] {.async.} =
+  result = newSeq[SurrealId](items.len)
+  let items = items.mapIt(%it)
+  var sql = self.insertValuesBuilder(items)
+  self.log.logger(sql)
+  let res = self.getAllRows(sql).await
+  var i = 0
+  for row in res.items:
+    defer: i.inc()
+    result[i] = SurrealId.new(row[key].getStr)
+
+
 proc update*(self: SurrealQuery, items: JsonNode){.async.} =
   ## https://surrealdb.com/docs/surrealql/statements/update
   var sql = self.updateBuilder(items)
@@ -389,6 +429,25 @@ proc update*(self:SurrealConnections, id:SurrealId, items:JsonNode) {.async.} =
     newJObject()
   )
   let sql = surrealQuery.updateMergeBuilder(id.rawid, items)
+  surrealQuery.log.logger(sql)
+  surrealQuery.exec(sql).await
+
+
+proc update*[T](self: SurrealQuery, items: T){.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/update
+  var sql = self.updateBuilder(%items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc update*[T](self:SurrealConnections, id:SurrealId, items:T) {.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/update
+  let surrealQuery = SurrealQuery.new(
+    self.log,
+    self.pools,
+    newJObject()
+  )
+  let sql = surrealQuery.updateMergeBuilder(id.rawid, %items)
   surrealQuery.log.logger(sql)
   surrealQuery.exec(sql).await
 

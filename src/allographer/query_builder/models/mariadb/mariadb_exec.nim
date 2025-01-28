@@ -3,6 +3,7 @@ import std/json
 import std/options
 import std/strformat
 import std/strutils
+import std/sequtils
 import std/times
 import ../../libs/mariadb/mariadb_impl
 import ../../log
@@ -426,7 +427,7 @@ proc findPlain*(self:MariadbQuery, id: int, key="id"):Future[seq[string]] {.asyn
   return self.findPlain($id, key).await
 
 
-# ==================== insert ====================
+# ==================== insert JsonNode ====================
 proc insert*(self:MariadbQuery, items:JsonNode) {.async.} =
   ## items is `JObject`
   var sql = self.insertValueBuilder(items)
@@ -457,8 +458,46 @@ proc insertId*(self: MariadbQuery, items: seq[JsonNode], key="id"):Future[seq[st
     self.placeHolder = newJArray()
 
 
+# ==================== insert Object ====================
+proc insert*[T](self:MariadbQuery, items:T) {.async.} =
+  var sql = self.insertValueBuilder(%items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc insert*[T](self:MariadbQuery, items:seq[T]) {.async.} =
+  let items = items.mapIt(%it)
+  var sql = self.insertValuesBuilder(items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc insertId*[T](self:MariadbQuery, items:T, key="id"):Future[string] {.async.} =
+  var sql = self.insertValueBuilder(%items)
+  sql.add(&" RETURNING `{key}`")
+  self.log.logger(sql)
+  return self.insertId(sql, key).await
+
+
+proc insertId*[T](self: MariadbQuery, items: seq[T], key="id"):Future[seq[string]] {.async.} =
+  result = newSeq[string](items.len)
+  for i, item in items:
+    var sql = self.insertValueBuilder(%item)
+    sql.add(&" RETURNING `{key}`")
+    self.log.logger(sql)
+    result[i] = self.insertId(sql, key).await
+    self.placeHolder = newJArray()
+
+
+# ==================== update JsonNode ====================
 proc update*(self: MariadbQuery, items: JsonNode){.async.} =
   var sql = self.updateBuilder(items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc update*[T](self: MariadbQuery, items: T){.async.} =
+  var sql = self.updateBuilder(%items)
   self.log.logger(sql)
   self.exec(sql).await
 

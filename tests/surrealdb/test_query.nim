@@ -2,7 +2,7 @@ discard """
   cmd: "nim c -d:reset $file"
 """
 
-# nim c -r -d:reset tests/v2/surrealdb/test_query.nim
+# nim c -r -d:reset tests/surrealdb/test_query.nim
 
 import std/unittest
 import std/asyncdispatch
@@ -352,6 +352,33 @@ suite($rdb & " insert"):
     res = rdb.table("user").where("email", "is", nil).first().waitFor
     check res.get["email"] == newJNull()
 
+  
+
+  test("insert [T]"):
+    type User = object
+      name:string
+
+    let user = User(name: "Alice")
+    rdb.table("user").insert(user).waitFor
+
+    let row = rdb.table("user").orderBy("index", Desc).first().waitFor().get()
+    check row["name"].getStr() == "Alice"
+
+
+  test("insert seq[T]"):
+    type User = object
+      name:string
+
+    let users = @[
+      User(name: "Alice"),
+      User(name: "Bob"),
+    ]
+
+    rdb.table("user").insert(users).waitFor
+    let t = rdb.table("user").orderBy("index", Desc).limit(2).get().waitFor()
+    check t[0]["name"].getStr() == "Bob"
+    check t[1]["name"].getStr() == "Alice"
+
 
 suite($rdb & " update"):
   setup:
@@ -366,10 +393,35 @@ suite($rdb & " update"):
     check user1["name"].getStr() == "Alice"
 
 
+  test("update [T]"):
+    type User = object
+      name:string
+
+    let user = User(name: "Alice")
+    var user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
+    let user1Id = SurrealId.new(user1["id"].getStr())
+    rdb.table("user").where("id", "=", user1Id).update(user).waitFor()
+    user1 = rdb.table("user").find(user1Id).waitFor().get()
+    check user1["name"].getStr() == "Alice"
+
+
   test("update merge"):
     var user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
     let user1Id = SurrealId.new(user1["id"].getStr())
     rdb.update(user1Id, %*{"name": "updated"}).waitFor()
+    user1 = rdb.table("user").find(user1Id).waitFor().get()
+    check user1["name"].getStr() == "updated"
+
+
+  test("update merge [T]"):
+    type User = object
+      name:string
+
+
+    var user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
+    let user1Id = SurrealId.new(user1["id"].getStr())
+    let user = User(name: "updated")
+    rdb.update(user1Id, user).waitFor()
     user1 = rdb.table("user").find(user1Id).waitFor().get()
     check user1["name"].getStr() == "updated"
 

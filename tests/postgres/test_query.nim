@@ -2,7 +2,7 @@ discard """
   cmd: "nim c -d:reset -d:ssl -r $file"
 """
 
-# nim c -d:reset -d:ssl -r tests/v2/postgres/test_query.nim
+# nim c -d:reset -d:ssl -r tests/postgres/test_query.nim
 
 import std/unittest
 import std/asyncdispatch
@@ -405,12 +405,48 @@ suite($rdb & " insert"):
     check res.get["email"] == newJNull()
 
 
+  test("insert [T]"):
+    type User = object
+      name:string
+
+    let user = User(name: "Alice")
+    rdb.table("user").insert(user).waitFor
+
+    let row = rdb.table("user").orderBy("id", Desc).first().waitFor().get()
+    check row["name"].getStr() == "Alice"
+
+
+  test("insert seq[T]"):
+    type User = object
+      name:string
+
+    let users = @[
+      User(name: "Alice"),
+      User(name: "Bob"),
+    ]
+
+    rdb.table("user").insert(users).waitFor
+    let t = rdb.table("user").orderBy("id", Desc).limit(2).get().waitFor()
+    check t[0]["name"].getStr() == "Bob"
+    check t[1]["name"].getStr() == "Alice"
+
+
 suite($rdb & " update"):
   setup:
     setup(rdb)
 
   test("update"):
     rdb.table("user").where("id", "=", 1).update(%*{"name": "Alice"}).waitFor
+    var t = rdb.table("user").find(1).waitFor().get()
+    check t["name"].getStr() == "Alice"
+
+
+  test("update [T]"):
+    type User = object
+      name:string
+
+    let user = User(name: "Alice")
+    rdb.table("user").where("id", "=", 1).update(user).waitFor
     var t = rdb.table("user").find(1).waitFor().get()
     check t["name"].getStr() == "Alice"
 

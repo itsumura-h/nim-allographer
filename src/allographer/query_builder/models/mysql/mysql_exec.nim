@@ -3,6 +3,7 @@ import std/json
 import std/options
 import std/strformat
 import std/strutils
+import std/sequtils
 import std/times
 import ../../libs/mysql/mysql_impl
 import ../../log
@@ -429,7 +430,7 @@ proc findPlain*(self:MysqlQuery, id: int, key="id"):Future[seq[string]] {.async.
   return self.findPlain($id, key).await
 
 
-# ==================== intert ====================
+# ==================== intert JsonNode ====================
 proc insert*(self:MysqlQuery, items:JsonNode) {.async.} =
   ## items is `JObject`
   var sql = self.insertValueBuilder(items)
@@ -460,8 +461,45 @@ proc insertId*(self: MysqlQuery, items: seq[JsonNode], key="id"):Future[seq[stri
     self.placeHolder = newJArray()
 
 
+# ==================== intert Object ====================
+proc insert*[T](self:MysqlQuery, items:T) {.async.} =
+  var sql = self.insertValueBuilder(%items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc insert*[T](self:MysqlQuery, items:seq[T]) {.async.} =
+  let items = items.mapIt(%it)
+  var sql = self.insertValuesBuilder(items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc insertId*[T](self:MysqlQuery, items:T, key="id"):Future[string] {.async.} =
+  var sql = self.insertValueBuilder(%items)
+  # sql.add(&" RETURNING `{key}`")
+  self.log.logger(sql)
+  return self.insertId(sql, key).await
+
+
+proc insertId*[T](self: MysqlQuery, items: seq[T], key="id"):Future[seq[string]] {.async.} =
+  result = newSeq[string](items.len)
+  for i, item in items:
+    var sql = self.insertValueBuilder(%item)
+    # sql.add(&" RETURNING `{key}`")
+    self.log.logger(sql)
+    result[i] = self.insertId(sql, key).await
+    self.placeHolder = newJArray()
+
+
 proc update*(self: MysqlQuery, items: JsonNode){.async.} =
   var sql = self.updateBuilder(items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc update*[T](self: MysqlQuery, items: T){.async.} =
+  var sql = self.updateBuilder(%items)
   self.log.logger(sql)
   self.exec(sql).await
 
