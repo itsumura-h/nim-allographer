@@ -3,6 +3,7 @@ import std/json
 import std/options
 import std/strformat
 import std/strutils
+import std/sequtils
 import std/times
 import ../../libs/sqlite/sqlite_impl
 import ../../log
@@ -597,7 +598,7 @@ proc findPlain*(self:SqliteQuery, id: int, key="id"):Future[seq[string]] {.async
 #   return self.find($id, typ, key).await
 
 
-# ==================== insert ====================
+# ==================== insert JsonNode ====================
 proc insert*(self:SqliteQuery, items:JsonNode) {.async.} =
   let sql = self.insertValueBuilder(items)
   self.log.logger(sql)
@@ -625,6 +626,36 @@ proc insertId*(self: SqliteQuery, items: seq[JsonNode], key="id"):Future[seq[str
     self.placeHolder = newJArray()
 
 
+# ==================== insert Object ====================
+proc insert*[T](self:SqliteQuery, items:T) {.async.} =
+  let sql = self.insertValueBuilder(%items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc insert*[T](self:SqliteQuery, items:seq[T]) {.async.} =
+  let items = items.mapIt(%it)
+  let sql = self.insertValuesBuilder(items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc insertId*[T](self: SqliteQuery, items: T, key="id"):Future[string] {.async.} =
+  let sql = self.insertValueBuilder(%items)
+  self.log.logger(sql)
+  return self.insertId(sql, key).await
+
+
+proc insertId*[T](self: SqliteQuery, items: seq[T], key="id"):Future[seq[string]] {.async.} =
+  result = newSeq[string](items.len)
+  for i, item in items:
+    let sql = self.insertValueBuilder(%item)
+    self.log.logger(sql)
+    result[i] = self.insertId(sql, key).await
+    self.placeHolder = newJArray()
+
+
+# ==================== update ====================
 proc update*(self:SqliteQuery, items:JsonNode) {.async.} =
   let sql = self.updateBuilder(items)
   self.log.logger(sql)
