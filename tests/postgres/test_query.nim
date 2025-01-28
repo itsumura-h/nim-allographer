@@ -2,7 +2,7 @@ discard """
   cmd: "nim c -d:reset -d:ssl -r $file"
 """
 
-# nim c -d:reset -d:ssl -r tests/v2/postgres/test_query.nim
+# nim c -d:reset -d:ssl -r tests/postgres/test_query.nim
 
 import std/unittest
 import std/asyncdispatch
@@ -403,6 +403,32 @@ suite($rdb & " insert"):
     res = rdb.table("user").where("email", "is", nil).first().waitFor
     echo res.get
     check res.get["email"] == newJNull()
+
+
+  test("insert [T]"):
+    type User = object
+      name:string
+
+    let user = User(name: "Alice")
+    rdb.table("user").insert(user).waitFor
+
+    let row = rdb.table("user").orderBy("id", Desc).first().waitFor().get()
+    check row["name"].getStr() == "Alice"
+
+
+  test("insert rows [T]"):
+    type User = object
+      name:string
+
+    let users = @[
+      User(name: "Alice"),
+      User(name: "Bob"),
+    ]
+
+    rdb.table("user").insert(users).waitFor
+    let t = rdb.table("user").orderBy("id", Desc).limit(2).get().waitFor()
+    check t[0]["name"].getStr() == "Bob"
+    check t[1]["name"].getStr() == "Alice"
 
 
 suite($rdb & " update"):

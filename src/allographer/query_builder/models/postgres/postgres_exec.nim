@@ -3,6 +3,7 @@ import std/json
 import std/options
 import std/strformat
 import std/strutils
+import std/sequtils
 import std/times
 import ../../libs/postgres/postgres_lib
 import ../../libs/postgres/postgres_impl
@@ -453,7 +454,7 @@ proc findPlain*(self:PostgresQuery, id: int, key="id"):Future[seq[string]] {.asy
   return self.findPlain($id, key).await
 
 
-# ==================== insert ====================
+# ==================== insert JsonNode ====================
 proc insert*(self:PostgresQuery, items:JsonNode) {.async.} =
   ## items is `JObject`
   var sql = self.insertValueBuilder(items)
@@ -488,6 +489,42 @@ proc insertId*(self: PostgresQuery, items: seq[JsonNode], key="id"):Future[seq[s
     self.placeHolder = newJArray()
 
 
+# ==================== insert Object ====================
+proc insert*[T](self:PostgresQuery, items:T) {.async.} =
+  var sql = self.insertValueBuilder(%items)
+  sql = questionToDaller(sql)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc insert*[T](self:PostgresQuery, items:seq[T]) {.async.} =
+  let items = items.mapIt(%it)
+  var sql = self.insertValuesBuilder(items)
+  sql = questionToDaller(sql)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc insertId*[T](self:PostgresQuery, items:T, key="id"):Future[string] {.async.} =
+  var sql = self.insertValueBuilder(%items)
+  sql.add(&" RETURNING \"{key}\"")
+  sql = questionToDaller(sql)
+  self.log.logger(sql)
+  return self.insertId(sql, key).await
+
+
+proc insertId*[T](self: PostgresQuery, items: seq[T], key="id"):Future[seq[string]] {.async.} =
+  result = newSeq[string](items.len)
+  for i, item in items:
+    var sql = self.insertValueBuilder(%item)
+    sql.add(&" RETURNING \"{key}\"")
+    sql = questionToDaller(sql)
+    self.log.logger(sql)
+    result[i] = self.insertId(sql, key).await
+    self.placeHolder = newJArray()
+
+
+# ==================== update ====================
 proc update*(self: PostgresQuery, items: JsonNode){.async.} =
   var sql = self.updateBuilder(items)
   sql = questionToDaller(sql)
