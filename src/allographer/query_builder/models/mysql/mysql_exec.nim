@@ -498,6 +498,12 @@ proc update*(self: MysqlQuery, items: JsonNode){.async.} =
   self.exec(sql).await
 
 
+proc update*[T](self: MysqlQuery, items: T){.async.} =
+  var sql = self.updateBuilder(%items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
 proc delete*(self: MysqlQuery){.async.} =
   var sql = self.deleteBuilder()
   self.log.logger(sql)
