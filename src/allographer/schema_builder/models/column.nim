@@ -287,13 +287,18 @@ proc reference*(self:Column, column:string):Column =
 
 
 proc onTable*(self:Column, table:string):Column =
-  self.info["table"] = %*table
+  if self.info.kind == JNull:
+    self.info = %*{"table": table}
+  else:
+    self.info["table"] = %table
   return self
+
 
 when NimMajor == 1:
   proc on*(self:Column, table:string):Column {.deprecated: "Consider using onTable instead".} =
     self.info["table"] = %*table
     return self
+
 
 proc onDelete*(self:Column, kind:ForeignOnDelete):Column =
   self.foreignOnDelete = kind
