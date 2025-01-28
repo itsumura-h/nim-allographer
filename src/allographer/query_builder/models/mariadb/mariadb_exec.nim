@@ -496,6 +496,12 @@ proc update*(self: MariadbQuery, items: JsonNode){.async.} =
   self.exec(sql).await
 
 
+proc update*[T](self: MariadbQuery, items: T){.async.} =
+  var sql = self.updateBuilder(%items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
 proc delete*(self: MariadbQuery){.async.} =
   var sql = self.deleteBuilder()
   self.log.logger(sql)

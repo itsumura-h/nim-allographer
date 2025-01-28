@@ -442,6 +442,16 @@ suite($rdb & " update"):
     check t["name"].getStr() == "Alice"
 
 
+  test("update [T]"):
+    type User = object
+      name:string
+
+    let user = User(name: "Alice")
+    rdb.table("user").where("id", "=", 1).update(user).waitFor
+    var t = rdb.table("user").find(1).waitFor().get()
+    check t["name"].getStr() == "Alice"
+
+
 suite($rdb & " delete"):
   setup(rdb)
 
