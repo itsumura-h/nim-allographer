@@ -433,6 +433,25 @@ proc update*(self:SurrealConnections, id:SurrealId, items:JsonNode) {.async.} =
   surrealQuery.exec(sql).await
 
 
+proc update*[T](self: SurrealQuery, items: T){.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/update
+  var sql = self.updateBuilder(%items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
+proc update*[T](self:SurrealConnections, id:SurrealId, items:T) {.async.} =
+  ## https://surrealdb.com/docs/surrealql/statements/update
+  let surrealQuery = SurrealQuery.new(
+    self.log,
+    self.pools,
+    newJObject()
+  )
+  let sql = surrealQuery.updateMergeBuilder(id.rawid, %items)
+  surrealQuery.log.logger(sql)
+  surrealQuery.exec(sql).await
+
+
 proc delete*(self: SurrealQuery){.async.} =
   ## https://surrealdb.com/docs/surrealql/statements/delete
   let sql = self.deleteBuilder()

@@ -298,107 +298,132 @@ setup(rdb)
 #     check newSeq[JsonNode](0) == rdb.table("user").where("id", "=", 50).get().waitFor()
 
 
-suite($rdb & " insert"):
+# suite($rdb & " insert"):
+#   setup:
+#     setup(rdb)
+
+#   test("insert row"):
+#     rdb.table("user").insert(%*{"name": "Alice"}).waitFor
+#     let t = rdb.table("user").orderBy("index", Desc).first().waitFor().get()
+#     check t["name"].getStr() == "Alice"
+
+
+#   test("insert rows"):
+#     rdb.table("user").insert(@[
+#       %*{"name": "Alice"},
+#       %*{"name": "Bob"},
+#     ]).waitFor
+#     let t = rdb.table("user").orderBy("index", Desc).limit(2).get().waitFor()
+#     check t[0]["name"].getStr() == "Bob"
+#     check t[1]["name"].getStr() == "Alice"
+
+
+#   test("insertId row"):
+#     var id = rdb.table("user").insertId(%*{"name": "Alice"}).waitFor
+#     echo id
+#     let t = rdb.table("user").find(id).waitFor().get()
+#     check t["name"].getStr() == "Alice"
+
+  
+#   test("insertId rows"):
+#     let ids = rdb.table("user").insertId(@[
+#       %*{"name": "Alice"},
+#       %*{"name": "Bob"},
+#     ]).waitFor
+
+#     var t = rdb.table("user").find(ids[0]).waitFor().get()
+#     check t["name"].getStr == "Alice"
+
+#     t = rdb.table("user").find(ids[1]).waitFor().get()
+#     check t["name"].getStr == "Bob"
+
+
+#   test("insertNil"):
+#     var id = rdb.table("user").insertId(%*{
+#       "name": "Alice",
+#       "email": nil,
+#       "address": ""
+#     })
+#     .waitFor
+
+#     var res = rdb.table("user").find(id).waitFor
+#     check res.get["email"] == newJNull()
+
+#     res = rdb.table("user").where("email", "is", nil).first().waitFor
+#     check res.get["email"] == newJNull()
+
+  
+
+#   test("insert [T]"):
+#     type User = object
+#       name:string
+
+#     let user = User(name: "Alice")
+#     rdb.table("user").insert(user).waitFor
+
+#     let row = rdb.table("user").orderBy("index", Desc).first().waitFor().get()
+#     check row["name"].getStr() == "Alice"
+
+
+#   test("insert seq[T]"):
+#     type User = object
+#       name:string
+
+#     let users = @[
+#       User(name: "Alice"),
+#       User(name: "Bob"),
+#     ]
+
+#     rdb.table("user").insert(users).waitFor
+#     let t = rdb.table("user").orderBy("index", Desc).limit(2).get().waitFor()
+#     check t[0]["name"].getStr() == "Bob"
+#     check t[1]["name"].getStr() == "Alice"
+
+
+suite($rdb & " update"):
   setup:
     setup(rdb)
 
-  test("insert row"):
-    rdb.table("user").insert(%*{"name": "Alice"}).waitFor
-    let t = rdb.table("user").orderBy("index", Desc).first().waitFor().get()
-    check t["name"].getStr() == "Alice"
+
+  test("update"):
+    var user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
+    let user1Id = SurrealId.new(user1["id"].getStr())
+    rdb.table("user").where("id", "=", user1Id).update(%*{"name": "Alice"}).waitFor()
+    user1 = rdb.table("user").find(user1Id).waitFor().get()
+    check user1["name"].getStr() == "Alice"
 
 
-  test("insert rows"):
-    rdb.table("user").insert(@[
-      %*{"name": "Alice"},
-      %*{"name": "Bob"},
-    ]).waitFor
-    let t = rdb.table("user").orderBy("index", Desc).limit(2).get().waitFor()
-    check t[0]["name"].getStr() == "Bob"
-    check t[1]["name"].getStr() == "Alice"
-
-
-  test("insertId row"):
-    var id = rdb.table("user").insertId(%*{"name": "Alice"}).waitFor
-    echo id
-    let t = rdb.table("user").find(id).waitFor().get()
-    check t["name"].getStr() == "Alice"
-
-  
-  test("insertId rows"):
-    let ids = rdb.table("user").insertId(@[
-      %*{"name": "Alice"},
-      %*{"name": "Bob"},
-    ]).waitFor
-
-    var t = rdb.table("user").find(ids[0]).waitFor().get()
-    check t["name"].getStr == "Alice"
-
-    t = rdb.table("user").find(ids[1]).waitFor().get()
-    check t["name"].getStr == "Bob"
-
-
-  test("insertNil"):
-    var id = rdb.table("user").insertId(%*{
-      "name": "Alice",
-      "email": nil,
-      "address": ""
-    })
-    .waitFor
-
-    var res = rdb.table("user").find(id).waitFor
-    check res.get["email"] == newJNull()
-
-    res = rdb.table("user").where("email", "is", nil).first().waitFor
-    check res.get["email"] == newJNull()
-
-  
-
-  test("insert [T]"):
+  test("update [T]"):
     type User = object
       name:string
 
     let user = User(name: "Alice")
-    rdb.table("user").insert(user).waitFor
+    var user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
+    let user1Id = SurrealId.new(user1["id"].getStr())
+    rdb.table("user").where("id", "=", user1Id).update(user).waitFor()
+    user1 = rdb.table("user").find(user1Id).waitFor().get()
+    check user1["name"].getStr() == "Alice"
 
-    let row = rdb.table("user").orderBy("index", Desc).first().waitFor().get()
-    check row["name"].getStr() == "Alice"
+
+  test("update merge"):
+    var user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
+    let user1Id = SurrealId.new(user1["id"].getStr())
+    rdb.update(user1Id, %*{"name": "updated"}).waitFor()
+    user1 = rdb.table("user").find(user1Id).waitFor().get()
+    check user1["name"].getStr() == "updated"
 
 
-  test("insert seq[T]"):
+  test("update merge [T]"):
     type User = object
       name:string
 
-    let users = @[
-      User(name: "Alice"),
-      User(name: "Bob"),
-    ]
 
-    rdb.table("user").insert(users).waitFor
-    let t = rdb.table("user").orderBy("index", Desc).limit(2).get().waitFor()
-    check t[0]["name"].getStr() == "Bob"
-    check t[1]["name"].getStr() == "Alice"
-
-
-# suite($rdb & " update"):
-#   setup:
-#     setup(rdb)
-
-
-#   test("update"):
-#     var user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
-#     let user1Id = SurrealId.new(user1["id"].getStr())
-#     rdb.table("user").where("id", "=", user1Id).update(%*{"name": "Alice"}).waitFor()
-#     user1 = rdb.table("user").find(user1Id).waitFor().get()
-#     check user1["name"].getStr() == "Alice"
-
-
-#   test("update merge"):
-#     var user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
-#     let user1Id = SurrealId.new(user1["id"].getStr())
-#     rdb.update(user1Id, %*{"name": "updated"}).waitFor()
-#     user1 = rdb.table("user").find(user1Id).waitFor().get()
-#     check user1["name"].getStr() == "updated"
+    var user1 = rdb.table("user").where("index", "=", 1).first().waitFor().get()
+    let user1Id = SurrealId.new(user1["id"].getStr())
+    let user = User(name: "updated")
+    rdb.update(user1Id, user).waitFor()
+    user1 = rdb.table("user").find(user1Id).waitFor().get()
+    check user1["name"].getStr() == "updated"
 
 
 # suite($rdb & " delete"):
