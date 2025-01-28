@@ -662,6 +662,12 @@ proc update*(self:SqliteQuery, items:JsonNode) {.async.} =
   self.exec(sql).await
 
 
+proc update*[T](self:SqliteQuery, items:T) {.async.} =
+  let sql = self.updateBuilder(%items)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
 proc delete*(self:SqliteQuery) {.async.} =
   let sql = self.deleteBuilder()
   self.log.logger(sql)
