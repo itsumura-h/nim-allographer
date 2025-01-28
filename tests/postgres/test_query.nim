@@ -416,7 +416,7 @@ suite($rdb & " insert"):
     check row["name"].getStr() == "Alice"
 
 
-  test("insert rows [T]"):
+  test("insert seq[T]"):
     type User = object
       name:string
 
