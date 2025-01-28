@@ -532,6 +532,13 @@ proc update*(self: PostgresQuery, items: JsonNode){.async.} =
   self.exec(sql).await
 
 
+proc update*[T](self: PostgresQuery, items: T){.async.} =
+  var sql = self.updateBuilder(%items)
+  sql = questionToDaller(sql)
+  self.log.logger(sql)
+  self.exec(sql).await
+
+
 proc delete*(self: PostgresQuery){.async.} =
   var sql = self.deleteBuilder()
   sql = questionToDaller(sql)
