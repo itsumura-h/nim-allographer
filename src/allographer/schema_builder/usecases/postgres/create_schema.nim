@@ -4,6 +4,7 @@ import std/strformat
 import std/json
 import std/tables
 import std/re
+import std/os
 import ../../../query_builder/models/postgres/postgres_types
 import ../../../query_builder/models/postgres/postgres_query
 import ../../../query_builder/models/postgres/postgres_exec
@@ -75,10 +76,10 @@ proc generateSchemaCode(tablesInfo: Table[string, seq[tuple[name: string, typ: s
   return code
 
 
-proc createSchema*(rdb: PostgresConnections) {.async.} =
+proc createSchema*(rdb: PostgresConnections, schemaPath="") {.async.} =
   ## create schema.nim
   let tablesInfo = rdb.getTableInfo().await
   let schemaCode = generateSchemaCode(tablesInfo)
   
-  writeFile("schema.nim", schemaCode)
+  writeFile(schemaPath / "schema.nim", schemaCode)
   echo "schema.nim generated successfully"

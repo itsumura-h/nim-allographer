@@ -4,9 +4,11 @@ import std/strformat
 import std/json
 import std/tables
 import std/re
+import std/os
 import ../../../query_builder/models/mariadb/mariadb_types
 import ../../../query_builder/models/mariadb/mariadb_query
 import ../../../query_builder/models/mariadb/mariadb_exec
+
 
 proc getTableInfo(rdb: MariaDBConnections): Future[Table[string, seq[tuple[name: string, typ: string]]]] {.async.} =
   ## get table info
@@ -73,10 +75,10 @@ proc generateSchemaCode(tablesInfo: Table[string, seq[tuple[name: string, typ: s
 
   return code
 
-proc createSchema*(rdb: MariaDBConnections) {.async.} =
+proc createSchema*(rdb: MariaDBConnections, schemaPath="") {.async.} =
   ## create schema.nim
   let tablesInfo = await rdb.getTableInfo()
   let schemaCode = generateSchemaCode(tablesInfo)
 
-  writeFile("schema.nim", schemaCode)
+  writeFile(schemaPath / "schema.nim", schemaCode)
   echo "schema.nim generated successfully"
