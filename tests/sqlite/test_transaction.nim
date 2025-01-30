@@ -10,7 +10,7 @@ import std/options
 import std/asyncdispatch
 import ../../src/allographer/schema_builder
 import ../../src/allographer/query_builder
-import ../connections
+import ./connections
 import ../clear_tables
 
 

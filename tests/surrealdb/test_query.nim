@@ -12,7 +12,7 @@ import std/strformat
 import std/times
 import ../../src/allographer/schema_builder
 import ../../src/allographer/query_builder
-import ../connections
+import ./connections
 import ../clear_tables
 
 

@@ -3,12 +3,11 @@ discard """
 """
 
 import std/unittest
-import std/asyncdispatch
 import std/os
 import std/strutils
 import std/json
 import ../../src/allographer/schema_builder
-import ../connections
+import ./connections
 import ../clear_tables
 
 
