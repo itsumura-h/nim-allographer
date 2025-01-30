@@ -3,6 +3,7 @@ discard """
 """
 
 import std/unittest
+import std/asyncdispatch
 import std/os
 import std/strutils
 import std/json
