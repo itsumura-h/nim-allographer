@@ -4,6 +4,7 @@ import std/strformat
 import std/json
 import std/tables
 import std/re
+import std/os
 import ../../../query_builder/models/mysql/mysql_types
 import ../../../query_builder/models/mysql/mysql_query
 import ../../../query_builder/models/mysql/mysql_exec
@@ -73,10 +74,10 @@ proc generateSchemaCode(tablesInfo: Table[string, seq[tuple[name: string, typ: s
 
   return code
 
-proc createSchema*(rdb: MysqlConnections) {.async.} =
+proc createSchema*(rdb: MysqlConnections, schemaPath="") {.async.} =
   ## create schema.nim
   let tablesInfo = await rdb.getTableInfo()
   let schemaCode = generateSchemaCode(tablesInfo)
   
-  writeFile("schema.nim", schemaCode)
+  writeFile(schemaPath / "schema.nim", schemaCode)
   echo "schema.nim generated successfully"

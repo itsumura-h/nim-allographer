@@ -13,7 +13,7 @@ import std/asyncdispatch
 import std/macros
 import ../../src/allographer/schema_builder
 import ../../src/allographer/query_builder
-import ../connections
+import ./connections
 import ../clear_tables
 
 
