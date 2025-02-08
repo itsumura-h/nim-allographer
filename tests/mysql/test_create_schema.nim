@@ -2,6 +2,8 @@ discard """
   cmd: "nim c -d:reset $file"
 """
 
+# nim c -d:reset -r tests/mysql/test_create_schema.nim
+
 import std/unittest
 import std/asyncdispatch
 import std/os
@@ -14,6 +16,7 @@ import ../clear_tables
 
 let rdb = mysql
 let schemaFilePath = getCurrentDir() / "schema.nim"
+clearTables(rdb).waitFor()
 
 suite "Schema output after migration":
   setup:
@@ -61,7 +64,7 @@ suite "Schema output after migration":
 
   test "should generate schema.nim file":
     # スキーマ生成
-    rdb.createSchema().waitFor()
+    rdb.createSchema(schemaFilePath).waitFor()
     
     # schema.nim ファイルの存在確認
     check fileExists(schemaFilePath)

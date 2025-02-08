@@ -75,9 +75,21 @@ proc generateSchemaCode(tablesInfo: Table[string, seq[tuple[name: string, typ: s
   return code
 
 proc createSchema*(rdb: MysqlConnections, schemaPath="") {.async.} =
-  ## create schema.nim
-  let tablesInfo = await rdb.getTableInfo()
-  let schemaCode = generateSchemaCode(tablesInfo)
-  
-  writeFile(schemaPath / "schema.nim", schemaCode)
-  echo "schema.nim generated successfully"
+  ## if schemaPath is not specified, the schema will be generated in the current directory
+  ## 
+  ## Default schema file name is `getCurrentDir() / "schema.nim"`
+  try:
+    let tablesInfo = rdb.getTableInfo().await
+    let schemaCode = generateSchemaCode(tablesInfo)
+
+    let schemaFilePath =
+      if schemaPath == "":
+        getCurrentDir() / "schema.nim"
+      else:
+        schemaPath
+    
+    writeFile(schemaFilePath, schemaCode)
+    echo "schema generated successfully in ", schemaFilePath
+  except Exception as e:
+    echo "Error generating schema: ", e.msg
+    raise
