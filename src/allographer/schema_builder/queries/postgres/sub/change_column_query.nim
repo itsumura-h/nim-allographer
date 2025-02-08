@@ -347,68 +347,83 @@ proc indexColumn(column:Column, table:Table):string =
   return &"CREATE INDEX IF NOT EXISTS \"{table.name}_{column.name}_index\" ON \"{table.name}\"(\"{column.name}\")"
 
 
+proc addCommentColumn(column:Column, table:Table):string =
+  return &"COMMENT ON COLUMN \"{table.name}\".\"{column.name}\" IS '{column.commentContent}'"
+
+
+proc addNullCommentColumn(column:Column, table:Table):string =
+  return &"COMMENT ON COLUMN \"{table.name}\".\"{column.name}\" IS NULL"
+
+
 proc changeColumnString*(table:Table, column:Column):seq[string] =
+  var queries:seq[string]
   case column.typ:
     # int
   of rdbIncrements:
-    notAllowedType("increments")
+    queries = column.changeIntColumn(table)
   of rdbInteger:
-    return column.changeIntColumn(table)
+    queries = column.changeIntColumn(table)
   of rdbSmallInteger:
-    return column.changeSmallIntColumn(table)
+    queries = column.changeSmallIntColumn(table)
   of rdbMediumInteger:
-    return column.changeMediumIntColumn(table)
+    queries = column.changeMediumIntColumn(table)
   of rdbBigInteger:
-    return column.changeBigIntColumn(table)
+    queries = column.changeBigIntColumn(table)
     # float
   of rdbDecimal:
-    return column.changeDecimalColumn(table)
+    queries = column.changeDecimalColumn(table)
   of rdbDouble:
-    return column.changeDecimalColumn(table)
+    queries = column.changeDecimalColumn(table)
   of rdbFloat:
-    return column.changeFloatColumn(table)
+    queries = column.changeFloatColumn(table)
     # char
   of rdbUuid:
-    return column.changeStringColumn(table)
+    queries = column.changeStringColumn(table)
   of rdbChar:
-    return column.changeCharColumn(table)
+    queries = column.changeCharColumn(table)
   of rdbString:
-    return column.changeStringColumn(table)
+    queries = column.changeStringColumn(table)
     # text
   of rdbText:
-    return column.changeTextColumn(table)
+    queries = column.changeTextColumn(table)
   of rdbMediumText:
-    return column.changeTextColumn(table)
+    queries = column.changeTextColumn(table)
   of rdbLongText:
-    return column.changeTextColumn(table)
+    queries = column.changeTextColumn(table)
     # date
   of rdbDate:
-    return column.changeDateColumn(table)
+    queries = column.changeDateColumn(table)
   of rdbDatetime:
-    return column.changeDatetimeColumn(table)
+    queries = column.changeDatetimeColumn(table)
   of rdbTime:
-    return column.changeTimeColumn(table)
+    queries = column.changeTimeColumn(table)
   of rdbTimestamp:
-    return column.changeTimestampColumn(table)
+    queries = column.changeTimestampColumn(table)
   of rdbTimestamps:
     notAllowedType("timestamps")
   of rdbSoftDelete:
     notAllowedType("softDelete")
     # others
   of rdbBinary:
-    return column.changeBlobColumn(table)
+    queries = column.changeBlobColumn(table)
   of rdbBoolean:
-    return column.changeBoolColumn(table)
+    queries = column.changeBoolColumn(table)
   of rdbEnumField:
-    return column.changeEnumColumn(table)
+    queries = column.changeEnumColumn(table)
   of rdbJson:
-    return column.changeJsonColumn(table)
+    queries = column.changeJsonColumn(table)
   # foreign
   of rdbForeign:
     notAllowedType("foreign")
   of rdbStrForeign:
     notAllowedType("strForeign")
 
+  if column.isIndex and column.typ != rdbIncrements:
+    queries.add(indexColumn(column, table))
 
-proc changeIndexString*(table:Table, column:Column):string =
-  return column.indexColumn(table)
+  if column.commentContent.len > 0:
+    queries.add(column.addCommentColumn(table))
+  elif column.isCommentNull:
+    queries.add(column.addNullCommentColumn(table))
+
+  return queries

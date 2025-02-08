@@ -15,6 +15,7 @@ import ../clear_tables
 
 
 let rdb = postgres
+clearTables(rdb).waitFor()
 
 suite("PostgreSQL create table"):
   test("create table"):
@@ -298,11 +299,32 @@ suite($rdb & " primary"):
 
 
 suite("Comment"):
-  test("column comment"):
+  test("create table with column comment"):
     rdb.create(
       table("Comment", [
         Column.integer("index1").comment("index1 comment"),
         Column.string("string").comment("string comment")
+      ])
+    )
+
+  test("alter table change column comment"):
+    rdb.alter(
+      table("Comment", [
+        Column.integer("index1").comment("changed index1 comment").change()
+      ])
+    )
+
+  test("alter table add column comment"):
+    rdb.alter(
+      table("Comment", [
+        Column.string("string2").comment("string2 comment").add()
+      ])
+    )
+
+  test("alter table add null comment"):
+    rdb.alter(
+      table("Comment", [
+        Column.string("string").comment(nil).change()
       ])
     )
 

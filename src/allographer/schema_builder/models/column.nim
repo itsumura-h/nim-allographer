@@ -20,6 +20,7 @@ type Column* = ref object
   defaultDatetime*: DefaultDateTime
   foreignOnDelete*: ForeignOnDelete
   commentContent*:string
+  isCommentNull*:bool
   info*: JsonNode
   checksum*:string
   # alter table
@@ -51,6 +52,7 @@ proc toSchema*(self:Column):JsonNode =
     "defaultJson": self.defaultJson,
     "foreignOnDelete": self.foreignOnDelete,
     "comment": self.commentContent,
+    "isCommentNull": self.isCommentNull,
     "info": self.info,
     "previousName":self.previousName,
     "migrationType":self.migrationType,
@@ -387,6 +389,10 @@ proc unsigned*(c: Column): Column =
 
 proc comment*(c: Column, value:string): Column =
   c.commentContent = value
+  return c
+
+proc comment*(c: Column, arg:type nil): Column =
+  c.isCommentNull = true
   return c
 
 

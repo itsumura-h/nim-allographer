@@ -421,6 +421,14 @@ proc addIndexColumn(column:Column, table:Table):string =
   return &"CREATE INDEX IF NOT EXISTS \"{table.name}_{column.name}_index\" ON \"{table.name}\"(\"{column.name}\")"
 
 
+proc addCommentColumn(column:Column, table:Table):string =
+  return &"COMMENT ON COLUMN \"{table.name}\".\"{column.name}\" IS '{column.commentContent}'"
+
+
+proc addNullCommentColumn(column:Column, table:Table):string =
+  return &"COMMENT ON COLUMN \"{table.name}\".\"{column.name}\" IS NULL"
+
+
 proc addColumnString*(table:Table, column:Column):seq[string] =
   var queries:seq[string]
   case column.typ:
@@ -491,5 +499,10 @@ proc addColumnString*(table:Table, column:Column):seq[string] =
 
   if column.isUpdatedAt:
     queries.add(column.addUpdatedAtColumn(table))
+
+  if column.commentContent.len > 0:
+    queries.add(column.addCommentColumn(table))
+  elif column.isCommentNull:
+    queries.add(column.addNullCommentColumn(table))
 
   return queries
