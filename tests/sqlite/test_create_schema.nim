@@ -2,6 +2,8 @@ discard """
   cmd: "nim c -d:reset $file"
 """
 
+# nim c -d:reset -r tests/sqlite/test_create_schema.nim
+
 import std/unittest
 import std/asyncdispatch
 import std/os
@@ -61,7 +63,7 @@ suite "Schema output after migration":
 
   test "should generate schema.nim file":
     # スキーマ生成
-    rdb.createSchema().waitFor()
+    rdb.createSchema(schemaFilePath).waitFor()
     
     # schema.nim ファイルの存在確認
     check fileExists(schemaFilePath)
