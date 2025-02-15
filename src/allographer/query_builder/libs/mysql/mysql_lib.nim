@@ -113,7 +113,7 @@ proc dbQuote(s: string): string =
     of '"': result.add "\\\""
     of '\'': result.add "\\'"
     of '\\': result.add "\\\\"
-    of '_': result.add "\\_"
+    # of '_': result.add "\\_"
     else: result.add c
   add(result, '\'')
 

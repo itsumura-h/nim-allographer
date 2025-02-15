@@ -28,9 +28,9 @@ proc getTableInfo(rdb: MariaDBConnections): Future[Table[string, seq[tuple[name:
     
     # get column info
     let query = 
-      """SELECT column_name, data_type 
-          FROM information_schema.columns 
-          WHERE table_name = ? 
+      """SELECT column_name, data_type
+          FROM information_schema.columns
+          WHERE table_name = ?
           AND table_schema = DATABASE()
           ORDER BY ordinal_position
       """

@@ -102,7 +102,7 @@ suite "Schema output after migration":
     check schemaContent.contains("str_relation_id*: string")
 
 
-clearTables(rdb).waitFor()
+# clearTables(rdb).waitFor()
 # schema.nim ファイルの削除
 if fileExists(schemaFilePath):
   removeFile(schemaFilePath)
