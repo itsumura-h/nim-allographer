@@ -25,13 +25,13 @@ suite "Schema output after migration":
       removeFile(schemaFilePath)
 
     rdb.create(
-      table("IntRelation", [
+      table("int_relation", [
         Column.increments("id")
       ]),
-      table("StrRelation", [
+      table("str_relation", [
         Column.uuid("uuid")
       ]),
-      table("TestSchemaOutput", [
+      table("test_schema_output", [
         Column.increments("id"),
         Column.integer("integer"),
         Column.smallInteger("smallInteger"),
@@ -56,8 +56,8 @@ suite "Schema output after migration":
         Column.boolean("boolean"),
         Column.enumField("enumField", ["A", "B", "C"]),
         Column.json("json"),
-        Column.foreign("int_relation_id").reference("id").onTable("IntRelation").onDelete(SET_NULL),
-        Column.strForeign("str_relation_id").reference("uuid").onTable("StrRelation").onDelete(SET_NULL)
+        Column.foreign("int_relation_id").reference("id").onTable("int_relation").onDelete(SET_NULL),
+        Column.strForeign("str_relation_id").reference("uuid").onTable("str_relation").onDelete(SET_NULL)
       ])
     )
 
@@ -73,6 +73,7 @@ suite "Schema output after migration":
     let schemaContent = readFile(schemaFilePath)
     echo "schemaContent: ", schemaContent
     check schemaContent.contains("type TestSchemaOutputTable* = object")
+    check schemaContent.contains("## test_schema_output")
     check schemaContent.contains("integer*: int")
     check schemaContent.contains("smallInteger*: int")
     check schemaContent.contains("mediumInteger*: int")
@@ -101,7 +102,7 @@ suite "Schema output after migration":
     check schemaContent.contains("str_relation_id*: string")
 
 
-clearTables(rdb).waitFor()
+# clearTables(rdb).waitFor()
 # schema.nim ファイルの削除
 if fileExists(schemaFilePath):
   removeFile(schemaFilePath)

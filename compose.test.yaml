@@ -30,7 +30,7 @@ services:
       - surreal
 
   mysql:
-    image: mysql:8
+    image: mysql:8.0-debian
     tty: true
     environment:
       MYSQL_ROOT_PASSWORD: root
