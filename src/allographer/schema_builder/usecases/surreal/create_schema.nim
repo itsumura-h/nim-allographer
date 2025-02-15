@@ -4,6 +4,7 @@ import std/strformat
 import std/json
 import std/tables
 import std/os
+import ../../../utils/snake_to_camel
 import ../../../query_builder/models/surreal/surreal_types
 import ../../../query_builder/models/surreal/surreal_query
 import ../../../query_builder/models/surreal/surreal_exec
@@ -53,9 +54,10 @@ proc generateSchemaCode(tablesInfo: Table[string, seq[tuple[name: string, typ: s
   for tableName, columns in tablesInfo.pairs:
     if tableName == "_allographer_migrations":
       continue
-    
+
+    let tableNameCamel = tableName.snakeToCamel()
     code.add("\n\n")
-    code.add(&"type {tableName.capitalizeAscii}Table* = object\n")
+    code.add(&"type {tableNameCamel}Table* = object\n")
     code .add(&"  ## {tableName}\n")
     for col in columns:
       let nimType = 

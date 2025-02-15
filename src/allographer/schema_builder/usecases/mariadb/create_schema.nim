@@ -5,6 +5,7 @@ import std/json
 import std/tables
 import std/re
 import std/os
+import ../../../utils/snake_to_camel
 import ../../../query_builder/models/mariadb/mariadb_types
 import ../../../query_builder/models/mariadb/mariadb_query
 import ../../../query_builder/models/mariadb/mariadb_exec
@@ -53,8 +54,9 @@ proc generateSchemaCode(tablesInfo: Table[string, seq[tuple[name: string, typ: s
   var code = "import std/json"
   
   for tableName, columns in tablesInfo.pairs:
+    let tableNameCamel = tableName.snakeToCamel()
     code.add("\n\n")
-    code.add(&"type {tableName.capitalizeAscii}Table* = object\n")
+    code.add(&"type {tableNameCamel}Table* = object\n")
     code.add(&"  ## {tableName}\n")
     for col in columns:
       let nimType = 
