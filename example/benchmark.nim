@@ -1,3 +1,5 @@
+# nim c -r -d:reset -d:check_pool benchmark.nim
+
 import std/asyncdispatch
 when NimMajor == 2:
   import db_connector/db_postgres
@@ -19,8 +21,8 @@ import ../src/allographer/query_builder
 
 
 randomize()
-let rdb = dbOpen(PostgreSQL, "database", "user", "pass", "postgres", 5432, 95, 30, shouldDisplayLog=false)
-# let rdb = dbOpen(MariaDB, "database", "user", "pass", "mariadb", 3306, 95, 30, shouldDisplayLog=false)
+# let rdb = dbOpen(PostgreSQL, "database", "user", "pass", "postgres", 5432, 95, 30, shouldDisplayLog=false)
+let rdb = dbOpen(MariaDB, "database", "user", "pass", "mariadb", 3306, 95, 30, shouldDisplayLog=false)
 # let rdb = dbOpen(SQLite3, "db.sqlite3", 95, 30, shouldDisplayLog=false)
 # let rdb = dbOpen(SurrealDB, "test", "test", "user", "pass", "http://surreal", 8000, 500, 30, shouldDisplayLog=false).waitFor()
 let stdRdb = open("postgres:5432", "user", "pass", "database")
@@ -73,15 +75,13 @@ var getFirstPrepare: SqlPrepared
 var updatePrepare: SqlPrepared
 
 proc worldTablePresent(): Future[bool] {.async.} =
-  let rows = await rdb.raw(
-    """SELECT EXISTS (
-         SELECT 1 FROM information_schema.tables
-         WHERE table_schema = 'public' AND table_name = 'World'
-       ) AS ex"""
-  ).getPlain()
-  if rows.len == 0 or rows[0].len == 0:
+  ## information_schema など方言に依存させず、実テーブルへ 1 行だけ問い合わせる。
+  ## テーブルが無ければ例外、空テーブルなら `none` で成功するのでいずれも「存在」と判定できる。
+  try:
+    discard await rdb.select("id").table("World").limit(1).first()
+    return true
+  except CatchableError:
     return false
-  return rows[0][0] in ["t", "true", "1"]
 
 const countNum = 500
 
@@ -210,7 +210,7 @@ proc main() =
     stderr.writeLine "[benchmark] migrate でエラー（続行します）: ", getCurrentExceptionMsg()
 
   if not worldTablePresent().waitFor:
-    stderr.writeLine "[benchmark] public.\"World\" がありません。マイグレーション履歴だけ残っている場合は次を試してください:"
+    stderr.writeLine "[benchmark] テーブル \"World\" がありません。マイグレーション履歴だけ残っている場合は次を試してください:"
     stderr.writeLine "  nim c -d:reset -r example/benchmark.nim"
     stderr.writeLine "[benchmark] ベンチマークを終了します（致命的エラーにはしません）。"
     return

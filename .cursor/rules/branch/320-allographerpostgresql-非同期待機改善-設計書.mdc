@@ -25,6 +25,10 @@ allographer(PostgreSQL) 非同期待機改善 ブランチルール
 - [x] PostgreSQL の単体・結合・回帰テストを追加または更新する（`tests/postgres/test_pool_wait.nim` 追加、既存 `test*.nim` 回帰）
 - [x] `sleepAsync(10)` が PostgreSQL クエリ待機とプール空き待機から除去されたことを確認する
 - [ ] README / documents / ルール文書に仕様差分が必要か確認し、必要分を同期する（利用者向け公開 API 変更なしのため未着手。必要なら追記）
+- [x] MariaDB: `mariadb_rdb.nim` に `mysql_read_query_result`（`cdecl`）を追加
+- [x] MariaDB: `mariadb_impl.nim` は接続ブロッキング前提で `mysql_real_query` / `mysql_read_query_result` / `mysql_fetch_row` / `free_result` を同期利用（`mysql_read_query_result_*` / `fetch_row_*` の async ループは環境でタイムアウト・デッドロックのため不使用）
+- [x] MariaDB: `mariadb_open.nim` は `MYSQL_OPT_NONBLOCK` を付与しない（同上）
+- [x] MariaDB: `mariadb_types` / `mariadb_exec` のプール空き待ちは通知ベース（`tests/mariadb/test_pool_wait.nim`）
 
 ## 参考資料
 - allographer の PostgreSQL 実装: `src/allographer/query_builder/libs/postgres/postgres_impl.nim`
@@ -61,7 +65,7 @@ allographer(PostgreSQL) 非同期待機改善 ブランチルール
 ### 非目標
 
 1. Query Builder API の破壊的変更
-2. MySQL / MariaDB / SQLite への同時展開
+2. MySQL / SQLite への同時展開（MariaDB は PostgreSQL と同方針で非同期待機を実装済み）
 3. 初回対応で全 OS 最適化を完了させること
 
 ### 実装方針
