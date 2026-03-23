@@ -118,14 +118,18 @@ proc dbQuote(s: string): string =
   add(result, '\'')
 
 proc dbFormat*(formatstr: string, args: seq[string]): string =
-  result = ""
+  result = newStringOfCap(formatstr.len + args.len * 8)
   var a = 0
-  for c in items(formatstr):
-    if c == '?':
-      add(result, dbQuote(args[a]))
+  var segStart = 0
+  for i in 0 ..< formatstr.len:
+    if formatstr[i] == '?':
+      if i > segStart:
+        result.add(formatstr[segStart ..< i])
+      result.add(dbQuote(args[a]))
       inc(a)
-    else:
-      add(result, c)
+      segStart = i + 1
+  if segStart < formatstr.len:
+    result.add(formatstr[segStart ..< formatstr.len])
 
 
 # proc rawExec*(db:PMySQL, query:string, args: seq[string]) =
@@ -205,20 +209,24 @@ proc fromObj*(_:type MariadbParams, args:JsonNode, columns:seq[seq[string]]):Mar
 
 
 proc dbFormat*(conn:PMySQL, query: string, args: MariadbParams): string =
-  result = ""
-  var i = 0
-  for c in query:
-    if c == '?':
-      defer: i.inc()
-      if args[i].isBinary:
-        let `from` = args[i].value
+  result = newStringOfCap(query.len + args.len * 8)
+  var a = 0
+  var segStart = 0
+  for i in 0 ..< query.len:
+    if query[i] == '?':
+      if i > segStart:
+        result.add(query[segStart ..< i])
+      if args[a].isBinary:
+        let `from` = args[a].value
         var to = newString(`from`.len * 2 + 1)
-        let len = mariadb_rdb.real_escape_string(conn, to.cstring, `from`.cstring, `from`.len)
-        to.setLen(len)
+        let escLen = mariadb_rdb.real_escape_string(conn, to.cstring, `from`.cstring, `from`.len)
+        to.setLen(escLen)
         result.add("\'")
         result.add(to)
         result.add("\'")
       else:
-        result.add(dbQuote(args[i].value))
-    else:
-      result.add(c)
+        result.add(dbQuote(args[a].value))
+      inc(a)
+      segStart = i + 1
+  if segStart < query.len:
+    result.add(query[segStart ..< query.len])

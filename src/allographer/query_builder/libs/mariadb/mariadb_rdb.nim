@@ -41,6 +41,10 @@ type
 # # Field/table name length
 
 const
+  MYSQL_WAIT_READ* = 1
+  MYSQL_WAIT_WRITE* = 2
+  MYSQL_WAIT_EXCEPT* = 4
+  MYSQL_WAIT_TIMEOUT* = 8
 #   NAME_LEN* = 64
 #   HOSTNAME_LENGTH* = 60
 #   USERNAME_LENGTH* = 16
@@ -508,7 +512,7 @@ type
     OPT_WRITE_TIMEOUT, OPT_USE_RESULT, OPT_USE_REMOTE_CONNECTION,
     OPT_USE_EMBEDDED_CONNECTION, OPT_GUESS_CONNECTION, SET_CLIENT_IP,
     SECURE_AUTH, REPORT_DATA_TRUNCATION, OPT_RECONNECT,
-    MYSQL_OPT_NONBLOCK
+    MYSQL_OPT_NONBLOCK = 6000
 # {.deprecated: [Tst_mysql_data: St_mysql_data, TDATA: DATA, Toption: Option].}
 
 # const
@@ -1010,8 +1014,22 @@ proc ping*(MySQL: PMySQL): cint{.stdcall, dynlib: lib, importc: "mysql_ping".}
 #                                  importc: "mysql_list_processes".}
 # proc options*(MySQL: PMySQL, option: Option, arg: cstring): cint{.stdcall, dynlib: lib,
 #     importc: "mysql_options".}
+proc options*(MySQL: PMySQL, option: Option, arg: pointer): cint{.stdcall, dynlib: lib,
+    importc: "mysql_options".}
+proc optionsv*(MySQL: PMySQL, option: Option): cint{.cdecl, dynlib: lib,
+    importc: "mysql_optionsv", varargs.}
+proc get_socket*(MySQL: PMySQL): my_socket{.stdcall, dynlib: lib,
+    importc: "mysql_get_socket".}
+proc get_timeout_value*(MySQL: PMySQL): cuint{.stdcall, dynlib: lib,
+    importc: "mysql_get_timeout_value".}
+proc get_timeout_value_ms*(MySQL: PMySQL): cuint{.stdcall, dynlib: lib,
+    importc: "mysql_get_timeout_value_ms".}
 proc free_result*(result: PRES){.stdcall, dynlib: lib,
                                  importc: "mysql_free_result".}
+proc free_result_start*(result: PRES): cint{.stdcall, dynlib: lib,
+    importc: "mysql_free_result_start".}
+proc free_result_cont*(result: PRES, status: cint): cint{.stdcall, dynlib: lib,
+    importc: "mysql_free_result_cont".}
 # proc data_seek*(result: PRES, offset: my_ulonglong){.stdcall, dynlib: lib,
 #     importc: "mysql_data_seek".}
 # proc row_seek*(result: PRES, offset: ROW_OFFSET): ROW_OFFSET{.stdcall,
@@ -1020,6 +1038,10 @@ proc free_result*(result: PRES){.stdcall, dynlib: lib,
 #     dynlib: lib, importc: "mysql_field_seek".}
 proc fetch_row*(result: PRES): ROW{.stdcall, dynlib: lib,
                                     importc: "mysql_fetch_row".}
+proc fetch_row_start*(ret: ptr ROW, result: PRES): cint{.stdcall, dynlib: lib,
+    importc: "mysql_fetch_row_start".}
+proc fetch_row_cont*(ret: ptr ROW, result: PRES, status: cint): cint{.stdcall, dynlib: lib,
+    importc: "mysql_fetch_row_cont".}
 # proc fetch_lengths*(result: PRES): ptr int{.stdcall, dynlib: lib,
 #     importc: "mysql_fetch_lengths".}
 # proc fetch_field*(result: PRES): PFIELD{.stdcall, dynlib: lib,
@@ -1052,6 +1074,26 @@ proc real_escape_string*(MySQL: PMySQL, fto: cstring, `from`: cstring, len: int)
 #     stdcall, dynlib: lib, importc: "mysql_manager_fetch_line".}
 # proc read_query_result*(MySQL: PMySQL): my_bool{.stdcall, dynlib: lib,
 #                                        importc: "mysql_read_query_result".}
+proc read_query_result*(MySQL: PMySQL): my_bool{.stdcall, dynlib: lib,
+    importc: "mysql_read_query_result".}
+proc read_query_result_start*(ret: ptr my_bool, MySQL: PMySQL): cint{.stdcall, dynlib: lib,
+    importc: "mysql_read_query_result_start".}
+proc read_query_result_cont*(ret: ptr my_bool, MySQL: PMySQL, status: cint): cint{.stdcall, dynlib: lib,
+    importc: "mysql_read_query_result_cont".}
+proc real_connect_start*(ret: ptr PMySQL, MySQL: PMySQL, host: cstring, user: cstring, passwd: cstring,
+                   db: cstring, port: cuint, unix_socket: cstring,
+                   clientflag: culong): cint{.stdcall, dynlib: lib,
+                                        importc: "mysql_real_connect_start".}
+proc real_connect_cont*(ret: ptr PMySQL, MySQL: PMySQL, status: cint): cint{.stdcall, dynlib: lib,
+    importc: "mysql_real_connect_cont".}
+proc real_query_start*(ret: ptr cint, MySQL: PMySQL, q: cstring, len: culong): cint{.stdcall, dynlib: lib,
+    importc: "mysql_real_query_start".}
+proc real_query_cont*(ret: ptr cint, MySQL: PMySQL, status: cint): cint{.stdcall, dynlib: lib,
+    importc: "mysql_real_query_cont".}
+proc store_result_start*(ret: ptr PRES, MySQL: PMySQL): cint{.stdcall, dynlib: lib,
+    importc: "mysql_store_result_start".}
+proc store_result_cont*(ret: ptr PRES, MySQL: PMySQL, status: cint): cint{.stdcall, dynlib: lib,
+    importc: "mysql_store_result_cont".}
 proc stmt_init*(MySQL: PMySQL): PSTMT{.stdcall, dynlib: lib, importc: "mysql_stmt_init".}
 # proc stmt_prepare*(stmt: PSTMT, query: cstring, len: int): cint{.stdcall,
 #     dynlib: lib, importc: "mysql_stmt_prepare".}

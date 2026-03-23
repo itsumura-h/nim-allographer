@@ -15,6 +15,10 @@ proc dbOpen*(_: type MariaDB, database: string, user: string, password: string,
     if conn == nil:
       mariadb_rdb.close(conn)
       dbError("mariadb_rdb.init() failed")
+    if mariadb_rdb.options(conn, MYSQL_OPT_NONBLOCK, nil) != 0:
+      let errmsg = $mariadb_rdb.error(conn)
+      mariadb_rdb.close(conn)
+      dbError(errmsg)
     if mariadb_rdb.real_connect(conn, host, user, password, database, port.int32, nil, 0) == nil:
       var errmsg = $mariadb_rdb.error(conn)
       mariadb_rdb.close(conn)
