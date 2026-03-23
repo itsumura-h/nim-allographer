@@ -11,6 +11,7 @@ import std/options
 import std/strutils
 import std/strformat
 import std/sequtils
+import std/syncio
 import std/times
 import ../src/allographer/connection
 import ../src/allographer/schema_builder
@@ -67,8 +68,20 @@ proc migrate() {.async.} =
   echo "=== finish migration"
 
 
-let getFirstPrepare = stdRdb.prepare("getFirst", sql""" SELECT * FROM "World" WHERE id = $1 LIMIT 1 """, 1)
-let updatePrepare = stdRdb.prepare("updatePrepare", sql""" UPDATE "World" SET "randomNumber" = $1 WHERE id = $2 """, 2)
+## `stdRdb.prepare` はサーバーでクエリを検証するため、**World 作成後**にだけ実行する（モジュール先頭だと migrate より先に走り未作成テーブルで落ちる）。
+var getFirstPrepare: SqlPrepared
+var updatePrepare: SqlPrepared
+
+proc worldTablePresent(): Future[bool] {.async.} =
+  let rows = await rdb.raw(
+    """SELECT EXISTS (
+         SELECT 1 FROM information_schema.tables
+         WHERE table_schema = 'public' AND table_name = 'World'
+       ) AS ex"""
+  ).getPlain()
+  if rows.len == 0 or rows[0].len == 0:
+    return false
+  return rows[0][0] in ["t", "true", "1"]
 
 const countNum = 500
 
@@ -184,15 +197,37 @@ proc timeProcess[T](name:string, cb:proc():Future[T]) {.async.}=
   echo ""
 
 
-proc main() =
-  migrate().waitFor
+template safeTimeProcess(name: string; cb: untyped): untyped =
+  try:
+    waitFor timeProcess(name, cb)
+  except CatchableError:
+    stderr.writeLine "[benchmark] ", name, " はスキップ: ", getCurrentExceptionMsg()
 
-  timeProcess("query", query).waitFor
-  timeProcess("queryRaw", queryRaw).waitFor
-  timeProcess("queryStd", queryStd).waitFor
-  timeProcess("update", update).waitFor
-  timeProcess("updateRaw", updateRaw).waitFor
-  timeProcess("updateRawStd", updateRawStd).waitFor
+proc main() =
+  try:
+    migrate().waitFor
+  except CatchableError:
+    stderr.writeLine "[benchmark] migrate でエラー（続行します）: ", getCurrentExceptionMsg()
+
+  if not worldTablePresent().waitFor:
+    stderr.writeLine "[benchmark] public.\"World\" がありません。マイグレーション履歴だけ残っている場合は次を試してください:"
+    stderr.writeLine "  nim c -d:reset -r example/benchmark.nim"
+    stderr.writeLine "[benchmark] ベンチマークを終了します（致命的エラーにはしません）。"
+    return
+
+  try:
+    getFirstPrepare = stdRdb.prepare("getFirst", sql""" SELECT * FROM "World" WHERE id = $1 LIMIT 1 """, 1)
+    updatePrepare = stdRdb.prepare("updatePrepare", sql""" UPDATE "World" SET "randomNumber" = $1 WHERE id = $2 """, 2)
+  except CatchableError:
+    stderr.writeLine "[benchmark] std/db の prepare に失敗: ", getCurrentExceptionMsg()
+    return
+
+  safeTimeProcess("query", query)
+  safeTimeProcess("queryRaw", queryRaw)
+  safeTimeProcess("queryStd", queryStd)
+  safeTimeProcess("update", update)
+  safeTimeProcess("updateRaw", updateRaw)
+  safeTimeProcess("updateRawStd", updateRawStd)
 
 
 main()

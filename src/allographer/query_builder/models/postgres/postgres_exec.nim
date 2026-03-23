@@ -17,23 +17,51 @@ import ./postgres_types
 # connection
 # ================================================================================
 
-proc getFreeConn(self:PostgresConnections | PostgresQuery | RawPostgresQuery):Future[int] {.async.} =
-  let calledAt = getTime().toUnix()
+proc removePoolWaiter(pools: Connections, w: Future[void]) =
+  var i = 0
+  while i < pools.waiters.len:
+    if pools.waiters[i] == w:
+      pools.waiters.delete(i)
+      return
+    inc i
+
+proc wakeOnePoolWaiter(pools: Connections) =
+  while pools.waiters.len > 0:
+    let w = pools.waiters[0]
+    pools.waiters.delete(0)
+    if w.finished:
+      continue
+    w.complete()
+    break
+
+proc getFreeConn(self: PostgresConnections | PostgresQuery | RawPostgresQuery): Future[int] {.async.} =
+  let deadline = getTime().toUnix() + self.pools.timeout
   while true:
-    for i in 0..<self.pools.conns.len:
+    for i in 0 ..< self.pools.conns.len:
       if not self.pools.conns[i].isBusy:
         self.pools.conns[i].isBusy = true
         when defined(check_pool):
           echo "=== getFreeConn ", i
         return i
-    await sleepAsync(10)
-    if getTime().toUnix() >= calledAt + self.pools.timeout:
+    let now = getTime().toUnix()
+    if now >= deadline:
+      return errorConnectionNum
+    let w = newFuture[void]("getFreeConn.poolWait")
+    self.pools.waiters.add(w)
+    let remainingSec = deadline - now
+    var ms = int(remainingSec * 1000)
+    if ms < 1:
+      ms = 1
+    let ok = await withTimeout(w, ms)
+    if not ok:
+      removePoolWaiter(self.pools, w)
       return errorConnectionNum
 
 
-proc returnConn(self:PostgresConnections | PostgresQuery | RawPostgresQuery, i: int) {.async.} =
+proc returnConn(self: PostgresConnections | PostgresQuery | RawPostgresQuery, i: int) {.async.} =
   if i != errorConnectionNum:
     self.pools.conns[i].isBusy = false
+    wakeOnePoolWaiter(self.pools)
 
 
 # ================================================================================
@@ -132,8 +160,6 @@ proc getRow(self:PostgresQuery, queryString:string, connI:int=0):Future[Option[J
 
   if connI == errorConnectionNum:
     return
-
-  sleepAsync(0).await
 
   let (rows, dbRows) = postgres_impl.query(
     self.pools.conns[connI].conn,

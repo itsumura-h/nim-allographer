@@ -1,5 +1,6 @@
 import std/times
 import std/strutils
+import ../../error
 import ../../libs/postgres/postgres_rdb
 import ../../libs/postgres/postgres_lib
 import ../../log
@@ -12,14 +13,19 @@ proc dbOpen*(_:type PostgreSQL, database: string, user: string, password: string
   for i in 0..<maxConnections:
     let conn = postgres_rdb.pqsetdbLogin(host, port.`$`.cstring, nil, nil, database, user, password)
     if pqStatus(conn) != CONNECTION_OK: dbError(conn)
+    if pqsetnonblocking(conn, 1'i32) != 0'i32:
+      dbError(conn)
+    if pqisnonblocking(conn) != 1'i32:
+      raise newException(DbError, "PostgreSQL connection could not be set to non-blocking mode")
     conns[i] = Connection(
       conn: conn,
       isBusy: false,
       createdAt: getTime().toUnix(),
     )
   let pools = Connections(
-    conns:conns,
-    timeout:timeout
+    conns: conns,
+    timeout: timeout,
+    waiters: @[],
   )
   result = PostgresConnections(
     pools: pools,

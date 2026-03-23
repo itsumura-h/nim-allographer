@@ -1,6 +1,7 @@
 *
 !*.*
 !*/
+!makefile
 
 # Created by https://www.gitignore.io/api/nim
 # Edit at https://www.gitignore.io/?templates=nim
@@ -21,6 +22,7 @@ lcov.info
 .migration.json
 *logs/*
 *.log
+.diff
 testresults
 
 

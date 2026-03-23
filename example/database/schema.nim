@@ -20,14 +20,10 @@ type UserTable* = object
   updated_at*: int
 
 
-type PostTable* = object
-  ## post
-  id*: string
-  title*: string
-  content*: string
-  user_id*: string
-  created_at*: int
-  updated_at*: int
+type AuthTable* = object
+  ## Auth
+  id*: int
+  auth*: string
 
 
 type TypesTable* = object
@@ -59,3 +55,13 @@ type TypesTable* = object
   json*: JsonNode
   int_relation_id*: int
   str_relation_id*: string
+
+
+type PostTable* = object
+  ## post
+  id*: string
+  title*: string
+  content*: string
+  user_id*: string
+  created_at*: int
+  updated_at*: int
