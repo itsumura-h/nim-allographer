@@ -1,3 +1,5 @@
+# nim c -r -d:reset -d:check_pool benchmark.nim
+
 import std/asyncdispatch
 when NimMajor == 2:
   import db_connector/db_postgres
@@ -11,6 +13,7 @@ import std/options
 import std/strutils
 import std/strformat
 import std/sequtils
+import std/syncio
 import std/times
 import ../src/allographer/connection
 import ../src/allographer/schema_builder
@@ -18,8 +21,8 @@ import ../src/allographer/query_builder
 
 
 randomize()
-let rdb = dbOpen(PostgreSQL, "database", "user", "pass", "postgres", 5432, 95, 30, shouldDisplayLog=false)
-# let rdb = dbOpen(MariaDB, "database", "user", "pass", "mariadb", 3306, 95, 30, shouldDisplayLog=false)
+# let rdb = dbOpen(PostgreSQL, "database", "user", "pass", "postgres", 5432, 95, 30, shouldDisplayLog=false)
+let rdb = dbOpen(MariaDB, "database", "user", "pass", "mariadb", 3306, 95, 30, shouldDisplayLog=false)
 # let rdb = dbOpen(SQLite3, "db.sqlite3", 95, 30, shouldDisplayLog=false)
 # let rdb = dbOpen(SurrealDB, "test", "test", "user", "pass", "http://surreal", 8000, 500, 30, shouldDisplayLog=false).waitFor()
 let stdRdb = open("postgres:5432", "user", "pass", "database")
@@ -67,8 +70,18 @@ proc migrate() {.async.} =
   echo "=== finish migration"
 
 
-let getFirstPrepare = stdRdb.prepare("getFirst", sql""" SELECT * FROM "World" WHERE id = $1 LIMIT 1 """, 1)
-let updatePrepare = stdRdb.prepare("updatePrepare", sql""" UPDATE "World" SET "randomNumber" = $1 WHERE id = $2 """, 2)
+## `stdRdb.prepare` はサーバーでクエリを検証するため、**World 作成後**にだけ実行する（モジュール先頭だと migrate より先に走り未作成テーブルで落ちる）。
+var getFirstPrepare: SqlPrepared
+var updatePrepare: SqlPrepared
+
+proc worldTablePresent(): Future[bool] {.async.} =
+  ## information_schema など方言に依存させず、実テーブルへ 1 行だけ問い合わせる。
+  ## テーブルが無ければ例外、空テーブルなら `none` で成功するのでいずれも「存在」と判定できる。
+  try:
+    discard await rdb.select("id").table("World").limit(1).first()
+    return true
+  except CatchableError:
+    return false
 
 const countNum = 500
 
@@ -184,15 +197,37 @@ proc timeProcess[T](name:string, cb:proc():Future[T]) {.async.}=
   echo ""
 
 
-proc main() =
-  migrate().waitFor
+template safeTimeProcess(name: string; cb: untyped): untyped =
+  try:
+    waitFor timeProcess(name, cb)
+  except CatchableError:
+    stderr.writeLine "[benchmark] ", name, " はスキップ: ", getCurrentExceptionMsg()
 
-  timeProcess("query", query).waitFor
-  timeProcess("queryRaw", queryRaw).waitFor
-  timeProcess("queryStd", queryStd).waitFor
-  timeProcess("update", update).waitFor
-  timeProcess("updateRaw", updateRaw).waitFor
-  timeProcess("updateRawStd", updateRawStd).waitFor
+proc main() =
+  try:
+    migrate().waitFor
+  except CatchableError:
+    stderr.writeLine "[benchmark] migrate でエラー（続行します）: ", getCurrentExceptionMsg()
+
+  if not worldTablePresent().waitFor:
+    stderr.writeLine "[benchmark] テーブル \"World\" がありません。マイグレーション履歴だけ残っている場合は次を試してください:"
+    stderr.writeLine "  nim c -d:reset -r example/benchmark.nim"
+    stderr.writeLine "[benchmark] ベンチマークを終了します（致命的エラーにはしません）。"
+    return
+
+  try:
+    getFirstPrepare = stdRdb.prepare("getFirst", sql""" SELECT * FROM "World" WHERE id = $1 LIMIT 1 """, 1)
+    updatePrepare = stdRdb.prepare("updatePrepare", sql""" UPDATE "World" SET "randomNumber" = $1 WHERE id = $2 """, 2)
+  except CatchableError:
+    stderr.writeLine "[benchmark] std/db の prepare に失敗: ", getCurrentExceptionMsg()
+    return
+
+  safeTimeProcess("query", query)
+  safeTimeProcess("queryRaw", queryRaw)
+  safeTimeProcess("queryStd", queryStd)
+  safeTimeProcess("update", update)
+  safeTimeProcess("updateRaw", updateRaw)
+  safeTimeProcess("updateRawStd", updateRawStd)
 
 
 main()

@@ -1,0 +1,204 @@
+---
+alwaysApply: true
+---
+プロジェクトルール
+===
+
+## 0. 規範表現（RFC 2119）と Lint方針
+
+このドキュメントの規範キーワードは以下の意味で扱う。
+- **MUST**: 必須。違反はレビューで差し戻し対象
+- **SHOULD**: 強い推奨。逸脱時は理由を記録する
+- **MAY**: 任意。採用時は周辺整合性を優先する
+- **MUST NOT**: 禁止。明示的な合意なしに導入してはならない
+
+各ルールには Rule ID を付与する。
+- 形式: `SYW-<DOMAIN>-<NNN>`
+- 併記形式: `[ID][LEVEL][CHECK]`
+- `CHECK` の意味:
+  - `grep`: 文字列や配置で確認しやすい
+  - `manual`: レビューで確認する
+  - `test`: テストで確認する
+  - `doc`: 文書整合の確認
+
+本文とルール一覧が矛盾した場合は、ルール一覧を優先する。
+
+### 0.1 ルール一覧（要約）
+
+| ID | LEVEL | CHECK | 対象 | 要件（要約） |
+|---|---|---|---|---|
+| SYW-GOAL-001 | MUST | manual | 全体 | 本リポジトリは Nim による RDB 向け query builder / migration / seeder を中核成果物とする |
+| SYW-GOAL-002 | MUST | manual | API | Laravel Query Builder / Orator に学んだ直感的で連鎖可能な API を保つ |
+| SYW-ARCH-001 | MUST | manual | 設計 | DB差分は driver 実装へ閉じ込め、公開 API は可能な限り共通化する |
+| SYW-ARCH-002 | MUST NOT | manual | 設計 | 一時的な場当たり分岐を公開 API に持ち込まない |
+| SYW-QB-001 | MUST | test | Query Builder | SQL 生成は決定的で、同じ入力に対し同じクエリ文字列・束縛順序を返す |
+| SYW-QB-002 | MUST | manual | Query Builder | メソッドチェーンは可読性を優先し、Laravel/Orator 利用者が推測可能な命名を採用する |
+| SYW-QB-003 | MUST NOT | manual | Query Builder | RDB 向け API に暗黙の破壊的副作用を持たせない |
+| SYW-SCHEMA-001 | MUST | test | Migration | migration は冪等に再実行判定でき、履歴テーブルと整合する |
+| SYW-SCHEMA-002 | MUST | test | Schema Builder | create / alter / drop は DB ごとの差異を吸収しつつ意味論を維持する |
+| SYW-SEED-001 | MUST | test | Seeder | seeder は空判定または条件判定に基づき安全に再実行できる |
+| SYW-COMPAT-001 | MUST | manual | 互換性 | 既存公開 API の破壊的変更は、必要性・移行方針・影響範囲を文書化する |
+| SYW-TEST-001 | MUST | test | テスト | 修正した機能レイヤに対応するテストを追加または更新する |
+| SYW-TEST-002 | SHOULD | test | テスト | DB 横断の共通仕様は複数 driver で検証する |
+| SYW-DOC-001 | MUST | doc | ドキュメント | README / documents / ルール文書は、公開仕様変更時に同期する |
+| SYW-SCOPE-001 | MUST NOT | manual | スコープ | ORM 全面実装を前提にせず、query builder・schema builder の完成度を優先する |
+
+## 1. 目的・スコープ
+
+### 1.1 達成目標
+
+[SYW-GOAL-001][MUST][manual]
+このプロジェクトの達成目標は、**Nim 言語で Laravel の Query Builder / ORM 的な記述感と Python Orator の使いやすさを参考にした、RDB 向け query builder を実装・改善・保守すること**である。
+
+[SYW-GOAL-002][MUST][manual]
+中核機能は以下の 3 系統である。
+- Query Builder
+- Migration / Schema Builder
+- Seeder
+
+[SYW-GOAL-003][MUST][manual]
+利用者は「生 SQL を毎回手で組み立てなくても、読みやすいメソッドチェーンで安全に RDB を扱える」ことを期待している。実装判断は常にこの期待を優先する。
+
+### 1.2 主要スコープ
+
+[SYW-SCOPE-001][MUST][manual]
+主要スコープは以下である。
+- SQLite / PostgreSQL / MySQL / MariaDB などの RDB 向け query builder
+- create / alter / drop を扱う schema builder
+- migration 履歴管理
+- 初期データ投入用 seeder
+- 非同期実行を前提とした接続・実行モデル
+
+[SYW-SCOPE-002][SHOULD][manual]
+既存コードベースに SurrealDB 実装が存在していても、判断に迷った場合はまず RDB 向け API 品質を優先する。
+
+### 1.3 非スコープ
+
+[SYW-SCOPE-003][MUST NOT][manual]
+以下は明示的な要件がない限り優先しない。
+- Active Record 的な重い ORM 機能の全面拡張
+- マジックに依存した暗黙変換の追加
+- driver ごとに大きく振る舞いが異なる独自 API の増殖
+
+## 2. 設計原則
+
+### 2.1 API 原則
+
+[SYW-ARCH-001][MUST][manual]
+公開 API は driver 差分より先に、利用者の記述体験を基準に設計する。各 driver の都合は内部実装で吸収する。
+
+[SYW-QB-002][MUST][manual]
+メソッド名・引数順・返り値は、Laravel Query Builder / Orator を知る利用者が高い確率で推測できる形を優先する。
+
+[SYW-QB-003][MUST NOT][manual]
+`select`, `where`, `join`, `insert`, `update`, `delete`, `first`, `find`, `get` などの基本操作に、利用者が予期しない破壊的副作用を持ち込んではならない。
+
+[SYW-COMPAT-001][MUST][manual]
+公開 API の破壊的変更を行う場合は、少なくとも以下を変更箇所に残す。
+- 何が壊れるか
+- なぜ必要か
+- 既存利用者の移行方法
+
+### 2.2 実装分離
+
+[SYW-ARCH-002][MUST NOT][manual]
+「特定 driver だけ通すための場当たり的 if 文」を上位 API 層へ散在させてはならない。分岐は generator / lib / model など責務のある層へ閉じ込める。
+
+[SYW-ARCH-003][MUST][manual]
+責務分離の目安は以下とする。
+- 接続管理: `connection` 系
+- API 入口と共通操作: `query_builder` / `schema_builder`
+- DB 方言差分: `models/*/query/*`, `libs/*`
+- 実行・変換: `*_exec`, `*_types`, `*_query`
+
+[SYW-ARCH-004][SHOULD][manual]
+新機能は、まず共通仕様を言語化してから driver 差分へ展開する。最初に 1 driver だけ特殊実装へ逃がさない。
+
+## 3. Query Builder ルール
+
+[SYW-QB-001][MUST][test]
+同じ builder 入力は、同じ SQL 文字列と同じ bind 順序を生成しなければならない。出力が非決定的になる変更は禁止する。
+
+[SYW-QB-004][MUST][manual]
+where 句、join、group by、order by、limit / offset、paginate などの句の結合順は、利用者の記述順と SQL としての自然順を壊さない。
+
+[SYW-QB-005][SHOULD][manual]
+値の埋め込みよりも、既存のプレースホルダ・エスケープ・型変換の仕組みを優先して使う。
+
+[SYW-QB-006][MUST][test]
+`first` / `find` / `get` の空結果時の振る舞いは既存仕様を維持する。`Option` や空シーケンスの扱いを無言で変えてはならない。
+
+[SYW-QB-007][SHOULD][manual]
+ログ出力やデバッグ補助を追加する場合は、通常経路の性能や API 純度を汚さない。
+
+## 4. Migration / Schema Builder ルール
+
+[SYW-SCHEMA-001][MUST][test]
+migration は履歴テーブルにより再実行可否を判定できなければならない。二重適用や履歴不整合を起こす変更は禁止する。
+
+[SYW-SCHEMA-002][MUST][test]
+`create`, `alter`, `drop`, `rename`, `add column`, `change column`, `drop column` は、DB ごとの差異があっても利用者にとって一貫した意味を維持する。
+
+[SYW-SCHEMA-003][MUST][manual]
+破壊的な schema 操作を追加・変更する場合は、ロールバック不能性やデータ移行影響を必ず確認する。
+
+[SYW-SCHEMA-004][SHOULD][manual]
+column 定義 API は Laravel ライクな表現を優先し、命名やオプションの意味が直感に反しないようにする。
+
+## 5. Seeder ルール
+
+[SYW-SEED-001][MUST][test]
+seeder は再実行時に重複データを無制限に増やさないよう、空テーブル判定または列条件判定を用いる既存思想を維持する。
+
+[SYW-SEED-002][SHOULD][manual]
+サンプル seeder と実装が乖離した場合は、利用者が最初に触れる example を優先して同期する。
+
+## 6. テスト・品質保証
+
+[SYW-TEST-001][MUST][test]
+コード変更時は、影響する最小レイヤのテストを追加または更新する。
+- query 生成を変えたら query テスト
+- schema 操作を変えたら schema / create_schema テスト
+- トランザクションを変えたら transaction テスト
+- utility を変えたら utils テスト
+
+[SYW-TEST-002][SHOULD][test]
+共通 API の変更は、可能な限り SQLite だけでなく PostgreSQL / MySQL / MariaDB 系にも同種の検証を広げる。
+
+[SYW-TEST-003][MUST][manual]
+テスト追加が難しい場合は、その理由と未検証リスクを作業記録へ残す。
+
+## 7. ドキュメント・例・後方互換
+
+[SYW-DOC-001][MUST][doc]
+公開仕様を変えたら、必要に応じて以下を同期する。
+- `README.md`
+- `documents/rdb/*.md`
+- `example/`
+- `.cursor/rules/*.mdc`
+
+[SYW-DOC-002][SHOULD][doc]
+サンプルコードは「最短で使い方が伝わる」ことを優先し、実装とズレた古い記法を放置しない。
+
+[SYW-COMPAT-002][SHOULD][manual]
+`v1.bk` など過去実装を参照する場合でも、安易なコピーではなく現行構成に合わせて責務を再配置する。
+
+## 8. 実装判断の優先順位
+
+[SYW-PRIO-001][MUST][manual]
+判断に迷った場合の優先順位は以下とする。
+1. 利用者にとって API が自然か
+2. 既存公開仕様を壊さないか
+3. 複数 RDB で意味が揃うか
+4. 内部実装が責務分離されているか
+5. テストと文書で保守できるか
+
+## 9. このプロジェクトで避けること
+
+[SYW-ANTI-001][MUST NOT][manual]
+以下は避ける。
+- 一部 driver だけを通すための公開 API 汚染
+- テストなしの SQL 生成変更
+- migration 履歴や seeder 冪等性を壊す変更
+- README と実装の乖離放置
+- Nim らしさよりも複雑なマジックを優先すること

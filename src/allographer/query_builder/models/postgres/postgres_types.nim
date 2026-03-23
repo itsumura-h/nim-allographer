@@ -1,3 +1,4 @@
+import std/asyncdispatch
 import std/json
 import ../../log
 import ../../libs/postgres/postgres_rdb
@@ -14,7 +15,9 @@ type Connection* = ref object
 
 type Connections* = ref object
   conns*: seq[Connection]
-  timeout*:int
+  timeout*: int
+  ## `getFreeConn` が接続を待つときに積む Future。`returnConn` が先頭から 1 件だけ完了させる。
+  waiters*: seq[Future[void]]
 
 
 ## created by `let rdb = dbOpen(PostgreSQL, "localhost", 5432)`

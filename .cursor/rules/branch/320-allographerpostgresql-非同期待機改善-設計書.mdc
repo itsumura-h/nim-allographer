@@ -1,0 +1,156 @@
+---
+description: 320-allographerpostgresql-非同期待機改善-設計書ブランチでの開発時に読み込む
+alwaysApply: false
+---
+allographer(PostgreSQL) 非同期待機改善 ブランチルール
+===
+
+このブランチで実装することは以下の通りです。
+- allographer の PostgreSQL 実装に残っている `sleepAsync(10)` ベースの非同期待機を、libpq ソケット readiness ベースの待機へ置き換える。
+- `query*`, `queryPlain*`, `exec*`, `getColumns*` など、同一問題を持つ待機経路を共通化して修正する。
+- `dbOpen` 時に PostgreSQL 接続を non-blocking 化し、libpq 非同期 API の前提を明示的に保証する。
+- 接続プール空き待機を `sleepAsync(10)` ポーリングから通知ベースへ移行し、プール枯渇時の待機遅延を抑制する。
+- 公開 API 互換を維持したまま、httpbeast/httpx 利用時の DB 完了後の回収遅延を縮小する。
+
+## 進捗
+- [x] `src/allographer/query_builder/libs/postgres/postgres_impl.nim` の待機ループを調査し、`sleepAsync(10)` 依存箇所を一覧化する
+- [x] `src/allographer/query_builder/libs/postgres/postgres_rdb.nim` を確認し、既存宣言で再利用できる libpq API と不足宣言を整理する（追加宣言不要。`pqsocket` / `pqflush` / `pqsetnonblocking` 等は既存）
+- [x] PostgreSQL 待機ヘルパ `waitPgReadable` / `waitPgWritable` / `cancelQuery` の責務と配置を決める（`postgres_impl.nim` 内の非公開プロシージャ）
+- [x] `PQsocket` / `PQconsumeInput` / `PQisBusy` / `PQgetResult` / `PQflush` に基づく共通クエリ待機ループを設計する（`pgFlushOutgoing` / `pgNextResult` / `pgEnsureIdle`）
+- [x] `query*`, `queryPlain*`, `exec*`, `getColumns*` の各経路を共通待機ロジックへ寄せる
+- [x] タイムアウト時の `cancelQuery` 実行とエラーメッセージ方針を統一する（タイムアウトは `cancelQuery` 後に `DbError`）
+- [x] `src/allographer/query_builder/models/postgres/postgres_open.nim` で `pqsetnonblocking(conn, 1)` と検証処理を追加する
+- [x] `src/allographer/query_builder/models/postgres/postgres_types.nim` に接続プール waiter キューを追加する（`waiters*: seq[Future[void]]`）
+- [x] `src/allographer/query_builder/models/postgres/postgres_exec.nim` の `getFreeConn` / `returnConn` を通知ベースへ置換する
+- [x] PostgreSQL の単体・結合・回帰テストを追加または更新する（`tests/postgres/test_pool_wait.nim` 追加、既存 `test*.nim` 回帰）
+- [x] `sleepAsync(10)` が PostgreSQL クエリ待機とプール空き待機から除去されたことを確認する
+- [ ] README / documents / ルール文書に仕様差分が必要か確認し、必要分を同期する（利用者向け公開 API 変更なしのため未着手。必要なら追記）
+- [x] MariaDB: `mariadb_rdb.nim` に `mysql_read_query_result`（`cdecl`）を追加
+- [x] MariaDB: `mariadb_impl.nim` は接続ブロッキング前提で `mysql_real_query` / `mysql_read_query_result` / `mysql_fetch_row` / `free_result` を同期利用（`mysql_read_query_result_*` / `fetch_row_*` の async ループは環境でタイムアウト・デッドロックのため不使用）
+- [x] MariaDB: `mariadb_open.nim` は `MYSQL_OPT_NONBLOCK` を付与しない（同上）
+- [x] MariaDB: `mariadb_types` / `mariadb_exec` のプール空き待ちは通知ベース（`tests/mariadb/test_pool_wait.nim`）
+
+## 参考資料
+- allographer の PostgreSQL 実装: `src/allographer/query_builder/libs/postgres/postgres_impl.nim`
+- allographer の PostgreSQL 実行管理: `src/allographer/query_builder/models/postgres/postgres_exec.nim`
+- allographer の PostgreSQL 接続初期化: `src/allographer/query_builder/models/postgres/postgres_open.nim`
+- allographer の PostgreSQL 型定義: `src/allographer/query_builder/models/postgres/postgres_types.nim`
+- libpq 非同期 API: `PQsocket`, `PQconsumeInput`, `PQisBusy`, `PQgetResult`, `PQsetnonblocking`, `PQflush`, `PQgetCancel`, `PQcancel`, `PQfreeCancel`
+- Nim `asyncdispatch` のイベントループ仕様
+- httpbeast / httpx の POSIX selector ループ実装
+
+## 調査結果・設計まとめ
+
+### 背景
+
+`httpbeast` / `httpx` 利用時のみ、DB クエリ待機が `asynchttpserver` より大きく悪化する事象がある。
+
+現状の allographer PostgreSQL 実装は、libpq 非同期 API を使いながらも、実際の待機を `await sleepAsync(10)` に依存している。
+
+### 問題の本質
+
+- 現状の PostgreSQL 待機は、ソケット readiness 待ちではなく 10ms 刻みのポーリングである
+- Nim の `asyncdispatch` は `poll` / `waitFor` / `runForever` が回らない限りタイマーも進まない
+- httpbeast / httpx の POSIX 経路は `selectInto(-1, ...)` による無期限ブロックを中心としており、`asyncdispatch.poll(0)` は限定的にしか回らない
+- そのため `sleepAsync(10)` は実時間 10ms で復帰せず、「次に HTTP 側ループがたまたま dispatcher を回すまで」遅延する
+- 結果として、DB は完了済みでも allographer 側の結果回収が遅れ、体感レイテンシが悪化する
+
+### 設計目標
+
+1. PostgreSQL クエリ待機から `sleepAsync` ポーリングを除去する
+2. libpq ソケットの可読・可書込イベントで待機する
+3. 接続プール空き待ちも通知ベースへ移行し、タイマー依存を減らす
+4. `dbOpen`, `table`, `select`, `find`, `update` などの公開 API 互換を維持する
+
+### 非目標
+
+1. Query Builder API の破壊的変更
+2. MySQL / SQLite への同時展開（MariaDB は PostgreSQL と同方針で非同期待機を実装済み）
+3. 初回対応で全 OS 最適化を完了させること
+
+### 実装方針
+
+#### 1. libpq 待機を FD イベント待機へ変更する
+
+変更対象:
+- `src/allographer/query_builder/libs/postgres/postgres_impl.nim`
+- `src/allographer/query_builder/libs/postgres/postgres_rdb.nim`
+
+追加する内部ヘルパ:
+- `waitPgReadable(db: PPGconn, timeoutMs: int): Future[bool]`
+- `waitPgWritable(db: PPGconn, timeoutMs: int): Future[bool]`
+- `cancelQuery(db: PPGconn)`
+
+要点:
+- `pqsocket(db)` で FD を得る
+- 必要に応じて dispatcher に `AsyncFD` を登録する
+- read / write readiness を Future 完了で待つ
+- タイムアウト管理を行う
+- 登録リークや未解除ハンドラを残さない
+
+#### 2. クエリ実行ループを共通化する
+
+送信フェーズ:
+1. `pqsendQueryParams(...)` を呼ぶ
+2. `pqflush == 1` の間は `waitPgWritable` で待機する
+
+受信フェーズ:
+1. `pqconsumeInput`
+2. `pqisBusy == 1` なら `waitPgReadable` で待機する
+3. ready 後に `pqgetResult` を drain する
+
+タイムアウト時は `cancelQuery` を実行し、エラーを返す。
+
+#### 3. `dbOpen` で non-blocking を保証する
+
+変更対象:
+- `src/allographer/query_builder/models/postgres/postgres_open.nim`
+
+仕様:
+1. `pqsetnonblocking(conn, 1)` を実行する
+2. 失敗時は `DbError`
+3. `pqisnonblocking(conn) == 1` を確認し、保証できない場合は例外化する
+
+#### 4. 接続プール空き待ちを通知ベースに変更する
+
+変更対象:
+- `src/allographer/query_builder/models/postgres/postgres_types.nim`
+- `src/allographer/query_builder/models/postgres/postgres_exec.nim`
+
+方針:
+- `Connections` に `waiters*: Deque[Future[void]]` を追加する
+- `getFreeConn` は空きがなければ waiter を登録して待機する
+- `returnConn` は `isBusy = false` にした後、未完了 waiter を 1 つだけ起こす
+- 余剰 waiter や完了済み waiter は掃除する
+
+### 失敗時挙動
+
+1. `pqsocket < 0` は `DbError`
+2. タイムアウト時は `cancelQuery` 実行後に `DbError`
+3. `cancelQuery` 失敗時は追加情報付きで例外化
+4. dispatcher 登録・解除エラーは握り潰さず上位へ伝播する
+
+### テスト方針
+
+単体テスト:
+1. `waitPgReadable` が read event で復帰する
+2. timeout 時に `false` を返す
+3. `cancelQuery` が後始末まで行う
+4. `getFreeConn` が通知で復帰する
+
+結合テスト:
+1. httpbeast / httpx + Postgres のレイテンシ回帰を確認する
+2. `asynchttpserver` と比較して極端な乖離がないことを確認する
+3. プール枯渇時の待機が 10ms 刻みポーリングに依存しないことを確認する
+
+回帰テスト:
+1. 既存 CRUD クエリの結果互換
+2. transaction 系 API の動作
+3. 例外時メッセージが意味を保っていること
+
+### 受け入れ基準
+
+1. PostgreSQL クエリ待機ループから `await sleepAsync(10)` が除去されている
+2. httpbeast / httpx で DB 完了後の回収遅延が顕著に増幅しない
+3. プール空き待機で `sleepAsync` ポーリングを使わない
+4. 公開 API 変更なしで既存テストと追加テストが成立する
