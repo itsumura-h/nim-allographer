@@ -1,9 +1,12 @@
 import std/asyncdispatch
+import std/deques
 import std/json
+import std/monotimes
 import std/options
 import std/strformat
 import std/strutils
 import std/sequtils
+import std/tables
 import std/times
 import ../../libs/postgres/postgres_lib
 import ../../libs/postgres/postgres_impl
@@ -18,24 +21,33 @@ import ./postgres_types
 # ================================================================================
 
 proc removePoolWaiter(pools: Connections, w: Future[void]) =
-  var i = 0
-  while i < pools.waiters.len:
-    if pools.waiters[i] == w:
-      pools.waiters.delete(i)
-      return
-    inc i
+  var kept = initDeque[Future[void]]()
+  while pools.waiters.len > 0:
+    let x = pools.waiters.popFirst()
+    if x != w:
+      kept.addLast(x)
+  pools.waiters = move(kept)
 
 proc wakeOnePoolWaiter(pools: Connections) =
   while pools.waiters.len > 0:
-    let w = pools.waiters[0]
-    pools.waiters.delete(0)
+    let w = pools.waiters.popFirst()
     if w.finished:
       continue
     w.complete()
     break
 
+proc poolRemainingMs(deadline: MonoTime): int =
+  let left = (deadline - getMonoTime()).inMilliseconds
+  if left <= 0:
+    return 0
+  if left > int64(high(int)):
+    return high(int)
+  result = int(left)
+  if result < 1:
+    result = 1
+
 proc getFreeConn(self: PostgresConnections | PostgresQuery | RawPostgresQuery): Future[int] {.async.} =
-  let deadline = getTime().toUnix() + self.pools.timeout
+  let deadline = getMonoTime() + initDuration(seconds = self.pools.timeout)
   while true:
     for i in 0 ..< self.pools.conns.len:
       if not self.pools.conns[i].isBusy:
@@ -43,13 +55,11 @@ proc getFreeConn(self: PostgresConnections | PostgresQuery | RawPostgresQuery): 
         when defined(check_pool):
           echo "=== getFreeConn ", i
         return i
-    let now = getTime().toUnix()
-    if now >= deadline:
+    if getMonoTime() >= deadline:
       return errorConnectionNum
     let w = newFuture[void]("getFreeConn.poolWait")
-    self.pools.waiters.add(w)
-    let remainingSec = deadline - now
-    var ms = int(remainingSec * 1000)
+    self.pools.waiters.addLast(w)
+    var ms = poolRemainingMs(deadline)
     if ms < 1:
       ms = 1
     let ok = await withTimeout(w, ms)
@@ -106,6 +116,21 @@ proc toJson(results:openArray[seq[string]], dbRows:DbRows):seq[JsonNode] =
 # ================================================================================
 # private exec
 # ================================================================================
+
+const pgInfoSchemaColumnsQuery =
+  "SELECT column_name, data_type FROM information_schema.columns WHERE table_schema = current_schema() AND table_name = $1"
+
+proc getCachedColumnTypes(self: PostgresQuery, connI: int): Future[seq[Row]] {.async.} =
+  let table = self.query["table"].getStr
+  if self.pools.columnTypeCache.hasKey(table):
+    return self.pools.columnTypeCache[table]
+  let args = %*[%*{"key": "table", "value": table}]
+  let (columns, _) = postgres_impl.query(
+    self.pools.conns[connI].conn, pgInfoSchemaColumnsQuery, args, self.pools.timeout
+  ).await
+  self.pools.columnTypeCache[table] = columns
+  return columns
+
 
 proc getAllRows(self:PostgresQuery, queryString:string):Future[seq[JsonNode]] {.async.} =
   var connI = self.transactionConn
@@ -204,10 +229,7 @@ proc exec(self:PostgresQuery, queryString:string) {.async.} =
   if connI == errorConnectionNum:
     return
 
-  let table = self.query["table"].getStr
-  let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
-  let (columns, _) = postgres_impl.query(self.pools.conns[connI].conn, columnGetQuery, newJArray(), self.pools.timeout).await
-
+  let columns = getCachedColumnTypes(self, connI).await
   postgres_impl.exec(self.pools.conns[connI].conn, queryString, self.placeHolder, columns, self.pools.timeout).await
 
 
@@ -221,10 +243,7 @@ proc insertId(self:PostgresQuery, queryString:string, key:string):Future[string]
   if connI == errorConnectionNum:
     return
 
-  let table = self.query["table"].getStr
-  let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
-  let (columns, _) = postgres_impl.query(self.pools.conns[connI].conn, columnGetQuery, newJArray(), self.pools.timeout).await
-
+  let columns = getCachedColumnTypes(self, connI).await
   let (rows, _) = postgres_impl.execGetValue(self.pools.conns[connI].conn, queryString, self.placeHolder, columns, self.pools.timeout).await
   return rows[0][0]
 

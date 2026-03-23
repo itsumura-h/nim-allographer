@@ -1,5 +1,8 @@
 import std/asyncdispatch
+import std/deques
 import std/json
+import std/tables
+import ../database_types
 import ../../log
 import ../../libs/postgres/postgres_rdb
 
@@ -17,7 +20,9 @@ type Connections* = ref object
   conns*: seq[Connection]
   timeout*: int
   ## `getFreeConn` が接続を待つときに積む Future。`returnConn` が先頭から 1 件だけ完了させる。
-  waiters*: seq[Future[void]]
+  waiters*: Deque[Future[void]]
+  ## `exec` / `insertId` 用。テーブルごとに information_schema 相当の列型を初回のみ取得して保持する。
+  columnTypeCache*: Table[string, seq[Row]]
 
 
 ## created by `let rdb = dbOpen(PostgreSQL, "localhost", 5432)`

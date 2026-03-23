@@ -1,5 +1,4 @@
 import std/strutils
-import std/strformat
 import std/json
 import ../../error
 import ../../models/database_types
@@ -19,14 +18,9 @@ proc checkError*(db: PPGconn) =
   if message.len > 0:
     raise newException(DbError, $message)
 
-proc getColumnType(res: PPGresult, line, col: int32) : DbType =
-  ## returns DbType for given column in the row
-  ## defined in pg_type.h file in the postgres source code
-  ## Wire representation for types: http://www.npgsql.org/dev/types.html
-  var oid = pqftype(res, int32(col))
-  if pqgetisnull(res, line, col) == 1:
-    return DbType(kind: dbNull, name: "null")
-  ## The integer returned is the internal OID number of the type
+proc getBaseColumnType(res: PPGresult, col: int32): DbType =
+  ## OID → DbType（行に依存しない）。NULL セルは行ごとに `pqgetisnull` で上書きする。
+  let oid = pqftype(res, col)
   case oid
   of 16: return DbType(kind: DbTypeKind.dbBool, name: "bool")
   of 17: return DbType(kind: DbTypeKind.dbBlob, name: "bytea")
@@ -156,15 +150,24 @@ proc getColumnType(res: PPGresult, line, col: int32) : DbType =
   of 705:  return DbType(kind: DbTypeKind.dbUnknown, name: "unknown")
   else: return DbType(kind: DbTypeKind.dbUnknown, name: $oid) ## Query the system table pg_type to determine exactly which type is referenced.
 
-proc setColumnInfo*(res: PPGresult; dbRows: var DbRows; line, cols: int32) =
-  var columns: DbColumns
-  setLen(columns, cols)
-  for col in 0'i32..cols-1:
-    columns[col].name = $pqfname(res, col)
-    columns[col].typ = getColumnType(res, line, col)
-    columns[col].tableName = $(pqftable(res, col)) ## Returns the OID of the table from which the given column was fetched.
-                                              ## Query the system table pg_class to determine exactly which table is referenced.
+proc buildBaseDbColumns*(res: PPGresult; cols: int32): DbColumns =
+  result = newSeqOfCap[DbColumn](cols.int)
+  setLen(result, cols)
+  for col in 0'i32 ..< cols:
+    result[col].name = $pqfname(res, col)
+    result[col].typ = getBaseColumnType(res, col)
+    result[col].tableName = $(pqftable(res, col))
+
+proc appendDbRowWithBaseColumns*(res: PPGresult; dbRows: var DbRows; line, cols: int32; base: DbColumns) =
+  var columns = base
+  for col in 0'i32 ..< cols:
+    if pqgetisnull(res, line, col) == 1:
+      columns[col].typ = DbType(kind: dbNull, name: "null")
   dbRows.add(columns)
+
+proc setColumnInfo*(res: PPGresult; dbRows: var DbRows; line, cols: int32) =
+  let base = buildBaseDbColumns(res, cols)
+  appendDbRowWithBaseColumns(res, dbRows, line, cols, base)
 
 proc newRow*(L: int): Row =
   newSeq(result, L)
@@ -192,7 +195,8 @@ proc dbQuote(s: string): string =
   ## DB quotes the string.
   if s == "null":
     return "NULL"
-  result = "'"
+  result = newStringOfCap(s.len * 2 + 2)
+  result.add('\'')
   for c in items(s):
     case c
     of '\'': add(result, "''")
@@ -201,32 +205,41 @@ proc dbQuote(s: string): string =
   add(result, '\'')
 
 proc dbFormat*(formatstr: string, args: varargs[string]): string =
-  result = ""
   var a = 0
   if args.len > 0 and not formatstr.contains("?"):
     dbError("""parameter substitution expects "?" """)
   if args.len == 0:
     return formatstr
-  else:
-    for c in items(formatstr):
-      if c == '?':
-        add(result, dbQuote(args[a]))
-        inc(a)
-      else:
-        add(result, c)
+  result = newStringOfCap(formatstr.len + args.len * 8)
+  var segStart = 0
+  for j in 0 ..< formatstr.len:
+    if formatstr[j] == '?':
+      if j > segStart:
+        result.add(formatstr[segStart ..< j])
+      result.add(dbQuote(args[a]))
+      inc(a)
+      segStart = j + 1
+  if segStart < formatstr.len:
+    result.add(formatstr[segStart ..< formatstr.len])
 
 
 proc questionToDaller*(s:string):string =
   ## from `UPDATE user SET name = ?, email = ? WHERE id = ?`
-  ## 
+  ##
   ## to   `UPDATE user SET name = $1, email = $2 WHERE id = $3`
   var i = 1
-  for c in s:
-    if c == '?':
-      result.add(&"${i}")
-      i += 1
-    else:
-      result.add(c)
+  var segStart = 0
+  result = newStringOfCap(s.len + 8)
+  for j in 0 ..< s.len:
+    if s[j] == '?':
+      if j > segStart:
+        result.add(s[segStart ..< j])
+      result.add('$')
+      result.add($i)
+      inc(i)
+      segStart = j + 1
+  if segStart < s.len:
+    result.add(s[segStart ..< s.len])
 
 
 type PGParams* = object
@@ -236,104 +249,73 @@ type PGParams* = object
   formats*: seq[int32] # 0:text,1:binary
 
 
-proc fromObjArray*(_:type PGParams, args: JsonNode, columns:seq[Row]):PGParams =
-  if args.len == 0:
-    return
-  result.nParams = args.len.int32
-
-  var values = newSeq[string](args.len)
-  result.formats = newSeq[int32](args.len)
+proc objArrayParamSeqs(args: JsonNode; columns: seq[Row]): tuple[values: seq[string], lengths: seq[int32], formats: seq[int32]] =
+  result.values = newSeq[string](args.len)
   result.lengths = newSeq[int32](args.len)
-
+  result.formats = newSeq[int32](args.len)
   var i = 0
   for arg in args.items:
     defer: i.inc()
     case arg["value"].kind
     of JBool:
-      values[i] = if arg["value"].getBool: "t" else: "f"
+      result.values[i] = if arg["value"].getBool: "t" else: "f"
       result.lengths[i] = 0
       result.formats[i] = 0
     of JInt:
-      values[i] = $arg["value"].getInt
+      result.values[i] = $arg["value"].getInt
       result.lengths[i] = 0
       result.formats[i] = 0
     of JFloat:
-      values[i] = $arg["value"].getFloat
+      result.values[i] = $arg["value"].getFloat
       result.lengths[i] = 0
       result.formats[i] = 0
     of JNull:
-      values[i] = "NULL"
+      result.values[i] = "NULL"
       result.lengths[i] = 0
       result.formats[i] = 0
     of JObject, JArray:
-      values[i] = arg["value"].pretty
+      result.values[i] = arg["value"].pretty
       result.lengths[i] = 0
       result.formats[i] = 0
     of JString:
-      for column in columns:
-        let columnName = column[0]
-        let columnTyp = column[1]
+      if columns.len > 0:
+        for column in columns:
+          if column[0] == arg["key"].getStr:
+            defer: break
+            let value = arg["value"].getStr
+            result.values[i] = value
+            result.lengths[i] = value.len.int32
+            if column[1] == "bytea":
+              result.formats[i] = 1
+            else:
+              result.formats[i] = 0
+      else:
+        let value = arg["value"].getStr
+        result.values[i] = value
+        result.lengths[i] = value.len.int32
+        result.formats[i] = 0
 
-        if columnName == arg["key"].getStr:
-          defer: break
-          let value = arg["value"].getStr
-          values[i] = value
-          result.lengths[i] = value.len.int32
-          if columnTyp == "bytea":
-            result.formats[i] = 1
-          else:
-            result.formats[i] = 0
-
+proc allocPgParamsFromSeqs(values: seq[string]; lengths, formats: seq[int32]; n: int): PGParams =
+  result.nParams = n.int32
+  result.lengths = lengths
+  result.formats = formats
   result.values = allocCStringArray(values)
-  for i, row in values:
+  for j, row in values:
     if row == "NULL":
-      result.values[i] = nil
+      result.values[j] = nil
 
+proc fromObjArray*(_: type PGParams, args: JsonNode, columns: seq[Row]): PGParams =
+  if args.len == 0:
+    return
+  let t = objArrayParamSeqs(args, columns)
+  result = allocPgParamsFromSeqs(t.values, t.lengths, t.formats, args.len)
 
-proc fromObjArray*(_:type PGParams, args: JsonNode):PGParams =
+proc fromObjArray*(_: type PGParams, args: JsonNode): PGParams =
   ## `args` is JArray `[{"key": "bool", "value": true},{"key": "int", "value": 1}]`
   if args.len == 0:
     return
-  result.nParams = args.len.int32
-
-  var values = newSeq[string](args.len)
-  result.formats = newSeq[int32](args.len)
-  result.lengths = newSeq[int32](args.len)
-
-  var i = 0
-  for arg in args.items:
-    defer: i.inc()
-    case arg["value"].kind
-    of JBool:
-      values[i] = if arg["value"].getBool: "t" else: "f"
-      result.lengths[i] = 0
-      result.formats[i] = 0
-    of JInt:
-      values[i] = $arg["value"].getInt
-      result.lengths[i] = 0
-      result.formats[i] = 0
-    of JFloat:
-      values[i] = $arg["value"].getFloat
-      result.lengths[i] = 0
-      result.formats[i] = 0
-    of JNull:
-      values[i] = "NULL"
-      result.lengths[i] = 0
-      result.formats[i] = 0
-    of JObject, JArray:
-      values[i] = arg["value"].pretty
-      result.lengths[i] = 0
-      result.formats[i] = 0
-    of JString:
-      let value = arg["value"].getStr
-      values[i] = value
-      result.lengths[i] = value.len.int32
-      result.formats[i] = 0
-
-  result.values = allocCStringArray(values)
-  for i, row in values:
-    if row == "NULL":
-      result.values[i] = nil
+  let t = objArrayParamSeqs(args, @[])
+  result = allocPgParamsFromSeqs(t.values, t.lengths, t.formats, args.len)
 
 
 proc fromArray*(_:type PGParams, args: JsonNode):PGParams =

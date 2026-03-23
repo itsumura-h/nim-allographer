@@ -1,5 +1,9 @@
+import std/asyncdispatch
+import std/deques
+import std/tables
 import std/times
 import std/strutils
+import ../database_types
 import ../../error
 import ../../libs/postgres/postgres_rdb
 import ../../libs/postgres/postgres_lib
@@ -25,7 +29,8 @@ proc dbOpen*(_:type PostgreSQL, database: string, user: string, password: string
   let pools = Connections(
     conns: conns,
     timeout: timeout,
-    waiters: @[],
+    waiters: initDeque[Future[void]](),
+    columnTypeCache: initTable[string, seq[Row]](),
   )
   result = PostgresConnections(
     pools: pools,
