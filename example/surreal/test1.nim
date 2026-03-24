@@ -19,8 +19,8 @@ proc main() {.async.} =
     DEFINE FIELD `int` ON TABLE `test` TYPE int;
     DEFINE FIELD `float` ON TABLE `test` TYPE decimal;
     DEFINE FIELD `str` ON TABLE `test` TYPE string;
-    DEFINE FIELD `data` ON TABLE `test` TYPE string;
-    DEFINE FIELD `object` ON TABLE `test` FLEXIBLE TYPE object;
+    DEFINE FIELD `data` ON TABLE `test` TYPE string | NONE;
+    DEFINE FIELD `object` ON TABLE `test` TYPE object | NONE FLEXIBLE;
   """).exec().waitFor
 
   echo rdb.table("test").columns().waitFor

@@ -1,5 +1,4 @@
 import std/strutils
-import std/strformat
 import std/json
 
 
@@ -26,6 +25,21 @@ proc dbQuote(s:string):string =
   add(result, '\'')
 
 
+proc appendAlphabet(result: var string, n: int) =
+  var n = n
+  if n <= 0:
+    return
+
+  var chars: seq[char] = @[]
+  while n > 0:
+    n.dec()
+    chars.add(chr(ord('a') + (n mod 26)))
+    n = n div 26
+
+  for i in countdown(chars.high, 0):
+    result.add(chars[i])
+
+
 proc dbFormat*(formatstr: string, args: varargs[string]): string =
   var a = 0
   result = newStringOfCap(formatstr.len + args.len * 8)
@@ -43,16 +57,8 @@ proc dbFormat*(formatstr: string, args: varargs[string]): string =
 
 proc numToAlphabet*(n:int):string =
   ## 1 => "a", 26 => "z", 27 => "aa", 28 => "ab", 52 => "az", 53 => "ba"
-  var n = n
-  result = ""
-  while n > 0:
-    n.dec()
-    let quotient = n.div(26)
-    let remainder = n.mod(26)
-    result = chr(int('A') + remainder) & result
-    n = quotient
-
-  return result.toLower()
+  result = newStringOfCap(8)
+  appendAlphabet(result, n)
 
 
 proc questionToDaller*(s: string): string =
@@ -67,52 +73,51 @@ proc questionToDaller*(s: string): string =
       if j > segStart:
         result.add(s[segStart ..< j])
       result.add('$')
-      result.add(numToAlphabet(i))
+      appendAlphabet(result, i)
       inc(i)
       segStart = j + 1
   if segStart < s.len:
     result.add(s[segStart ..< s.len])
 
 
+proc appendJsonLetClause(result: var string, idx: int, arg: JsonNode, quoteString: bool) =
+  result.add("LET $")
+  appendAlphabet(result, idx)
+  result.add(" = ")
+  case arg.kind
+  of JBool:
+    result.add($arg.getBool)
+  of JInt:
+    result.add($arg.getInt)
+  of JFloat:
+    result.add($arg.getFloat)
+  of JString:
+    let val = arg.getStr().replace("\"", "\\\"")
+    if quoteString:
+      result.add('"')
+      result.add(val)
+      result.add('"')
+    else:
+      result.add(val)
+  of JNull:
+    result.add("null")
+  of JArray, JObject:
+    result.add($arg)
+  result.add("; ")
+
+
 proc dbFormat*(queryString: string, args: JsonNode): string =
   let queryPart = queryString.questionToDaller()
-
-  var strArgs: seq[string]
+  result = newStringOfCap(queryPart.len + max(args.len, 1) * 24)
   if args.kind == JArray and args.len > 0:
     var i = 1
     for arg in args.items:
-      defer: i.inc()
-      case arg.kind
-      of JBool:
-        strArgs.add(&"LET ${numToAlphabet(i)} = {$arg.getBool}; ")
-      of JInt:
-        strArgs.add(&"LET ${numToAlphabet(i)} = {$arg.getInt}; ")
-      of JFloat:
-        strArgs.add(&"LET ${numToAlphabet(i)} = {$arg.getFloat}; ")
-      of JString:
-        let val = arg.getStr().replace("\"", "\\\"")
-        strArgs.add(&"""LET ${numToAlphabet(i)} = "{val}"; """)
-      of JNull:
-        strArgs.add(&"LET ${numToAlphabet(i)} = null; ")
-      of JArray, JObject:
-        strArgs.add(&"LET ${numToAlphabet(i)} = {$arg}; ")
+      appendJsonLetClause(result, i, arg, true)
+      inc(i)
   elif args.kind == JObject and args.len > 0:
     var i = 1
     for (key, arg) in args.pairs:
-      defer: i.inc()
-      case arg.kind
-      of JBool:
-        strArgs.add(&"LET ${numToAlphabet(i)} = {$arg.getBool}; ")
-      of JInt:
-        strArgs.add(&"LET ${numToAlphabet(i)} = {$arg.getInt}; ")
-      of JFloat:
-        strArgs.add(&"LET ${numToAlphabet(i)} = {$arg.getFloat}; ")
-      of JString:
-        let val = arg.getStr().replace("\"", "\\\"")
-        strArgs.add(&"""LET ${numToAlphabet(i)} = {val}; """)
-      of JNull:
-        strArgs.add(&"LET ${numToAlphabet(i)} = null; ")
-      of JArray, JObject:
-        strArgs.add(&"LET ${numToAlphabet(i)} = {$arg}; ")
+      appendJsonLetClause(result, i, arg, false)
+      inc(i)
 
-  result = strArgs.join() & queryPart
+  result.add(queryPart)

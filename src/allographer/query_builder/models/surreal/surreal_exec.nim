@@ -5,7 +5,6 @@ import std/monotimes
 import std/options
 import std/strformat
 import std/strutils
-import std/sequtils
 import std/times
 import ../../libs/surreal/surreal_lib
 import ../../libs/surreal/surreal_impl
@@ -135,7 +134,7 @@ proc getAllRows(self:SurrealQuery, queryString:string):Future[seq[JsonNode]] {.a
   if rows.len == 0:
     self.log.echoErrorMsg(queryString)
     return newSeq[JsonNode](0)
-  return rows.toSeq # seq[JsonNode]
+  return rows.getElems() # seq[JsonNode]
 
 
 proc getRow(self:SurrealQuery, queryString:string):Future[Option[JsonNode]] {.async.} =
@@ -198,7 +197,7 @@ proc getAllRows(self:RawSurrealQuery, queryString:string):Future[seq[JsonNode]] 
   if rows.len == 0:
     self.log.echoErrorMsg(queryString)
     return newSeq[JsonNode](0)
-  return rows.toSeq()
+  return rows.getElems()
 
 
 # proc getAllRowsPlain(self:RawSurrealQuery, queryString:string, args:JsonNode):Future[seq[seq[string]]] {.async.} =
@@ -422,8 +421,10 @@ proc insert*[T](self:SurrealQuery, items:T) {.async.} =
 
 proc insert*[T](self:SurrealQuery, items:seq[T]) {.async.} =
   ## https://surrealdb.com/docs/surrealql/statements/insert
-  let items = items.mapIt(%it)
-  var sql = self.insertValuesBuilder(items)
+  var jsonItems = newSeq[JsonNode](items.len)
+  for i, item in items:
+    jsonItems[i] = %item
+  var sql = self.insertValuesBuilder(jsonItems)
   self.log.logger(sql)
   self.exec(sql).await
 
@@ -441,8 +442,10 @@ proc insertId*[T](self:SurrealQuery, items:T, key="id"):Future[SurrealId] {.asyn
 
 proc insertId*[T](self: SurrealQuery, items: seq[T], key="id"):Future[seq[SurrealId]] {.async.} =
   result = newSeq[SurrealId](items.len)
-  let items = items.mapIt(%it)
-  var sql = self.insertValuesBuilder(items)
+  var jsonItems = newSeq[JsonNode](items.len)
+  for i, item in items:
+    jsonItems[i] = %item
+  var sql = self.insertValuesBuilder(jsonItems)
   self.log.logger(sql)
   let res = self.getAllRows(sql).await
   var i = 0
@@ -510,7 +513,7 @@ proc columns*(self: SurrealQuery):Future[seq[string]] {.async.} =
     self.log.logger(sql)
     let resp = self.column(sql).await
     var columns:seq[string]
-    for (key, value) in resp[0]["result"]["fd"].pairs:
+    for (key, value) in resp[0]["result"]["fields"].pairs:
       columns.add(key)
     return columns
   except CatchableError:

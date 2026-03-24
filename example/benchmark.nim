@@ -5,6 +5,7 @@ import std/json
 import std/os
 import std/random
 import std/strutils
+import std/monotimes
 import std/times
 import ../src/allographer/env
 import ../src/allographer/connection
@@ -78,7 +79,6 @@ template benchmarkScenario(rdb: untyped): untyped =
     return response
 
   proc timeProcess[T](name: system.string, cb: proc(): Future[T]) {.async.} =
-    var start = 0.0
     var eachTime = 0.0
     var sumTime = 0.0
     const repeatCount = 5
@@ -86,9 +86,9 @@ template benchmarkScenario(rdb: untyped): untyped =
 
     for i in 1..repeatCount:
       sleep(100)
-      start = cpuTime()
+      let start = getMonoTime()
       discard cb().await
-      eachTime = cpuTime() - start
+      eachTime = float64((getMonoTime() - start).inMilliseconds) / 1000.0
       sumTime += eachTime
       if i > 1: resultStr.add("\n")
       resultStr.add("|" & $i & "|" & $eachTime & "|")
