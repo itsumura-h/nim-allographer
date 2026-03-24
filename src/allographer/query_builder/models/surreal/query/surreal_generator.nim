@@ -214,9 +214,9 @@ proc whereNullSql*(self: SurrealQuery): SurrealQuery =
       column = quote(column)
 
       if self.queryString.contains("WHERE"):
-        self.queryString.add(&" OR {column} IS NULL")
+        self.queryString.add(&" OR {column} IS NONE")
       else:
-        self.queryString.add(&" WHERE {column} IS NULL")
+        self.queryString.add(&" WHERE {column} IS NONE")
 
   return self
 
@@ -375,7 +375,7 @@ proc selectCountSql*(self: SurrealQuery): SurrealQuery =
 proc selectAvgSql*(self: SurrealQuery, column:string): SurrealQuery =
   var column = column
   column = quote(column)
-  self.queryString = &"SELECT math::trimean({column}) AS avg"
+  self.queryString = &"SELECT math::mean({column}) AS avg"
   return self
 
 

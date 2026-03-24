@@ -1,3 +1,5 @@
+import std/asyncdispatch
+import std/deques
 import std/json
 import std/httpclient
 import ../../log
@@ -16,7 +18,9 @@ type Connection* = object
 
 type Connections* = ref object
   conns*: seq[Connection]
-  timeout*:int
+  timeout*: int
+  ## `getFreeConn` が接続を待つときに積む Future。`returnConn` が先頭から 1 件だけ完了させる。
+  waiters*: Deque[Future[void]]
 
 
 ## created by `let rdb = dbOpen(SurrealDB, "ns", "database", "user", "pass", "http://surreal", 8000)`

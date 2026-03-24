@@ -1,11 +1,14 @@
 import std/asyncdispatch
+import std/deques
 import std/json
+import std/monotimes
 import std/options
-import std/strformat
 import std/strutils
 import std/sequtils
+import std/tables
 import std/times
 import ../../libs/sqlite/sqlite_impl
+import ../../libs/sqlite/sqlite_lib
 import ../../log
 import ../database_types
 import ./query/sqlite_builder
@@ -16,23 +19,58 @@ import ./sqlite_types
 # connection
 # ================================================================================
 
-proc getFreeConn(self:SqliteConnections | SqliteQuery | RawSqliteQuery):Future[int] {.async.} =
-  let calledAt = getTime().toUnix()
+proc removePoolWaiter(pools: Connections, w: Future[void]) =
+  var kept = initDeque[Future[void]]()
+  while pools.waiters.len > 0:
+    let x = pools.waiters.popFirst()
+    if x != w:
+      kept.addLast(x)
+  pools.waiters = move(kept)
+
+proc wakeOnePoolWaiter(pools: Connections) =
+  while pools.waiters.len > 0:
+    let w = pools.waiters.popFirst()
+    if w.finished:
+      continue
+    w.complete()
+    break
+
+proc poolRemainingMs(deadline: MonoTime): int =
+  let left = (deadline - getMonoTime()).inMilliseconds
+  if left <= 0:
+    return 0
+  if left > int64(high(int)):
+    return high(int)
+  result = int(left)
+  if result < 1:
+    result = 1
+
+proc getFreeConn(self: SqliteConnections | SqliteQuery | RawSqliteQuery): Future[int] {.async.} =
+  let deadline = getMonoTime() + initDuration(seconds = self.pools.timeout)
   while true:
-    for i in 0..<self.pools.conns.len:
+    for i in 0 ..< self.pools.conns.len:
       if not self.pools.conns[i].isBusy:
         self.pools.conns[i].isBusy = true
         when defined(check_pool):
           echo "=== getFreeConn ", i
         return i
-    await sleepAsync(10)
-    if getTime().toUnix() >= calledAt + self.pools.timeout:
+    if getMonoTime() >= deadline:
+      return errorConnectionNum
+    let w = newFuture[void]("getFreeConn.poolWait")
+    self.pools.waiters.addLast(w)
+    var ms = poolRemainingMs(deadline)
+    if ms < 1:
+      ms = 1
+    let ok = await withTimeout(w, ms)
+    if not ok:
+      removePoolWaiter(self.pools, w)
       return errorConnectionNum
 
 
 proc returnConn(self: SqliteConnections | SqliteQuery | RawSqliteQuery, i: int) {.async.} =
   if i != errorConnectionNum:
     self.pools.conns[i].isBusy = false
+    wakeOnePoolWaiter(self.pools)
 
 
 # ================================================================================
@@ -67,6 +105,16 @@ proc toJson(results:openArray[seq[string]], dbRows:DbRows):seq[JsonNode] =
 # ================================================================================
 # private exec
 # ================================================================================
+
+proc getCachedSqliteColumnTypes(self: SqliteQuery, connI: int): Future[seq[(string, string)]] {.async.} =
+  let table = self.query["table"].getStr
+  if self.pools.columnTypeCache.hasKey(table):
+    return self.pools.columnTypeCache[table]
+  let q = "PRAGMA table_info(" & sqliteQuoteIdent(table) & ")"
+  let columns = sqlite_impl.getColumnTypes(self.pools.conns[connI].conn, q).await
+  self.pools.columnTypeCache[table] = columns
+  return columns
+
 
 proc getAllRows(self:SqliteQuery, queryString:string):Future[seq[JsonNode]] {.async.} =
   var connI = self.transactionConn
@@ -358,10 +406,7 @@ proc exec(self:SqliteQuery, queryString:string) {.async.} =
   if connI == errorConnectionNum:
     return
 
-  let table = self.query["table"].getStr
-  let columnGetQuery = &"PRAGMA table_info(\"{table}\")"
-  let columns = sqlite_impl.getColumnTypes(self.pools.conns[connI].conn, columnGetQuery).await
-
+  let columns = getCachedSqliteColumnTypes(self, connI).await
   sqlite_impl.exec(self.pools.conns[connI].conn, queryString, self.placeHolder, columns, self.pools.timeout).await
 
 
@@ -388,10 +433,7 @@ proc insertId(self:SqliteQuery, queryString:string, key:string):Future[string]{.
   if connI == errorConnectionNum:
     return
 
-  let table = self.query["table"].getStr
-  let columnGetQuery = &"PRAGMA table_info(\"{table}\")"
-  let columns = sqlite_impl.getColumnTypes(self.pools.conns[connI].conn, columnGetQuery).await
-
+  let columns = getCachedSqliteColumnTypes(self, connI).await
   sqlite_impl.exec(self.pools.conns[connI].conn, queryString, self.placeHolder, columns, self.pools.timeout).await
 
   var strArgs:seq[string]

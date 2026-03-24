@@ -2,6 +2,7 @@
 
 import std/asyncdispatch
 import std/json
+import std/monotimes
 import std/strutils
 import std/times
 import ../../error
@@ -11,7 +12,7 @@ import ./postgres_lib
 
 
 type
-  PgWaitState = ref object
+  PgWaitState = object
     cancelled: bool
 
 proc cancelQuery(db: PPGconn) {.raises: [DbError].} =
@@ -25,70 +26,67 @@ proc cancelQuery(db: PPGconn) {.raises: [DbError].} =
   if pqCancel(cancel, errBuf.cstring, int32(errBuf.len)) == 0:
     raise newException(DbError, "PQcancel failed: " & $errBuf.cstring)
 
-proc ensurePgSocketRegistered(db: PPGconn) =
+proc ensurePgSocketRegistered(db: PPGconn): AsyncFD =
   let sock = pqsocket(db)
   if sock < 0:
     dbError(db)
-  let fd = AsyncFD(cint(sock))
+  result = AsyncFD(cint(sock))
   let disp = getGlobalDispatcher()
-  if not disp.contains(fd):
-    register(fd)
+  if not disp.contains(result):
+    register(result)
 
-proc waitPgReadable(db: PPGconn, timeoutMs: int): Future[bool] {.async.} =
+proc waitPgIo(db: PPGconn, timeoutMs: int; forRead: bool): Future[bool] {.async.} =
   if timeoutMs <= 0:
     return false
-  ensurePgSocketRegistered(db)
-  let sock = pqsocket(db)
-  if sock < 0:
-    dbError(db)
-  let fd = AsyncFD(cint(sock))
-  let state = PgWaitState(cancelled: false)
-  var readFut = newFuture[void]("waitPgReadable")
-  proc readCb(f: AsyncFD): bool =
-    if state.cancelled:
+  let fd = ensurePgSocketRegistered(db)
+  var state = PgWaitState(cancelled: false)
+  var ioFut = newFuture[void]("waitPgIo")
+  if forRead:
+    proc readCb(f: AsyncFD): bool =
+      if state.cancelled:
+        return true
+      if not ioFut.finished:
+        ioFut.complete()
       return true
-    if not readFut.finished:
-      readFut.complete()
-    return true
-  addRead(fd, readCb)
-  let ok = await withTimeout(readFut, timeoutMs)
+    addRead(fd, readCb)
+  else:
+    proc writeCb(f: AsyncFD): bool =
+      if state.cancelled:
+        return true
+      if not ioFut.finished:
+        ioFut.complete()
+      return true
+    addWrite(fd, writeCb)
+  let ok = await withTimeout(ioFut, timeoutMs)
   if not ok:
     state.cancelled = true
     unregister(fd)
   return ok
 
-proc waitPgWritable(db: PPGconn, timeoutMs: int): Future[bool] {.async.} =
-  if timeoutMs <= 0:
-    return false
-  ensurePgSocketRegistered(db)
-  let sock = pqsocket(db)
-  if sock < 0:
-    dbError(db)
-  let fd = AsyncFD(cint(sock))
-  let state = PgWaitState(cancelled: false)
-  var writeFut = newFuture[void]("waitPgWritable")
-  proc writeCb(f: AsyncFD): bool =
-    if state.cancelled:
-      return true
-    if not writeFut.finished:
-      writeFut.complete()
-    return true
-  addWrite(fd, writeCb)
-  let ok = await withTimeout(writeFut, timeoutMs)
-  if not ok:
-    state.cancelled = true
-    unregister(fd)
-  return ok
+proc makePgDeadline(timeout: int): MonoTime =
+  let sec = if timeout > 0: timeout else: 0
+  getMonoTime() + initDuration(seconds = sec)
 
-proc pgRemainingMs(deadline: int64): int =
-  let leftSec = deadline - getTime().toUnix()
-  if leftSec <= 0:
+proc pgRemainingMs(deadline: MonoTime): int =
+  let left = (deadline - getMonoTime()).inMilliseconds
+  if left <= 0:
     return 0
-  result = int(leftSec * 1000)
+  if left > int64(high(int)):
+    return high(int)
+  result = int(left)
   if result < 1:
     result = 1
 
-proc pgFlushOutgoing(db: PPGconn, deadline: int64): Future[void] {.async.} =
+proc pgSendQueryParams(db: PPGconn, query: string, pgParams: PGParams) {.raises: [DbError].} =
+  let status =
+    if pgParams.nParams > 0:
+      pqsendQueryParams(db, query.cstring, pgParams.nParams, nil, pgParams.values, pgParams.lengths[0].unsafeAddr, pgParams.formats[0].unsafeAddr, 0)
+    else:
+      pqsendQueryParams(db, query.cstring, pgParams.nParams, nil, nil, nil, nil, 0)
+  if status != 1:
+    dbError(db)
+
+proc pgFlushOutgoing(db: PPGconn, deadline: MonoTime): Future[void] {.async.} =
   while true:
     let flushRes = pqflush(db)
     if flushRes == 0:
@@ -99,11 +97,11 @@ proc pgFlushOutgoing(db: PPGconn, deadline: int64): Future[void] {.async.} =
     if ms <= 0:
       cancelQuery(db)
       raise newException(DbError, "PostgreSQL query timeout")
-    if not await waitPgWritable(db, ms):
+    if not await waitPgIo(db, ms, false):
       cancelQuery(db)
       raise newException(DbError, "PostgreSQL query timeout")
 
-proc pgAwaitReadyForGetResult(db: PPGconn, deadline: int64): Future[void] {.async.} =
+proc pgAwaitReadyForGetResult(db: PPGconn, deadline: MonoTime): Future[void] {.async.} =
   while true:
     if pqconsumeInput(db) != 1:
       dbError(db)
@@ -113,15 +111,15 @@ proc pgAwaitReadyForGetResult(db: PPGconn, deadline: int64): Future[void] {.asyn
     if ms <= 0:
       cancelQuery(db)
       raise newException(DbError, "PostgreSQL query timeout")
-    if not await waitPgReadable(db, ms):
+    if not await waitPgIo(db, ms, true):
       cancelQuery(db)
       raise newException(DbError, "PostgreSQL query timeout")
 
-proc pgNextResult(db: PPGconn, deadline: int64): Future[PPGresult] {.async.} =
+proc pgNextResult(db: PPGconn, deadline: MonoTime): Future[PPGresult] {.async.} =
   await pgAwaitReadyForGetResult(db, deadline)
   result = pqgetResult(db)
 
-proc pgEnsureIdle(db: PPGconn, deadline: int64): Future[void] {.async.} =
+proc pgEnsureIdle(db: PPGconn, deadline: MonoTime): Future[void] {.async.} =
   while true:
     await pgAwaitReadyForGetResult(db, deadline)
     let r = pqgetResult(db)
@@ -134,20 +132,12 @@ proc pgEnsureIdle(db: PPGconn, deadline: int64): Future[void] {.async.} =
 proc query*(db: PPGconn, query: string, args: JsonNode, timeout: int): Future[(seq[Row], DbRows)] {.async.} =
   assert db.status == CONNECTION_OK
   let pgParams = PGParams.fromObjArray(args)
-
-  let status =
-    if pgParams.nParams > 0:
-      pqsendQueryParams(db, query.cstring, pgParams.nParams, nil, pgParams.values, pgParams.lengths[0].unsafeAddr, pgParams.formats[0].unsafeAddr, 0)
-    else:
-      pqsendQueryParams(db, query.cstring, pgParams.nParams, nil, nil, nil, nil, 0)
   defer:
     if pgParams.nParams > 0: pgParams.values.deallocCStringArray()
-
-  if status != 1: dbError(db)
+  pgSendQueryParams(db, query, pgParams)
   var dbRows: DbRows
   var rows = newSeq[Row]()
-  let calledAt = getTime().toUnix()
-  let deadline = calledAt + timeout.int64
+  let deadline = makePgDeadline(timeout)
   await pgFlushOutgoing(db, deadline)
   while true:
     let pqresult = await pgNextResult(db, deadline)
@@ -155,11 +145,12 @@ proc query*(db: PPGconn, query: string, args: JsonNode, timeout: int): Future[(s
       db.checkError()
       break
 
-    var cols = pqnfields(pqresult)
+    let cols = pqnfields(pqresult)
     var row = newRow(cols)
+    let base = buildBaseDbColumns(pqresult, cols)
     for i in 0'i32 .. pqNtuples(pqresult) - 1:
       setRow(pqresult, row, i, cols)
-      setColumnInfo(pqresult, dbRows, i, cols)
+      appendDbRowWithBaseColumns(pqresult, dbRows, i, cols, base)
       rows.add(row)
     pqclear(pqresult)
 
@@ -169,18 +160,10 @@ proc query*(db: PPGconn, query: string, args: JsonNode, timeout: int): Future[(s
 proc exec*(db: PPGconn, query: string, args: JsonNode, columns: seq[Row], timeout: int) {.async.} =
   assert db.status == CONNECTION_OK
   let pgParams = PGParams.fromObjArray(args, columns)
-
-  let status =
-    if pgParams.nParams > 0:
-      pqsendQueryParams(db, query.cstring, pgParams.nParams, nil, pgParams.values, pgParams.lengths[0].unsafeAddr, pgParams.formats[0].unsafeAddr, 0)
-    else:
-      pqsendQueryParams(db, query.cstring, pgParams.nParams, nil, nil, nil, nil, 0)
   defer:
     if pgParams.nParams > 0: pgParams.values.deallocCStringArray()
-
-  if status != 1: dbError(db)
-  let calledAt = getTime().toUnix()
-  let deadline = calledAt + timeout.int64
+  pgSendQueryParams(db, query, pgParams)
+  let deadline = makePgDeadline(timeout)
   await pgFlushOutgoing(db, deadline)
   while true:
     let pqresult = await pgNextResult(db, deadline)
@@ -193,20 +176,12 @@ proc exec*(db: PPGconn, query: string, args: JsonNode, columns: seq[Row], timeou
 proc execGetValue*(db: PPGconn, query: string, args: JsonNode, columns: seq[Row], timeout: int): Future[(seq[Row], DbRows)] {.async.} =
   assert db.status == CONNECTION_OK
   let pgParams = PGParams.fromObjArray(args, columns)
-
-  let status =
-    if pgParams.nParams > 0:
-      pqsendQueryParams(db, query.cstring, pgParams.nParams, nil, pgParams.values, pgParams.lengths[0].unsafeAddr, pgParams.formats[0].unsafeAddr, 0)
-    else:
-      pqsendQueryParams(db, query.cstring, pgParams.nParams, nil, nil, nil, nil, 0)
   defer:
     if pgParams.nParams > 0: pgParams.values.deallocCStringArray()
-
-  if status != 1: dbError(db)
+  pgSendQueryParams(db, query, pgParams)
   var dbRows: DbRows
   var rows = newSeq[Row]()
-  let calledAt = getTime().toUnix()
-  let deadline = calledAt + timeout.int64
+  let deadline = makePgDeadline(timeout)
   await pgFlushOutgoing(db, deadline)
   while true:
     let pqresult = await pgNextResult(db, deadline)
@@ -214,11 +189,12 @@ proc execGetValue*(db: PPGconn, query: string, args: JsonNode, columns: seq[Row]
       db.checkError()
       break
 
-    var cols = pqnfields(pqresult)
+    let cols = pqnfields(pqresult)
     var row = newRow(cols)
+    let base = buildBaseDbColumns(pqresult, cols)
     for i in 0'i32 .. pqNtuples(pqresult) - 1:
       setRow(pqresult, row, i, cols)
-      setColumnInfo(pqresult, dbRows, i, cols)
+      appendDbRowWithBaseColumns(pqresult, dbRows, i, cols, base)
       rows.add(row)
     pqclear(pqresult)
 
@@ -228,20 +204,12 @@ proc execGetValue*(db: PPGconn, query: string, args: JsonNode, columns: seq[Row]
 proc rawQuery*(db: PPGconn, query: string, args: JsonNode, timeout: int): Future[(seq[Row], DbRows)] {.async.} =
   assert db.status == CONNECTION_OK
   let pgParams = PGParams.fromArray(args)
-
-  let status =
-    if pgParams.nParams > 0:
-      pqsendQueryParams(db, query.cstring, pgParams.nParams, nil, pgParams.values, pgParams.lengths[0].unsafeAddr, pgParams.formats[0].unsafeAddr, 0)
-    else:
-      pqsendQueryParams(db, query.cstring, pgParams.nParams, nil, nil, nil, nil, 0)
   defer:
     if pgParams.nParams > 0: pgParams.values.deallocCStringArray()
-
-  if status != 1: dbError(db)
+  pgSendQueryParams(db, query, pgParams)
   var dbRows: DbRows
   var rows = newSeq[Row]()
-  let calledAt = getTime().toUnix()
-  let deadline = calledAt + timeout.int64
+  let deadline = makePgDeadline(timeout)
   await pgFlushOutgoing(db, deadline)
   while true:
     let pqresult = await pgNextResult(db, deadline)
@@ -249,11 +217,12 @@ proc rawQuery*(db: PPGconn, query: string, args: JsonNode, timeout: int): Future
       db.checkError()
       break
 
-    var cols = pqnfields(pqresult)
+    let cols = pqnfields(pqresult)
     var row = newRow(cols)
+    let base = buildBaseDbColumns(pqresult, cols)
     for i in 0'i32 .. pqNtuples(pqresult) - 1:
       setRow(pqresult, row, i, cols)
-      setColumnInfo(pqresult, dbRows, i, cols)
+      appendDbRowWithBaseColumns(pqresult, dbRows, i, cols, base)
       rows.add(row)
     pqclear(pqresult)
 
@@ -263,18 +232,10 @@ proc rawQuery*(db: PPGconn, query: string, args: JsonNode, timeout: int): Future
 proc rawExec*(db: PPGconn, query: string, args: JsonNode, timeout: int) {.async.} =
   assert db.status == CONNECTION_OK
   let pgParams = PGParams.fromArray(args)
-
-  let status =
-    if pgParams.nParams > 0:
-      pqsendQueryParams(db, query.cstring, pgParams.nParams, nil, pgParams.values, pgParams.lengths[0].unsafeAddr, pgParams.formats[0].unsafeAddr, 0)
-    else:
-      pqsendQueryParams(db, query.cstring, pgParams.nParams, nil, nil, nil, nil, 0)
   defer:
     if pgParams.nParams > 0: pgParams.values.deallocCStringArray()
-
-  if status != 1: dbError(db)
-  let calledAt = getTime().toUnix()
-  let deadline = calledAt + timeout.int64
+  pgSendQueryParams(db, query, pgParams)
+  let deadline = makePgDeadline(timeout)
   await pgFlushOutgoing(db, deadline)
   while true:
     let pqresult = await pgNextResult(db, deadline)
@@ -294,8 +255,7 @@ proc query*(db: PPGconn, query: string, args: seq[string], timeout: int): Future
   if status != 1: dbError(db)
   var dbRows: DbRows
   var rows = newSeq[Row]()
-  let calledAt = getTime().toUnix()
-  let deadline = calledAt + timeout.int64
+  let deadline = makePgDeadline(timeout)
   await pgFlushOutgoing(db, deadline)
   while true:
     let pqresult = await pgNextResult(db, deadline)
@@ -303,11 +263,12 @@ proc query*(db: PPGconn, query: string, args: seq[string], timeout: int): Future
       db.checkError()
       break
 
-    var cols = pqnfields(pqresult)
+    let cols = pqnfields(pqresult)
     var row = newRow(cols)
+    let base = buildBaseDbColumns(pqresult, cols)
     for i in 0'i32 .. pqNtuples(pqresult) - 1:
       setRow(pqresult, row, i, cols)
-      setColumnInfo(pqresult, dbRows, i, cols)
+      appendDbRowWithBaseColumns(pqresult, dbRows, i, cols, base)
       rows.add(row)
     pqclear(pqresult)
 
@@ -318,8 +279,7 @@ proc queryPlain*(db: PPGconn, query: string, args: seq[string], timeout: int): F
   let status = pqsendQuery(db, dbFormat(query, args).cstring)
   if status != 1: dbError(db)
   var rows = newSeq[Row]()
-  let calledAt = getTime().toUnix()
-  let deadline = calledAt + timeout.int64
+  let deadline = makePgDeadline(timeout)
   await pgFlushOutgoing(db, deadline)
   while true:
     let pqresult = await pgNextResult(db, deadline)
@@ -341,8 +301,7 @@ proc exec*(db: PPGconn, query: string, args: seq[string], timeout: int) {.async.
   assert db.status == CONNECTION_OK
   let success = pqsendQuery(db, dbFormat(query, args).cstring)
   if success != 1: dbError(db)
-  let calledAt = getTime().toUnix()
-  let deadline = calledAt + timeout.int64
+  let deadline = makePgDeadline(timeout)
   await pgFlushOutgoing(db, deadline)
   while true:
     let pqresult = await pgNextResult(db, deadline)
@@ -357,8 +316,7 @@ proc getColumns*(db: PPGconn, query: string, args: seq[string], timeout: int): F
   let status = pqsendQuery(db, dbFormat(query, args).cstring)
   if status != 1: dbError(db)
   var dbRows: DbRows
-  let calledAt = getTime().toUnix()
-  let deadline = calledAt + timeout.int64
+  let deadline = makePgDeadline(timeout)
   await pgFlushOutgoing(db, deadline)
   while true:
     let pqresult = await pgNextResult(db, deadline)
@@ -366,8 +324,9 @@ proc getColumns*(db: PPGconn, query: string, args: seq[string], timeout: int): F
       db.checkError()
       break
 
-    var cols = pqnfields(pqresult)
-    setColumnInfo(pqresult, dbRows, 0, cols)
+    let cols = pqnfields(pqresult)
+    let base = buildBaseDbColumns(pqresult, cols)
+    appendDbRowWithBaseColumns(pqresult, dbRows, 0, cols, base)
     pqclear(pqresult)
 
   for column in dbRows[0]:
@@ -379,8 +338,7 @@ proc prepare*(db: PPGconn, query: string, timeout: int, stmtName: string): Futur
   let nArgs = query.count('$')
   let success = pqsendPrepare(db, stmtName, dbFormat(query).cstring, int32(nArgs), nil)
   if success != 1: dbError(db)
-  let calledAt = getTime().toUnix()
-  let deadline = calledAt + timeout.int64
+  let deadline = makePgDeadline(timeout)
   await pgFlushOutgoing(db, deadline)
   while true:
     let pqresult = await pgNextResult(db, deadline)
@@ -392,8 +350,7 @@ proc prepare*(db: PPGconn, query: string, timeout: int, stmtName: string): Futur
 
 proc preparedQuery*(db: PPGconn, args: seq[string], nArgs: int, timeout: int, stmtName: string): Future[(seq[Row], DbRows)] {.async.} =
   assert db.status == CONNECTION_OK
-  let calledAt = getTime().toUnix()
-  let deadline = calledAt + timeout.int64
+  let deadline = makePgDeadline(timeout)
   await pgEnsureIdle(db, deadline)
   let arr = allocCStringArray(args)
   let status = pqsendQueryPrepared(db, stmtName, int32(nArgs), arr, nil, nil, 0)
@@ -408,20 +365,20 @@ proc preparedQuery*(db: PPGconn, args: seq[string], nArgs: int, timeout: int, st
       db.checkError()
       break
 
-    var cols = pqnfields(pqresult)
+    let cols = pqnfields(pqresult)
     var row = newRow(cols)
+    let base = buildBaseDbColumns(pqresult, cols)
     for i in 0'i32 .. pqNtuples(pqresult) - 1:
       setRow(pqresult, row, i, cols)
+      appendDbRowWithBaseColumns(pqresult, dbRows, i, cols, base)
       rows.add(row)
-      setColumnInfo(pqresult, dbRows, i, cols)
     pqclear(pqresult)
 
   return (rows, dbRows)
 
 proc preparedExec*(db: PPGconn, args: seq[string], nArgs: int, timeout: int, stmtName: string) {.async.} =
   assert db.status == CONNECTION_OK
-  let calledAt = getTime().toUnix()
-  let deadline = calledAt + timeout.int64
+  let deadline = makePgDeadline(timeout)
   await pgEnsureIdle(db, deadline)
   let arr = allocCStringArray(args)
   let status = pqsendQueryPrepared(db, stmtName, int32(nArgs), arr, nil, nil, 0)

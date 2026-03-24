@@ -17,7 +17,7 @@ proc getTableInfo(rdb: SurrealConnections): Future[Table[string, seq[tuple[name:
   try:
     # Get all tables using SurrealDB's INFO statement
     let dbResponse = rdb.raw("INFO FOR DB").info().await
-    let dbInfo = dbResponse[0]["result"]["tb"].getFields()
+    let dbInfo = dbResponse[0]["result"]["tables"].getFields()
     var tables:seq[string]
     for key, _ in dbInfo.pairs:
       if key == "_allographer_migrations":
@@ -29,7 +29,7 @@ proc getTableInfo(rdb: SurrealConnections): Future[Table[string, seq[tuple[name:
     for tableName in tables:
       # Get field definitions for each table
       let tableResponse = rdb.raw(&"INFO FOR TABLE {tableName}").info().await
-      let fields = tableResponse[0]["result"]["fd"].getFields()
+      let fields = tableResponse[0]["result"]["fields"].getFields()
 
       var columnInfo: seq[tuple[name: string, typ: string]]
       for fieldName, fieldDef in fields.pairs:
@@ -66,6 +66,8 @@ proc generateSchemaCode(tablesInfo: Table[string, seq[tuple[name: string, typ: s
           "int"
         of "string", "datetime":
           "string"
+        of "object":
+          "JsonNode"
         of "bool":
           "bool"
         of "decimal", "float":

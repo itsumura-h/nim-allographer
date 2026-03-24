@@ -7,63 +7,103 @@
 
 import std/json
 import std/strformat
-import std/strutils
 import ../../../enums
 import ../../../models/table
 import ../../../models/column
 import ../schema_utils
 
 
+proc addAssertPart(assertClause: var string, part: string) =
+  if part.len == 0:
+    return
+
+  if assertClause.len > 0:
+    assertClause.add(" AND ")
+  assertClause.add(part)
+
+
+proc addValueClause(query: var string, defaultClause: string, isNullable: bool, fallbackClause: string) =
+  if defaultClause.len > 0:
+    query.add(&" VALUE $value OR {defaultClause}")
+  elif isNullable:
+    query.add(" VALUE $value OR NONE")
+  else:
+    query.add(&" VALUE $value OR {fallbackClause}")
+
+
+proc addAssertClause(query: var string, assertBody: string, isNullable: bool) =
+  if assertBody.len == 0:
+    if not isNullable:
+      query.add(" ASSERT $value != NONE")
+    return
+
+  if isNullable:
+    query.add(&" ASSERT $value = NONE OR ({assertBody})")
+  else:
+    query.add(&" ASSERT {assertBody}")
+
+
+proc autoIncrementValueExpr(table: Table, column: Column): string =
+  &"(SELECT `max_index` FROM `_autoincrement_sequences` WHERE `table` = \"{table.name}\" AND `column` = \"{column.name}\" LIMIT 1)[0].max_index + 1"
+
+
+proc isSurrealIdField(column: Column): bool =
+  column.name == "id"
+
+
 # =============================================================================
 # int
 # =============================================================================
 proc createIncrementsColumn(column:Column, table:Table):seq[string] =
+  if isSurrealIdField(column):
+    return @[]
+
+  let nextIndexExpr = autoIncrementValueExpr(table, column)
   result.add(&"""
     INSERT INTO `_autoincrement_sequences` {{table: "{table.name}", column: "{column.name}", max_index: 0}};
     DEFINE EVENT `autoincrement_{table.name}_{column.name}` ON TABLE `{table.name}` WHEN $event = "CREATE" THEN {{
-      LET $val = (SELECT `max_index` FROM `_autoincrement_sequences` WHERE `table` = "{table.name}" AND `column` = "{column.name}" LIMIT 1)[0].max_index + 1;
-      UPDATE `{table.name}` MERGE {{{column.name}: $val}} WHERE id = $after.id;
-      UPDATE `_autoincrement_sequences` MERGE {{max_index: $val}} WHERE `table` = "{table.name}" AND `column` = "{column.name}";
+      UPDATE `_autoincrement_sequences` MERGE {{max_index: $after.{column.name}}} WHERE `table` = "{table.name}" AND `column` = "{column.name}";
     }}
   """)
-  result.add(&"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE int")
+  result.add(&"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE int VALUE $value OR {nextIndexExpr}")
   result.add(&"DEFINE INDEX `{table.name}_{column.name}_unique` ON TABLE `{table.name}` COLUMNS `{column.name}` UNIQUE")
 
 
 proc createIntColumn(column:Column, table:Table):seq[string] =
   var query = ""
+  var assertClause = ""
 
   if column.isAutoIncrement:
+    if isSurrealIdField(column):
+      return @[]
+
+    let nextIndexExpr = autoIncrementValueExpr(table, column)
     query.add(&"""
       INSERT INTO `_autoincrement_sequences` {{table: "{table.name}", column: "{column.name}", max_index: 0}};
       DEFINE EVENT `autoincrement_{table.name}_{column.name}` ON TABLE `{table.name}` WHEN $event = "CREATE" THEN {{
-        LET $val = (SELECT `max_index` FROM `_autoincrement_sequences` WHERE `table` = "{table.name}" AND `column` = "{column.name}" LIMIT 1)[0].max_index + 1;
-        UPDATE `{table.name}` MERGE {{{column.name}: $val}} WHERE id = $after.id;
-        UPDATE `_autoincrement_sequences` MERGE {{max_index: $val}} WHERE `table` = "{table.name}" AND `column` = "{column.name}";
+        UPDATE `_autoincrement_sequences` MERGE {{max_index: $after.{column.name}}} WHERE `table` = "{table.name}" AND `column` = "{column.name}";
       }};
     """)
 
-    query.add(&"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE int")
+    query.add(&"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE int VALUE $value OR {nextIndexExpr}")
     return @[query]
 
   query.add(&"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE int")
+  if column.isNullable:
+    query.add(" | NONE")
 
   if not column.isNullable:
-    query.add(" ASSERT $value != NONE")
+    addAssertPart(assertClause, "$value != NONE")
 
   if column.isUnsigned:
-    if query.contains("ASSERT"):
-      query.add(&" AND $value >= 0")
-    else:
-      query.add(&" ASSERT $value >= 0")
+    addAssertPart(assertClause, "$value >= 0")
 
   if column.isDefault:
-    query.add(&" VALUE $value OR {column.defaultInt}")
-  elif column.isNullable:
-    query.add(" VALUE $value OR NULL")
+    addValueClause(query, $column.defaultInt, column.isNullable, "0")
   else:
-    query.add(" VALUE $value OR 0")
+    addValueClause(query, "", column.isNullable, "0")
 
+  addAssertClause(query, assertClause, column.isNullable)
   result.add(query)
 
   if column.isIndex:
@@ -78,26 +118,25 @@ proc createIntColumn(column:Column, table:Table):seq[string] =
 # =============================================================================
 proc createDecimalColumn(column:Column, table:Table):seq[string] =
   var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE decimal"
+  var assertClause = ""
+  if column.isNullable:
+    query.add(" | NONE")
 
   if not column.isNullable:
-    query.add(" ASSERT $value != NONE")
+    addAssertPart(assertClause, "$value != NONE")
 
   if column.isUnsigned:
-    if query.contains("ASSERT"):
-      query.add(&" AND $value >= 0")
-    else:
-      query.add(&" ASSERT $value >= 0")
+    addAssertPart(assertClause, "$value >= 0")
 
   if column.isDefault:
-    query.add(&" VALUE $value OR {column.defaultFloat}")
-  elif column.isNullable:
-    query.add(" VALUE $value OR NULL")
+    addValueClause(query, $column.defaultFloat, column.isNullable, "0.0")
   else:
-    query.add(" VALUE $value OR 0.0")
+    addValueClause(query, "", column.isNullable, "0.0")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
 
+  addAssertClause(query, assertClause, column.isNullable)
   result.add(query)
 
   if column.isIndex:
@@ -109,26 +148,25 @@ proc createDecimalColumn(column:Column, table:Table):seq[string] =
 
 proc createFloatColumn(column:Column, table:Table):seq[string] =
   var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE float"
+  var assertClause = ""
+  if column.isNullable:
+    query.add(" | NONE")
 
   if not column.isNullable:
-    query.add(" ASSERT $value != NONE")
+    addAssertPart(assertClause, "$value != NONE")
 
   if column.isUnsigned:
-    if query.contains("ASSERT"):
-      query.add(&" AND $value >= 0")
-    else:
-      query.add(&" ASSERT $value >= 0")
+    addAssertPart(assertClause, "$value >= 0")
 
   if column.isDefault:
-    query.add(&" VALUE $value OR {column.defaultFloat}")
-  elif column.isNullable:
-    query.add(" VALUE $value OR NULL")
+    addValueClause(query, $column.defaultFloat, column.isNullable, "0.0")
   else:
-    query.add(" VALUE $value OR 0.0")
+    addValueClause(query, "", column.isNullable, "0.0")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
 
+  addAssertClause(query, assertClause, column.isNullable)
   result.add(query)
 
   if column.isIndex:
@@ -142,29 +180,34 @@ proc createFloatColumn(column:Column, table:Table):seq[string] =
 # char
 # =============================================================================
 proc createUuidColumn(column:Column, table:Table):seq[string] =
-  result.add(&"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE string VALUE $value OR rand::uuid() ASSERT $value != NONE")
+  var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE string"
+  if column.isNullable:
+    query.add(" | NONE")
+  query.add(" VALUE $value OR rand::uuid()")
+  addAssertClause(query, "", column.isNullable)
+  result.add(query)
   result.add(&"DEFINE INDEX `{table.name}_{column.name}_unique` ON TABLE `{table.name}` COLUMNS `{column.name}` UNIQUE")
 
 
 proc createCharColumn(column:Column, table:Table):seq[string] =
   var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE string"
-
+  if column.isNullable:
+    query.add(" | NONE")
   let maxLength = column.info["maxLength"].getInt
-  query.add(&" ASSERT string::len($value) < {maxLength}")
+  var assertClause = &"string::len($value) < {maxLength}"
 
   if not column.isNullable:
-    query.add(" AND $value != NONE")
+    addAssertPart(assertClause, "$value != NONE")
 
   if column.isDefault:
-    query.add(&" VALUE $value OR '{column.defaultString}'")
-  elif column.isNullable:
-    query.add(" VALUE $value OR NULL")
+    addValueClause(query, &"'{column.defaultString}'", column.isNullable, "''")
   else:
-    query.add(" VALUE $value OR ''")
+    addValueClause(query, "", column.isNullable, "''")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
 
+  addAssertClause(query, assertClause, column.isNullable)
   result.add(query)
 
   if column.isIndex:
@@ -179,23 +222,23 @@ proc createCharColumn(column:Column, table:Table):seq[string] =
 
 proc createVarcharColumn(column:Column, table:Table):seq[string] =
   var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE string"
-
+  if column.isNullable:
+    query.add(" | NONE")
   let maxLength = column.info["maxLength"].getInt
-  query.add(&" ASSERT string::len($value) < {maxLength}")
+  var assertClause = &"string::len($value) < {maxLength}"
 
   if not column.isNullable:
-    query.add(" AND $value != NONE")
+    addAssertPart(assertClause, "$value != NONE")
 
   if column.isDefault:
-    query.add(&" VALUE $value OR '{column.defaultString}'")
-  elif column.isNullable:
-    query.add(" VALUE $value OR NULL")
+    addValueClause(query, &"'{column.defaultString}'", column.isNullable, "''")
   else:
-    query.add(" VALUE $value OR ''")
+    addValueClause(query, "", column.isNullable, "''")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
 
+  addAssertClause(query, assertClause, column.isNullable)
   result.add(query)
 
   if column.isIndex:
@@ -210,20 +253,22 @@ proc createVarcharColumn(column:Column, table:Table):seq[string] =
 
 proc createTextColumn(column:Column, table:Table):seq[string] =
   var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE string"
+  var assertClause = ""
+  if column.isNullable:
+    query.add(" | NONE")
 
   if not column.isNullable:
-    query.add(" ASSERT $value != NONE")
+    addAssertPart(assertClause, "$value != NONE")
 
   if column.isDefault:
-    query.add(&" VALUE $value OR '{column.defaultString}'")
-  elif column.isNullable:
-    query.add(" VALUE $value OR NULL")
+    addValueClause(query, &"'{column.defaultString}'", column.isNullable, "''")
   else:
-    query.add(" VALUE $value OR ''")
+    addValueClause(query, "", column.isNullable, "''")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
 
+  addAssertClause(query, assertClause, column.isNullable)
   result.add(query)
 
   if column.isIndex:
@@ -241,9 +286,12 @@ proc createTextColumn(column:Column, table:Table):seq[string] =
 # =============================================================================
 proc createDatetimeColumn(column:Column, table:Table):seq[string] =
   var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE datetime"
+  var assertClause = ""
+  if column.isNullable:
+    query.add(" | NONE")
 
   if not column.isNullable:
-    query.add(" ASSERT $value != NONE")
+    addAssertPart(assertClause, "$value != NONE")
 
   if column.isDefault and column.defaultDatetime == Current:
     query.add(&" VALUE $value OR time::now()")
@@ -252,11 +300,12 @@ proc createDatetimeColumn(column:Column, table:Table):seq[string] =
   elif column.isNullable:
     query.add(" VALUE $value OR NULL")
   else:
-    query.add(" VALUE $value OR '1970-01-01T00:00:00Z'")
+    query.add(" VALUE $value OR <datetime>\"1970-01-01T00:00:00Z\"")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
 
+  addAssertClause(query, assertClause, column.isNullable)
   result.add(query)
 
   if column.isIndex:
@@ -287,20 +336,22 @@ proc createSoftDeleteColumn(column:Column, table:Table):seq[string] =
 # =============================================================================
 proc createBlobColumn(column:Column, table:Table):seq[string] =
   var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE string"
+  var assertClause = ""
+  if column.isNullable:
+    query.add(" | NONE")
 
   if not column.isNullable:
-    query.add(" ASSERT $value != NONE")
+    addAssertPart(assertClause, "$value != NONE")
 
   if column.isDefault:
-    query.add(&" VALUE $value OR '{column.defaultString}'")
-  elif column.isNullable:
-    query.add(" VALUE $value OR NULL")
+    addValueClause(query, &"'{column.defaultString}'", column.isNullable, "''")
   else:
-    query.add(" VALUE $value OR ''")
+    addValueClause(query, "", column.isNullable, "''")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
 
+  addAssertClause(query, assertClause, column.isNullable)
   result.add(query)
 
   if column.isIndex:
@@ -315,20 +366,22 @@ proc createBlobColumn(column:Column, table:Table):seq[string] =
 
 proc createBoolColumn(column:Column, table:Table):seq[string] =
   var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE bool"
+  var assertClause = ""
+  if column.isNullable:
+    query.add(" | NONE")
 
   if not column.isNullable:
-    query.add(" ASSERT $value != NONE")
+    addAssertPart(assertClause, "$value != NONE")
 
   if column.isDefault:
-    query.add(&" VALUE $value OR {column.defaultBool}")
-  elif column.isNullable:
-    query.add(" VALUE $value OR NULL")
+    addValueClause(query, $column.defaultBool, column.isNullable, "false")
   else:
-    query.add(" VALUE $value OR false")
+    addValueClause(query, "", column.isNullable, "false")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
 
+  addAssertClause(query, assertClause, column.isNullable)
   result.add(query)
 
   if column.isIndex:
@@ -354,27 +407,29 @@ proc enumOptionsColumn(options:seq[string]):string =
 
 proc createEnumColumn(column:Column, table:Table):seq[string] =
   var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE string"
+  var assertClause = ""
+  if column.isNullable:
+    query.add(" | NONE")
   
   var options:seq[string]
   for row in column.info["options"].items:
     options.add(row.getStr)
   let optionsString = enumOptionsColumn(options)
-  query.add(&" ASSERT $value INSIDE [{optionsString}]")
+  addAssertPart(assertClause, &"$value INSIDE [{optionsString}]")
 
   if not column.isNullable:
-    query.add(" AND $value != NONE")
+    addAssertPart(assertClause, "$value != NONE")
 
   if column.isDefault:
-    query.add(&" VALUE $value OR '{column.defaultString}'")
-  elif column.isNullable:
-    query.add(" VALUE $value OR NULL")
+    addValueClause(query, &"'{column.defaultString}'", column.isNullable, "''")
   else:
     let default = column.info["options"][0].getStr
-    query.add(&" VALUE $value OR '{default}'")
+    addValueClause(query, &"'{default}'", column.isNullable, "''")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
 
+  addAssertClause(query, assertClause, column.isNullable)
   result.add(query)
 
   if column.isIndex:
@@ -388,21 +443,23 @@ proc createEnumColumn(column:Column, table:Table):seq[string] =
 
 
 proc createJsonColumn(column:Column, table:Table):seq[string] =
-  var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` FLEXIBLE TYPE object"
+  var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE object FLEXIBLE"
+  var assertClause = ""
+  if column.isNullable:
+    query.add(" | NONE")
 
   if not column.isNullable:
-    query.add(" ASSERT $value != NONE")
+    addAssertPart(assertClause, "$value != NONE")
 
   if column.isDefault:
-    query.add(&" VALUE $value OR {$column.defaultJson}")
-  elif column.isNullable:
-    query.add(" VALUE $value OR NULL")
+    addValueClause(query, &"{$column.defaultJson}", column.isNullable, "{}")
   else:
-    query.add(" VALUE $value OR {}")
+    addValueClause(query, "", column.isNullable, "{}")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
 
+  addAssertClause(query, assertClause, column.isNullable)
   result.add(query)
 
   if column.isIndex:
@@ -420,19 +477,23 @@ proc createJsonColumn(column:Column, table:Table):seq[string] =
 # =============================================================================
 proc createForeignColumn(column:Column, table:Table):seq[string] =
   let refTable = column.info["table"].getStr
-  var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE record (`{refTable}`)"
+  var query = &"DEFINE FIELD `{column.name}` ON TABLE `{table.name}` TYPE record<{refTable}>"
+  var assertClause = ""
+  if column.isNullable:
+    query.add(" | NONE")
 
   if not column.isNullable:
-    query.add(" ASSERT $value != NONE")
+    addAssertPart(assertClause, "$value != NONE")
 
   if column.isDefault:
-    query.add(&" VALUE $value OR {$column.defaultString}")
+    addValueClause(query, &"{column.defaultString}", column.isNullable, "NULL")
 
   if column.isAutoIncrement:
     notAllowedOption("autoincrement", "decimal", column.name)
   elif column.isNullable:
-    query.add(" VALUE $value OR NULL")
+    addValueClause(query, "", true, "NULL")
 
+  addAssertClause(query, assertClause, column.isNullable)
   result.add(query)
 
   if column.isIndex:

@@ -1,0 +1,240 @@
+---
+description: 321-mariadb-nonblockingブランチでの開発時に読み込む
+alwaysApply: false
+---
+MariaDB nonblocking API 対応 ブランチルール
+===
+
+このブランチで実装することは以下の通りです。
+- allographer の MariaDB 実装を、MariaDB Connector/C の non-blocking client API に追従できる構成へ設計・整備する。
+- 現在の `sleepAsync(10)` ベースの接続プール待機と、実質ブロッキングなクエリ実行経路を切り分けて改善方針を明確化する。
+- `mysql_real_query_start/cont` 系、`mysql_read_query_result_start/cont` 系、`mysql_fetch_row_start/cont` 系を使う待機ループの責務分離を設計する。
+- 必要な Connector/C 宣言を `mariadb_rdb.nim` に追加し、将来の実装変更でヘッダ不足が起きないようにする。
+- 公開 API 互換を維持しつつ、MariaDB driver 内に差分を閉じ込める。
+- 設計メモで整理していた背景・参照仕様・リスク・段階導入案をこのブランチルールへ集約し、参照元を一本化する。
+
+## 進捗
+- [x] `.cursor/rules/project.mdc` と `.cursor/rules/branch.mdc` を確認した
+- [x] 現行 `src/allographer/query_builder/models/mariadb/` と `src/allographer/query_builder/libs/mariadb/` を調査した
+- [x] ローカルの `/usr/include/mariadb/mysql.h` で non-blocking API 宣言と待機フラグを確認した
+- [x] MariaDB 公式ドキュメントで non-blocking API の制約と利用手順を確認した
+- [x] ブランチルールに設計方針・改修粒度・参考資料を整理した
+- [x] `src/allographer/query_builder/libs/mariadb/mariadb_rdb.nim` に必要宣言を追加した
+- [x] `mariadb_impl.nim` に共通待機ヘルパと `_start/_cont` ベースの実行ループを実装する
+- [x] `mariadb_open.nim` で `MYSQL_OPT_NONBLOCK` を有効化し、接続初期化手順を整理する
+- [x] `mariadb_types.nim` / `mariadb_exec.nim` のプール空き待機を通知ベースへ置換する
+- [x] `tests/mariadb/` に pool wait と CRUD 回帰を追加する
+- [x] 実装中に設計差分が出た場合は本ファイルの `調査結果・設計まとめ` を更新する
+- [x] `src/allographer/query_builder/libs/surreal/` と `models/surreal/` の効率改善余地を調査し、`documents/rdb/surreal_efficiency_report.md` に整理した
+- [x] `documents/rdb/surreal_efficiency_report.md` の P0/P1 項目に沿って、`surreal_impl.nim` の HTTP timeout 共通化、`surreal_open.nim` の bootstrap 1 回化、`surreal_lib.nim` の文字列生成改善、`surreal_exec.nim` の `getElems()` 化を実装した
+
+## 参考資料
+- `documents/rdb/mariadb_nonblocking_design.md` の内容を統合済み
+- `src/allographer/query_builder/models/mariadb/mariadb_open.nim`
+- `src/allographer/query_builder/models/mariadb/mariadb_exec.nim`
+- `src/allographer/query_builder/models/mariadb/mariadb_types.nim`
+- `src/allographer/query_builder/libs/mariadb/mariadb_impl.nim`
+- `src/allographer/query_builder/libs/mariadb/mariadb_rdb.nim`
+- `documents/rdb/surreal_efficiency_report.md`
+- `/usr/include/mariadb/mysql.h`
+- MariaDB Documentation: Non-Blocking API Reference
+- MariaDB Documentation: Using the Non-Blocking Library
+- `src/allographer/query_builder/models/postgres/postgres_open.nim`
+- `src/allographer/query_builder/models/postgres/postgres_exec.nim`
+
+## 調査結果・設計まとめ
+
+### 背景
+
+現行の MariaDB 実装は `Future` を返しているが、実際の MariaDB Connector/C 呼び出しは `mysql_real_query()` / `mysql_use_result()` / `mysql_fetch_row()` を同期的に使っている。
+
+そのため、Nim 側では async API に見えても、ソケット I/O 待機は Connector/C 内でブロックされうる。さらに接続プール枯渇時は `sleepAsync(10)` ポーリングで待っており、待機遅延が大きい。
+
+### 現状の問題
+
+1. `mariadb_exec.nim` の `getFreeConn` が `sleepAsync(10)` ポーリングで、プール返却の即時通知がない
+2. `mariadb_impl.nim` の `query*` / `exec*` / `getColumns*` は non-blocking API を使っていない
+3. `timeout` 引数はあるが、Connector/C の I/O 待機そのものをアプリ側 event loop で制御できていない
+4. `mysql_use_result()` を使う都合上、行フェッチ途中で新規操作を開始できないという Connector/C 制約を、内部設計として明示できていない
+5. 設計メモが別ファイルに分散すると、ブランチ進捗と参照資料の整合性が崩れやすい
+
+### 設計目標
+
+1. MariaDB クエリ送受信を Connector/C の `_start/_cont` API へ置き換える
+2. ソケット待機は `mysql_get_socket()` と `MYSQL_WAIT_*` に従って event loop で処理する
+3. `mysql_get_timeout_value_ms()` に従って timeout を扱い、ライブラリ内部 timeout と allographer の接続 timeout を両立させる
+4. 公開 API は維持し、driver 内部だけで差分を吸収する
+5. 接続プール空き待機は PostgreSQL と同様の通知ベースへ寄せる
+
+### 非目標
+
+1. Query Builder の公開 API 変更
+2. MySQL driver まで同時に全面改修すること
+3. 初回対応で prepared statement 系まで non-blocking 化すること
+4. このブランチの責務を MariaDB driver の範囲から広げすぎること
+
+### 実装方針
+
+#### 1. `mariadb_rdb.nim` に non-blocking API 宣言を揃える
+
+追加または有効化する対象:
+- `mysql_options`
+- `mysql_get_socket`
+- `mysql_get_timeout_value`
+- `mysql_get_timeout_value_ms`
+- `mysql_real_connect_start/cont`
+- `mysql_real_query_start/cont`
+- `mysql_store_result_start/cont`
+- `mysql_read_query_result_start/cont`
+- `mysql_fetch_row_start/cont`
+- `mysql_free_result_start/cont`
+- `MYSQL_WAIT_READ/WRITE/EXCEPT/TIMEOUT`
+- 必要なら `mysql_optionsv` など周辺宣言も不足なく追加する
+
+#### 2. `mariadb_open.nim` で non-blocking を明示的に有効化する
+
+手順:
+1. `mysql_init()` 後、`mysql_options(conn, MYSQL_OPT_NONBLOCK, nil)` を呼ぶ
+2. 接続自体も `mysql_real_connect_start/cont` に寄せるか、初手は接続のみ同期で残すかを選ぶ
+3. 設計上は接続も non-blocking に揃えるのが一貫するため、最終的には `_start/_cont` 化を目標とする
+
+補足:
+- MariaDB 公式ドキュメントでは、`MYSQL_OPT_NONBLOCK` を有効化せずに non-blocking API を使うとクラッシュしうる
+- DNS 解決は非同期化されないため、ホスト名利用時は依然として初回接続でブロックしうる
+- 接続初期化の最終形は `_start/_cont` へ寄せるが、既存動作を壊さない段階導入を優先する
+
+#### 3. `mariadb_impl.nim` に共通待機ヘルパを追加する
+
+候補ヘルパ:
+- `waitMariadb(conn: PMySQL, waitStatus: cint, deadline: MonoTime): Future[cint]`
+- `runMariadbOp[T](...)` のような `_start/_cont` 反復ヘルパ
+- `readAllRows(...)` のような result drain ヘルパ
+
+待機仕様:
+- `waitStatus` の `MYSQL_WAIT_READ/WRITE/EXCEPT` を `AsyncFD` で待つ
+- `MYSQL_WAIT_TIMEOUT` が立っているときは `mysql_get_timeout_value_ms()` を優先する
+- allographer 側 `timeout` を超えたら `DbError` を返す
+- 待機ループは API ごとに重複させず、共通の進行関数へ寄せる
+
+#### 4. クエリ実行は「送信」「結果確定」「結果取得」「行フェッチ」に分ける
+
+`SELECT` 系:
+1. `mysql_real_query_start/cont`
+2. `mysql_use_result()` または `mysql_store_result_start/cont` のどちらを使うか判断
+3. 既存実装との互換を優先するなら、まずは `mysql_use_result()` を維持しつつ `mysql_fetch_row_start/cont` で逐次取得する
+4. 行取得後に `mysql_free_result_start/cont` または `mysql_free_result()` で解放する
+
+`INSERT/UPDATE/DELETE` 系:
+1. `mysql_real_query_start/cont`
+2. `mysql_real_query_start/cont` の完了を実行完了とみなし、結果セットがない経路では追加の `read_query_result` 呼び出しを行わない
+3. `mysql_errno()` / `mysql_error()` を確認して `DbError`
+
+補足:
+- MariaDB 公式ドキュメントでは、`mysql_use_result()` 自体はブロックしないが、そこからの `mysql_fetch_row_start/cont` は `use_result` 由来なら待機を伴う
+- `store_result` を選ぶとフェッチ自体は即時化しやすい一方、結果全件受信を先に待つ必要がある
+- 現行の逐次処理に近いのは `use_result + fetch_row_start/cont`
+- 実装上の都合で `store_result` を選ぶ場合でも、公開 API の見え方は変えない
+- 実装検証では、`mysql_real_query_start/cont` 直後に `mysql_read_query_result_start/cont` を追加すると DML 経路でタイムアウトが発生したため、`exec*` 系は `real_query` 完了をもって終了判定する方針へ更新した
+
+#### 4.1 実装差分メモ（2026-03-23）
+
+- `mariadb_rdb.nim` の `MYSQL_OPT_NONBLOCK` は MariaDB ヘッダ定義に合わせて `6000` を明示指定した
+- `mariadb_impl.nim` では `waitMariadb` を共通化し、`mysql_real_query_start/cont` と `mysql_fetch_row_start/cont` / `mysql_free_result_start/cont` を統一ループで実行する実装にした
+- `mariadb_open.nim` で `mysql_options(conn, MYSQL_OPT_NONBLOCK, nil)` を全接続で有効化した
+- `mariadb_types.nim` / `mariadb_exec.nim` で接続プール待機を `waiters` ベースへ置換し、`sleepAsync(10)` ポーリングを撤廃した
+- `tests/mariadb/test_pool_wait.nim` を追加し、`tests/mariadb/test_query.nim` / `tests/mariadb/test_transaction.nim` と合わせて回帰確認した
+
+#### 4.2 効率改善差分メモ（2026-03-23）
+
+- `mariadb_impl.nim`: `setColumnInfo` を `while true` フェッチループの外に移動し、行ごとに `fetch_field_direct` の FFI 呼び出しと文字列アロケーションが発生する問題を解消した。各行では `baseColumns` のコピーに対して NULL 上書きのみ行う
+- `mariadb_impl.nim`: 全 proc から `assert db.ping == 0` を除去した。`mysql_ping` は同期ブロッキングでイベントループを停止するため。接続異常は `real_query_start` のエラーハンドリングで検出する
+- `mariadb_impl.nim`: `epochTime()` ベースのデッドライン管理を `std/monotimes` の `MonoTime` + `Duration` に置き換え、NTP 補正による巻き戻りリスクを排除した
+- `mariadb_impl.nim`: `MariadbWaitState` を `ref object` から `object`（値型）に変更し、`waitMariadb` 呼び出しあたり 1 回のヒープアロケーションを削減した
+- `mariadb_impl.nim`: JSON→string 変換ロジックを `jsonObjValuesToStrSeq` / `jsonFlatToStrSeq` の 2 proc に集約し、4 箇所の重複を解消した
+- `mariadb_impl.nim`: `getColumnTypes` の SQL を文字列補間から `?` プレースホルダに変更し、SQL インジェクションリスクを排除した
+- `mariadb_exec.nim`: `exec` / `insertId` が DML のたびに `INFORMATION_SCHEMA.COLUMNS` を問い合わせていた問題を、`Connections.columnTypeCache` によるテーブル単位キャッシュで解消した
+- `mariadb_types.nim`: `waiters` を `seq[Future[void]]` から `Deque[Future[void]]` に変更し、`wakeOnePoolWaiter` の先頭削除を O(n) → O(1) に改善した
+- `mariadb_lib.nim`: `dbFormat` の char-by-char 連結を、`?` 位置間のサブ文字列を一括 `add` する方式に変更した
+- SurrealDB: `surreal_impl.nim` に `runSurrealSql` / `awaitWithTimeout` を追加し、`query` / `exec` / `info` の HTTP timeout と JSON error 処理を共通化した
+- SurrealDB: `surreal_open.nim` で `/status` と `/sql` の bootstrap を timeout 対応で実行し、namespace/database 定義を初回接続へ集約した
+- SurrealDB: `surreal_lib.nim` の `numToAlphabet` / `questionToDaller` / `dbFormat(JsonNode)` を単一バッファ志向へ整理した
+- SurrealDB: `surreal_exec.nim` の `getAllRows` は `rows.getElems()` を使い、`toSeq()` の追加走査を避けた
+
+#### 5. 接続プール待機は通知ベースへ置換する
+
+`mariadb_types.nim`:
+- `Connections.waiters*: seq[Future[void]]` を追加する
+
+`mariadb_exec.nim`:
+- `getFreeConn` は waiter を積んで `withTimeout` で待つ
+- `returnConn` は接続返却後に 1 件だけ waiter を起こす
+- PostgreSQL 実装と同じ責務分割に揃える
+- waiters の起床順やキャンセル時の取り扱いは、既存 PostgreSQL 実装の方針に合わせて整理する
+
+#### 6. 段階導入する
+
+第1段階:
+- ヘッダ宣言追加
+- ブランチルール・設計書追加
+
+第2段階:
+- プール待機の通知化
+- `exec*` 系の non-blocking 化
+
+第3段階:
+- `query*` / `rawQuery*` / `getColumns*` / `insertId` の非同期 result drain 実装
+- テスト拡充
+- 段階ごとに実装差分が出たら本ファイルへ追記し、ブランチ内の唯一の設計記録にする
+
+### 受け入れ基準
+
+1. MariaDB driver で `sleepAsync(10)` によるプール待機がなくなっている
+2. `mariadb_impl.nim` のクエリ待機が `mysql_real_query_start/cont` などの non-blocking API を利用している
+3. 同一接続上で未完了 non-blocking 操作を残したまま次の操作を始めない
+4. 既存 CRUD / transaction / schema テストが回帰しない
+5. 公開 API 変更なしで実装差分が driver 内に閉じ込められている
+
+### 参照仕様
+
+- MariaDB Documentation: Non-Blocking API Reference
+  https://mariadb.com/docs/server/reference/product-development/mariadb-internals/using-mariadb-with-your-programs-api/non-blocking-client-library/non-blocking-api-reference
+- MariaDB Documentation: Using the Non-Blocking Library
+  https://mariadb.com/docs/server/reference/product-development/mariadb-internals/using-mariadb-with-your-programs-api/non-blocking-client-library/using-the-non-blocking-library
+- `/usr/include/mariadb/mysql.h`
+
+確認済み項目:
+- `MYSQL_OPT_NONBLOCK`
+- `MYSQL_WAIT_READ`, `MYSQL_WAIT_WRITE`, `MYSQL_WAIT_EXCEPT`, `MYSQL_WAIT_TIMEOUT`
+- `mysql_options`, `mysql_optionsv`
+- `mysql_get_socket`
+- `mysql_get_timeout_value`, `mysql_get_timeout_value_ms`
+- `mysql_real_connect_start/cont`
+- `mysql_real_query_start/cont`
+- `mysql_store_result_start/cont`
+- `mysql_read_query_result_start/cont`
+- `mysql_fetch_row_start/cont`
+- `mysql_free_result_start/cont`
+
+### リスク
+
+1. `mysql_use_result()` は結果を最後まで読み切る前に次操作へ進めないため、clean up 漏れがあると接続を壊しやすい
+2. MariaDB non-blocking API は `_cont()` を最後まで呼び切る必要があり、途中中断設計を誤ると不整合が出る
+3. DNS 解決はブロックしうるので、接続初期化だけは期待したほど改善しない可能性がある
+4. MySQL driver と共通化したくなっても、まずは MariaDB driver 内に閉じ込めてから判断すべき
+5. 設計記録を別ファイルに残さないことで、進捗と方針の乖離を抑える
+
+### 段階導入案
+
+1. 設計書とブランチルールを追加
+2. `mariadb_rdb.nim` に宣言追加
+3. プール待機通知化
+4. `exec*` 系を non-blocking 化
+5. `query*` / `rawQuery*` / `getColumns*` を non-blocking 化
+6. 必要なら `mysql_real_connect_start/cont` を導入
+
+### 完了条件
+
+1. MariaDB driver の内部待機が Connector/C non-blocking API ベースになっている
+2. プール空き待機が通知ベースである
+3. 既存公開 API を壊していない
+4. MariaDB の主要テストが通る

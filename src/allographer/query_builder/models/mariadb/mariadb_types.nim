@@ -1,4 +1,7 @@
+import std/asyncdispatch
+import std/deques
 import std/json
+import std/tables
 import ../../log
 import ../../libs/mariadb/mariadb_rdb
 
@@ -23,6 +26,8 @@ type Connection* = object
 type Connections* = ref object
   conns*: seq[Connection]
   timeout*:int
+  waiters*: Deque[Future[void]]
+  columnTypeCache*: Table[string, seq[seq[string]]]
 
 
 ## created by `let rdb = dbOpen(MySQL, "localhost", 3306)`

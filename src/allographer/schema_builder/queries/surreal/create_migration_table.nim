@@ -13,7 +13,7 @@ import ./surreal_query_type
 import ./sub/create_column_query
 
 
-proc createMigrationTable*(self: SurrealSchema) =
+proc createMigrationTable*(self: SurrealSchema, isReset: bool = false) =
   let logDisplay = self.rdb.log.shouldDisplayLog
   let logFile = self.rdb.log.shouldOutputLogFile
   self.rdb.log.shouldDisplayLog = false
@@ -23,7 +23,12 @@ proc createMigrationTable*(self: SurrealSchema) =
     self.rdb.log.shouldOutputLogFile = logFile
 
   let info = self.rdb.raw("INFO FOR DB").info().waitFor()
-  if not info[0]["result"]["tb"].contains("_autoincrement_migrations"):
+  var hasMigrationTable = info[0]["result"]["tables"].contains("_allographer_migrations")
+  if isReset and hasMigrationTable:
+    self.rdb.raw("REMOVE TABLE `_allographer_migrations`").exec().waitFor()
+    hasMigrationTable = false
+
+  if not hasMigrationTable:
     var queries:seq[string]
     queries.add(&"DEFINE TABLE `{self.table.name}` SCHEMAFULL")
     

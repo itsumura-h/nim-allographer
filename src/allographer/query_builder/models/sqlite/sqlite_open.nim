@@ -1,3 +1,6 @@
+import std/asyncdispatch
+import std/deques
+import std/tables
 import std/times
 import ../../libs/sqlite/sqlite_rdb
 import ../../log
@@ -17,8 +20,10 @@ proc dbOpen*(_:type SQLite3, database: string = "",
       createdAt: getTime().toUnix(),
     )
   let pools = Connections(
-    conns:conns,
-    timeout:timeout
+    conns: conns,
+    timeout: timeout,
+    waiters: initDeque[Future[void]](),
+    columnTypeCache: initTable[string, seq[(string, string)]](),
   )
   result = SqliteConnections(
     pools: pools,

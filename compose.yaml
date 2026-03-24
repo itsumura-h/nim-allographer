@@ -43,12 +43,12 @@ services:
       POSTGRES_PASSWORD: pass
 
   surreal:
-    image: surrealdb/surrealdb:1.0.0-beta.9
+    image: surrealdb/surrealdb:v3.0
     tty: true
-    # command: start --log TRACE --user user --pass pass memory # like redis
-    # command: start --log TRACE --user user --pass pass file://root/.surrealdb # like mongo
-    command: start --strict --log TRACE --user user --pass pass memory # like in-memory sqlite
-    # command: start --strict --log TRACE --user user --pass pass file://root/.surrealdb # like rdb
+    # command: start --log trace --user user --pass pass memory # like redis
+    # command: start --log trace --user user --pass pass file://root/.surrealdb # like mongo
+    command: start --log trace --user user --pass pass memory # like in-memory sqlite
+    # command: start --log trace --user user --pass pass file://root/.surrealdb # like rdb
 
   adminer:
     image: adminer:4.8.1-standalone

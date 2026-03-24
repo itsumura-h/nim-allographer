@@ -1,25 +1,10 @@
 services:
-  app-ubuntu-v1:
+  app:
     build:
       context: .
       dockerfile: ./docker/ubuntu/test.Dockerfile
       args:
-        NIM_VERSION: 1.6.20
-    tty: true
-    volumes:
-      - .:/root/project
-    depends_on:
-      - postgres
-      - mysql
-      - mariadb
-      - surreal
-
-  app-ubuntu-v2:
-    build:
-      context: .
-      dockerfile: ./docker/ubuntu/test.Dockerfile
-      args:
-        NIM_VERSION: 2.2.0
+        NIM_VERSION: "${NIM_VERSION:-2.2.8}"
     tty: true
     volumes:
       - .:/root/project
@@ -57,9 +42,9 @@ services:
       POSTGRES_PASSWORD: pass
 
   surreal:
-    image: surrealdb/surrealdb:1.0.0-beta.9
+    image: surrealdb/surrealdb:v3.0
     tty: true
-    # command: start --log TRACE --user user --pass pass memory # like redis
-    # command: start --log TRACE --user user --pass pass file://root/.surrealdb # like mongo
-    command: start --strict --log TRACE --user user --pass pass memory # like in-memory sqlite
-    # command: start --strict --log TRACE --user user --pass pass file://root/.surrealdb # like rdb
+    # command: start --log trace --user user --pass pass memory # like redis
+    # command: start --log trace --user user --pass pass file://root/.surrealdb # like mongo
+    command: start --log trace --user user --pass pass memory # like in-memory sqlite
+    # command: start --log trace --user user --pass pass file://root/.surrealdb # like rdb

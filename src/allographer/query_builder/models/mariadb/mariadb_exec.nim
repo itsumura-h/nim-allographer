@@ -1,9 +1,11 @@
 import std/asyncdispatch
+import std/deques
 import std/json
 import std/options
 import std/strformat
 import std/strutils
 import std/sequtils
+import std/tables
 import std/times
 import ../../libs/mariadb/mariadb_impl
 import ../../log
@@ -17,7 +19,7 @@ import ./mariadb_types
 # ================================================================================
 
 proc getFreeConn(self:MariadbConnections | MariadbQuery | RawMariadbQuery):Future[int] {.async.} =
-  let calledAt = getTime().toUnix()
+  let deadline = getTime().toUnix() + self.pools.timeout
   while true:
     for i in 0..<self.pools.conns.len:
       if not self.pools.conns[i].isBusy:
@@ -25,14 +27,33 @@ proc getFreeConn(self:MariadbConnections | MariadbQuery | RawMariadbQuery):Futur
         when defined(check_pool):
           echo "=== getFreeConn ",i
         return i
-    await sleepAsync(10)
-    if getTime().toUnix() >= calledAt + self.pools.timeout:
+    let now = getTime().toUnix()
+    if now >= deadline:
       return errorConnectionNum
+    let w = newFuture[void]("getFreeConn.poolWait")
+    self.pools.waiters.addLast(w)
+    let remainingSec = deadline - now
+    var ms = int(remainingSec * 1000)
+    if ms < 1:
+      ms = 1
+    let ok = await withTimeout(w, ms)
+    if not ok:
+      return errorConnectionNum
+
+
+proc wakeOnePoolWaiter(pools: Connections) =
+  while pools.waiters.len > 0:
+    let w = pools.waiters.popFirst()
+    if w.finished:
+      continue
+    w.complete()
+    break
 
 
 proc returnConn(self:MariadbConnections | MariadbQuery | RawMariadbQuery, i: int) {.async.} =
   if i != errorConnectionNum:
     self.pools.conns[i].isBusy = false
+    wakeOnePoolWaiter(self.pools)
 
 
 # ================================================================================
@@ -158,6 +179,19 @@ proc getRowPlain(self:MariadbQuery, queryString:string, args:JsonNode):Future[se
   return rows[0]
 
 
+proc getCachedColumnTypes(self: MariadbQuery, connI: int): Future[seq[seq[string]]] {.async.} =
+  let database = self.info.database
+  let table = self.query["table"].getStr
+  let cacheKey = database & "." & table
+  if cacheKey in self.pools.columnTypeCache:
+    return self.pools.columnTypeCache[cacheKey]
+  let columns = mariadb_impl.getColumnTypes(
+    self.pools.conns[connI].conn, database, table, self.pools.timeout
+  ).await
+  self.pools.columnTypeCache[cacheKey] = columns
+  return columns
+
+
 proc exec(self:MariadbQuery, queryString:string) {.async.} =
   var connI = self.transactionConn
   if not self.isInTransaction:
@@ -168,9 +202,7 @@ proc exec(self:MariadbQuery, queryString:string) {.async.} =
   if connI == errorConnectionNum:
     return
 
-  let database = self.info.database
-  let table = self.query["table"].getStr
-  let columns = mariadb_impl.getColumnTypes(self.pools.conns[connI].conn, $database, table, self.pools.timeout).await
+  let columns = self.getCachedColumnTypes(connI).await
   mariadb_impl.exec(self.pools.conns[connI].conn, queryString, self.placeHolder, columns, self.pools.timeout).await
 
 
@@ -184,10 +216,7 @@ proc insertId(self:MariadbQuery, queryString:string, key:string):Future[string] 
   if connI == errorConnectionNum:
     return
 
-  let table = self.query["table"].getStr
-  let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
-  let (columns, _) = mariadb_impl.query(self.pools.conns[connI].conn, columnGetQuery, newJArray(), self.pools.timeout).await
-
+  let columns = self.getCachedColumnTypes(connI).await
   let (rows, _) = mariadb_impl.execGetValue(self.pools.conns[connI].conn, queryString, self.placeHolder, columns, self.pools.timeout).await
   return rows[0][0]
 

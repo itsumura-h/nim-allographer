@@ -1,6 +1,7 @@
 discard """
-  cmd: "nim c -d:reset $file"
+  cmd: "nim c -d:reset -d:ssl $file"
 """
+# nim c -r -d:reset -d:ssl tests/surrealdb/test_autoincrements.nim
 
 import std/unittest
 import std/asyncdispatch
@@ -20,7 +21,8 @@ suite("autoincrements"):
     rdb.raw("REMOVE TABLE _autoincrement_sequences").exec().waitFor()
 
     var info = rdb.raw("INFO FOR DB").info().waitFor()
-    check not info[0]["result"]["tb"].contains("_autoincrement_sequences")
+    echo "info: ", info.pretty
+    check not info[0]["result"]["tables"].contains("_autoincrement_sequences")
 
     rdb.create(
       table("user", [
@@ -30,7 +32,8 @@ suite("autoincrements"):
     )
 
     info = rdb.raw("INFO FOR DB").info().waitFor()
-    check info[0]["result"]["tb"].contains("_autoincrement_sequences")
+    echo "info: ", info.pretty
+    check info[0]["result"]["tables"].contains("_autoincrement_sequences")
 
     let id = rdb.table("user").insertId(%*{"name": "alice"}).waitFor()
     var user = rdb.table("user").find(id).waitFor().get()
@@ -46,7 +49,7 @@ suite("autoincrements"):
 
   test("sequence table is exists"):
     var info = rdb.raw("INFO FOR DB").info().waitFor()
-    check info[0]["result"]["tb"].contains("_autoincrement_sequences")
+    check info[0]["result"]["tables"].contains("_autoincrement_sequences")
 
     rdb.create(
       table("user", [

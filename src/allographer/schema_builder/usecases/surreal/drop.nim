@@ -14,7 +14,7 @@ proc drop*(rdb:SurrealConnections, tables:varargs[Table]) =
 
   # create migration table
   var query = createSchema(rdb, migrationTable)
-  query.createMigrationTable()
+  query.createMigrationTable(isReset)
 
   for table in tables:
     table.usecaseType = Drop

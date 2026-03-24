@@ -1,9 +1,10 @@
 import std/asyncdispatch
+import std/deques
 import std/json
+import std/monotimes
 import std/options
 import std/strformat
 import std/strutils
-import std/sequtils
 import std/times
 import ../../libs/surreal/surreal_lib
 import ../../libs/surreal/surreal_impl
@@ -19,23 +20,58 @@ import ./surreal_query
 # connection
 # ================================================================================
 
-proc getFreeConn(self:SurrealConnections | SurrealQuery | RawSurrealQuery):Future[int] {.async.} =
-  let calledAt = getTime().toUnix()
+proc removePoolWaiter(pools: Connections, w: Future[void]) =
+  var kept = initDeque[Future[void]]()
+  while pools.waiters.len > 0:
+    let x = pools.waiters.popFirst()
+    if x != w:
+      kept.addLast(x)
+  pools.waiters = move(kept)
+
+proc wakeOnePoolWaiter(pools: Connections) =
+  while pools.waiters.len > 0:
+    let w = pools.waiters.popFirst()
+    if w.finished:
+      continue
+    w.complete()
+    break
+
+proc surrealPoolRemainingMs(deadline: MonoTime): int =
+  let left = (deadline - getMonoTime()).inMilliseconds
+  if left <= 0:
+    return 0
+  if left > int64(high(int)):
+    return high(int)
+  result = int(left)
+  if result < 1:
+    result = 1
+
+proc getFreeConn(self: SurrealConnections | SurrealQuery | RawSurrealQuery): Future[int] {.async.} =
+  let deadline = getMonoTime() + initDuration(seconds = self.pools.timeout)
   while true:
-    for i in 0..<self.pools.conns.len:
+    for i in 0 ..< self.pools.conns.len:
       if not self.pools.conns[i].isBusy:
         self.pools.conns[i].isBusy = true
         when defined(check_pool):
           echo "=== getFreeConn ", i
         return i
-    await sleepAsync(10)
-    if getTime().toUnix() >= calledAt + self.pools.timeout:
+    if getMonoTime() >= deadline:
+      return errorConnectionNum
+    let w = newFuture[void]("getFreeConn.poolWait")
+    self.pools.waiters.addLast(w)
+    var ms = surrealPoolRemainingMs(deadline)
+    if ms < 1:
+      ms = 1
+    let ok = await withTimeout(w, ms)
+    if not ok:
+      removePoolWaiter(self.pools, w)
       return errorConnectionNum
 
 
-proc returnConn(self:SurrealConnections | SurrealQuery | RawSurrealQuery, i: int) {.async.} =
+proc returnConn(self: SurrealConnections | SurrealQuery | RawSurrealQuery, i: int) {.async.} =
   if i != errorConnectionNum:
     self.pools.conns[i].isBusy = false
+    wakeOnePoolWaiter(self.pools)
 
 
 # ================================================================================
@@ -98,7 +134,7 @@ proc getAllRows(self:SurrealQuery, queryString:string):Future[seq[JsonNode]] {.a
   if rows.len == 0:
     self.log.echoErrorMsg(queryString)
     return newSeq[JsonNode](0)
-  return rows.toSeq # seq[JsonNode]
+  return rows.getElems() # seq[JsonNode]
 
 
 proc getRow(self:SurrealQuery, queryString:string):Future[Option[JsonNode]] {.async.} =
@@ -161,7 +197,7 @@ proc getAllRows(self:RawSurrealQuery, queryString:string):Future[seq[JsonNode]] 
   if rows.len == 0:
     self.log.echoErrorMsg(queryString)
     return newSeq[JsonNode](0)
-  return rows.toSeq()
+  return rows.getElems()
 
 
 # proc getAllRowsPlain(self:RawSurrealQuery, queryString:string, args:JsonNode):Future[seq[seq[string]]] {.async.} =
@@ -355,18 +391,15 @@ proc insert*(self:SurrealQuery, items:seq[JsonNode]) {.async.} =
 
 proc insertId*(self:SurrealQuery, items:JsonNode, key="id"):Future[SurrealId] {.async.} =
   ## https://surrealdb.com/docs/surrealql/statements/insert
-  let sql = self.insertValueBuilder(items)
+  var sql = self.insertValueBuilder(items) & " RETURN AFTER"
   self.log.logger(sql)
   let res = self.getRow(sql).await
-  if res.isSome():
-    return SurrealId.new(res.get()[key].getStr())
-  else:
-    return SurrealId.new()
+  return SurrealId.new(res.get()[key].getStr)
 
 
 proc insertId*(self: SurrealQuery, items: seq[JsonNode], key="id"):Future[seq[SurrealId]] {.async.} =
   result = newSeq[SurrealId](items.len)
-  var sql = self.insertValuesBuilder(items)
+  var sql = self.insertValuesBuilder(items) & " RETURN AFTER"
   self.log.logger(sql)
   let res = self.getAllRows(sql).await
   var i = 0
@@ -385,27 +418,28 @@ proc insert*[T](self:SurrealQuery, items:T) {.async.} =
 
 proc insert*[T](self:SurrealQuery, items:seq[T]) {.async.} =
   ## https://surrealdb.com/docs/surrealql/statements/insert
-  let items = items.mapIt(%it)
-  var sql = self.insertValuesBuilder(items)
+  var jsonItems = newSeq[JsonNode](items.len)
+  for i, item in items:
+    jsonItems[i] = %item
+  var sql = self.insertValuesBuilder(jsonItems)
   self.log.logger(sql)
   self.exec(sql).await
 
 
 proc insertId*[T](self:SurrealQuery, items:T, key="id"):Future[SurrealId] {.async.} =
   ## https://surrealdb.com/docs/surrealql/statements/insert
-  let sql = self.insertValueBuilder(%items)
+  var sql = self.insertValueBuilder(%items) & " RETURN AFTER"
   self.log.logger(sql)
   let res = self.getRow(sql).await
-  if res.isSome():
-    return SurrealId.new(res.get()[key].getStr())
-  else:
-    return SurrealId.new()
+  return SurrealId.new(res.get()[key].getStr)
 
 
 proc insertId*[T](self: SurrealQuery, items: seq[T], key="id"):Future[seq[SurrealId]] {.async.} =
   result = newSeq[SurrealId](items.len)
-  let items = items.mapIt(%it)
-  var sql = self.insertValuesBuilder(items)
+  var jsonItems = newSeq[JsonNode](items.len)
+  for i, item in items:
+    jsonItems[i] = %item
+  var sql = self.insertValuesBuilder(jsonItems) & " RETURN AFTER"
   self.log.logger(sql)
   let res = self.getAllRows(sql).await
   var i = 0
@@ -473,7 +507,7 @@ proc columns*(self: SurrealQuery):Future[seq[string]] {.async.} =
     self.log.logger(sql)
     let resp = self.column(sql).await
     var columns:seq[string]
-    for (key, value) in resp[0]["result"]["fd"].pairs:
+    for (key, value) in resp[0]["result"]["fields"].pairs:
       columns.add(key)
     return columns
   except CatchableError:
@@ -533,7 +567,16 @@ proc avg*(self:SurrealQuery, column:string):Future[float]{.async.} =
   self.log.logger(sql)
   let response =  await self.getRow(sql)
   if response.isSome:
-    return response.get["avg"].getStr().parseFloat()
+    let value = response.get["avg"]
+    case value.kind
+    of JInt:
+      return value.getInt.float
+    of JFloat:
+      return value.getFloat()
+    of JString:
+      return value.getStr().parseFloat()
+    else:
+      return 0.0
   else:
     return 0.0
 
