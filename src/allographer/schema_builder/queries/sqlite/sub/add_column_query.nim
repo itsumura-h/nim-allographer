@@ -102,7 +102,7 @@ proc addUuidColumn(table:Table, column:Column):seq[string] =
     query.add(&" DEFAULT '{column.defaultString}'")
 
   let maxLength = column.info["maxLength"].getInt
-  query.add(&" CHECK (length('{column.name}') <= {maxLength})")
+  query.add(sqliteLengthCheck(column, maxLength))
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "varchar", column.name)
@@ -120,7 +120,7 @@ proc addCharColumn(table:Table, column:Column):seq[string] =
     query.add(&" DEFAULT '{column.defaultString}'")
 
   let maxLength = column.info["maxLength"].getInt
-  query.add(&" CHECK (length('{column.name}') <= {maxLength})")
+  query.add(sqliteLengthCheck(column, maxLength))
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "char", column.name)
@@ -138,7 +138,7 @@ proc addVarcharColumn(table:Table, column:Column):seq[string] =
     query.add(&" DEFAULT '{column.defaultString}'")
 
   let maxLength = column.info["maxLength"].getInt
-  query.add(&" CHECK (length('{column.name}') <= {maxLength})")
+  query.add(sqliteLengthCheck(column, maxLength))
 
   if column.isUnsigned:
     notAllowedOption("unsigned", "varchar", column.name)

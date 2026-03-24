@@ -8,6 +8,7 @@ import ../../../query_builder/models/sqlite/sqlite_types
 import ../../../query_builder/models/sqlite/sqlite_query
 import ../../../query_builder/models/sqlite/sqlite_exec
 import ../../../query_builder/error
+import ../../models/column
 import ../../models/table
 
 
@@ -18,6 +19,12 @@ proc notAllowedOption*(option, typ, column:string) =
 proc notAllowedType*(typ:string) =
   ## Change to {typ} type is not allowed
   raise newException(DbError, &"type {typ} is not allowed")
+
+
+proc sqliteLengthCheck*(column:Column, maxLength:int):string =
+  ## "CHECK (length({column.name}) <= {maxLength})"
+  let escapedColumnName = column.name.replace("\"", "\"\"")
+  return &" CHECK (length(\"{escapedColumnName}\") <= {maxLength})"
 
 
 # ==================================================
