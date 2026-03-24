@@ -1,0 +1,2 @@
+nimTitle	create_schema	schema_builder/usecases/sqlite/create_schema.html	module src/allographer/schema_builder/usecases/sqlite/create_schema		0
+nim	createSchema	schema_builder/usecases/sqlite/create_schema.html#createSchema,SqliteConnections,string	proc createSchema(rdb: SqliteConnections; schemaPath = ""): owned(Future[void])		78

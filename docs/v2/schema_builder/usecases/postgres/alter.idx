@@ -1,2 +1,2 @@
-nimTitle	alter	v2/schema_builder/usecases/postgres/alter.html	module src/allographer/v2/schema_builder/usecases/postgres/alter		0
-nim	alter	v2/schema_builder/usecases/postgres/alter.html#alter,PostgresConnections,varargs[Table]	proc alter(rdb: PostgresConnections; tables: varargs[Table])		10
+nimTitle	alter	schema_builder/usecases/postgres/alter.html	module src/allographer/schema_builder/usecases/postgres/alter		0
+nim	alter	schema_builder/usecases/postgres/alter.html#alter,PostgresConnections,varargs[Table]	proc alter(rdb: PostgresConnections; tables: varargs[Table])		16

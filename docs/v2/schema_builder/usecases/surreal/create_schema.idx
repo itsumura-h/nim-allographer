@@ -1,0 +1,2 @@
+nimTitle	create_schema	schema_builder/usecases/surreal/create_schema.html	module src/allographer/schema_builder/usecases/surreal/create_schema		0
+nim	createSchema	schema_builder/usecases/surreal/create_schema.html#createSchema,SurrealConnections,string	proc createSchema(rdb: SurrealConnections; schemaPath = ""): owned(Future[void])		84
