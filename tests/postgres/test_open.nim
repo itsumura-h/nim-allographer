@@ -27,6 +27,12 @@ suite("PostgreSQL connection"):
     check(rdb.isConnected())
 
 
+  test("connection with DatabaseUrl"):
+    let url = asDatabaseUrl("postgresql://user:pass@postgres:5432/database")
+    let rdb = dbOpen(PostgreSQL, databaseUrl = url)
+    check(rdb.isConnected())
+
+
   test("url is not start with postgresql://"):
     let url = "mysql://user:pass@postgres:5432/database"
     expect(ValueError):

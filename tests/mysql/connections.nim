@@ -7,4 +7,4 @@ let
   maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
   timeout = getEnv("DB_TIMEOUT").parseInt
 
-let mysql* = dbOpen(MySQL, mysqlUrl, maxConnections, timeout, shouldDisplayLog=true)
+let mysql* = dbOpen(MySQL, databaseUrl = asDatabaseUrl(mysqlUrl), maxConnections, timeout, shouldDisplayLog=true)

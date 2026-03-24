@@ -27,6 +27,12 @@ suite("MySQL connection"):
     check(rdb.isConnected())
 
 
+  test("connection with DatabaseUrl"):
+    let url = asDatabaseUrl("mysql://user:pass@mariadb:3306/database")
+    let rdb = dbOpen(MySQL, databaseUrl = url)
+    check(rdb.isConnected())
+
+
   test("url is not start with mysql://"):
     let url = "aaa://user:pass@mariadb:3306/database"
     expect(ValueError):
