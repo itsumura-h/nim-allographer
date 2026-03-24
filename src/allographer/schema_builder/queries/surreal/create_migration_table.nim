@@ -23,7 +23,7 @@ proc createMigrationTable*(self: SurrealSchema) =
     self.rdb.log.shouldOutputLogFile = logFile
 
   let info = self.rdb.raw("INFO FOR DB").info().waitFor()
-  if not info[0]["result"]["tb"].contains("_autoincrement_migrations"):
+  if not info[0]["result"]["tables"].contains("_autoincrement_migrations"):
     var queries:seq[string]
     queries.add(&"DEFINE TABLE `{self.table.name}` SCHEMAFULL")
     

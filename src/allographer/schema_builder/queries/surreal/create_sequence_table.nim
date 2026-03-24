@@ -18,7 +18,7 @@ proc createSequenceTable*(rdb:SurrealConnections) =
     rdb.log.shouldOutputLogFile = logFile
 
   let info = rdb.raw(&"INFO FOR DB").info().waitFor()
-  if not info[0]["result"]["tb"].contains("_autoincrement_sequences"):
+  if not info[0]["result"]["tables"].contains("_autoincrement_sequences"):
     rdb.raw(&"""
       DEFINE TABLE `_autoincrement_sequences`;
       DEFINE FIELD `table` ON TABLE `_autoincrement_sequences` TYPE string;
