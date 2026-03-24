@@ -1,1 +1,0 @@
-alter	v1/schema_builder/usecases/mysql/alter.html#alter,MysqlConnections,varargs[Table]	alter: alter(rdb: MysqlConnections; tables: varargs[Table])	
