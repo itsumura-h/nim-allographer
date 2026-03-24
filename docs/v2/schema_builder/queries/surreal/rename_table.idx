@@ -1,0 +1,2 @@
+nimTitle	rename_table	schema_builder/queries/surreal/rename_table.html	module src/allographer/schema_builder/queries/surreal/rename_table		0
+nim	renameTable	schema_builder/queries/surreal/rename_table.html#renameTable,SurrealSchema,bool	proc renameTable(self: SurrealSchema; isReset: bool)		14

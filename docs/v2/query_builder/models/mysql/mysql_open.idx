@@ -1,0 +1,5 @@
+nimTitle	mysql_open	query_builder/models/mysql/mysql_open.html	module src/allographer/query_builder/models/mysql/mysql_open		0
+nim	dbOpen	query_builder/models/mysql/mysql_open.html#dbOpen,typeMySQL,string,string,string,string,int,int,int,string	proc dbOpen(_: type MySQL; database: string; user: string; password: string;\n       host: string; port: int; maxConnections: int = 1; timeout = 30;\n       shouldDisplayLog = false; shouldOutputLogFile = false; logDir = ""): MysqlConnections		9
+nim	dbOpen	query_builder/models/mysql/mysql_open.html#dbOpen,typeMySQL,string,int,int,string	proc dbOpen(_: type MySQL; url: string; maxConnections = 1; timeout = 30;\n       shouldDisplayLog = false; shouldOutputLogFile = false; logDir = ""): MysqlConnections		52
+nim	dbOpen	query_builder/models/mysql/mysql_open.html#dbOpen,typeMySQL,DatabaseUrl,int,int,string	proc dbOpen(_: type MySQL; databaseUrl: DatabaseUrl; maxConnections = 1;\n       timeout = 30; shouldDisplayLog = false; shouldOutputLogFile = false;\n       logDir = ""): MysqlConnections		57
+nimgrp	dbopen	query_builder/models/mysql/mysql_open.html#dbOpen-procs-all	proc		9

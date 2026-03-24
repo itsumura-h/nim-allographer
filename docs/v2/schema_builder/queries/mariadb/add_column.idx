@@ -1,0 +1,2 @@
+nimTitle	add_column	schema_builder/queries/mariadb/add_column.html	module src/allographer/schema_builder/queries/mariadb/add_column		0
+nim	addColumn	schema_builder/queries/mariadb/add_column.html#addColumn,MariadbSchema,bool	proc addColumn(self: MariadbSchema; isReset: bool)		14

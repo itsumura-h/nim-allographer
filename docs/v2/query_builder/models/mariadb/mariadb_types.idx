@@ -1,0 +1,10 @@
+nimTitle	mariadb_types	query_builder/models/mariadb/mariadb_types.html	module src/allographer/query_builder/models/mariadb/mariadb_types		0
+nim	MariaDB	query_builder/models/mariadb/mariadb_types.html#MariaDB	object MariaDB		9
+nim	ConnectionInfo	query_builder/models/mariadb/mariadb_types.html#ConnectionInfo	object ConnectionInfo		12
+nim	Connection	query_builder/models/mariadb/mariadb_types.html#Connection	object Connection		20
+nim	Connections	query_builder/models/mariadb/mariadb_types.html#Connections	type Connections		26
+nim	MariadbConnections	query_builder/models/mariadb/mariadb_types.html#MariadbConnections	type MariadbConnections		34
+nim	MariadbQuery	query_builder/models/mariadb/mariadb_types.html#MariadbQuery	type MariadbQuery		44
+nim	RawMariadbQuery	query_builder/models/mariadb/mariadb_types.html#RawMariadbQuery	type RawMariadbQuery		56
+nim	`$`	query_builder/models/mariadb/mariadb_types.html#$	proc `$`(self: MariadbConnections | MariadbQuery | RawMariadbQuery): string		68
+nim	isConnected	query_builder/models/mariadb/mariadb_types.html#isConnected	proc isConnected(self: MariadbConnections | MariadbQuery | RawMariadbQuery): bool		72

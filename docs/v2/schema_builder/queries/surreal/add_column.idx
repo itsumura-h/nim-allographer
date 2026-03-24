@@ -1,0 +1,2 @@
+nimTitle	add_column	schema_builder/queries/surreal/add_column.html	module src/allographer/schema_builder/queries/surreal/add_column		0
+nim	addColumn	schema_builder/queries/surreal/add_column.html#addColumn,SurrealSchema,bool	proc addColumn(self: SurrealSchema; isReset: bool)		14

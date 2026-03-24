@@ -1,0 +1,5 @@
+nimTitle	mariadb_open	query_builder/models/mariadb/mariadb_open.html	module src/allographer/query_builder/models/mariadb/mariadb_open		0
+nim	dbOpen	query_builder/models/mariadb/mariadb_open.html#dbOpen,typeMariaDB,string,string,string,string,int,int,int,string	proc dbOpen(_: type MariaDB; database: string; user: string; password: string;\n       host: string; port: int; maxConnections = 1; timeout = 30;\n       shouldDisplayLog = false; shouldOutputLogFile = false; logDir = ""): MariadbConnections		9
+nim	dbOpen	query_builder/models/mariadb/mariadb_open.html#dbOpen,typeMariaDB,string,int,int,string	proc dbOpen(_: type MariaDB; url: string; maxConnections: int = 1; timeout = 30;\n       shouldDisplayLog = false; shouldOutputLogFile = false; logDir = ""): MariadbConnections		49
+nim	dbOpen	query_builder/models/mariadb/mariadb_open.html#dbOpen,typeMariaDB,DatabaseUrl,int,int,string	proc dbOpen(_: type MariaDB; databaseUrl: DatabaseUrl; maxConnections = 1;\n       timeout = 30; shouldDisplayLog = false; shouldOutputLogFile = false;\n       logDir = ""): MariadbConnections		54
+nimgrp	dbopen	query_builder/models/mariadb/mariadb_open.html#dbOpen-procs-all	proc		9

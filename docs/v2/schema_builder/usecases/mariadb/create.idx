@@ -1,0 +1,2 @@
+nimTitle	create	schema_builder/usecases/mariadb/create.html	module src/allographer/schema_builder/usecases/mariadb/create		0
+nim	create	schema_builder/usecases/mariadb/create.html#create,MariadbConnections,varargs[Table]	proc create(rdb: MariadbConnections; tables: varargs[Table])		12

@@ -1,0 +1,10 @@
+nimTitle	mysql_types	query_builder/models/mysql/mysql_types.html	module src/allographer/query_builder/models/mysql/mysql_types		0
+nim	MySQL	query_builder/models/mysql/mysql_types.html#MySQL	object MySQL		6
+nim	ConnectionInfo	query_builder/models/mysql/mysql_types.html#ConnectionInfo	object ConnectionInfo		9
+nim	Connection	query_builder/models/mysql/mysql_types.html#Connection	object Connection		17
+nim	Connections	query_builder/models/mysql/mysql_types.html#Connections	type Connections		23
+nim	MysqlConnections	query_builder/models/mysql/mysql_types.html#MysqlConnections	type MysqlConnections		29
+nim	MysqlQuery	query_builder/models/mysql/mysql_types.html#MysqlQuery	type MysqlQuery		39
+nim	RawMysqlQuery	query_builder/models/mysql/mysql_types.html#RawMysqlQuery	type RawMysqlQuery		51
+nim	`$`	query_builder/models/mysql/mysql_types.html#$	proc `$`(self: MysqlConnections | MysqlQuery | RawMysqlQuery): string		63
+nim	isConnected	query_builder/models/mysql/mysql_types.html#isConnected	proc isConnected(self: MysqlConnections | MysqlQuery | RawMysqlQuery): bool		67

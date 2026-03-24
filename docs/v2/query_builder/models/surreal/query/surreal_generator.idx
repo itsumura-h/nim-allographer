@@ -1,0 +1,32 @@
+nimTitle	surreal_generator	query_builder/models/surreal/query/surreal_generator.html	module src/allographer/query_builder/models/surreal/query/surreal_generator		0
+nim	quote	query_builder/models/surreal/query/surreal_generator.html#quote,string	proc quote(input: string): string		11
+nim	selectSql	query_builder/models/surreal/query/surreal_generator.html#selectSql,SurrealQuery	proc selectSql(self: SurrealQuery): SurrealQuery		49
+nim	fromSql	query_builder/models/surreal/query/surreal_generator.html#fromSql,SurrealQuery	proc fromSql(self: SurrealQuery): SurrealQuery		65
+nim	maxFromSql	query_builder/models/surreal/query/surreal_generator.html#maxFromSql,SurrealQuery,string	proc maxFromSql(self: SurrealQuery; column: string): SurrealQuery		72
+nim	selectFirstSql	query_builder/models/surreal/query/surreal_generator.html#selectFirstSql,SurrealQuery	proc selectFirstSql(self: SurrealQuery): SurrealQuery		79
+nim	selectByIdSql	query_builder/models/surreal/query/surreal_generator.html#selectByIdSql,SurrealQuery,SurrealId,string	proc selectByIdSql(self: SurrealQuery; id: SurrealId; key: string): SurrealQuery		84
+nim	whereSql	query_builder/models/surreal/query/surreal_generator.html#whereSql,SurrealQuery	proc whereSql(self: SurrealQuery): SurrealQuery		96
+nim	orWhereSql	query_builder/models/surreal/query/surreal_generator.html#orWhereSql,SurrealQuery	proc orWhereSql(self: SurrealQuery): SurrealQuery		113
+nim	whereBetweenSql	query_builder/models/surreal/query/surreal_generator.html#whereBetweenSql,SurrealQuery	proc whereBetweenSql(self: SurrealQuery): SurrealQuery		130
+nim	whereNotBetweenSql	query_builder/models/surreal/query/surreal_generator.html#whereNotBetweenSql,SurrealQuery	proc whereNotBetweenSql(self: SurrealQuery): SurrealQuery		147
+nim	whereInSql	query_builder/models/surreal/query/surreal_generator.html#whereInSql,SurrealQuery	proc whereInSql(self: SurrealQuery): SurrealQuery		164
+nim	whereNotInSql	query_builder/models/surreal/query/surreal_generator.html#whereNotInSql,SurrealQuery	proc whereNotInSql(self: SurrealQuery): SurrealQuery		187
+nim	whereNullSql	query_builder/models/surreal/query/surreal_generator.html#whereNullSql,SurrealQuery	proc whereNullSql(self: SurrealQuery): SurrealQuery		210
+nim	groupBySql	query_builder/models/surreal/query/surreal_generator.html#groupBySql,SurrealQuery	proc groupBySql(self: SurrealQuery): SurrealQuery		224
+nim	orderBySql	query_builder/models/surreal/query/surreal_generator.html#orderBySql,SurrealQuery	proc orderBySql(self: SurrealQuery): SurrealQuery		236
+nim	limitSql	query_builder/models/surreal/query/surreal_generator.html#limitSql,SurrealQuery	proc limitSql(self: SurrealQuery): SurrealQuery		251
+nim	startSql	query_builder/models/surreal/query/surreal_generator.html#startSql,SurrealQuery	proc startSql(self: SurrealQuery): SurrealQuery		258
+nim	fetchSql	query_builder/models/surreal/query/surreal_generator.html#fetchSql,SurrealQuery	proc fetchSql(self: SurrealQuery): SurrealQuery		265
+nim	parallelSql	query_builder/models/surreal/query/surreal_generator.html#parallelSql,SurrealQuery	proc parallelSql(self: SurrealQuery): SurrealQuery		276
+nim	insertSql	query_builder/models/surreal/query/surreal_generator.html#insertSql,SurrealQuery	proc insertSql(self: SurrealQuery): SurrealQuery		284
+nim	insertValueSql	query_builder/models/surreal/query/surreal_generator.html#insertValueSql,SurrealQuery,JsonNode	proc insertValueSql(self: SurrealQuery; items: JsonNode): SurrealQuery		291
+nim	insertValuesSql	query_builder/models/surreal/query/surreal_generator.html#insertValuesSql,SurrealQuery,openArray[JsonNode]	proc insertValuesSql(self: SurrealQuery; rows: openArray[JsonNode]): SurrealQuery		303
+nim	updateSql	query_builder/models/surreal/query/surreal_generator.html#updateSql,SurrealQuery	proc updateSql(self: SurrealQuery): SurrealQuery		321
+nim	updateValuesSql	query_builder/models/surreal/query/surreal_generator.html#updateValuesSql,SurrealQuery,JsonNode	proc updateValuesSql(self: SurrealQuery; items: JsonNode): SurrealQuery		332
+nim	updateMergeSql	query_builder/models/surreal/query/surreal_generator.html#updateMergeSql,SurrealQuery,string,JsonNode	proc updateMergeSql(self: SurrealQuery; id: string; items: JsonNode): SurrealQuery		343
+nim	deleteSql	query_builder/models/surreal/query/surreal_generator.html#deleteSql,SurrealQuery	proc deleteSql(self: SurrealQuery): SurrealQuery		350
+nim	deleteByIdSql	query_builder/models/surreal/query/surreal_generator.html#deleteByIdSql,SurrealQuery,string	proc deleteByIdSql(self: SurrealQuery; id: string): SurrealQuery		355
+nim	selectCountSql	query_builder/models/surreal/query/surreal_generator.html#selectCountSql,SurrealQuery	proc selectCountSql(self: SurrealQuery): SurrealQuery		363
+nim	selectAvgSql	query_builder/models/surreal/query/surreal_generator.html#selectAvgSql,SurrealQuery,string	proc selectAvgSql(self: SurrealQuery; column: string): SurrealQuery		375
+nim	selectSumSql	query_builder/models/surreal/query/surreal_generator.html#selectSumSql,SurrealQuery,string	proc selectSumSql(self: SurrealQuery; column: string): SurrealQuery		382
+nim	groupAllSql	query_builder/models/surreal/query/surreal_generator.html#groupAllSql,SurrealQuery	proc groupAllSql(self: SurrealQuery): SurrealQuery		389

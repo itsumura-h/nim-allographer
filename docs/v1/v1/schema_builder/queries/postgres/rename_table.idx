@@ -1,1 +1,0 @@
-renameTable	v1/schema_builder/queries/postgres/rename_table.html#renameTable,PostgresSchema,bool	rename_table: renameTable(self: PostgresSchema; isReset: bool)	

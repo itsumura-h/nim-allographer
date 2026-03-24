@@ -1,0 +1,2 @@
+nimTitle	alter	schema_builder/usecases/surreal/alter.html	module src/allographer/schema_builder/usecases/surreal/alter		0
+nim	alter	schema_builder/usecases/surreal/alter.html#alter,SurrealConnections,varargs[Table]	proc alter(rdb: SurrealConnections; tables: varargs[Table])		16

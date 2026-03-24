@@ -1,0 +1,6 @@
+nimTitle	surreal_lib	query_builder/libs/surreal/surreal_lib.html	module src/allographer/query_builder/libs/surreal/surreal_lib		0
+nim	dbFormat	query_builder/libs/surreal/surreal_lib.html#dbFormat,string,varargs[string]	proc dbFormat(formatstr: string; args: varargs[string]): string		97
+nim	numToAlphabet	query_builder/libs/surreal/surreal_lib.html#numToAlphabet,int	proc numToAlphabet(n: int): string		112
+nim	questionToDaller	query_builder/libs/surreal/surreal_lib.html#questionToDaller,string	proc questionToDaller(s: string): string		118
+nim	dbFormat	query_builder/libs/surreal/surreal_lib.html#dbFormat,string,JsonNode	proc dbFormat(queryString: string; args: JsonNode): string		169
+nimgrp	dbformat	query_builder/libs/surreal/surreal_lib.html#dbFormat-procs-all	proc		97

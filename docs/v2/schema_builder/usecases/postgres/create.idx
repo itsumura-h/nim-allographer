@@ -1,0 +1,2 @@
+nimTitle	create	schema_builder/usecases/postgres/create.html	module src/allographer/schema_builder/usecases/postgres/create		0
+nim	create	schema_builder/usecases/postgres/create.html#create,PostgresConnections,varargs[Table]	proc create(rdb: PostgresConnections; tables: varargs[Table])		12

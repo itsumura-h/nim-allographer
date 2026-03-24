@@ -1,0 +1,2 @@
+nimTitle	add_column	schema_builder/queries/sqlite/add_column.html	module src/allographer/schema_builder/queries/sqlite/add_column		0
+nim	addColumn	schema_builder/queries/sqlite/add_column.html#addColumn,SqliteSchema,bool	proc addColumn(self: SqliteSchema; isReset: bool)		44

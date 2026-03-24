@@ -1,0 +1,8 @@
+nimTitle	sqlite_types	query_builder/models/sqlite/sqlite_types.html	module src/allographer/query_builder/models/sqlite/sqlite_types		0
+nim	SQLite3	query_builder/models/sqlite/sqlite_types.html#SQLite3	object SQLite3		9
+nim	Connection	query_builder/models/sqlite/sqlite_types.html#Connection	type Connection		12
+nim	Connections	query_builder/models/sqlite/sqlite_types.html#Connections	type Connections		18
+nim	SqliteConnections	query_builder/models/sqlite/sqlite_types.html#SqliteConnections	type SqliteConnections		28
+nim	SqliteQuery	query_builder/models/sqlite/sqlite_types.html#SqliteQuery	type SqliteQuery		37
+nim	RawSqliteQuery	query_builder/models/sqlite/sqlite_types.html#RawSqliteQuery	type RawSqliteQuery		48
+nim	`$`	query_builder/models/sqlite/sqlite_types.html#$	proc `$`(self: SqliteConnections | SqliteQuery | RawSqliteQuery): string		59

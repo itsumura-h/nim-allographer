@@ -1,0 +1,2 @@
+nimTitle	alter	schema_builder/usecases/mysql/alter.html	module src/allographer/schema_builder/usecases/mysql/alter		0
+nim	alter	schema_builder/usecases/mysql/alter.html#alter,MysqlConnections,varargs[Table]	proc alter(rdb: MysqlConnections; tables: varargs[Table])		16

@@ -1,0 +1,2 @@
+nimTitle	add_column	schema_builder/queries/postgres/add_column.html	module src/allographer/schema_builder/queries/postgres/add_column		0
+nim	addColumn	schema_builder/queries/postgres/add_column.html#addColumn,PostgresSchema,bool	proc addColumn(self: PostgresSchema; isReset: bool)		14

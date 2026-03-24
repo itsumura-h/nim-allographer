@@ -1,0 +1,2 @@
+nimTitle	drop_column	schema_builder/queries/sqlite/drop_column.html	module src/allographer/schema_builder/queries/sqlite/drop_column		0
+nim	dropColumn	schema_builder/queries/sqlite/drop_column.html#dropColumn,SqliteSchema,bool	proc dropColumn(self: SqliteSchema; isReset: bool)		20

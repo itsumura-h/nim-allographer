@@ -1,0 +1,9 @@
+nimTitle	postgres_types	query_builder/models/postgres/postgres_types.html	module src/allographer/query_builder/models/postgres/postgres_types		0
+nim	PostgreSQL	query_builder/models/postgres/postgres_types.html#PostgreSQL	object PostgreSQL		10
+nim	Connection	query_builder/models/postgres/postgres_types.html#Connection	type Connection		13
+nim	Connections	query_builder/models/postgres/postgres_types.html#Connections	type Connections		19
+nim	PostgresConnections	query_builder/models/postgres/postgres_types.html#PostgresConnections	type PostgresConnections		29
+nim	PostgresQuery	query_builder/models/postgres/postgres_types.html#PostgresQuery	type PostgresQuery		38
+nim	RawPostgresQuery	query_builder/models/postgres/postgres_types.html#RawPostgresQuery	type RawPostgresQuery		49
+nim	`$`	query_builder/models/postgres/postgres_types.html#$	proc `$`(self: PostgresConnections | PostgresQuery | RawPostgresQuery): string		60
+nim	isConnected	query_builder/models/postgres/postgres_types.html#isConnected	proc isConnected(self: PostgresConnections | PostgresQuery | RawPostgresQuery): bool		64

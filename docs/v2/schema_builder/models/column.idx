@@ -1,0 +1,52 @@
+nimTitle	column	schema_builder/models/column.html	module src/allographer/schema_builder/models/column		0
+nim	Column	schema_builder/models/column.html#Column	type Column		5
+nim	toSchema	schema_builder/models/column.html#toSchema,Column	proc toSchema(self: Column): JsonNode		37
+nim	increments	schema_builder/models/column.html#increments,typeColumn,string	proc increments(_: type Column; name: string): Column		65
+nim	integer	schema_builder/models/column.html#integer,typeColumn,string	proc integer(_: type Column; name: string): Column		72
+nim	smallInteger	schema_builder/models/column.html#smallInteger,typeColumn,string	proc smallInteger(_: type Column; name: string): Column		79
+nim	mediumInteger	schema_builder/models/column.html#mediumInteger,typeColumn,string	proc mediumInteger(_: type Column; name: string): Column		86
+nim	bigInteger	schema_builder/models/column.html#bigInteger,typeColumn,string	proc bigInteger(_: type Column; name: string): Column		93
+nim	decimal	schema_builder/models/column.html#decimal,typeColumn,string,int,int	proc decimal(_: type Column; name: string; maximum: int; digit: int): Column		103
+nim	double	schema_builder/models/column.html#double,typeColumn,string,int,int	proc double(_: type Column; name: string; maximum: int; digit: int): Column		114
+nim	float	schema_builder/models/column.html#float,typeColumn,string	proc float(_: type Column; name: string): Column		125
+nim	char	schema_builder/models/column.html#char,typeColumn,string,int	proc char(_: type Column; name: string; maxLength: int): Column		135
+nim	string	schema_builder/models/column.html#string,typeColumn,string,int	proc string(_: type Column; name: string; length = 256): Column		145
+nim	uuid	schema_builder/models/column.html#uuid,typeColumn,string	proc uuid(_: type Column; name: string): Column		153
+nim	text	schema_builder/models/column.html#text,typeColumn,string	proc text(_: type Column; name: string): Column		162
+nim	mediumText	schema_builder/models/column.html#mediumText,typeColumn,string	proc mediumText(_: type Column; name: string): Column		169
+nim	longText	schema_builder/models/column.html#longText,typeColumn,string	proc longText(_: type Column; name: string): Column		176
+nim	date	schema_builder/models/column.html#date,typeColumn,string	proc date(_: type Column; name: string): Column		186
+nim	datetime	schema_builder/models/column.html#datetime,typeColumn,string	proc datetime(_: type Column; name: string): Column		193
+nim	time	schema_builder/models/column.html#time,typeColumn,string	proc time(_: type Column; name: string): Column		200
+nim	timestamp	schema_builder/models/column.html#timestamp,typeColumn,string	proc timestamp(_: type Column; name: string): Column		207
+nim	timestamps	schema_builder/models/column.html#timestamps,typeColumn	proc timestamps(_: type Column): Column		214
+nim	softDelete	schema_builder/models/column.html#softDelete,typeColumn	proc softDelete(_: type Column): Column		221
+nim	binary	schema_builder/models/column.html#binary,typeColumn,string	proc binary(_: type Column; name: string): Column		230
+nim	boolean	schema_builder/models/column.html#boolean,typeColumn,string	proc boolean(_: type Column; name: string): Column		237
+nim	enumField	schema_builder/models/column.html#enumField,typeColumn,string,openArray[string]	proc enumField(_: type Column; name: string; options: openArray[string]): Column		244
+nim	json	schema_builder/models/column.html#json,typeColumn,string	proc json(_: type Column; name: string): Column		254
+nim	foreign	schema_builder/models/column.html#foreign,typeColumn,string	proc foreign(_: type Column; name: string): Column		264
+nim	strForeign	schema_builder/models/column.html#strForeign,typeColumn,string,int	proc strForeign(_: type Column; name: string; length = 256): Column		273
+nim	reference	schema_builder/models/column.html#reference,Column,string	proc reference(self: Column; column: string): Column		283
+nim	onTable	schema_builder/models/column.html#onTable,Column,string	proc onTable(self: Column; table: string): Column		291
+nim	onDelete	schema_builder/models/column.html#onDelete,Column,ForeignOnDelete	proc onDelete(self: Column; kind: ForeignOnDelete): Column		305
+nim	autoIncrement	schema_builder/models/column.html#autoIncrement,Column	proc autoIncrement(c: Column): Column		313
+nim	default	schema_builder/models/column.html#default,Column,bool	proc default(c: Column; value: bool): Column		320
+nim	default	schema_builder/models/column.html#default,Column,int	proc default(c: Column; value: int): Column		327
+nim	default	schema_builder/models/column.html#default,Column,float	proc default(c: Column; value: float): Column		334
+nim	default	schema_builder/models/column.html#default,Column,string	proc default(c: Column; value: string): Column		341
+nim	default	schema_builder/models/column.html#default,Column,JsonNode	proc default(c: Column; value: JsonNode): Column		348
+nim	default	schema_builder/models/column.html#default,Column,DefaultDateTime	proc default(c: Column; value: DefaultDateTime): Column		355
+nim	default	schema_builder/models/column.html#default,Column	proc default(c: Column): Column		362
+nim	index	schema_builder/models/column.html#index,Column	proc index(c: Column): Column		368
+nim	nullable	schema_builder/models/column.html#nullable,Column	proc nullable(c: Column): Column		374
+nim	unique	schema_builder/models/column.html#unique,Column	proc unique(c: Column): Column		379
+nim	unsigned	schema_builder/models/column.html#unsigned,Column	proc unsigned(c: Column): Column		385
+nim	comment	schema_builder/models/column.html#comment,Column,string	proc comment(c: Column; value: string): Column		390
+nim	comment	schema_builder/models/column.html#comment,Column,type	proc comment(c: Column; arg: type nil): Column		394
+nim	add	schema_builder/models/column.html#add,Column	proc add(c: Column): Column		402
+nim	change	schema_builder/models/column.html#change,Column	proc change(c: Column): Column		406
+nim	renameColumn	schema_builder/models/column.html#renameColumn,typeColumn,string,string	proc renameColumn(_: type Column; src, dest: string): Column		410
+nim	dropColumn	schema_builder/models/column.html#dropColumn,typeColumn,string	proc dropColumn(_: type Column; name: string): Column		417
+nimgrp	default	schema_builder/models/column.html#default-procs-all	proc		320
+nimgrp	comment	schema_builder/models/column.html#comment-procs-all	proc		390

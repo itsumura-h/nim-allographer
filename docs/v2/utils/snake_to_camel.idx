@@ -1,0 +1,2 @@
+nimTitle	snake_to_camel	utils/snake_to_camel.html	module src/allographer/utils/snake_to_camel		0
+nim	snakeToCamel	utils/snake_to_camel.html#snakeToCamel,string	proc snakeToCamel(s: string): string		5

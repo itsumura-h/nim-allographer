@@ -1,0 +1,2 @@
+nimTitle	create_migration_table	schema_builder/queries/mariadb/create_migration_table.html	module src/allographer/schema_builder/queries/mariadb/create_migration_table		0
+nim	createMigrationTable	schema_builder/queries/mariadb/create_migration_table.html#createMigrationTable,MariadbSchema	proc createMigrationTable(self: MariadbSchema)		10

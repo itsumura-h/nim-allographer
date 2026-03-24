@@ -1,0 +1,51 @@
+nimTitle	enums	schema_builder/enums.html	module src/allographer/schema_builder/enums		0
+nim	rdbIncrements	schema_builder/enums.html#rdbIncrements	RdbTypeKind.rdbIncrements		1
+nim	rdbInteger	schema_builder/enums.html#rdbInteger	RdbTypeKind.rdbInteger		1
+nim	rdbSmallInteger	schema_builder/enums.html#rdbSmallInteger	RdbTypeKind.rdbSmallInteger		1
+nim	rdbMediumInteger	schema_builder/enums.html#rdbMediumInteger	RdbTypeKind.rdbMediumInteger		1
+nim	rdbBigInteger	schema_builder/enums.html#rdbBigInteger	RdbTypeKind.rdbBigInteger		1
+nim	rdbDecimal	schema_builder/enums.html#rdbDecimal	RdbTypeKind.rdbDecimal		1
+nim	rdbDouble	schema_builder/enums.html#rdbDouble	RdbTypeKind.rdbDouble		1
+nim	rdbFloat	schema_builder/enums.html#rdbFloat	RdbTypeKind.rdbFloat		1
+nim	rdbUuid	schema_builder/enums.html#rdbUuid	RdbTypeKind.rdbUuid		1
+nim	rdbChar	schema_builder/enums.html#rdbChar	RdbTypeKind.rdbChar		1
+nim	rdbString	schema_builder/enums.html#rdbString	RdbTypeKind.rdbString		1
+nim	rdbText	schema_builder/enums.html#rdbText	RdbTypeKind.rdbText		1
+nim	rdbMediumText	schema_builder/enums.html#rdbMediumText	RdbTypeKind.rdbMediumText		1
+nim	rdbLongText	schema_builder/enums.html#rdbLongText	RdbTypeKind.rdbLongText		1
+nim	rdbDate	schema_builder/enums.html#rdbDate	RdbTypeKind.rdbDate		1
+nim	rdbDatetime	schema_builder/enums.html#rdbDatetime	RdbTypeKind.rdbDatetime		1
+nim	rdbTime	schema_builder/enums.html#rdbTime	RdbTypeKind.rdbTime		1
+nim	rdbTimestamp	schema_builder/enums.html#rdbTimestamp	RdbTypeKind.rdbTimestamp		1
+nim	rdbTimestamps	schema_builder/enums.html#rdbTimestamps	RdbTypeKind.rdbTimestamps		1
+nim	rdbSoftDelete	schema_builder/enums.html#rdbSoftDelete	RdbTypeKind.rdbSoftDelete		1
+nim	rdbBinary	schema_builder/enums.html#rdbBinary	RdbTypeKind.rdbBinary		1
+nim	rdbBoolean	schema_builder/enums.html#rdbBoolean	RdbTypeKind.rdbBoolean		1
+nim	rdbEnumField	schema_builder/enums.html#rdbEnumField	RdbTypeKind.rdbEnumField		1
+nim	rdbJson	schema_builder/enums.html#rdbJson	RdbTypeKind.rdbJson		1
+nim	rdbForeign	schema_builder/enums.html#rdbForeign	RdbTypeKind.rdbForeign		1
+nim	rdbStrForeign	schema_builder/enums.html#rdbStrForeign	RdbTypeKind.rdbStrForeign		1
+nim	RdbTypeKind	schema_builder/enums.html#RdbTypeKind	enum RdbTypeKind		1
+nim	RESTRICT	schema_builder/enums.html#RESTRICT	ForeignOnDelete.RESTRICT		35
+nim	CASCADE	schema_builder/enums.html#CASCADE	ForeignOnDelete.CASCADE		35
+nim	SET_NULL	schema_builder/enums.html#SET_NULL	ForeignOnDelete.SET_NULL		35
+nim	NO_ACTION	schema_builder/enums.html#NO_ACTION	ForeignOnDelete.NO_ACTION		35
+nim	ForeignOnDelete	schema_builder/enums.html#ForeignOnDelete	enum ForeignOnDelete		35
+nim	None	schema_builder/enums.html#None	DefaultDateTime.None		42
+nim	Current	schema_builder/enums.html#Current	DefaultDateTime.Current		42
+nim	CurrentOnUpdate	schema_builder/enums.html#CurrentOnUpdate	DefaultDateTime.CurrentOnUpdate		42
+nim	DefaultDateTime	schema_builder/enums.html#DefaultDateTime	enum DefaultDateTime		42
+nim	Create	schema_builder/enums.html#Create	UsecaseType.Create		47
+nim	Alter	schema_builder/enums.html#Alter	UsecaseType.Alter		47
+nim	Drop	schema_builder/enums.html#Drop	UsecaseType.Drop		47
+nim	UsecaseType	schema_builder/enums.html#UsecaseType	enum UsecaseType		47
+nim	CreateTable	schema_builder/enums.html#CreateTable	TableMigrationType.CreateTable		52
+nim	ChangeTable	schema_builder/enums.html#ChangeTable	TableMigrationType.ChangeTable		52
+nim	RenameTable	schema_builder/enums.html#RenameTable	TableMigrationType.RenameTable		52
+nim	DropTable	schema_builder/enums.html#DropTable	TableMigrationType.DropTable		52
+nim	TableMigrationType	schema_builder/enums.html#TableMigrationType	enum TableMigrationType		52
+nim	AddColumn	schema_builder/enums.html#AddColumn	ColumnMigrationType.AddColumn		58
+nim	ChangeColumn	schema_builder/enums.html#ChangeColumn	ColumnMigrationType.ChangeColumn		58
+nim	RenameColumn	schema_builder/enums.html#RenameColumn	ColumnMigrationType.RenameColumn		58
+nim	DropColumn	schema_builder/enums.html#DropColumn	ColumnMigrationType.DropColumn		58
+nim	ColumnMigrationType	schema_builder/enums.html#ColumnMigrationType	enum ColumnMigrationType		58

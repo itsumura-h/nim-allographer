@@ -1,0 +1,13 @@
+nimTitle	database_url	query_builder/libs/database_url.html	module src/allographer/query_builder/libs/database_url		0
+nim	DatabaseUrl	query_builder/libs/database_url.html#DatabaseUrl	type DatabaseUrl		5
+nim	DatabaseUrlQuery	query_builder/libs/database_url.html#DatabaseUrlQuery	tuple DatabaseUrlQuery		7
+nim	ParsedDatabaseUrl	query_builder/libs/database_url.html#ParsedDatabaseUrl	object ParsedDatabaseUrl		9
+nim	asDatabaseUrl	query_builder/libs/database_url.html#asDatabaseUrl,string	proc asDatabaseUrl(value: string): DatabaseUrl		21
+nim	`$`	query_builder/libs/database_url.html#$,DatabaseUrl	proc `$`(value: DatabaseUrl): string		25
+nim	parseDatabaseUrl	query_builder/libs/database_url.html#parseDatabaseUrl,string	proc parseDatabaseUrl(value: string): ParsedDatabaseUrl		44
+nim	parseDatabaseUrl	query_builder/libs/database_url.html#parseDatabaseUrl,DatabaseUrl	proc parseDatabaseUrl(value: DatabaseUrl): ParsedDatabaseUrl		60
+nim	requireDatabaseUrlScheme	query_builder/libs/database_url.html#requireDatabaseUrlScheme,ParsedDatabaseUrl,openArray[string],string	proc requireDatabaseUrlScheme(value: ParsedDatabaseUrl;\n                         expectedSchemes: openArray[string]; driverName: string)		64
+nim	databaseName	query_builder/libs/database_url.html#databaseName,ParsedDatabaseUrl	proc databaseName(value: ParsedDatabaseUrl): string		82
+nim	sqliteDatabasePath	query_builder/libs/database_url.html#sqliteDatabasePath,ParsedDatabaseUrl	proc sqliteDatabasePath(value: ParsedDatabaseUrl): string		86
+nim	portOrDefault	query_builder/libs/database_url.html#portOrDefault,ParsedDatabaseUrl,int	proc portOrDefault(value: ParsedDatabaseUrl; defaultPort: int): int		97
+nimgrp	parsedatabaseurl	query_builder/libs/database_url.html#parseDatabaseUrl-procs-all	proc		44

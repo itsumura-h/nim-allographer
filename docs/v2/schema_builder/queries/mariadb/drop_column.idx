@@ -1,0 +1,2 @@
+nimTitle	drop_column	schema_builder/queries/mariadb/drop_column.html	module src/allographer/schema_builder/queries/mariadb/drop_column		0
+nim	dropColumn	schema_builder/queries/mariadb/drop_column.html#dropColumn,MariadbSchema,bool	proc dropColumn(self: MariadbSchema; isReset: bool)		14

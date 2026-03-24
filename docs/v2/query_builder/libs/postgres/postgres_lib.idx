@@ -1,0 +1,15 @@
+nimTitle	postgres_lib	query_builder/libs/postgres/postgres_lib.html	module src/allographer/query_builder/libs/postgres/postgres_lib		0
+nim	dbError	query_builder/libs/postgres/postgres_lib.html#dbError,PPGconn	proc dbError(db: PPGconn)		8
+nim	checkError	query_builder/libs/postgres/postgres_lib.html#checkError,PPGconn	proc checkError(db: PPGconn)		15
+nim	buildBaseDbColumns	query_builder/libs/postgres/postgres_lib.html#buildBaseDbColumns,PPGresult,int32	proc buildBaseDbColumns(res: PPGresult; cols: int32): DbColumns		153
+nim	appendDbRowWithBaseColumns	query_builder/libs/postgres/postgres_lib.html#appendDbRowWithBaseColumns,PPGresult,DbRows,int32,int32,DbColumns	proc appendDbRowWithBaseColumns(res: PPGresult; dbRows: var DbRows;\n                           line, cols: int32; base: DbColumns)		161
+nim	setColumnInfo	query_builder/libs/postgres/postgres_lib.html#setColumnInfo,PPGresult,DbRows,int32,int32	proc setColumnInfo(res: PPGresult; dbRows: var DbRows; line, cols: int32)		168
+nim	newRow	query_builder/libs/postgres/postgres_lib.html#newRow,int	proc newRow(L: int): Row		172
+nim	setRow	query_builder/libs/postgres/postgres_lib.html#setRow,PPGresult,Row,int32,int32	proc setRow(res: PPGresult; r: var Row; line, cols: int32)		176
+nim	dbFormat	query_builder/libs/postgres/postgres_lib.html#dbFormat,string,varargs[string]	proc dbFormat(formatstr: string; args: varargs[string]): string		207
+nim	questionToDaller	query_builder/libs/postgres/postgres_lib.html#questionToDaller,string	proc questionToDaller(s: string): string		226
+nim	PGParams	query_builder/libs/postgres/postgres_lib.html#PGParams	object PGParams		245
+nim	fromObjArray	query_builder/libs/postgres/postgres_lib.html#fromObjArray,typePGParams,JsonNode,seq[Row]	proc fromObjArray(_: type PGParams; args: JsonNode; columns: seq[Row]): PGParams		307
+nim	fromObjArray	query_builder/libs/postgres/postgres_lib.html#fromObjArray,typePGParams,JsonNode	proc fromObjArray(_: type PGParams; args: JsonNode): PGParams		313
+nim	fromArray	query_builder/libs/postgres/postgres_lib.html#fromArray,typePGParams,JsonNode	proc fromArray(_: type PGParams; args: JsonNode): PGParams		321
+nimgrp	fromobjarray	query_builder/libs/postgres/postgres_lib.html#fromObjArray-procs-all	proc		307

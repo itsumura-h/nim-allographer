@@ -1,0 +1,5 @@
+nimTitle	mysql_query_type	schema_builder/queries/mysql/mysql_query_type.html	module src/allographer/schema_builder/queries/mysql/mysql_query_type		0
+nim	MysqlSchema	schema_builder/queries/mysql/mysql_query_type.html#MysqlSchema	type MysqlSchema		6
+nim	new	schema_builder/queries/mysql/mysql_query_type.html#new,typeMysqlSchema,MysqlConnections,Table	proc new(_: type MysqlSchema; rdb: MysqlConnections; table: Table): MysqlSchema		11
+nim	new	schema_builder/queries/mysql/mysql_query_type.html#new,typeMysqlSchema,MysqlConnections,Table,Column	proc new(_: type MysqlSchema; rdb: MysqlConnections; table: Table; column: Column): MysqlSchema		14
+nimgrp	new	schema_builder/queries/mysql/mysql_query_type.html#new-procs-all	proc		11

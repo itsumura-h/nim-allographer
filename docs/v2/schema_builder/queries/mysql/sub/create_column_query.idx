@@ -1,0 +1,5 @@
+nimTitle	create_column_query	schema_builder/queries/mysql/sub/create_column_query.html	module src/allographer/schema_builder/queries/mysql/sub/create_column_query		0
+nim	createForeignKey	schema_builder/queries/mysql/sub/create_column_query.html#createForeignKey,Table,Column	proc createForeignKey(table: Table; column: Column): string		502
+nim	alterAddForeignKey	schema_builder/queries/mysql/sub/create_column_query.html#alterAddForeignKey,Column,Table	proc alterAddForeignKey(column: Column; table: Table): string		518
+nim	createIndexString	schema_builder/queries/mysql/sub/create_column_query.html#createIndexString,Table,Column	proc createIndexString(table: Table; column: Column): string		545
+nim	createColumnString	schema_builder/queries/mysql/sub/create_column_query.html#createColumnString,Table,Column	proc createColumnString(table: Table; column: Column): string		549

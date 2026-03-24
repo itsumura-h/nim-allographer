@@ -1,0 +1,156 @@
+nimTitle	mariadb_rdb	query_builder/libs/mariadb/mariadb_rdb.html	module src/allographer/query_builder/libs/mariadb/mariadb_rdb		0
+nim	false	query_builder/libs/mariadb/mariadb_rdb.html#false	my_bool.false		21
+nim	true	query_builder/libs/mariadb/mariadb_rdb.html#true	my_bool.true		21
+nim	my_bool	query_builder/libs/mariadb/mariadb_rdb.html#my_bool	type my_bool		21
+nim	Pmy_bool	query_builder/libs/mariadb/mariadb_rdb.html#Pmy_bool	type Pmy_bool		22
+nim	PVIO	query_builder/libs/mariadb/mariadb_rdb.html#PVIO	type PVIO		23
+nim	gptr	query_builder/libs/mariadb/mariadb_rdb.html#gptr	type gptr		25
+nim	my_socket	query_builder/libs/mariadb/mariadb_rdb.html#my_socket	type my_socket		27
+nim	PPByte	query_builder/libs/mariadb/mariadb_rdb.html#PPByte	type PPByte		28
+nim	cuint	query_builder/libs/mariadb/mariadb_rdb.html#cuint	type cuint		29
+nim	MYSQL_WAIT_READ	query_builder/libs/mariadb/mariadb_rdb.html#MYSQL_WAIT_READ	const MYSQL_WAIT_READ		44
+nim	MYSQL_WAIT_WRITE	query_builder/libs/mariadb/mariadb_rdb.html#MYSQL_WAIT_WRITE	const MYSQL_WAIT_WRITE		45
+nim	MYSQL_WAIT_EXCEPT	query_builder/libs/mariadb/mariadb_rdb.html#MYSQL_WAIT_EXCEPT	const MYSQL_WAIT_EXCEPT		46
+nim	MYSQL_WAIT_TIMEOUT	query_builder/libs/mariadb/mariadb_rdb.html#MYSQL_WAIT_TIMEOUT	const MYSQL_WAIT_TIMEOUT		47
+nim	SQLSTATE_LENGTH	query_builder/libs/mariadb/mariadb_rdb.html#SQLSTATE_LENGTH	const SQLSTATE_LENGTH		52
+nim	Enum_server_command	query_builder/libs/mariadb/mariadb_rdb.html#Enum_server_command	enum Enum_server_command		61
+nim	SCRAMBLE_LENGTH	query_builder/libs/mariadb/mariadb_rdb.html#SCRAMBLE_LENGTH	const SCRAMBLE_LENGTH		72
+nim	NOT_NULL_FLAG	query_builder/libs/mariadb/mariadb_rdb.html#NOT_NULL_FLAG	const NOT_NULL_FLAG		79
+nim	PRI_KEY_FLAG	query_builder/libs/mariadb/mariadb_rdb.html#PRI_KEY_FLAG	const PRI_KEY_FLAG		80
+nim	ERRMSG_SIZE	query_builder/libs/mariadb/mariadb_rdb.html#ERRMSG_SIZE	const ERRMSG_SIZE		145
+nim	St_net	query_builder/libs/mariadb/mariadb_rdb.html#St_net	object St_net		162
+nim	NET	query_builder/libs/mariadb/mariadb_rdb.html#NET	type NET		202
+nim	PNET	query_builder/libs/mariadb/mariadb_rdb.html#PNET	type PNET		203
+nim	TYPE_DECIMAL	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_DECIMAL	Enum_field_types.TYPE_DECIMAL		210
+nim	TYPE_TINY	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_TINY	Enum_field_types.TYPE_TINY		210
+nim	TYPE_SHORT	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_SHORT	Enum_field_types.TYPE_SHORT		210
+nim	TYPE_LONG	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_LONG	Enum_field_types.TYPE_LONG		210
+nim	TYPE_FLOAT	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_FLOAT	Enum_field_types.TYPE_FLOAT		210
+nim	TYPE_DOUBLE	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_DOUBLE	Enum_field_types.TYPE_DOUBLE		210
+nim	TYPE_NULL	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_NULL	Enum_field_types.TYPE_NULL		210
+nim	TYPE_TIMESTAMP	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_TIMESTAMP	Enum_field_types.TYPE_TIMESTAMP		210
+nim	TYPE_LONGLONG	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_LONGLONG	Enum_field_types.TYPE_LONGLONG		210
+nim	TYPE_INT24	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_INT24	Enum_field_types.TYPE_INT24		210
+nim	TYPE_DATE	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_DATE	Enum_field_types.TYPE_DATE		210
+nim	TYPE_TIME	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_TIME	Enum_field_types.TYPE_TIME		210
+nim	TYPE_DATETIME	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_DATETIME	Enum_field_types.TYPE_DATETIME		210
+nim	TYPE_YEAR	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_YEAR	Enum_field_types.TYPE_YEAR		210
+nim	TYPE_NEWDATE	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_NEWDATE	Enum_field_types.TYPE_NEWDATE		210
+nim	TYPE_VARCHAR	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_VARCHAR	Enum_field_types.TYPE_VARCHAR		210
+nim	TYPE_BIT	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_BIT	Enum_field_types.TYPE_BIT		210
+nim	TYPE_NEWDECIMAL	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_NEWDECIMAL	Enum_field_types.TYPE_NEWDECIMAL		210
+nim	TYPE_ENUM	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_ENUM	Enum_field_types.TYPE_ENUM		210
+nim	TYPE_SET	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_SET	Enum_field_types.TYPE_SET		210
+nim	TYPE_TINY_BLOB	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_TINY_BLOB	Enum_field_types.TYPE_TINY_BLOB		210
+nim	TYPE_MEDIUM_BLOB	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_MEDIUM_BLOB	Enum_field_types.TYPE_MEDIUM_BLOB		210
+nim	TYPE_LONG_BLOB	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_LONG_BLOB	Enum_field_types.TYPE_LONG_BLOB		210
+nim	TYPE_BLOB	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_BLOB	Enum_field_types.TYPE_BLOB		210
+nim	TYPE_VAR_STRING	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_VAR_STRING	Enum_field_types.TYPE_VAR_STRING		210
+nim	TYPE_STRING	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_STRING	Enum_field_types.TYPE_STRING		210
+nim	TYPE_GEOMETRY	query_builder/libs/mariadb/mariadb_rdb.html#TYPE_GEOMETRY	Enum_field_types.TYPE_GEOMETRY		210
+nim	Enum_field_types	query_builder/libs/mariadb/mariadb_rdb.html#Enum_field_types	enum Enum_field_types		210
+nim	St_mysql_field	query_builder/libs/mariadb/mariadb_rdb.html#St_mysql_field	object St_mysql_field		407
+nim	FIELD	query_builder/libs/mariadb/mariadb_rdb.html#FIELD	type FIELD		430
+nim	PFIELD	query_builder/libs/mariadb/mariadb_rdb.html#PFIELD	type PFIELD		431
+nim	ROW	query_builder/libs/mariadb/mariadb_rdb.html#ROW	type ROW		433
+nim	my_ulonglong	query_builder/libs/mariadb/mariadb_rdb.html#my_ulonglong	type my_ulonglong		446
+nim	Pst_mysql_rows	query_builder/libs/mariadb/mariadb_rdb.html#Pst_mysql_rows	type Pst_mysql_rows		453
+nim	St_mysql_rows	query_builder/libs/mariadb/mariadb_rdb.html#St_mysql_rows	object St_mysql_rows		454
+nim	ROWS	query_builder/libs/mariadb/mariadb_rdb.html#ROWS	type ROWS		459
+nim	PROWS	query_builder/libs/mariadb/mariadb_rdb.html#PROWS	type PROWS		460
+nim	Pst_used_mem	query_builder/libs/mariadb/mariadb_rdb.html#Pst_used_mem	type Pst_used_mem		471
+nim	St_used_mem	query_builder/libs/mariadb/mariadb_rdb.html#St_used_mem	object St_used_mem		472
+nim	USED_MEM	query_builder/libs/mariadb/mariadb_rdb.html#USED_MEM	type USED_MEM		477
+nim	PUSED_MEM	query_builder/libs/mariadb/mariadb_rdb.html#PUSED_MEM	type PUSED_MEM		478
+nim	St_mem_root	query_builder/libs/mariadb/mariadb_rdb.html#St_mem_root	object St_mem_root		480
+nim	MEM_ROOT	query_builder/libs/mariadb/mariadb_rdb.html#MEM_ROOT	type MEM_ROOT		492
+nim	St_mysql_data	query_builder/libs/mariadb/mariadb_rdb.html#St_mysql_data	object St_mysql_data		499
+nim	DATA	query_builder/libs/mariadb/mariadb_rdb.html#DATA	type DATA		506
+nim	PDATA	query_builder/libs/mariadb/mariadb_rdb.html#PDATA	type PDATA		507
+nim	OPT_CONNECT_TIMEOUT	query_builder/libs/mariadb/mariadb_rdb.html#OPT_CONNECT_TIMEOUT	Option.OPT_CONNECT_TIMEOUT		508
+nim	OPT_COMPRESS	query_builder/libs/mariadb/mariadb_rdb.html#OPT_COMPRESS	Option.OPT_COMPRESS		508
+nim	OPT_NAMED_PIPE	query_builder/libs/mariadb/mariadb_rdb.html#OPT_NAMED_PIPE	Option.OPT_NAMED_PIPE		508
+nim	INIT_COMMAND	query_builder/libs/mariadb/mariadb_rdb.html#INIT_COMMAND	Option.INIT_COMMAND		508
+nim	READ_DEFAULT_FILE	query_builder/libs/mariadb/mariadb_rdb.html#READ_DEFAULT_FILE	Option.READ_DEFAULT_FILE		508
+nim	READ_DEFAULT_GROUP	query_builder/libs/mariadb/mariadb_rdb.html#READ_DEFAULT_GROUP	Option.READ_DEFAULT_GROUP		508
+nim	SET_CHARSET_DIR	query_builder/libs/mariadb/mariadb_rdb.html#SET_CHARSET_DIR	Option.SET_CHARSET_DIR		508
+nim	SET_CHARSET_NAME	query_builder/libs/mariadb/mariadb_rdb.html#SET_CHARSET_NAME	Option.SET_CHARSET_NAME		508
+nim	OPT_LOCAL_INFILE	query_builder/libs/mariadb/mariadb_rdb.html#OPT_LOCAL_INFILE	Option.OPT_LOCAL_INFILE		508
+nim	OPT_PROTOCOL	query_builder/libs/mariadb/mariadb_rdb.html#OPT_PROTOCOL	Option.OPT_PROTOCOL		508
+nim	SHARED_MEMORY_BASE_NAME	query_builder/libs/mariadb/mariadb_rdb.html#SHARED_MEMORY_BASE_NAME	Option.SHARED_MEMORY_BASE_NAME		508
+nim	OPT_READ_TIMEOUT	query_builder/libs/mariadb/mariadb_rdb.html#OPT_READ_TIMEOUT	Option.OPT_READ_TIMEOUT		508
+nim	OPT_WRITE_TIMEOUT	query_builder/libs/mariadb/mariadb_rdb.html#OPT_WRITE_TIMEOUT	Option.OPT_WRITE_TIMEOUT		508
+nim	OPT_USE_RESULT	query_builder/libs/mariadb/mariadb_rdb.html#OPT_USE_RESULT	Option.OPT_USE_RESULT		508
+nim	OPT_USE_REMOTE_CONNECTION	query_builder/libs/mariadb/mariadb_rdb.html#OPT_USE_REMOTE_CONNECTION	Option.OPT_USE_REMOTE_CONNECTION		508
+nim	OPT_USE_EMBEDDED_CONNECTION	query_builder/libs/mariadb/mariadb_rdb.html#OPT_USE_EMBEDDED_CONNECTION	Option.OPT_USE_EMBEDDED_CONNECTION		508
+nim	OPT_GUESS_CONNECTION	query_builder/libs/mariadb/mariadb_rdb.html#OPT_GUESS_CONNECTION	Option.OPT_GUESS_CONNECTION		508
+nim	SET_CLIENT_IP	query_builder/libs/mariadb/mariadb_rdb.html#SET_CLIENT_IP	Option.SET_CLIENT_IP		508
+nim	SECURE_AUTH	query_builder/libs/mariadb/mariadb_rdb.html#SECURE_AUTH	Option.SECURE_AUTH		508
+nim	REPORT_DATA_TRUNCATION	query_builder/libs/mariadb/mariadb_rdb.html#REPORT_DATA_TRUNCATION	Option.REPORT_DATA_TRUNCATION		508
+nim	OPT_RECONNECT	query_builder/libs/mariadb/mariadb_rdb.html#OPT_RECONNECT	Option.OPT_RECONNECT		508
+nim	MYSQL_OPT_NONBLOCK	query_builder/libs/mariadb/mariadb_rdb.html#MYSQL_OPT_NONBLOCK	Option.MYSQL_OPT_NONBLOCK		508
+nim	Option	query_builder/libs/mariadb/mariadb_rdb.html#Option	enum Option		508
+nim	St_dynamic_array	query_builder/libs/mariadb/mariadb_rdb.html#St_dynamic_array	object St_dynamic_array		528
+nim	Pst_dynamic_array	query_builder/libs/mariadb/mariadb_rdb.html#Pst_dynamic_array	type Pst_dynamic_array		536
+nim	St_mysql_options	query_builder/libs/mariadb/mariadb_rdb.html#St_mysql_options	object St_mysql_options		538
+nim	STATUS_READY	query_builder/libs/mariadb/mariadb_rdb.html#STATUS_READY	Status.STATUS_READY		584
+nim	STATUS_GET_RESULT	query_builder/libs/mariadb/mariadb_rdb.html#STATUS_GET_RESULT	Status.STATUS_GET_RESULT		584
+nim	STATUS_USE_RESULT	query_builder/libs/mariadb/mariadb_rdb.html#STATUS_USE_RESULT	Status.STATUS_USE_RESULT		584
+nim	Status	query_builder/libs/mariadb/mariadb_rdb.html#Status	enum Status		584
+nim	Charset_info_st	query_builder/libs/mariadb/mariadb_rdb.html#Charset_info_st	object Charset_info_st		593
+nim	Pcharset_info_st	query_builder/libs/mariadb/mariadb_rdb.html#Pcharset_info_st	type Pcharset_info_st		622
+nim	Pst_mysql_methods	query_builder/libs/mariadb/mariadb_rdb.html#Pst_mysql_methods	type Pst_mysql_methods		636
+nim	Pst_mysql	query_builder/libs/mariadb/mariadb_rdb.html#Pst_mysql	type Pst_mysql		637
+nim	St_mysql	query_builder/libs/mariadb/mariadb_rdb.html#St_mysql	object St_mysql		638
+nim	MySQL	query_builder/libs/mariadb/mariadb_rdb.html#MySQL	type MySQL		684
+nim	PMySQL	query_builder/libs/mariadb/mariadb_rdb.html#PMySQL	type PMySQL		685
+nim	St_mysql_res	query_builder/libs/mariadb/mariadb_rdb.html#St_mysql_res	object St_mysql_res		687
+nim	RES	query_builder/libs/mariadb/mariadb_rdb.html#RES	type RES		703
+nim	PRES	query_builder/libs/mariadb/mariadb_rdb.html#PRES	type PRES		704
+nim	Pst_mysql_stmt	query_builder/libs/mariadb/mariadb_rdb.html#Pst_mysql_stmt	type Pst_mysql_stmt		705
+nim	PSTMT	query_builder/libs/mariadb/mariadb_rdb.html#PSTMT	type PSTMT		706
+nim	St_mysql_methods	query_builder/libs/mariadb/mariadb_rdb.html#St_mysql_methods	object St_mysql_methods		707
+nim	STMT_INIT_DONE	query_builder/libs/mariadb/mariadb_rdb.html#STMT_INIT_DONE	Enum_mysql_stmt_state.STMT_INIT_DONE		755
+nim	STMT_PREPARE_DONE	query_builder/libs/mariadb/mariadb_rdb.html#STMT_PREPARE_DONE	Enum_mysql_stmt_state.STMT_PREPARE_DONE		755
+nim	STMT_EXECUTE_DONE	query_builder/libs/mariadb/mariadb_rdb.html#STMT_EXECUTE_DONE	Enum_mysql_stmt_state.STMT_EXECUTE_DONE		755
+nim	STMT_FETCH_DONE	query_builder/libs/mariadb/mariadb_rdb.html#STMT_FETCH_DONE	Enum_mysql_stmt_state.STMT_FETCH_DONE		755
+nim	Enum_mysql_stmt_state	query_builder/libs/mariadb/mariadb_rdb.html#Enum_mysql_stmt_state	enum Enum_mysql_stmt_state		755
+nim	U	query_builder/libs/mariadb/mariadb_rdb.html#U	object U		779
+nim	St_mysql_bind	query_builder/libs/mariadb/mariadb_rdb.html#St_mysql_bind	object St_mysql_bind		783
+nim	BIND	query_builder/libs/mariadb/mariadb_rdb.html#BIND	type BIND		804
+nim	PBIND	query_builder/libs/mariadb/mariadb_rdb.html#PBIND	type PBIND		805
+nim	St_mysql_stmt	query_builder/libs/mariadb/mariadb_rdb.html#St_mysql_stmt	object St_mysql_stmt		806
+nim	STMT	query_builder/libs/mariadb/mariadb_rdb.html#STMT	type STMT		834
+nim	num_fields	query_builder/libs/mariadb/mariadb_rdb.html#num_fields,PRES	proc num_fields(res: PRES): cuint		877
+nim	fetch_field_direct	query_builder/libs/mariadb/mariadb_rdb.html#fetch_field_direct,PRES,cuint	proc fetch_field_direct(res: PRES; fieldnr: cuint): PFIELD		880
+nim	error	query_builder/libs/mariadb/mariadb_rdb.html#error,PMySQL	proc error(MySQL: PMySQL): cstring		895
+nim	init	query_builder/libs/mariadb/mariadb_rdb.html#init,PMySQL	proc init(MySQL: PMySQL): PMySQL		905
+nim	init	query_builder/libs/mariadb/mariadb_rdb.html#init,PMySQL_2	proc init(MySQL: var PMySQL)		906
+nim	real_connect	query_builder/libs/mariadb/mariadb_rdb.html#real_connect,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,int	proc real_connect(MySQL: PMySQL; host: cstring; user: cstring; passwd: cstring;\n             db: cstring; port: cuint; unix_socket: cstring; clientflag: int): PMySQL		912
+nim	real_query	query_builder/libs/mariadb/mariadb_rdb.html#real_query,PMySQL,cstring,int	proc real_query(MySQL: PMySQL; q: cstring; len: int): cint		935
+nim	use_result	query_builder/libs/mariadb/mariadb_rdb.html#use_result,PMySQL	proc use_result(MySQL: PMySQL): PRES		939
+nim	ping	query_builder/libs/mariadb/mariadb_rdb.html#ping,PMySQL	proc ping(MySQL: PMySQL): cint		995
+nim	options	query_builder/libs/mariadb/mariadb_rdb.html#options,PMySQL,Option,pointer	proc options(MySQL: PMySQL; option: Option; arg: pointer): cint		1017
+nim	optionsv	query_builder/libs/mariadb/mariadb_rdb.html#optionsv,PMySQL,Option	proc optionsv(MySQL: PMySQL; option: Option): cint		1019
+nim	get_socket	query_builder/libs/mariadb/mariadb_rdb.html#get_socket,PMySQL	proc get_socket(MySQL: PMySQL): my_socket		1021
+nim	get_timeout_value	query_builder/libs/mariadb/mariadb_rdb.html#get_timeout_value,PMySQL	proc get_timeout_value(MySQL: PMySQL): cuint		1023
+nim	get_timeout_value_ms	query_builder/libs/mariadb/mariadb_rdb.html#get_timeout_value_ms,PMySQL	proc get_timeout_value_ms(MySQL: PMySQL): cuint		1025
+nim	free_result	query_builder/libs/mariadb/mariadb_rdb.html#free_result,PRES	proc free_result(result: PRES)		1027
+nim	free_result_start	query_builder/libs/mariadb/mariadb_rdb.html#free_result_start,PRES	proc free_result_start(result: PRES): cint		1029
+nim	free_result_cont	query_builder/libs/mariadb/mariadb_rdb.html#free_result_cont,PRES,cint	proc free_result_cont(result: PRES; status: cint): cint		1031
+nim	fetch_row	query_builder/libs/mariadb/mariadb_rdb.html#fetch_row,PRES	proc fetch_row(result: PRES): ROW		1039
+nim	fetch_row_start	query_builder/libs/mariadb/mariadb_rdb.html#fetch_row_start,ptr.ROW,PRES	proc fetch_row_start(ret: ptr ROW; result: PRES): cint		1041
+nim	fetch_row_cont	query_builder/libs/mariadb/mariadb_rdb.html#fetch_row_cont,ptr.ROW,PRES,cint	proc fetch_row_cont(ret: ptr ROW; result: PRES; status: cint): cint		1043
+nim	real_escape_string	query_builder/libs/mariadb/mariadb_rdb.html#real_escape_string,PMySQL,cstring,cstring,int	proc real_escape_string(MySQL: PMySQL; fto: cstring; from: cstring; len: int): int		1055
+nim	read_query_result	query_builder/libs/mariadb/mariadb_rdb.html#read_query_result,PMySQL	proc read_query_result(MySQL: PMySQL): my_bool		1077
+nim	read_query_result_start	query_builder/libs/mariadb/mariadb_rdb.html#read_query_result_start,ptr.my_bool,PMySQL	proc read_query_result_start(ret: ptr my_bool; MySQL: PMySQL): cint		1079
+nim	read_query_result_cont	query_builder/libs/mariadb/mariadb_rdb.html#read_query_result_cont,ptr.my_bool,PMySQL,cint	proc read_query_result_cont(ret: ptr my_bool; MySQL: PMySQL; status: cint): cint		1081
+nim	real_connect_start	query_builder/libs/mariadb/mariadb_rdb.html#real_connect_start,ptr.PMySQL,PMySQL,cstring,cstring,cstring,cstring,cuint,cstring,culong	proc real_connect_start(ret: ptr PMySQL; MySQL: PMySQL; host: cstring; user: cstring;\n                   passwd: cstring; db: cstring; port: cuint;\n                   unix_socket: cstring; clientflag: culong): cint		1083
+nim	real_connect_cont	query_builder/libs/mariadb/mariadb_rdb.html#real_connect_cont,ptr.PMySQL,PMySQL,cint	proc real_connect_cont(ret: ptr PMySQL; MySQL: PMySQL; status: cint): cint		1087
+nim	real_query_start	query_builder/libs/mariadb/mariadb_rdb.html#real_query_start,ptr.cint,PMySQL,cstring,culong	proc real_query_start(ret: ptr cint; MySQL: PMySQL; q: cstring; len: culong): cint		1089
+nim	real_query_cont	query_builder/libs/mariadb/mariadb_rdb.html#real_query_cont,ptr.cint,PMySQL,cint	proc real_query_cont(ret: ptr cint; MySQL: PMySQL; status: cint): cint		1091
+nim	store_result_start	query_builder/libs/mariadb/mariadb_rdb.html#store_result_start,ptr.PRES,PMySQL	proc store_result_start(ret: ptr PRES; MySQL: PMySQL): cint		1093
+nim	store_result_cont	query_builder/libs/mariadb/mariadb_rdb.html#store_result_cont,ptr.PRES,PMySQL,cint	proc store_result_cont(ret: ptr PRES; MySQL: PMySQL; status: cint): cint		1095
+nim	stmt_init	query_builder/libs/mariadb/mariadb_rdb.html#stmt_init,PMySQL	proc stmt_init(MySQL: PMySQL): PSTMT		1097
+nim	close	query_builder/libs/mariadb/mariadb_rdb.html#close,PMySQL	proc close(sock: PMySQL)		1158
+nimgrp	init	query_builder/libs/mariadb/mariadb_rdb.html#init-procs-all	proc		905

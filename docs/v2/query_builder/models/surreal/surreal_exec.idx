@@ -1,0 +1,37 @@
+nimTitle	surreal_exec	query_builder/models/surreal/surreal_exec.html	module src/allographer/query_builder/models/surreal/surreal_exec		0
+nim	get	query_builder/models/surreal/surreal_exec.html#get,SurrealQuery	proc get(self: SurrealQuery): Future[seq[JsonNode]]		342
+nim	first	query_builder/models/surreal/surreal_exec.html#first,SurrealQuery	proc first(self: SurrealQuery): Future[Option[JsonNode]]		354
+nim	find	query_builder/models/surreal/surreal_exec.html#find,SurrealQuery,SurrealId,string	proc find(self: SurrealQuery; id: SurrealId; key = "id"): Future[Option[JsonNode]]		365
+nim	insert	query_builder/models/surreal/surreal_exec.html#insert,SurrealQuery,JsonNode	proc insert(self: SurrealQuery; items: JsonNode): owned(Future[void])		378
+nim	insert	query_builder/models/surreal/surreal_exec.html#insert,SurrealQuery,seq[JsonNode]	proc insert(self: SurrealQuery; items: seq[JsonNode]): owned(Future[void])		385
+nim	insertId	query_builder/models/surreal/surreal_exec.html#insertId,SurrealQuery,JsonNode,string	proc insertId(self: SurrealQuery; items: JsonNode; key = "id"): Future[SurrealId]		392
+nim	insertId	query_builder/models/surreal/surreal_exec.html#insertId,SurrealQuery,seq[JsonNode],string	proc insertId(self: SurrealQuery; items: seq[JsonNode]; key = "id"): Future[\n    seq[SurrealId]]		400
+nim	insert	query_builder/models/surreal/surreal_exec.html#insert,SurrealQuery,T	proc insert[T](self: SurrealQuery; items: T): owned(Future[void])		412
+nim	insert	query_builder/models/surreal/surreal_exec.html#insert,SurrealQuery,seq[T]	proc insert[T](self: SurrealQuery; items: seq[T]): owned(Future[void])		419
+nim	insertId	query_builder/models/surreal/surreal_exec.html#insertId,SurrealQuery,T,string	proc insertId[T](self: SurrealQuery; items: T; key = "id"): Future[SurrealId]		429
+nim	insertId	query_builder/models/surreal/surreal_exec.html#insertId,SurrealQuery,seq[T],string	proc insertId[T](self: SurrealQuery; items: seq[T]; key = "id"): Future[\n    seq[SurrealId]]		437
+nim	update	query_builder/models/surreal/surreal_exec.html#update,SurrealQuery,JsonNode	proc update(self: SurrealQuery; items: JsonNode): owned(Future[void])		451
+nim	update	query_builder/models/surreal/surreal_exec.html#update,SurrealConnections,SurrealId,JsonNode	proc update(self: SurrealConnections; id: SurrealId; items: JsonNode): owned(\n    Future[void])		458
+nim	update	query_builder/models/surreal/surreal_exec.html#update,SurrealQuery,T	proc update[T](self: SurrealQuery; items: T): owned(Future[void])		470
+nim	update	query_builder/models/surreal/surreal_exec.html#update,SurrealConnections,SurrealId,T	proc update[T](self: SurrealConnections; id: SurrealId; items: T): owned(\n    Future[void])		477
+nim	delete	query_builder/models/surreal/surreal_exec.html#delete,SurrealQuery	proc delete(self: SurrealQuery): owned(Future[void])		489
+nim	delete	query_builder/models/surreal/surreal_exec.html#delete,SurrealQuery,SurrealId	proc delete(self: SurrealQuery; id: SurrealId): owned(Future[void])		496
+nim	columns	query_builder/models/surreal/surreal_exec.html#columns,SurrealQuery	proc columns(self: SurrealQuery): Future[seq[string]]		503
+nim	count	query_builder/models/surreal/surreal_exec.html#count,SurrealQuery	proc count(self: SurrealQuery): Future[int]		519
+nim	min	query_builder/models/surreal/surreal_exec.html#min,SurrealQuery,string,Collation	proc min(self: SurrealQuery; column: string; collaction: Collation = None): Future[\n    string]		529
+nim	max	query_builder/models/surreal/surreal_exec.html#max,SurrealQuery,string,Collation	proc max(self: SurrealQuery; column: string; collaction: Collation = None): Future[\n    string]		547
+nim	avg	query_builder/models/surreal/surreal_exec.html#avg,SurrealQuery,string	proc avg(self: SurrealQuery; column: string): Future[float]		565
+nim	sum	query_builder/models/surreal/surreal_exec.html#sum,SurrealQuery,string	proc sum(self: SurrealQuery; column: string): Future[float]		584
+nim	get	query_builder/models/surreal/surreal_exec.html#get,RawSurrealQuery	proc get(self: RawSurrealQuery): Future[seq[JsonNode]]		594
+nim	exec	query_builder/models/surreal/surreal_exec.html#exec,RawSurrealQuery	proc exec(self: RawSurrealQuery): owned(Future[void])		600
+nim	info	query_builder/models/surreal/surreal_exec.html#info,RawSurrealQuery	proc info(self: RawSurrealQuery): Future[JsonNode]		614
+nim	first	query_builder/models/surreal/surreal_exec.html#first,RawSurrealQuery	proc first(self: RawSurrealQuery): Future[Option[JsonNode]]		628
+nim	seeder	query_builder/models/surreal/surreal_exec.html#seeder.t,SurrealConnections,string,untyped	template seeder(rdb: SurrealConnections; tableName: string; body: untyped): untyped		634
+nim	seeder	query_builder/models/surreal/surreal_exec.html#seeder.t,SurrealConnections,string,string,untyped	template seeder(rdb: SurrealConnections; tableName, column: string; body: untyped): untyped		641
+nimgrp	insertid	query_builder/models/surreal/surreal_exec.html#insertId-procs-all	proc		392
+nimgrp	delete	query_builder/models/surreal/surreal_exec.html#delete-procs-all	proc		489
+nimgrp	get	query_builder/models/surreal/surreal_exec.html#get-procs-all	proc		342
+nimgrp	update	query_builder/models/surreal/surreal_exec.html#update-procs-all	proc		451
+nimgrp	first	query_builder/models/surreal/surreal_exec.html#first-procs-all	proc		354
+nimgrp	insert	query_builder/models/surreal/surreal_exec.html#insert-procs-all	proc		378
+nimgrp	seeder	query_builder/models/surreal/surreal_exec.html#seeder-templates-all	template		634

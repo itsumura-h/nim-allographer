@@ -1,0 +1,5 @@
+nimTitle	surreal_query_type	schema_builder/queries/surreal/surreal_query_type.html	module src/allographer/schema_builder/queries/surreal/surreal_query_type		0
+nim	SurrealSchema	schema_builder/queries/surreal/surreal_query_type.html#SurrealSchema	type SurrealSchema		6
+nim	new	schema_builder/queries/surreal/surreal_query_type.html#new,typeSurrealSchema,SurrealConnections,Table	proc new(_: type SurrealSchema; rdb: SurrealConnections; table: Table): SurrealSchema		11
+nim	new	schema_builder/queries/surreal/surreal_query_type.html#new,typeSurrealSchema,SurrealConnections,Table,Column	proc new(_: type SurrealSchema; rdb: SurrealConnections; table: Table; column: Column): SurrealSchema		14
+nimgrp	new	schema_builder/queries/surreal/surreal_query_type.html#new-procs-all	proc		11

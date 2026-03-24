@@ -1,0 +1,2 @@
+nimTitle	change_column	schema_builder/queries/surreal/change_column.html	module src/allographer/schema_builder/queries/surreal/change_column		0
+nim	changeColumn	schema_builder/queries/surreal/change_column.html#changeColumn,SurrealSchema,bool	proc changeColumn(self: SurrealSchema; isReset: bool)		17

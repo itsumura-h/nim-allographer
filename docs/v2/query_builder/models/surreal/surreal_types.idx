@@ -1,0 +1,18 @@
+nimTitle	surreal_types	query_builder/models/surreal/surreal_types.html	module src/allographer/query_builder/models/surreal/surreal_types		0
+nim	SurrealDB	query_builder/models/surreal/surreal_types.html#SurrealDB	object SurrealDB		10
+nim	Connection	query_builder/models/surreal/surreal_types.html#Connection	object Connection		13
+nim	Connections	query_builder/models/surreal/surreal_types.html#Connections	type Connections		19
+nim	SurrealConnections	query_builder/models/surreal/surreal_types.html#SurrealConnections	type SurrealConnections		27
+nim	SurrealQuery	query_builder/models/surreal/surreal_types.html#SurrealQuery	type SurrealQuery		32
+nim	new	query_builder/models/surreal/surreal_types.html#new,typeSurrealQuery,LogSetting,Connections,JsonNode	proc new(_: type SurrealQuery; log: LogSetting; pools: Connections; query: JsonNode): SurrealQuery		42
+nim	RawSurrealQuery	query_builder/models/surreal/surreal_types.html#RawSurrealQuery	type RawSurrealQuery		52
+nim	`$`	query_builder/models/surreal/surreal_types.html#$	proc `$`(self: SurrealConnections | SurrealQuery | RawSurrealQuery): string		60
+nim	SurrealId	query_builder/models/surreal/surreal_types.html#SurrealId	object SurrealId		64
+nim	new	query_builder/models/surreal/surreal_types.html#new,typeSurrealId	proc new(_: type SurrealId): SurrealId		69
+nim	new	query_builder/models/surreal/surreal_types.html#new,typeSurrealId,string,string	proc new(_: type SurrealId; table, id: string): SurrealId		74
+nim	new	query_builder/models/surreal/surreal_types.html#new,typeSurrealId,string	proc new(_: type SurrealId; rawId: string): SurrealId		87
+nim	rawId	query_builder/models/surreal/surreal_types.html#rawId,SurrealId	proc rawId(self: SurrealId): string		99
+nim	`$`	query_builder/models/surreal/surreal_types.html#$,SurrealId	proc `$`(self: SurrealId): string		107
+nim	`%`	query_builder/models/surreal/surreal_types.html#%,SurrealId	proc `%`(self: SurrealId): JsonNode		111
+nimgrp	$	query_builder/models/surreal/surreal_types.html#$-procs-all	proc		60
+nimgrp	new	query_builder/models/surreal/surreal_types.html#new-procs-all	proc		42

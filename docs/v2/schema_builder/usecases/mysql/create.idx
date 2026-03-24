@@ -1,0 +1,2 @@
+nimTitle	create	schema_builder/usecases/mysql/create.html	module src/allographer/schema_builder/usecases/mysql/create		0
+nim	create	schema_builder/usecases/mysql/create.html#create,MysqlConnections,varargs[Table]	proc create(rdb: MysqlConnections; tables: varargs[Table])		12

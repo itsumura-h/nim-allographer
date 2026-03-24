@@ -1,0 +1,4 @@
+nimTitle	create_query_def	schema_builder/usecases/mysql/create_query_def.html	module src/allographer/schema_builder/usecases/mysql/create_query_def		0
+nim	createSchema	schema_builder/usecases/mysql/create_query_def.html#createSchema,MysqlConnections,Table	proc createSchema(rdb: MysqlConnections; table: Table): MysqlSchema		7
+nim	createSchema	schema_builder/usecases/mysql/create_query_def.html#createSchema,MysqlConnections,Table,Column	proc createSchema(rdb: MysqlConnections; table: Table; column: Column): MysqlSchema		10
+nimgrp	createschema	schema_builder/usecases/mysql/create_query_def.html#createSchema-procs-all	proc		7

@@ -1,0 +1,32 @@
+nimTitle	sqlite_query	query_builder/models/sqlite/sqlite_query.html	module src/allographer/query_builder/models/sqlite/sqlite_query		0
+nim	select	query_builder/models/sqlite/sqlite_query.html#select,SqliteConnections,varargs[string]	proc select(self: SqliteConnections; columnsArg: varargs[string]): SqliteQuery		11
+nim	table	query_builder/models/sqlite/sqlite_query.html#table,SqliteConnections,string	proc table(self: SqliteConnections; tableArg: string): SqliteQuery		31
+nim	table	query_builder/models/sqlite/sqlite_query.html#table,SqliteQuery,string	proc table(self: SqliteQuery; tableArg: string): SqliteQuery		47
+nim	`distinct`	query_builder/models/sqlite/sqlite_query.html#distinct,SqliteQuery	proc `distinct`(self: SqliteQuery): SqliteQuery		52
+nim	join	query_builder/models/sqlite/sqlite_query.html#join,SqliteQuery,string,string,string,string	proc join(self: SqliteQuery; table: string; column1: string; symbol: string;\n     column2: string): SqliteQuery		58
+nim	leftJoin	query_builder/models/sqlite/sqlite_query.html#leftJoin,SqliteQuery,string,string,string,string	proc leftJoin(self: SqliteQuery; table: string; column1: string; symbol: string;\n         column2: string): SqliteQuery		77
+nim	where	query_builder/models/sqlite/sqlite_query.html#where,SqliteQuery,string,string,	proc where(self: SqliteQuery; column: string; symbol: string;\n      value: string | int | float): SqliteQuery		99
+nim	where	query_builder/models/sqlite/sqlite_query.html#where,SqliteQuery,string,string,bool	proc where(self: SqliteQuery; column: string; symbol: string; value: bool): SqliteQuery		126
+nim	where	query_builder/models/sqlite/sqlite_query.html#where,SqliteQuery,string,string,_2	proc where(self: SqliteQuery; column: string; symbol: string; value: nil.type): SqliteQuery		153
+nim	orWhere	query_builder/models/sqlite/sqlite_query.html#orWhere,SqliteQuery,string,string,	proc orWhere(self: SqliteQuery; column: string; symbol: string;\n        value: string | int | float | bool): SqliteQuery		177
+nim	orWhere	query_builder/models/sqlite/sqlite_query.html#orWhere,SqliteQuery,string,string,_2	proc orWhere(self: SqliteQuery; column: string; symbol: string; value: nil.type): SqliteQuery		203
+nim	whereBetween	query_builder/models/sqlite/sqlite_query.html#whereBetween,SqliteQuery,string,array[,]	proc whereBetween(self: SqliteQuery; column: string; width: array[2, int | float]): SqliteQuery		224
+nim	whereBetween	query_builder/models/sqlite/sqlite_query.html#whereBetween,SqliteQuery,string,array[,string]	proc whereBetween(self: SqliteQuery; column: string; width: array[2, string]): SqliteQuery		237
+nim	whereNotBetween	query_builder/models/sqlite/sqlite_query.html#whereNotBetween,SqliteQuery,string,array[,]	proc whereNotBetween(self: SqliteQuery; column: string; width: array[2, int | float]): SqliteQuery		250
+nim	whereNotBetween	query_builder/models/sqlite/sqlite_query.html#whereNotBetween,SqliteQuery,string,array[,string]	proc whereNotBetween(self: SqliteQuery; column: string; width: array[2, string]): SqliteQuery		263
+nim	whereIn	query_builder/models/sqlite/sqlite_query.html#whereIn,SqliteQuery,string,seq[]	proc whereIn(self: SqliteQuery; column: string; width: seq[int | float | string]): SqliteQuery		276
+nim	whereNotIn	query_builder/models/sqlite/sqlite_query.html#whereNotIn,SqliteQuery,string,seq[]	proc whereNotIn(self: SqliteQuery; column: string; width: seq[int | float | string]): SqliteQuery		290
+nim	whereNull	query_builder/models/sqlite/sqlite_query.html#whereNull,SqliteQuery,string	proc whereNull(self: SqliteQuery; column: string): SqliteQuery		304
+nim	groupBy	query_builder/models/sqlite/sqlite_query.html#groupBy,SqliteQuery,string	proc groupBy(self: SqliteQuery; column: string): SqliteQuery		316
+nim	having	query_builder/models/sqlite/sqlite_query.html#having,SqliteQuery,string,string,	proc having(self: SqliteQuery; column: string; symbol: string;\n       value: string | int | float | bool): SqliteQuery		324
+nim	having	query_builder/models/sqlite/sqlite_query.html#having,SqliteQuery,string,string,_2	proc having(self: SqliteQuery; column: string; symbol: string; value: nil.type): SqliteQuery		350
+nim	orderBy	query_builder/models/sqlite/sqlite_query.html#orderBy,SqliteQuery,string,Order	proc orderBy(self: SqliteQuery; column: string; order: Order): SqliteQuery		374
+nim	limit	query_builder/models/sqlite/sqlite_query.html#limit,SqliteQuery,int	proc limit(self: SqliteQuery; num: int): SqliteQuery		388
+nim	offset	query_builder/models/sqlite/sqlite_query.html#offset,SqliteQuery,int	proc offset(self: SqliteQuery; num: int): SqliteQuery		393
+nim	raw	query_builder/models/sqlite/sqlite_query.html#raw,SqliteConnections,string	proc raw(self: SqliteConnections; sql: string; arges = newJArray()): RawSqliteQuery		398
+nimgrp	where	query_builder/models/sqlite/sqlite_query.html#where-procs-all	proc		99
+nimgrp	wherebetween	query_builder/models/sqlite/sqlite_query.html#whereBetween-procs-all	proc		224
+nimgrp	wherenotbetween	query_builder/models/sqlite/sqlite_query.html#whereNotBetween-procs-all	proc		250
+nimgrp	orwhere	query_builder/models/sqlite/sqlite_query.html#orWhere-procs-all	proc		177
+nimgrp	having	query_builder/models/sqlite/sqlite_query.html#having-procs-all	proc		324
+nimgrp	table	query_builder/models/sqlite/sqlite_query.html#table-procs-all	proc		31

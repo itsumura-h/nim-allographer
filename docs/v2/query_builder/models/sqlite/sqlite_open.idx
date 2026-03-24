@@ -1,0 +1,4 @@
+nimTitle	sqlite_open	query_builder/models/sqlite/sqlite_open.html	module src/allographer/query_builder/models/sqlite/sqlite_open		0
+nim	dbOpen	query_builder/models/sqlite/sqlite_open.html#dbOpen,typeSQLite3,string,int,int,string	proc dbOpen(_: type SQLite3; database: string = ""; maxConnections: int = 1;\n       timeout = 30; shouldDisplayLog = false; shouldOutputLogFile = false;\n       logDir = ""): SqliteConnections		35
+nim	dbOpen	query_builder/models/sqlite/sqlite_open.html#dbOpen,typeSQLite3,DatabaseUrl,int,int,string	proc dbOpen(_: type SQLite3; databaseUrl: DatabaseUrl; maxConnections: int = 1;\n       timeout = 30; shouldDisplayLog = false; shouldOutputLogFile = false;\n       logDir = ""): SqliteConnections		46
+nimgrp	dbopen	query_builder/models/sqlite/sqlite_open.html#dbOpen-procs-all	proc		35

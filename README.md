@@ -90,22 +90,20 @@ rdb.alter(
 
 ## Index
 <!--ts-->
-* [allographer](#allographer)
-   * [Easy to access Rdb](#easy-to-access-rdb)
-      * [Query Builder](#query-builder)
-      * [Schema Builder](#schema-builder)
-   * [Index](#index)
-   * [Install](#install)
-   * [Configuation](#configuation)
-   * [Createing connection](#createing-connection)
-   * [Logging](#logging)
-   * [Documents](#documents)
-   * [Nim API Documents](#nim-api-documents)
-      * [Schema Builder](#schema-builder-1)
-      * [Query Builder for RDB](#query-builder-for-rdb)
-      * [Query Builder for SurrealDB](#query-builder-for-surrealdb)
-   * [Development](#development)
-      * [Branch naming rule](#branch-naming-rule)
+- [allographer](#allographer)
+  - [Easy to access Rdb](#easy-to-access-rdb)
+    - [Query Builder](#query-builder)
+    - [Schema Builder](#schema-builder)
+  - [Index](#index)
+  - [Install](#install)
+  - [Configuation](#configuation)
+  - [Createing connection](#createing-connection)
+  - [Logging](#logging)
+  - [Documents](#documents)
+  - [Nim API Documents](#nim-api-documents)
+    - [v2](#v2)
+  - [Development](#development)
+    - [Branch naming rule](#branch-naming-rule)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
 <!-- Added by: root, at: Mon Jul 17 07:46:10 UTC 2023 -->
@@ -188,11 +186,6 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 [connection](https://itsumura-h.github.io/nim-allographer/v2/connection.html)  
 [Schema Builder](https://itsumura-h.github.io/nim-allographer/v2/schema_builder.html)  
 [Query Builder](https://itsumura-h.github.io/nim-allographer/v2/query_builder.html)
-
-### v1
-[connection](https://itsumura-h.github.io/nim-allographer/v1/connection.html)  
-[Schema Builder](https://itsumura-h.github.io/nim-allographer/v1/schema_builder.html)  
-[Query Builder](https://itsumura-h.github.io/nim-allographer/v1/query_builder.html)
 
 
 ## Development

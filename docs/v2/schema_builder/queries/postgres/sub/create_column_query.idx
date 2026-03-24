@@ -1,0 +1,6 @@
+nimTitle	create_column_query	schema_builder/queries/postgres/sub/create_column_query.html	module src/allographer/schema_builder/queries/postgres/sub/create_column_query		0
+nim	createColumnString	schema_builder/queries/postgres/sub/create_column_query.html#createColumnString,Table,Column	proc createColumnString(table: Table; column: Column): string		390
+nim	createForeignString	schema_builder/queries/postgres/sub/create_column_query.html#createForeignString,Table,Column	proc createForeignString(table: Table; column: Column): string		453
+nim	createIndexString	schema_builder/queries/postgres/sub/create_column_query.html#createIndexString,Table,Column	proc createIndexString(table: Table; column: Column): string		457
+nim	createUpdatedAtString	schema_builder/queries/postgres/sub/create_column_query.html#createUpdatedAtString,Table,Column	proc createUpdatedAtString(table: Table; column: Column): seq[string]		461
+nim	createCommentColumn	schema_builder/queries/postgres/sub/create_column_query.html#createCommentColumn,Table,Column	proc createCommentColumn(table: Table; column: Column): string		465

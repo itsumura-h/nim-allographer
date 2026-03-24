@@ -1,0 +1,33 @@
+nimTitle	mariadb_generator	query_builder/models/mariadb/query/mariadb_generator.html	module src/allographer/query_builder/models/mariadb/query/mariadb_generator		0
+nim	selectSql	query_builder/models/mariadb/query/mariadb_generator.html#selectSql,MariadbQuery	proc selectSql(self: MariadbQuery): MariadbQuery		43
+nim	fromSql	query_builder/models/mariadb/query/mariadb_generator.html#fromSql,MariadbQuery	proc fromSql(self: MariadbQuery): MariadbQuery		64
+nim	selectFirstSql	query_builder/models/mariadb/query/mariadb_generator.html#selectFirstSql,MariadbQuery	proc selectFirstSql(self: MariadbQuery): MariadbQuery		70
+nim	selectByIdSql	query_builder/models/mariadb/query/mariadb_generator.html#selectByIdSql,MariadbQuery,string	proc selectByIdSql(self: MariadbQuery; key: string): MariadbQuery		75
+nim	joinSql	query_builder/models/mariadb/query/mariadb_generator.html#joinSql,MariadbQuery	proc joinSql(self: MariadbQuery): MariadbQuery		84
+nim	leftJoinSql	query_builder/models/mariadb/query/mariadb_generator.html#leftJoinSql,MariadbQuery	proc leftJoinSql(self: MariadbQuery): MariadbQuery		96
+nim	whereSql	query_builder/models/mariadb/query/mariadb_generator.html#whereSql,MariadbQuery	proc whereSql(self: MariadbQuery): MariadbQuery		108
+nim	orWhereSql	query_builder/models/mariadb/query/mariadb_generator.html#orWhereSql,MariadbQuery	proc orWhereSql(self: MariadbQuery): MariadbQuery		121
+nim	whereBetweenSql	query_builder/models/mariadb/query/mariadb_generator.html#whereBetweenSql,MariadbQuery	proc whereBetweenSql(self: MariadbQuery): MariadbQuery		135
+nim	whereBetweenStringSql	query_builder/models/mariadb/query/mariadb_generator.html#whereBetweenStringSql,MariadbQuery	proc whereBetweenStringSql(self: MariadbQuery): MariadbQuery		151
+nim	whereNotBetweenSql	query_builder/models/mariadb/query/mariadb_generator.html#whereNotBetweenSql,MariadbQuery	proc whereNotBetweenSql(self: MariadbQuery): MariadbQuery		167
+nim	whereNotBetweenStringSql	query_builder/models/mariadb/query/mariadb_generator.html#whereNotBetweenStringSql,MariadbQuery	proc whereNotBetweenStringSql(self: MariadbQuery): MariadbQuery		183
+nim	whereInSql	query_builder/models/mariadb/query/mariadb_generator.html#whereInSql,MariadbQuery	proc whereInSql(self: MariadbQuery): MariadbQuery		199
+nim	whereNotInSql	query_builder/models/mariadb/query/mariadb_generator.html#whereNotInSql,MariadbQuery	proc whereNotInSql(self: MariadbQuery): MariadbQuery		215
+nim	whereNullSql	query_builder/models/mariadb/query/mariadb_generator.html#whereNullSql,MariadbQuery	proc whereNullSql(self: MariadbQuery): MariadbQuery		231
+nim	groupBySql	query_builder/models/mariadb/query/mariadb_generator.html#groupBySql,MariadbQuery	proc groupBySql(self: MariadbQuery): MariadbQuery		243
+nim	havingSql	query_builder/models/mariadb/query/mariadb_generator.html#havingSql,MariadbQuery	proc havingSql(self: MariadbQuery): MariadbQuery		254
+nim	orderBySql	query_builder/models/mariadb/query/mariadb_generator.html#orderBySql,MariadbQuery	proc orderBySql(self: MariadbQuery): MariadbQuery		269
+nim	limitSql	query_builder/models/mariadb/query/mariadb_generator.html#limitSql,MariadbQuery	proc limitSql(self: MariadbQuery): MariadbQuery		282
+nim	offsetSql	query_builder/models/mariadb/query/mariadb_generator.html#offsetSql,MariadbQuery	proc offsetSql(self: MariadbQuery): MariadbQuery		290
+nim	insertSql	query_builder/models/mariadb/query/mariadb_generator.html#insertSql,MariadbQuery	proc insertSql(self: MariadbQuery): MariadbQuery		300
+nim	insertValueSql	query_builder/models/mariadb/query/mariadb_generator.html#insertValueSql,MariadbQuery,JsonNode	proc insertValueSql(self: MariadbQuery; items: JsonNode): MariadbQuery		306
+nim	insertValuesSql	query_builder/models/mariadb/query/mariadb_generator.html#insertValuesSql,MariadbQuery,openArray[JsonNode]	proc insertValuesSql(self: MariadbQuery; rows: openArray[JsonNode]): MariadbQuery		326
+nim	updateSql	query_builder/models/mariadb/query/mariadb_generator.html#updateSql,MariadbQuery	proc updateSql(self: MariadbQuery): MariadbQuery		358
+nim	updateValuesSql	query_builder/models/mariadb/query/mariadb_generator.html#updateValuesSql,MariadbQuery,JsonNode	proc updateValuesSql(self: MariadbQuery; items: JsonNode): MariadbQuery		368
+nim	deleteSql	query_builder/models/mariadb/query/mariadb_generator.html#deleteSql,MariadbQuery	proc deleteSql(self: MariadbQuery): MariadbQuery		390
+nim	deleteByIdSql	query_builder/models/mariadb/query/mariadb_generator.html#deleteByIdSql,MariadbQuery,int,string	proc deleteByIdSql(self: MariadbQuery; id: int; key: string): MariadbQuery		395
+nim	selectCountSql	query_builder/models/mariadb/query/mariadb_generator.html#selectCountSql,MariadbQuery	proc selectCountSql(self: MariadbQuery): MariadbQuery		401
+nim	selectMaxSql	query_builder/models/mariadb/query/mariadb_generator.html#selectMaxSql,MariadbQuery,string	proc selectMaxSql(self: MariadbQuery; column: string): MariadbQuery		412
+nim	selectMinSql	query_builder/models/mariadb/query/mariadb_generator.html#selectMinSql,MariadbQuery,string	proc selectMinSql(self: MariadbQuery; column: string): MariadbQuery		417
+nim	selectAvgSql	query_builder/models/mariadb/query/mariadb_generator.html#selectAvgSql,MariadbQuery,string	proc selectAvgSql(self: MariadbQuery; column: string): MariadbQuery		422
+nim	selectSumSql	query_builder/models/mariadb/query/mariadb_generator.html#selectSumSql,MariadbQuery,string	proc selectSumSql(self: MariadbQuery; column: string): MariadbQuery		427

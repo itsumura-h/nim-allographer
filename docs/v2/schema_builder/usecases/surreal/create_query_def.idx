@@ -1,0 +1,4 @@
+nimTitle	create_query_def	schema_builder/usecases/surreal/create_query_def.html	module src/allographer/schema_builder/usecases/surreal/create_query_def		0
+nim	createSchema	schema_builder/usecases/surreal/create_query_def.html#createSchema,SurrealConnections,Table	proc createSchema(rdb: SurrealConnections; table: Table): SurrealSchema		7
+nim	createSchema	schema_builder/usecases/surreal/create_query_def.html#createSchema,SurrealConnections,Table,Column	proc createSchema(rdb: SurrealConnections; table: Table; column: Column): SurrealSchema		10
+nimgrp	createschema	schema_builder/usecases/surreal/create_query_def.html#createSchema-procs-all	proc		7

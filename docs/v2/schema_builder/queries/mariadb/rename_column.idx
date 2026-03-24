@@ -1,0 +1,2 @@
+nimTitle	rename_column	schema_builder/queries/mariadb/rename_column.html	module src/allographer/schema_builder/queries/mariadb/rename_column		0
+nim	renameColumn	schema_builder/queries/mariadb/rename_column.html#renameColumn,MariadbSchema,bool	proc renameColumn(self: MariadbSchema; isReset: bool)		14

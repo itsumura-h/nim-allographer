@@ -1,0 +1,2 @@
+nimTitle	drop_table	schema_builder/queries/mysql/drop_table.html	module src/allographer/schema_builder/queries/mysql/drop_table		0
+nim	dropTable	schema_builder/queries/mysql/drop_table.html#dropTable,MysqlSchema,bool	proc dropTable(self: MysqlSchema; isReset: bool)		13

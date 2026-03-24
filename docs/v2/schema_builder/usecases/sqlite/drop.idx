@@ -1,0 +1,2 @@
+nimTitle	drop	schema_builder/usecases/sqlite/drop.html	module src/allographer/schema_builder/usecases/sqlite/drop		0
+nim	drop	schema_builder/usecases/sqlite/drop.html#drop,SqliteConnections,varargs[Table]	proc drop(rdb: SqliteConnections; tables: varargs[Table])		11

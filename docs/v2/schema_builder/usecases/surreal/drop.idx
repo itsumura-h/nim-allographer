@@ -1,0 +1,2 @@
+nimTitle	drop	schema_builder/usecases/surreal/drop.html	module src/allographer/schema_builder/usecases/surreal/drop		0
+nim	drop	schema_builder/usecases/surreal/drop.html#drop,SurrealConnections,varargs[Table]	proc drop(rdb: SurrealConnections; tables: varargs[Table])		11

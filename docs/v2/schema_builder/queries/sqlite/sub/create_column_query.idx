@@ -1,0 +1,4 @@
+nimTitle	create_column_query	schema_builder/queries/sqlite/sub/create_column_query.html	module src/allographer/schema_builder/queries/sqlite/sub/create_column_query		0
+nim	createColumnString	schema_builder/queries/sqlite/sub/create_column_query.html#createColumnString,Column	proc createColumnString(column: Column): string		339
+nim	createForeignString	schema_builder/queries/sqlite/sub/create_column_query.html#createForeignString,Column	proc createForeignString(column: Column): string		402
+nim	createIndexString	schema_builder/queries/sqlite/sub/create_column_query.html#createIndexString,Table,Column	proc createIndexString(table: Table; column: Column): string		407

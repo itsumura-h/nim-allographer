@@ -1,0 +1,2 @@
+nimTitle	rename_table	schema_builder/queries/sqlite/rename_table.html	module src/allographer/schema_builder/queries/sqlite/rename_table		0
+nim	renameTable	schema_builder/queries/sqlite/rename_table.html#renameTable,SqliteSchema,bool	proc renameTable(self: SqliteSchema; isReset: bool)		13

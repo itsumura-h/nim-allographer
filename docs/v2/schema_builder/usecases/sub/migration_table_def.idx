@@ -1,0 +1,2 @@
+nimTitle	migration_table_def	schema_builder/usecases/sub/migration_table_def.html	module src/allographer/schema_builder/usecases/sub/migration_table_def		0
+nim	migrationTable	schema_builder/usecases/sub/migration_table_def.html#migrationTable	let migrationTable		4

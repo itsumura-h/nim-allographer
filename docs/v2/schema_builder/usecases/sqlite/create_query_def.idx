@@ -1,0 +1,4 @@
+nimTitle	create_query_def	schema_builder/usecases/sqlite/create_query_def.html	module src/allographer/schema_builder/usecases/sqlite/create_query_def		0
+nim	createSchema	schema_builder/usecases/sqlite/create_query_def.html#createSchema,SqliteConnections,Table	proc createSchema(rdb: SqliteConnections; table: Table): SqliteSchema		7
+nim	createSchema	schema_builder/usecases/sqlite/create_query_def.html#createSchema,SqliteConnections,Table,Column	proc createSchema(rdb: SqliteConnections; table: Table; column: Column): SqliteSchema		10
+nimgrp	createschema	schema_builder/usecases/sqlite/create_query_def.html#createSchema-procs-all	proc		7

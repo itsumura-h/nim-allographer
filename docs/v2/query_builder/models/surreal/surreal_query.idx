@@ -1,0 +1,29 @@
+nimTitle	surreal_query	query_builder/models/surreal/surreal_query.html	module src/allographer/query_builder/models/surreal/surreal_query		0
+nim	select	query_builder/models/surreal/surreal_query.html#select,SurrealConnections,varargs[string]	proc select(self: SurrealConnections; columnsArg: varargs[string]): SurrealQuery		11
+nim	table	query_builder/models/surreal/surreal_query.html#table,SurrealConnections,string	proc table(self: SurrealConnections; tableArg: string): SurrealQuery		27
+nim	table	query_builder/models/surreal/surreal_query.html#table,SurrealQuery,string	proc table(self: SurrealQuery; tableArg: string): SurrealQuery		39
+nim	`distinct`	query_builder/models/surreal/surreal_query.html#distinct,SurrealQuery	proc `distinct`(self: SurrealQuery): SurrealQuery		44
+nim	where	query_builder/models/surreal/surreal_query.html#where,SurrealQuery,string,string,	proc where(self: SurrealQuery; column: string; symbol: string;\n      value: bool | int | float | string | SurrealId): SurrealQuery		92
+nim	where	query_builder/models/surreal/surreal_query.html#where,SurrealQuery,string,string,_2	proc where(self: SurrealQuery; column: string; symbol: string; value: nil.type): SurrealQuery		117
+nim	orWhere	query_builder/models/surreal/surreal_query.html#orWhere,SurrealQuery,string,string,	proc orWhere(self: SurrealQuery; column: string; symbol: string;\n        value: bool | int | float | string | SurrealId): SurrealQuery		141
+nim	orWhere	query_builder/models/surreal/surreal_query.html#orWhere,SurrealQuery,string,string,_2	proc orWhere(self: SurrealQuery; column: string; symbol: string; value: nil.type): SurrealQuery		166
+nim	whereBetween	query_builder/models/surreal/surreal_query.html#whereBetween,SurrealQuery,string,array[,]	proc whereBetween(self: SurrealQuery; column: string; width: array[2, int | float]): SurrealQuery		188
+nim	whereNotBetween	query_builder/models/surreal/surreal_query.html#whereNotBetween,SurrealQuery,string,array[,]	proc whereNotBetween(self: SurrealQuery; column: string; width: array[2, int | float]): SurrealQuery		226
+nim	whereIn	query_builder/models/surreal/surreal_query.html#whereIn,SurrealQuery,string,seq[]	proc whereIn(self: SurrealQuery; column: string; width: seq[int | float | string]): SurrealQuery		262
+nim	whereNotIn	query_builder/models/surreal/surreal_query.html#whereNotIn,SurrealQuery,string,seq[]	proc whereNotIn(self: SurrealQuery; column: string; width: seq[int | float | string]): SurrealQuery		281
+nim	whereNull	query_builder/models/surreal/surreal_query.html#whereNull,SurrealQuery,string	proc whereNull(self: SurrealQuery; column: string): SurrealQuery		300
+nim	groupBy	query_builder/models/surreal/surreal_query.html#groupBy,SurrealQuery,string	proc groupBy(self: SurrealQuery; column: string): SurrealQuery		315
+nim	having	query_builder/models/surreal/surreal_query.html#having,SurrealQuery,string,string,	proc having(self: SurrealQuery; column: string; symbol: string;\n       value: bool | int | float | string): SurrealQuery		323
+nim	having	query_builder/models/surreal/surreal_query.html#having,SurrealQuery,string,string,_2	proc having(self: SurrealQuery; column: string; symbol: string; value: nil.type): SurrealQuery		348
+nim	fetch	query_builder/models/surreal/surreal_query.html#fetch,SurrealQuery,varargs[string]	proc fetch(self: SurrealQuery; columnsArg: varargs[string]): SurrealQuery		372
+nim	orderBy	query_builder/models/surreal/surreal_query.html#orderBy,SurrealQuery,string,Order	proc orderBy(self: SurrealQuery; column: string; order: Order): SurrealQuery		377
+nim	orderBy	query_builder/models/surreal/surreal_query.html#orderBy,SurrealQuery,string,Collation,Order	proc orderBy(self: SurrealQuery; column: string; collation: Collation; order: Order): SurrealQuery		393
+nim	limit	query_builder/models/surreal/surreal_query.html#limit,SurrealQuery,int	proc limit(self: SurrealQuery; num: int): SurrealQuery		409
+nim	start	query_builder/models/surreal/surreal_query.html#start,SurrealQuery,int	proc start(self: SurrealQuery; num: int): SurrealQuery		414
+nim	parallel	query_builder/models/surreal/surreal_query.html#parallel,SurrealQuery	proc parallel(self: SurrealQuery): SurrealQuery		419
+nim	raw	query_builder/models/surreal/surreal_query.html#raw,SurrealConnections,string	proc raw(self: SurrealConnections; sql: string; arges = newJArray()): RawSurrealQuery		441
+nimgrp	where	query_builder/models/surreal/surreal_query.html#where-procs-all	proc		92
+nimgrp	orderby	query_builder/models/surreal/surreal_query.html#orderBy-procs-all	proc		377
+nimgrp	orwhere	query_builder/models/surreal/surreal_query.html#orWhere-procs-all	proc		141
+nimgrp	having	query_builder/models/surreal/surreal_query.html#having-procs-all	proc		323
+nimgrp	table	query_builder/models/surreal/surreal_query.html#table-procs-all	proc		27

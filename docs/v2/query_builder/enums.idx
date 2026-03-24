@@ -1,0 +1,8 @@
+nimTitle	enums	query_builder/enums.html	module src/allographer/query_builder/enums		0
+nim	Asc	query_builder/enums.html#Asc	Order.Asc		1
+nim	Desc	query_builder/enums.html#Desc	Order.Desc		1
+nim	Order	query_builder/enums.html#Order	enum Order		1
+nim	None	query_builder/enums.html#None	Collation.None		5
+nim	Collate	query_builder/enums.html#Collate	Collation.Collate		5
+nim	Numeric	query_builder/enums.html#Numeric	Collation.Numeric		5
+nim	Collation	query_builder/enums.html#Collation	enum Collation		5

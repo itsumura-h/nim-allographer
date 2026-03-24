@@ -1,0 +1,2 @@
+nimTitle	change_column_query	schema_builder/queries/postgres/sub/change_column_query.html	module src/allographer/schema_builder/queries/postgres/sub/change_column_query		0
+nim	changeColumnString	schema_builder/queries/postgres/sub/change_column_query.html#changeColumnString,Table,Column	proc changeColumnString(table: Table; column: Column): seq[string]		358

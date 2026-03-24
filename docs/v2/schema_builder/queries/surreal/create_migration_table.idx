@@ -1,0 +1,2 @@
+nimTitle	create_migration_table	schema_builder/queries/surreal/create_migration_table.html	module src/allographer/schema_builder/queries/surreal/create_migration_table		0
+nim	createMigrationTable	schema_builder/queries/surreal/create_migration_table.html#createMigrationTable,SurrealSchema,bool	proc createMigrationTable(self: SurrealSchema; isReset: bool = false)		16

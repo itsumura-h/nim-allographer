@@ -1,0 +1,2 @@
+nimTitle	poatgres_transaction	query_builder/models/postgres/poatgres_transaction.html	module src/allographer/query_builder/models/postgres/poatgres_transaction		0
+nim	transaction	query_builder/models/postgres/poatgres_transaction.html#transaction.t,PostgresConnections,untyped	template transaction(rdb: PostgresConnections; callback: untyped)		41

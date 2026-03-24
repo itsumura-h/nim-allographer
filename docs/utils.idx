@@ -1,0 +1,2 @@
+nimTitle	utils	utils.html	module src/allographer/utils		0
+nim	getOsName	utils.html#getOsName	proc getOsName(): string		3
