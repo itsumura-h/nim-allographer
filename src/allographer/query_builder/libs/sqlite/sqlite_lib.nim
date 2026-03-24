@@ -13,11 +13,23 @@ proc dbQuote(s: string): string =
 
   if s == "null":
     return "NULL"
-  result = "'"
+  result = newStringOfCap(s.len * 2 + 2)
+  result.add('\'')
   for c in items(s):
     if c == '\'': add(result, "''")
     else: add(result, c)
   add(result, '\'')
+
+proc sqliteQuoteIdent*(name: string): string =
+  ## `PRAGMA` 等で使う SQLite の二重引用符識別子（内部の `"` は `""` にエスケープ）。
+  result = newStringOfCap(name.len + 2)
+  result.add('"')
+  for c in name:
+    if c == '"':
+      result.add("\"\"")
+    else:
+      result.add(c)
+  result.add('"')
 
 proc dbError*(db: PSqlite3) {.noreturn.} =
   ## Raises a `DbError` exception.
@@ -36,14 +48,18 @@ proc dbError*(db: PSqlite3) {.noreturn.} =
   raise e
 
 proc dbFormat*(formatstr: string, args: varargs[string]): string =
-  result = ""
   var a = 0
-  for c in items(formatstr):
-    if c == '?':
-      add(result, dbQuote(args[a]))
+  result = newStringOfCap(formatstr.len + args.len * 8)
+  var segStart = 0
+  for j in 0 ..< formatstr.len:
+    if formatstr[j] == '?':
+      if j > segStart:
+        result.add(formatstr[segStart ..< j])
+      result.add(dbQuote(args[a]))
       inc(a)
-    else:
-      add(result, c)
+      segStart = j + 1
+  if segStart < formatstr.len:
+    result.add(formatstr[segStart ..< formatstr.len])
 
 proc setupQuery(db: PSqlite3, query: string, args: varargs[string]): PStmt =
   assert(not db.isNil, "Database not connected.")
@@ -63,14 +79,20 @@ proc toTypeKind(t: var DbType; x: int32) =
   of SQLITE_TEXT: t.kind = dbVarchar
   else: t.kind = dbUnknown
 
-proc setColumns(columns: var DbColumns; x: PStmt) =
+proc setColumnsStaticMeta(columns: var DbColumns; x: PStmt) =
+  ## ステップ前でも列名・宣言型・テーブル名は取得できる（行に依存しない）。
   let L = column_count(x)
-  setLen(columns, L)
+  setLen(columns, L.int)
   for i in 0'i32 ..< L:
     columns[i].name = $column_name(x, i)
     columns[i].typ.name = $column_decltype(x, i)
-    toTypeKind(columns[i].typ, column_type(x, i))
     columns[i].tableName = $column_table_name(x, i)
+
+proc setColumnsRuntimeTypes(columns: var DbColumns; x: PStmt) =
+  ## 行ごとに変わりうるのは `column_type` のみ。
+  let L = column_count(x)
+  for i in 0'i32 ..< L:
+    toTypeKind(columns[i].typ, column_type(x, i))
 
 iterator instantRows*(db: PSqlite3; dbRows: var DbRows; query: string, args: seq[string]): InstantRow
                       {.tags: [ReadDbEffect].} =
@@ -104,8 +126,9 @@ iterator instantRows*(db: PSqlite3; dbRows: var DbRows; query: string, args: seq
   var stmt = setupQuery(db, query, args)
   try:
     var columns: DbColumns
+    setColumnsStaticMeta(columns, stmt)
     while step(stmt) == SQLITE_ROW:
-      setColumns(columns, stmt)
+      setColumnsRuntimeTypes(columns, stmt)
       dbRows.add(columns)
       yield stmt
   finally:
@@ -125,8 +148,9 @@ iterator instantRows*(db: PSqlite3, dbRows: var DbRows, sqliteStmt: PStmt): Inst
   var sqliteStmt = sqliteStmt
   try:
     var columns: DbColumns
+    setColumnsStaticMeta(columns, sqliteStmt)
     while step(sqliteStmt) == SQLITE_ROW:
-      setColumns(columns, sqliteStmt)
+      setColumnsRuntimeTypes(columns, sqliteStmt)
       dbRows.add(columns)
       yield sqliteStmt
   finally:

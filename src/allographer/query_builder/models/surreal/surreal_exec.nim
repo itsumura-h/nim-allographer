@@ -1,5 +1,7 @@
 import std/asyncdispatch
+import std/deques
 import std/json
+import std/monotimes
 import std/options
 import std/strformat
 import std/strutils
@@ -19,23 +21,58 @@ import ./surreal_query
 # connection
 # ================================================================================
 
-proc getFreeConn(self:SurrealConnections | SurrealQuery | RawSurrealQuery):Future[int] {.async.} =
-  let calledAt = getTime().toUnix()
+proc removePoolWaiter(pools: Connections, w: Future[void]) =
+  var kept = initDeque[Future[void]]()
+  while pools.waiters.len > 0:
+    let x = pools.waiters.popFirst()
+    if x != w:
+      kept.addLast(x)
+  pools.waiters = move(kept)
+
+proc wakeOnePoolWaiter(pools: Connections) =
+  while pools.waiters.len > 0:
+    let w = pools.waiters.popFirst()
+    if w.finished:
+      continue
+    w.complete()
+    break
+
+proc surrealPoolRemainingMs(deadline: MonoTime): int =
+  let left = (deadline - getMonoTime()).inMilliseconds
+  if left <= 0:
+    return 0
+  if left > int64(high(int)):
+    return high(int)
+  result = int(left)
+  if result < 1:
+    result = 1
+
+proc getFreeConn(self: SurrealConnections | SurrealQuery | RawSurrealQuery): Future[int] {.async.} =
+  let deadline = getMonoTime() + initDuration(seconds = self.pools.timeout)
   while true:
-    for i in 0..<self.pools.conns.len:
+    for i in 0 ..< self.pools.conns.len:
       if not self.pools.conns[i].isBusy:
         self.pools.conns[i].isBusy = true
         when defined(check_pool):
           echo "=== getFreeConn ", i
         return i
-    await sleepAsync(10)
-    if getTime().toUnix() >= calledAt + self.pools.timeout:
+    if getMonoTime() >= deadline:
+      return errorConnectionNum
+    let w = newFuture[void]("getFreeConn.poolWait")
+    self.pools.waiters.addLast(w)
+    var ms = surrealPoolRemainingMs(deadline)
+    if ms < 1:
+      ms = 1
+    let ok = await withTimeout(w, ms)
+    if not ok:
+      removePoolWaiter(self.pools, w)
       return errorConnectionNum
 
 
-proc returnConn(self:SurrealConnections | SurrealQuery | RawSurrealQuery, i: int) {.async.} =
+proc returnConn(self: SurrealConnections | SurrealQuery | RawSurrealQuery, i: int) {.async.} =
   if i != errorConnectionNum:
     self.pools.conns[i].isBusy = false
+    wakeOnePoolWaiter(self.pools)
 
 
 # ================================================================================

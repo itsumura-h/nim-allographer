@@ -27,14 +27,18 @@ proc dbQuote(s:string):string =
 
 
 proc dbFormat*(formatstr: string, args: varargs[string]): string =
-  result = ""
   var a = 0
-  for c in items(formatstr):
-    if c == '?':
-      add(result, dbQuote(args[a]))
+  result = newStringOfCap(formatstr.len + args.len * 8)
+  var segStart = 0
+  for j in 0 ..< formatstr.len:
+    if formatstr[j] == '?':
+      if j > segStart:
+        result.add(formatstr[segStart ..< j])
+      result.add(dbQuote(args[a]))
       inc(a)
-    else:
-      add(result, c)
+      segStart = j + 1
+  if segStart < formatstr.len:
+    result.add(formatstr[segStart ..< formatstr.len])
 
 
 proc numToAlphabet*(n:int):string =
@@ -51,31 +55,29 @@ proc numToAlphabet*(n:int):string =
   return result.toLower()
 
 
-proc questionToDaller*(s:string):string =
+proc questionToDaller*(s: string): string =
   ## from `UPDATE user SET name = ?, email = ? WHERE id = ?`
-  ## 
+  ##
   ## to   `UPDATE user SET name = $a, email = $b WHERE id = $c`
   var i = 1
-  for c in s:
-    if c == '?':
-      result.add(&"${numToAlphabet(i)}")
-      i += 1
-    else:
-      result.add(c)
+  var segStart = 0
+  result = newStringOfCap(s.len + 8)
+  for j in 0 ..< s.len:
+    if s[j] == '?':
+      if j > segStart:
+        result.add(s[segStart ..< j])
+      result.add('$')
+      result.add(numToAlphabet(i))
+      inc(i)
+      segStart = j + 1
+  if segStart < s.len:
+    result.add(s[segStart ..< s.len])
 
 
 proc dbFormat*(queryString: string, args: JsonNode): string =
-  result = ""
-  var queryString = queryString.questionToDaller()
-  var i = 0
-  for c in items(queryString):
-    if c == '?':
-      result.add(&"${numToAlphabet(i)}")
-      inc(i)
-    else:
-      add(result, c)
+  let queryPart = queryString.questionToDaller()
 
-  var strArgs:seq[string]
+  var strArgs: seq[string]
   if args.kind == JArray and args.len > 0:
     var i = 1
     for arg in args.items:
@@ -113,5 +115,4 @@ proc dbFormat*(queryString: string, args: JsonNode): string =
       of JArray, JObject:
         strArgs.add(&"LET ${numToAlphabet(i)} = {$arg}; ")
 
-  result = strArgs.join() & result
-  return result
+  result = strArgs.join() & queryPart

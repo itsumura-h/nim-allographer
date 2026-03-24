@@ -1,4 +1,5 @@
 import std/asyncdispatch
+import std/deques
 import std/httpclient
 import std/httpcore
 import std/strformat
@@ -45,8 +46,9 @@ proc dbOpen*(_:type SurrealDB, namespace:string = "", database: string = "", use
       createdAt: getTime().toUnix(),
     )
   let pools = Connections(
-    conns:conns,
-    timeout:timeout
+    conns: conns,
+    timeout: timeout,
+    waiters: initDeque[Future[void]](),
   )
   return SurrealConnections(
     pools: pools,
