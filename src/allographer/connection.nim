@@ -1,5 +1,7 @@
 import ./env
 
+import ./query_builder/libs/database_url
+export DatabaseUrl, DatabaseUrlQuery, ParsedDatabaseUrl, asDatabaseUrl, parseDatabaseUrl, databaseName, sqliteDatabasePath, portOrDefault, requireDatabaseUrlScheme
 
 when isExistsSqlite:
   import ./query_builder/models/sqlite/sqlite_types; export SQLite3, SqliteConnections

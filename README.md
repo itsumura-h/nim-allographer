@@ -18,12 +18,13 @@ import allographer/query_builder
 
 let maxConnections = 95
 let timeout = 30
-let rdb = dbOpen(PostgreSql, "database", "user", "password" "localhost", 5432, maxConnections, timeout)
+let rdb = dbOpen(PostgreSQL, "database", "user", "password", "localhost", 5432, maxConnections, timeout)
 # also available
-# let rdb = dbOpen(Sqlite3, "/path/to/db/sqlite3.db", maxConnections=maxConnections, timeout=timeout)
-# let rdb = dbOpen(MySQL, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
-# let rdb = dbOpen(MariaDB, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
-# let surreal = dbOpen(SurrealDb, "test_ns" "test_db", "user", "password" "http://localhost", 8000, maxConnections, timeout)
+# let rdb = dbOpen(SQLite3, "/path/to/db/sqlite3.db", maxConnections=maxConnections, timeout=timeout)
+# let rdb = dbOpen(MySQL, "database", "user", "password", "localhost", 3306, maxConnections, timeout)
+# let rdb = dbOpen(MariaDB, "database", "user", "password", "localhost", 3306, maxConnections, timeout)
+# let rdb = dbOpen(PostgreSQL, databaseUrl = asDatabaseUrl("postgresql://user:password@localhost:5432/database"), maxConnections=maxConnections, timeout=timeout)
+# let surreal = dbOpen(SurrealDB, "test_ns" "test_db", "user", "password" "http://localhost", 8000, maxConnections, timeout)
 
 proc main(){.async.} =
   let result = await rdb
@@ -139,12 +140,13 @@ database.nim
 ```nim
 import allographer/connection
 
-let rdb* = dbOpen(PostgreSql, "database", "user", "password" "localhost", 5432, maxConnections, timeout)
+let rdb* = dbOpen(PostgreSQL, "database", "user", "password", "localhost", 5432, maxConnections, timeout)
 
 # you can create connection for multiple database at same time.
 let sqliteRdb* = dbOpen(Sqlite3, "/path/to/db/sqlite3.db", maxConnections=maxConnections, timeout=timeout)
-let mysqlRdb* = dbOpen(MySQL, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
-let mariaRdb* = dbOpen(MariaDB, "database", "user", "password" "localhost", 3306, maxConnections, timeout)
+let mysqlRdb* = dbOpen(MySQL, "database", "user", "password", "localhost", 3306, maxConnections, timeout)
+let mariaRdb* = dbOpen(MariaDB, "database", "user", "password", "localhost", 3306, maxConnections, timeout)
+let pgUrlRdb* = dbOpen(PostgreSQL, databaseUrl = asDatabaseUrl("postgresql://user:password@localhost:5432/database"), maxConnections=maxConnections, timeout=timeout)
 let surrealDb* = dbOpen(SurrealDb, "test_ns" "test_db", "user", "password" "http://localhost", 8000, maxConnections, timeout)
 ```
 

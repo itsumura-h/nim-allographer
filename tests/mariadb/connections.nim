@@ -8,4 +8,4 @@ let
   maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
   timeout = getEnv("DB_TIMEOUT").parseInt
 
-let mariadb* = dbOpen(MariaDB, mariadbUrl, maxConnections, timeout, shouldDisplayLog=true)
+let mariadb* = dbOpen(MariaDB, databaseUrl = asDatabaseUrl(mariadbUrl), maxConnections, timeout, shouldDisplayLog=true)

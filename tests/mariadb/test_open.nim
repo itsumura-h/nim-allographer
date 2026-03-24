@@ -27,6 +27,12 @@ suite("MariaDB connection"):
     check(rdb.isConnected())
 
 
+  test("connection with DatabaseUrl"):
+    let url = asDatabaseUrl("mariadb://user:pass@mariadb:3306/database")
+    let rdb = dbOpen(MariaDB, databaseUrl = url)
+    check(rdb.isConnected())
+
+
   test("url is not start with mariadb://"):
     let url = "aaa://user:pass@mariadb:3306/database"
     expect(ValueError):

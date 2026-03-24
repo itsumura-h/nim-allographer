@@ -1,0 +1,174 @@
+---
+description: 323-database-url-for-connectionブランチでの開発時に読み込む
+alwaysApply: false
+---
+dbOpen Database URL 対応 ブランチルール
+===
+
+このブランチで実装することは以下の通りです。
+- `dbOpen` に database URL を使って接続できる新しいオーバーロードを追加し、既存の引数シグネチャは後方互換のため残す。
+- SQLite / MySQL / MariaDB / PostgreSQL は一般的な database URL 仕様に従い、scheme・認証情報・host・port・database path・query を解釈できる設計に整える。
+- URL 解析責務を各 driver の `dbOpen` 実装にベタ書きせず、共通化できる層へ寄せて公開 API を汚さない。
+- 既存の URL 文字列 1 引数版 `dbOpen` と、新しく追加する引数デザインの役割分担を明確にし、曖昧なオーバーロード解決を避ける。
+- 既存テスト・example・README・`documents/rdb/query_builder.md` を、最終仕様と齟齬がない状態へ同期する。
+
+## 進捗
+- [x] `.cursor/rules/project.mdc` と `.cursor/rules/branch.mdc` を確認した
+- [x] 現在のブランチ名に対応するブランチルールファイルが未作成であることを確認した
+- [x] 既存 `dbOpen` 実装が SQLite / MySQL / MariaDB / PostgreSQL / SurrealDB でどう分かれているか確認した
+- [x] MySQL / MariaDB / PostgreSQL にはすでに URL 文字列 1 引数版 `dbOpen` があり、SQLite には未整備であることを確認した
+- [x] 既存 URL 実装が `split` ベースの簡易パーサであり、一般的な URL 仕様を十分に扱えていないことを確認した
+- [x] 今回のブランチでは SurrealDB を対象外とする方針を反映した
+- [x] ブランチルールに改修方針・進捗粒度・参考資料を整理した
+- [x] 一般的な database URL 仕様として採用する範囲を整理する
+- [x] 新しい `dbOpen` オーバーロードの引数デザインを確定する
+- [x] URL 解析の共通 helper / 型配置を決め、driver 差分の閉じ込め方を整理する
+- [x] SQLite の URL 受け口を追加し、ファイルパス指定との意味論を衝突させない
+- [x] MySQL / MariaDB / PostgreSQL の URL 解析を一般仕様に合わせて強化する
+- [x] 正常系・異常系・後方互換のテストを driver ごとに追加または更新する
+- [x] example / README / documents を同期する
+- [x] 実装途中で設計認識に誤りが見つかった場合は、本ファイルの `調査結果・設計まとめ` を更新する
+
+## 参考資料
+- `src/allographer/connection.nim`
+- `src/allographer/query_builder/models/sqlite/sqlite_open.nim`
+- `src/allographer/query_builder/models/mysql/mysql_open.nim`
+- `src/allographer/query_builder/models/mariadb/mariadb_open.nim`
+- `src/allographer/query_builder/models/postgres/postgres_open.nim`
+- `src/allographer/query_builder/models/surreal/surreal_open.nim`
+- `tests/mysql/test_open.nim`
+- `tests/mariadb/test_open.nim`
+- `tests/postgres/test_open.nim`
+- `tests/sqlite/connections.nim`
+- `tests/postgres/connections.nim`
+- `tests/mysql/connections.nim`
+- `tests/mariadb/connections.nim`
+- `example/connections.nim`
+- `README.md`
+- `documents/rdb/query_builder.md`
+- RFC 3986: Uniform Resource Identifier (URI): Generic Syntax
+- PostgreSQL Documentation: Connection URIs
+- MySQL / MariaDB ecosystem documentation for connection URI / DSN conventions
+
+## 調査結果・設計まとめ
+
+### 背景
+
+現状の `dbOpen` は、RDB 系では「分解済みの接続情報を個別引数で渡す形」が基本で、一部 driver にだけ URL 文字列 1 引数版が追加されている。
+
+ただし既存の URL 版は `split` を重ねた簡易実装で、一般的な URL で登場する予約文字・query・省略可能項目・scheme 差異に弱い。API としては URL 対応を名乗りつつ、仕様が狭く不均一な状態である。
+
+今回の目的は、既存 API を壊さずに、database URL を正式な接続入力として扱える `dbOpen` オーバーロード群を整備し、RDB driver 間の設計を揃えることである。SurrealDB は今回の対象外とする。
+
+### 現状の問題
+
+1. SQLite はファイルパス引数のみで、URL ベース接続の入口がない
+2. MySQL / MariaDB / PostgreSQL の URL 版は実装されているが、一般的な URL 仕様を十分に扱えない
+3. driver ごとに URL の扱いがバラバラで、共通 API として学習コストが高い
+4. 既存の URL 文字列 1 引数版と、新たな「database url を使う関数」の住み分けを設計しないと、将来の拡張で曖昧さが増える
+
+### 設計目標
+
+1. 既存 `dbOpen` シグネチャを残しつつ、新しいオーバーロードで URL ベース接続を自然に表現できる
+2. SQLite / MySQL / MariaDB / PostgreSQL は一般的な URI 記法を優先する
+3. URL 解析と driver ごとの接続情報変換を責務分離し、公開 API へ場当たり的分岐を持ち込まない
+4. 後方互換・テスト・文書更新まで含めて、利用者が迷わない状態を作る
+
+### 非目標
+
+1. 既存の個別引数版 `dbOpen` を削除または非推奨化すること
+2. 接続 URL と無関係な query builder / schema builder API を同時に変更すること
+3. SurrealDB の接続モデルや URL 設計をこのブランチで見直すこと
+4. このブランチで ORM 的な接続設定 abstraction を全面導入すること
+
+### API 方針
+
+#### 1. 新しいオーバーロードは「URL であることが呼び出し側から明確に分かる」形を優先する
+
+候補:
+1. `dbOpen(MySQL, url = "...", maxConnections = ..., timeout = ...)`
+2. `dbOpen(MySQL, databaseUrl = "...", maxConnections = ..., timeout = ...)`
+3. URL 専用の薄い型を導入して `dbOpen(MySQL, DatabaseUrl("..."), ...)`
+
+採用した設計:
+- URL 専用の薄い型 `DatabaseUrl` を導入し、`dbOpen(driver, databaseUrl = asDatabaseUrl("..."), ...)` で呼べるようにした
+- 既存の `dbOpen(driver, url: string, ...)` は後方互換のため残し、内部では共通 parser に委譲する
+- SQLite の既存 `dbOpen(SQLite3, path: string, ...)` はそのまま維持し、URL 文字列が渡された場合のみ URL ルートへ寄せる
+
+理由:
+- SQLite では単なる `string` がファイルパスと URL の両方になり得る
+- `DatabaseUrl` に分けることで、既存の string overload と overload 解決が衝突しない
+- 将来の拡張でも、URL 専用の入口を安全に追加しやすい
+
+#### 2. RDB の URL 仕様は一般的な形式を優先する
+
+最低限そろえる対象:
+1. `sqlite:///absolute/path/to/db.sqlite3`
+2. `sqlite://relative/path.db` またはこの扱いを不採用とするなら明文化する
+3. `mysql://user:pass@host:3306/database`
+4. `mariadb://user:pass@host:3306/database`
+5. `postgresql://user:pass@host:5432/database`
+
+設計メモ:
+- `postgres://...` は `postgresql://...` の alias として受ける
+- percent-encoding の decode 要否を明確にする
+- query parameter は現段階で未使用でも、少なくとも破壊的に誤解釈しない方針を取る
+- database 名や password に `:` `/` `@` が含まれるケースを、単純 `split` で壊さない
+
+### 実装方針
+
+#### 1. URL 解析は共通 helper 化を優先する
+
+方針:
+- `scheme`, `user`, `password`, `host`, `port`, `path`, `query` を扱える共通 parser を用意する
+- URL 専用の `DatabaseUrl` を導入し、driver ごとの差分は「解析結果からどう接続情報へ落とすか」に限定する
+- 既存 driver ファイルの `split` ベース処理は置き換え対象とする
+
+#### 2. SQLite は URL とファイルパスの意味論を分ける
+
+要点:
+- 既存 `dbOpen(SQLite3, "/path/to/file.db")` はそのまま維持する
+- URL 版は `asDatabaseUrl(...)` で「これは URL」と明示できる形を優先する
+- `:memory:` や相対パスとの整合を壊さない
+
+#### 3. 既存 URL 1 引数版は互換維持しつつ内部実装を新 parser に寄せる
+
+要点:
+- MySQL / MariaDB / PostgreSQL の既存テストは維持する
+- 既存の `ValueError` / `DbError` の期待が妥当なら保つ
+- 公開 API は残しつつ、仕様の狭さだけを改善する
+
+#### 4. テストは「構文解析」と「実接続」を分けて考える
+
+候補:
+1. URL から接続情報へ正しく分解されることを確認する軽量テスト
+2. 既存の integration 系 `dbOpen(...).isConnected()` テスト
+3. 不正 scheme・不足情報・不正 port・予約文字を含む入力の異常系テスト
+4. SQLite の URL 指定とファイルパス指定の後方互換テスト
+5. SurrealDB の namespace / database 解決規則テスト
+
+### 受け入れ基準
+
+1. 既存の `dbOpen` 呼び出しを壊さずに、新しい URL ベースのオーバーロードを追加できている
+2. SQLite / MySQL / MariaDB / PostgreSQL の URL 設計が一般的な仕様と整合している
+3. SurrealDB の URL 設計が独自要件を満たしつつ、他 driver と読後感が大きく乖離していない
+4. 既存の簡易 `split` 実装を置き換え、予約文字や query を誤解釈しにくい構造になっている
+5. driver ごとの正常系・異常系・後方互換テストが追加または更新されている
+6. example / README / documents / ブランチルールが最終仕様と一致している
+
+### リスク
+
+1. Nim 標準ライブラリだけで URL 解析を行う場合、RFC 3986 の細部を十分に扱えない可能性がある
+2. SQLite の URL 仕様を曖昧にすると、既存のファイルパス API と混同されやすい
+3. SurrealDB の namespace / database の載せ方を誤ると、RDB に寄せたつもりで逆に分かりにくくなる
+4. 既存の `dbOpen(driver, urlString)` と新オーバーロードが衝突すると、Nim の overload 解決で利用者体験が悪化する
+5. 文字列解析だけでなく実接続テストも必要なため、driver 横断で確認コストが上がる
+
+### 段階導入案
+
+1. 採用する URL 仕様と新オーバーロードの表面 API を確定する
+2. 共通 URL parser / 接続情報変換レイヤを用意する
+3. MySQL / MariaDB / PostgreSQL の既存 URL 実装を載せ替える
+4. SQLite の URL 入口を追加する
+5. テストを整備して後方互換と異常系を固める
+6. example / README / documents を同期する

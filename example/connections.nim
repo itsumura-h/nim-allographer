@@ -17,9 +17,9 @@ let
 let
   # rdb* = dbOpen(SQLite3, sqliteHost, maxConnections=maxConnections, shouldDisplayLog=false)
   rdb* = dbOpen(SQLite3, ":memory:", maxConnections=maxConnections, shouldDisplayLog=false)
-  # rdb* = dbOpen(MySQL, database, user, password, mysqlHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=true)
-  # rdb* = dbOpen(MariaDB, database, user, password, mariadbHost, mysqlPort, maxConnections, timeout, shouldDisplayLog=true)
-  # rdb* = dbOpen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=true)
+  # rdb* = dbOpen(MySQL, databaseUrl = asDatabaseUrl("mysql://user:password@" & mysqlHost & ":" & $mysqlPort & "/" & database), maxConnections, timeout, shouldDisplayLog=true)
+  # rdb* = dbOpen(MariaDB, databaseUrl = asDatabaseUrl("mariadb://user:password@" & mariadbHost & ":" & $mysqlPort & "/" & database), maxConnections, timeout, shouldDisplayLog=true)
+  # rdb* = dbOpen(PostgreSQL, databaseUrl = asDatabaseUrl("postgresql://user:password@" & pgHost & ":" & $pgPort & "/" & database), maxConnections, timeout, shouldDisplayLog=true)
 
 template asyncBlock*(body:untyped) =
   (proc(){.async.}=

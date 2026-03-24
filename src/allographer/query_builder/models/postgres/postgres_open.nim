@@ -2,9 +2,9 @@ import std/asyncdispatch
 import std/deques
 import std/tables
 import std/times
-import std/strutils
 import ../database_types
 import ../../error
+import ../../libs/database_url
 import ../../libs/postgres/postgres_rdb
 import ../../libs/postgres/postgres_lib
 import ../../log
@@ -40,15 +40,26 @@ proc dbOpen*(_:type PostgreSQL, database: string, user: string, password: string
 
 proc dbOpen*(_:type PostgreSQL, url: string, maxConnections: int = 1, timeout=30,
               shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): PostgresConnections =
-  ## url: "postgresql://user:pass@host:port/database"
-  let isPostgres = url.startsWith("postgresql://")
-  if not isPostgres:
-    raise newException(ValueError, "Invalid URL format. Expected a PostgreSQL URL starting with 'postgresql://'.")
-  
-  let user = url.split("://")[1].split(":")[0]
-  let password = url.split(":")[2].split("@")[0]
-  let host = url.split("@")[1].split(":")[0]
-  let port = url.split(":")[3].split("/")[0]
-  let database = url.split("/")[^1]
+  return dbOpen(PostgreSQL, asDatabaseUrl(url), maxConnections, timeout, shouldDisplayLog, shouldOutputLogFile, logDir)
 
-  return dbOpen(PostgreSQL, database, user, password, host, port.parseInt, maxConnections, timeout, shouldDisplayLog, shouldOutputLogFile, logDir)
+
+proc dbOpen*(_:type PostgreSQL, databaseUrl: DatabaseUrl, maxConnections: int = 1, timeout=30,
+             shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): PostgresConnections =
+  let parsed = parseDatabaseUrl(databaseUrl)
+  requireDatabaseUrlScheme(parsed, ["postgresql", "postgres"], "PostgreSQL")
+
+  let database = databaseName(parsed)
+  let port = portOrDefault(parsed, 5432)
+  return dbOpen(
+    PostgreSQL,
+    database,
+    parsed.username,
+    parsed.password,
+    parsed.hostname,
+    port,
+    maxConnections,
+    timeout,
+    shouldDisplayLog,
+    shouldOutputLogFile,
+    logDir
+  )

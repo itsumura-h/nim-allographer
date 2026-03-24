@@ -1,15 +1,16 @@
 import std/asyncdispatch
 import std/deques
+import std/strutils
 import std/tables
 import std/times
+import ../../libs/database_url
 import ../../libs/sqlite/sqlite_rdb
 import ../../log
 import ./sqlite_types
 
 
-proc dbOpen*(_:type SQLite3, database: string = "", 
-              maxConnections: int = 1, timeout=30,
-              shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): SqliteConnections =
+proc openSqlite(database: string; maxConnections: int; timeout: int;
+                shouldDisplayLog: bool; shouldOutputLogFile: bool; logDir: string): SqliteConnections =
   var conns = newSeq[Connection](maxConnections)
   for i in 0..<maxConnections:
     var db: PSqlite3
@@ -29,3 +30,23 @@ proc dbOpen*(_:type SQLite3, database: string = "",
     pools: pools,
     log: LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)
   )
+
+
+proc dbOpen*(_:type SQLite3, database: string = "",
+              maxConnections: int = 1, timeout=30,
+              shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): SqliteConnections =
+  if database.len > 0 and database.contains("://"):
+    let parsed = parseDatabaseUrl(asDatabaseUrl(database))
+    requireDatabaseUrlScheme(parsed, ["sqlite"], "SQLite")
+    return openSqlite(sqliteDatabasePath(parsed), maxConnections, timeout, shouldDisplayLog, shouldOutputLogFile, logDir)
+
+  return openSqlite(database, maxConnections, timeout, shouldDisplayLog, shouldOutputLogFile, logDir)
+
+
+proc dbOpen*(_:type SQLite3, databaseUrl: DatabaseUrl,
+             maxConnections: int = 1, timeout=30,
+             shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): SqliteConnections =
+  let parsed = parseDatabaseUrl(databaseUrl)
+  requireDatabaseUrlScheme(parsed, ["sqlite"], "SQLite")
+  let database = sqliteDatabasePath(parsed)
+  return openSqlite(database, maxConnections, timeout, shouldDisplayLog, shouldOutputLogFile, logDir)

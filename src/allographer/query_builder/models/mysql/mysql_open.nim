@@ -1,5 +1,5 @@
 import std/times
-import std/strutils
+import ../../libs/database_url
 import ../../libs/mysql/mysql_rdb
 import ../../error
 import ../../log
@@ -51,15 +51,26 @@ proc dbOpen*(_:type MySQL, database: string, user: string, password: string,
 
 proc dbOpen*(_:type MySQL, url: string, maxConnections=1, timeout=30,
               shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): MysqlConnections =
-  ## url: "mysql://username:password@localhost:3306/DB_Name"
-  let isMariadb = url.startsWith("mysql://")
-  if not isMariadb:
-    raise newException(ValueError, "Invalid URL format. Expected a MariaDB URL starting with 'mariadb://'.")
+  return dbOpen(MySQL, asDatabaseUrl(url), maxConnections, timeout, shouldDisplayLog, shouldOutputLogFile, logDir)
 
-  let user = url.split("://")[1].split(":")[0]
-  let password = url.split(":")[2].split("@")[0]
-  let host = url.split("@")[1].split(":")[0]
-  let port = url.split(":")[3].split("/")[0]
-  let database = url.split("/")[^1]
 
-  return dbOpen(MySQL, database, user, password, host, port.parseInt, maxConnections, timeout, shouldDisplayLog, shouldOutputLogFile, logDir)
+proc dbOpen*(_:type MySQL, databaseUrl: DatabaseUrl, maxConnections=1, timeout=30,
+             shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): MysqlConnections =
+  let parsed = parseDatabaseUrl(databaseUrl)
+  requireDatabaseUrlScheme(parsed, ["mysql"], "MySQL")
+
+  let database = databaseName(parsed)
+  let port = portOrDefault(parsed, 3306)
+  return dbOpen(
+    MySQL,
+    database,
+    parsed.username,
+    parsed.password,
+    parsed.hostname,
+    port,
+    maxConnections,
+    timeout,
+    shouldDisplayLog,
+    shouldOutputLogFile,
+    logDir
+  )

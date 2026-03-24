@@ -7,4 +7,4 @@ let
   maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
   timeout = getEnv("DB_TIMEOUT").parseInt
 
-let postgres* = dbOpen(PostgreSQL, pgUrl, maxConnections, timeout, shouldDisplayLog=true)
+let postgres* = dbOpen(PostgreSQL, databaseUrl = asDatabaseUrl(pgUrl), maxConnections, timeout, shouldDisplayLog=true)
