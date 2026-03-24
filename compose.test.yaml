@@ -1,25 +1,10 @@
 services:
-  app-ubuntu-v1:
+  app:
     build:
       context: .
       dockerfile: ./docker/ubuntu/test.Dockerfile
       args:
-        NIM_VERSION: 1.6.20
-    tty: true
-    volumes:
-      - .:/root/project
-    depends_on:
-      - postgres
-      - mysql
-      - mariadb
-      - surreal
-
-  app-ubuntu-v2:
-    build:
-      context: .
-      dockerfile: ./docker/ubuntu/test.Dockerfile
-      args:
-        NIM_VERSION: 2.2.0
+        NIM_VERSION: "${NIM_VERSION:-2.2.8}"
     tty: true
     volumes:
       - .:/root/project

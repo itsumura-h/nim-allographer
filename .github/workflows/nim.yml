@@ -1,7 +1,11 @@
 name: Build and test Nim
 
 # テストはPRだけ
-on: [pull_request]
+on:
+  pull_request:
+    paths-ignore:
+      - '*.md'
+      - 'documents/*'
 
 # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
 # However, do NOT cancel in-progress runs as we want to allow these production deployments to complete.
@@ -23,25 +27,25 @@ jobs:
     steps:
       - run: echo "no WIP"
 
-  test-on-docker-nim-v1:
+  test-on-docker-nim:
     runs-on: ubuntu-latest
     needs: before
+    strategy:
+      fail-fast: false
+      matrix:
+        nim-version:
+          - 2.0.16
+          - 2.2.8
+    env:
+      NIM_VERSION: ${{ matrix.nim-version }}
     steps:
-    - uses: actions/checkout@v2
-    - name: Build docker image
-      run: docker compose -f compose.test.yaml build app-ubuntu-v1
-    - name: Test
-      run: docker compose -f compose.test.yaml run app-ubuntu-v1 nimble test
-
-  test-on-docker-nim-v2:
-    runs-on: ubuntu-latest
-    needs: before
-    steps:
-    - uses: actions/checkout@v2
-    - name: Build docker image
-      run: docker compose -f compose.test.yaml build app-ubuntu-v2
-    - name: Test
-      run: docker compose -f compose.test.yaml run app-ubuntu-v2 nimble test
+      - uses: actions/checkout@v2
+      - name: Build docker image
+        run: docker compose -f compose.test.yaml build app
+      - name: Start dependencies
+        run: docker compose -f compose.test.yaml up -d postgres mysql mariadb surreal
+      - name: Test
+        run: docker compose -f compose.test.yaml run --rm --no-deps app nimble test
 
 
   # アプリケーションの方を使うことにした
