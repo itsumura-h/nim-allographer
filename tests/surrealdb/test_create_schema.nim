@@ -26,13 +26,13 @@ suite "Schema output after migration":
 
     rdb.create(
       table("int_relation", [
-        Column.increments("id")
+        Column.increments("index")
       ]),
       table("str_relation", [
         Column.uuid("uuid")
       ]),
       table("test_schema_output", [
-        Column.increments("id"),
+        Column.increments("index"),
         Column.integer("integer"),
         Column.smallInteger("smallInteger"),
         Column.mediumInteger("mediumInteger"),

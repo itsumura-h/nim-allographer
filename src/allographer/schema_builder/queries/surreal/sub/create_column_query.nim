@@ -47,10 +47,17 @@ proc autoIncrementValueExpr(table: Table, column: Column): string =
   &"(SELECT `max_index` FROM `_autoincrement_sequences` WHERE `table` = \"{table.name}\" AND `column` = \"{column.name}\" LIMIT 1)[0].max_index + 1"
 
 
+proc isSurrealIdField(column: Column): bool =
+  column.name == "id"
+
+
 # =============================================================================
 # int
 # =============================================================================
 proc createIncrementsColumn(column:Column, table:Table):seq[string] =
+  if isSurrealIdField(column):
+    return @[]
+
   let nextIndexExpr = autoIncrementValueExpr(table, column)
   result.add(&"""
     INSERT INTO `_autoincrement_sequences` {{table: "{table.name}", column: "{column.name}", max_index: 0}};
@@ -67,6 +74,9 @@ proc createIntColumn(column:Column, table:Table):seq[string] =
   var assertClause = ""
 
   if column.isAutoIncrement:
+    if isSurrealIdField(column):
+      return @[]
+
     let nextIndexExpr = autoIncrementValueExpr(table, column)
     query.add(&"""
       INSERT INTO `_autoincrement_sequences` {{table: "{table.name}", column: "{column.name}", max_index: 0}};

@@ -20,6 +20,17 @@ proc notAllowedType*(typ:string) =
   raise newException(DbError, &"type {typ} is not allowed")
 
 
+proc responseMessage(node: JsonNode): string =
+  if node.kind == JObject:
+    for key in ["detail", "information", "result", "message", "error"]:
+      if node.hasKey(key):
+        let value = node[key]
+        if value.kind == JString:
+          return value.getStr()
+        return value.pretty
+  return node.pretty
+
+
 # ==================================================
 # SurrealDB
 # ==================================================
@@ -60,8 +71,8 @@ proc execThenSaveHistory*(rdb:SurrealConnections, tableName:string, queries:seq[
     for query in queries:
       let resp = rdb.raw(query).info().waitFor
       for row in resp:
-        if row["status"].getStr != "OK":
-          raise newException(DbError, row["detail"].getStr)
+        if row.hasKey("status") and row["status"].kind == JString and row["status"].getStr != "OK":
+          raise newException(DbError, responseMessage(row))
     isSuccess = true
   except DbError:
     echo getCurrentExceptionMsg()
@@ -91,10 +102,10 @@ proc execThenSaveHistory*(rdb:SurrealConnections, tableName:string, query:string
   try:
     let resp = rdb.raw(query).info().waitFor
     if resp.kind == JObject:
-      raise newException(DbError, resp["information"].getStr)
+      raise newException(DbError, responseMessage(resp))
     for row in resp:
-      if row["status"].getStr != "OK":
-        raise newException(DbError, row["detail"].getStr)
+      if row.hasKey("status") and row["status"].kind == JString and row["status"].getStr != "OK":
+        raise newException(DbError, responseMessage(row))
     isSuccess = true
   except DbError:
     echo getCurrentExceptionMsg()

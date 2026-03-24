@@ -66,6 +66,8 @@ proc generateSchemaCode(tablesInfo: Table[string, seq[tuple[name: string, typ: s
           "int"
         of "string", "datetime":
           "string"
+        of "object":
+          "JsonNode"
         of "bool":
           "bool"
         of "decimal", "float":
