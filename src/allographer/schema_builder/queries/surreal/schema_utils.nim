@@ -75,7 +75,7 @@ proc execThenSaveHistory*(rdb:SurrealConnections, tableName:string, queries:seq[
     rdb.log.shouldOutputLogFile = logFile
 
   let tableQuery = queries.join("; ")
-  let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
+  let createdAt = now().utc.format("yyyy-MM-dd'T'HH:mm:ss'.'fff'Z'")
   rdb.table("_allographer_migrations").insert(%*{
     "name": tableName,
     "query": tableQuery,
@@ -107,7 +107,7 @@ proc execThenSaveHistory*(rdb:SurrealConnections, tableName:string, query:string
     rdb.log.shouldDisplayLog = logDisplay
     rdb.log.shouldOutputLogFile = logFile
 
-  let createdAt = now().utc.format("yyyy-MM-dd HH:mm:ss'.'fff")
+  let createdAt = now().utc.format("yyyy-MM-dd'T'HH:mm:ss'.'fff'Z'")
   rdb.table("_allographer_migrations").insert(%*{
     "name": tableName,
     "query": query,

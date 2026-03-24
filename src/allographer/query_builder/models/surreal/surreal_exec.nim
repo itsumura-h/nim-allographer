@@ -391,18 +391,15 @@ proc insert*(self:SurrealQuery, items:seq[JsonNode]) {.async.} =
 
 proc insertId*(self:SurrealQuery, items:JsonNode, key="id"):Future[SurrealId] {.async.} =
   ## https://surrealdb.com/docs/surrealql/statements/insert
-  let sql = self.insertValueBuilder(items)
+  var sql = self.insertValueBuilder(items) & " RETURN AFTER"
   self.log.logger(sql)
   let res = self.getRow(sql).await
-  if res.isSome():
-    return SurrealId.new(res.get()[key].getStr())
-  else:
-    return SurrealId.new()
+  return SurrealId.new(res.get()[key].getStr)
 
 
 proc insertId*(self: SurrealQuery, items: seq[JsonNode], key="id"):Future[seq[SurrealId]] {.async.} =
   result = newSeq[SurrealId](items.len)
-  var sql = self.insertValuesBuilder(items)
+  var sql = self.insertValuesBuilder(items) & " RETURN AFTER"
   self.log.logger(sql)
   let res = self.getAllRows(sql).await
   var i = 0
@@ -431,13 +428,10 @@ proc insert*[T](self:SurrealQuery, items:seq[T]) {.async.} =
 
 proc insertId*[T](self:SurrealQuery, items:T, key="id"):Future[SurrealId] {.async.} =
   ## https://surrealdb.com/docs/surrealql/statements/insert
-  let sql = self.insertValueBuilder(%items)
+  var sql = self.insertValueBuilder(%items) & " RETURN AFTER"
   self.log.logger(sql)
   let res = self.getRow(sql).await
-  if res.isSome():
-    return SurrealId.new(res.get()[key].getStr())
-  else:
-    return SurrealId.new()
+  return SurrealId.new(res.get()[key].getStr)
 
 
 proc insertId*[T](self: SurrealQuery, items: seq[T], key="id"):Future[seq[SurrealId]] {.async.} =
@@ -445,7 +439,7 @@ proc insertId*[T](self: SurrealQuery, items: seq[T], key="id"):Future[seq[Surrea
   var jsonItems = newSeq[JsonNode](items.len)
   for i, item in items:
     jsonItems[i] = %item
-  var sql = self.insertValuesBuilder(jsonItems)
+  var sql = self.insertValuesBuilder(jsonItems) & " RETURN AFTER"
   self.log.logger(sql)
   let res = self.getAllRows(sql).await
   var i = 0
@@ -573,7 +567,16 @@ proc avg*(self:SurrealQuery, column:string):Future[float]{.async.} =
   self.log.logger(sql)
   let response =  await self.getRow(sql)
   if response.isSome:
-    return response.get["avg"].getStr().parseFloat()
+    let value = response.get["avg"]
+    case value.kind
+    of JInt:
+      return value.getInt.float
+    of JFloat:
+      return value.getFloat()
+    of JString:
+      return value.getStr().parseFloat()
+    else:
+      return 0.0
   else:
     return 0.0
 

@@ -2,10 +2,64 @@ import std/strutils
 import std/json
 
 
+proc looksLikeRecordId(s: string): bool =
+  let colonPos = s.find(':')
+  if colonPos <= 0 or colonPos >= s.high:
+    return false
+  if s.find(':', colonPos + 1) >= 0:
+    return false
+  if s.contains(' ') or s.contains('"') or s.contains('\''):
+    return false
+  if not (s[0].isAlphaAscii or s[0] == '_'):
+    return false
+  for ch in s[1 ..< colonPos]:
+    if not (ch.isAlphaNumeric or ch == '_'):
+      return false
+  for ch in s[colonPos + 1 .. ^1]:
+    if ch.isSpaceAscii:
+      return false
+  return true
+
+
+proc looksLikeDateTimeValue(s: string): bool =
+  if s.len < 10:
+    return false
+
+  for idx in [0, 1, 2, 3, 5, 6, 8, 9]:
+    if idx >= s.len or not s[idx].isDigit:
+      return false
+
+  if s[4] != '-' or s[7] != '-':
+    return false
+
+  if s.len == 10:
+    return true
+
+  if s.len < 19:
+    return false
+
+  if s[10] notin {'T', ' '}:
+    return false
+
+  for idx in [11, 12, 14, 15, 17, 18]:
+    if idx >= s.len or not s[idx].isDigit:
+      return false
+
+  if s[13] != ':' or s[16] != ':':
+    return false
+
+  if s.len == 19:
+    return true
+
+  return s[19] in {'.', 'Z', '+', '-'}
+
+
 proc dbQuote(s:string):string =
   ## DB quotes the string.
   if s == "null":
     return "NULL"
+  if looksLikeRecordId(s):
+    return s
   result = newStringOfCap(s.len + 2)
   result.add "'"
   for c in items(s):
@@ -93,14 +147,20 @@ proc appendJsonLetClause(result: var string, idx: int, arg: JsonNode, quoteStrin
     result.add($arg.getFloat)
   of JString:
     let val = arg.getStr().replace("\"", "\\\"")
-    if quoteString:
+    if looksLikeRecordId(val):
+      result.add(val)
+    elif looksLikeDateTimeValue(val):
+      result.add("<datetime>\"")
+      result.add(val)
+      result.add("\"")
+    elif quoteString:
       result.add('"')
       result.add(val)
       result.add('"')
     else:
       result.add(val)
   of JNull:
-    result.add("null")
+    result.add("NONE")
   of JArray, JObject:
     result.add($arg)
   result.add("; ")

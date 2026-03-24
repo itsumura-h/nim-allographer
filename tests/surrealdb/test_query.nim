@@ -18,6 +18,10 @@ import ../clear_tables
 
 let rdb = surreal
 
+
+proc isNullish(node: JsonNode, key: string): bool =
+  not node.hasKey(key) or node[key].kind == JNull
+
 # =============================================================================
 # test
 # =============================================================================
@@ -56,9 +60,10 @@ proc setup(rdb:SurrealConnections) =
         %*{
           "name": &"user{i}",
           "email": &"user{i}@example.com",
+          "address": newJNull(),
           "auth": authId,
           "submit_on": &"2020-{month}-01",
-          "submit_at": &"2020-{month}-01 00:00:00",
+          "submit_at": &"2020-{month}-01T00:00:00Z",
         }
       )
 
@@ -74,7 +79,7 @@ suite($rdb & " get"):
     check t[0]["index"].getInt() == 1
     check t[0]["name"].getStr() == "user1"
     check t[0]["email"].getStr() == "user1@example.com"
-    check t[0]["address"].kind == JNull
+    check isNullish(t[0], "address")
     check t[0]["submit_on"].getStr().parse("yyyy-MM-dd'T'hh:mm:ss'Z'").format("yyyy-MM-dd") == "2020-01-01"
     check t[0]["submit_at"].getStr() == "2020-01-01T00:00:00Z"
 
@@ -84,7 +89,7 @@ suite($rdb & " get"):
     check t["index"].getInt() == 1
     check t["name"].getStr() == "user1"
     check t["email"].getStr() == "user1@example.com"
-    check t["address"].kind == JNull
+    check isNullish(t, "address")
     check t["submit_on"].getStr().parse("yyyy-MM-dd'T'hh:mm:ss'Z'").format("yyyy-MM-dd") == "2020-01-01"
     check t["submit_at"].getStr() == "2020-01-01T00:00:00Z"
 
@@ -96,7 +101,7 @@ suite($rdb & " get"):
     check t["index"].getInt() == 1
     check t["name"].getStr() == "user1"
     check t["email"].getStr() == "user1@example.com"
-    check t["address"].kind == JNull
+    check isNullish(t, "address")
     check t["submit_on"].getStr().parse("yyyy-MM-dd'T'hh:mm:ss'Z'").format("yyyy-MM-dd") == "2020-01-01"
     check t["submit_at"].getStr() == "2020-01-01T00:00:00Z"
 
@@ -120,10 +125,10 @@ suite($rdb & " get"):
     let users = rdb.table("user").where("email", "CONTAINS", "10").get().waitFor()
     check users[0]["email"].getStr() == "user10@example.com"
     
-    var user10 = rdb.raw("SELECT * FROM user WHERE string::startsWith(email, \"user10\")").first().waitFor()
+    var user10 = rdb.raw("SELECT * FROM user WHERE string::starts_with(email, \"user10\")").first().waitFor()
     check user10.get()["email"].getStr() == "user10@example.com"
 
-    user10 = rdb.raw("SELECT * FROM user WHERE string::endsWith(email, \"10@example.com\")").first().waitFor()
+    user10 = rdb.raw("SELECT * FROM user WHERE string::ends_with(email, \"10@example.com\")").first().waitFor()
     check user10.get()["email"].getStr() == "user10@example.com"
 
 
@@ -149,7 +154,7 @@ suite($rdb & " get"):
       check row["index"].getInt() == ids[i]
       check row["name"].getStr() == &"user{ids[i]}" 
       check row["email"].getStr() == &"user{ids[i]}@example.com" 
-      check row["address"].kind == JNull
+      check isNullish(row, "address")
       check row["submit_on"].getStr() == &"2020-0{ids[i]}-01T00:00:00Z"
 
 
@@ -158,7 +163,7 @@ suite($rdb & " get"):
     check t["index"].getInt() == 1
     check t["name"].getStr() == "user1" 
     check t["email"].getStr() == "user1@example.com" 
-    check t["address"].kind == JNull
+    check isNullish(t, "address")
     check t["submit_on"].getStr() == "2020-01-01T00:00:00Z"
 
 
@@ -172,7 +177,7 @@ suite($rdb & " get"):
       check row["index"].getInt() == ids[i]
       check row["name"].getStr() == &"user{ids[i]}" 
       check row["email"].getStr() == &"user{ids[i]}@example.com" 
-      check row["address"].kind == JNull
+      check isNullish(row, "address")
       check row["submit_on"].getStr() == &"2020-0{ids[i]}-01T00:00:00Z"
 
 
@@ -189,7 +194,7 @@ suite($rdb & " get"):
       check row["index"].getInt() == ids[i]
       check row["name"].getStr() == &"user{ids[i]}" 
       check row["email"].getStr() == &"user{ids[i]}@example.com" 
-      check row["address"].kind == JNull
+      check isNullish(row, "address")
       check row["submit_on"].getStr() == &"2020-0{ids[i]}-01T00:00:00Z"
 
 
@@ -206,7 +211,7 @@ suite($rdb & " get"):
       check row["index"].getInt() == ids[i]
       check row["name"].getStr() == &"user{ids[i]}" 
       check row["email"].getStr() == &"user{ids[i]}@example.com" 
-      check row["address"].kind == JNull
+      check isNullish(row, "address")
       check row["submit_on"].getStr() == &"2020-0{ids[i]}-01T00:00:00Z"
 
 
@@ -223,7 +228,7 @@ suite($rdb & " get"):
       check row["index"].getInt() == ids[i]
       check row["name"].getStr() == &"user{ids[i]}" 
       check row["email"].getStr() == &"user{ids[i]}@example.com" 
-      check row["address"].kind == JNull
+      check isNullish(row, "address")
       check row["submit_on"].getStr() == &"2020-0{ids[i]}-01T00:00:00Z"
 
 
@@ -240,7 +245,7 @@ suite($rdb & " get"):
       check row["index"].getInt() == ids[i]
       check row["name"].getStr() == &"user{ids[i]}" 
       check row["email"].getStr() == &"user{ids[i]}@example.com" 
-      check row["address"].kind == JNull
+      check isNullish(row, "address")
       check row["submit_on"].getStr() == &"2020-0{ids[i]}-01T00:00:00Z"
 
 
@@ -347,10 +352,10 @@ suite($rdb & " insert"):
     .waitFor
 
     var res = rdb.table("user").find(id).waitFor
-    check res.get["email"] == newJNull()
+    check not res.get.hasKey("email") or res.get["email"].kind == JNull
 
-    res = rdb.table("user").where("email", "is", nil).first().waitFor
-    check res.get["email"] == newJNull()
+    res = rdb.table("user").whereNull("email").first().waitFor
+    check not res.get.hasKey("email") or res.get["email"].kind == JNull
 
   
 

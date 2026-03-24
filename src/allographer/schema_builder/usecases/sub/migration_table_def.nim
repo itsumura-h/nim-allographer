@@ -2,7 +2,7 @@ import ../../models/table
 import ../../models/column
 
 let migrationTable* :Table = table("_allographer_migrations", [
-  Column.increments("id"),
+  Column.increments("index"),
   Column.string("name"),
   Column.text("query"),
   Column.string("checksum").index(),

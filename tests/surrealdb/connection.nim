@@ -3,13 +3,25 @@ import std/os
 import std/strutils
 import ../../src/allographer/connection
 
-let
-  database = getEnv("DB_DATABASE")
-  user = getEnv("DB_USER")
-  password = getEnv("DB_PASSWORD")
-  surrealHost = getEnv("SURREAL_HOST")
-  surrealPort = getEnv("SURREAL_PORT").parseInt
-  maxConnections = getEnv("DB_MAX_CONNECTION").parseInt
-  timeout = getEnv("DB_TIMEOUT").parseInt
+proc envStringDefault(key, defaultValue: string): string =
+  let value = getEnv(key)
+  if value.len == 0:
+    return defaultValue
+  return value
 
-let surreal* = dbOpen(SurrealDB, "test", "test", "user", "pass", surrealHost, surrealPort, 5, 30, shouldDisplayLog=true).waitFor()
+proc envIntDefault(key: string, defaultValue: int): int =
+  let value = getEnv(key)
+  if value.len == 0:
+    return defaultValue
+  return value.parseInt
+
+let
+  database = envStringDefault("DB_DATABASE", "test")
+  user = envStringDefault("DB_USER", "user")
+  password = envStringDefault("DB_PASSWORD", "pass")
+  surrealHost = envStringDefault("SURREAL_HOST", "http://surreal")
+  surrealPort = envIntDefault("SURREAL_PORT", 8000)
+  maxConnections = envIntDefault("DB_MAX_CONNECTION", 5)
+  timeout = envIntDefault("DB_TIMEOUT", 30)
+
+let surreal* = dbOpen(SurrealDB, database, database, user, password, surrealHost, surrealPort, maxConnections, timeout, shouldDisplayLog=true).waitFor()

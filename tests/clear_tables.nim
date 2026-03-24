@@ -7,7 +7,7 @@ import ../src/allographer/query_builder
 
 proc clearTables*(rdb:PostgresConnections) {.async.} =
   try:
-    let tables = rdb.table("_allographer_migrations").orderBy("id", Desc) .get().await
+    let tables = rdb.table("_allographer_migrations").orderBy("index", Desc) .get().await
     for table in tables:
       let tableName = table["name"].getStr()
       if not tableName.startsWith("_"):
@@ -20,7 +20,7 @@ proc clearTables*(rdb:PostgresConnections) {.async.} =
 
 proc clearTables*(rdb:MariaDBConnections) {.async.} =
   try:
-    let tables = rdb.table("_allographer_migrations").orderBy("id", Desc) .get().await
+    let tables = rdb.table("_allographer_migrations").orderBy("index", Desc) .get().await
     for table in tables:
       let tableName = table["name"].getStr()
       if not tableName.startsWith("_"):
@@ -33,7 +33,7 @@ proc clearTables*(rdb:MariaDBConnections) {.async.} =
 
 proc clearTables*(rdb:MySQLConnections) {.async.} =
   try:
-    let tables = rdb.table("_allographer_migrations").orderBy("id", Desc) .get().await
+    let tables = rdb.table("_allographer_migrations").orderBy("index", Desc) .get().await
     for table in tables:
       let tableName = table["name"].getStr()
       if not tableName.startsWith("_"):
@@ -46,7 +46,7 @@ proc clearTables*(rdb:MySQLConnections) {.async.} =
 
 proc clearTables*(rdb:SqliteConnections) {.async.} =
   try:
-    let tables = rdb.table("_allographer_migrations").orderBy("id", Desc) .get().await
+    let tables = rdb.table("_allographer_migrations").orderBy("index", Desc) .get().await
     for table in tables:
       let tableName = table["name"].getStr()
       if not tableName.startsWith("_"):
@@ -60,7 +60,7 @@ proc clearTables*(rdb:SqliteConnections) {.async.} =
 proc clearTables*(rdb:SurrealConnections) {.async.} =
   try:
     let dbInfo = rdb.raw("INFO FOR DB").info().await
-    let tables = dbInfo[0]["result"]["tb"]
+    let tables = dbInfo[0]["result"]["tables"]
     for (table, _) in tables.pairs:
       if not table.startsWith("_"):
         rdb.raw(&"REMOVE TABLE {table}").exec().await

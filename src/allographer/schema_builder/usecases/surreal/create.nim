@@ -18,7 +18,7 @@ proc create*(rdb:SurrealConnections, tables:varargs[Table]) =
   var query = createSchema(rdb, migrationTable)
   createSequenceTable(rdb)
   resetSequence(rdb, Table(name:"_allographer_migrations"))
-  query.createMigrationTable()
+  query.createMigrationTable(isReset)
 
   if isReset:
     # delete table in reverse loop in tables
