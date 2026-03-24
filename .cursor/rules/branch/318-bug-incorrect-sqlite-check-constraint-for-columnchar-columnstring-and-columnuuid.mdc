@@ -1,0 +1,130 @@
+---
+description: 318-bug-incorrect-sqlite-check-constraint-for-columnchar-columnstring-and-columnuuidブランチでの開発時に読み込む
+alwaysApply: false
+---
+SQLite CHECK Constraint 引用誤り修正 ブランチルール
+===
+
+このブランチで実装することは以下の通りです。
+- SQLite の schema builder において、`Column.char`, `Column.string`, `Column.uuid` が生成する `CHECK` 制約の列参照が文字列リテラル扱いになっている不具合を修正する。
+- `CREATE TABLE` と `ALTER TABLE ... ADD COLUMN` の両方で、`length('column_name')` ではなく列値を参照する `length(column_name)` 系の SQL を生成するように整える。
+- SQLite driver の修正を公開 API へ漏らさず、driver 内部の SQL 生成責務に閉じ込める。
+- 長さ制約の既定値あり・既定値なしの両ケースで、`char` `string` `uuid` の意味論が崩れないことを確認できるテストを整備する。
+- 必要に応じて README / `documents/rdb/schema_builder.md` の SQLite 例を同期し、誤った `CHECK (length('email') <= 255)` 表記を残さない。
+
+## 進捗
+- [x] `.cursor/rules/project.mdc` と `.cursor/rules/branch.mdc` を確認した
+- [x] 現在のブランチ名に対応するブランチルールファイルが未作成であることを確認した
+- [x] SQLite の `CHECK` 生成箇所を調査し、`create_column_query.nim` と `add_column_query.nim` の両方に同種の問題があることを確認した
+- [x] 対象カラム型が `Column.char`, `Column.string`, `Column.uuid` の 3 系統であることを確認した
+- [x] ドキュメントに同じ誤表記が残っていることを確認した
+- [x] ブランチルールに改修方針・進捗粒度・参考資料を整理した
+- [x] SQLite schema builder の `CHECK` 制約生成を、列名を文字列リテラル化しない形式へ修正する
+- [x] `CREATE TABLE` 経路のテストを追加または更新し、生成 SQL が列値長を検査することを確認する
+- [x] `ADD COLUMN` 経路のテストを追加または更新し、生成 SQL が列値長を検査することを確認する
+- [x] `char` `string` `uuid` の既定長と明示長の両ケースで回帰確認する
+- [x] 必要な README / `documents/rdb/schema_builder.md` の記述を同期する
+- [ ] 実装途中で設計認識に誤りが見つかった場合は、本ファイルの `調査結果・設計まとめ` を更新する
+
+## 参考資料
+- `src/allographer/schema_builder/queries/sqlite/sub/create_column_query.nim`
+- `src/allographer/schema_builder/queries/sqlite/sub/add_column_query.nim`
+- `tests/sqlite/test_create_schema.nim`
+- `tests/sqlite/test_schema.nim`
+- `documents/rdb/schema_builder.md`
+- `README.md`
+- SQLite Documentation: CHECK constraints
+- SQLite Documentation: core functions `length(...)`
+
+## 調査結果・設計まとめ
+
+### 背景
+
+SQLite 実装では、文字列長を制限するために `CHECK (length(...) <= N)` を列定義へ付与している。
+
+しかし現状の SQL 生成は `length('{column.name}')` となっており、列値ではなく列名そのものを単一引用符付きの文字列リテラルとして評価している。
+
+その結果、たとえば `name` 列では常に `length('name') == 4` と評価されるため、期待した列値バリデーションにならない。
+
+### 現状の問題
+
+1. SQLite の `CREATE TABLE` 用列生成で `CHECK (length('{column.name}') <= {maxLength})` を出力している
+2. SQLite の `ADD COLUMN` 用列生成でも同じ誤りを重複して持っている
+3. 影響範囲が `Column.char`, `Column.string`, `Column.uuid` にまたがっている
+4. ドキュメント例にも同じ誤表記があり、利用者が誤仕様と誤解する余地がある
+5. SQL 生成の不具合であり、公開 API ではなく SQLite driver 内部責務として直すべき問題である
+
+### 設計目標
+
+1. SQLite で生成される長さ `CHECK` 制約が常に列値を参照する
+2. `char`, `string`, `uuid` の API 意味論を変えずに不具合のみを修正する
+3. `create` と `add column` の両経路で SQL 生成規則を揃える
+4. 既存の RDB 向け共通 API を汚さず、SQLite 実装へ変更を閉じ込める
+5. テストと文書で回帰防止できる状態にする
+
+### 非目標
+
+1. SQLite 以外の driver の長さ制約仕様を同時に変更すること
+2. `Column.char`, `Column.string`, `Column.uuid` の既定長そのものを見直すこと
+3. schema builder 全体の quoting 戦略をこのブランチで全面再設計すること
+4. 公開 API の追加・削除・引数変更を行うこと
+
+### 実装方針
+
+#### 1. SQLite の長さ `CHECK` 制約は列値参照に統一する
+
+変更対象:
+- `src/allographer/schema_builder/queries/sqlite/sub/create_column_query.nim`
+- `src/allographer/schema_builder/queries/sqlite/sub/add_column_query.nim`
+
+方針:
+- `length('{column.name}')` を列値参照の式へ修正する
+- `char`, `string`, `uuid` の 3 系統で同じルールを適用する
+- `CREATE TABLE` と `ADD COLUMN` で生成式の差異を作らない
+
+#### 2. 列名の扱いは SQLite 列参照として妥当な形を維持する
+
+要点:
+- 単一引用符 `'...'` は文字列リテラルなので使用しない
+- 既存の SQLite SQL 生成スタイルに合わせ、列参照として解釈される形を採用する
+- 必要なら identifier quoting の既存ルールを確認し、単純な文字列置換ではなく SQLite 方言として自然な表現に寄せる
+- 共通 helper を `schema_utils` に置き、`CREATE TABLE` / `ADD COLUMN` の両経路で同じ生成規則を使う
+
+#### 3. テストは SQL 文字列と実動作の両面を意識して追加する
+
+候補:
+1. schema 生成テストで `CHECK` 句が列値参照になっていることを確認する
+2. `Column.string("name")` の既定長ケースを確認する
+3. `Column.char("name", 20)` の明示長ケースを確認する
+4. `Column.uuid("uuid")` の既定長ケースを確認する
+5. `add()` 経路でも同じ `CHECK` 句になることを確認する
+
+### 受け入れ基準
+
+1. SQLite の `char`, `string`, `uuid` が生成する `CHECK` 制約で列名が単一引用符付き文字列になっていない
+2. `CREATE TABLE` と `ADD COLUMN` の両方で同じ修正が反映されている
+3. 追加または更新したテストで不具合再発を防止できる
+4. 必要なドキュメント例が実装と一致している
+5. 公開 API 変更なしで SQLite driver 内に修正が閉じ込められている
+
+### 参照仕様
+
+- SQLite Documentation: CHECK constraints
+  https://www.sqlite.org/lang_createtable.html#ckconst
+- SQLite Documentation: Built-In Scalar SQL Functions
+  https://www.sqlite.org/lang_corefunc.html#length
+
+### リスク
+
+1. 列名参照の quoting 形式を誤ると、今度は予約語や特殊文字を含む列名で不整合が出る可能性がある
+2. `create` と `add column` の片方だけ修正すると、経路差による再発が起きる
+3. ドキュメント未更新のままだと、修正後も利用者が誤った SQL 例を参照して混乱する
+4. SQL 文字列比較系テストだけだと、実際の制約評価の誤りを見逃す可能性がある
+
+### 段階導入案
+
+1. 影響箇所と既存 SQLite テストを整理する
+2. `create` / `add column` の SQL 生成を修正する
+3. `char` / `string` / `uuid` の回帰テストを追加または更新する
+4. 必要な README / documents を同期する
+5. 実装差分が設計とずれたら本ファイルを更新する

@@ -64,7 +64,7 @@ rdb.alter(
   ])
 )
 ```
-`>> ALTER TABLE "users" ADD COLUMN 'email' UNIQUE DEFAULT '' CHECK (length('email') <= 255)`
+`>> ALTER TABLE "users" ADD COLUMN 'email' VARCHAR UNIQUE DEFAULT '' CHECK (length("email") <= 255)`
 
 
 ### change column
