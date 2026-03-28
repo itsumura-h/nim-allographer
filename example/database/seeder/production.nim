@@ -8,4 +8,7 @@ proc seed() =
   if env != "production":
     raise newException(Exception, "This command is only available in the production environment")
 
+  userSeeder().waitFor()
+  postSeeder().waitFor()
+
 seed()
