@@ -5,7 +5,7 @@ import ../src/allographer/schema_builder
 import ./connections
 
 asyncBlock:
-  rdb.schema([
+  rdb.create([
     table("auth",[
       Column().increments("id"),
       Column().string("auth")
