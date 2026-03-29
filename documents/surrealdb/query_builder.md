@@ -1,5 +1,8 @@
 Example: Query Builder for SurrealDB
 ===
+> [!WARNING]
+> SurrealDB support is planned for v3. The current implementation is for reference only and may not work as expected in v2.
+
 [back](../../README.md)
 
 ## index
