@@ -1,4 +1,5 @@
 import json
+import std/options
 import ../../src/allographer/query_builder
 import repository
 
@@ -13,5 +14,5 @@ proc newService*():Service =
 proc getUsers*(this:Service):seq[JsonNode] =
   return this.repository.getUsers()
 
-proc getUser*(this:Service, id:int):JsonNode =
+proc getUser*(this:Service, id:int):Option[JsonNode] =
   return this.repository.getUser(id)

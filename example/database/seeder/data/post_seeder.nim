@@ -23,9 +23,9 @@ proc postSeeder*() {.async.} =
         id: $genOid(),
         title: &"post {i}",
         content: &"content {i}",
-        userId: users[i-1].id,
-        createdAt: now().toTime().toUnix().int,
-        updatedAt: now().toTime().toUnix().int
+        user_id: users[i-1].id,
+        created_at: now().toTime().toUnix().int,
+        updated_at: now().toTime().toUnix().int
       )
       postList.add(%row)
     

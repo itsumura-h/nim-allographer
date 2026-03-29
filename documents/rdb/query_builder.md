@@ -48,13 +48,20 @@ import allographer/connection
 
 let maxConnections = 95
 let timeout = 30
-let rdb = dbOpen(PostgreSQL, "database", "user", "password", "localhost", 5432, maxConnections, timeout)
 
-# also available
-# let rdb = dbOpen(Sqlite3, "/path/to/db/sqlite3.db", maxConnections=maxConnections, timeout=timeout)
-# let rdb = dbOpen(MySQL, "database", "user", "password", "localhost", 3306, maxConnections, timeout)
-# let rdb = dbOpen(MariaDB, "database", "user", "password", "localhost", 3306, maxConnections, timeout)
-# let rdb = dbOpen(PostgreSQL, databaseUrl = asDatabaseUrl("postgresql://user:password@localhost:5432/database"), maxConnections=maxConnections, timeout=timeout)
+# Using connection URL (Recommended)
+let rdb = dbOpen(PostgreSQL, "postgresql://user:password@localhost:5432/database", maxConnections, timeout)
+
+# Using positional arguments
+# let rdb = dbOpen(PostgreSQL, "database", "user", "password", "localhost", 5432, maxConnections, timeout)
+
+# SQLite
+# let rdb = dbOpen(SQLite3, "/path/to/db.sqlite3", maxConnections, timeout)
+# let rdb = dbOpen(SQLite3, ":memory:", maxConnections, timeout)
+
+# MySQL / MariaDB
+# let rdb = dbOpen(MySQL, "mysql://user:password@localhost:3306/database", maxConnections, timeout)
+# let rdb = dbOpen(MariaDB, "mariadb://user:password@localhost:3306/database", maxConnections, timeout)
 ```
 
 ## SELECT
@@ -294,7 +301,7 @@ let users = rdb
 
 ### paginate
 ```nim
-rdb.table("users").delete(2)
+rdb.table("users").delete(2).await
 let users = rdb
             .table("users")
             .select("id", "name")
@@ -486,7 +493,7 @@ rdb.table("users").insert(
 ```nim
 import allographer/query_builder
 
-rdb.table("users").inserts(
+echo rdb.table("users").insert(
   @[
     %*{"name": "John", "email": "John@gmail.com", "address": "London"},
     %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
@@ -531,7 +538,7 @@ echo rdb.table("users").insertId(
 ```nim
 import allographer/query_builder
 
-echo rdb.table("users").insertsID(
+echo rdb.table("users").insertId(
   @[
     %*{"name": "John", "email": "John@gmail.com", "address": "London"},
     %*{"name": "Paul", "email": "Paul@gmail.com", "address": "London"},
@@ -669,7 +676,7 @@ Except of `count`, these functions return `Option` type.
 ```nim
 import allographer/query_builder
 
-echo rdb.table("users").count()
+echo rdb.table("users").count().await
 >> 10       # int
 
 let response = await rdb.table("users").max("name").await

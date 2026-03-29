@@ -4,7 +4,7 @@ import ../src/allographer/connection
 import ../src/allographer/query_builder
 
 
-let db = dbOpen(SurrealDB, "test:test", "user", "pass", "http://surreal", 8000, 10, 30, true, true)
+let db = dbOpen(SurrealDB, "test", "test", "user", "pass", "http://surreal", 8000, 10, 30, true, true).waitFor()
 db.raw("DELETE FROM account").exec().waitFor
 echo db.raw("INFO FOR DB").get().waitFor
 

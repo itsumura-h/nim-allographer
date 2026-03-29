@@ -1,4 +1,4 @@
-import times, json, typeinfo, macros
+import times, json, macros
 
 # type Type = ref object
 #   id: int
@@ -13,8 +13,8 @@ var response = @[
                 ]
 
 macro orm(head, body: untyped) =
-  echo head
-  echo body
+  echo repr(head)
+  echo repr(body)
 
 orm typ:
  response

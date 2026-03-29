@@ -6,7 +6,7 @@ import ../src/allographer/connection
 import ../src/allographer/query_builder
 
 proc main() {.async.} =
-  let surreal = dbOpen(SurrealDb, "test", "test", "user", "pass", "http://surreal", 8000, 10, 30, true, false).await
+  let surreal = await dbOpen(SurrealDb, "test", "test", "user", "pass", "http://surreal", 8000, 10, 30, true, false)
   surreal.raw("DELETE type").exec().await
 
   surreal.table("type").insert(%*[
@@ -139,7 +139,7 @@ DEFINE FIELD float ON TABLE type TYPE float;
 DEFINE FIELD int ON TABLE type TYPE int;
 DEFINE FIELD string ON TABLE type TYPE string;
 """
-    surreal.raw(define).exec().await()
+    surreal.raw(define).exec().await
 
     echo surreal.raw("INFO FOR TABLE type").info().await
 
@@ -156,7 +156,7 @@ DEFINE FIELD string ON TABLE type TYPE string;
         string: "aaa"
       }
     """,
-    $max, now().format("yyyy-MM-dd'T'HH:mm:sszzz"))
+    %*[$max, now().format("yyyy-MM-dd'T'HH:mm:sszzz")])
     .exec()
     .await
 

@@ -1,8 +1,6 @@
 import std/asyncdispatch
 import std/strformat
 import std/json
-import progress
-import bcrypt
 import ../src/allographer/query_builder
 import ../src/allographer/schema_builder
 from ./connections import rdb
@@ -20,7 +18,7 @@ rdb.create([
     Column.string("password").nullable(),
     Column.string("address").nullable(),
     Column.date("birth_date").nullable(),
-    Column.foreign("auth_id").reference("id").on("auth").onDelete(SET_NULL)
+    Column.foreign("auth_id").reference("id").onTable("auth").onDelete(SET_NULL)
   ])
 ])
 
@@ -32,27 +30,19 @@ seeder rdb, "auth":
   ])
   .waitFor
 
-# プログレスバー
 let total = 20
-var pb = newProgressBar(total=total) # totalは分母
-
-pb.start()
 var insertData: seq[JsonNode]
 for i in 1..total:
-  let salt = genSalt(10)
-  let password = hash(&"password{i}", salt)
   let authId = if i mod 2 == 0: 1 else: 2
   insertData.add(
     %*{
       "name": &"user{i}",
       "email": &"user{i}@gmail.com",
-      "password": password,
+      "password": &"password{i}",
       "auth_id": authId
     }
   )
-  pb.increment()
 
-pb.finish()
 rdb.table("users").insert(insertData).waitFor()
 echo rdb.table("users").get().waitFor()
 
