@@ -1,0 +1,719 @@
+---
+description: 333-prepared-statementブランチでの開発時に読み込む
+alwaysApply: false
+---
+333-prepared-statement ブランチでの開発内容
+===
+
+このブランチで実装することは以下の通りです。
+- コネクションプールに対応した prepared statement API を SQLite・PostgreSQL・MariaDB に追加する
+
+## 進捗
+
+- [x] SQLite の prepared statement 実装
+  - [x] `sqlite_impl.nim` に再利用可能な実行関数を追加（reset/rebind パス）
+  - [x] `sqlite_types.nim` に `SqlitePreparedStatement` 型を追加
+  - [x] `sqlite_exec.nim` に `prepare` / `get` / `first` / `exec` / `close` を追加（`getPlain` / `firstPlain` も追加）
+- [x] PostgreSQL の prepared statement 実装
+  - [x] `postgres_impl.nim` に `deallocate` 関数を追加（`prepare` は `nParams` を明示、`preparedQueryOpts` / `preparedExecOpts` で `Option[string]` 引数対応）
+  - [x] `postgres_types.nim` に `PostgresPreparedStatement` 型を追加
+  - [x] `postgres_exec.nim` に `prepare` / `get` / `first` / `exec` / `close` を追加（Plain 系も）
+- [x] MariaDB の prepared statement 実装
+  - [x] `mariadb_rdb.nim` の MYSQL_STMT 関連 FFI を有効化
+  - [x] `mariadb_impl.nim` に stmt 操作関数を追加
+  - [x] `mariadb_types.nim` に `MariadbPreparedStatement` 型を追加（`PSTMT` を export）
+  - [x] `mariadb_exec.nim` に `prepare` / `get` / `first` / `exec` / `close` を追加
+- [x] `query_builder.nim` — 既存の `export *_types` / `export *_exec` で各 `*PreparedStatement` と `prepare` がそのまま利用者に公開されるため変更なし
+- [x] テスト追加: `tests/sqlite/test_prepared_statement.nim`, `tests/postgres/test_prepared_statement.nim`, `tests/mariadb/test_prepared_statement.nim`
+
+## 参考資料
+
+- SQLite prepared statement API: https://www.sqlite.org/c3ref/prepare.html
+  - `sqlite3_prepare_v2` / `sqlite3_reset` / `sqlite3_bind_*` / `sqlite3_step` / `sqlite3_finalize`
+- PostgreSQL libpq prepared statements: https://www.postgresql.jp/document/12/html/libpq-exec.html
+  - `PQsendPrepare` / `PQsendQueryPrepared` / `PQexec("DEALLOCATE ...")`
+- MariaDB Connector/C STMT API: https://mariadb.com/kb/en/mysql_stmt_prepare/
+  - `mysql_stmt_init` / `mysql_stmt_prepare` / `mysql_stmt_bind_param` / `mysql_stmt_execute` / `mysql_stmt_close`
+
+## 調査結果・設計まとめ
+
+---
+
+### 0. SQL 組み立てと値バインドの仕組み（現行実装）
+
+prepared statement を設計するために、まず既存の「SQL 組み立て → 値バインド → 実行」のフローを正確に理解する。
+
+#### 0-1. SQL 組み立ての責務分離
+
+```
+*_query.nim      ← ユーザー向け API（select/table/where/...）
+  │  where() 等が self.query (JObject) と self.placeHolder (JArray) に情報を書き込む
+  ▼
+*_generator.nim  ← SQL フラグメントを生成するプロシージャ群（メソッドチェーン）
+  │  self.queryString を順番に組み立て、値位置には必ず "?" を埋める
+  ▼
+*_builder.nim    ← generator を組み合わせて完全な SQL 文字列を返す
+  │  selectBuilder() / insertValueBuilder() / updateBuilder() / ...
+  ▼
+*_exec.nim       ← SQL 文字列と placeHolder を実際のコネクションに渡す
+```
+
+#### 0-2. placeHolder の構造
+
+`SqliteQuery.placeHolder` / `PostgresQuery.placeHolder` は `JsonNode`（JArray）。
+**builder 用（where 値・insert 値・update 値）**はオブジェクト形式：
+
+```json
+[
+  {"key": "id",   "value": 1},
+  {"key": "name", "value": "alice"},
+  {"key": "flag", "value": true},
+  {"key": "rate", "value": 3.14},
+  {"key": "memo", "value": null}
+]
+```
+
+**raw クエリ用**はフラット配列形式：
+
+```json
+[1, "alice", true, 3.14, null]
+```
+
+#### 0-3. generator が placeHolder を書き込むタイミング
+
+`*_generator.nim` の各プロシージャが `self.query` を読みながら `self.queryString` を組み立てる際、**値が入る位置には `"?"` を書き込み、同時に `self.placeHolder` に `{"key": col, "value": val}` を append する**。
+
+例）`insertValueSql`：
+
+```nim
+proc insertValueSql*(self: SqliteQuery, items: JsonNode): SqliteQuery =
+  for key, val in items.pairs:
+    ...
+    self.placeHolder.add(%*{"key": key, "value": val})  # ← 値を記録
+    values.add("?")                                      # ← SQL には ? を入れる
+```
+
+例）`updateValuesSql`（UPDATE の場合は SET 値を先に、WHERE 値を後ろに並べる）：
+
+```nim
+proc updateValuesSql*(self: SqliteQuery, items: JsonNode): SqliteQuery =
+  let placeHolder = newJArray()
+  for key, val in items.pairs:
+    placeHolder.add(%*{"key": key, "value": val})   # SET 値を先に
+  for row in self.placeHolder.items:
+    placeHolder.add(row)                             # WHERE 値を後ろに
+  self.placeHolder = placeHolder                     # 置き換え
+```
+
+`whereSql` では `self.placeHolder` への追記は `*_query.nim` 側（`where()` 呼び出し時点）で行われ、`whereSql` は `"?"` を SQL に書くだけ。
+
+#### 0-4. PostgreSQL の `?` → `$n` 変換
+
+generator は SQLite / PostgreSQL とも `?` で SQL を生成する。
+**PostgreSQL の `exec.nim` 公開 API 層で `questionToDaller()` を呼んで `$1, $2...` に変換してから `postgres_impl` に渡す**。
+
+```nim
+# postgres_exec.nim (公開 API)
+proc get*(self: PostgresQuery): Future[seq[JsonNode]] {.async.} =
+  var sql = self.selectBuilder()       # "SELECT ... WHERE "id" = ?"
+  sql = questionToDaller(sql)          # "SELECT ... WHERE "id" = $1"
+  return self.getAllRows(sql).await
+```
+
+`questionToDaller` の動作：
+
+```
+入力: UPDATE "users" SET "name" = ?, "email" = ? WHERE "id" = ?
+出力: UPDATE "users" SET "name" = $1, "email" = $2 WHERE "id" = $3
+```
+
+raw クエリ（`RawPostgresQuery`）も同様に、private `getAllRows` / `exec` 内で `questionToDaller` を呼ぶ。
+
+#### 0-5. 値のバインド方法（ドライバ別）
+
+**SQLite**（`sqlite_impl.exec`）:
+
+```
+placeHolder (JArray of {"key","value"}) を受け取る
+  ↓
+sqlite3_prepare_v2() で PStmt を生成
+  ↓
+arg["value"].kind で分岐:
+  JBool   → bind_int64(stmt, i, 0 or 1)
+  JInt    → bind_int64(stmt, i, val)
+  JFloat  → bind_double(stmt, i, val)
+  JNull   → bind_null(stmt, i)
+  JObject/JArray → bind_text(stmt, i, val.pretty)
+  JString → カラム型が BLOB なら bind_blob、それ以外は bind_text
+    ※ BLOB 判定は columnTypeCache (PRAGMA table_info) を使う
+  ↓
+step(stmt) → finalize(stmt)
+```
+
+`query`（SELECT系）では string に変換してから `setupQuery` でエスケープ埋め込み：
+
+```
+placeHolder を seq[string] に変換（JBool→"1"/"0", JInt→$int, ...）
+  ↓
+setupQuery(db, sql, strArgs)
+  └─ dbFormat(sql, strArgs) で ? をエスケープ済み文字列に置換して PStmt を生成
+  ↓
+step/finalize
+```
+
+**PostgreSQL**（`postgres_impl`）:
+
+```
+placeHolder (JArray) を PGParams に変換 (postgres_lib.nim)
+  PGParams.fromObjArray(args, columns):
+    JBool   → "t" / "f"  (format=0, length=0)
+    JInt    → $int        (format=0, length=0)
+    JFloat  → $float      (format=0, length=0)
+    JNull   → nil         (values[i] = nil → PQsendQueryParams が NULL 扱い)
+    JString → val (bytea カラムなら format=1 バイナリ)
+  allocCStringArray(values) → cstringArray
+  ↓
+PQsendQueryParams(db, sql_with_$n, nParams, nil, values, lengths, formats, 0)
+```
+
+**MariaDB**（`mariadb_impl`）:
+
+```
+placeHolder (JArray of {"key","value"}) を seq[string] に変換
+  JBool   → "1" / "0"
+  JInt    → $int
+  JFloat  → $float
+  JNull   → "null"
+  JString → val
+  ↓
+dbFormat(conn, sql, MariadbParams) でエスケープ後に real_query_start → real_query_cont
+```
+
+MariaDB は現在 MYSQL_STMT を使わず、エスケープ済み文字列を `real_query` に投げる方式。
+
+#### 0-6. prepared statement との対応関係
+
+準備した SQL は上記フローの **「SQLを生成する部分」と「値をバインドする部分」を分離したもの**：
+
+| 通常クエリ | prepared statement |
+|---|---|
+| 実行のたびに SQL 文字列を組み立てる | SQL は prepare 時に 1 回だけコンパイル |
+| 値は SQL 文字列に埋め込む（エスケープ）or bind API | 値は毎回 bind API で渡す（SQL 再コンパイルなし） |
+| `PStmt` の生成と破棄が毎回発生（SQLite） | `PStmt` はコネクションにキャッシュされ `reset` で再利用 |
+
+prepared statement 実行時のバインド方法は **ドライバの bind API をそのまま使う**。SQLite なら `bind_int64` / `bind_text` 等、PostgreSQL なら `pqsendQueryPrepared` にパラメータ配列を渡す。値の型変換ロジック（JBool→"t"/"f" 等）は既存コードを共通関数として切り出して再利用する。
+
+---
+
+### 0-7. Prepared Statement API のデザインと SQL 組み立て・値バインドの方針
+
+#### 基本方針：ユーザーは SQL を直接書く
+
+通常の query builder はメソッドチェーンで SQL を組み立てるが、prepared statement はそれと**別の API 系統**として提供する。ユーザーは生 SQL を書き、実行時に引数を渡す。
+
+```nim
+# 通常クエリ（毎回 SQL を組み立てる）
+let rows = await rdb.table("World").where("index", "=", index).get()
+
+# prepared statement（SQL は一度だけコンパイル、引数だけ変える）
+let stmt = rdb.prepare("SELECT * FROM \"World\" WHERE \"index\" = ?")
+let rows = await stmt.first($index)
+await stmt.close()
+```
+
+builder API（`.table().where().get()`）との統合は行わない。理由：
+- builder は SQL 生成と値バインドを 1 回の処理に結びつけている
+- prepare 時点で「クエリの形」、execute 時点で「値」を分ける設計と相性が悪い
+- 生 SQL の方がユーザーの意図が明確で、prepare/execute の境界がわかりやすい
+
+#### API の全体像
+
+```nim
+# ── prepare ──────────────────────────────────────────
+# SQL に ? プレースホルダを使う（全 DB 共通）
+let stmt: SqlitePreparedStatement = rdb.prepare(
+  "SELECT \"index\", \"randomNumber\" FROM \"World\" WHERE \"index\" = ?"
+)
+
+# ── execute（SELECT 系） ──────────────────────────────
+# 引数は seq[string]。? の順番通りに渡す
+let rows: seq[JsonNode]        = await stmt.get(@[$index])
+let row:  Option[JsonNode]     = await stmt.first(@[$index])
+let plain: seq[seq[string]]    = await stmt.getPlain(@[$index])
+let row1:  seq[string]         = await stmt.firstPlain(@[$index])
+
+# ── execute（INSERT / UPDATE / DELETE 系） ────────────
+await stmt.exec(@[$number, $index])
+
+# ── lifecycle ─────────────────────────────────────────
+stmt.close()   # 全コネクション分のステートメントを解放
+```
+
+**benchmark.nim での使用イメージ**：
+
+```nim
+# prepare は一度だけ（プールの外で）
+let stmtSelect = rdb.prepare(
+  "SELECT \"index\" as id, \"randomNumber\" FROM \"World\" WHERE \"index\" = ?"
+)
+let stmtUpdate = rdb.prepare(
+  "UPDATE \"World\" SET \"randomNumber\" = ? WHERE \"index\" = ?"
+)
+defer: stmtSelect.close(); stmtUpdate.close()
+
+# ループ内では execute だけ（SQL の再解析なし）
+for i in 1..countNum:
+  let index = rand(range1_10000)
+  let number = rand(range1_10000)
+  let row = await stmtSelect.first(@[$index])
+  await stmtUpdate.exec(@[$number, $index])
+```
+
+#### SQL の書き方ルール
+
+プレースホルダは **`?` を統一記法とする**。DB の内部仕様（PostgreSQL は `$n`）への変換は実装側が行う。
+
+```nim
+# ユーザーは常に ? で書く
+rdb.prepare("SELECT * FROM \"users\" WHERE \"id\" = ?")
+rdb.prepare("INSERT INTO \"users\" (\"name\", \"email\") VALUES (?, ?)")
+rdb.prepare("UPDATE \"users\" SET \"name\" = ?, \"email\" = ? WHERE \"id\" = ?")
+```
+
+テーブル名・カラム名はユーザーが適切にクォートする（`"tableName"`)。builder のような自動クォートは行わない。
+
+#### prepare 時の SQL 処理（ドライバ別）
+
+**SQLite**：
+
+```
+rdb.prepare("SELECT * FROM \"World\" WHERE \"index\" = ?")
+  ↓
+コネクション初回使用時（lazy）に:
+  sqlite3_prepare_v2(conn, sql_with_?, len, ppStmt, nil)
+    → PStmt をコネクション i のスロット stmts[i] に保存
+  ※ SQL を DB エンジンがコンパイル・最適化プランを生成して保持
+```
+
+**PostgreSQL**：
+
+```
+rdb.prepare("SELECT * FROM \"World\" WHERE \"index\" = ?")
+  ↓
+コネクション初回使用時（lazy）に:
+  questionToDaller("...WHERE \"index\" = ?")
+    → "...WHERE \"index\" = $1"                  # 変換
+  nArgs = count of '?' in original sql
+  pqsendPrepare(conn, stmtName, sql_with_$n, nArgs, nil)
+    → 変換後の SQL をサーバーにコンパイルさせる
+    → stmtName をコネクション i のスロット stmtNames[i] に保存
+```
+
+**MariaDB**：
+
+```
+rdb.prepare("SELECT * FROM \"World\" WHERE \"index\" = ?")
+  ↓
+コネクション初回使用時（lazy）に:
+  mysql_stmt_prepare(stmt, sql_with_?, len)
+    → MYSQL_STMT をコネクション i のスロット stmts[i] に保存
+```
+
+**重要**：prepare 時点では値は一切関与しない。SQL の構造だけを DB エンジンに渡す。
+
+#### execute 時の値バインド（ドライバ別）
+
+引数は `seq[string]` で受け取る。`?` の出現順と対応する。
+
+**SQLite**（`reset` + rebind パターン）：
+
+```
+stmt.get(@["42"])
+  ↓
+getFreeConn() → connI
+  ↓
+PStmt が stmts[connI] に存在しなければ prepare（lazy）
+  ↓
+reset(stmts[connI])           # 前回の実行結果・バインドをクリア
+clear_bindings(stmts[connI])  # 全 bind スロットを NULL に戻す
+  ↓
+bind_text(stmts[connI], 1, "42")   # 1-indexed で位置バインド
+  ↓
+step ループで行を取得
+  └─ step() == SQLITE_ROW の間、column_text/column_int 等で値を読む
+  ↓
+finalize は呼ばない（再利用するため）
+  ↓
+returnConn(connI)
+```
+
+SQLite は文字列として `bind_text` に渡しても DB 側が列の型アフィニティに従って自動変換する（"42" を INTEGER カラムに入れると整数として扱う）。`bind_text` 統一で十分。
+
+**PostgreSQL**（`pqsendQueryPrepared` パターン）：
+
+```
+stmt.get(@["42"])
+  ↓
+getFreeConn() → connI
+  ↓
+stmtName が stmtNames[connI] に存在しなければ prepare（lazy）
+  ↓
+pgEnsureIdle(conn)              # 前の処理が完了していることを確認
+  ↓
+let arr = allocCStringArray(@["42"])
+pqsendQueryPrepared(
+  conn,
+  stmtName,     # prepare 時に登録した名前
+  nArgs,        # プレースホルダ数
+  arr,          # 値の cstringArray（NULL は nil ポインタ）
+  nil,          # lengths（text モードでは nil）
+  nil,          # formats（0 = text）
+  0             # result format (text)
+)
+deallocCStringArray(arr)
+  ↓
+pgFlushOutgoing → pgNextResult でレスポンスを受け取る
+  ↓
+returnConn(connI)
+```
+
+NULL を渡したい場合は `arr[i] = nil`（cstring nil が NULL 扱い）。
+
+**MariaDB**（`mysql_stmt_execute` パターン）：
+
+```
+stmt.exec(@["100", "42"])
+  ↓
+getFreeConn() → connI
+  ↓
+MYSQL_STMT が stmts[connI] に存在しなければ prepare（lazy）
+  ↓
+MYSQL_BIND 配列を構築:
+  各 args[i] を MYSQL_BIND に設定
+    buffer_type = MYSQL_TYPE_STRING
+    buffer      = args[i].cstring
+    length      = args[i].len
+  ↓
+mysql_stmt_bind_param(stmt, binds)
+  ↓
+mysql_stmt_execute_start → mysql_stmt_execute_cont （非同期）
+  ↓
+SELECT 系は mysql_stmt_store_result → mysql_stmt_fetch で行取得
+  ↓
+returnConn(connI)
+```
+
+#### NULL の扱い
+
+`seq[string]` に `"NULL"` という文字列を入れても DB には文字列 "NULL" として渡ってしまう。NULL を表現するには **特別な sentinel 値**か **`Option[string]`** が必要。
+
+設計上の選択肢：
+1. `seq[Option[string]]` を使う（`none(string)` が NULL）
+2. `""` を NULL として扱う（空文字との区別ができない）
+3. `"NULL"` という文字列を特別扱いする（"NULL" という文字列を入れたいときに困る）
+
+**変更（実装）**：`get` / `first` / `exec` 等は **`macro` + `varargs[untyped]`** で展開し、呼び出し側は **`echo` と同様に任意個・任意型**を渡せる（各引数は **`toPreparedParam`** → 通常は **`$` で文字列化**）。Nim の **`echo` 専用の `varargs[typed, `$`]` はユーザー定義 proc では使えない**ため、この形が実質的な代替となる。SQL NULL は **`sqlNull()` などの専用 API は出さず**、次を **SQL NULL** として解釈する。
+
+- `Option[T]` の **`none(...)`**（例: `none(string)`）
+- リテラル **`nil`**（`typeof(nil)` 用オーバーロード）
+- **`cstring(nil)`**
+- **`JsonNode`** が `nil`、または JSON の **`null`**（`JNull`）
+
+```nim
+await stmt.exec("alice", "alice@example.com", none(string))
+await stmt.first(42)
+```
+
+#### 型情報と bind_text 統一の理由
+
+Prepared statement の引数はすべて `string` として受け渡す（`bind_text` / text format に統一）。通常クエリの `placeHolder` が持っていた `{"key": col, "value": JsonNode}` のような型情報は **prepared statement では持たない**。
+
+理由：
+- **SQLite** は型アフィニティにより文字列からの自動変換を行うため実用上問題ない
+- **PostgreSQL** は `PQsendQueryPrepared` に渡す format=0（text）で正常動作する。パラメータの型は prepare 済みのプランが知っているため、text で渡してもサーバー側でキャストされる
+- **MariaDB** も `MYSQL_TYPE_STRING` で渡せば適切に変換される
+- BLOB 対応は将来課題とする（`bind_blob` が必要なケースは `exec` のオーバーロードで対応）
+
+通常クエリの `exec`（INSERT/UPDATE）が `columnTypeCache` + `PRAGMA table_info` を使って BLOB カラムを判定しているのと対照的に、prepared statement では BLOB サポートを初期スコープから外す。
+
+---
+
+### 1. 現在のコネクションプール仕様
+
+#### 共通構造（SQLite / PostgreSQL / MariaDB）
+
+```
+SqliteConnections / PostgresConnections / MariadbConnections
+  └─ pools: Connections
+       ├─ conns: seq[Connection]      # プールサイズ = maxConnections
+       ├─ timeout: int                # 秒単位のタイムアウト
+       ├─ waiters: Deque[Future[void]] # 空き待ちキュー（async/await 対応）
+       └─ columnTypeCache: Table[string, ...]  # テーブルごとの型情報キャッシュ
+
+Connection
+  ├─ conn: PSqlite3 | PPGconn | PMySQL  # ネイティブ接続ハンドル
+  ├─ isBusy: bool                        # 使用中フラグ
+  └─ createdAt: int64
+```
+
+- MySQL（レガシー）は `waiters` を持たず、非同期待機に非対応。MariaDB は対応済み。
+
+#### コネクション取得・返却フロー
+
+1. `getFreeConn(self)` → `isBusy == false` の連番インデックス `connI` を返す
+2. 全コネクションがビジーなら `Future[void]` を `waiters` に積んで非同期待機
+3. 実処理: `pools.conns[connI].conn` に対して `*_impl` の関数を直接呼ぶ
+4. `returnConn(self, connI)` → `isBusy = false` にして `waiters` の先頭を 1 件 complete
+
+#### クエリ実行の全体像
+
+```
+rdb.table("users").where("id","=",1).first()
+  │
+  ├─ selectBuilder() で SQL 文字列と placeHolder (JArray) を生成
+  ├─ getFreeConn() → connI
+  ├─ *_impl.query(pools.conns[connI].conn, sql, args, timeout)
+  └─ returnConn(connI)
+```
+
+---
+
+### 2. Prepared Statement に固有の制約
+
+#### ステートメントはコネクションに紐づく
+
+| DB | ハンドル型 | スコープ |
+|---|---|---|
+| SQLite | `PStmt` (`ptr TStmt`) | 特定の `PSqlite3` コネクションに紐づく |
+| PostgreSQL | named statement (文字列名) | 特定の `PPGconn` セッションに紐づく |
+| MariaDB | `MYSQL_STMT*` | 特定の `PMySQL` コネクションに紐づく |
+
+プールに N 本のコネクションがある場合、同一の SQL であっても **各コネクションに個別に prepare** する必要がある。
+
+#### 現状の `*_impl.nim` に存在するプリミティブ
+
+| DB | prepare 関数 | execute 関数 | 再利用可否 |
+|---|---|---|---|
+| SQLite | `prepare(db, sql)` → `PStmt` | `preparedQuery` / `preparedExec` | **不可**（finalize で破棄） |
+| PostgreSQL | `prepare(db, sql, stmtName)` → `int` (nArgs) | `preparedQuery` / `preparedExec` | **可**（DEALLOCATE まで存続） |
+| MariaDB | なし | なし | — |
+
+**SQLite の既存 `preparedQuery` / `preparedExec` の問題点**:
+- `preparedQuery` 内の `instantRows(db, dbRows, sqliteStmt)` イテレータが `finalize` を呼ぶ
+- `preparedExec` も末尾で `finalize(sqliteStmt)` を呼ぶ
+- これらは「一度使ったら破棄」の実装であり、ステートメントを再利用できない
+- **再利用のためには `finalize` を呼ばず `reset` → rebind → `step` に変更する必要がある**
+
+---
+
+### 3. 設計方針: Lazy Per-Connection Preparation
+
+#### 採用するアプローチ
+
+`PreparedStatement` ハンドルを返す設計とし、ステートメントは **コネクション初回使用時に遅延 prepare** する。
+
+```
+let stmt = rdb.prepare("SELECT * FROM users WHERE id = ?")
+# ↑ この時点では何も prepare しない。ハンドルのみ生成。
+
+let row = await stmt.first("1")
+# ↑ getFreeConn() で connI を取得し、stmts[connI] が nil なら prepare を実行。
+#   以降同じ connI が選ばれた場合はステートメントを reset + rebind して再利用。
+
+stmt.close()
+# ↑ 全 connI の PStmt を finalize / DEALLOCATE
+```
+
+#### 採用理由
+
+- コネクション数が多くても使われないコネクションには prepare コストが発生しない
+- 既存の `getFreeConn` / `returnConn` ロジックをそのまま流用できる
+- API を単純にできる（ユーザーは SQL 文字列と引数だけ意識すれば良い）
+
+#### 不採用アプローチ
+
+- **Eager whole-pool prepare**: dbOpen 後に全コネクションをブロックして prepare するのはコストが高い
+- **Single-connection pinning**: 並列度が maxConnections から 1 に落ちる
+
+---
+
+### 4. 型定義の設計
+
+#### SQLite
+
+```nim
+# sqlite_types.nim に追加
+type SqlitePreparedStatement* = ref object
+  log*: LogSetting
+  pools*: Connections
+  sql*: string
+  stmts*: seq[PStmt]       ## pools.conns.len と同サイズ。nil = 未 prepare
+  isInTransaction*: bool
+  transactionConn*: int
+```
+
+#### PostgreSQL
+
+PostgreSQL の named prepared statement は文字列名で管理する。
+名前は `allographer_<ハッシュ>_<connI>` のような形式にしてコリジョンを避ける。
+
+```nim
+# postgres_types.nim に追加
+type PostgresPreparedStatement* = ref object
+  log*: LogSetting
+  pools*: Connections
+  sql*: string
+  stmtBaseName*: string    ## ユニークな基底名（prepare 時に生成）
+  stmtNames*: seq[string]  ## pools.conns.len と同サイズ。"" = 未 prepare
+  nArgs*: int              ## プレースホルダ（$1, $2, ...）の数
+  isInTransaction*: bool
+  transactionConn*: int
+```
+
+#### MariaDB
+
+```nim
+# mariadb_types.nim に追加
+type MYSQL_STMT* = pointer  # mariadb_rdb.nim で FFI 定義する
+
+type MariadbPreparedStatement* = ref object
+  log*: LogSetting
+  pools*: Connections
+  info*: ConnectionInfo
+  sql*: string
+  stmts*: seq[MYSQL_STMT]   ## pools.conns.len と同サイズ。nil = 未 prepare
+  isInTransaction*: bool
+  transactionConn*: int
+```
+
+---
+
+### 5. `*_impl.nim` への追加・変更
+
+#### `sqlite_impl.nim`
+
+```nim
+# 再利用可能な実行（finalize しない）
+proc preparedQueryReuse*(db: PSqlite3, stmt: PStmt, args: seq[string],
+                         timeout: int): Future[(seq[Row], DbRows)] {.async.}
+  # reset(stmt) → bind_* → step loop → clear_bindings(stmt)
+  # finalize は呼ばない
+
+proc preparedExecReuse*(db: PSqlite3, stmt: PStmt, args: seq[string],
+                        timeout: int) {.async.}
+  # reset(stmt) → bind_* → step → clear_bindings(stmt)
+  # finalize は呼ばない
+
+proc finalizeStmt*(stmt: PStmt)
+  # sqlite3_finalize のラッパー
+```
+
+既存の `preparedQuery` / `preparedExec` は後方互換のため残す（ただし benchmark.nim 等で未使用であれば整理可）。
+
+#### `postgres_impl.nim`
+
+```nim
+# DEALLOCATE のラッパー（close 時に呼ぶ）
+proc deallocate*(db: PPGconn, stmtName: string, timeout: int) {.async.}
+```
+
+既存の `prepare` / `preparedQuery` / `preparedExec` はそのまま再利用可。
+
+#### `mariadb_impl.nim`
+
+MariaDB C client の `MYSQL_STMT` を使う非同期ラッパーを追加。
+MariaDB の非ブロッキング API には `mysql_stmt_prepare_start` / `mysql_stmt_prepare_cont` 等が存在する。
+
+```nim
+proc stmtPrepare*(conn: PMySQL, sql: string, deadline: MonoTime): Future[MYSQL_STMT] {.async.}
+proc stmtExec*(conn: PMySQL, stmt: MYSQL_STMT, args: seq[string], deadline: MonoTime) {.async.}
+proc stmtQuery*(conn: PMySQL, stmt: MYSQL_STMT, args: seq[string],
+                deadline: MonoTime): Future[(seq[Row], DbRows)] {.async.}
+proc stmtClose*(stmt: MYSQL_STMT) {.async.}
+```
+
+---
+
+### 6. 公開 API 設計
+
+```nim
+# ─── prepare ───
+# rdb が SqliteConnections / PostgresConnections / MariadbConnections のどれでも同じ形
+proc prepare*(self: SqliteConnections, sql: string): SqlitePreparedStatement
+proc prepare*(self: PostgresConnections, sql: string): PostgresPreparedStatement
+proc prepare*(self: MariadbConnections, sql: string): MariadbPreparedStatement
+
+# ─── execute ───
+# `macro` + `varargs[untyped]` — 展開時に `@[toPreparedParam(a), ...]` を組み立てる（`prepared_param.buildPreparedParamSeqExpr`）
+# 呼び出しは `stmt.get(1, "x")` のように echo 風。SQL NULL は `none(...)` / `nil` / `cstring(nil)` / `JsonNode(nil|JNull)` など（`sqlNull()` は公開しない）
+macro get*(self: SqlitePreparedStatement, args: varargs[untyped]): untyped
+macro first*(self: SqlitePreparedStatement, args: varargs[untyped]): untyped
+macro exec*(self: SqlitePreparedStatement, args: varargs[untyped]): untyped
+# 展開結果の型は従来どおり Future[...]（内部で runPrepared* に seq[PreparedParam] を渡す）
+
+# ─── lifecycle ───
+proc close*(self: SqlitePreparedStatement): Future[void] {.async.}
+  # 全コネクション分の PStmt を finalize
+```
+
+PostgreSQL・MariaDB も同じマクロ形を持つ（型名だけ異なる）。`getPlain` / `firstPlain` あり。束縛値の意味論は `PreparedParam` / `toPreparedParam`（`sqlNull` は無し）。
+
+#### プレースホルダ規約
+
+| DB | ユーザー記法（prepare API） |
+|---|---|
+| SQLite | `?` |
+| PostgreSQL | `?`（実装が `questionToDaller` で `$1`, `$2`, ... に変換） |
+| MariaDB | `?` |
+
+公開 prepared API では **クエリは共通で `?`** とし、PostgreSQL のみ内部で `$n` に変換する（通常の query builder と同様）。
+
+---
+
+### 7. 実装ファイル変更一覧
+
+| ファイル | 変更内容 |
+|---|---|
+| `libs/sqlite/sqlite_impl.nim` | `preparedQueryReuse` / `preparedExecReuse` / `finalizeStmt` 追加 |
+| `libs/postgres/postgres_impl.nim` | `deallocate` 追加 |
+| `libs/mariadb/mariadb_rdb.nim` | `MYSQL_STMT` 型・FFI 追加（要確認） |
+| `libs/mariadb/mariadb_impl.nim` | `stmtPrepare` / `stmtExec` / `stmtQuery` / `stmtClose` 追加 |
+| `models/sqlite/sqlite_types.nim` | `SqlitePreparedStatement` 追加 |
+| `models/postgres/postgres_types.nim` | `PostgresPreparedStatement` 追加 |
+| `models/mariadb/mariadb_types.nim` | `MariadbPreparedStatement` / `MYSQL_STMT` 追加 |
+| `models/sqlite/sqlite_exec.nim` | `prepare` / `get` / `first` / `exec` / `close` 追加 |
+| `models/postgres/postgres_exec.nim` | 同上 |
+| `models/mariadb/mariadb_exec.nim` | 同上 |
+| `query_builder.nim` | 各 `*PreparedStatement` 型・API をエクスポート |
+
+---
+
+### 8. 未解決・要検討事項
+
+1. **MariaDB の非ブロッキング STMT API の有無確認**
+   - `mariadb_rdb.nim` は `real_query_start` / `real_query_cont` を持つが、`mysql_stmt_prepare_start` / `mysql_stmt_prepare_cont` が利用できるか未確認
+   - できない場合は同期的な STMT API か、クエリエスケープによる従来実装にフォールバック
+
+2. **PostgreSQL の `stmtBaseName` 生成方法**
+   - SQL 文字列のハッシュを使うか、単調増加カウンタを使うか
+   - コネクションを再接続した場合の旧ステートメント名との衝突回避
+
+3. **MySQL（レガシー）への対応**
+   - MySQL ドライバは非同期未対応のため、当ブランチのスコープ外とする可能性が高い
+
+4. **トランザクション中の prepared statement**
+   - `isInTransaction = true` の場合は `transactionConn` の固定コネクションを使う（既存クエリと同じ）
+   - `stmts[transactionConn]` が nil なら prepare → execute の流れは通常時と同じ
+
+5. **コネクション再接続時のステートメント無効化**
+   - 現状、コネクション断後の再接続処理は各ドライバに存在しない
+   - `PStmt` がコネクション切断後に無効になった場合のエラーハンドリングは後続タスク
+
+---
+
+### 実装後メモ（333 ブランチ）
+
+- **PostgreSQL `prepare`**: `nParams` は `postgres_lib.countQuestionMarks(sql)`（`?` の個数）で固定。旧 `query.count('$')` は `$10` 等で誤るため廃止。
+- **引数型**: 公開 API は **`macro` + `varargs[untyped]`**（echo 風の呼び出し）。展開先は `seq[PreparedParam]` + `toPreparedParam`（`$` 変換）。SQL NULL は `none` / `nil` / `cstring(nil)` / `JsonNode` の nil・JNull を `toPreparedParam` が解釈。async と varargs の相性のため、実処理は `runPrepared*` に閉じ、マクロはそれへの呼び出しに展開する。
+- **MariaDB `mysql_stmt_fetch`**: 行終端で `101` を返す前提でループ終了（コネクタの定義に依存するため、挙動が異なる環境では要確認）。
+- **`sqlite_lib`**: `preparedQueryReuse` 用に `setColumnsStaticMeta` / `setColumnsRuntimeTypes` を export。
