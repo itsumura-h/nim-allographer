@@ -1,4 +1,6 @@
 # Surreal driver 効率改善レポート
+> [!WARNING]
+> SurrealDB support is planned for v3. The current implementation and proposed improvements are for reference only and will be addressed in v3.
 
 `src/allographer/query_builder/libs/surreal/` と、その呼び出し元である `models/surreal/` を調査し、`documents/rdb/postgres_efficiency_report.md` と `320-allographerpostgresql-非同期待機改善-設計書.mdc` と同じ観点で、処理効率と待機制御の改善余地を整理した。
 

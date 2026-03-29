@@ -6,8 +6,8 @@ allographer
 
 
 An asynchronous query builder library inspired by [Laravel/PHP](https://readouble.com/laravel/6.0/en/queries.html) and [Orator/Python](https://orator-orm.com) for Nim.  
-Supported Databases are [Sqlite3](https://www.sqlite.org/index.html), [PostgreSQL](https://www.postgresql.org/), [MySQL](https://www.mysql.com/), [MariaDB](https://mariadb.org/) and [SurrealDB](https://surrealdb.com/).  
-Supported Nim for both `1.6.14` and `2.0.0`
+Supported Databases are [Sqlite3](https://www.sqlite.org/index.html), [PostgreSQL](https://www.postgresql.org/), [MySQL](https://www.mysql.com/) and [MariaDB](https://mariadb.org/). (SurrealDB is planned to be supported in v3)  
+Supported Nim v2
 
 ## Easy to access Rdb
 ### Query Builder
@@ -119,7 +119,8 @@ nimble install allographer
 If you get `SIGSEGV: Illegal storage access. (Attempt to read from nil?)` when trying to use the database you likely have a problem with the library path. On OS X the default is to check for the `brew --prefix` of the chosen driver, if that doesn't work it will look in `/usr/lib` or an environment variable `DYLD_xxx_PATH` where `xxx` if your driver: `SQLITE`, `MARIADB`, `MYSQL` or `POSTGRES`.
 
 ## Configuation
-Allographer loads emvironment variables of `DB_SQLITE`, `DB_POSTGRES`, `DB_MYSQL` `DB_MARIADB` and `DB_SURREAL` to define which process should be **compiled**.<br>
+Allographer loads emvironment variables of `DB_SQLITE`, `DB_POSTGRES`, `DB_MYSQL` and `DB_MARIADB` to define which process should be **compiled**.<br>
+(`DB_SURREAL` is planned to be supported in v3)<br>
 These environment variables have to be set at compile time, so they have to be written in `config.nims` not in `.env`.
 
 config.nims
@@ -145,7 +146,7 @@ let sqliteRdb* = dbOpen(Sqlite3, "/path/to/db/sqlite3.db", maxConnections=maxCon
 let mysqlRdb* = dbOpen(MySQL, "database", "user", "password", "localhost", 3306, maxConnections, timeout)
 let mariaRdb* = dbOpen(MariaDB, "database", "user", "password", "localhost", 3306, maxConnections, timeout)
 let pgUrlRdb* = dbOpen(PostgreSQL, databaseUrl = asDatabaseUrl("postgresql://user:password@localhost:5432/database"), maxConnections=maxConnections, timeout=timeout)
-let surrealDb* = dbOpen(SurrealDb, "test_ns" "test_db", "user", "password" "http://localhost", 8000, maxConnections, timeout)
+# let surrealDb* = dbOpen(SurrealDb, "test_ns" "test_db", "user", "password" "http://localhost", 8000, maxConnections, timeout) # planned for v3
 ```
 
 Then, call connection when you run query.
@@ -177,8 +178,8 @@ proc dbOpen*(driver:Driver, database:string="", user:string="", password:string=
 ## Documents
 [Schema Builder for RDB](./documents/rdb/schema_builder.md)  
 [Query Builder for RDB](./documents/rdb/query_builder.md)  
-[Schema Builder for SurrealDB](./documents/surrealdb/schema_builder.md)  
-[Query Builder for SurrealDB](./documents/surrealdb/query_builder.md)  
+[Schema Builder for SurrealDB](./documents/surrealdb/schema_builder.md) (planned for v3)  
+[Query Builder for SurrealDB](./documents/surrealdb/query_builder.md) (planned for v3)
 
 
 ## Nim API Documents

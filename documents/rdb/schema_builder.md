@@ -238,8 +238,7 @@ Column.strForeign("uuid")
   .onTable("users")
   .onDelete(SET_NULL)
 
-# use `on("users")` in Nim v1
-# use `onTable("users")` in Nim v2
+# use `onTable("users")`
 ```
 
 arg of `onDelete` is enum
