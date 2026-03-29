@@ -1,11 +1,10 @@
-import
-  std/asyncdispatch,
-  std/json,
-  std/random,
-  std/times,
-  ../src/allographer/query_builder,
-  ../src/allographer/schema_builder,
-  ../src/allographer/query_builder/libs/sqlite/sqlite_impl
+import std/asyncdispatch
+import std/json
+import std/random
+import std/times
+import ../src/allographer/query_builder
+import ../src/allographer/schema_builder
+import ../src/allographer/query_builder/libs/sqlite/sqlite_impl
 from connections import rdb
 
 randomize()
