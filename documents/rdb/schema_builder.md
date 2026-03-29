@@ -4,24 +4,24 @@ Example: Schema Builder
 
 ## index
 <!--ts-->
-* [Example: Schema Builder](#example-schema-builder)
-   * [index](#index)
-   * [Create table](#create-table)
-   * [Alter Table](#alter-table)
-      * [add column](#add-column)
-      * [change column](#change-column)
-      * [drop column](#drop-column)
-      * [rename table](#rename-table)
-      * [drop table](#drop-table)
-   * [Migration history](#migration-history)
-      * [seeder template](#seeder-template)
-   * [integer](#integer)
-   * [float](#float)
-   * [char](#char)
-   * [date](#date)
-   * [others](#others)
-   * [options](#options)
-   * [Foreign Key Constraints](#foreign-key-constraints)
+- [Example: Schema Builder](#example-schema-builder)
+  - [index](#index)
+  - [Create table](#create-table)
+  - [Alter Table](#alter-table)
+    - [add column](#add-column)
+    - [change column](#change-column)
+    - [drop column](#drop-column)
+    - [rename table](#rename-table)
+    - [drop table](#drop-table)
+  - [Migration history](#migration-history)
+    - [seeder template](#seeder-template)
+  - [integer](#integer)
+  - [float](#float)
+  - [char](#char)
+  - [date](#date)
+  - [others](#others)
+  - [options](#options)
+  - [Foreign Key Constraints](#foreign-key-constraints)
 
 <!-- Created by https://github.com/ekalinin/github-markdown-toc -->
 <!-- Added by: root, at: Mon Jul 17 07:46:21 UTC 2023 -->
@@ -32,9 +32,9 @@ Example: Schema Builder
 ## Create table
 ```nim
 import allographer/schema_builder
-from ../database import rdb
+import connections # or define rdb here
 
-rdb.create([
+rdb.create(
   table("auth", [
     Column.increments("id"),
     Column.uuid("uuid"),
@@ -44,10 +44,10 @@ rdb.create([
   table("users", [
     Column.increments("id"),
     Column.string("name"),
-    Column.foreign("auth_id").reference("id").onTable("auth").onDelete(SET_NULL)
-    Column.strForeign("uuid").reference("uuid")..onDelete(SET_NULL)
+    Column.foreign("auth_id").reference("id").onTable("auth").onDelete(SET_NULL),
+    Column.strForeign("uuid").reference("uuid").onTable("auth").onDelete(SET_NULL)
   ])
-])
+)
 ```
 
 ## Alter Table
@@ -55,10 +55,9 @@ rdb.create([
 ```nim
 rdb.alter(
   table("auth", [
-    Column.increments("id").add(),
-    Column.string("name").add(),
+    Column.string("email").add(),
   ]),
-  table("users",[
+  table("users", [
     Column.string("email").unique().default("").add(),
     Column.foreign("auth_id").reference("id").onTable("auth").onDelete(SET_NULL).add()
   ])
@@ -70,10 +69,10 @@ rdb.alter(
 ### change column
 ```nim
 rdb.alter(
-  table("users",
+  table("users", [
     Column.renameColumn("name", "new_name"),
-    Column.char("name", 20).unique().default("").cange()
-  )
+    Column.char("name", 20).unique().default("").change()
+  ])
 )
 ```
 - Create new table with new column definition
@@ -85,16 +84,16 @@ rdb.alter(
 ### drop column
 ```nim
 rdb.alter(
-  table("users",
+  table("users", [
     Column.dropColumn("name")
-  )
+  ])
 )
 ```
 
 ### rename table
 ```nim
 rdb.alter(
-  rename("users", "new_users")
+  table("users").renameTo("new_users")
 )
 ```
 `>> ALTER TABLE users RENAME TO new_users`
@@ -108,18 +107,17 @@ rdb.drop(
 `>> DROP TABLE users`
 
 ## Migration history
-allographer generate `_migrations` table in your database. It has migration history data which have hash key generated a query.
+allographer generate `_allographer_migrations` table in your database. It has migration history data which have hash key generated a query.
 
 
 ```nim
 # migrate.nim
-import json
+import std/asyncdispatch
+import std/json
 import allographer/schema_builder
-import allographer/query_builder
+import connections
 
-let rdb = dbopen(SQLite3, "/path/to/db.sqlite")
-
-rdb.schema(
+rdb.create(
   table("auth", [
     Column.increments("id"),
     Column.string("name")
@@ -151,7 +149,7 @@ seeder rdb, "users":
 ```sh
 # first time
 nim c -r migrate
->> run query and generate `_migrations` table
+>> run query and generate `_allographer_migrations` table
 # secound time
 nim c -r migrate
 >> nothing to do

@@ -37,7 +37,9 @@
 |binary|BLOB|BLOB|BYTEA|JString
 |boolean|TINYINT|TINYINT|BOOLEAN|JBool
 |enumField|VARCHAR|ENUM|CHARACTER|JString
-|json|TEXT|JSON|JSON|JString
+|json|TEXT|JSON|JSON|JObject / JArray *1|
+
+*1: For SQLite, it returns `JString`. For other databases, it returns parsed `JsonNode` (`JObject` or `JArray`).
 |foreign|INTEGER|INT|INT|JInt
 |strForeign|VARCHAR|VARCHAR|VARCHAR|JString
 

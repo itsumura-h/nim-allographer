@@ -34,12 +34,13 @@ You can create `SCHEMAFULL` table for SurrealDB.
 [DEFINE FIELD](https://surrealdb.com/docs/surrealql/statements/define/field)
 
 ```nim
+import std/asyncdispatch
 import allographer/connection
 import allographer/schema_builder
 
-let surreal = dbOpen(SurrealDb, "test", "test", "user", "pass", "htttp://surreal", 8000, 5, 30, false, false).waitFor()
+let surreal = dbOpen(SurrealDb, "test", "test", "user", "pass", "http://surreal", 8000, 5, 30, false, false).await
 
-surreal.create([
+surreal.create(
   table("auth", [
     Column.increments("index"),
     Column.uuid("uuid"),
@@ -49,9 +50,9 @@ surreal.create([
   table("user", [
     Column.increments("index"),
     Column.string("name"),
-    Column.foreign("auth").reference("id").on("auth").onDelete(SET_NULL)
+    Column.foreign("auth").reference("id").onTable("auth").onDelete(SET_NULL)
   ])
-])
+)
 ```
 
 These query run.
@@ -96,9 +97,9 @@ surreal.alter(
     Column.increments("index").add(),
     Column.string("name").add(),
   ]),
-  table("user",[
+  table("user", [
     Column.string("email").unique().default("").add(),
-    Column.foreign("auth").reference("id").on("auth").onDelete(SET_NULL).add()
+    Column.foreign("auth").reference("id").onTable("auth").onDelete(SET_NULL).add()
   ])
 )
 ```
@@ -121,9 +122,9 @@ DEFINE FIELD `auth` ON TABLE `user` TYPE record (`auth`) ASSERT $value != NONE
 ### drop column
 ```nim
 surreal.alter(
-  table("user",
+  table("user", [
     Column.dropColumn("name")
-  )
+  ])
 )
 ```
 
@@ -133,7 +134,7 @@ REMOVE FIELD `name` ON TABLE `user`
 
 ### drop table
 ```nim
-rdb.drop(
+surreal.drop(
   table("user")
 )
 ```
