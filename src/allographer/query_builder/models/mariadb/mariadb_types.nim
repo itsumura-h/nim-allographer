@@ -65,6 +65,25 @@ type RawMariadbQuery* = ref object
   transactionConn*: int
 
 
+type MariadbResultBindCache* = ref object
+  binds*: seq[BIND]
+  buffers*: seq[string]
+  lengths*: seq[culong]
+  nullFlags*: seq[my_bool]
+  errorFlags*: seq[my_bool]
+
+
+type MariadbPreparedStatement* = ref object
+  owner*: MariadbConnections
+  info*: ConnectionInfo
+  sql*: string
+  stmts*: seq[PSTMT]
+  nArgs*: int
+  resultBindCache*: seq[MariadbResultBindCache]
+
+
+
+
 proc `$`*(self:MariadbConnections|MariadbQuery|RawMariadbQuery):string =
   return "MariaDB"
 

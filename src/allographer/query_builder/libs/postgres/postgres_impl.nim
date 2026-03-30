@@ -7,6 +7,7 @@ import std/strutils
 import std/times
 import ../../error
 import ../../models/database_types
+import ../../prepared_param
 import ./postgres_rdb
 import ./postgres_lib
 
@@ -333,10 +334,9 @@ proc getColumns*(db: PPGconn, query: string, args: seq[string], timeout: int): F
     result.add(column.name)
 
 
-proc prepare*(db: PPGconn, query: string, timeout: int, stmtName: string): Future[int] {.async.} =
+proc prepare*(db: PPGconn, query: string, timeout: int, stmtName: string, nArgs: int): Future[void] {.async.} =
   assert db.status == CONNECTION_OK
-  let nArgs = query.count('$')
-  let success = pqsendPrepare(db, stmtName, dbFormat(query).cstring, int32(nArgs), nil)
+  let success = pqsendPrepare(db, stmtName, questionToDaller(query).cstring, int32(nArgs), nil)
   if success != 1: dbError(db)
   let deadline = makePgDeadline(timeout)
   await pgFlushOutgoing(db, deadline)
@@ -346,15 +346,52 @@ proc prepare*(db: PPGconn, query: string, timeout: int, stmtName: string): Futur
       db.checkError()
       break
     pqclear(pqresult)
-  return nArgs
 
-proc preparedQuery*(db: PPGconn, args: seq[string], nArgs: int, timeout: int, stmtName: string): Future[(seq[Row], DbRows)] {.async.} =
+
+proc deallocate*(db: PPGconn, stmtName: string, timeout: int): Future[void] {.async.} =
+  assert db.status == CONNECTION_OK
+  if stmtName.len == 0:
+    return
+  let success = pqsendQuery(db, ("DEALLOCATE " & stmtName).cstring)
+  if success != 1:
+    dbError(db)
+  let deadline = makePgDeadline(timeout)
+  await pgFlushOutgoing(db, deadline)
+  while true:
+    let pqresult = await pgNextResult(db, deadline)
+    if pqresult == nil:
+      db.checkError()
+      break
+    pqclear(pqresult)
+
+proc allocPreparedCStringArray(args: seq[PreparedParam]): cstringArray =
+  result = cast[cstringArray](alloc0((args.len + 1) * sizeof(cstring)))
+  for i, arg in args:
+    if arg.isNull:
+      continue
+    let cstrLen = arg.value.len + 1
+    let cstr = cast[cstring](alloc0(cstrLen))
+    copyMem(cstr, arg.value.cstring, arg.value.len)
+    result[i] = cstr
+
+
+proc freePreparedCStringArray(values: cstringArray, n: int) =
+  if values.isNil:
+    return
+  for i in 0 ..< n:
+    if values[i] != nil:
+      dealloc(values[i])
+  dealloc(values)
+
+
+proc preparedQuery*(db: PPGconn, args: seq[PreparedParam], nArgs: int, timeout: int, stmtName: string): Future[(seq[Row], DbRows)] {.async.} =
   assert db.status == CONNECTION_OK
   let deadline = makePgDeadline(timeout)
   await pgEnsureIdle(db, deadline)
-  let arr = allocCStringArray(args)
-  let status = pqsendQueryPrepared(db, stmtName, int32(nArgs), arr, nil, nil, 0)
-  deallocCStringArray(arr)
+  let values = allocPreparedCStringArray(args)
+  defer:
+    freePreparedCStringArray(values, args.len)
+  let status = pqsendQueryPrepared(db, stmtName, int32(nArgs), values, nil, nil, 0)
   if status != 1: dbError(db)
   var dbRows: DbRows
   var rows = newSeq[Row]()
@@ -376,13 +413,14 @@ proc preparedQuery*(db: PPGconn, args: seq[string], nArgs: int, timeout: int, st
 
   return (rows, dbRows)
 
-proc preparedExec*(db: PPGconn, args: seq[string], nArgs: int, timeout: int, stmtName: string) {.async.} =
+proc preparedExec*(db: PPGconn, args: seq[PreparedParam], nArgs: int, timeout: int, stmtName: string) {.async.} =
   assert db.status == CONNECTION_OK
   let deadline = makePgDeadline(timeout)
   await pgEnsureIdle(db, deadline)
-  let arr = allocCStringArray(args)
-  let status = pqsendQueryPrepared(db, stmtName, int32(nArgs), arr, nil, nil, 0)
-  deallocCStringArray(arr)
+  let values = allocPreparedCStringArray(args)
+  defer:
+    freePreparedCStringArray(values, args.len)
+  let status = pqsendQueryPrepared(db, stmtName, int32(nArgs), values, nil, nil, 0)
   if status != 1: dbError(db)
   await pgFlushOutgoing(db, deadline)
   while true:

@@ -1053,43 +1053,39 @@ proc real_escape_string*(MySQL: PMySQL, fto: cstring, `from`: cstring, len: int)
 # proc read_query_result*(MySQL: PMySQL): my_bool{.stdcall, dynlib: lib,
 #                                        importc: "mysql_read_query_result".}
 proc stmt_init*(MySQL: PMySQL): PSTMT{.stdcall, dynlib: lib, importc: "mysql_stmt_init".}
-# proc stmt_prepare*(stmt: PSTMT, query: cstring, len: int): cint{.stdcall,
-#     dynlib: lib, importc: "mysql_stmt_prepare".}
-# proc stmt_execute*(stmt: PSTMT): cint{.stdcall, dynlib: lib,
-#                                        importc: "mysql_stmt_execute".}
-# proc stmt_fetch*(stmt: PSTMT): cint{.stdcall, dynlib: lib,
-#                                      importc: "mysql_stmt_fetch".}
-# proc stmt_fetch_column*(stmt: PSTMT, `bind`: PBIND, column: cuint, offset: int): cint{.
-#     stdcall, dynlib: lib, importc: "mysql_stmt_fetch_column".}
-# proc stmt_store_result*(stmt: PSTMT): cint{.stdcall, dynlib: lib,
-#     importc: "mysql_stmt_store_result".}
-# proc stmt_param_count*(stmt: PSTMT): int{.stdcall, dynlib: lib,
-#     importc: "mysql_stmt_param_count".}
-# proc stmt_attr_set*(stmt: PSTMT, attr_type: Enum_stmt_attr_type, attr: pointer): my_bool{.
-#     stdcall, dynlib: lib, importc: "mysql_stmt_attr_set".}
-# proc stmt_attr_get*(stmt: PSTMT, attr_type: Enum_stmt_attr_type, attr: pointer): my_bool{.
-#     stdcall, dynlib: lib, importc: "mysql_stmt_attr_get".}
-# proc stmt_bind_param*(stmt: PSTMT, bnd: PBIND): my_bool{.stdcall, dynlib: lib,
-#     importc: "mysql_stmt_bind_param".}
-# proc stmt_bind_result*(stmt: PSTMT, bnd: PBIND): my_bool{.stdcall, dynlib: lib,
-#     importc: "mysql_stmt_bind_result".}
-# proc stmt_close*(stmt: PSTMT): my_bool{.stdcall, dynlib: lib,
-#                                         importc: "mysql_stmt_close".}
-# proc stmt_reset*(stmt: PSTMT): my_bool{.stdcall, dynlib: lib,
-#                                         importc: "mysql_stmt_reset".}
-# proc stmt_free_result*(stmt: PSTMT): my_bool{.stdcall, dynlib: lib,
-#     importc: "mysql_stmt_free_result".}
+proc stmt_prepare*(stmt: PSTMT, query: cstring, len: int): cint{.stdcall,
+    dynlib: lib, importc: "mysql_stmt_prepare".}
+proc stmt_execute*(stmt: PSTMT): cint{.stdcall, dynlib: lib,
+                                       importc: "mysql_stmt_execute".}
+proc stmt_fetch*(stmt: PSTMT): cint{.stdcall, dynlib: lib,
+                                     importc: "mysql_stmt_fetch".}
+proc stmt_fetch_column*(stmt: PSTMT, `bind`: PBIND, column: cuint, offset: int): cint{.
+    stdcall, dynlib: lib, importc: "mysql_stmt_fetch_column".}
+proc stmt_store_result*(stmt: PSTMT): cint{.stdcall, dynlib: lib,
+    importc: "mysql_stmt_store_result".}
+proc stmt_param_count*(stmt: PSTMT): int{.stdcall, dynlib: lib,
+    importc: "mysql_stmt_param_count".}
+proc stmt_bind_param*(stmt: PSTMT, bnd: PBIND): my_bool{.stdcall, dynlib: lib,
+    importc: "mysql_stmt_bind_param".}
+proc stmt_bind_result*(stmt: PSTMT, bnd: PBIND): my_bool{.stdcall, dynlib: lib,
+    importc: "mysql_stmt_bind_result".}
+proc stmt_close*(stmt: PSTMT): my_bool{.stdcall, dynlib: lib,
+                                        importc: "mysql_stmt_close".}
+proc stmt_reset*(stmt: PSTMT): my_bool{.stdcall, dynlib: lib,
+                                        importc: "mysql_stmt_reset".}
+proc stmt_free_result*(stmt: PSTMT): my_bool{.stdcall, dynlib: lib,
+    importc: "mysql_stmt_free_result".}
 # proc stmt_send_long_data*(stmt: PSTMT, param_number: cuint, data: cstring,
 #                           len: int): my_bool{.stdcall, dynlib: lib,
 #     importc: "mysql_stmt_send_long_data".}
-# proc stmt_result_metadata*(stmt: PSTMT): PRES{.stdcall, dynlib: lib,
-#     importc: "mysql_stmt_result_metadata".}
+proc stmt_result_metadata*(stmt: PSTMT): PRES{.stdcall, dynlib: lib,
+    importc: "mysql_stmt_result_metadata".}
 # proc stmt_param_metadata*(stmt: PSTMT): PRES{.stdcall, dynlib: lib,
 #     importc: "mysql_stmt_param_metadata".}
 # proc stmt_errno*(stmt: PSTMT): cuint{.stdcall, dynlib: lib,
 #                                       importc: "mysql_stmt_errno".}
-# proc stmt_error*(stmt: PSTMT): cstring{.stdcall, dynlib: lib,
-#                                         importc: "mysql_stmt_error".}
+proc stmt_error*(stmt: PSTMT): cstring{.stdcall, dynlib: lib,
+                                        importc: "mysql_stmt_error".}
 # proc stmt_sqlstate*(stmt: PSTMT): cstring{.stdcall, dynlib: lib,
 #     importc: "mysql_stmt_sqlstate".}
 # proc stmt_row_seek*(stmt: PSTMT, offset: ROW_OFFSET): ROW_OFFSET{.stdcall,

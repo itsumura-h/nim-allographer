@@ -23,8 +23,23 @@ alwaysApply: false
   - [x] `mariadb_impl.nim` に stmt 操作関数を追加
   - [x] `mariadb_types.nim` に `MariadbPreparedStatement` 型を追加（`PSTMT` を export）
   - [x] `mariadb_exec.nim` に `prepare` / `get` / `first` / `exec` / `close` を追加
+- [x] MySQL の prepared statement 実装
+  - [x] `mysql_rdb.nim` の MYSQL_STMT 関連 FFI を有効化
+  - [x] `mysql_impl.nim` に stmt 操作関数を追加
+  - [x] `mysql_types.nim` に `MysqlPreparedStatement` 型を追加（`PSTMT` を export）
+  - [x] `mysql_exec.nim` に `prepare` / `get` / `first` / `exec` / `close` を追加
 - [x] `query_builder.nim` — 既存の `export *_types` / `export *_exec` で各 `*PreparedStatement` と `prepare` がそのまま利用者に公開されるため変更なし
-- [x] テスト追加: `tests/sqlite/test_prepared_statement.nim`, `tests/postgres/test_prepared_statement.nim`, `tests/mariadb/test_prepared_statement.nim`
+- [x] テスト追加: `tests/sqlite/test_prepared_statement.nim`, `tests/postgres/test_prepared_statement.nim`, `tests/mariadb/test_prepared_statement.nim`, `tests/mysql/test_prepared_statement.nim`
+- [x] Prepared statement の public API を SQLite は proc overload、PostgreSQL / MariaDB / MySQL は private helper + proc overload に統一した
+- [x] 改善候補の次フェーズ対応
+  - [x] MariaDB の STMT 実行を non-blocking start/cont ベースへ移行
+  - [x] MariaDB の result bind を接続単位で再利用する cache を追加
+  - [x] PostgreSQL の `close()` を並列 `DEALLOCATE` に変更
+  - [x] SQLite の `setColumnsStaticMeta` を prepared statement 側でキャッシュ化
+  - [x] PostgreSQL の prepared 引数を unsafeAddr 依存から外した
+  - [x] `preparedArgsExpr` の間接呼び出しを除去した
+  - [x] MariaDB の `stmt.mysql` 直接参照を撤去した
+  - [x] PreparedStatement 型の冗長な `log` / `pools` フィールドを削除した
 
 ## 参考資料
 
@@ -412,7 +427,7 @@ returnConn(connI)
 2. `""` を NULL として扱う（空文字との区別ができない）
 3. `"NULL"` という文字列を特別扱いする（"NULL" という文字列を入れたいときに困る）
 
-**変更（実装）**：`get` / `first` / `exec` 等は **`macro` + `varargs[untyped]`** で展開し、呼び出し側は **`echo` と同様に任意個・任意型**を渡せる（各引数は **`toPreparedParam`** → 通常は **`$` で文字列化**）。Nim の **`echo` 専用の `varargs[typed, `$`]` はユーザー定義 proc では使えない**ため、この形が実質的な代替となる。SQL NULL は **`sqlNull()` などの専用 API は出さず**、次を **SQL NULL** として解釈する。
+**変更（実装）**：`get` / `first` / `exec` 等は **`macro` + `varargs[untyped]`** で展開し、呼び出し側は **`echo` と同様に任意個・任意型**を渡せる（各引数は **`toPreparedParam`** → 通常は **`$` で文字列化**）。Nim の **`echo` 専用の `varargs[typed, `$`]` はユーザー定義 proc では使えない**ため、この形が実質的な代替となる。なお **SQLite の prepared statement 公開 API は proc overload に切り替え**、`seq[string]` と `JsonNode` の両方を受ける。SQL NULL は **`sqlNull()` などの専用 API は出さず**、次を **SQL NULL** として解釈する。
 
 - `Option[T]` の **`none(...)`**（例: `none(string)`）
 - リテラル **`nil`**（`typeof(nil)` 用オーバーロード）
@@ -421,8 +436,10 @@ returnConn(connI)
 
 ```nim
 await stmt.exec("alice", "alice@example.com", none(string))
-await stmt.first(42)
+await stmt.first(@[$index])
 ```
+
+SQLite の proc overload では、文字列側は `"NULL"` / `"null"` sentinel を互換維持し、JsonNode 側は `JNull` を SQL NULL として扱う。
 
 #### 型情報と bind_text 統一の理由
 
@@ -714,6 +731,228 @@ PostgreSQL・MariaDB も同じマクロ形を持つ（型名だけ異なる）�
 ### 実装後メモ（333 ブランチ）
 
 - **PostgreSQL `prepare`**: `nParams` は `postgres_lib.countQuestionMarks(sql)`（`?` の個数）で固定。旧 `query.count('$')` は `$10` 等で誤るため廃止。
-- **引数型**: 公開 API は **`macro` + `varargs[untyped]`**（echo 風の呼び出し）。展開先は `seq[PreparedParam]` + `toPreparedParam`（`$` 変換）。SQL NULL は `none` / `nil` / `cstring(nil)` / `JsonNode` の nil・JNull を `toPreparedParam` が解釈。async と varargs の相性のため、実処理は `runPrepared*` に閉じ、マクロはそれへの呼び出しに展開する。
+- **引数型**: SQLite の prepared statement 公開 API は **`proc` overload** で `seq[string]` / `JsonNode` を受ける。文字列側は `"NULL"` / `"null"` を SQL NULL sentinel として解釈し、JsonNode 側は `JNull` / `nil` を解釈する。PostgreSQL / MariaDB の既存 prepared 公開 API は引き続き macro + varargs で、実処理は private helper に閉じ込める。
 - **MariaDB `mysql_stmt_fetch`**: 行終端で `101` を返す前提でループ終了（コネクタの定義に依存するため、挙動が異なる環境では要確認）。
 - **`sqlite_lib`**: `preparedQueryReuse` 用に `setColumnsStaticMeta` / `setColumnsRuntimeTypes` を export。
+- **MariaDB result bind cache**: Nim の async 状態機械では `var tuple` の捕捉が安全解析に引っかかるため、`MariadbResultBindCache` を `ref object` にして接続単位で再利用する方針にした。
+
+---
+
+### 9. 改善候補（次フェーズ向け）
+
+実装コードレビューで判明した課題を優先度順に列挙する。
+
+---
+
+#### 9-1. [correctness/高優先] MariaDB: `MYSQL_DATA_TRUNCATED (101)` の誤った扱い
+
+**問題**: `queryPreparedStmt` の fetch ループで戻り値 `101 = MYSQL_DATA_TRUNCATED` をエラーでも終了でもなく無視している。
+
+```nim
+let fetchRes = stmt_fetch(stmt)
+if fetchRes == 100:   # MYSQL_NO_DATA → ループ終了
+  break
+if fetchRes notin {0, 101}:  # 101 を "正常" として通過させているが実は切り捨て発生中
+  dbError(conn)
+```
+
+結果バッファ（`max(field.len, 4096)` バイト）を超えたデータは**サイレントに切り捨てられる**。
+`TEXT` / `BLOB` 型や、`utf8mb4` で `VARCHAR(255)` (= 最大 1020 バイト) を超えるデータで発生しうる。
+
+**修正方針**:
+1. `fetchRes == 101` の場合、`resultBinds.errorFlags[i]` が立っている列を特定する
+2. 該当列に対して動的にバッファを拡大（`resultBinds.lengths[i]` が実際の長さ）し、`stmt_fetch_column` で再取得する
+3. 再取得後に row データを正しく更新する
+
+```nim
+# 修正後イメージ（列ごとの再取得）
+if fetchRes in {0, 101}:
+  for i in 0 ..< cols:
+    if resultBinds.errorFlags[i]:  # このカラムはバッファ不足で切り捨て
+      let needed = int(resultBinds.lengths[i])
+      resultBinds.buffers[i] = newString(needed)
+      resultBinds.binds[i].buffer = cast[pointer](resultBinds.buffers[i].cstring)
+      resultBinds.binds[i].buffer_length = needed.culong
+      discard stmt_fetch_column(stmt, resultBinds.binds[i].addr, cuint(i), 0)
+```
+
+---
+
+#### 9-2. [correctness/高優先] `close()` でエラーが起きると残りのコネクションがクリーンアップされない
+
+**問題**: `close()` が途中で例外を投げると、後続のコネクション分がリークする。
+
+```nim
+proc close*(self: PostgresPreparedStatement) {.async.} =
+  for i, stmtName in self.stmtNames:
+    await postgres_impl.deallocate(...)  # ここで例外 → 残りのループが実行されない
+```
+
+**修正方針**: `try/except` でエラーをログに記録しながら全コネクション分をクリーンアップする。
+
+```nim
+proc close*(self: PostgresPreparedStatement) {.async.} =
+  for i, stmtName in self.stmtNames:
+    if stmtName.len == 0: continue
+    try:
+      await postgres_impl.deallocate(self.pools.conns[i].conn, stmtName, self.pools.timeout)
+    except CatchableError:
+      self.log.echoErrorMsg("deallocate failed for " & stmtName & ": " & getCurrentExceptionMsg())
+    self.stmtNames[i] = ""
+```
+
+SQLite / MariaDB の `close()` も同様に `try/except` で保護する。
+
+---
+
+#### 9-3. [performance/高優先] MariaDB: 同期的 STMT 実行がイベントループをブロック
+
+**問題**: `execPreparedStmt` / `queryPreparedStmt` は `sleepAsync(0).await` を1回行った後、以降のすべての STMT 操作（`stmt_execute`, `stmt_store_result`, `stmt_fetch`）を同期ブロッキング呼び出しで実行している。これは他の MariaDB クエリと同様に、実行中は非同期イベントループ全体をブロックする。
+
+**修正方針**: MariaDB Connector/C の非ブロッキング STMT API を `mariadb_rdb.nim` に追加し、同パターンで実装する。
+
+追加が必要な FFI:
+```nim
+proc stmt_execute_start*(ret: ptr cint, stmt: PSTMT): cint {.stdcall, dynlib: lib, importc: "mysql_stmt_execute_start".}
+proc stmt_execute_cont*(ret: ptr cint, stmt: PSTMT, status: cint): cint {.stdcall, dynlib: lib, importc: "mysql_stmt_execute_cont".}
+proc stmt_store_result_start*(ret: ptr cint, stmt: PSTMT): cint {.stdcall, dynlib: lib, importc: "mysql_stmt_store_result_start".}
+proc stmt_store_result_cont*(ret: ptr cint, stmt: PSTMT, status: cint): cint {.stdcall, dynlib: lib, importc: "mysql_stmt_store_result_cont".}
+proc stmt_fetch_start*(ret: ptr cint, stmt: PSTMT): cint {.stdcall, dynlib: lib, importc: "mysql_stmt_fetch_start".}
+proc stmt_fetch_cont*(ret: ptr cint, stmt: PSTMT, status: cint): cint {.stdcall, dynlib: lib, importc: "mysql_stmt_fetch_cont".}
+proc stmt_prepare_start*(ret: ptr cint, stmt: PSTMT, query: cstring, len: int): cint {.stdcall, dynlib: lib, importc: "mysql_stmt_prepare_start".}
+proc stmt_prepare_cont*(ret: ptr cint, stmt: PSTMT, status: cint): cint {.stdcall, dynlib: lib, importc: "mysql_stmt_prepare_cont".}
+```
+
+`prepareStmt` も非ブロッキングパターンに変更する。
+
+---
+
+#### 9-4. [memory/中優先] MariaDB: `bindStmtResults` が毎回 GC アロケーション
+
+**問題**: `queryPreparedStmt` → `bindStmtResults` が毎回 5 つの `newSeq` を確保する（`binds`, `buffers`, `lengths`, `nullFlags`, `errorFlags`）。高頻度な prepared statement 実行では GC プレッシャーになる。
+
+**修正方針**: `MariadbPreparedStatement` にキャッシュフィールドを追加し、コネクションごとに一度だけ確保して再利用する。
+
+```nim
+type MariadbPreparedStatement* = ref object
+  ...
+  # 各コネクションの結果バインドキャッシュ（列数が変わらない限り再利用）
+  resultBindCache*: seq[tuple[
+    binds: seq[BIND], buffers: seq[string],
+    lengths: seq[culong], nullFlags: seq[my_bool], errorFlags: seq[my_bool]
+  ]]
+```
+
+---
+
+#### 9-5. [memory/中優先] PreparedStatement 型の冗長フィールド
+
+**対応済み**: `SqlitePreparedStatement`, `PostgresPreparedStatement`, `MariadbPreparedStatement` から `log` と `pools` を削除した。prepared statement 側は `owner.log` / `owner.pools` を参照する構成に統一した。
+
+```nim
+type SqlitePreparedStatement* = ref object
+  owner*: SqliteConnections
+  sql*: string
+  stmts*: seq[PStmt]
+  nArgs*: int
+  cachedColumns*: DbColumns
+  hasCachedColumns*: bool
+```
+
+**実装結果**: prepared statement のライフサイクル管理は `owner` に集約し、型定義の重複を解消した。将来的に `owner` を持たない軽量ハンドルが必要になった場合のみ再導入を検討する。
+
+---
+
+#### 9-6. [safety/中優先] PostgreSQL: `toPreparedCStringArray` の unsafe ポインタ
+
+**問題**:
+
+```nim
+proc toPreparedCStringArray(args: seq[PreparedParam]): seq[cstring] =
+  result[i] = arg.value.cstring  # arg.value の内部ポインタを借用
+
+let valuePtr = cast[cstringArray](values[0].unsafeAddr)  # unsafeAddr
+pqsendQueryPrepared(..., valuePtr, ...)
+```
+
+`cstring` は Nim の GC 管理文字列への生ポインタ。`values` seq 内の cstring が `args` の `PreparedParam.value` 文字列を直接指すため、GC による移動（将来の ARC/ORC + 移動最適化）で dangling になりうる。現状の `pqsendQueryPrepared` 呼び出しは await なしなので実害はないが設計上fragile。
+
+**修正方針**: `allocCStringArray` を使うか、`GC_ref` で各文字列を pin してから渡す。
+
+```nim
+# 安全な代替案
+var strbuf = newSeq[string](args.len)  # 文字列を保持する所有コンテナ
+var cstrs = newSeq[cstring](args.len)
+for i, arg in args:
+  if arg.isNull:
+    cstrs[i] = nil
+  else:
+    strbuf[i] = arg.value  # ここで文字列を「所有」
+    cstrs[i] = cstrs[i].addr  # strbuf[i] の参照
+```
+
+---
+
+#### 9-7. [performance/低優先] `close()` の逐次 DEALLOCATE → 並列化
+
+**問題**: PostgreSQL の `close()` で各コネクションへの `DEALLOCATE` を逐次 `await` している。
+
+**修正方針**: `asyncdispatch.all()` で全コネクションへ並列送信する。
+
+```nim
+proc close*(self: PostgresPreparedStatement) {.async.} =
+  var futs: seq[Future[void]]
+  for i, stmtName in self.stmtNames:
+    if stmtName.len > 0:
+      futs.add(postgres_impl.deallocate(self.pools.conns[i].conn, stmtName, self.pools.timeout))
+  await all(futs)
+  for i in 0 ..< self.stmtNames.len:
+    self.stmtNames[i] = ""
+```
+
+※ エラーハンドリング（9-2）と組み合わせて実装する。
+
+---
+
+#### 9-8. [code quality/低優先] `preparedArgsExpr` 間接呼び出しの冗長除去
+
+**問題**: 3 つの `*_exec.nim` それぞれに以下の wrapper proc が存在する：
+
+```nim
+proc preparedArgsExpr(args: NimNode): NimNode =
+  result = buildPreparedArgsExpr(args)
+```
+
+`buildPreparedArgsExpr` を直接マクロ内で呼べばよく、この wrapper は不要。
+
+**修正方針**: 削除して、マクロ内で `buildPreparedArgsExpr(args)` を直接呼ぶ。
+
+---
+
+#### 9-9. [code quality/低優先] `getPreparedRows` / `preparedGet` 系のコード重複
+
+3 つの `*_exec.nim` にほぼ同一の private proc 群が重複している：
+- `getPreparedRows` / `getPreparedAllRows` / `getPreparedRow` / `getPreparedAllRowsPlain` / `getPreparedRowPlain`
+- `preparedGet` / `preparedFirst` / `preparedGetPlain` / `preparedFirstPlain` / `preparedExec`
+
+型の違いにより単純なテンプレート化は難しいが、少なくとも try/catch ロギングラッパーパターンをテンプレートで共通化できる。
+
+---
+
+#### 9-10. [correctness/低優先] `mariadb_rdb.nim` の `Enum_stmt_attr_type` 重複定義
+
+`Enum_stmt_attr_type` が uncomment されたが、その直下に同内容のコメントアウトされた旧定義が残っており、コード上は重複している。コメントアウト側を削除して整理する。
+
+---
+
+#### 9-11. [performance/低優先] SQLite: `setColumnsStaticMeta` のキャッシュ化
+
+`preparedQueryReuse` が呼ばれるたびに `setColumnsStaticMeta(columns, stmt)` を実行しているが、列のメタデータ（名前・宣言型）は同じステートメントに対して不変。`SqlitePreparedStatement` に `cachedColumns` を持たせ、初回のみ設定することで毎回の計算を省略できる。
+
+---
+
+#### 9-12. [correctness/低優先] MariaDB: `stmt.mysql` 内部フィールルアクセス
+
+`bindStmtParams` 内で `dbError(stmt.mysql)` を呼んでいる。`PSTMT` の内部フィールド `mysql` への直接アクセスは Connector/C のバージョン間で構造体レイアウトが変わると壊れる可能性がある。代わりに `stmt_errno(stmt)` / `stmt_error(stmt)` を使用する。
+
+---

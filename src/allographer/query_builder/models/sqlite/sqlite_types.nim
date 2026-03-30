@@ -2,6 +2,7 @@ import std/asyncdispatch
 import std/deques
 import std/json
 import std/tables
+import ../database_types
 import ../../log
 import ../../libs/sqlite/sqlite_rdb
 
@@ -54,6 +55,16 @@ type RawSqliteQuery* = ref object
   # for transaction
   isInTransaction*: bool
   transactionConn*: int
+
+
+type SqlitePreparedStatement* = ref object
+  owner*: SqliteConnections
+  sql*: string
+  stmts*: seq[PStmt]
+  nArgs*: int
+  cachedColumns*: DbColumns
+  hasCachedColumns*: bool
+
 
 
 proc `$`*(self:SqliteConnections|SqliteQuery|RawSqliteQuery):string =

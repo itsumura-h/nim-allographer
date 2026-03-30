@@ -5,6 +5,8 @@ import std/strformat
 import std/json
 import ../../error
 import ../../models/database_types
+import ../../models/mysql/mysql_types
+import ../../prepared_param
 import ./mysql_rdb
 import ./mysql_lib
 
@@ -31,6 +33,193 @@ proc rawExec(conn:PMySQL, query: string, args: MysqlParams) =
 
   var q = dbFormat(conn, query, args)
   if realQuery(conn, q.cstring, q.len) != 0'i32: dbError(conn)
+
+
+proc prepareStmt*(conn: PMySQL, sql: string, timeout: int): Future[PSTMT] {.async.} =
+  assert(not conn.isNil, "Database not connected.")
+  await sleepAsync(0)
+  result = mysql_rdb.stmt_init(conn)
+  if result.isNil:
+    dbError(conn)
+  if mysql_rdb.stmt_prepare(result, sql.cstring, sql.len) != 0:
+    let errmsg = $mysql_rdb.stmt_error(result)
+    discard mysql_rdb.stmt_close(result)
+    raise newException(DbError, errmsg)
+
+
+proc bindStmtParams(stmt: PSTMT, args: seq[PreparedParam]) =
+  if mysql_rdb.stmt_param_count(stmt) != args.len:
+    raise newException(DbError, "Prepared statement parameter count mismatch.")
+
+  if args.len == 0:
+    return
+
+  var binds = newSeq[BIND](args.len)
+  var values = newSeq[string](args.len)
+  var lengths = newSeq[culong](args.len)
+  var nullFlags = newSeq[my_bool](args.len)
+  var errorFlags = newSeq[my_bool](args.len)
+
+  for i, arg in args:
+    if arg.isNull:
+      nullFlags[i] = true
+      binds[i].buffer_type = TYPE_NULL
+      binds[i].is_null = addr nullFlags[i]
+      binds[i].error = addr errorFlags[i]
+      continue
+
+    values[i] = arg.value
+    lengths[i] = values[i].len.culong
+    binds[i].buffer_type = TYPE_STRING
+    if values[i].len > 0:
+      binds[i].buffer = cast[pointer](values[i].cstring)
+    else:
+      binds[i].buffer = nil
+    binds[i].buffer_length = values[i].len.culong
+    binds[i].length = addr lengths[i]
+    binds[i].is_null = addr nullFlags[i]
+    binds[i].error = addr errorFlags[i]
+
+  if mysql_rdb.stmt_bind_param(stmt, binds[0].addr):
+    raise newException(DbError, $mysql_rdb.stmt_error(stmt))
+
+
+proc bindStmtResults(
+    stmt: PSTMT,
+    metadata: PRES,
+    resultBinds: MysqlResultBindCache
+) =
+  let cols = int(mysql_rdb.num_fields(metadata))
+  if resultBinds.binds.len != cols:
+    resultBinds.binds = newSeq[BIND](cols)
+    resultBinds.buffers = newSeq[string](cols)
+    resultBinds.lengths = newSeq[culong](cols)
+    resultBinds.nullFlags = newSeq[my_bool](cols)
+    resultBinds.errorFlags = newSeq[my_bool](cols)
+    for i in 0 ..< cols:
+      let field = mysql_rdb.fetch_field_direct(metadata, cast[mysql_rdb.cuint](i))
+      var bufferLen = int(field.len)
+      if bufferLen < 4096:
+        bufferLen = 4096
+      resultBinds.buffers[i] = newString(bufferLen)
+  else:
+    for i in 0 ..< cols:
+      resultBinds.lengths[i] = 0
+      resultBinds.nullFlags[i] = false
+      resultBinds.errorFlags[i] = false
+
+  for i in 0 ..< cols:
+    resultBinds.binds[i].buffer_type = TYPE_STRING
+    resultBinds.binds[i].buffer = if resultBinds.buffers[i].len > 0: cast[pointer](resultBinds.buffers[i].cstring) else: nil
+    resultBinds.binds[i].buffer_length = resultBinds.buffers[i].len.culong
+    resultBinds.binds[i].length = addr resultBinds.lengths[i]
+    resultBinds.binds[i].is_null = addr resultBinds.nullFlags[i]
+    resultBinds.binds[i].error = addr resultBinds.errorFlags[i]
+
+  if cols > 0 and mysql_rdb.stmt_bind_result(stmt, resultBinds.binds[0].addr):
+    raise newException(DbError, $mysql_rdb.stmt_error(stmt))
+
+
+proc refetchTruncatedColumns(
+    stmt: PSTMT,
+    resultBinds: MysqlResultBindCache
+) =
+  for i in 0 ..< resultBinds.binds.len:
+    if not resultBinds.errorFlags[i]:
+      continue
+    let needed = max(int(resultBinds.lengths[i]), resultBinds.buffers[i].len)
+    if needed <= 0:
+      continue
+    resultBinds.buffers[i] = newString(needed)
+    resultBinds.binds[i].buffer = cast[pointer](resultBinds.buffers[i].cstring)
+    resultBinds.binds[i].buffer_length = needed.culong
+    if mysql_rdb.stmt_fetch_column(stmt, resultBinds.binds[i].addr, cast[mysql_rdb.cuint](i), 0) != 0:
+      raise newException(DbError, $mysql_rdb.stmt_error(stmt))
+
+
+proc execPreparedStmt*(conn: PMySQL, stmt: PSTMT, args: seq[PreparedParam], timeout: int) {.async.} =
+  assert(not conn.isNil, "Database not connected.")
+  await sleepAsync(0)
+  if mysql_rdb.stmt_reset(stmt):
+    raise newException(DbError, $mysql_rdb.stmt_error(stmt))
+  if mysql_rdb.stmt_free_result(stmt):
+    raise newException(DbError, $mysql_rdb.stmt_error(stmt))
+  bindStmtParams(stmt, args)
+  if mysql_rdb.stmt_execute(stmt) != 0:
+    raise newException(DbError, $mysql_rdb.stmt_error(stmt))
+  if mysql_rdb.stmt_free_result(stmt):
+    raise newException(DbError, $mysql_rdb.stmt_error(stmt))
+
+
+proc queryPreparedStmt*(
+    conn: PMySQL,
+    stmt: PSTMT,
+    args: seq[PreparedParam],
+    timeout: int,
+    resultBinds: MysqlResultBindCache
+): Future[(seq[database_types.Row], DbRows)] {.async.} =
+  assert(not conn.isNil, "Database not connected.")
+  await sleepAsync(0)
+  if mysql_rdb.stmt_reset(stmt):
+    raise newException(DbError, $mysql_rdb.stmt_error(stmt))
+  if mysql_rdb.stmt_free_result(stmt):
+    raise newException(DbError, $mysql_rdb.stmt_error(stmt))
+  bindStmtParams(stmt, args)
+  if mysql_rdb.stmt_execute(stmt) != 0:
+    raise newException(DbError, $mysql_rdb.stmt_error(stmt))
+
+  var dbRows: DbRows
+  var rows = newSeq[seq[string]]()
+  let metadata = mysql_rdb.stmt_result_metadata(stmt)
+  if metadata.isNil:
+    if mysql_rdb.stmt_free_result(stmt):
+      raise newException(DbError, $mysql_rdb.stmt_error(stmt))
+    return (rows, dbRows)
+
+  defer:
+    mysql_rdb.free_result(metadata)
+    if mysql_rdb.stmt_free_result(stmt):
+      raise newException(DbError, $mysql_rdb.stmt_error(stmt))
+
+  if mysql_rdb.stmt_store_result(stmt) != 0:
+    raise newException(DbError, $mysql_rdb.stmt_error(stmt))
+
+  let cols = int(mysql_rdb.num_fields(metadata))
+  var baseColumns: DbColumns
+  setColumnInfo(baseColumns, metadata, cols)
+  bindStmtResults(stmt, metadata, resultBinds)
+
+  while true:
+    let fetchRes = mysql_rdb.stmt_fetch(stmt)
+    if fetchRes == 100:
+      break
+    if fetchRes notin {0, 101}:
+      raise newException(DbError, $mysql_rdb.stmt_error(stmt))
+    if fetchRes == 101:
+      refetchTruncatedColumns(stmt, resultBinds)
+
+    var rowColumns = baseColumns
+    var row = newSeq[string](cols)
+    for i in 0 ..< cols:
+      if resultBinds.nullFlags[i]:
+        rowColumns[i].typ.kind = dbNull
+        row[i] = ""
+      else:
+        let length = min(int(resultBinds.lengths[i]), resultBinds.buffers[i].len)
+        if length <= 0:
+          row[i] = ""
+        else:
+          row[i] = resultBinds.buffers[i][0 ..< length]
+    rows.add(row)
+    dbRows.add(rowColumns)
+
+  return (rows, dbRows)
+
+
+proc closePreparedStmt*(stmt: PSTMT) =
+  if stmt.isNil:
+    return
+  discard mysql_rdb.stmt_close(stmt)
 
 
 proc query*(db:PMySQL, query: string, args: seq[string], timeout:int):Future[(seq[database_types.Row], DbRows)] {.async.} =

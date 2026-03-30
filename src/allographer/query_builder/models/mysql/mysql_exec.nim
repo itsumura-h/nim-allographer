@@ -6,8 +6,10 @@ import std/strutils
 import std/sequtils
 import std/times
 import ../../libs/mysql/mysql_impl
+import ../../libs/mysql/mysql_rdb except Option
 import ../../log
 import ../database_types
+import ../../prepared_param
 import ./query/mysql_builder
 import ./mysql_types
 
@@ -338,7 +340,7 @@ proc transactionStart(self:MysqlConnections) {.async.} =
   self.isInTransaction = true
   self.transactionConn = connI
 
-  mysql_impl.exec(self.pools.conns[connI].conn, "BEGIN", newJArray(), newSeq[Row](), self.pools.timeout).await
+  mysql_impl.exec(self.pools.conns[connI].conn, "BEGIN", newJArray(), newSeq[seq[string]](), self.pools.timeout).await
 
 
 proc transactionEnd(self:MysqlConnections, query:string) {.async.} =
@@ -347,7 +349,7 @@ proc transactionEnd(self:MysqlConnections, query:string) {.async.} =
     self.transactionConn = 0
     self.isInTransaction = false
 
-  mysql_impl.exec(self.pools.conns[self.transactionConn].conn, query, newJArray(), newSeq[Row](), self.pools.timeout).await
+  mysql_impl.exec(self.pools.conns[self.transactionConn].conn, query, newJArray(), newSeq[seq[string]](), self.pools.timeout).await
 
 
 # ================================================================================
@@ -604,6 +606,189 @@ proc rollback*(self:MysqlConnections) {.async.} =
 proc commit*(self:MysqlConnections) {.async.} =
   self.log.logger("COMMIT")
   self.transactionEnd("COMMIT").await
+
+
+proc prepare*(self: MysqlConnections, sql: string): MysqlPreparedStatement =
+  new(result)
+  result.owner = self
+  result.info = self.info
+  result.sql = sql
+  result.stmts = newSeq[PSTMT](self.pools.conns.len)
+  result.nArgs = countQuestionMarks(sql)
+  result.resultBindCache = newSeq[MysqlResultBindCache](self.pools.conns.len)
+
+
+proc ensurePreparedStmt(self: MysqlPreparedStatement, connI: int): Future[PSTMT] {.async.} =
+  if self.stmts[connI].isNil:
+    self.stmts[connI] = await mysql_impl.prepareStmt(self.owner.pools.conns[connI].conn, self.sql, self.owner.pools.timeout)
+  return self.stmts[connI]
+
+
+proc getPreparedRows(self: MysqlPreparedStatement, args: seq[PreparedParam]): Future[(seq[seq[string]], DbRows)] {.async.} =
+  var connI = self.owner.transactionConn
+  if not self.owner.isInTransaction:
+    connI = getFreeConn(self.owner).await
+  defer:
+    if not self.owner.isInTransaction:
+      self.owner.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  let stmt = await self.ensurePreparedStmt(connI)
+  if connI >= self.resultBindCache.len:
+    self.resultBindCache.setLen(connI + 1)
+  if self.resultBindCache[connI].isNil:
+    new(self.resultBindCache[connI])
+  return mysql_impl.queryPreparedStmt(
+    self.owner.pools.conns[connI].conn,
+    stmt,
+    args,
+    self.owner.pools.timeout,
+    self.resultBindCache[connI]
+  ).await
+
+
+proc getPreparedAllRows(self: MysqlPreparedStatement, args: seq[PreparedParam]): Future[seq[JsonNode]] {.async.} =
+  let (rows, dbRows) = await self.getPreparedRows(args)
+  if rows.len == 0:
+    self.owner.log.echoErrorMsg(self.sql)
+    return newSeq[JsonNode](0)
+  return toJson(rows, dbRows)
+
+
+proc getPreparedRow(self: MysqlPreparedStatement, args: seq[PreparedParam]): Future[Option[JsonNode]] {.async.} =
+  let (rows, dbRows) = await self.getPreparedRows(args)
+  if rows.len == 0:
+    self.owner.log.echoErrorMsg(self.sql)
+    return none(JsonNode)
+  return toJson(rows, dbRows)[0].some()
+
+
+proc getPreparedAllRowsPlain(self: MysqlPreparedStatement, args: seq[PreparedParam]): Future[seq[seq[string]]] {.async.} =
+  let (rows, _) = await self.getPreparedRows(args)
+  return rows
+
+
+proc getPreparedRowPlain(self: MysqlPreparedStatement, args: seq[PreparedParam]): Future[seq[string]] {.async.} =
+  let (rows, _) = await self.getPreparedRows(args)
+  if rows.len == 0:
+    self.owner.log.echoErrorMsg(self.sql)
+    return newSeq[string](0)
+  return rows[0]
+
+
+proc execPrepared(self: MysqlPreparedStatement, args: seq[PreparedParam]) {.async.} =
+  var connI = self.owner.transactionConn
+  if not self.owner.isInTransaction:
+    connI = getFreeConn(self.owner).await
+  defer:
+    if not self.owner.isInTransaction:
+      self.owner.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  let stmt = await self.ensurePreparedStmt(connI)
+  await mysql_impl.execPreparedStmt(
+    self.owner.pools.conns[connI].conn,
+    stmt,
+    args,
+    self.owner.pools.timeout
+  )
+
+
+proc preparedGet(self: MysqlPreparedStatement, args: seq[PreparedParam]): Future[seq[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedAllRows(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedFirst(self: MysqlPreparedStatement, args: seq[PreparedParam]): Future[Option[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRow(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedGetPlain(self: MysqlPreparedStatement, args: seq[PreparedParam]): Future[seq[seq[string]]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedAllRowsPlain(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedFirstPlain(self: MysqlPreparedStatement, args: seq[PreparedParam]): Future[seq[string]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRowPlain(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedExec(self: MysqlPreparedStatement, args: seq[PreparedParam]) {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    await self.execPrepared(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc get*(self: MysqlPreparedStatement, args: seq[string]): Future[seq[JsonNode]] {.async.} =
+  return await self.preparedGet(args.toPreparedParams)
+
+
+proc get*(self: MysqlPreparedStatement, args: JsonNode): Future[seq[JsonNode]] {.async.} =
+  return await self.preparedGet(args.toPreparedParams)
+
+
+proc first*(self: MysqlPreparedStatement, args: seq[string]): Future[Option[JsonNode]] {.async.} =
+  return await self.preparedFirst(args.toPreparedParams)
+
+
+proc first*(self: MysqlPreparedStatement, args: JsonNode): Future[Option[JsonNode]] {.async.} =
+  return await self.preparedFirst(args.toPreparedParams)
+
+
+proc getPlain*(self: MysqlPreparedStatement, args: seq[string]): Future[seq[seq[string]]] {.async.} =
+  return await self.preparedGetPlain(args.toPreparedParams)
+
+
+proc getPlain*(self: MysqlPreparedStatement, args: JsonNode): Future[seq[seq[string]]] {.async.} =
+  return await self.preparedGetPlain(args.toPreparedParams)
+
+
+proc firstPlain*(self: MysqlPreparedStatement, args: seq[string]): Future[seq[string]] {.async.} =
+  return await self.preparedFirstPlain(args.toPreparedParams)
+
+
+proc firstPlain*(self: MysqlPreparedStatement, args: JsonNode): Future[seq[string]] {.async.} =
+  return await self.preparedFirstPlain(args.toPreparedParams)
+
+
+proc exec*(self: MysqlPreparedStatement, args: seq[string]) {.async.} =
+  await self.preparedExec(args.toPreparedParams)
+
+
+proc exec*(self: MysqlPreparedStatement, args: JsonNode) {.async.} =
+  await self.preparedExec(args.toPreparedParams)
+
+
+proc close*(self: MysqlPreparedStatement) {.async.} =
+  for stmt in self.stmts:
+    mysql_impl.closePreparedStmt(stmt)
 
 
 proc get*(self: RawMysqlQuery):Future[seq[JsonNode]] {.async.} =
