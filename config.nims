@@ -1,7 +1,7 @@
 import os
 
-putEnv("DB_SQLITE", $true)
+putEnv("DB_SQLITE", $false)
 putEnv("DB_POSTGRES", $true)
-putEnv("DB_MYSQL", $true)
-putEnv("DB_MARIADB", $true)
-putEnv("DB_SURREAL", $true)
+putEnv("DB_MYSQL", $false)
+putEnv("DB_MARIADB", $false)
+putEnv("DB_SURREAL", $false)

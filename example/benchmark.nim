@@ -27,6 +27,7 @@ let
 
   sqlitePath = getEnv("SQLITE_PATH", "db.sqlite3")
 
+  mysqlUrl = getEnv("MYSQL_URL", "mysql://user:pass@mysql:3306/database")
   database = getEnv("DB_DATABASE", "database")
   user = getEnv("DB_USER", "user")
   password = getEnv("DB_PASSWORD", "pass")
@@ -43,7 +44,7 @@ let
   surrealPort = getEnv("SURREAL_PORT", "8000").parseInt
 
 
-template benchmarkScenario(rdb: untyped): untyped =
+template benchmarkScenario(rdb: untyped, useBackticks: static[bool]): untyped =
   proc migrate() {.async.} =
     rdb.create(
       table("World", [
@@ -78,6 +79,31 @@ template benchmarkScenario(rdb: untyped): untyped =
     await all(futures)
     return response
 
+  proc benchUpdatePrepared(): Future[seq[JsonNode]] {.async.} =
+    when isExistsMariaDB or isExistsMySQL:
+      let selectSql = """SELECT `index` as id, `randomNumber` FROM `World` WHERE `index` = ?"""
+      let updateSql = """UPDATE `World` SET `randomNumber` = ? WHERE `index` = ?"""
+    else:
+      let selectSql = """SELECT "index" as id, "randomNumber" FROM "World" WHERE "index" = ?"""
+      let updateSql = """UPDATE "World" SET "randomNumber" = ? WHERE "index" = ?"""
+
+    let selectStmt = rdb.prepare(selectSql)
+    let updateStmt = rdb.prepare(updateSql)
+    var response = newSeq[JsonNode](countNum)
+    var futures = newSeq[Future[void]](countNum)
+    for i in 1..countNum:
+      let index = rand(range1_10000)
+      let number = rand(range1_10000)
+      futures[i - 1] = (proc(): Future[void] {.async.} =
+        discard await selectStmt.first(@[$index])
+        await updateStmt.exec(@[$number, $index])
+      )()
+      response[i - 1] = %*{"id": index, "randomNumber": number}
+    await all(futures)
+    await selectStmt.close()
+    await updateStmt.close()
+    return response
+
   proc timeProcess[T](name: system.string, cb: proc(): Future[T]) {.async.} =
     var eachTime = 0.0
     var sumTime = 0.0
@@ -102,36 +128,46 @@ template benchmarkScenario(rdb: untyped): untyped =
 
   migrate().waitFor
   waitFor timeProcess("update", benchUpdate)
+  when compiles(rdb.prepare("SELECT 1")):
+    waitFor timeProcess("update prepared", benchUpdatePrepared)
 
 
 when isExistsSqlite:
   proc runSqlite() =
     echo "=== sqlite"
     let rdb = dbOpen(SQLite3, sqlitePath, maxConnections, timeout, shouldDisplayLog=shouldDisplayLog)
-    benchmarkScenario(rdb)
+    benchmarkScenario(rdb, false)
+
+when isExistsMysql:
+  proc runMysql() =
+    echo "=== mysql"
+    let rdb = dbOpen(MySQL, mysqlUrl, maxConnections, timeout, shouldDisplayLog=shouldDisplayLog)
+    benchmarkScenario(rdb, true)
 
 when isExistsMariadb:
   proc runMariadb() =
     echo "=== mariadb"
-    let rdb = dbOpen(MariaDB, database, user, password, mariaHost, mariaPort, maxConnections, timeout, shouldDisplayLog=shouldDisplayLog)
-    benchmarkScenario(rdb)
+    let rdb = dbOpen(MariaDB, "mariadb://user:pass@mariadb:3306/database", maxConnections, timeout, shouldDisplayLog=shouldDisplayLog)
+    benchmarkScenario(rdb, true)
 
 when isExistsPostgres:
   proc runPostgres() =
     echo "=== postgres"
-    let rdb = dbOpen(PostgreSQL, database, user, password, pgHost, pgPort, maxConnections, timeout, shouldDisplayLog=shouldDisplayLog)
-    benchmarkScenario(rdb)
+    let rdb = dbOpen(PostgreSQL, "postgresql://user:pass@postgres:5432/database", maxConnections, timeout, shouldDisplayLog=shouldDisplayLog)
+    benchmarkScenario(rdb, false)
 
 when isExistsSurrealdb:
   proc runSurreal() =
     echo "=== surrealdb"
     let rdb = waitFor dbOpen(SurrealDB, surrealNamespace, surrealDatabase, surrealUser, surrealPassword, surrealHost, surrealPort, maxConnections, timeout, shouldDisplayLog=shouldDisplayLog)
-    benchmarkScenario(rdb)
+    benchmarkScenario(rdb, false)
 
 
 proc main() =
   when isExistsSqlite:
     runSqlite()
+  when isExistsMysql:
+    runMysql()
   when isExistsMariadb:
     runMariadb()
   when isExistsPostgres:

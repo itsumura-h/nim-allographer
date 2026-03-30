@@ -40,6 +40,8 @@ alwaysApply: false
   - [x] `preparedArgsExpr` の間接呼び出しを除去した
   - [x] MariaDB の `stmt.mysql` 直接参照を撤去した
   - [x] PreparedStatement 型の冗長な `log` / `pools` フィールドを削除した
+- [x] `example/benchmark.nim` の PostgreSQL 計測で prepared update が遅く見える理由を調査し、ブランチルールへ反映した
+- [x] prepared statement を高速化目的で使うための実装方針を設計書としてブランチルールへ追記した
 
 ## 参考資料
 
@@ -51,6 +53,405 @@ alwaysApply: false
   - `mysql_stmt_init` / `mysql_stmt_prepare` / `mysql_stmt_bind_param` / `mysql_stmt_execute` / `mysql_stmt_close`
 
 ## 調査結果・設計まとめ
+
+### 2026-03-30 benchmark.nim(PostgreSQL) で prepared update が遅く見える理由
+
+結論として、現在の `example/benchmark.nim` が計測しているのは「prepared statement を十分に warm up して再利用した steady-state の実行性能」ではなく、**prepare / lazy prepare / deallocate を含めた prepared statement のライフサイクル全体**である。そのため PostgreSQL では通常の `update` より prepared 側が遅く見えやすい。
+
+#### 1. ベンチマークが `prepare` と `close()` を毎回の計測に含めている
+
+`benchUpdatePrepared()` は毎回の実行ごとに `selectStmt` / `updateStmt` を新規作成し、500 件の処理が終わったあと `close()` している。
+
+- `example/benchmark.nim:83-105`
+- `example/benchmark.nim:114-118`
+
+つまり `timeProcess("update prepared", ...)` の 1 回分には次がすべて含まれる。
+
+- `rdb.prepare(...)` で prepared statement ハンドルを作る
+- 各コネクションで必要になった時点の lazy prepare
+- 500 件の `SELECT` + `UPDATE`
+- `close()` による各コネクションの `DEALLOCATE`
+
+しかも `timeProcess` はこれを 5 回繰り返すので、prepared statement の準備・破棄コストが毎回入り直す。
+
+#### 2. PostgreSQL 実装は「コネクションごと」に lazy prepare する
+
+`PostgresPreparedStatement` は `stmtNames` をコネクション数ぶん持ち、`ensurePreparedStmt()` がそのコネクションで未 prepare の場合だけ `postgres_impl.prepare()` を呼ぶ。
+
+- `src/allographer/query_builder/models/postgres/postgres_exec.nim:81-100`
+
+したがって PostgreSQL の prepared statement は「SQL ごとに 1 回」ではなく、**SQL ごと × 使用したコネクションごとに 1 回** prepare される。
+
+このベンチマークは `DB_MAX_CONNECTION` のデフォルトが 95 で、500 件を並列に投げている。
+
+- `example/benchmark.nim:20`
+- `example/benchmark.nim:25`
+
+そのため `selectStmt` と `updateStmt` の 2 本は、1 回の計測中に多くのコネクションへ広く拡散して prepare されやすい。最悪に近いケースでは、1 回の計測で概ね次の追加往復が発生する。
+
+- `selectStmt`: 最大 95 接続ぶんの `PREPARE`
+- `updateStmt`: 最大 95 接続ぶんの `PREPARE`
+- `selectStmt.close()`: 使用済み接続ぶんの `DEALLOCATE`
+- `updateStmt.close()`: 使用済み接続ぶんの `DEALLOCATE`
+
+つまり通常経路にない追加通信が、1 回のベンチで最大 190 回の `PREPARE` と 190 回の `DEALLOCATE` ぶん乗る。
+
+#### 3. `first()` と `exec()` が別々に接続を取り直すので、prepare がさらに拡散する
+
+prepared の `first()` と `exec()` はどちらも内部で `getFreeConn()` し、処理後に即 `returnConn()` する。トランザクションで束縛していないため、1 つの Future 内の `SELECT` と `UPDATE` が別コネクションで走ることがある。
+
+- `src/allographer/query_builder/models/postgres/postgres_exec.nim:441-458`
+- `src/allographer/query_builder/models/postgres/postgres_exec.nim:490-507`
+
+このため 500 件の処理は実質的に「1000 回のコネクション取得」に近い挙動になり、prepared statement がプール全体へ広がりやすい。結果として lazy prepare の発生回数が増える。
+
+#### 4. 通常の `update` 側にも初回コストはあるが、prepared 側よりかなり小さい
+
+通常の PostgreSQL `update` は `exec()` の前に `information_schema.columns` を読んで列型をキャッシュする。ただしこれはテーブルごとに 1 回だけで、以後は `columnTypeCache` が再利用される。
+
+- `src/allographer/query_builder/models/postgres/postgres_exec.nim:147-159`
+- `src/allographer/query_builder/models/postgres/postgres_exec.nim:759-763`
+
+一方 prepared 側は列型キャッシュ取得を避けられても、その代わりに `PREPARE` / `DEALLOCATE` がコネクション単位で発生する。今回のベンチ条件では、この差のほうが重い。
+
+#### 5. PostgreSQL の通常経路もすでに bind パラメータ実行で、prepared の利得が限定されやすい
+
+通常の `PostgresQuery` は文字列連結で値を埋め込んでいるわけではなく、`postgres_impl.query/exec` で `PQsendQueryParams` を使っている。つまり通常経路でもクライアント側の SQL 文字列組み立てコストは大きくなく、prepared が削減できるのは主にサーバー側の parse/plan の一部である。
+
+- `src/allographer/query_builder/libs/postgres/postgres_impl.nim:69-77`
+- `src/allographer/query_builder/libs/postgres/postgres_impl.nim:124-161`
+
+今回のベンチでは 1 回のステートメントを長く使い回す前に close してしまうため、その利得よりも prepare/deallocate の通信コストのほうが前面に出る。
+
+#### 6. 実装ベースでの整理
+
+したがって、今回の PostgreSQL 計測結果は「prepared statement が本質的に遅い」ことを示しているのではなく、次の条件が重なった結果と解釈するのが正しい。
+
+- `benchmark.nim` が prepared statement を毎回作成して毎回 close している
+- PostgreSQL 実装が prepared statement をコネクションごとに lazy prepare する
+- `SELECT` と `UPDATE` が別々にコネクションを取り直すため、prepare 対象の接続が増えやすい
+- 通常経路はすでに `PQsendQueryParams` を使っており、prepared の純粋な利得が小さい
+
+#### 7. 再計測時の注意点
+
+prepared statement の純粋な再利用効果を見たい場合は、少なくとも次の条件に変える必要がある。
+
+- `selectStmt` / `updateStmt` を `timeProcess` の外で 1 回だけ作る
+- 5 回の繰り返しで同じ prepared statement を使い回す
+- `close()` は最後に 1 回だけ呼ぶ
+- 可能なら `DB_MAX_CONNECTION` を絞るか、同一処理内で接続を固定してコネクションごとの warm up 拡散を抑える
+
+現状コードのままでは、benchmark 名は `update prepared` でも、実際に測っているものは「prepared statement reuse の速さ」ではなく「prepared statement の準備・拡散・破棄まで含む総コスト」である。
+
+### 2026-03-30 prepared statement を高速化目的で使うための設計書
+
+#### 1. 目的
+
+prepared statement を「SQL インジェクション対策の別 API」として提供するだけでなく、**同じ SQL を高頻度に繰り返し実行するワークロードで、通常経路より速くなる実装**へ寄せる。
+
+このブランチで目指すべき性能改善の主眼は次の 3 つ。
+
+- prepare/deallocate の往復回数を減らす
+- 同一の logical operation 内で接続を固定し、prepared state の局所性を高める
+- ベンチマークと利用者 API の両方で、prepared statement の warm state を継続利用できるようにする
+
+#### 2. 現状のボトルネック整理
+
+高速化を阻害している要因は、前節の benchmark 調査結果と合わせると次の 4 点に集約できる。
+
+##### 2-1. prepared state がハンドル単位で、プール単位の cache になっていない
+
+現状の `PostgresPreparedStatement` は `stmtBaseName` / `stmtNames` を自分自身の中に持つ。
+
+- `src/allographer/query_builder/models/postgres/postgres_types.nim`
+- `src/allographer/query_builder/models/postgres/postgres_exec.nim:81-100`
+
+このため同じ SQL に対して `rdb.prepare(sql)` を 2 回呼ぶと、同一プール内でも statement 情報は共有されず、別の handle として prepare がやり直される。ベンチマークのように handle を短命に作る使い方では、この設計がそのまま追加コストになる。
+
+##### 2-2. prepared 実行ごとに `getFreeConn()` するため、接続局所性が弱い
+
+`first()` と `exec()` は prepared statement でも毎回 `getFreeConn()` → 実行 → `returnConn()` になっている。
+
+- `src/allographer/query_builder/models/postgres/postgres_exec.nim:441-458`
+- `src/allographer/query_builder/models/postgres/postgres_exec.nim:490-507`
+
+このため「SELECT してから UPDATE」のような 1 つの業務操作の中でも接続が変わりうる。prepared の再利用に必要な「同じ接続に同じ SQL を当て続ける」性質が弱く、prepare がプール全体に拡散する。
+
+##### 2-3. `close()` が論理 close ではなく物理 deallocate になっている
+
+現状の `close()` は、その handle が使った全接続に対して `DEALLOCATE` を送る。
+
+- `src/allographer/query_builder/models/postgres/postgres_exec.nim:921-930`
+
+利用者が「このハンドルをもう参照しない」という意味で close しただけでも、プール内に蓄積した prepared state を物理破棄してしまう。短いスコープの prepared handle を何度も作る利用法と相性が悪い。
+
+##### 2-4. 通常経路もすでに bind 実行なので、prepared の優位は薄い
+
+PostgreSQL の通常経路は `PQsendQueryParams` ベースであり、文字列埋め込みをしていない。
+
+- `src/allographer/query_builder/libs/postgres/postgres_impl.nim:69-77`
+- `src/allographer/query_builder/libs/postgres/postgres_impl.nim:124-161`
+
+したがって prepared による性能優位は「サーバー側 parse/plan の再利用」と「クライアント側の余計な周辺処理削減」に限られる。prepare/deallocate や接続取り直しが多いままでは、通常経路を上回りにくい。
+
+#### 3. 設計方針
+
+高速化のための設計方針は次の 3 本柱にする。
+
+##### 3-1. プール単位の prepared statement cache を導入する
+
+`PreparedStatement` 自体に driver ハンドルを抱え込ませるのではなく、**プール (`Connections`) が SQL ごとの prepared state を保持する**設計に寄せる。
+
+概念的には以下の構成にする。
+
+```nim
+type PreparedCacheKey = object
+  sql*: string
+  nArgs*: int
+
+type PostgresPreparedEntry = ref object
+  sql*: string
+  nArgs*: int
+  stmtBaseName*: string
+  stmtNames*: seq[string]    ## connI ごとの物理 prepared 名
+  refCount*: int             ## 論理 handle 数
+  lastUsedAt*: int64
+
+type Connections* = ref object
+  conns*: seq[Connection]
+  timeout*: int
+  waiters*: Deque[Future[void]]
+  columnTypeCache*: Table[string, seq[Row]]
+  preparedCache*: Table[string, PostgresPreparedEntry]
+```
+
+`prepare(self, sql)` の意味も次のように変える。
+
+- いま: 新しい `PostgresPreparedStatement` を毎回独立生成
+- 変更後: `preparedCache[sql]` を lookup し、なければ論理 entry を作る
+- 戻り値の handle は cache entry への参照だけを持つ軽量ハンドルにする
+
+これにより同一 SQL を何度 `prepare()` しても、物理 prepared state はプール内で共有される。
+
+##### 3-2. 「接続固定で複数回実行する」API を追加する
+
+高速化を狙うなら、prepared statement を単発 API として呼ぶだけでは不十分。**呼び出し側が同じ接続に複数の prepared 実行を束ねられる API** を持つべきである。
+
+最小案は次のどちらか。
+
+- `withConnection` / `withPreparedConnection` のような block API
+- `PreparedSession` / `ConnectionLease` のような明示ハンドル API
+
+PostgreSQL の既存構造に最も素直なのは block API。
+
+```nim
+await rdb.withPreparedConnection(proc (ctx: PostgresPreparedContext): Future[void] {.async.} =
+  discard await selectStmt.first(ctx, @[$index])
+  await updateStmt.exec(ctx, @[$number, $index])
+)
+```
+
+`ctx` は内部に `connI` を持ち、prepared 実行は `getFreeConn()` を呼ばず必ずその接続を使う。これにより 1 つの業務操作の中で接続がぶれなくなる。
+
+この API はトランザクションとも整合させやすい。
+
+- トランザクション中なら `transactionConn` を流用
+- 非トランザクション時は `withPreparedConnection` が 1 回だけ `getFreeConn()` し、block 終了時に返却
+
+##### 3-3. `close()` を「論理 close」に変更し、物理破棄は別 API に分離する
+
+prepared statement の高速化には、プールに残った warm state を次回も再利用できることが重要。そのため `close()` は物理 `DEALLOCATE` ではなく、**論理参照の解放だけ**に変える。
+
+想定する意味論は次の通り。
+
+- `close()`: handle の `refCount` を減らすだけ。entry 自体は cache に残す
+- `flushPrepared(sql)` または `clearPreparedCache()`: 物理 `DEALLOCATE`
+- コネクション close 時: その接続に紐づく prepared state を一括破棄
+
+この変更により、利用者が毎回 `prepare` / `close` しても、プール側が hot SQL を一定期間保持できる。
+
+#### 4. PostgreSQL 向け具体設計
+
+##### 4-1. 型変更
+
+`PostgresPreparedStatement` は「物理 state の所有者」から「cache entry を参照するハンドル」へ変える。
+
+```nim
+type PostgresPreparedStatement* = ref object
+  owner*: PostgresConnections
+  cacheKey*: string
+```
+
+`stmtBaseName` / `stmtNames` / `nArgs` は `Connections.preparedCache[cacheKey]` 側へ移す。
+
+##### 4-2. statement 名の決め方
+
+PostgreSQL の prepared 名は cache entry に属する stable name にする。
+
+候補:
+
+- `allographer_stmt_{hash(sql)}`
+- 実際の物理名は `{base}_{connI}`
+
+`prepare()` のたびに `gPreparedStmtCounter` で新しい名前を振る現行方式だと cache 再利用と相性が悪い。SQL ベースで stable に決まる名前へ寄せる。
+
+##### 4-3. `ensurePreparedStmt()` の役割変更
+
+`ensurePreparedStmt(self, connI)` は handle ではなく cache entry を見るようにする。
+
+挙動:
+
+- `preparedCache[cacheKey].stmtNames[connI]` が空なら `PQsendPrepare`
+- すでに埋まっていればそのまま再利用
+- `lastUsedAt` を更新
+
+これで同じ SQL を複数 handle が共有しても、接続ごとの physical prepare は 1 回で済む。
+
+##### 4-4. evict 戦略
+
+cache を無制限にすると長時間プロセスで膨らむため、最低限の eviction ポリシーを入れる。
+
+初期実装は簡素でよい。
+
+- `preparedCacheMaxEntries` を `Connections` に持つ
+- 上限超過時は `refCount == 0` の entry だけを LRU で追い出す
+- evict 時に、その entry が prepare 済みの接続へ `DEALLOCATE`
+
+TTL は後回しでよい。まずは `maxEntries + refCount + LRU` で十分。
+
+#### 5. 接続固定 API の設計
+
+##### 5-1. 新規型
+
+```nim
+type PostgresPreparedContext* = ref object
+  owner*: PostgresConnections
+  connI*: int
+```
+
+##### 5-2. 新規 API
+
+```nim
+proc withPreparedConnection*(
+  self: PostgresConnections,
+  body: proc (ctx: PostgresPreparedContext): Future[void]
+): Future[void]
+```
+
+必要なら戻り値付き overload も持たせる。
+
+```nim
+proc withPreparedConnection*[T](
+  self: PostgresConnections,
+  body: proc (ctx: PostgresPreparedContext): Future[T]
+): Future[T]
+```
+
+##### 5-3. prepared 実行の overload
+
+prepared statement に `ctx` 付き overload を足す。
+
+```nim
+proc first*(self: PostgresPreparedStatement, ctx: PostgresPreparedContext, args: seq[string]): Future[Option[JsonNode]]
+proc exec*(self: PostgresPreparedStatement, ctx: PostgresPreparedContext, args: seq[string]): Future[void]
+```
+
+内部では `ctx.connI` をそのまま使い、`getFreeConn()` / `returnConn()` を行わない。
+
+##### 5-4. 使い分け
+
+- 既存 API `stmt.exec(args)` は後方互換のため維持
+- 高速化を狙う経路は `withPreparedConnection` + `stmt.exec(ctx, args)` を推奨
+
+これなら public API を壊さず、新しい最適化経路だけを増やせる。
+
+#### 6. benchmark.nim の設計変更
+
+性能検証用の example は、prepared statement の高速化効果を測れるように使い方も変える。
+
+##### 6-1. statement 作成位置を `timeProcess` の外へ出す
+
+```nim
+let selectStmt = rdb.prepare(selectSql)
+let updateStmt = rdb.prepare(updateSql)
+
+waitFor timeProcess("update prepared", benchUpdatePrepared)
+
+await selectStmt.close()
+await updateStmt.close()
+```
+
+これにより 5 回の計測中で同じ prepared state を使い回せる。
+
+##### 6-2. 計測対象を 2 種類に分ける
+
+ベンチマーク名も分けるべき。
+
+- `update prepared cold`: prepare/warmup を含む
+- `update prepared warm`: warmup 済み state の再利用だけを測る
+
+prepared statement の利得を見るなら主対象は `warm`。
+
+##### 6-3. 高速化経路では接続固定 API を使う
+
+```nim
+await rdb.withPreparedConnection(proc (ctx: PostgresPreparedContext): Future[void] {.async.} =
+  discard await selectStmt.first(ctx, @[$index])
+  await updateStmt.exec(ctx, @[$number, $index])
+)
+```
+
+これで 1 つの操作が 1 接続に閉じ、prepared locality が保たれる。
+
+#### 7. 実装順序
+
+この設計は段階的に入れる。
+
+##### Phase 1: cache 化
+
+- `Connections.preparedCache` 追加
+- `prepare()` を cache lookup ベースへ変更
+- `close()` を論理 close 化
+- `clearPreparedCache()` を追加
+
+この段階だけでも「毎回 prepare / close する」使い方の無駄をかなり減らせる。
+
+##### Phase 2: 接続固定 API
+
+- `PreparedContext` / `withPreparedConnection` を追加
+- prepared `get/first/exec` に `ctx` overload を追加
+- benchmark.nim をこの経路で更新
+
+この段階で「SELECT と UPDATE が別接続に飛ぶ」問題を抑えられる。
+
+##### Phase 3: eviction と運用制御
+
+- `preparedCacheMaxEntries`
+- LRU eviction
+- 明示的 flush API
+- 必要なら prewarm API
+
+ここは運用性の整備フェーズ。
+
+#### 8. テスト方針
+
+高速化系の変更でも、最低限次の挙動はテストで固定する。
+
+- 同じ SQL を `prepare()` しても、同一接続では物理 prepare が 1 回しか走らないこと
+- `close()` 後でも cache が残る設計なら、再 `prepare()` で物理 prepare が再実行されないこと
+- `withPreparedConnection` の block 内で、同じ `connI` が再利用されること
+- transaction 中は `transactionConn` が優先され、追加の `getFreeConn()` が走らないこと
+- cache eviction 時に `DEALLOCATE` が正しく発行されること
+
+#### 9. 非目標
+
+今回の高速化設計では、以下は初期スコープに含めない。
+
+- PostgreSQL の generic plan / custom plan の細かい制御
+- SQL 正規化による高度な cache key 統合
+- prepared statement の driver 横断完全共通化
+
+まずは PostgreSQL を基準に、**prepare/deallocate の無駄を減らし、接続固定で locality を作る**ところまでを優先する。
 
 ---
 
