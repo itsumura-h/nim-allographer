@@ -57,6 +57,14 @@ type RawPostgresQuery* = ref object
   transactionConn*: int
 
 
+type PostgresPreparedStatement* = ref object
+  owner*: PostgresConnections
+  sql*: string
+  stmtBaseName*: string
+  stmtNames*: seq[string]
+  nArgs*: int
+
+
 proc `$`*(self:PostgresConnections|PostgresQuery|RawPostgresQuery):string =
   return "PostgreSQL"
 

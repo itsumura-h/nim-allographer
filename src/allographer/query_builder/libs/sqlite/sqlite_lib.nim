@@ -79,7 +79,7 @@ proc toTypeKind(t: var DbType; x: int32) =
   of SQLITE_TEXT: t.kind = dbVarchar
   else: t.kind = dbUnknown
 
-proc setColumnsStaticMeta(columns: var DbColumns; x: PStmt) =
+proc setColumnsStaticMeta*(columns: var DbColumns; x: PStmt) =
   ## ステップ前でも列名・宣言型・テーブル名は取得できる（行に依存しない）。
   let L = column_count(x)
   setLen(columns, L.int)
@@ -88,7 +88,7 @@ proc setColumnsStaticMeta(columns: var DbColumns; x: PStmt) =
     columns[i].typ.name = $column_decltype(x, i)
     columns[i].tableName = $column_table_name(x, i)
 
-proc setColumnsRuntimeTypes(columns: var DbColumns; x: PStmt) =
+proc setColumnsRuntimeTypes*(columns: var DbColumns; x: PStmt) =
   ## 行ごとに変わりうるのは `column_type` のみ。
   let L = column_count(x)
   for i in 0'i32 ..< L:

@@ -1,0 +1,167 @@
+---
+description: 333-prepared-statementブランチでの開発時に読み込む
+alwaysApply: false
+---
+333-prepared-statement ブランチでの高速化内容
+===
+
+このブランチで実装することは以下の通りです。
+- prepared statement を、高頻度な同一 SQL 実行で通常経路より速くなるように改善する
+- とくに PostgreSQL で、prepare/deallocate の無駄と接続拡散を減らす
+- benchmark が prepared statement の warm 状態を正しく測れるようにする
+
+## 進捗
+
+- [x] `example/benchmark.nim` の PostgreSQL 計測で prepared update が遅く見える理由を調査した
+- [x] prepared statement 高速化の設計方針を整理した
+- [ ] PostgreSQL にプール単位の prepared statement cache を追加する
+- [ ] `close()` を論理 close 化し、物理破棄は別 API に分離する
+- [ ] 接続固定で prepared statement を連続実行できる API を追加する
+- [ ] `example/benchmark.nim` を cold/warm 計測に分離し、warm 経路で同一 statement を再利用する
+- [ ] prepared cache と接続固定 API のテストを追加する
+
+## 参考資料
+
+- PostgreSQL libpq prepared statements: https://www.postgresql.jp/document/12/html/libpq-exec.html
+  - `PQsendPrepare`
+  - `PQsendQueryPrepared`
+  - `DEALLOCATE`
+- PostgreSQL 非同期 libpq: https://www.postgresql.jp/document/12/html/libpq-async.html
+- 対象実装
+  - `src/allographer/query_builder/models/postgres/postgres_exec.nim`
+  - `src/allographer/query_builder/models/postgres/postgres_types.nim`
+  - `src/allographer/query_builder/libs/postgres/postgres_impl.nim`
+  - `example/benchmark.nim`
+
+## 調査結果・設計まとめ
+
+### 現状の問題
+
+PostgreSQL で prepared statement が遅く見える主因は、prepared statement 自体の性質ではなく、現在の実装と benchmark の計測条件にある。
+
+- `benchmark.nim` は計測のたびに `prepare` と `close` を行っており、steady-state の再利用性能ではなくライフサイクル全体を測っている
+- PostgreSQL 実装は prepared statement をコネクションごとに lazy prepare するため、プールが大きいと `PREPARE` が広く拡散する
+- `first()` と `exec()` が毎回 `getFreeConn()` するため、1 つの業務操作でも接続が変わり、prepared state の局所性が弱い
+- 通常経路も `PQsendQueryParams` による bind 実行なので、prepared の利得は parse/plan 再利用ぶんに限られる
+
+### 高速化の基本方針
+
+prepared statement を速くするには、単発 API を追加するだけでは足りない。以下をまとめて入れる必要がある。
+
+- prepare/deallocate の回数を減らす
+- 同じ logical operation を同じ接続に寄せる
+- warm 済み prepared state をプール内で継続利用する
+
+### 設計方針 1: プール単位の prepared cache
+
+`PreparedStatement` ハンドルごとに物理 state を持つのではなく、`Connections` が SQL ごとの prepared state を保持する。
+
+概念設計:
+
+```nim
+type PostgresPreparedEntry = ref object
+  sql*: string
+  nArgs*: int
+  stmtBaseName*: string
+  stmtNames*: seq[string]   ## connI ごとの物理 prepared 名
+  refCount*: int
+  lastUsedAt*: int64
+
+type Connections* = ref object
+  conns*: seq[Connection]
+  timeout*: int
+  waiters*: Deque[Future[void]]
+  columnTypeCache*: Table[string, seq[Row]]
+  preparedCache*: Table[string, PostgresPreparedEntry]
+```
+
+期待効果:
+
+- 同じ SQL に対する `prepare()` の重複を避けられる
+- 同一プール内では physical prepare を接続ごとに 1 回へ寄せられる
+- 短命な prepared handle を繰り返し作っても warm state を失いにくくなる
+
+### 設計方針 2: `close()` の論理 close 化
+
+現在の `close()` は、その handle が使った接続すべてに `DEALLOCATE` を送る。高速化の観点ではこれは不利なので、意味論を分ける。
+
+- `close()`: handle の参照を閉じるだけ
+- `clearPreparedCache()` または `flushPrepared(sql)`: 物理 `DEALLOCATE`
+- 接続 close 時: その接続に紐づく prepared state を一括破棄
+
+期待効果:
+
+- 利用者が毎回 `prepare` / `close` しても、プール側は hot SQL を保持できる
+- benchmark の warm 計測でも、毎回の物理破棄コストを避けられる
+
+### 設計方針 3: 接続固定 API の追加
+
+prepared statement の locality を高めるため、同じ接続上で複数回の prepared 実行を束ねる API を追加する。
+
+候補 API:
+
+```nim
+proc withPreparedConnection*(
+  self: PostgresConnections,
+  body: proc (ctx: PostgresPreparedContext): Future[void]
+): Future[void]
+```
+
+```nim
+type PostgresPreparedContext* = ref object
+  owner*: PostgresConnections
+  connI*: int
+```
+
+prepared statement 側には `ctx` 付き overload を足す。
+
+```nim
+proc first*(self: PostgresPreparedStatement, ctx: PostgresPreparedContext, args: seq[string]): Future[Option[JsonNode]]
+proc exec*(self: PostgresPreparedStatement, ctx: PostgresPreparedContext, args: seq[string]): Future[void]
+```
+
+期待効果:
+
+- `SELECT` と `UPDATE` が別接続に飛ぶのを防げる
+- lazy prepare の発生先が必要な接続に限定される
+- transaction 中の `transactionConn` と整合しやすい
+
+### benchmark の変更方針
+
+`example/benchmark.nim` は prepared statement の高速化効果を正しく測れるように変更する。
+
+- `selectStmt` / `updateStmt` を `timeProcess` の外で 1 回だけ作る
+- 繰り返し計測では同じ prepared statement を再利用する
+- `close()` は全計測の最後に 1 回だけ呼ぶ
+- benchmark 名を `cold` と `warm` に分ける
+- warm 計測では `withPreparedConnection` を使って接続固定経路を測る
+
+### 実装順序
+
+#### Phase 1
+
+- `Connections.preparedCache` を追加する
+- `prepare()` を cache lookup ベースに変更する
+- `close()` を論理 close 化する
+- `clearPreparedCache()` を追加する
+
+#### Phase 2
+
+- `PostgresPreparedContext` を追加する
+- `withPreparedConnection` を追加する
+- prepared `get/first/exec` に `ctx` overload を追加する
+- `benchmark.nim` を warm/cold 計測へ更新する
+
+#### Phase 3
+
+- `preparedCacheMaxEntries` を追加する
+- `refCount == 0` の entry を対象に LRU eviction を入れる
+- eviction 時に `DEALLOCATE` を発行する
+
+### テスト方針
+
+- 同じ SQL を複数回 `prepare()` しても、同一接続で physical prepare が 1 回に収まること
+- `close()` 後に再 `prepare()` しても、cache が残る設計なら physical prepare が増えないこと
+- `withPreparedConnection` の block 内で同じ `connI` が使われること
+- transaction 中は `transactionConn` が優先されること
+- cache eviction 時に `DEALLOCATE` が正しく走ること

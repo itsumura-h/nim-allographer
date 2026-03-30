@@ -60,6 +60,23 @@ type RawMysqlQuery* = ref object
   transactionConn*: int
 
 
+type MysqlResultBindCache* = ref object
+  binds*: seq[BIND]
+  buffers*: seq[string]
+  lengths*: seq[culong]
+  nullFlags*: seq[my_bool]
+  errorFlags*: seq[my_bool]
+
+
+type MysqlPreparedStatement* = ref object
+  owner*: MysqlConnections
+  info*: ConnectionInfo
+  sql*: string
+  stmts*: seq[PSTMT]
+  nArgs*: int
+  resultBindCache*: seq[MysqlResultBindCache]
+
+
 proc `$`*(self:MysqlConnections|MysqlQuery|RawMysqlQuery):string =
   return "MySQL"
 

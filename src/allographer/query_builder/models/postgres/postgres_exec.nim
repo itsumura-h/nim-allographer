@@ -1,5 +1,6 @@
 import std/asyncdispatch
 import std/deques
+import std/atomics
 import std/json
 import std/monotimes
 import std/options
@@ -12,8 +13,11 @@ import ../../libs/postgres/postgres_lib
 import ../../libs/postgres/postgres_impl
 import ../../log
 import ../database_types
+import ../../prepared_param
 import ./query/postgres_builder
 import ./postgres_types
+
+var gPreparedStmtCounter: Atomic[int]
 
 
 # ================================================================================
@@ -72,6 +76,29 @@ proc returnConn(self: PostgresConnections | PostgresQuery | RawPostgresQuery, i:
   if i != errorConnectionNum:
     self.pools.conns[i].isBusy = false
     wakeOnePoolWaiter(self.pools)
+
+
+proc prepare*(self: PostgresConnections, sql: string): PostgresPreparedStatement =
+  new(result)
+  result.owner = self
+  result.sql = sql
+  result.stmtBaseName = &"allographer_stmt_{gPreparedStmtCounter.fetchAdd(1)}"
+  result.stmtNames = newSeq[string](self.pools.conns.len)
+  result.nArgs = countQuestionMarks(sql)
+
+
+proc ensurePreparedStmt(self: PostgresPreparedStatement, connI: int): Future[string] {.async.} =
+  if self.stmtNames[connI].len == 0:
+    let stmtName = &"{self.stmtBaseName}_{connI}"
+    await postgres_impl.prepare(
+      self.owner.pools.conns[connI].conn,
+      self.sql,
+      self.owner.pools.timeout,
+      stmtName,
+      self.nArgs
+    )
+    self.stmtNames[connI] = stmtName
+  return self.stmtNames[connI]
 
 
 # ================================================================================
@@ -401,14 +428,173 @@ proc transactionStart(self:PostgresConnections|PostgresQuery) {.async.} =
   self.isInTransaction = true
   self.transactionConn = connI
 
-  postgres_impl.exec(self.pools.conns[connI].conn, "BEGIN", newJArray(), newSeq[Row](), self.pools.timeout).await
+  postgres_impl.exec(self.pools.conns[connI].conn, "BEGIN", newJArray(), newSeq[seq[string]](), self.pools.timeout).await
 
 
 proc transactionEnd(self:PostgresConnections|PostgresQuery, query:string) {.async.} =
-  postgres_impl.exec(self.pools.conns[self.transactionConn].conn, query, newJArray(), newSeq[Row](), self.pools.timeout).await
+  postgres_impl.exec(self.pools.conns[self.transactionConn].conn, query, newJArray(), newSeq[seq[string]](), self.pools.timeout).await
   self.returnConn(self.transactionConn).await
   self.transactionConn = 0
   self.isInTransaction = false
+
+
+proc getPreparedRows(self: PostgresPreparedStatement, args: seq[PreparedParam]): Future[(seq[seq[string]], DbRows)] {.async.} =
+  var connI = self.owner.transactionConn
+  if not self.owner.isInTransaction:
+    connI = getFreeConn(self.owner).await
+  defer:
+    if not self.owner.isInTransaction:
+      self.owner.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  let stmtName = await self.ensurePreparedStmt(connI)
+  return postgres_impl.preparedQuery(
+    self.owner.pools.conns[connI].conn,
+    args,
+    self.nArgs,
+    self.owner.pools.timeout,
+    stmtName
+  ).await
+
+
+proc getPreparedAllRows(self: PostgresPreparedStatement, args: seq[PreparedParam]): Future[seq[JsonNode]] {.async.} =
+  let (rows, dbRows) = await self.getPreparedRows(args)
+  if rows.len == 0:
+    self.owner.log.echoErrorMsg(self.sql)
+    return newSeq[JsonNode](0)
+  return toJson(rows, dbRows)
+
+
+proc getPreparedRow(self: PostgresPreparedStatement, args: seq[PreparedParam]): Future[Option[JsonNode]] {.async.} =
+  let (rows, dbRows) = await self.getPreparedRows(args)
+  if rows.len == 0:
+    self.owner.log.echoErrorMsg(self.sql)
+    return none(JsonNode)
+  return toJson(rows, dbRows)[0].some()
+
+
+proc getPreparedAllRowsPlain(self: PostgresPreparedStatement, args: seq[PreparedParam]): Future[seq[seq[string]]] {.async.} =
+  let (rows, _) = await self.getPreparedRows(args)
+  return rows
+
+
+proc getPreparedRowPlain(self: PostgresPreparedStatement, args: seq[PreparedParam]): Future[seq[string]] {.async.} =
+  let (rows, _) = await self.getPreparedRows(args)
+  if rows.len == 0:
+    self.owner.log.echoErrorMsg(self.sql)
+    return newSeq[string](0)
+  return rows[0]
+
+
+proc execPrepared(self: PostgresPreparedStatement, args: seq[PreparedParam]) {.async.} =
+  var connI = self.owner.transactionConn
+  if not self.owner.isInTransaction:
+    connI = getFreeConn(self.owner).await
+  defer:
+    if not self.owner.isInTransaction:
+      self.owner.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  let stmtName = await self.ensurePreparedStmt(connI)
+  await postgres_impl.preparedExec(
+    self.owner.pools.conns[connI].conn,
+    args,
+    self.nArgs,
+    self.owner.pools.timeout,
+    stmtName
+  )
+
+
+proc preparedGet(self: PostgresPreparedStatement, args: seq[PreparedParam]): Future[seq[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedAllRows(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedFirst(self: PostgresPreparedStatement, args: seq[PreparedParam]): Future[Option[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRow(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedGetPlain(self: PostgresPreparedStatement, args: seq[PreparedParam]): Future[seq[seq[string]]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedAllRowsPlain(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedFirstPlain(self: PostgresPreparedStatement, args: seq[PreparedParam]): Future[seq[string]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRowPlain(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedExec(self: PostgresPreparedStatement, args: seq[PreparedParam]) {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    await self.execPrepared(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc get*(self: PostgresPreparedStatement, args: seq[string]): Future[seq[JsonNode]] {.async.} =
+  return await self.preparedGet(args.toPreparedParams)
+
+
+proc get*(self: PostgresPreparedStatement, args: JsonNode): Future[seq[JsonNode]] {.async.} =
+  return await self.preparedGet(args.toPreparedParams)
+
+
+proc first*(self: PostgresPreparedStatement, args: seq[string]): Future[Option[JsonNode]] {.async.} =
+  return await self.preparedFirst(args.toPreparedParams)
+
+
+proc first*(self: PostgresPreparedStatement, args: JsonNode): Future[Option[JsonNode]] {.async.} =
+  return await self.preparedFirst(args.toPreparedParams)
+
+
+proc getPlain*(self: PostgresPreparedStatement, args: seq[string]): Future[seq[seq[string]]] {.async.} =
+  return await self.preparedGetPlain(args.toPreparedParams)
+
+
+proc getPlain*(self: PostgresPreparedStatement, args: JsonNode): Future[seq[seq[string]]] {.async.} =
+  return await self.preparedGetPlain(args.toPreparedParams)
+
+
+proc firstPlain*(self: PostgresPreparedStatement, args: seq[string]): Future[seq[string]] {.async.} =
+  return await self.preparedFirstPlain(args.toPreparedParams)
+
+
+proc firstPlain*(self: PostgresPreparedStatement, args: JsonNode): Future[seq[string]] {.async.} =
+  return await self.preparedFirstPlain(args.toPreparedParams)
+
+
+proc exec*(self: PostgresPreparedStatement, args: seq[string]) {.async.} =
+  await self.preparedExec(args.toPreparedParams)
+
+
+proc exec*(self: PostgresPreparedStatement, args: JsonNode) {.async.} =
+  await self.preparedExec(args.toPreparedParams)
 
 
 # ================================================================================
@@ -723,6 +909,25 @@ proc firstPlain*(self: RawPostgresQuery):Future[seq[string]] {.async.} =
   ## It is only used with raw()
   self.log.logger(self.queryString)
   return self.getRowPlain(self.queryString, self.placeHolder).await
+
+
+proc deallocatePreparedStmtSafely(self: PostgresPreparedStatement, connI: int, stmtName: string): Future[void] {.async.} =
+  try:
+    await postgres_impl.deallocate(self.owner.pools.conns[connI].conn, stmtName, self.owner.pools.timeout)
+  except CatchableError:
+    self.owner.log.echoErrorMsg("deallocate failed for " & stmtName & ": " & getCurrentExceptionMsg())
+
+
+proc close*(self: PostgresPreparedStatement) {.async.} =
+  var futs: seq[Future[void]]
+  for i, stmtName in self.stmtNames:
+    if stmtName.len == 0:
+      continue
+    futs.add(self.deallocatePreparedStmtSafely(i, stmtName))
+  if futs.len > 0:
+    await all(futs)
+  for i in 0 ..< self.stmtNames.len:
+    self.stmtNames[i] = ""
 
 
 template seeder*(rdb:PostgresConnections, tableName:string, body:untyped):untyped =

@@ -9,8 +9,10 @@ import std/tables
 import std/times
 import ../../libs/sqlite/sqlite_impl
 import ../../libs/sqlite/sqlite_lib
+import ../../libs/sqlite/sqlite_rdb
 import ../../log
 import ../database_types
+import ../../prepared_param
 import ./query/sqlite_builder
 import ./sqlite_types
 
@@ -71,6 +73,22 @@ proc returnConn(self: SqliteConnections | SqliteQuery | RawSqliteQuery, i: int) 
   if i != errorConnectionNum:
     self.pools.conns[i].isBusy = false
     wakeOnePoolWaiter(self.pools)
+
+
+proc prepare*(self: SqliteConnections, sql: string): SqlitePreparedStatement =
+  SqlitePreparedStatement(
+    owner: self,
+    sql: sql,
+    stmts: newSeq[PStmt](self.pools.conns.len),
+    nArgs: countQuestionMarks(sql)
+  )
+
+
+proc ensurePreparedStmt(self: SqlitePreparedStatement, connI: int): Future[PStmt] {.async.} =
+  if self.stmts[connI].isNil:
+    self.stmts[connI] = sqlite_impl.prepare(self.owner.pools.conns[connI].conn, self.sql, self.owner.pools.timeout).await
+  return self.stmts[connI]
+
 
 
 # ================================================================================
@@ -509,6 +527,128 @@ proc transactionEnd(self:SqliteConnections, query:string) {.async.} =
   sqlite_impl.exec(self.pools.conns[self.transactionConn].conn, query, newJArray(), self.pools.timeout).await
 
 
+proc getPreparedRows(self: SqlitePreparedStatement, args: seq[PreparedParam]): Future[(seq[seq[string]], DbRows)] {.async.} =
+  var connI = self.owner.transactionConn
+  if not self.owner.isInTransaction:
+    connI = getFreeConn(self.owner).await
+  defer:
+    if not self.owner.isInTransaction:
+      self.owner.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  let stmt = await self.ensurePreparedStmt(connI)
+  if not self.hasCachedColumns:
+    setColumnsStaticMeta(self.cachedColumns, stmt)
+    self.hasCachedColumns = true
+
+  return sqlite_impl.preparedQueryReuse(
+    self.owner.pools.conns[connI].conn,
+    stmt,
+    args,
+    self.owner.pools.timeout,
+    self.cachedColumns
+  ).await
+
+
+proc getPreparedAllRows(self: SqlitePreparedStatement, args: seq[PreparedParam]): Future[seq[JsonNode]] {.async.} =
+  let (rows, dbRows) = await self.getPreparedRows(args)
+  if rows.len == 0:
+    self.owner.log.echoErrorMsg(self.sql)
+    return newSeq[JsonNode](0)
+  return toJson(rows, dbRows)
+
+
+proc getPreparedRow(self: SqlitePreparedStatement, args: seq[PreparedParam]): Future[Option[JsonNode]] {.async.} =
+  let (rows, dbRows) = await self.getPreparedRows(args)
+  if rows.len == 0:
+    self.owner.log.echoErrorMsg(self.sql)
+    return none(JsonNode)
+  return toJson(rows, dbRows)[0].some()
+
+
+proc getPreparedAllRowsPlain(self: SqlitePreparedStatement, args: seq[PreparedParam]): Future[seq[seq[string]]] {.async.} =
+  let (rows, _) = await self.getPreparedRows(args)
+  return rows
+
+
+proc getPreparedRowPlain(self: SqlitePreparedStatement, args: seq[PreparedParam]): Future[seq[string]] {.async.} =
+  let (rows, _) = await self.getPreparedRows(args)
+  if rows.len == 0:
+    self.owner.log.echoErrorMsg(self.sql)
+    return newSeq[string](0)
+  return rows[0]
+
+
+proc execPrepared(self: SqlitePreparedStatement, args: seq[PreparedParam]) {.async.} =
+  var connI = self.owner.transactionConn
+  if not self.owner.isInTransaction:
+    connI = getFreeConn(self.owner).await
+  defer:
+    if not self.owner.isInTransaction:
+      self.owner.returnConn(connI).await
+  if connI == errorConnectionNum:
+    return
+
+  let stmt = await self.ensurePreparedStmt(connI)
+  await sqlite_impl.preparedExecReuse(
+    self.owner.pools.conns[connI].conn,
+    stmt,
+    args,
+    self.owner.pools.timeout
+  )
+
+
+proc preparedGet(self: SqlitePreparedStatement, args: seq[PreparedParam]): Future[seq[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedAllRows(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedFirst(self: SqlitePreparedStatement, args: seq[PreparedParam]): Future[Option[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRow(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedGetPlain(self: SqlitePreparedStatement, args: seq[PreparedParam]): Future[seq[seq[string]]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedAllRowsPlain(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedFirstPlain(self: SqlitePreparedStatement, args: seq[PreparedParam]): Future[seq[string]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRowPlain(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedExec(self: SqlitePreparedStatement, args: seq[PreparedParam]) {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    await self.execPrepared(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
 # ================================================================================
 # public exec
 # ================================================================================
@@ -589,55 +729,6 @@ proc findPlain*(self:SqliteQuery, id: string, key="id"):Future[seq[string]] {.as
 
 proc findPlain*(self:SqliteQuery, id: int, key="id"):Future[seq[string]] {.async.} =
   return self.findPlain($id, key).await
-
-
-# ==================== return Object ====================
-# proc get*[T](self: SqliteQuery, typ:typedesc[T]):Future[seq[T]] {.async.} =
-#   var sql = self.selectBuilder()
-#   try:
-#     self.log.logger(sql)
-#     let rows = self.getAllRows(sql).await
-#     for row in rows:
-#       result.add(row.to(typ))
-#   except CatchableError:
-#     self.log.echoErrorMsg(sql)
-#     self.log.echoErrorMsg( getCurrentExceptionMsg() )
-#     raise getCurrentException()
-
-
-# proc first*[T](self: SqliteQuery, typ:typedesc[T]):Future[Option[T]] {.async.} =
-#   var sql = self.selectFirstBuilder()
-#   try:
-#     self.log.logger(sql)
-#     let row = self.getRow(sql).await
-#     if row.isSome():
-#       return row.get().to(typ).some()
-#     else:
-#       return none(typ)
-#   except CatchableError:
-#     self.log.echoErrorMsg(sql)
-#     self.log.echoErrorMsg( getCurrentExceptionMsg() )
-#     raise getCurrentException()
-
-
-# proc find*[T](self: SqliteQuery, id:string, typ:typedesc[T], key="id"):Future[Option[T]] {.async.} =
-#   self.placeHolder.add(%*{"key":key, "value": id})
-#   var sql = self.selectFindBuilder(key)
-#   try:
-#     self.log.logger(sql)
-#     let row = self.getRow(sql).await
-#     if row.isSome():
-#       return row.get().to(typ).some()
-#     else:
-#       return none(typ)
-#   except CatchableError:
-#     self.log.echoErrorMsg(sql)
-#     self.log.echoErrorMsg( getCurrentExceptionMsg() )
-#     raise getCurrentException()
-
-
-# proc find*[T](self: SqliteQuery, id:int, typ:typedesc[T], key="id"):Future[Option[T]] {.async.} =
-#   return self.find($id, typ, key).await
 
 
 # ==================== insert JsonNode ====================
@@ -834,6 +925,62 @@ proc firstPlain*(self: RawSqliteQuery):Future[seq[string]] {.async.} =
   ## It is only used with raw()
   self.log.logger(self.queryString)
   return self.getRowPlain(self.queryString, self.placeHolder).await
+
+
+proc close*(self: SqlitePreparedStatement) {.async.} =
+  for i, stmt in self.stmts:
+    if stmt.isNil:
+      continue
+    try:
+      discard finalize(stmt)
+    except CatchableError:
+      self.owner.log.echoErrorMsg("finalize failed for prepared stmt: " & getCurrentExceptionMsg())
+    self.stmts[i] = nil
+
+
+# ================================================================================
+# public prepared exec
+# ================================================================================
+
+proc get*(self: SqlitePreparedStatement, args: seq[string]): Future[seq[JsonNode]] {.async.} =
+  return await self.preparedGet(args.toPreparedParams)
+
+
+proc get*(self: SqlitePreparedStatement, args: JsonNode): Future[seq[JsonNode]] {.async.} =
+  return await self.preparedGet(args.toPreparedParams)
+
+
+proc first*(self: SqlitePreparedStatement, args: seq[string]): Future[Option[JsonNode]] {.async.} =
+  return await self.preparedFirst(args.toPreparedParams)
+
+
+proc first*(self: SqlitePreparedStatement, args: JsonNode): Future[Option[JsonNode]] {.async.} =
+  return await self.preparedFirst(args.toPreparedParams)
+
+
+proc getPlain*(self: SqlitePreparedStatement, args: seq[string]): Future[seq[seq[string]]] {.async.} =
+  return await self.preparedGetPlain(args.toPreparedParams)
+
+
+proc getPlain*(self: SqlitePreparedStatement, args: JsonNode): Future[seq[seq[string]]] {.async.} =
+  return await self.preparedGetPlain(args.toPreparedParams)
+
+
+proc firstPlain*(self: SqlitePreparedStatement, args: seq[string]): Future[seq[string]] {.async.} =
+  return await self.preparedFirstPlain(args.toPreparedParams)
+
+
+proc firstPlain*(self: SqlitePreparedStatement, args: JsonNode): Future[seq[string]] {.async.} =
+  return await self.preparedFirstPlain(args.toPreparedParams)
+
+
+proc exec*(self: SqlitePreparedStatement, args: seq[string]) {.async.} =
+  await self.preparedExec(args.toPreparedParams)
+
+
+proc exec*(self: SqlitePreparedStatement, args: JsonNode) {.async.} =
+  await self.preparedExec(args.toPreparedParams)
+
 
 
 template seeder*(rdb:SqliteConnections, tableName:string, body:untyped):untyped =

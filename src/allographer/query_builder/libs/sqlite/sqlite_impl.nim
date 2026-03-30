@@ -2,6 +2,7 @@ import std/asyncdispatch
 import std/strutils
 import std/json
 import ../../models/database_types
+import ../../prepared_param
 import ./sqlite_rdb
 import ./sqlite_lib
 
@@ -161,6 +162,69 @@ proc getColumns*(db:PSqlite3, query:string, args:seq[string], timeout:int):Futur
 proc prepare*(db:PSqlite3, query:string, timeout:int):Future[PStmt] {.async.} =
   if prepare_v2(db, query, query.len.cint, result, nil) != SQLITE_OK:
     discard finalize(result)
+    dbError(db)
+
+
+proc bindPreparedParams(db: PSqlite3, stmt: PStmt, args: seq[PreparedParam]) =
+  if reset(stmt) != SQLITE_OK:
+    dbError(db)
+  if clear_bindings(stmt) != SQLITE_OK:
+    dbError(db)
+
+  for i, arg in args:
+    let paramIdx = i.int32 + 1
+    if arg.isNull:
+      if bind_null(stmt, paramIdx) != SQLITE_OK:
+        dbError(db)
+    else:
+      if bind_text(stmt, paramIdx, arg.value.cstring, arg.value.len.int32, SQLITE_TRANSIENT) != SQLITE_OK:
+        dbError(db)
+
+
+proc preparedQueryReuse*(db: PSqlite3, stmt: PStmt, args: seq[PreparedParam], timeout: int,
+                         cachedColumns: DbColumns): Future[(seq[Row], DbRows)] {.async.} =
+  assert(not db.isNil, "Database not connected.")
+  sleepAsync(0).await
+  bindPreparedParams(db, stmt, args)
+  defer:
+    discard clear_bindings(stmt)
+
+  var dbRows: DbRows
+  var rows = newSeq[seq[string]]()
+
+  while true:
+    let stepRes = step(stmt)
+    if stepRes == SQLITE_ROW:
+      var columns = cachedColumns
+      setColumnsRuntimeTypes(columns, stmt)
+      dbRows.add(columns)
+      var row = newSeq[string](int(column_count(stmt)))
+      for i in 0 ..< row.len:
+        let text = column_text(stmt, i.int32)
+        if text.isNil:
+          row[i] = ""
+        else:
+          row[i] = $text
+      rows.add(row)
+      continue
+    if stepRes == SQLITE_DONE:
+      break
+    dbError(db)
+
+  return (rows, dbRows)
+
+
+proc preparedExecReuse*(db: PSqlite3, stmt: PStmt, args: seq[PreparedParam], timeout: int) {.async.} =
+  assert(not db.isNil, "Database not connected.")
+  sleepAsync(0).await
+  bindPreparedParams(db, stmt, args)
+  defer:
+    discard clear_bindings(stmt)
+
+  var stepRes = step(stmt)
+  while stepRes == SQLITE_ROW:
+    stepRes = step(stmt)
+  if stepRes != SQLITE_DONE:
     dbError(db)
 
 
