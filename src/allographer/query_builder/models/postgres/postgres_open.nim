@@ -31,6 +31,7 @@ proc dbOpen*(_:type PostgreSQL, database: string, user: string, password: string
     timeout: timeout,
     waiters: initDeque[Future[void]](),
     columnTypeCache: initTable[string, seq[Row]](),
+    preparedCache: initTable[string, PostgresPreparedEntry](),
   )
   result = PostgresConnections(
     pools: pools,

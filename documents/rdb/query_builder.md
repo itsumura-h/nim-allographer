@@ -33,6 +33,7 @@ Example: Query Builder for RDB
    * [DELETE](#delete)
    * [Plain Response](#plain-response)
    * [Raw SQL](#raw-sql)
+   * [Prepared Statement](#prepared-statement)
    * [Aggregates](#aggregates)
    * [Transaction](#transaction)
 
@@ -666,6 +667,40 @@ echo rdb.raw(sql).firstPlain().await
 ```nim
 let sql = "UPDATE users SET name = ? where id = ?"
 rdb.raw(sql, "John", "1").exec().await
+```
+
+## Prepared Statement
+[to index](#index)
+
+```nim
+import allographer/query_builder
+
+let selectStmt = rdb.prepare("""SELECT "id", "name" FROM "users" WHERE "id" = ?""")
+let updateStmt = rdb.prepare("""UPDATE "users" SET "name" = ? WHERE "id" = ?""")
+
+let row = await selectStmt.first(@["1"])
+await updateStmt.exec(@["John", "1"])
+
+# close() is logical close.
+await selectStmt.close()
+await updateStmt.close()
+```
+
+In PostgreSQL, a context API can be used to ensure multiple operations use the same connection.
+
+```nim
+await rdb.withConn(
+  proc(ctx: PostgresPreparedContext): Future[void] {.async.} =
+    discard await selectStmt.first(ctx, @["1"])
+    await updateStmt.exec(ctx, @["John", "1"])
+)
+```
+
+In PostgreSQL, APIs to physically clear the prepared statement cache are also available.
+
+```nim
+await rdb.flushStmt("""SELECT "id", "name" FROM "users" WHERE "id" = ?""")
+await rdb.clearStmtCache()
 ```
 
 ## Aggregates

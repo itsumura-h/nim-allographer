@@ -7,6 +7,7 @@ import std/strutils
 import std/sequtils
 import std/tables
 import std/times
+import ../../error
 import ../../libs/mariadb/mariadb_impl
 import ../../libs/mariadb/mariadb_rdb except Option, cuint
 import ../../log
@@ -56,6 +57,10 @@ proc returnConn(self:MariadbConnections | MariadbQuery | RawMariadbQuery, i: int
   if i != errorConnectionNum:
     self.pools.conns[i].isBusy = false
     wakeOnePoolWaiter(self.pools)
+
+
+proc raisePoolTimeout(self: MariadbConnections | MariadbQuery | RawMariadbQuery | MariadbPreparedStatement) {.noreturn.} =
+  raise newException(DbError, "Timed out while waiting for a free MariaDB connection")
 
 
 proc prepare*(self: MariadbConnections, sql: string): MariadbPreparedStatement =
@@ -120,7 +125,7 @@ proc getAllRows(self:MariadbQuery, queryString:string):Future[seq[JsonNode]] {.a
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let (rows, dbRows) = mariadb_impl.query(
     self.pools.conns[connI].conn,
@@ -143,7 +148,7 @@ proc getAllRowsPlain(self:MariadbQuery, queryString:string, args:JsonNode):Futur
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let (rows, _) = mariadb_impl.query(
     self.pools.conns[connI].conn,
@@ -163,7 +168,7 @@ proc getRow(self:MariadbQuery, queryString:string):Future[Option[JsonNode]] {.as
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let (rows, dbRows) = mariadb_impl.query(
     self.pools.conns[connI].conn,
@@ -186,7 +191,7 @@ proc getRowPlain(self:MariadbQuery, queryString:string, args:JsonNode):Future[se
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
   
   let (rows, _) = mariadb_impl.query(
     self.pools.conns[connI].conn,
@@ -218,7 +223,7 @@ proc exec(self:MariadbQuery, queryString:string) {.async.} =
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let columns = self.getCachedColumnTypes(connI).await
   mariadb_impl.exec(self.pools.conns[connI].conn, queryString, self.placeHolder, columns, self.pools.timeout).await
@@ -232,7 +237,7 @@ proc insertId(self:MariadbQuery, queryString:string, key:string):Future[string] 
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let columns = self.getCachedColumnTypes(connI).await
   let (rows, _) = mariadb_impl.execGetValue(self.pools.conns[connI].conn, queryString, self.placeHolder, columns, self.pools.timeout).await
@@ -247,7 +252,7 @@ proc getAllRows(self:RawMariadbQuery, queryString:string):Future[seq[JsonNode]] 
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let (rows, dbRows) = mariadb_impl.rawQuery(
     self.pools.conns[connI].conn,
@@ -271,7 +276,7 @@ proc getAllRowsPlain(self:RawMariadbQuery, queryString:string, args:JsonNode):Fu
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let (rows, _) = mariadb_impl.rawQuery(
     self.pools.conns[connI].conn,
@@ -291,7 +296,7 @@ proc getRow(self:RawMariadbQuery, queryString:string):Future[Option[JsonNode]] {
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let (rows, dbRows) = mariadb_impl.rawQuery(
     self.pools.conns[connI].conn,
@@ -314,7 +319,7 @@ proc getRowPlain(self:RawMariadbQuery, queryString:string, args:JsonNode):Future
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let (rows, _) = mariadb_impl.rawQuery(
     self.pools.conns[connI].conn,
@@ -333,7 +338,7 @@ proc exec(self:RawMariadbQuery, queryString:string) {.async.} =
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   mariadb_impl.exec(
     self.pools.conns[connI].conn,
@@ -351,7 +356,7 @@ proc getColumns(self:MariadbQuery, queryString:string):Future[seq[string]] {.asy
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   var strArgs:seq[string]
   for arg in self.placeHolder.items:
@@ -378,7 +383,7 @@ proc getColumns(self:MariadbQuery, queryString:string):Future[seq[string]] {.asy
 proc transactionStart(self:MariadbConnections) {.async.} =
   let connI = getFreeConn(self).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
   self.isInTransaction = true
   self.transactionConn = connI
 
@@ -402,7 +407,7 @@ proc getPreparedRows(self: MariadbPreparedStatement, args: seq[PreparedParam]): 
     if not self.owner.isInTransaction:
       self.owner.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let stmt = await self.ensurePreparedStmt(connI)
   if connI >= self.resultBindCache.len:
@@ -455,7 +460,7 @@ proc execPrepared(self: MariadbPreparedStatement, args: seq[PreparedParam]) {.as
     if not self.owner.isInTransaction:
       self.owner.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let stmt = await self.ensurePreparedStmt(connI)
   await mariadb_impl.execPreparedStmt(

@@ -79,30 +79,61 @@ template benchmarkScenario(rdb: untyped, useBackticks: static[bool]): untyped =
     await all(futures)
     return response
 
-  proc benchUpdatePrepared(): Future[seq[JsonNode]] {.async.} =
+  when compiles(rdb.prepare("SELECT 1")):
     when isExistsMariaDB or isExistsMySQL:
-      let selectSql = """SELECT `index` as id, `randomNumber` FROM `World` WHERE `index` = ?"""
-      let updateSql = """UPDATE `World` SET `randomNumber` = ? WHERE `index` = ?"""
+      const selectSql = """SELECT `index` as id, `randomNumber` FROM `World` WHERE `index` = ?"""
+      const updateSql = """UPDATE `World` SET `randomNumber` = ? WHERE `index` = ?"""
     else:
-      let selectSql = """SELECT "index" as id, "randomNumber" FROM "World" WHERE "index" = ?"""
-      let updateSql = """UPDATE "World" SET "randomNumber" = ? WHERE "index" = ?"""
+      const selectSql = """SELECT "index" as id, "randomNumber" FROM "World" WHERE "index" = ?"""
+      const updateSql = """UPDATE "World" SET "randomNumber" = ? WHERE "index" = ?"""
 
-    let selectStmt = rdb.prepare(selectSql)
-    let updateStmt = rdb.prepare(updateSql)
-    var response = newSeq[JsonNode](countNum)
-    var futures = newSeq[Future[void]](countNum)
-    for i in 1..countNum:
-      let index = rand(range1_10000)
-      let number = rand(range1_10000)
-      futures[i - 1] = (proc(): Future[void] {.async.} =
-        discard await selectStmt.first(@[$index])
-        await updateStmt.exec(@[$number, $index])
-      )()
-      response[i - 1] = %*{"id": index, "randomNumber": number}
-    await all(futures)
-    await selectStmt.close()
-    await updateStmt.close()
-    return response
+    proc benchUpdatePreparedCold(): Future[seq[JsonNode]] {.async.} =
+      let selectStmt = rdb.prepare(selectSql)
+      let updateStmt = rdb.prepare(updateSql)
+      var response = newSeq[JsonNode](countNum)
+      var futures = newSeq[Future[void]](countNum)
+      for i in 1..countNum:
+        let index = rand(range1_10000)
+        let number = rand(range1_10000)
+        futures[i - 1] = (proc(): Future[void] {.async.} =
+          discard await selectStmt.first(@[$index])
+          await updateStmt.exec(@[$number, $index])
+        )()
+        response[i - 1] = %*{"id": index, "randomNumber": number}
+      await all(futures)
+      await selectStmt.close()
+      await updateStmt.close()
+      return response
+
+    let selectStmtWarm = rdb.prepare(selectSql)
+    let updateStmtWarm = rdb.prepare(updateSql)
+
+    proc benchUpdatePreparedWarm(): Future[seq[JsonNode]] {.async.} =
+      var response = newSeq[JsonNode](countNum)
+      var futures = newSeq[Future[void]](countNum)
+      for i in 1..countNum:
+        let index = rand(range1_10000)
+        let number = rand(range1_10000)
+        futures[i - 1] = (proc(): Future[void] {.async.} =
+          when declared(PostgresPreparedContext) and compiles(
+            rdb.withConn(
+              proc(ctx: PostgresPreparedContext): Future[void] {.async.} =
+                discard await selectStmtWarm.first(ctx, @[$index])
+                await updateStmtWarm.exec(ctx, @[$number, $index])
+            )
+          ):
+            await rdb.withConn(
+              proc(ctx: PostgresPreparedContext): Future[void] {.async.} =
+                discard await selectStmtWarm.first(ctx, @[$index])
+                await updateStmtWarm.exec(ctx, @[$number, $index])
+            )
+          else:
+            discard await selectStmtWarm.first(@[$index])
+            await updateStmtWarm.exec(@[$number, $index])
+        )()
+        response[i - 1] = %*{"id": index, "randomNumber": number}
+      await all(futures)
+      return response
 
   proc timeProcess[T](name: system.string, cb: proc(): Future[T]) {.async.} =
     var eachTime = 0.0
@@ -129,7 +160,10 @@ template benchmarkScenario(rdb: untyped, useBackticks: static[bool]): untyped =
   migrate().waitFor
   waitFor timeProcess("update", benchUpdate)
   when compiles(rdb.prepare("SELECT 1")):
-    waitFor timeProcess("update prepared", benchUpdatePrepared)
+    waitFor timeProcess("update prepared cold", benchUpdatePreparedCold)
+    waitFor timeProcess("update prepared warm", benchUpdatePreparedWarm)
+    waitFor selectStmtWarm.close()
+    waitFor updateStmtWarm.close()
 
 
 when isExistsSqlite:

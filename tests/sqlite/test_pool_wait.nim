@@ -17,3 +17,9 @@ suite "SQLite pool waiter (notify)":
     let a = sel()
     let b = sel()
     waitFor all(a, b)
+
+  test "pool size 0: raw get raises DbError":
+    let sqliteHost = getEnv("SQLITE_HOST")
+    let rdb = dbOpen(SQLite3, sqliteHost, maxConnections = 0, timeout = 0)
+    expect(DbError):
+      discard waitFor rdb.raw("SELECT 1").get()
