@@ -5,6 +5,7 @@ import std/strformat
 import std/strutils
 import std/sequtils
 import std/times
+import ../../error
 import ../../libs/mysql/mysql_impl
 import ../../libs/mysql/mysql_rdb except Option
 import ../../log
@@ -35,6 +36,10 @@ proc getFreeConn(self:MysqlConnections | MysqlQuery | RawMysqlQuery):Future[int]
 proc returnConn(self:MysqlConnections | MysqlQuery | RawMysqlQuery, i: int) {.async.} =
   if i != errorConnectionNum:
     self.pools.conns[i].isBusy = false
+
+
+proc raisePoolTimeout(self: MysqlConnections | MysqlQuery | RawMysqlQuery | MysqlPreparedStatement) {.noreturn.} =
+  raise newException(DbError, "Timed out while waiting for a free MySQL connection")
 
 
 # ================================================================================
@@ -83,7 +88,7 @@ proc getAllRows(self:MysqlQuery, queryString:string):Future[seq[JsonNode]] {.asy
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let (rows, dbRows) = mysql_impl.query(
     self.pools.conns[connI].conn,
@@ -106,7 +111,7 @@ proc getAllRowsPlain(self:MysqlQuery, queryString:string, args:JsonNode):Future[
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let (rows, _) = mysql_impl.query(
     self.pools.conns[connI].conn,
@@ -126,7 +131,7 @@ proc getRow(self:MysqlQuery, queryString:string):Future[Option[JsonNode]] {.asyn
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let (rows, dbRows) = mysql_impl.query(
     self.pools.conns[connI].conn,
@@ -149,7 +154,7 @@ proc getRowPlain(self:MysqlQuery, queryString:string, args:JsonNode):Future[seq[
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
   
   let (rows, _) = mysql_impl.query(
     self.pools.conns[connI].conn,
@@ -168,7 +173,7 @@ proc exec(self:MysqlQuery, queryString:string) {.async.} =
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let database = self.info.database
   let table = self.query["table"].getStr
@@ -184,7 +189,7 @@ proc insertId(self:MysqlQuery, queryString:string, key:string):Future[string] {.
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let table = self.query["table"].getStr
   let columnGetQuery = &"SELECT column_name, data_type FROM information_schema.columns WHERE table_name = '{table}'"
@@ -205,7 +210,7 @@ proc getAllRows(self:RawMysqlQuery, queryString:string):Future[seq[JsonNode]] {.
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let (rows, dbRows) = mysql_impl.rawQuery(
     self.pools.conns[connI].conn,
@@ -229,7 +234,7 @@ proc getAllRowsPlain(self:RawMysqlQuery, queryString:string, args:JsonNode):Futu
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let (rows, _) = mysql_impl.rawQuery(
     self.pools.conns[connI].conn,
@@ -249,7 +254,7 @@ proc getRow(self:RawMysqlQuery, queryString:string):Future[Option[JsonNode]] {.a
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let (rows, dbRows) = mysql_impl.rawQuery(
     self.pools.conns[connI].conn,
@@ -272,7 +277,7 @@ proc getRowPlain(self:RawMysqlQuery, queryString:string, args:JsonNode):Future[s
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let (rows, _) = mysql_impl.rawQuery(
     self.pools.conns[connI].conn,
@@ -291,7 +296,7 @@ proc exec(self:RawMysqlQuery, queryString:string) {.async.} =
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   mysql_impl.exec(
     self.pools.conns[connI].conn,
@@ -309,7 +314,7 @@ proc getColumns(self:MysqlQuery, queryString:string):Future[seq[string]] {.async
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   var strArgs:seq[string]
   for arg in self.placeHolder.items:
@@ -336,7 +341,7 @@ proc getColumns(self:MysqlQuery, queryString:string):Future[seq[string]] {.async
 proc transactionStart(self:MysqlConnections) {.async.} =
   let connI = getFreeConn(self).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
   self.isInTransaction = true
   self.transactionConn = connI
 
@@ -632,7 +637,7 @@ proc getPreparedRows(self: MysqlPreparedStatement, args: seq[PreparedParam]): Fu
     if not self.owner.isInTransaction:
       self.owner.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let stmt = await self.ensurePreparedStmt(connI)
   if connI >= self.resultBindCache.len:
@@ -685,7 +690,7 @@ proc execPrepared(self: MysqlPreparedStatement, args: seq[PreparedParam]) {.asyn
     if not self.owner.isInTransaction:
       self.owner.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let stmt = await self.ensurePreparedStmt(connI)
   await mysql_impl.execPreparedStmt(

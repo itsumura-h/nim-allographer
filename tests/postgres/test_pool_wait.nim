@@ -17,3 +17,9 @@ suite "PostgreSQL pool waiter (notify)":
     let a = sel()
     let b = sel()
     waitFor all(a, b)
+
+  test "pool size 0: raw get raises DbError":
+    let pgUrl = getEnv("PG_URL")
+    let rdb = dbOpen(PostgreSQL, pgUrl, maxConnections = 0, timeout = 0)
+    expect(DbError):
+      discard waitFor rdb.raw("SELECT 1").get()

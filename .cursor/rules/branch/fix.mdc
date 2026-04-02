@@ -1,0 +1,35 @@
+---
+description: fixブランチでの開発時に読み込む
+alwaysApply: false
+---
+fix ブランチルール
+===
+
+
+allographer自体の改善
+
+- `getFreeConn` がタイムアウトすると `errorConnectionNum` を返すが、その後の `getRowPlain` / `exec` / `getAllRows` は例外ではなくそのまま `return` している。結果として、更新できていなくてもアプリ側では成功レスポンスを返せてしまう。
+- prepared statement は接続ごとに lazy prepare されるが、プール単位の cache がない。高頻度 SQL が複数接続に散ると、prepare の局所性が弱い。
+- `close()` は使った接続全てに `DEALLOCATE` を送る実装なので、短寿命の prepared statement を多用すると warm 状態を毎回捨てる。
+- DML 実行時の列型取得は現在は table 単位 cache になっているが、bulk update 用の raw SQL / prepared SQL を多用する場合は、そもそも query builder を通さない高速経路の価値が高い。
+
+改善方針:
+- `errorConnectionNum` に到達したときは no-op ではなく `DbError` を投げる。silent failure は benchmark だけでなく通常アプリでも危険。
+- `Connections` に SQL 単位の prepared cache を持たせ、同一 SQL の physical prepare を接続ごとに 1 回へ寄せる。
+- `close()` は論理 close に寄せ、物理 `DEALLOCATE` は明示 API に分離する。steady-state の benchmark では prepared state を維持できるようにする。
+- 接続固定 API、あるいは transaction / prepared context を足し、同一 logical operation の複数クエリを同じ接続に寄せられるようにする。
+- bulk update 用に `raw(...).exec()` だけでなく、prepared raw SQL を再利用できる経路を整える。今回のベンチマーク用途では query builder の汎用性よりも固定 SQL の再利用性が効く。
+
+## 進捗
+- [x] `errorConnectionNum` 到達時の silent return を `DbError` へ置換（PostgreSQL / MySQL / MariaDB / SQLite）
+- [x] PostgreSQL に SQL 単位の prepared cache (`Connections.preparedCache`) を追加
+- [x] PostgreSQL prepared `close()` を論理 close 化し、`flushStmt(sql)` / `clearStmtCache()` を追加
+- [x] PostgreSQL に `withConn` / `PostgresPreparedContext` を追加し、prepared `first/get/exec` の `ctx` overload を追加
+- [x] `example/benchmark.nim` を prepared cold/warm 計測へ分離し、warm 側で statement 再利用経路を追加
+- [x] PostgreSQL prepared statement テストに論理 close / cache clear / prepared context ケースを追加
+- [x] pool wait テストに pool size 0 時の `DbError` 検証を追加（PostgreSQL / MariaDB / SQLite）
+
+## 調査結果・設計まとめ
+- `errorConnectionNum` の no-op return は、DML 失敗を呼び出し側が検知できないため、全 RDB driver で同じ失敗モードを発生させていた。今回 `DbError` へ統一し、失敗を上位へ伝播させる。
+- prepared cache はまず PostgreSQL に導入した。理由は `PREPARE/DEALLOCATE` のネットワーク往復コストがベンチで支配的だったため。
+- `close()` の意味を「ハンドルの寿命」と「物理 prepared state の寿命」で分離し、warm 計測で state を保持できるようにした。

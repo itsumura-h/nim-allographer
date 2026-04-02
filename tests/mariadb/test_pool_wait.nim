@@ -21,3 +21,9 @@ suite "MariaDB pool waiter (notify)":
     let b = sel()
     waitFor all(a, b)
     check rdb.pools.waiters.len == 0
+
+  test "pool size 0: raw get raises DbError":
+    let mariaUrl = getEnv("MARIA_URL")
+    let rdb = dbOpen(MariaDB, mariaUrl, maxConnections = 0, timeout = 0)
+    expect(DbError):
+      discard waitFor rdb.raw("SELECT 1").get()

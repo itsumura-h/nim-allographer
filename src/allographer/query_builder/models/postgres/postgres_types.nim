@@ -16,6 +16,15 @@ type Connection* = ref object
   createdAt*: int64
 
 
+type PostgresPreparedEntry* = ref object
+  sql*: string
+  nArgs*: int
+  stmtBaseName*: string
+  stmtNames*: seq[string]
+  refCount*: int
+  lastUsedAt*: int64
+
+
 type Connections* = ref object
   conns*: seq[Connection]
   timeout*: int
@@ -23,6 +32,8 @@ type Connections* = ref object
   waiters*: Deque[Future[void]]
   ## `exec` / `insertId` 用。テーブルごとに information_schema 相当の列型を初回のみ取得して保持する。
   columnTypeCache*: Table[string, seq[Row]]
+  ## SQL 単位の prepared statement cache。物理 prepare 状態は conn ごとに保持する。
+  preparedCache*: Table[string, PostgresPreparedEntry]
 
 
 ## created by `let rdb = dbOpen(PostgreSQL, "localhost", 5432)`
@@ -57,12 +68,17 @@ type RawPostgresQuery* = ref object
   transactionConn*: int
 
 
+type PostgresPreparedContext* = ref object
+  owner*: PostgresConnections
+  connI*: int
+
+
 type PostgresPreparedStatement* = ref object
   owner*: PostgresConnections
+  entry*: PostgresPreparedEntry
   sql*: string
-  stmtBaseName*: string
-  stmtNames*: seq[string]
   nArgs*: int
+  isClosed*: bool
 
 
 proc `$`*(self:PostgresConnections|PostgresQuery|RawPostgresQuery):string =

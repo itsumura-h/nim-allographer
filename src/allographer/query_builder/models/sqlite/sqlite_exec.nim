@@ -7,6 +7,7 @@ import std/strutils
 import std/sequtils
 import std/tables
 import std/times
+import ../../error
 import ../../libs/sqlite/sqlite_impl
 import ../../libs/sqlite/sqlite_lib
 import ../../libs/sqlite/sqlite_rdb
@@ -73,6 +74,10 @@ proc returnConn(self: SqliteConnections | SqliteQuery | RawSqliteQuery, i: int) 
   if i != errorConnectionNum:
     self.pools.conns[i].isBusy = false
     wakeOnePoolWaiter(self.pools)
+
+
+proc raisePoolTimeout(self: SqliteConnections | SqliteQuery | RawSqliteQuery | SqlitePreparedStatement) {.noreturn.} =
+  raise newException(DbError, "Timed out while waiting for a free SQLite connection")
 
 
 proc prepare*(self: SqliteConnections, sql: string): SqlitePreparedStatement =
@@ -142,7 +147,7 @@ proc getAllRows(self:SqliteQuery, queryString:string):Future[seq[JsonNode]] {.as
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   var strArgs:seq[string]
   for arg in self.placeHolder.items:
@@ -179,7 +184,7 @@ proc getAllRowsPlain(self:SqliteQuery, queryString:string, args:JsonNode):Future
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   var strArgs:seq[string]
   for arg in args.items:
@@ -212,7 +217,7 @@ proc getRow(self:SqliteQuery, queryString:string):Future[Option[JsonNode]] {.asy
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   var strArgs:seq[string]
   for arg in self.placeHolder.items:
@@ -249,7 +254,7 @@ proc getRowPlain(self:SqliteQuery, queryString:string, args:JsonNode):Future[seq
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   var strArgs:seq[string]
   for arg in args.items:
@@ -281,7 +286,7 @@ proc getAllRows(self:RawSqliteQuery, queryString:string):Future[seq[JsonNode]] {
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   var strArgs:seq[string]
   for arg in self.placeHolder.items:
@@ -318,7 +323,7 @@ proc getAllRowsPlain(self:RawSqliteQuery, queryString:string, args:JsonNode):Fut
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   var strArgs:seq[string]
   for arg in args.items:
@@ -351,7 +356,7 @@ proc getRow(self:RawSqliteQuery, queryString:string):Future[Option[JsonNode]] {.
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   var strArgs:seq[string]
   for arg in self.placeHolder.items:
@@ -388,7 +393,7 @@ proc getRowPlain(self:RawSqliteQuery, queryString:string, args:JsonNode):Future[
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   var strArgs:seq[string]
   for arg in args.items:
@@ -422,7 +427,7 @@ proc exec(self:SqliteQuery, queryString:string) {.async.} =
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let columns = getCachedSqliteColumnTypes(self, connI).await
   sqlite_impl.exec(self.pools.conns[connI].conn, queryString, self.placeHolder, columns, self.pools.timeout).await
@@ -436,7 +441,7 @@ proc exec(self:RawSqliteQuery, queryString:string, args:JsonNode) {.async.} =
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   sqlite_impl.exec(self.pools.conns[connI].conn, queryString, args, self.pools.timeout).await
 
@@ -449,7 +454,7 @@ proc insertId(self:SqliteQuery, queryString:string, key:string):Future[string]{.
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let columns = getCachedSqliteColumnTypes(self, connI).await
   sqlite_impl.exec(self.pools.conns[connI].conn, queryString, self.placeHolder, columns, self.pools.timeout).await
@@ -485,7 +490,7 @@ proc getColumns(self:SqliteQuery, queryString:string, args=newJArray()):Future[s
     if not self.isInTransaction:
       self.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   var strArgs:seq[string]
   for arg in args.items:
@@ -512,7 +517,7 @@ proc getColumns(self:SqliteQuery, queryString:string, args=newJArray()):Future[s
 proc transactionStart(self:SqliteConnections) {.async.} =
   let connI = getFreeConn(self).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
   self.isInTransaction = true
   self.transactionConn = connI
   sqlite_impl.exec(self.pools.conns[connI].conn, "BEGIN", newJArray(), self.pools.timeout).await
@@ -535,7 +540,7 @@ proc getPreparedRows(self: SqlitePreparedStatement, args: seq[PreparedParam]): F
     if not self.owner.isInTransaction:
       self.owner.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let stmt = await self.ensurePreparedStmt(connI)
   if not self.hasCachedColumns:
@@ -588,7 +593,7 @@ proc execPrepared(self: SqlitePreparedStatement, args: seq[PreparedParam]) {.asy
     if not self.owner.isInTransaction:
       self.owner.returnConn(connI).await
   if connI == errorConnectionNum:
-    return
+    raisePoolTimeout(self)
 
   let stmt = await self.ensurePreparedStmt(connI)
   await sqlite_impl.preparedExecReuse(
