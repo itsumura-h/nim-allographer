@@ -1,0 +1,151 @@
+---
+description: 336-update-prepared-statementブランチでの開発時に読み込む
+alwaysApply: false
+---
+336-update-prepared-statement ブランチでの prepared statement 横展開
+===
+
+このブランチで実装することは以下の通りです。
+- `333-prepared-statement` で PostgreSQL 向けに整理・実装された prepared statement 改善を、可能な限り同じ公開 API で MariaDB / MySQL に横展開する
+- driver 差分は内部実装に閉じ込め、利用者から見える API は PostgreSQL と揃える
+- すでに PostgreSQL 側で実装済みの内容はこのブランチで再実装せず、未着手の MariaDB / MySQL 側へタスクを移す
+
+## 進捗
+
+- [x] `.cursor/rules/branch/333-prepared-statement.mdc` の設計意図を確認した
+- [x] 現在ブランチが `336-update-prepared-statement` であることを確認した
+- [x] PostgreSQL 側の実装到達点をコードベースから確認した
+- [x] MariaDB / MySQL 側の prepared statement 実装差分を確認した
+- [x] PostgreSQL 側で以下が実装済みであることを確認した
+- [x] PostgreSQL のプール単位 prepared cache
+- [x] PostgreSQL の論理 close と `clearStmtCache` / `flushStmt`
+- [x] PostgreSQL の接続固定 API `withConn` と `PostgresPreparedContext`
+- [x] PostgreSQL prepared statement の `ctx` 付き overload
+- [x] `example/benchmark.nim` の prepared cold / warm 計測
+- [x] PostgreSQL の基本テスト追加
+- [x] MariaDB に PostgreSQL 相当の prepared cache を追加する
+- [x] MySQL に PostgreSQL 相当の prepared cache を追加する
+- [x] MariaDB の `close()` を論理 close 化し、物理破棄 API を分離する
+- [x] MySQL の `close()` を論理 close 化し、物理破棄 API を分離する
+- [x] MariaDB に PostgreSQL と揃う接続固定 API を追加する
+- [x] MySQL に PostgreSQL と揃う接続固定 API を追加する
+- [x] MariaDB prepared statement に `ctx` 付き overload を追加する
+- [x] MySQL prepared statement に `ctx` 付き overload を追加する
+- [x] benchmark の warm 経路が MariaDB / MySQL でも同じ API で通るようにする
+- [x] MariaDB / MySQL の prepared statement テストを PostgreSQL 相当まで拡張する
+- [ ] API 名の差分を吸収するため、必要なら PostgreSQL 側の命名も含めて最終形を再確認する
+
+## 参考資料
+
+- 既存ブランチルール
+  - `.cursor/rules/branch/333-prepared-statement.mdc`
+- PostgreSQL 実装
+  - `src/allographer/query_builder/models/postgres/postgres_types.nim`
+  - `src/allographer/query_builder/models/postgres/postgres_exec.nim`
+  - `src/allographer/query_builder/models/postgres/postgres_open.nim`
+  - `tests/postgres/test_prepared_statement.nim`
+- MariaDB 実装
+  - `src/allographer/query_builder/models/mariadb/mariadb_types.nim`
+  - `src/allographer/query_builder/models/mariadb/mariadb_exec.nim`
+  - `tests/mariadb/test_prepared_statement.nim`
+- MySQL 実装
+  - `src/allographer/query_builder/models/mysql/mysql_types.nim`
+  - `src/allographer/query_builder/models/mysql/mysql_exec.nim`
+  - `tests/mysql/test_prepared_statement.nim`
+- benchmark
+  - `example/benchmark.nim`
+
+## 調査結果・設計まとめ
+
+### 1. PostgreSQL 側で実装済みの内容
+
+`333-prepared-statement` に書かれていた PostgreSQL 向け主要タスクは、コードベース上かなり進んでいる。
+
+- `Connections.preparedCache` が追加済み
+- `prepare()` は SQL 単位で cache entry を引く形になっている
+- `close()` は logical close になっており、entry の refCount を下げるだけになっている
+- 物理破棄 API として `flushStmt(sql)` / `clearStmtCache()` が入っている
+- 接続固定 API は設計書の `withPreparedConnection` ではなく `withConn` という名前で実装済み
+- `PostgresPreparedContext` と、`get/first/getPlain/firstPlain/exec` の `ctx` overload が実装済み
+- benchmark は prepared cold / warm に分かれており、PostgreSQL では `withConn` を使う分岐が入っている
+- PostgreSQL テストには logical close、cache clear、接続固定 API の確認が追加済み
+
+### 2. PostgreSQL 側で未完了または名称確定済みの点
+
+`333-prepared-statement` の設計と完全一致ではない点が残っている。
+
+- 接続固定 API 名は `withConn` を正とする
+- cache clear API 名は `clearStmtCache` を正とする
+- eviction / `preparedCacheMaxEntries` / LRU の Phase 3 は未実装
+- 「physical prepare が 1 回に収まること」を直接見るテストはまだ入っていない
+
+このブランチではまず MariaDB / MySQL への API 横展開を優先し、PostgreSQL の高度な eviction は別タスクとして扱う。
+
+### 3. MariaDB / MySQL 側の現状
+
+MariaDB / MySQL の prepared statement 実装は、まだ PostgreSQL 以前の形に近い。
+
+- prepared statement ハンドル自身が `stmts: seq[PSTMT]` を持つ
+- `prepare()` は毎回新しいハンドルを返し、プール単位 cache は持っていない
+- `close()` は各 `PSTMT` を物理 close する
+- 接続固定 API がない
+- prepared statement の `ctx` 付き overload がない
+- benchmark の warm 経路は PostgreSQL 以外ではフォールバック実行になっている
+- テストは基本的な select / update 程度で、logical close や cache 維持、接続固定 API は未検証
+
+### 4. このブランチの実装方針
+
+公開 API は PostgreSQL に寄せる。命名は「短く、意味が通じる」方を正とし、すでに PostgreSQL で使われている短い名前へ揃える。
+
+統一方針:
+
+- 接続固定 API は全 driver で `withConn`
+- prepared context 型は driver ごとに `MariadbPreparedContext` / `MysqlPreparedContext`
+- cache clear API は全 driver で `clearStmtCache`
+- 個別破棄 API は全 driver で `flushStmt`
+- prepared statement の `close()` は全 driver で logical close
+
+この形なら `example/benchmark.nim` の warm 経路を driver ごとに似た形へ揃えやすい。
+
+### 5. 実装後の確認
+
+- MariaDB / MySQL でも `Connections.preparedCache` を持ち、SQL ごとに `PSTMT` を再利用するようにした
+- `close()` は MariaDB / MySQL でも論理 close に変更し、物理破棄は `flushStmt` / `clearStmtCache` に分離した
+- `withConn` と `MariadbPreparedContext` / `MysqlPreparedContext` を追加し、benchmark の warm 経路を共通化した
+- prepared statement の `ctx` 付き overload を追加し、MariaDB / MySQL テストでも接続固定経路を検証するようにした
+- `example/benchmark.nim` は PostgreSQL / MariaDB / MySQL で同じ warm パターンを選べるようになった
+
+### 6. 実装順序
+
+#### Phase 1
+
+- MariaDB / MySQL の型定義に prepared cache entry と context 型を追加する
+- `Connections` に prepared cache を持たせる
+- `prepare()` を SQL 単位 cache lookup ベースへ変更する
+
+#### Phase 2
+
+- MariaDB / MySQL の `close()` を logical close に変える
+- `flushStmt` / `clearStmtCache` を追加する
+- 接続 close 時に物理 prepared state が自然破棄される前提との差分を確認する
+
+#### Phase 3
+
+- MariaDB / MySQL に `withConn` を追加する
+- prepared statement の `ctx` overload を追加する
+- benchmark の warm 経路を PostgreSQL と同じ書き方へ寄せる
+
+#### Phase 4
+
+- MariaDB / MySQL テストを拡張する
+- logical close 後の再利用
+- cache clear 後の再 prepare
+- 接続固定 API 経由の select / update
+- transaction 中の接続選択との整合
+
+### 7. 注意点
+
+- `SYW-ARCH-001` / `SYW-ARCH-002` に従い、driver 差分を公開 API に漏らしすぎない
+- 既存の MariaDB / MySQL prepared statement API を壊す場合は移行影響を記録する
+- 現時点で PostgreSQL は `withConn` / `clearStmtCache` 命名で先行しており、この命名を正式採用する
+- 実装中に PostgreSQL 側の API 名を再調整したくなった場合は、この文書の設計方針も合わせて更新する

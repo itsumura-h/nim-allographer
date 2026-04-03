@@ -63,20 +63,60 @@ proc raisePoolTimeout(self: MariadbConnections | MariadbQuery | RawMariadbQuery 
   raise newException(DbError, "Timed out while waiting for a free MariaDB connection")
 
 
+proc touchStmtEntry(entry: MariadbPreparedEntry) =
+  entry.lastUsedAt = getTime().toUnix()
+
+
+proc mustBeOpen(self: MariadbPreparedStatement) =
+  if self.isNil or self.isClosed:
+    raise newException(DbError, "MariaDB prepared statement is already closed")
+
+
+proc hasPreparedEntry(cache: Table[string, MariadbPreparedEntry], sql: string): bool =
+  for key in cache.keys:
+    if key == sql:
+      return true
+  return false
+
+
+proc getStmtEntry(self: MariadbConnections, sql: string): MariadbPreparedEntry =
+  if hasPreparedEntry(self.pools.preparedCache, sql):
+    return self.pools.preparedCache[sql]
+  let entry = MariadbPreparedEntry(
+    sql: sql,
+    nArgs: countQuestionMarks(sql),
+    stmts: newSeq[PSTMT](self.pools.conns.len),
+    refCount: 0,
+    lastUsedAt: getTime().toUnix(),
+  )
+  self.pools.preparedCache[sql] = entry
+  return entry
+
+
 proc prepare*(self: MariadbConnections, sql: string): MariadbPreparedStatement =
   new(result)
   result.owner = self
   result.info = self.info
+  result.entry = self.getStmtEntry(sql)
   result.sql = sql
-  result.stmts = newSeq[PSTMT](self.pools.conns.len)
-  result.nArgs = countQuestionMarks(sql)
+  result.nArgs = result.entry.nArgs
+  result.entry.refCount += 1
+  touchStmtEntry(result.entry)
   result.resultBindCache = newSeq[MariadbResultBindCache](self.pools.conns.len)
 
 
 proc ensurePreparedStmt(self: MariadbPreparedStatement, connI: int): Future[PSTMT] {.async.} =
-  if self.stmts[connI].isNil:
-    self.stmts[connI] = await mariadb_impl.prepareStmt(self.owner.pools.conns[connI].conn, self.sql, self.owner.pools.timeout)
-  return self.stmts[connI]
+  self.mustBeOpen()
+  if connI < 0 or connI >= self.owner.pools.conns.len:
+    raise newException(DbError, "MariaDB prepared statement received an invalid connection index")
+  if self.entry.stmts[connI].isNil:
+    self.entry.stmts[connI] = await mariadb_impl.prepareStmt(
+      self.owner.pools.conns[connI].conn,
+      self.sql,
+      self.owner.pools.timeout
+    )
+  touchStmtEntry(self.entry)
+  return self.entry.stmts[connI]
 
 
 # ================================================================================
@@ -399,15 +439,43 @@ proc transactionEnd(self:MariadbConnections, query:string) {.async.} =
   mariadb_impl.exec(self.pools.conns[self.transactionConn].conn, query, newJArray(), newSeq[seq[string]](), self.pools.timeout).await
 
 
-proc getPreparedRows(self: MariadbPreparedStatement, args: seq[PreparedParam]): Future[(seq[seq[string]], DbRows)] {.async.} =
-  var connI = self.owner.transactionConn
-  if not self.owner.isInTransaction:
-    connI = getFreeConn(self.owner).await
-  defer:
-    if not self.owner.isInTransaction:
-      self.owner.returnConn(connI).await
+proc withConn*(
+  self: MariadbConnections,
+  body: proc (ctx: MariadbPreparedContext): Future[void]
+) {.async.} =
+  if self.isInTransaction:
+    let ctx = MariadbPreparedContext(owner: self, connI: self.transactionConn)
+    await body(ctx)
+    return
+
+  let connI = getFreeConn(self).await
   if connI == errorConnectionNum:
     raisePoolTimeout(self)
+  defer:
+    self.returnConn(connI).await
+
+  let ctx = MariadbPreparedContext(owner: self, connI: connI)
+  await body(ctx)
+
+
+proc verifyCtx(self: MariadbPreparedStatement, ctx: MariadbPreparedContext) =
+  self.mustBeOpen()
+  if ctx.isNil:
+    raise newException(DbError, "MariaDB prepared context is nil")
+  if ctx.owner != self.owner:
+    raise newException(DbError, "MariaDB prepared context owner mismatch")
+  if ctx.connI < 0 or ctx.connI >= self.owner.pools.conns.len:
+    raise newException(DbError, "MariaDB prepared context has invalid connection index")
+
+
+proc getPreparedRowsOnConn(
+  self: MariadbPreparedStatement,
+  connI: int,
+  args: seq[PreparedParam]
+): Future[(seq[seq[string]], DbRows)] {.async.} =
+  self.mustBeOpen()
+  if connI < 0 or connI >= self.owner.pools.conns.len:
+    raise newException(DbError, "MariaDB prepared statement received an invalid connection index")
 
   let stmt = await self.ensurePreparedStmt(connI)
   if connI >= self.resultBindCache.len:
@@ -421,6 +489,31 @@ proc getPreparedRows(self: MariadbPreparedStatement, args: seq[PreparedParam]): 
     self.owner.pools.timeout,
     self.resultBindCache[connI]
   ).await
+
+
+proc getPreparedRows(
+  self: MariadbPreparedStatement,
+  args: seq[PreparedParam]
+): Future[(seq[seq[string]], DbRows)] {.async.} =
+  var connI = self.owner.transactionConn
+  if not self.owner.isInTransaction:
+    connI = getFreeConn(self.owner).await
+  defer:
+    if not self.owner.isInTransaction:
+      self.owner.returnConn(connI).await
+  if connI == errorConnectionNum:
+    raisePoolTimeout(self)
+
+  return await self.getPreparedRowsOnConn(connI, args)
+
+
+proc getPreparedRows(
+  self: MariadbPreparedStatement,
+  ctx: MariadbPreparedContext,
+  args: seq[PreparedParam]
+): Future[(seq[seq[string]], DbRows)] {.async.} =
+  self.verifyCtx(ctx)
+  return await self.getPreparedRowsOnConn(ctx.connI, args)
 
 
 proc getPreparedAllRows(self: MariadbPreparedStatement, args: seq[PreparedParam]): Future[seq[JsonNode]] {.async.} =
@@ -452,6 +545,69 @@ proc getPreparedRowPlain(self: MariadbPreparedStatement, args: seq[PreparedParam
   return rows[0]
 
 
+proc getPreparedAllRows(
+  self: MariadbPreparedStatement,
+  ctx: MariadbPreparedContext,
+  args: seq[PreparedParam]
+): Future[seq[JsonNode]] {.async.} =
+  let (rows, dbRows) = await self.getPreparedRows(ctx, args)
+  if rows.len == 0:
+    self.owner.log.echoErrorMsg(self.sql)
+    return newSeq[JsonNode](0)
+  return toJson(rows, dbRows)
+
+
+proc getPreparedRow(
+  self: MariadbPreparedStatement,
+  ctx: MariadbPreparedContext,
+  args: seq[PreparedParam]
+): Future[Option[JsonNode]] {.async.} =
+  let (rows, dbRows) = await self.getPreparedRows(ctx, args)
+  if rows.len == 0:
+    self.owner.log.echoErrorMsg(self.sql)
+    return none(JsonNode)
+  return toJson(rows, dbRows)[0].some()
+
+
+proc getPreparedAllRowsPlain(
+  self: MariadbPreparedStatement,
+  ctx: MariadbPreparedContext,
+  args: seq[PreparedParam]
+): Future[seq[seq[string]]] {.async.} =
+  let (rows, _) = await self.getPreparedRows(ctx, args)
+  return rows
+
+
+proc getPreparedRowPlain(
+  self: MariadbPreparedStatement,
+  ctx: MariadbPreparedContext,
+  args: seq[PreparedParam]
+): Future[seq[string]] {.async.} =
+  let (rows, _) = await self.getPreparedRows(ctx, args)
+  if rows.len == 0:
+    self.owner.log.echoErrorMsg(self.sql)
+    return newSeq[string](0)
+  return rows[0]
+
+
+proc execPreparedOnConn(
+  self: MariadbPreparedStatement,
+  connI: int,
+  args: seq[PreparedParam]
+) {.async.} =
+  self.mustBeOpen()
+  if connI < 0 or connI >= self.owner.pools.conns.len:
+    raise newException(DbError, "MariaDB prepared statement received an invalid connection index")
+
+  let stmt = await self.ensurePreparedStmt(connI)
+  await mariadb_impl.execPreparedStmt(
+    self.owner.pools.conns[connI].conn,
+    stmt,
+    args,
+    self.owner.pools.timeout
+  )
+
+
 proc execPrepared(self: MariadbPreparedStatement, args: seq[PreparedParam]) {.async.} =
   var connI = self.owner.transactionConn
   if not self.owner.isInTransaction:
@@ -462,13 +618,16 @@ proc execPrepared(self: MariadbPreparedStatement, args: seq[PreparedParam]) {.as
   if connI == errorConnectionNum:
     raisePoolTimeout(self)
 
-  let stmt = await self.ensurePreparedStmt(connI)
-  await mariadb_impl.execPreparedStmt(
-    self.owner.pools.conns[connI].conn,
-    stmt,
-    args,
-    self.owner.pools.timeout
-  )
+  await self.execPreparedOnConn(connI, args)
+
+
+proc execPrepared(
+  self: MariadbPreparedStatement,
+  ctx: MariadbPreparedContext,
+  args: seq[PreparedParam]
+) {.async.} =
+  self.verifyCtx(ctx)
+  await self.execPreparedOnConn(ctx.connI, args)
 
 
 proc preparedGet(self: MariadbPreparedStatement, args: seq[PreparedParam]): Future[seq[JsonNode]] {.async.} =
@@ -521,44 +680,154 @@ proc preparedExec(self: MariadbPreparedStatement, args: seq[PreparedParam]) {.as
     raise getCurrentException()
 
 
+proc preparedGet(
+  self: MariadbPreparedStatement,
+  ctx: MariadbPreparedContext,
+  args: seq[PreparedParam]
+): Future[seq[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedAllRows(ctx, args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedFirst(
+  self: MariadbPreparedStatement,
+  ctx: MariadbPreparedContext,
+  args: seq[PreparedParam]
+): Future[Option[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRow(ctx, args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedGetPlain(
+  self: MariadbPreparedStatement,
+  ctx: MariadbPreparedContext,
+  args: seq[PreparedParam]
+): Future[seq[seq[string]]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedAllRowsPlain(ctx, args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedFirstPlain(
+  self: MariadbPreparedStatement,
+  ctx: MariadbPreparedContext,
+  args: seq[PreparedParam]
+): Future[seq[string]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRowPlain(ctx, args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedExec(
+  self: MariadbPreparedStatement,
+  ctx: MariadbPreparedContext,
+  args: seq[PreparedParam]
+) {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    await self.execPrepared(ctx, args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
 proc get*(self: MariadbPreparedStatement, args: seq[string]): Future[seq[JsonNode]] {.async.} =
   return await self.preparedGet(args.toPreparedParams)
+
+
+proc get*(self: MariadbPreparedStatement, ctx: MariadbPreparedContext, args: seq[string]): Future[seq[JsonNode]] {.async.} =
+  return await self.preparedGet(ctx, args.toPreparedParams)
 
 
 proc get*(self: MariadbPreparedStatement, args: JsonNode): Future[seq[JsonNode]] {.async.} =
   return await self.preparedGet(args.toPreparedParams)
 
 
+proc get*(self: MariadbPreparedStatement, ctx: MariadbPreparedContext, args: JsonNode): Future[seq[JsonNode]] {.async.} =
+  return await self.preparedGet(ctx, args.toPreparedParams)
+
+
 proc first*(self: MariadbPreparedStatement, args: seq[string]): Future[Option[JsonNode]] {.async.} =
   return await self.preparedFirst(args.toPreparedParams)
+
+
+proc first*(self: MariadbPreparedStatement, ctx: MariadbPreparedContext, args: seq[string]): Future[Option[JsonNode]] {.async.} =
+  return await self.preparedFirst(ctx, args.toPreparedParams)
 
 
 proc first*(self: MariadbPreparedStatement, args: JsonNode): Future[Option[JsonNode]] {.async.} =
   return await self.preparedFirst(args.toPreparedParams)
 
 
+proc first*(self: MariadbPreparedStatement, ctx: MariadbPreparedContext, args: JsonNode): Future[Option[JsonNode]] {.async.} =
+  return await self.preparedFirst(ctx, args.toPreparedParams)
+
+
 proc getPlain*(self: MariadbPreparedStatement, args: seq[string]): Future[seq[seq[string]]] {.async.} =
   return await self.preparedGetPlain(args.toPreparedParams)
+
+
+proc getPlain*(self: MariadbPreparedStatement, ctx: MariadbPreparedContext, args: seq[string]): Future[seq[seq[string]]] {.async.} =
+  return await self.preparedGetPlain(ctx, args.toPreparedParams)
 
 
 proc getPlain*(self: MariadbPreparedStatement, args: JsonNode): Future[seq[seq[string]]] {.async.} =
   return await self.preparedGetPlain(args.toPreparedParams)
 
 
+proc getPlain*(self: MariadbPreparedStatement, ctx: MariadbPreparedContext, args: JsonNode): Future[seq[seq[string]]] {.async.} =
+  return await self.preparedGetPlain(ctx, args.toPreparedParams)
+
+
 proc firstPlain*(self: MariadbPreparedStatement, args: seq[string]): Future[seq[string]] {.async.} =
   return await self.preparedFirstPlain(args.toPreparedParams)
+
+
+proc firstPlain*(self: MariadbPreparedStatement, ctx: MariadbPreparedContext, args: seq[string]): Future[seq[string]] {.async.} =
+  return await self.preparedFirstPlain(ctx, args.toPreparedParams)
 
 
 proc firstPlain*(self: MariadbPreparedStatement, args: JsonNode): Future[seq[string]] {.async.} =
   return await self.preparedFirstPlain(args.toPreparedParams)
 
 
+proc firstPlain*(self: MariadbPreparedStatement, ctx: MariadbPreparedContext, args: JsonNode): Future[seq[string]] {.async.} =
+  return await self.preparedFirstPlain(ctx, args.toPreparedParams)
+
+
 proc exec*(self: MariadbPreparedStatement, args: seq[string]) {.async.} =
   await self.preparedExec(args.toPreparedParams)
 
 
+proc exec*(self: MariadbPreparedStatement, ctx: MariadbPreparedContext, args: seq[string]) {.async.} =
+  await self.preparedExec(ctx, args.toPreparedParams)
+
+
 proc exec*(self: MariadbPreparedStatement, args: JsonNode) {.async.} =
   await self.preparedExec(args.toPreparedParams)
+
+
+proc exec*(self: MariadbPreparedStatement, ctx: MariadbPreparedContext, args: JsonNode) {.async.} =
+  await self.preparedExec(ctx, args.toPreparedParams)
 
 
 # ================================================================================
@@ -849,14 +1118,34 @@ proc firstPlain*(self: RawMariadbQuery):Future[seq[string]] {.async.} =
 
 
 proc close*(self: MariadbPreparedStatement) {.async.} =
-  for i, stmt in self.stmts:
+  if self.isNil or self.isClosed:
+    return
+  self.isClosed = true
+  if not self.entry.isNil:
+    if self.entry.refCount > 0:
+      self.entry.refCount -= 1
+    touchStmtEntry(self.entry)
+
+
+proc flushStmt*(self: MariadbConnections, sql: string) {.async.} =
+  if not hasPreparedEntry(self.pools.preparedCache, sql):
+    return
+  let entry = self.pools.preparedCache[sql]
+  for i, stmt in entry.stmts:
     if stmt.isNil:
       continue
     try:
       mariadb_impl.closePreparedStmt(stmt)
     except CatchableError:
-      self.owner.log.echoErrorMsg("close failed for prepared stmt: " & getCurrentExceptionMsg())
-    self.stmts[i] = nil
+      self.log.echoErrorMsg("close failed for prepared stmt: " & getCurrentExceptionMsg())
+    entry.stmts[i] = nil
+  self.pools.preparedCache.del(sql)
+
+
+proc clearStmtCache*(self: MariadbConnections) {.async.} =
+  let keys = toSeq(self.pools.preparedCache.keys)
+  for sql in keys:
+    await self.flushStmt(sql)
 
 
 template seeder*(rdb:MariadbConnections, tableName:string, body:untyped):untyped =

@@ -23,11 +23,20 @@ type Connection* = object
   createdAt*: int64
 
 
+type MariadbPreparedEntry* = ref object
+  sql*: string
+  nArgs*: int
+  stmts*: seq[PSTMT]
+  refCount*: int
+  lastUsedAt*: int64
+
+
 type Connections* = ref object
   conns*: seq[Connection]
   timeout*:int
   waiters*: Deque[Future[void]]
   columnTypeCache*: Table[string, seq[seq[string]]]
+  preparedCache*: Table[string, MariadbPreparedEntry]
 
 
 ## created by `let rdb = dbOpen(MySQL, "localhost", 3306)`
@@ -38,6 +47,11 @@ type MariadbConnections* = ref object
   # for transaction
   isInTransaction*: bool
   transactionConn*: int
+
+
+type MariadbPreparedContext* = ref object
+  owner*: MariadbConnections
+  connI*: int
 
 
 ## created by `rdb.select("columnName")` or `rdb.table("tableName")`
@@ -76,9 +90,10 @@ type MariadbResultBindCache* = ref object
 type MariadbPreparedStatement* = ref object
   owner*: MariadbConnections
   info*: ConnectionInfo
+  entry*: MariadbPreparedEntry
   sql*: string
-  stmts*: seq[PSTMT]
   nArgs*: int
+  isClosed*: bool
   resultBindCache*: seq[MariadbResultBindCache]
 
 

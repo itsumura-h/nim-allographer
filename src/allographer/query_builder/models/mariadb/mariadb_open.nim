@@ -1,3 +1,6 @@
+import std/asyncdispatch
+import std/deques
+import std/tables
 import std/times
 import ../../libs/database_url
 import ../../libs/mariadb/mariadb_rdb
@@ -30,7 +33,10 @@ proc dbOpen*(_: type MariaDB, database: string, user: string, password: string,
     )
   let pools = Connections(
     conns: conns,
-    timeout: timeout
+    timeout: timeout,
+    waiters: initDeque[Future[void]](),
+    columnTypeCache: initTable[string, seq[seq[string]]](),
+    preparedCache: initTable[string, MariadbPreparedEntry](),
   )
   let info = ConnectionInfo(
     database:database,

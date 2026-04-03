@@ -1,3 +1,4 @@
+import std/tables
 import std/times
 import ../../libs/database_url
 import ../../libs/mysql/mysql_rdb
@@ -33,7 +34,8 @@ proc dbOpen*(_:type MySQL, database: string, user: string, password: string,
     )
   let pools = Connections(
     conns: conns,
-    timeout: timeout
+    timeout: timeout,
+    preparedCache: initTable[string, MysqlPreparedEntry](),
   )
   let info = ConnectionInfo(
     database:database,

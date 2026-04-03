@@ -127,6 +127,30 @@ template benchmarkScenario(rdb: untyped, useBackticks: static[bool]): untyped =
                 discard await selectStmtWarm.first(ctx, @[$index])
                 await updateStmtWarm.exec(ctx, @[$number, $index])
             )
+          elif declared(MariadbPreparedContext) and compiles(
+            rdb.withConn(
+              proc(ctx: MariadbPreparedContext): Future[void] {.async.} =
+                discard await selectStmtWarm.first(ctx, @[$index])
+                await updateStmtWarm.exec(ctx, @[$number, $index])
+            )
+          ):
+            await rdb.withConn(
+              proc(ctx: MariadbPreparedContext): Future[void] {.async.} =
+                discard await selectStmtWarm.first(ctx, @[$index])
+                await updateStmtWarm.exec(ctx, @[$number, $index])
+            )
+          elif declared(MysqlPreparedContext) and compiles(
+            rdb.withConn(
+              proc(ctx: MysqlPreparedContext): Future[void] {.async.} =
+                discard await selectStmtWarm.first(ctx, @[$index])
+                await updateStmtWarm.exec(ctx, @[$number, $index])
+            )
+          ):
+            await rdb.withConn(
+              proc(ctx: MysqlPreparedContext): Future[void] {.async.} =
+                discard await selectStmtWarm.first(ctx, @[$index])
+                await updateStmtWarm.exec(ctx, @[$number, $index])
+            )
           else:
             discard await selectStmtWarm.first(@[$index])
             await updateStmtWarm.exec(@[$number, $index])
