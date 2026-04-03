@@ -1,0 +1,206 @@
+---
+description: 336-update-prepared-statementブランチでの開発時に読み込む
+alwaysApply: false
+---
+336-update-prepared-statement ブランチでの prepared statement 横展開
+===
+
+このブランチで実装することは以下の通りです。
+- 既存の SQLite / PostgreSQL / MySQL / MariaDB の prepared statement API を参照しつつ、SurrealDB 向け prepared statement API を追加する
+- SurrealDB v3 の `/sql` API と SurrealQL の `LET` / parameter 仕様を前提に、server-side prepare ではなく client-side template reuse と 1 リクエスト多文実行で prepared statement 的な使い勝手を実現する
+- SurrealDB 固有事情は `models/surreal` と `libs/surreal` に閉じ込め、公開 API は既存 driver と可能な限り揃える
+- このターンでは実装は行わず、調査結果と実装方針の設計書を固める
+
+## 進捗
+
+- [x] `.cursor/rules/project.mdc` / `.cursor/rules/branch.mdc` / `.cursor/rules/branch/336-update-prepared-statement.mdc` を確認した
+- [x] 既存 prepared statement API の到達点を SQLite / PostgreSQL / MariaDB / MySQL で確認した
+- [x] 現在の SurrealDB 実装と `/sql` 利用箇所を確認した
+- [x] SurrealDB v3 公式ドキュメントで parameter / HTTP `/sql` / transaction の仕様を確認した
+- [x] SurrealDB prepared statement の設計と利用例を `documents/surrealdb/prepared_statement.md` に整理した
+- [x] `models/surreal` に prepared statement 用の型と公開 API を追加した
+- [x] `libs/surreal` に multi-statement 実行向けの共通処理を追加した
+- [x] SurrealDB prepared statement のテストを追加した
+- [x] `documents/surrealdb/query_builder.md` / `documents/rdb/query_builder.md` を更新した
+
+## 参考資料
+
+- 既存 prepared statement API
+  - `src/allographer/query_builder/models/sqlite/sqlite_types.nim`
+  - `src/allographer/query_builder/models/sqlite/sqlite_exec.nim`
+  - `src/allographer/query_builder/models/postgres/postgres_types.nim`
+  - `src/allographer/query_builder/models/postgres/postgres_exec.nim`
+  - `src/allographer/query_builder/models/mysql/mysql_exec.nim`
+  - `src/allographer/query_builder/models/mariadb/mariadb_exec.nim`
+- 現在の SurrealDB 実装
+  - `src/allographer/query_builder/models/surreal/surreal_types.nim`
+  - `src/allographer/query_builder/models/surreal/surreal_exec.nim`
+  - `src/allographer/query_builder/models/surreal/surreal_open.nim`
+  - `src/allographer/query_builder/libs/surreal/surreal_impl.nim`
+  - `src/allographer/query_builder/libs/surreal/surreal_lib.nim`
+  - `src/allographer/schema_builder/queries/surreal/schema_utils.nim`
+- 既存ドキュメント
+  - `documents/surrealdb/query_builder.md`
+  - `documents/surrealdb/schema_builder.md`
+- SurrealDB v3 公式ドキュメント
+  - Parameters: https://surrealdb.com/docs/surrealql/parameters
+  - HTTP Protocol (`POST /sql`): https://surrealdb.com/docs/surrealdb/integration/http
+  - Transactions: https://surrealdb.com/docs/surrealql/transactions
+  - Security summary (parameterized query): https://surrealdb.com/docs/surrealdb/security/summary
+
+## 調査結果・設計まとめ
+
+### 1. 前提整理
+
+SurrealDB v3 には PostgreSQL や MySQL のような server-side prepared statement を、そのまま同じ意味で `/sql` HTTP 経由に載せる公開 API は見当たらない。一方で、以下は公式仕様として確認できる。
+
+- `/sql` は 1 回の POST で複数の SurrealQL 文を `;` 区切りで送れる
+- parameter は `LET $x = ...;` で定義して後続文から参照できる
+- SurrealDB 3.x では `$x = ...` だけの旧記法は deprecated で、`LET` を使う必要がある
+- statement はデフォルトで文ごとに transaction 境界を持つ。複数文を原子的に扱いたい場合は `BEGIN TRANSACTION; ...; COMMIT TRANSACTION;` が必要
+
+したがって、このブランチでの `prepare()` は「DB が statement を事前コンパイルして保持する API」ではなく、「SQL template の正規化・再利用・安全な値埋め込み・単一 request 化を行う client-side prepared statement」として設計する。
+
+### 2. 公開 API 方針
+
+利用者体験は既存 driver に寄せる。第一候補は次の API である。
+
+```nim
+let stmt = surreal.prepare("SELECT * FROM user WHERE id = ?")
+let rows = await stmt.get(@["user:alice"])
+let row = await stmt.first(%*[1])
+await stmt.exec(@["value"])
+await stmt.close()
+await surreal.clearStmtCache()
+await surreal.withConn(proc(ctx: SurrealPreparedContext): Future[void] {.async.} =
+  discard await stmt.first(ctx, @["user:alice"])
+)
+```
+
+採用方針:
+
+- `prepare`
+- `get`
+- `first`
+- `exec`
+- `close`
+- `flushStmt`
+- `clearStmtCache`
+- `withConn`
+- `SurrealPreparedContext`
+
+初期スコープでは `getPlain` / `firstPlain` は後回し候補とする。SurrealDB の戻り値は object 中心で列定義が RDB より弱く、列順の意味が薄いため、まずは既存の `JsonNode` 中心 API を優先する。
+
+### 3. 実装モデル
+
+prepared statement 実行時は、毎回次の 3 段階で 1 リクエストを組み立てる。
+
+1. 元 SQL の `?` を `$a`, `$b`, ... に変換する
+2. 各引数を `LET $a = ...; LET $b = ...;` に変換する
+3. `LET` 群と本体 SQL を `;` で連結して `/sql` に 1 回だけ POST する
+
+概念的には次の形になる。
+
+```sql
+LET $a = "user:alice";
+LET $b = <datetime>"2026-04-03T00:00:00Z";
+SELECT * FROM user WHERE id = $a AND created_at >= $b;
+```
+
+この方式なら、すでに `surreal_lib.nim` にある `questionToDaller` と `dbFormat(queryString, args: JsonNode)` の思想をそのまま再利用できる。prepared statement 専用に別の埋め込み規則を増やす必要はない。
+
+### 4. 型設計
+
+既存 driver に合わせ、プール単位 cache を持つ。
+
+```nim
+type SurrealPreparedEntry = ref object
+  sql*: string
+  normalizedSql*: string
+  nArgs*: int
+  refCount*: int
+  lastUsedAt*: int64
+
+type Connections* = ref object
+  conns*: seq[Connection]
+  timeout*: int
+  waiters*: Deque[Future[void]]
+  preparedCache*: Table[string, SurrealPreparedEntry]
+
+type SurrealPreparedContext* = ref object
+  owner*: SurrealConnections
+  connI*: int
+
+type SurrealPreparedStatement* = ref object
+  owner*: SurrealConnections
+  entry*: SurrealPreparedEntry
+  sql*: string
+  isClosed*: bool
+```
+
+ポイント:
+
+- Surreal は HTTP `/sql` なので physical statement handle は持たない
+- cache の目的は server resource 再利用ではなく、template 正規化と API 一貫性の維持
+- `close()` は logical close とし、cache entry 自体は `flushStmt` / `clearStmtCache` まで残す
+
+### 5. 実行結果の扱い
+
+`/sql` の戻り値は statement ごとの配列なので、prepared statement では「最後の本体 SQL の結果」を利用者へ返す。
+
+- `get`: 最終 statement の `result` を `seq[JsonNode]` で返す
+- `first`: `get` の先頭 1 件を `Option[JsonNode]` で返す
+- `exec`: 最終 statement の status を確認し、副作用系として扱う
+- `LET` statement の result は利用者に見せない
+
+ただし error 判定は最後の statement だけでなく全 statement を走査する。`LET` で失敗した場合でも早期に `DbError` を返す必要がある。
+
+### 6. `withConn` を残す理由
+
+HTTP `/sql` だけを見ると、prepared statement は connection 固定が必須ではない。しかし API 統一のため、`withConn` は残す価値がある。
+
+- 既存 driver と同じ呼び出しパターンを維持できる
+- SurrealDB の parameter は connection/session scope を持ちうるため、将来 RPC 対応や session 前提最適化へ進む余地を残せる
+- 現行の connection pool 制御と整合する
+
+ただし初期実装では、`withConn` の主目的は性能よりも API 一貫性になる。
+
+### 7. multi-statement 利用の境界
+
+このブランチで使う multi-statement は「`LET` 群 + 本体 SQL」を 1 リクエストに束ねる用途を主眼とする。
+
+- `prepare("UPDATE ...")` は 1 つの本体 statement を持つ
+- `LET` は前置 statement
+- 複数の業務 statement を 1 個の prepared statement に詰め込む設計は初期スコープ外
+
+理由:
+
+- 既存 prepared statement API も基本は 1 SQL を対象にしている
+- SurrealDB では複数 statement が自動で 1 transaction にはならない
+- 2 個以上の副作用文を 1 本の prepared statement に許すと、`exec()` の返り値・失敗時意味論・テストが急に複雑になる
+
+もし将来 multi-statement business query を扱うなら、別 API として `prepareBatch` あるいは transaction helper を検討する。
+
+### 8. 実装結果
+
+- `surreal_types.nim` に prepared 関連型を追加し、`Connections` に `preparedCache` を持たせた
+- `surreal_lib.nim` に prepared SQL 生成の共通関数を追加した
+- `surreal_exec.nim` に `prepare` / `get` / `first` / `exec` / `close` / `flushStmt` / `clearStmtCache` / `withConn` を追加した
+- `tests/surrealdb/test_prepared_statement.nim` を追加した
+- `documents/surrealdb/prepared_statement.md` と既存ドキュメントを同期した
+
+### 9. テスト方針
+
+- `prepare("SELECT ... WHERE id = ?")` で `get` / `first` が通ること
+- `prepare("UPDATE ... SET name = ? WHERE id = ?")` で `exec` が通ること
+- `close()` 後に同じ SQL を `prepare()` し直しても再利用できること
+- `clearStmtCache()` 後に再度 `prepare()` できること
+- `withConn` 内の `ctx` overload が通ること
+- `JsonNode` 引数で `JInt` / `JString` / `JNull` / `JArray` / `JObject` が `LET` 経由で正しく扱えること
+- record id や datetime 文字列の変換が既存 `dbFormat` 規則と一致すること
+
+### 10. 現時点の結論
+
+SurrealDB v3 版 prepared statement は「server-side prepare の移植」ではなく、「既存 prepared statement API と揃った公開インターフェースを、SurrealDB の `LET` と `/sql` multi-statement で安全に再現する」方針が最も自然である。
+
+この方針なら `SYW-ARCH-001` に従って公開 API を共通化しつつ、SurrealDB 固有差分は `libs/surreal` と `models/surreal` に閉じ込められる。

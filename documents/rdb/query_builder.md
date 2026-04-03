@@ -686,6 +686,8 @@ await selectStmt.close()
 await updateStmt.close()
 ```
 
+SurrealDB では server-side prepare ではなく、`LET` を使った client-side template reuse として同じ API を提供します。
+
 In PostgreSQL, a context API can be used to ensure multiple operations use the same connection.
 
 ```nim

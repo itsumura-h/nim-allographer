@@ -6,7 +6,7 @@ import ./query_builder/error; export error
 import ./query_builder/models/orm; export orm
 
 when isExistsSqlite:
-  import ./query_builder/models/sqlite/sqlite_types; export sqlite_types
+  import ./query_builder/models/sqlite/sqlite_types; export SQLite3, SqliteConnections, SqlitePreparedContext, sqlite_types
   import ./query_builder/models/sqlite/sqlite_query; export sqlite_query
   import ./query_builder/models/sqlite/sqlite_exec; export sqlite_exec
   import ./query_builder/models/sqlite/sqlite_transaction; export sqlite_transaction

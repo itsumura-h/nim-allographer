@@ -80,19 +80,86 @@ proc raisePoolTimeout(self: SqliteConnections | SqliteQuery | RawSqliteQuery | S
   raise newException(DbError, "Timed out while waiting for a free SQLite connection")
 
 
-proc prepare*(self: SqliteConnections, sql: string): SqlitePreparedStatement =
-  SqlitePreparedStatement(
-    owner: self,
+proc touchStmtEntry(entry: SqlitePreparedEntry) =
+  entry.lastUsedAt = getTime().toUnix()
+
+
+proc mustBeOpen(self: SqlitePreparedStatement) =
+  if self.isNil or self.isClosed:
+    raise newException(DbError, "SQLite prepared statement is already closed")
+
+
+proc hasPreparedEntry(cache: Table[string, SqlitePreparedEntry], sql: string): bool =
+  for key in cache.keys:
+    if key == sql:
+      return true
+  return false
+
+
+proc getStmtEntry(self: SqliteConnections, sql: string): SqlitePreparedEntry =
+  if hasPreparedEntry(self.pools.preparedCache, sql):
+    return self.pools.preparedCache[sql]
+  let entry = SqlitePreparedEntry(
     sql: sql,
+    nArgs: countQuestionMarks(sql),
     stmts: newSeq[PStmt](self.pools.conns.len),
-    nArgs: countQuestionMarks(sql)
+    refCount: 0,
+    lastUsedAt: getTime().toUnix(),
   )
+  self.pools.preparedCache[sql] = entry
+  return entry
+
+
+proc prepare*(self: SqliteConnections, sql: string): SqlitePreparedStatement =
+  new(result)
+  result.owner = self
+  result.entry = self.getStmtEntry(sql)
+  result.sql = sql
+  result.entry.refCount += 1
+  touchStmtEntry(result.entry)
 
 
 proc ensurePreparedStmt(self: SqlitePreparedStatement, connI: int): Future[PStmt] {.async.} =
-  if self.stmts[connI].isNil:
-    self.stmts[connI] = sqlite_impl.prepare(self.owner.pools.conns[connI].conn, self.sql, self.owner.pools.timeout).await
-  return self.stmts[connI]
+  self.mustBeOpen()
+  if connI < 0 or connI >= self.owner.pools.conns.len:
+    raise newException(DbError, "SQLite prepared statement received an invalid connection index")
+  if self.entry.stmts[connI].isNil:
+    self.entry.stmts[connI] = sqlite_impl.prepare(
+      self.owner.pools.conns[connI].conn,
+      self.sql,
+      self.owner.pools.timeout
+    ).await
+  touchStmtEntry(self.entry)
+  return self.entry.stmts[connI]
+
+
+proc withConn*(
+  self: SqliteConnections,
+  body: proc (ctx: SqlitePreparedContext): Future[void]
+) {.async.} =
+  if self.isInTransaction:
+    let ctx = SqlitePreparedContext(owner: self, connI: self.transactionConn)
+    await body(ctx)
+    return
+
+  let connI = getFreeConn(self).await
+  if connI == errorConnectionNum:
+    raisePoolTimeout(self)
+  defer:
+    self.returnConn(connI).await
+
+  let ctx = SqlitePreparedContext(owner: self, connI: connI)
+  await body(ctx)
+
+
+proc verifyCtx(self: SqlitePreparedStatement, ctx: SqlitePreparedContext) =
+  self.mustBeOpen()
+  if ctx.isNil:
+    raise newException(DbError, "SQLite prepared context is nil")
+  if ctx.owner != self.owner:
+    raise newException(DbError, "SQLite prepared context owner mismatch")
+  if ctx.connI < 0 or ctx.connI >= self.owner.pools.conns.len:
+    raise newException(DbError, "SQLite prepared context has invalid connection index")
 
 
 
@@ -532,15 +599,14 @@ proc transactionEnd(self:SqliteConnections, query:string) {.async.} =
   sqlite_impl.exec(self.pools.conns[self.transactionConn].conn, query, newJArray(), self.pools.timeout).await
 
 
-proc getPreparedRows(self: SqlitePreparedStatement, args: seq[PreparedParam]): Future[(seq[seq[string]], DbRows)] {.async.} =
-  var connI = self.owner.transactionConn
-  if not self.owner.isInTransaction:
-    connI = getFreeConn(self.owner).await
-  defer:
-    if not self.owner.isInTransaction:
-      self.owner.returnConn(connI).await
-  if connI == errorConnectionNum:
-    raisePoolTimeout(self)
+proc getPreparedRowsOnConn(
+  self: SqlitePreparedStatement,
+  connI: int,
+  args: seq[PreparedParam]
+): Future[(seq[seq[string]], DbRows)] {.async.} =
+  self.mustBeOpen()
+  if connI < 0 or connI >= self.owner.pools.conns.len:
+    raise newException(DbError, "SQLite prepared statement received an invalid connection index")
 
   let stmt = await self.ensurePreparedStmt(connI)
   if not self.hasCachedColumns:
@@ -554,6 +620,28 @@ proc getPreparedRows(self: SqlitePreparedStatement, args: seq[PreparedParam]): F
     self.owner.pools.timeout,
     self.cachedColumns
   ).await
+
+
+proc getPreparedRows(self: SqlitePreparedStatement, args: seq[PreparedParam]): Future[(seq[seq[string]], DbRows)] {.async.} =
+  var connI = self.owner.transactionConn
+  if not self.owner.isInTransaction:
+    connI = getFreeConn(self.owner).await
+  defer:
+    if not self.owner.isInTransaction:
+      self.owner.returnConn(connI).await
+  if connI == errorConnectionNum:
+    raisePoolTimeout(self)
+
+  return await self.getPreparedRowsOnConn(connI, args)
+
+
+proc getPreparedRows(
+  self: SqlitePreparedStatement,
+  ctx: SqlitePreparedContext,
+  args: seq[PreparedParam]
+): Future[(seq[seq[string]], DbRows)] {.async.} =
+  self.verifyCtx(ctx)
+  return await self.getPreparedRowsOnConn(ctx.connI, args)
 
 
 proc getPreparedAllRows(self: SqlitePreparedStatement, args: seq[PreparedParam]): Future[seq[JsonNode]] {.async.} =
@@ -585,6 +673,69 @@ proc getPreparedRowPlain(self: SqlitePreparedStatement, args: seq[PreparedParam]
   return rows[0]
 
 
+proc getPreparedAllRows(
+  self: SqlitePreparedStatement,
+  ctx: SqlitePreparedContext,
+  args: seq[PreparedParam]
+): Future[seq[JsonNode]] {.async.} =
+  let (rows, dbRows) = await self.getPreparedRows(ctx, args)
+  if rows.len == 0:
+    self.owner.log.echoErrorMsg(self.sql)
+    return newSeq[JsonNode](0)
+  return toJson(rows, dbRows)
+
+
+proc getPreparedRow(
+  self: SqlitePreparedStatement,
+  ctx: SqlitePreparedContext,
+  args: seq[PreparedParam]
+): Future[Option[JsonNode]] {.async.} =
+  let (rows, dbRows) = await self.getPreparedRows(ctx, args)
+  if rows.len == 0:
+    self.owner.log.echoErrorMsg(self.sql)
+    return none(JsonNode)
+  return toJson(rows, dbRows)[0].some()
+
+
+proc getPreparedAllRowsPlain(
+  self: SqlitePreparedStatement,
+  ctx: SqlitePreparedContext,
+  args: seq[PreparedParam]
+): Future[seq[seq[string]]] {.async.} =
+  let (rows, _) = await self.getPreparedRows(ctx, args)
+  return rows
+
+
+proc getPreparedRowPlain(
+  self: SqlitePreparedStatement,
+  ctx: SqlitePreparedContext,
+  args: seq[PreparedParam]
+): Future[seq[string]] {.async.} =
+  let (rows, _) = await self.getPreparedRows(ctx, args)
+  if rows.len == 0:
+    self.owner.log.echoErrorMsg(self.sql)
+    return newSeq[string](0)
+  return rows[0]
+
+
+proc execPreparedOnConn(
+  self: SqlitePreparedStatement,
+  connI: int,
+  args: seq[PreparedParam]
+) {.async.} =
+  self.mustBeOpen()
+  if connI < 0 or connI >= self.owner.pools.conns.len:
+    raise newException(DbError, "SQLite prepared statement received an invalid connection index")
+
+  let stmt = await self.ensurePreparedStmt(connI)
+  await sqlite_impl.preparedExecReuse(
+    self.owner.pools.conns[connI].conn,
+    stmt,
+    args,
+    self.owner.pools.timeout
+  )
+
+
 proc execPrepared(self: SqlitePreparedStatement, args: seq[PreparedParam]) {.async.} =
   var connI = self.owner.transactionConn
   if not self.owner.isInTransaction:
@@ -595,13 +746,16 @@ proc execPrepared(self: SqlitePreparedStatement, args: seq[PreparedParam]) {.asy
   if connI == errorConnectionNum:
     raisePoolTimeout(self)
 
-  let stmt = await self.ensurePreparedStmt(connI)
-  await sqlite_impl.preparedExecReuse(
-    self.owner.pools.conns[connI].conn,
-    stmt,
-    args,
-    self.owner.pools.timeout
-  )
+  await self.execPreparedOnConn(connI, args)
+
+
+proc execPrepared(
+  self: SqlitePreparedStatement,
+  ctx: SqlitePreparedContext,
+  args: seq[PreparedParam]
+) {.async.} =
+  self.verifyCtx(ctx)
+  await self.execPreparedOnConn(ctx.connI, args)
 
 
 proc preparedGet(self: SqlitePreparedStatement, args: seq[PreparedParam]): Future[seq[JsonNode]] {.async.} =
@@ -648,6 +802,76 @@ proc preparedExec(self: SqlitePreparedStatement, args: seq[PreparedParam]) {.asy
   try:
     self.owner.log.logger(self.sql)
     await self.execPrepared(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedGet(
+  self: SqlitePreparedStatement,
+  ctx: SqlitePreparedContext,
+  args: seq[PreparedParam]
+): Future[seq[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedAllRows(ctx, args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedFirst(
+  self: SqlitePreparedStatement,
+  ctx: SqlitePreparedContext,
+  args: seq[PreparedParam]
+): Future[Option[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRow(ctx, args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedGetPlain(
+  self: SqlitePreparedStatement,
+  ctx: SqlitePreparedContext,
+  args: seq[PreparedParam]
+): Future[seq[seq[string]]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedAllRowsPlain(ctx, args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedFirstPlain(
+  self: SqlitePreparedStatement,
+  ctx: SqlitePreparedContext,
+  args: seq[PreparedParam]
+): Future[seq[string]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRowPlain(ctx, args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc preparedExec(
+  self: SqlitePreparedStatement,
+  ctx: SqlitePreparedContext,
+  args: seq[PreparedParam]
+) {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    await self.execPrepared(ctx, args)
   except CatchableError:
     self.owner.log.echoErrorMsg(self.sql)
     self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
@@ -933,14 +1157,34 @@ proc firstPlain*(self: RawSqliteQuery):Future[seq[string]] {.async.} =
 
 
 proc close*(self: SqlitePreparedStatement) {.async.} =
-  for i, stmt in self.stmts:
+  if self.isNil or self.isClosed:
+    return
+  self.isClosed = true
+  if not self.entry.isNil:
+    if self.entry.refCount > 0:
+      self.entry.refCount -= 1
+    touchStmtEntry(self.entry)
+
+
+proc flushStmt*(self: SqliteConnections, sql: string) {.async.} =
+  if not hasPreparedEntry(self.pools.preparedCache, sql):
+    return
+  let entry = self.pools.preparedCache[sql]
+  for i, stmt in entry.stmts:
     if stmt.isNil:
       continue
     try:
       discard finalize(stmt)
     except CatchableError:
-      self.owner.log.echoErrorMsg("finalize failed for prepared stmt: " & getCurrentExceptionMsg())
-    self.stmts[i] = nil
+      self.log.echoErrorMsg("finalize failed for prepared stmt: " & getCurrentExceptionMsg())
+    entry.stmts[i] = nil
+  self.pools.preparedCache.del(sql)
+
+
+proc clearStmtCache*(self: SqliteConnections) {.async.} =
+  let keys = toSeq(self.pools.preparedCache.keys)
+  for sql in keys:
+    await self.flushStmt(sql)
 
 
 # ================================================================================
@@ -951,40 +1195,80 @@ proc get*(self: SqlitePreparedStatement, args: seq[string]): Future[seq[JsonNode
   return await self.preparedGet(args.toPreparedParams)
 
 
+proc get*(self: SqlitePreparedStatement, ctx: SqlitePreparedContext, args: seq[string]): Future[seq[JsonNode]] {.async.} =
+  return await self.preparedGet(ctx, args.toPreparedParams)
+
+
 proc get*(self: SqlitePreparedStatement, args: JsonNode): Future[seq[JsonNode]] {.async.} =
   return await self.preparedGet(args.toPreparedParams)
+
+
+proc get*(self: SqlitePreparedStatement, ctx: SqlitePreparedContext, args: JsonNode): Future[seq[JsonNode]] {.async.} =
+  return await self.preparedGet(ctx, args.toPreparedParams)
 
 
 proc first*(self: SqlitePreparedStatement, args: seq[string]): Future[Option[JsonNode]] {.async.} =
   return await self.preparedFirst(args.toPreparedParams)
 
 
+proc first*(self: SqlitePreparedStatement, ctx: SqlitePreparedContext, args: seq[string]): Future[Option[JsonNode]] {.async.} =
+  return await self.preparedFirst(ctx, args.toPreparedParams)
+
+
 proc first*(self: SqlitePreparedStatement, args: JsonNode): Future[Option[JsonNode]] {.async.} =
   return await self.preparedFirst(args.toPreparedParams)
+
+
+proc first*(self: SqlitePreparedStatement, ctx: SqlitePreparedContext, args: JsonNode): Future[Option[JsonNode]] {.async.} =
+  return await self.preparedFirst(ctx, args.toPreparedParams)
 
 
 proc getPlain*(self: SqlitePreparedStatement, args: seq[string]): Future[seq[seq[string]]] {.async.} =
   return await self.preparedGetPlain(args.toPreparedParams)
 
 
+proc getPlain*(self: SqlitePreparedStatement, ctx: SqlitePreparedContext, args: seq[string]): Future[seq[seq[string]]] {.async.} =
+  return await self.preparedGetPlain(ctx, args.toPreparedParams)
+
+
 proc getPlain*(self: SqlitePreparedStatement, args: JsonNode): Future[seq[seq[string]]] {.async.} =
   return await self.preparedGetPlain(args.toPreparedParams)
+
+
+proc getPlain*(self: SqlitePreparedStatement, ctx: SqlitePreparedContext, args: JsonNode): Future[seq[seq[string]]] {.async.} =
+  return await self.preparedGetPlain(ctx, args.toPreparedParams)
 
 
 proc firstPlain*(self: SqlitePreparedStatement, args: seq[string]): Future[seq[string]] {.async.} =
   return await self.preparedFirstPlain(args.toPreparedParams)
 
 
+proc firstPlain*(self: SqlitePreparedStatement, ctx: SqlitePreparedContext, args: seq[string]): Future[seq[string]] {.async.} =
+  return await self.preparedFirstPlain(ctx, args.toPreparedParams)
+
+
 proc firstPlain*(self: SqlitePreparedStatement, args: JsonNode): Future[seq[string]] {.async.} =
   return await self.preparedFirstPlain(args.toPreparedParams)
+
+
+proc firstPlain*(self: SqlitePreparedStatement, ctx: SqlitePreparedContext, args: JsonNode): Future[seq[string]] {.async.} =
+  return await self.preparedFirstPlain(ctx, args.toPreparedParams)
 
 
 proc exec*(self: SqlitePreparedStatement, args: seq[string]) {.async.} =
   await self.preparedExec(args.toPreparedParams)
 
 
+proc exec*(self: SqlitePreparedStatement, ctx: SqlitePreparedContext, args: seq[string]) {.async.} =
+  await self.preparedExec(ctx, args.toPreparedParams)
+
+
 proc exec*(self: SqlitePreparedStatement, args: JsonNode) {.async.} =
   await self.preparedExec(args.toPreparedParams)
+
+
+proc exec*(self: SqlitePreparedStatement, ctx: SqlitePreparedContext, args: JsonNode) {.async.} =
+  await self.preparedExec(ctx, args.toPreparedParams)
 
 
 

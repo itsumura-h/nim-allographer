@@ -4,6 +4,7 @@ import std/httpclient
 import std/httpcore
 import std/strformat
 import std/base64
+import std/tables
 import std/times
 import ../../libs/surreal/surreal_rdb
 import ../../error
@@ -76,6 +77,7 @@ proc dbOpen*(_:type SurrealDB, namespace:string = "", database: string = "", use
     conns: conns,
     timeout: timeout,
     waiters: initDeque[Future[void]](),
+    preparedCache: initTable[string, SurrealPreparedEntry](),
   )
   return SurrealConnections(
     pools: pools,

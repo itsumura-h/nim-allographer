@@ -2,6 +2,7 @@ import std/asyncdispatch
 import std/deques
 import std/json
 import std/httpclient
+import std/tables
 import ../../log
 import ../../libs/surreal/surreal_rdb
 import ../../error
@@ -16,17 +17,39 @@ type Connection* = object
   createdAt*:int64
 
 
+type SurrealPreparedEntry* = ref object
+  sql*: string
+  normalizedSql*: string
+  nArgs*: int
+  refCount*: int
+  lastUsedAt*: int64
+
+
 type Connections* = ref object
   conns*: seq[Connection]
   timeout*: int
   ## `getFreeConn` が接続を待つときに積む Future。`returnConn` が先頭から 1 件だけ完了させる。
   waiters*: Deque[Future[void]]
+  preparedCache*: Table[string, SurrealPreparedEntry]
 
 
 ## created by `let rdb = dbOpen(SurrealDB, "ns", "database", "user", "pass", "http://surreal", 8000)`
 type SurrealConnections* = ref object
   log*: LogSetting
   pools*:Connections
+
+
+type SurrealPreparedContext* = ref object
+  owner*: SurrealConnections
+  connI*: int
+
+
+type SurrealPreparedStatement* = ref object
+  owner*: SurrealConnections
+  entry*: SurrealPreparedEntry
+  sql*: string
+  nArgs*: int
+  isClosed*: bool
 
 
 type SurrealQuery* = ref object

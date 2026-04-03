@@ -25,6 +25,7 @@ proc openSqlite(database: string; maxConnections: int; timeout: int;
     timeout: timeout,
     waiters: initDeque[Future[void]](),
     columnTypeCache: initTable[string, seq[(string, string)]](),
+    preparedCache: initTable[string, SqlitePreparedEntry](),
   )
   result = SqliteConnections(
     pools: pools,

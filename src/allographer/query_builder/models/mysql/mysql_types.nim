@@ -1,3 +1,4 @@
+import std/tables
 import std/json
 import ../../log
 import ../../libs/mysql/mysql_rdb
@@ -20,9 +21,18 @@ type Connection* = object
   createdAt*: int64
 
 
+type MysqlPreparedEntry* = ref object
+  sql*: string
+  nArgs*: int
+  stmts*: seq[PSTMT]
+  refCount*: int
+  lastUsedAt*: int64
+
+
 type Connections* = ref object
   conns*: seq[Connection]
   timeout*:int
+  preparedCache*: Table[string, MysqlPreparedEntry]
 
 
 ## created by `let rdb = dbOpen(MySQL, "localhost", 3306)`
@@ -33,6 +43,11 @@ type MysqlConnections* = ref object
   # for transaction
   isInTransaction*: bool
   transactionConn*: int
+
+
+type MysqlPreparedContext* = ref object
+  owner*: MysqlConnections
+  connI*: int
 
 
 ## created by `rdb.select("columnName")` or `rdb.table("tableName")`
@@ -71,9 +86,10 @@ type MysqlResultBindCache* = ref object
 type MysqlPreparedStatement* = ref object
   owner*: MysqlConnections
   info*: ConnectionInfo
+  entry*: MysqlPreparedEntry
   sql*: string
-  stmts*: seq[PSTMT]
   nArgs*: int
+  isClosed*: bool
   resultBindCache*: seq[MysqlResultBindCache]
 
 
