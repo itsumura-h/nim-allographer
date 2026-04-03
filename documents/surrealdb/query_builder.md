@@ -28,6 +28,7 @@ Example: Query Builder for SurrealDB
    * [delete all](#delete-all)
    * [delete row](#delete-row)
    * [Raw Query](#raw-query)
+   * [Prepared Statement](#prepared-statement)
    * [Aggregates](#aggregates)
       * [count](#count)
       * [max](#max)
@@ -478,6 +479,17 @@ echo rows
     "string":"aaa"
   }
 ]
+```
+
+## Prepared Statement
+[to index](#INDEX)
+
+SurrealDB の prepared statement は [`documents/surrealdb/prepared_statement.md`](./prepared_statement.md) にまとめています。`prepare()`, `get()`, `first()`, `exec()`, `close()`, `flushStmt(stmt)`, `clearStmtCache()`, `withConn()` が利用できます。
+
+```nim
+let stmt = surreal.prepare("""SELECT * FROM "type" WHERE "id" = ?""")
+let row = await stmt.first(@["type:9nxye3dons0juyelv5if"])
+await stmt.close()
 ```
 
 ## Aggregates

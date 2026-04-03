@@ -20,5 +20,5 @@ when isExistsMysql:
   import ./query_builder/models/mysql/mysql_open; export mysql_open
 
 when isExistsSurrealdb:
-  import ./query_builder/models/surreal/surreal_types; export SurrealDB, SurrealConnections
+  import ./query_builder/models/surreal/surreal_types; export SurrealDB, SurrealConnections, SurrealPreparedContext
   import ./query_builder/models/surreal/surreal_open; export surreal_open

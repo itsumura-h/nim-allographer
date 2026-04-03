@@ -3,14 +3,18 @@ import std/deques
 import std/json
 import std/monotimes
 import std/options
+import std/sequtils
 import std/strformat
 import std/strutils
+import std/tables
 import std/times
+import ../../error
 import ../../libs/surreal/surreal_lib
 import ../../libs/surreal/surreal_impl
 import ../../log
 import ../../enums
 import ../database_types
+import ../../prepared_param
 import ./query/surreal_builder
 import ./surreal_types
 import ./surreal_query
@@ -72,6 +76,182 @@ proc returnConn(self: SurrealConnections | SurrealQuery | RawSurrealQuery, i: in
   if i != errorConnectionNum:
     self.pools.conns[i].isBusy = false
     wakeOnePoolWaiter(self.pools)
+
+
+proc raisePoolTimeout(self: SurrealConnections | SurrealQuery | RawSurrealQuery | SurrealPreparedStatement) {.noreturn.} =
+  raise newException(DbError, "Timed out while waiting for a free SurrealDB connection")
+
+
+proc touchStmtEntry(entry: SurrealPreparedEntry) =
+  entry.lastUsedAt = getTime().toUnix()
+
+
+proc mustBeOpen(self: SurrealPreparedStatement) =
+  if self.isNil or self.owner.isNil or self.isClosed:
+    raise newException(DbError, "SurrealDB prepared statement is already closed")
+
+
+proc hasPreparedEntry(cache: Table[string, SurrealPreparedEntry], sql: string): bool =
+  for key in cache.keys:
+    if key == sql:
+      return true
+  return false
+
+
+proc getStmtEntry(self: SurrealConnections, sql: string): SurrealPreparedEntry =
+  if hasPreparedEntry(self.pools.preparedCache, sql):
+    return self.pools.preparedCache[sql]
+  let entry = SurrealPreparedEntry(
+    sql: sql,
+    normalizedSql: sql.questionToDaller(),
+    nArgs: countQuestionMarks(sql),
+    refCount: 0,
+    lastUsedAt: getTime().toUnix(),
+  )
+  self.pools.preparedCache[sql] = entry
+  return entry
+
+
+proc prepare*(self: SurrealConnections, sql: string): SurrealPreparedStatement =
+  let entry = self.getStmtEntry(sql)
+  entry.refCount += 1
+  touchStmtEntry(entry)
+  new(result)
+  result.owner = self
+  result.entry = entry
+  result.sql = sql
+  result.nArgs = entry.nArgs
+  result.isClosed = false
+
+
+proc withConn*(
+  self: SurrealConnections,
+  body: proc (ctx: SurrealPreparedContext): Future[void]
+) {.async.} =
+  let connI = getFreeConn(self).await
+  if connI == errorConnectionNum:
+    raisePoolTimeout(self)
+  defer:
+    self.returnConn(connI).await
+
+  let ctx = SurrealPreparedContext(owner: self, connI: connI)
+  await body(ctx)
+
+
+proc verifyCtx(self: SurrealPreparedStatement, ctx: SurrealPreparedContext) =
+  self.mustBeOpen()
+  if ctx.isNil:
+    raise newException(DbError, "SurrealDB prepared context is nil")
+  if ctx.owner.isNil or ctx.owner != self.owner:
+    raise newException(DbError, "SurrealDB prepared context owner mismatch")
+  if ctx.connI < 0 or ctx.connI >= self.owner.pools.conns.len:
+    raise newException(DbError, "SurrealDB prepared context has invalid connection index")
+
+
+proc toPreparedArgsJson(args: seq[string]): JsonNode =
+  result = newJArray()
+  for arg in args:
+    if arg == "NULL" or arg == "null":
+      result.add(newJNull())
+    else:
+      result.add(%arg)
+
+
+proc buildPreparedSql(self: SurrealPreparedStatement, args: JsonNode): string =
+  self.mustBeOpen()
+  touchStmtEntry(self.entry)
+  result = dbFormatPrepared(self.entry.normalizedSql, args)
+
+
+proc getPreparedRowsOnConn(
+  self: SurrealPreparedStatement,
+  connI: int,
+  args: JsonNode
+): Future[seq[JsonNode]] {.async.} =
+  self.mustBeOpen()
+  if connI < 0 or connI >= self.owner.pools.conns.len:
+    raise newException(DbError, "SurrealDB prepared statement received an invalid connection index")
+
+  let sql = self.buildPreparedSql(args)
+  let rows = surreal_impl.query(
+    self.owner.pools.conns[connI].conn,
+    sql,
+    newJArray(),
+    self.owner.pools.timeout
+  ).await
+
+  if rows.kind != JArray or rows.len == 0:
+    return newSeq[JsonNode](0)
+  return rows.getElems()
+
+
+proc getPreparedRowOnConn(
+  self: SurrealPreparedStatement,
+  connI: int,
+  args: JsonNode
+): Future[Option[JsonNode]] {.async.} =
+  let rows = await self.getPreparedRowsOnConn(connI, args)
+  if rows.len == 0:
+    return none(JsonNode)
+  return rows[0].some
+
+
+proc execPreparedOnConn(
+  self: SurrealPreparedStatement,
+  connI: int,
+  args: JsonNode
+) {.async.} =
+  self.mustBeOpen()
+  if connI < 0 or connI >= self.owner.pools.conns.len:
+    raise newException(DbError, "SurrealDB prepared statement received an invalid connection index")
+
+  let sql = self.buildPreparedSql(args)
+  await surreal_impl.exec(
+    self.owner.pools.conns[connI].conn,
+    sql,
+    newJArray(),
+    self.owner.pools.timeout
+  )
+
+
+proc getPreparedRows(self: SurrealPreparedStatement, args: JsonNode): Future[seq[JsonNode]] {.async.} =
+  let connI = await getFreeConn(self.owner)
+  if connI == errorConnectionNum:
+    raisePoolTimeout(self)
+  defer:
+    await self.owner.returnConn(connI)
+  return await self.getPreparedRowsOnConn(connI, args)
+
+
+proc getPreparedRows(self: SurrealPreparedStatement, ctx: SurrealPreparedContext, args: JsonNode): Future[seq[JsonNode]] {.async.} =
+  self.verifyCtx(ctx)
+  return await self.getPreparedRowsOnConn(ctx.connI, args)
+
+
+proc getPreparedRow(self: SurrealPreparedStatement, args: JsonNode): Future[Option[JsonNode]] {.async.} =
+  let rows = await self.getPreparedRows(args)
+  if rows.len == 0:
+    return none(JsonNode)
+  return rows[0].some
+
+
+proc getPreparedRow(self: SurrealPreparedStatement, ctx: SurrealPreparedContext, args: JsonNode): Future[Option[JsonNode]] {.async.} =
+  self.verifyCtx(ctx)
+  return await self.getPreparedRowOnConn(ctx.connI, args)
+
+
+proc execPrepared(self: SurrealPreparedStatement, args: JsonNode) {.async.} =
+  let connI = await getFreeConn(self.owner)
+  if connI == errorConnectionNum:
+    raisePoolTimeout(self)
+  defer:
+    await self.owner.returnConn(connI)
+  await self.execPreparedOnConn(connI, args)
+
+
+proc execPrepared(self: SurrealPreparedStatement, ctx: SurrealPreparedContext, args: JsonNode) {.async.} =
+  self.verifyCtx(ctx)
+  await self.execPreparedOnConn(ctx.connI, args)
 
 
 # ================================================================================
@@ -314,6 +494,163 @@ proc column(self:SurrealQuery, queryString:string):Future[JsonNode] {.async.} =
       strArgs.add(arg["value"].pretty)
 
   return surreal_impl.info(self.pools.conns[connI].conn, queryString, strArgs, self.pools.timeout).await
+
+
+# ================================================================================
+# prepared statement cache
+# ================================================================================
+
+proc close*(self: SurrealPreparedStatement) {.async.} =
+  if self.isNil or self.isClosed:
+    return
+  self.isClosed = true
+  if not self.entry.isNil and self.entry.refCount > 0:
+    self.entry.refCount -= 1
+    touchStmtEntry(self.entry)
+
+
+proc removePreparedEntry(self: SurrealConnections, sql: string) =
+  if not self.pools.preparedCache.hasKey(sql):
+    return
+  self.pools.preparedCache.del(sql)
+
+
+proc flushStmt*(self: SurrealConnections, stmt: SurrealPreparedStatement) {.async.} =
+  if stmt.isNil:
+    return
+  let sql = stmt.sql
+  await stmt.close()
+  self.removePreparedEntry(sql)
+
+
+proc clearStmtCache*(self: SurrealConnections) {.async.} =
+  let keys = toSeq(self.pools.preparedCache.keys)
+  for sql in keys:
+    self.removePreparedEntry(sql)
+
+
+# ================================================================================
+# public prepared exec
+# ================================================================================
+
+proc get*(self: SurrealPreparedStatement, args: seq[string]): Future[seq[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRows(toPreparedArgsJson(args))
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc get*(self: SurrealPreparedStatement, ctx: SurrealPreparedContext, args: seq[string]): Future[seq[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRows(ctx, toPreparedArgsJson(args))
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc get*(self: SurrealPreparedStatement, args: JsonNode): Future[seq[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRows(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc get*(self: SurrealPreparedStatement, ctx: SurrealPreparedContext, args: JsonNode): Future[seq[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRows(ctx, args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc first*(self: SurrealPreparedStatement, args: seq[string]): Future[Option[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRow(toPreparedArgsJson(args))
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc first*(self: SurrealPreparedStatement, ctx: SurrealPreparedContext, args: seq[string]): Future[Option[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRow(ctx, toPreparedArgsJson(args))
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc first*(self: SurrealPreparedStatement, args: JsonNode): Future[Option[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRow(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc first*(self: SurrealPreparedStatement, ctx: SurrealPreparedContext, args: JsonNode): Future[Option[JsonNode]] {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    return await self.getPreparedRow(ctx, args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc exec*(self: SurrealPreparedStatement, args: seq[string]) {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    await self.execPrepared(toPreparedArgsJson(args))
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc exec*(self: SurrealPreparedStatement, ctx: SurrealPreparedContext, args: seq[string]) {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    await self.execPrepared(ctx, toPreparedArgsJson(args))
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc exec*(self: SurrealPreparedStatement, args: JsonNode) {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    await self.execPrepared(args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
+
+
+proc exec*(self: SurrealPreparedStatement, ctx: SurrealPreparedContext, args: JsonNode) {.async.} =
+  try:
+    self.owner.log.logger(self.sql)
+    await self.execPrepared(ctx, args)
+  except CatchableError:
+    self.owner.log.echoErrorMsg(self.sql)
+    self.owner.log.echoErrorMsg(getCurrentExceptionMsg())
+    raise getCurrentException()
 
 
 # proc transactionStart(self:SurrealConnections) {.async.} =

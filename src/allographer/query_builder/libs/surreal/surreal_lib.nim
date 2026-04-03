@@ -166,9 +166,19 @@ proc appendJsonLetClause(result: var string, idx: int, arg: JsonNode, quoteStrin
   result.add("; ")
 
 
-proc dbFormat*(queryString: string, args: JsonNode): string =
-  let queryPart = queryString.questionToDaller()
-  result = newStringOfCap(queryPart.len + max(args.len, 1) * 24)
+proc dbFormatPrepared*(normalizedQueryString: string, args: JsonNode): string =
+  ## `normalizedQueryString` should already have `?` converted to SurrealQL
+  ## style placeholders.
+  if args.isNil:
+    result = newStringOfCap(normalizedQueryString.len)
+    result.add(normalizedQueryString)
+    return
+  if args.kind == JNull:
+    result = newStringOfCap(normalizedQueryString.len)
+    result.add(normalizedQueryString)
+    return
+
+  result = newStringOfCap(normalizedQueryString.len + max(args.len, 1) * 24)
   if args.kind == JArray and args.len > 0:
     var i = 1
     for arg in args.items:
@@ -176,8 +186,12 @@ proc dbFormat*(queryString: string, args: JsonNode): string =
       inc(i)
   elif args.kind == JObject and args.len > 0:
     var i = 1
-    for (key, arg) in args.pairs:
+    for (_, arg) in args.pairs:
       appendJsonLetClause(result, i, arg, false)
       inc(i)
 
-  result.add(queryPart)
+  result.add(normalizedQueryString)
+
+
+proc dbFormat*(queryString: string, args: JsonNode): string =
+  result = dbFormatPrepared(queryString.questionToDaller(), args)

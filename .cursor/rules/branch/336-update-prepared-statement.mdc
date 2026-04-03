@@ -17,11 +17,11 @@ alwaysApply: false
 - [x] 既存 prepared statement API の到達点を SQLite / PostgreSQL / MariaDB / MySQL で確認した
 - [x] 現在の SurrealDB 実装と `/sql` 利用箇所を確認した
 - [x] SurrealDB v3 公式ドキュメントで parameter / HTTP `/sql` / transaction の仕様を確認した
-- [x] SurrealDB prepared statement 実装方針の設計書を `documents/surrealdb/prepared_statement.md` として作成する方針を整理した
-- [ ] `models/surreal` に prepared statement 用の型と公開 API を追加する
-- [ ] `libs/surreal` に multi-statement 実行と response 解析の共通処理を追加する
-- [ ] SurrealDB prepared statement のテストを追加する
-- [ ] 必要に応じて `documents/surrealdb/query_builder.md` / README を更新する
+- [x] SurrealDB prepared statement の設計と利用例を `documents/surrealdb/prepared_statement.md` に整理した
+- [x] `models/surreal` に prepared statement 用の型と公開 API を追加した
+- [x] `libs/surreal` に multi-statement 実行向けの共通処理を追加した
+- [x] SurrealDB prepared statement のテストを追加した
+- [x] `documents/surrealdb/query_builder.md` / `documents/rdb/query_builder.md` を更新した
 
 ## 参考資料
 
@@ -181,30 +181,13 @@ HTTP `/sql` だけを見ると、prepared statement は connection 固定が必�
 
 もし将来 multi-statement business query を扱うなら、別 API として `prepareBatch` あるいは transaction helper を検討する。
 
-### 8. 実装順序
+### 8. 実装結果
 
-#### Phase 1
-
-- `surreal_types.nim` に prepared 関連型を追加する
-- `Connections` に `preparedCache` を追加する
-- `prepare()` / `close()` / `flushStmt()` / `clearStmtCache()` の骨格を追加する
-
-#### Phase 2
-
-- `surreal_lib.nim` の placeholder 変換を prepared statement でも使える形に整理する
-- `surreal_impl.nim` に multi-statement response 検証の共通処理を追加する
-- `get` / `first` / `exec` を実装する
-
-#### Phase 3
-
-- `withConn` / `SurrealPreparedContext` を追加する
-- `ctx` 付き overload を実装する
-- `tests/surrealdb/test_prepared_statement.nim` を追加する
-
-#### Phase 4
-
-- 必要なら `documents/surrealdb/query_builder.md` に prepared statement の使い方を追記する
-- `schema_builder` 側の逐次 `/sql` 実行を将来的に batch 化できるか別タスクで評価する
+- `surreal_types.nim` に prepared 関連型を追加し、`Connections` に `preparedCache` を持たせた
+- `surreal_lib.nim` に prepared SQL 生成の共通関数を追加した
+- `surreal_exec.nim` に `prepare` / `get` / `first` / `exec` / `close` / `flushStmt` / `clearStmtCache` / `withConn` を追加した
+- `tests/surrealdb/test_prepared_statement.nim` を追加した
+- `documents/surrealdb/prepared_statement.md` と既存ドキュメントを同期した
 
 ### 9. テスト方針
 
