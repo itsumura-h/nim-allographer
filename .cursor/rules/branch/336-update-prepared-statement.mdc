@@ -6,188 +6,218 @@ alwaysApply: false
 ===
 
 このブランチで実装することは以下の通りです。
-- `333-prepared-statement` で PostgreSQL 向けに整理・実装された prepared statement 改善を、可能な限り同じ公開 API で MariaDB / MySQL に横展開する
-- driver 差分は内部実装に閉じ込め、利用者から見える API は PostgreSQL と揃える
-- すでに PostgreSQL 側で実装済みの内容はこのブランチで再実装せず、未着手の MariaDB / MySQL 側へタスクを移す
-- MariaDB / MySQL の横展開が終わったら、PostgreSQL と MariaDB の実装を参考に SQLite にも同様の prepared statement 改善を展開する方針を持つ
+- 既存の SQLite / PostgreSQL / MySQL / MariaDB の prepared statement API を参照しつつ、SurrealDB 向け prepared statement API を追加する
+- SurrealDB v3 の `/sql` API と SurrealQL の `LET` / parameter 仕様を前提に、server-side prepare ではなく client-side template reuse と 1 リクエスト多文実行で prepared statement 的な使い勝手を実現する
+- SurrealDB 固有事情は `models/surreal` と `libs/surreal` に閉じ込め、公開 API は既存 driver と可能な限り揃える
+- このターンでは実装は行わず、調査結果と実装方針の設計書を固める
 
 ## 進捗
 
-- [x] `.cursor/rules/branch/333-prepared-statement.mdc` の設計意図を確認した
-- [x] 現在ブランチが `336-update-prepared-statement` であることを確認した
-- [x] PostgreSQL 側の実装到達点をコードベースから確認した
-- [x] MariaDB / MySQL 側の prepared statement 実装差分を確認した
-- [x] PostgreSQL 側で以下が実装済みであることを確認した
-- [x] PostgreSQL のプール単位 prepared cache
-- [x] PostgreSQL の論理 close と `clearStmtCache` / `flushStmt`
-- [x] PostgreSQL の接続固定 API `withConn` と `PostgresPreparedContext`
-- [x] PostgreSQL prepared statement の `ctx` 付き overload
-- [x] `example/benchmark.nim` の prepared cold / warm 計測
-- [x] PostgreSQL の基本テスト追加
-- [x] MariaDB に PostgreSQL 相当の prepared cache を追加する
-- [x] MySQL に PostgreSQL 相当の prepared cache を追加する
-- [x] MariaDB の `close()` を論理 close 化し、物理破棄 API を分離する
-- [x] MySQL の `close()` を論理 close 化し、物理破棄 API を分離する
-- [x] MariaDB に PostgreSQL と揃う接続固定 API を追加する
-- [x] MySQL に PostgreSQL と揃う接続固定 API を追加する
-- [x] MariaDB prepared statement に `ctx` 付き overload を追加する
-- [x] MySQL prepared statement に `ctx` 付き overload を追加する
-- [x] benchmark の warm 経路が MariaDB / MySQL でも同じ API で通るようにする
-- [x] MariaDB / MySQL の prepared statement テストを PostgreSQL 相当まで拡張する
-- [x] SQLite の prepared statement 実装差分を確認した
-- [x] SQLite に PostgreSQL / MariaDB 相当の prepared cache を追加する
-- [x] SQLite の `close()` を論理 close 化し、物理破棄 API を分離する
-- [x] SQLite に PostgreSQL / MariaDB と揃う接続固定 API を追加する
-- [x] SQLite prepared statement に `ctx` 付き overload を追加する
-- [x] benchmark の warm 経路が SQLite でも同じ API で通るようにする
-- [x] SQLite の prepared statement テストを PostgreSQL / MariaDB 相当まで拡張する
-- [ ] API 名の差分を吸収するため、必要なら PostgreSQL 側の命名も含めて最終形を再確認する
+- [x] `.cursor/rules/project.mdc` / `.cursor/rules/branch.mdc` / `.cursor/rules/branch/336-update-prepared-statement.mdc` を確認した
+- [x] 既存 prepared statement API の到達点を SQLite / PostgreSQL / MariaDB / MySQL で確認した
+- [x] 現在の SurrealDB 実装と `/sql` 利用箇所を確認した
+- [x] SurrealDB v3 公式ドキュメントで parameter / HTTP `/sql` / transaction の仕様を確認した
+- [x] SurrealDB prepared statement 実装方針の設計書を `documents/surrealdb/prepared_statement.md` として作成する方針を整理した
+- [ ] `models/surreal` に prepared statement 用の型と公開 API を追加する
+- [ ] `libs/surreal` に multi-statement 実行と response 解析の共通処理を追加する
+- [ ] SurrealDB prepared statement のテストを追加する
+- [ ] 必要に応じて `documents/surrealdb/query_builder.md` / README を更新する
 
 ## 参考資料
 
-- 既存ブランチルール
-  - `.cursor/rules/branch/333-prepared-statement.mdc`
-- PostgreSQL 実装
-  - `src/allographer/query_builder/models/postgres/postgres_types.nim`
-  - `src/allographer/query_builder/models/postgres/postgres_exec.nim`
-  - `src/allographer/query_builder/models/postgres/postgres_open.nim`
-  - `tests/postgres/test_prepared_statement.nim`
-- MariaDB 実装
-  - `src/allographer/query_builder/models/mariadb/mariadb_types.nim`
-  - `src/allographer/query_builder/models/mariadb/mariadb_exec.nim`
-  - `tests/mariadb/test_prepared_statement.nim`
-- MySQL 実装
-  - `src/allographer/query_builder/models/mysql/mysql_types.nim`
-  - `src/allographer/query_builder/models/mysql/mysql_exec.nim`
-  - `tests/mysql/test_prepared_statement.nim`
-- SQLite 実装
+- 既存 prepared statement API
   - `src/allographer/query_builder/models/sqlite/sqlite_types.nim`
   - `src/allographer/query_builder/models/sqlite/sqlite_exec.nim`
-  - `tests/sqlite/test_prepared_statement.nim`
-- benchmark
-  - `example/benchmark.nim`
+  - `src/allographer/query_builder/models/postgres/postgres_types.nim`
+  - `src/allographer/query_builder/models/postgres/postgres_exec.nim`
+  - `src/allographer/query_builder/models/mysql/mysql_exec.nim`
+  - `src/allographer/query_builder/models/mariadb/mariadb_exec.nim`
+- 現在の SurrealDB 実装
+  - `src/allographer/query_builder/models/surreal/surreal_types.nim`
+  - `src/allographer/query_builder/models/surreal/surreal_exec.nim`
+  - `src/allographer/query_builder/models/surreal/surreal_open.nim`
+  - `src/allographer/query_builder/libs/surreal/surreal_impl.nim`
+  - `src/allographer/query_builder/libs/surreal/surreal_lib.nim`
+  - `src/allographer/schema_builder/queries/surreal/schema_utils.nim`
+- 既存ドキュメント
+  - `documents/surrealdb/query_builder.md`
+  - `documents/surrealdb/schema_builder.md`
+- SurrealDB v3 公式ドキュメント
+  - Parameters: https://surrealdb.com/docs/surrealql/parameters
+  - HTTP Protocol (`POST /sql`): https://surrealdb.com/docs/surrealdb/integration/http
+  - Transactions: https://surrealdb.com/docs/surrealql/transactions
+  - Security summary (parameterized query): https://surrealdb.com/docs/surrealdb/security/summary
 
 ## 調査結果・設計まとめ
 
-### 1. PostgreSQL 側で実装済みの内容
+### 1. 前提整理
 
-`333-prepared-statement` に書かれていた PostgreSQL 向け主要タスクは、コードベース上かなり進んでいる。
+SurrealDB v3 には PostgreSQL や MySQL のような server-side prepared statement を、そのまま同じ意味で `/sql` HTTP 経由に載せる公開 API は見当たらない。一方で、以下は公式仕様として確認できる。
 
-- `Connections.preparedCache` が追加済み
-- `prepare()` は SQL 単位で cache entry を引く形になっている
-- `close()` は logical close になっており、entry の refCount を下げるだけになっている
-- 物理破棄 API として `flushStmt(sql)` / `clearStmtCache()` が入っている
-- 接続固定 API は設計書の `withPreparedConnection` ではなく `withConn` という名前で実装済み
-- `PostgresPreparedContext` と、`get/first/getPlain/firstPlain/exec` の `ctx` overload が実装済み
-- benchmark は prepared cold / warm に分かれており、PostgreSQL では `withConn` を使う分岐が入っている
-- PostgreSQL テストには logical close、cache clear、接続固定 API の確認が追加済み
+- `/sql` は 1 回の POST で複数の SurrealQL 文を `;` 区切りで送れる
+- parameter は `LET $x = ...;` で定義して後続文から参照できる
+- SurrealDB 3.x では `$x = ...` だけの旧記法は deprecated で、`LET` を使う必要がある
+- statement はデフォルトで文ごとに transaction 境界を持つ。複数文を原子的に扱いたい場合は `BEGIN TRANSACTION; ...; COMMIT TRANSACTION;` が必要
 
-### 2. PostgreSQL 側で未完了または名称確定済みの点
+したがって、このブランチでの `prepare()` は「DB が statement を事前コンパイルして保持する API」ではなく、「SQL template の正規化・再利用・安全な値埋め込み・単一 request 化を行う client-side prepared statement」として設計する。
 
-`333-prepared-statement` の設計と完全一致ではない点が残っている。
+### 2. 公開 API 方針
 
-- 接続固定 API 名は `withConn` を正とする
-- cache clear API 名は `clearStmtCache` を正とする
-- eviction / `preparedCacheMaxEntries` / LRU の Phase 3 は未実装
-- 「physical prepare が 1 回に収まること」を直接見るテストはまだ入っていない
+利用者体験は既存 driver に寄せる。第一候補は次の API である。
 
-このブランチではまず MariaDB / MySQL への API 横展開を優先し、PostgreSQL の高度な eviction は別タスクとして扱う。
+```nim
+let stmt = surreal.prepare("SELECT * FROM user WHERE id = ?")
+let rows = await stmt.get(@["user:alice"])
+let row = await stmt.first(%*[1])
+await stmt.exec(@["value"])
+await stmt.close()
+await surreal.clearStmtCache()
+await surreal.withConn(proc(ctx: SurrealPreparedContext): Future[void] {.async.} =
+  discard await stmt.first(ctx, @["user:alice"])
+)
+```
 
-### 3. MariaDB / MySQL 側の現状
+採用方針:
 
-MariaDB / MySQL の prepared statement 実装は、まだ PostgreSQL 以前の形に近い。
+- `prepare`
+- `get`
+- `first`
+- `exec`
+- `close`
+- `flushStmt`
+- `clearStmtCache`
+- `withConn`
+- `SurrealPreparedContext`
 
-- prepared statement ハンドル自身が `stmts: seq[PSTMT]` を持つ
-- `prepare()` は毎回新しいハンドルを返し、プール単位 cache は持っていない
-- `close()` は各 `PSTMT` を物理 close する
-- 接続固定 API がない
-- prepared statement の `ctx` 付き overload がない
-- benchmark の warm 経路は PostgreSQL 以外ではフォールバック実行になっている
-- テストは基本的な select / update 程度で、logical close や cache 維持、接続固定 API は未検証
+初期スコープでは `getPlain` / `firstPlain` は後回し候補とする。SurrealDB の戻り値は object 中心で列定義が RDB より弱く、列順の意味が薄いため、まずは既存の `JsonNode` 中心 API を優先する。
 
-### 3.5 SQLite 側の現状
+### 3. 実装モデル
 
-SQLite の prepared statement 実装も、考え方としては MariaDB / MySQL の旧来実装に近い。
+prepared statement 実行時は、毎回次の 3 段階で 1 リクエストを組み立てる。
 
-- prepared statement ハンドル自身が `stmts: seq[PStmt]` を持つ
-- `prepare()` は毎回新しいハンドルを返し、プール単位 cache は持っていない
-- `close()` は各 `PStmt` を `finalize()` する物理 close である
-- `withConn` や `SqlitePreparedContext` は存在しない
-- prepared statement の `ctx` 付き overload はない
-- benchmark の warm 経路では SQLite は接続固定経路を使わず、通常の prepared 呼び出しへフォールバックする
+1. 元 SQL の `?` を `$a`, `$b`, ... に変換する
+2. 各引数を `LET $a = ...; LET $b = ...;` に変換する
+3. `LET` 群と本体 SQL を `;` で連結して `/sql` に 1 回だけ POST する
 
-SQLite は server-side prepare を持たないが、公開 API を PostgreSQL / MariaDB / MySQL と揃える価値は高いので、このブランチでは「同じ API で使えること」を主眼に設計を寄せる。
+概念的には次の形になる。
 
-### 4. このブランチの実装方針
+```sql
+LET $a = "user:alice";
+LET $b = <datetime>"2026-04-03T00:00:00Z";
+SELECT * FROM user WHERE id = $a AND created_at >= $b;
+```
 
-公開 API は PostgreSQL に寄せる。命名は「短く、意味が通じる」方を正とし、すでに PostgreSQL で使われている短い名前へ揃える。
+この方式なら、すでに `surreal_lib.nim` にある `questionToDaller` と `dbFormat(queryString, args: JsonNode)` の思想をそのまま再利用できる。prepared statement 専用に別の埋め込み規則を増やす必要はない。
 
-統一方針:
+### 4. 型設計
 
-- 接続固定 API は全 driver で `withConn`
-- prepared context 型は driver ごとに `MariadbPreparedContext` / `MysqlPreparedContext` / `SqlitePreparedContext`
-- cache clear API は全 driver で `clearStmtCache`
-- 個別破棄 API は全 driver で `flushStmt`
-- prepared statement の `close()` は全 driver で logical close
+既存 driver に合わせ、プール単位 cache を持つ。
 
-この形なら `example/benchmark.nim` の warm 経路を driver ごとに似た形へ揃えやすい。
+```nim
+type SurrealPreparedEntry = ref object
+  sql*: string
+  normalizedSql*: string
+  nArgs*: int
+  refCount*: int
+  lastUsedAt*: int64
 
-SQLite については driver 特性上、cache entry が保持する実体は `PStmt` になり、物理破棄は `finalize()` を使う。ただし利用者から見える API は PostgreSQL / MariaDB / MySQL と同じに保つ。
+type Connections* = ref object
+  conns*: seq[Connection]
+  timeout*: int
+  waiters*: Deque[Future[void]]
+  preparedCache*: Table[string, SurrealPreparedEntry]
 
-### 5. 実装後の確認
+type SurrealPreparedContext* = ref object
+  owner*: SurrealConnections
+  connI*: int
 
-- MariaDB / MySQL でも `Connections.preparedCache` を持ち、SQL ごとに `PSTMT` を再利用するようにした
-- `close()` は MariaDB / MySQL でも論理 close に変更し、物理破棄は `flushStmt` / `clearStmtCache` に分離した
-- `withConn` と `MariadbPreparedContext` / `MysqlPreparedContext` を追加し、benchmark の warm 経路を共通化した
-- prepared statement の `ctx` 付き overload を追加し、MariaDB / MySQL テストでも接続固定経路を検証するようにした
-- `example/benchmark.nim` は PostgreSQL / MariaDB / MySQL で同じ warm パターンを選べるようになった
-- SQLite も同じ `withConn` パターンで warm prepared 経路を通すようにした
-- 次の横展開先として SQLite を扱う方針を明文化した
-- SQLite では `PStmt` の lifecycle を `preparedCache` / `flushStmt` / `clearStmtCache` へ寄せつつ、公開 API は他 driver と共通化する方針とする
+type SurrealPreparedStatement* = ref object
+  owner*: SurrealConnections
+  entry*: SurrealPreparedEntry
+  sql*: string
+  isClosed*: bool
+```
 
-### 6. 実装順序
+ポイント:
+
+- Surreal は HTTP `/sql` なので physical statement handle は持たない
+- cache の目的は server resource 再利用ではなく、template 正規化と API 一貫性の維持
+- `close()` は logical close とし、cache entry 自体は `flushStmt` / `clearStmtCache` まで残す
+
+### 5. 実行結果の扱い
+
+`/sql` の戻り値は statement ごとの配列なので、prepared statement では「最後の本体 SQL の結果」を利用者へ返す。
+
+- `get`: 最終 statement の `result` を `seq[JsonNode]` で返す
+- `first`: `get` の先頭 1 件を `Option[JsonNode]` で返す
+- `exec`: 最終 statement の status を確認し、副作用系として扱う
+- `LET` statement の result は利用者に見せない
+
+ただし error 判定は最後の statement だけでなく全 statement を走査する。`LET` で失敗した場合でも早期に `DbError` を返す必要がある。
+
+### 6. `withConn` を残す理由
+
+HTTP `/sql` だけを見ると、prepared statement は connection 固定が必須ではない。しかし API 統一のため、`withConn` は残す価値がある。
+
+- 既存 driver と同じ呼び出しパターンを維持できる
+- SurrealDB の parameter は connection/session scope を持ちうるため、将来 RPC 対応や session 前提最適化へ進む余地を残せる
+- 現行の connection pool 制御と整合する
+
+ただし初期実装では、`withConn` の主目的は性能よりも API 一貫性になる。
+
+### 7. multi-statement 利用の境界
+
+このブランチで使う multi-statement は「`LET` 群 + 本体 SQL」を 1 リクエストに束ねる用途を主眼とする。
+
+- `prepare("UPDATE ...")` は 1 つの本体 statement を持つ
+- `LET` は前置 statement
+- 複数の業務 statement を 1 個の prepared statement に詰め込む設計は初期スコープ外
+
+理由:
+
+- 既存 prepared statement API も基本は 1 SQL を対象にしている
+- SurrealDB では複数 statement が自動で 1 transaction にはならない
+- 2 個以上の副作用文を 1 本の prepared statement に許すと、`exec()` の返り値・失敗時意味論・テストが急に複雑になる
+
+もし将来 multi-statement business query を扱うなら、別 API として `prepareBatch` あるいは transaction helper を検討する。
+
+### 8. 実装順序
 
 #### Phase 1
 
-- MariaDB / MySQL の型定義に prepared cache entry と context 型を追加する
-- `Connections` に prepared cache を持たせる
-- `prepare()` を SQL 単位 cache lookup ベースへ変更する
+- `surreal_types.nim` に prepared 関連型を追加する
+- `Connections` に `preparedCache` を追加する
+- `prepare()` / `close()` / `flushStmt()` / `clearStmtCache()` の骨格を追加する
 
 #### Phase 2
 
-- MariaDB / MySQL の `close()` を logical close に変える
-- `flushStmt` / `clearStmtCache` を追加する
-- 接続 close 時に物理 prepared state が自然破棄される前提との差分を確認する
+- `surreal_lib.nim` の placeholder 変換を prepared statement でも使える形に整理する
+- `surreal_impl.nim` に multi-statement response 検証の共通処理を追加する
+- `get` / `first` / `exec` を実装する
 
 #### Phase 3
 
-- MariaDB / MySQL に `withConn` を追加する
-- prepared statement の `ctx` overload を追加する
-- benchmark の warm 経路を PostgreSQL と同じ書き方へ寄せる
+- `withConn` / `SurrealPreparedContext` を追加する
+- `ctx` 付き overload を実装する
+- `tests/surrealdb/test_prepared_statement.nim` を追加する
 
 #### Phase 4
 
-- MariaDB / MySQL テストを拡張する
-- logical close 後の再利用
-- cache clear 後の再 prepare
-- 接続固定 API 経由の select / update
-- transaction 中の接続選択との整合
+- 必要なら `documents/surrealdb/query_builder.md` に prepared statement の使い方を追記する
+- `schema_builder` 側の逐次 `/sql` 実行を将来的に batch 化できるか別タスクで評価する
 
-#### Phase 5
+### 9. テスト方針
 
-- SQLite の型定義に prepared cache entry と context 型を追加する
-- `Connections` に prepared cache を持たせる
-- `prepare()` を SQL 単位 cache lookup ベースへ変更する
-- `close()` を logical close に変え、`flushStmt` / `clearStmtCache` を追加する
-- SQLite に `withConn` を追加する
-- prepared statement の `ctx` overload を追加する
-- benchmark の warm 経路を SQLite でも同じ書き方へ寄せる
-- SQLite テストを logical close、cache clear、接続固定 API まで拡張する
+- `prepare("SELECT ... WHERE id = ?")` で `get` / `first` が通ること
+- `prepare("UPDATE ... SET name = ? WHERE id = ?")` で `exec` が通ること
+- `close()` 後に同じ SQL を `prepare()` し直しても再利用できること
+- `clearStmtCache()` 後に再度 `prepare()` できること
+- `withConn` 内の `ctx` overload が通ること
+- `JsonNode` 引数で `JInt` / `JString` / `JNull` / `JArray` / `JObject` が `LET` 経由で正しく扱えること
+- record id や datetime 文字列の変換が既存 `dbFormat` 規則と一致すること
 
-### 7. 注意点
+### 10. 現時点の結論
 
-- `SYW-ARCH-001` / `SYW-ARCH-002` に従い、driver 差分を公開 API に漏らしすぎない
-- 既存の MariaDB / MySQL prepared statement API を壊す場合は移行影響を記録する
-- SQLite は driver 特性上 server-side state を持たないため、「PostgreSQL と同じ内部実装」ではなく「同じ公開 API と同じ利用体験」を揃える
-- 現時点で PostgreSQL は `withConn` / `clearStmtCache` 命名で先行しており、この命名を正式採用する
-- 実装中に PostgreSQL 側の API 名を再調整したくなった場合は、この文書の設計方針も合わせて更新する
+SurrealDB v3 版 prepared statement は「server-side prepare の移植」ではなく、「既存 prepared statement API と揃った公開インターフェースを、SurrealDB の `LET` と `/sql` multi-statement で安全に再現する」方針が最も自然である。
+
+この方針なら `SYW-ARCH-001` に従って公開 API を共通化しつつ、SurrealDB 固有差分は `libs/surreal` と `models/surreal` に閉じ込められる。
