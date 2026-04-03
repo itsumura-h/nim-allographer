@@ -78,6 +78,44 @@ suite($rdb & " prepared statement"):
     check stmt.firstPlain(args).waitFor[1] == "user1"
 
 
+  test("logical close and clear cache"):
+    let sql = """SELECT "id", "name", "email", "address" FROM "user" WHERE "id" = ?"""
+    let stmt = rdb.prepare(sql)
+    discard waitFor stmt.first(@["1"])
+    waitFor stmt.close()
+
+    let stmt2 = rdb.prepare(sql)
+    defer:
+      waitFor stmt2.close()
+
+    let rowOpt = stmt2.first(@["1"]).waitFor
+    check rowOpt.isSome
+
+    waitFor rdb.clearStmtCache()
+    let stmt3 = rdb.prepare(sql)
+    defer:
+      waitFor stmt3.close()
+    check stmt3.first(@["1"]).waitFor.isSome
+
+
+  test("with prepared connection context"):
+    let selectStmt = rdb.prepare("""SELECT "id", "name" FROM "user" WHERE "id" = ?""")
+    let updateStmt = rdb.prepare("""UPDATE "user" SET "address" = ? WHERE "id" = ?""")
+    defer:
+      waitFor selectStmt.close()
+      waitFor updateStmt.close()
+
+    waitFor rdb.withConn(
+      proc(ctx: SqlitePreparedContext): Future[void] {.async.} =
+        discard await selectStmt.first(ctx, @["1"])
+        await updateStmt.exec(ctx, @["ctx-address", "1"])
+    )
+
+    let rowOpt = rdb.table("user").find(1).waitFor
+    let row = options.get(rowOpt)
+    check row["address"].getStr == "ctx-address"
+
+
   test("update null"):
     let stmt = rdb.prepare("""UPDATE "user" SET "address" = ? WHERE "id" = ?""")
     defer:

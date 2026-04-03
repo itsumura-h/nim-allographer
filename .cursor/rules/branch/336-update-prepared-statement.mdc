@@ -9,6 +9,7 @@ alwaysApply: false
 - `333-prepared-statement` で PostgreSQL 向けに整理・実装された prepared statement 改善を、可能な限り同じ公開 API で MariaDB / MySQL に横展開する
 - driver 差分は内部実装に閉じ込め、利用者から見える API は PostgreSQL と揃える
 - すでに PostgreSQL 側で実装済みの内容はこのブランチで再実装せず、未着手の MariaDB / MySQL 側へタスクを移す
+- MariaDB / MySQL の横展開が終わったら、PostgreSQL と MariaDB の実装を参考に SQLite にも同様の prepared statement 改善を展開する方針を持つ
 
 ## 進捗
 
@@ -33,6 +34,13 @@ alwaysApply: false
 - [x] MySQL prepared statement に `ctx` 付き overload を追加する
 - [x] benchmark の warm 経路が MariaDB / MySQL でも同じ API で通るようにする
 - [x] MariaDB / MySQL の prepared statement テストを PostgreSQL 相当まで拡張する
+- [x] SQLite の prepared statement 実装差分を確認した
+- [x] SQLite に PostgreSQL / MariaDB 相当の prepared cache を追加する
+- [x] SQLite の `close()` を論理 close 化し、物理破棄 API を分離する
+- [x] SQLite に PostgreSQL / MariaDB と揃う接続固定 API を追加する
+- [x] SQLite prepared statement に `ctx` 付き overload を追加する
+- [x] benchmark の warm 経路が SQLite でも同じ API で通るようにする
+- [x] SQLite の prepared statement テストを PostgreSQL / MariaDB 相当まで拡張する
 - [ ] API 名の差分を吸収するため、必要なら PostgreSQL 側の命名も含めて最終形を再確認する
 
 ## 参考資料
@@ -52,6 +60,10 @@ alwaysApply: false
   - `src/allographer/query_builder/models/mysql/mysql_types.nim`
   - `src/allographer/query_builder/models/mysql/mysql_exec.nim`
   - `tests/mysql/test_prepared_statement.nim`
+- SQLite 実装
+  - `src/allographer/query_builder/models/sqlite/sqlite_types.nim`
+  - `src/allographer/query_builder/models/sqlite/sqlite_exec.nim`
+  - `tests/sqlite/test_prepared_statement.nim`
 - benchmark
   - `example/benchmark.nim`
 
@@ -93,6 +105,19 @@ MariaDB / MySQL の prepared statement 実装は、まだ PostgreSQL 以前の�
 - benchmark の warm 経路は PostgreSQL 以外ではフォールバック実行になっている
 - テストは基本的な select / update 程度で、logical close や cache 維持、接続固定 API は未検証
 
+### 3.5 SQLite 側の現状
+
+SQLite の prepared statement 実装も、考え方としては MariaDB / MySQL の旧来実装に近い。
+
+- prepared statement ハンドル自身が `stmts: seq[PStmt]` を持つ
+- `prepare()` は毎回新しいハンドルを返し、プール単位 cache は持っていない
+- `close()` は各 `PStmt` を `finalize()` する物理 close である
+- `withConn` や `SqlitePreparedContext` は存在しない
+- prepared statement の `ctx` 付き overload はない
+- benchmark の warm 経路では SQLite は接続固定経路を使わず、通常の prepared 呼び出しへフォールバックする
+
+SQLite は server-side prepare を持たないが、公開 API を PostgreSQL / MariaDB / MySQL と揃える価値は高いので、このブランチでは「同じ API で使えること」を主眼に設計を寄せる。
+
 ### 4. このブランチの実装方針
 
 公開 API は PostgreSQL に寄せる。命名は「短く、意味が通じる」方を正とし、すでに PostgreSQL で使われている短い名前へ揃える。
@@ -100,12 +125,14 @@ MariaDB / MySQL の prepared statement 実装は、まだ PostgreSQL 以前の�
 統一方針:
 
 - 接続固定 API は全 driver で `withConn`
-- prepared context 型は driver ごとに `MariadbPreparedContext` / `MysqlPreparedContext`
+- prepared context 型は driver ごとに `MariadbPreparedContext` / `MysqlPreparedContext` / `SqlitePreparedContext`
 - cache clear API は全 driver で `clearStmtCache`
 - 個別破棄 API は全 driver で `flushStmt`
 - prepared statement の `close()` は全 driver で logical close
 
 この形なら `example/benchmark.nim` の warm 経路を driver ごとに似た形へ揃えやすい。
+
+SQLite については driver 特性上、cache entry が保持する実体は `PStmt` になり、物理破棄は `finalize()` を使う。ただし利用者から見える API は PostgreSQL / MariaDB / MySQL と同じに保つ。
 
 ### 5. 実装後の確認
 
@@ -114,6 +141,9 @@ MariaDB / MySQL の prepared statement 実装は、まだ PostgreSQL 以前の�
 - `withConn` と `MariadbPreparedContext` / `MysqlPreparedContext` を追加し、benchmark の warm 経路を共通化した
 - prepared statement の `ctx` 付き overload を追加し、MariaDB / MySQL テストでも接続固定経路を検証するようにした
 - `example/benchmark.nim` は PostgreSQL / MariaDB / MySQL で同じ warm パターンを選べるようになった
+- SQLite も同じ `withConn` パターンで warm prepared 経路を通すようにした
+- 次の横展開先として SQLite を扱う方針を明文化した
+- SQLite では `PStmt` の lifecycle を `preparedCache` / `flushStmt` / `clearStmtCache` へ寄せつつ、公開 API は他 driver と共通化する方針とする
 
 ### 6. 実装順序
 
@@ -143,9 +173,21 @@ MariaDB / MySQL の prepared statement 実装は、まだ PostgreSQL 以前の�
 - 接続固定 API 経由の select / update
 - transaction 中の接続選択との整合
 
+#### Phase 5
+
+- SQLite の型定義に prepared cache entry と context 型を追加する
+- `Connections` に prepared cache を持たせる
+- `prepare()` を SQL 単位 cache lookup ベースへ変更する
+- `close()` を logical close に変え、`flushStmt` / `clearStmtCache` を追加する
+- SQLite に `withConn` を追加する
+- prepared statement の `ctx` overload を追加する
+- benchmark の warm 経路を SQLite でも同じ書き方へ寄せる
+- SQLite テストを logical close、cache clear、接続固定 API まで拡張する
+
 ### 7. 注意点
 
 - `SYW-ARCH-001` / `SYW-ARCH-002` に従い、driver 差分を公開 API に漏らしすぎない
 - 既存の MariaDB / MySQL prepared statement API を壊す場合は移行影響を記録する
+- SQLite は driver 特性上 server-side state を持たないため、「PostgreSQL と同じ内部実装」ではなく「同じ公開 API と同じ利用体験」を揃える
 - 現時点で PostgreSQL は `withConn` / `clearStmtCache` 命名で先行しており、この命名を正式採用する
 - 実装中に PostgreSQL 側の API 名を再調整したくなった場合は、この文書の設計方針も合わせて更新する

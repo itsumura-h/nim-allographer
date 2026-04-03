@@ -16,6 +16,14 @@ type Connection* = ref object
   createdAt*: int64
 
 
+type SqlitePreparedEntry* = ref object
+  sql*: string
+  nArgs*: int
+  stmts*: seq[PStmt]
+  refCount*: int
+  lastUsedAt*: int64
+
+
 type Connections* = ref object
   conns*: seq[Connection]
   timeout*: int
@@ -23,6 +31,7 @@ type Connections* = ref object
   waiters*: Deque[Future[void]]
   ## `exec` / `insertId` 用。テーブルごとに PRAGMA table_info の結果を初回のみ保持する。
   columnTypeCache*: Table[string, seq[(string, string)]]
+  preparedCache*: Table[string, SqlitePreparedEntry]
 
 
 ## created by `let rdb = dbOpen(SQLite3, "/path/to/sqlite.db")`
@@ -32,6 +41,11 @@ type SqliteConnections* = ref object
   # for transaction
   isInTransaction*: bool
   transactionConn*: int
+
+
+type SqlitePreparedContext* = ref object
+  owner*: SqliteConnections
+  connI*: int
 
 
 ## created by `rdb.select("columnName")` or `rdb.table("tableName")`
@@ -59,9 +73,9 @@ type RawSqliteQuery* = ref object
 
 type SqlitePreparedStatement* = ref object
   owner*: SqliteConnections
+  entry*: SqlitePreparedEntry
   sql*: string
-  stmts*: seq[PStmt]
-  nArgs*: int
+  isClosed*: bool
   cachedColumns*: DbColumns
   hasCachedColumns*: bool
 
