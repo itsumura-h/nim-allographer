@@ -10,10 +10,15 @@ import ../../libs/postgres/postgres_rdb
 type PostgreSQL* = object
 
 
+const DEFAULT_CONN_MAX_LIFETIME_SECONDS* = 300
+const DEFAULT_CONN_MAX_IDLE_SECONDS* = 300
+
+
 type Connection* = ref object
   conn*: PPGconn
   isBusy*: bool
   createdAt*: int64
+  lastUsedAt*: int64
 
 
 type PostgresPreparedEntry* = ref object
@@ -28,6 +33,13 @@ type PostgresPreparedEntry* = ref object
 type Connections* = ref object
   conns*: seq[Connection]
   timeout*: int
+  maxConnectionLifetime*: int
+  maxConnectionIdleTime*: int
+  database*: string
+  user*: string
+  password*: string
+  host*: string
+  port*: int
   ## `getFreeConn` が接続を待つときに積む Future。`returnConn` が先頭から 1 件だけ完了させる。
   waiters*: Deque[Future[void]]
   ## `exec` / `insertId` 用。テーブルごとに information_schema 相当の列型を初回のみ取得して保持する。

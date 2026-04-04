@@ -12,6 +12,7 @@ import std/times
 import ../../error
 import ../../libs/postgres/postgres_lib
 import ../../libs/postgres/postgres_impl
+import ../../libs/postgres/postgres_rdb
 import ../../log
 import ../database_types
 import ../../prepared_param
@@ -51,12 +52,70 @@ proc poolRemainingMs(deadline: MonoTime): int =
   if result < 1:
     result = 1
 
+
+proc nowUnix(): int64 =
+  getTime().toUnix()
+
+
+proc hasConnExpired(self: Connections, conn: Connection): bool =
+  let now = nowUnix()
+  if self.maxConnectionLifetime > 0 and now - conn.createdAt >= self.maxConnectionLifetime.int64:
+    return true
+  if self.maxConnectionIdleTime > 0 and now - conn.lastUsedAt >= self.maxConnectionIdleTime.int64:
+    return true
+  return false
+
+
+proc openPostgresConn(self: Connections): PPGconn =
+  let conn = postgres_rdb.pqsetdbLogin(
+    self.host.cstring,
+    self.port.`$`.cstring,
+    nil,
+    nil,
+    self.database.cstring,
+    self.user.cstring,
+    self.password.cstring
+  )
+  if pqStatus(conn) != CONNECTION_OK:
+    dbError(conn)
+  if pqsetnonblocking(conn, 1'i32) != 0'i32:
+    dbError(conn)
+  if pqisnonblocking(conn) != 1'i32:
+    raise newException(DbError, "PostgreSQL connection could not be set to non-blocking mode")
+  return conn
+
+
+proc clearPreparedSlot(self: Connections, connI: int) =
+  for entry in self.preparedCache.values:
+    if connI < 0 or connI >= entry.stmtNames.len:
+      continue
+    entry.stmtNames[connI] = ""
+
+
+proc refreshConn(self: Connections, connI: int): bool =
+  if connI < 0 or connI >= self.conns.len:
+    return false
+  let conn = openPostgresConn(self)
+  let oldConn = self.conns[connI].conn
+  self.clearPreparedSlot(connI)
+  if not oldConn.isNil:
+    pqfinish(oldConn)
+  self.conns[connI].conn = conn
+  self.conns[connI].createdAt = nowUnix()
+  self.conns[connI].lastUsedAt = self.conns[connI].createdAt
+  return true
+
 proc getFreeConn(self: PostgresConnections | PostgresQuery | RawPostgresQuery): Future[int] {.async.} =
   let deadline = getMonoTime() + initDuration(seconds = self.pools.timeout)
   while true:
     for i in 0 ..< self.pools.conns.len:
       if not self.pools.conns[i].isBusy:
         self.pools.conns[i].isBusy = true
+        if self.pools.hasConnExpired(self.pools.conns[i]):
+          try:
+            discard self.pools.refreshConn(i)
+          except CatchableError:
+            discard
         when defined(check_pool):
           echo "=== getFreeConn ", i
         return i
@@ -76,6 +135,7 @@ proc getFreeConn(self: PostgresConnections | PostgresQuery | RawPostgresQuery): 
 proc returnConn(self: PostgresConnections | PostgresQuery | RawPostgresQuery, i: int) {.async.} =
   if i != errorConnectionNum:
     self.pools.conns[i].isBusy = false
+    self.pools.conns[i].lastUsedAt = nowUnix()
     wakeOnePoolWaiter(self.pools)
 
 

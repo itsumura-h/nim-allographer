@@ -9,6 +9,10 @@ import ../../libs/mariadb/mariadb_rdb
 type MariaDB* = object
 
 
+const DEFAULT_CONN_MAX_LIFETIME_SECONDS* = 300
+const DEFAULT_CONN_MAX_IDLE_SECONDS* = 300
+
+
 type ConnectionInfo* = object
   database*:string
   user*:string
@@ -21,6 +25,7 @@ type Connection* = object
   conn*: PMySQL
   isBusy*: bool
   createdAt*: int64
+  lastUsedAt*: int64
 
 
 type MariadbPreparedEntry* = ref object
@@ -34,6 +39,9 @@ type MariadbPreparedEntry* = ref object
 type Connections* = ref object
   conns*: seq[Connection]
   timeout*:int
+  maxConnectionLifetime*: int
+  maxConnectionIdleTime*: int
+  info*: ConnectionInfo
   waiters*: Deque[Future[void]]
   columnTypeCache*: Table[string, seq[seq[string]]]
   preparedCache*: Table[string, MariadbPreparedEntry]

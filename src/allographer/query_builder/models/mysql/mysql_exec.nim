@@ -26,6 +26,11 @@ proc getFreeConn(self:MysqlConnections | MysqlQuery | RawMysqlQuery):Future[int]
     for i in 0..<self.pools.conns.len:
       if not self.pools.conns[i].isBusy:
         self.pools.conns[i].isBusy = true
+        if self.pools.hasConnExpired(self.pools.conns[i]):
+          try:
+            discard self.pools.refreshConn(i)
+          except CatchableError:
+            discard
         when defined(check_pool):
           echo "=== getFreeConn ",i
         return i
@@ -37,6 +42,7 @@ proc getFreeConn(self:MysqlConnections | MysqlQuery | RawMysqlQuery):Future[int]
 proc returnConn(self:MysqlConnections | MysqlQuery | RawMysqlQuery, i: int) {.async.} =
   if i != errorConnectionNum:
     self.pools.conns[i].isBusy = false
+    self.pools.conns[i].lastUsedAt = getTime().toUnix()
 
 
 proc raisePoolTimeout(self: MysqlConnections | MysqlQuery | RawMysqlQuery | MysqlPreparedStatement) {.noreturn.} =
@@ -71,6 +77,63 @@ proc getStmtEntry(self: MysqlConnections, sql: string): MysqlPreparedEntry =
   )
   self.pools.preparedCache[sql] = entry
   return entry
+
+
+proc nowUnix(): int64 =
+  getTime().toUnix()
+
+
+proc hasConnExpired(self: Connections, conn: Connection): bool =
+  let now = nowUnix()
+  if self.maxConnectionLifetime > 0 and now - conn.createdAt >= self.maxConnectionLifetime.int64:
+    return true
+  if self.maxConnectionIdleTime > 0 and now - conn.lastUsedAt >= self.maxConnectionIdleTime.int64:
+    return true
+  return false
+
+
+proc openMysqlConn(self: Connections): PMySQL =
+  let conn = mysql_rdb.init(nil)
+  if conn == nil:
+    mysql_rdb.close(conn)
+    dbError("mysql_rdb.init() failed")
+  if mysql_rdb.real_connect(
+    conn,
+    self.info.host.cstring,
+    self.info.user.cstring,
+    self.info.password.cstring,
+    self.info.database.cstring,
+    self.info.port.int32,
+    nil,
+    0
+  ) == nil:
+    let errmsg = $mysql_rdb.error(conn)
+    mysql_rdb.close(conn)
+    dbError(errmsg)
+  return conn
+
+
+proc clearPreparedSlot(self: Connections, connI: int) =
+  for entry in self.preparedCache.values:
+    if connI < 0 or connI >= entry.stmts.len:
+      continue
+    if not entry.stmts[connI].isNil:
+      mysql_impl.closePreparedStmt(entry.stmts[connI])
+      entry.stmts[connI] = nil
+
+
+proc refreshConn(self: Connections, connI: int): bool =
+  if connI < 0 or connI >= self.conns.len:
+    return false
+  let conn = openMysqlConn(self)
+  let oldConn = self.conns[connI].conn
+  self.clearPreparedSlot(connI)
+  if not oldConn.isNil:
+    mysql_rdb.close(oldConn)
+  self.conns[connI].conn = conn
+  self.conns[connI].createdAt = nowUnix()
+  self.conns[connI].lastUsedAt = self.conns[connI].createdAt
+  return true
 
 
 # ================================================================================

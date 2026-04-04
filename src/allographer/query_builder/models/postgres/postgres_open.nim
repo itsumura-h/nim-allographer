@@ -12,7 +12,9 @@ import ./postgres_types
 
 proc dbOpen*(_:type PostgreSQL, database: string, user: string, password: string,
               host: string, port: int, maxConnections=1, timeout=30,
-              shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): PostgresConnections =
+              shouldDisplayLog=false, shouldOutputLogFile=false, logDir="",
+              maxConnectionLifetime=DEFAULT_CONN_MAX_LIFETIME_SECONDS,
+              maxConnectionIdleTime=DEFAULT_CONN_MAX_IDLE_SECONDS): PostgresConnections =
   var conns = newSeq[Connection](maxConnections)
   for i in 0..<maxConnections:
     let conn = postgres_rdb.pqsetdbLogin(host, port.`$`.cstring, nil, nil, database, user, password)
@@ -25,10 +27,18 @@ proc dbOpen*(_:type PostgreSQL, database: string, user: string, password: string
       conn: conn,
       isBusy: false,
       createdAt: getTime().toUnix(),
+      lastUsedAt: getTime().toUnix(),
     )
   let pools = Connections(
     conns: conns,
     timeout: timeout,
+    maxConnectionLifetime: maxConnectionLifetime,
+    maxConnectionIdleTime: maxConnectionIdleTime,
+    database: database,
+    user: user,
+    password: password,
+    host: host,
+    port: port,
     waiters: initDeque[Future[void]](),
     columnTypeCache: initTable[string, seq[Row]](),
     preparedCache: initTable[string, PostgresPreparedEntry](),
@@ -40,12 +50,16 @@ proc dbOpen*(_:type PostgreSQL, database: string, user: string, password: string
 
 
 proc dbOpen*(_:type PostgreSQL, url: string, maxConnections: int = 1, timeout=30,
-              shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): PostgresConnections =
-  return dbOpen(PostgreSQL, asDatabaseUrl(url), maxConnections, timeout, shouldDisplayLog, shouldOutputLogFile, logDir)
+              shouldDisplayLog=false, shouldOutputLogFile=false, logDir="",
+              maxConnectionLifetime=DEFAULT_CONN_MAX_LIFETIME_SECONDS,
+              maxConnectionIdleTime=DEFAULT_CONN_MAX_IDLE_SECONDS): PostgresConnections =
+  return dbOpen(PostgreSQL, asDatabaseUrl(url), maxConnections, timeout, shouldDisplayLog, shouldOutputLogFile, logDir, maxConnectionLifetime, maxConnectionIdleTime)
 
 
 proc dbOpen*(_:type PostgreSQL, databaseUrl: DatabaseUrl, maxConnections: int = 1, timeout=30,
-             shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): PostgresConnections =
+             shouldDisplayLog=false, shouldOutputLogFile=false, logDir="",
+             maxConnectionLifetime=DEFAULT_CONN_MAX_LIFETIME_SECONDS,
+             maxConnectionIdleTime=DEFAULT_CONN_MAX_IDLE_SECONDS): PostgresConnections =
   let parsed = parseDatabaseUrl(databaseUrl)
   requireDatabaseUrlScheme(parsed, ["postgresql", "postgres"], "PostgreSQL")
 
@@ -62,5 +76,7 @@ proc dbOpen*(_:type PostgreSQL, databaseUrl: DatabaseUrl, maxConnections: int = 
     timeout,
     shouldDisplayLog,
     shouldOutputLogFile,
-    logDir
+    logDir,
+    maxConnectionLifetime,
+    maxConnectionIdleTime
   )

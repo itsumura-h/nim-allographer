@@ -10,10 +10,15 @@ import ../../libs/sqlite/sqlite_rdb
 type SQLite3* = object
 
 
+const DEFAULT_CONN_MAX_LIFETIME_SECONDS* = 300
+const DEFAULT_CONN_MAX_IDLE_SECONDS* = 300
+
+
 type Connection* = ref object
   conn*: PSqlite3
   isBusy*: bool
   createdAt*: int64
+  lastUsedAt*: int64
 
 
 type SqlitePreparedEntry* = ref object
@@ -27,6 +32,9 @@ type SqlitePreparedEntry* = ref object
 type Connections* = ref object
   conns*: seq[Connection]
   timeout*: int
+  maxConnectionLifetime*: int
+  maxConnectionIdleTime*: int
+  database*: string
   ## `getFreeConn` が接続を待つときに積む Future。`returnConn` が先頭から 1 件だけ完了させる。
   waiters*: Deque[Future[void]]
   ## `exec` / `insertId` 用。テーブルごとに PRAGMA table_info の結果を初回のみ保持する。

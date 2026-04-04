@@ -60,6 +60,28 @@ setup(rdb)
 
 
 suite($rdb & " prepared statement"):
+  test("aged connection refresh"):
+    rdb.pools.maxConnectionLifetime = 1
+    rdb.pools.maxConnectionIdleTime = 1
+    for conn in rdb.pools.conns.mitems:
+      conn.createdAt = 0
+      conn.lastUsedAt = 0
+
+    let sql = """SELECT "id", "name", "email", "address" FROM "user" WHERE "id" = ?"""
+    let stmt = rdb.prepare(sql)
+    defer:
+      waitFor stmt.close()
+
+    let rowOpt = stmt.first(@["1"]).waitFor
+    check rowOpt.isSome
+
+    var refreshed = false
+    for conn in rdb.pools.conns:
+      if conn.createdAt > 0:
+        refreshed = true
+        break
+    check refreshed
+
   test("select"):
     let stmt = rdb.prepare("""SELECT "id", "name", "email", "address" FROM "user" WHERE "id" = ?""")
     defer:

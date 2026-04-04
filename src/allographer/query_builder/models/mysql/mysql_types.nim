@@ -7,6 +7,10 @@ import ../../libs/mysql/mysql_rdb
 type MySQL* = object
 
 
+const DEFAULT_CONN_MAX_LIFETIME_SECONDS* = 300
+const DEFAULT_CONN_MAX_IDLE_SECONDS* = 300
+
+
 type ConnectionInfo* = object
   database*:string
   user*:string
@@ -19,6 +23,7 @@ type Connection* = object
   conn*: PMySQL
   isBusy*: bool
   createdAt*: int64
+  lastUsedAt*: int64
 
 
 type MysqlPreparedEntry* = ref object
@@ -32,6 +37,9 @@ type MysqlPreparedEntry* = ref object
 type Connections* = ref object
   conns*: seq[Connection]
   timeout*:int
+  maxConnectionLifetime*: int
+  maxConnectionIdleTime*: int
+  info*: ConnectionInfo
   preparedCache*: Table[string, MysqlPreparedEntry]
 
 

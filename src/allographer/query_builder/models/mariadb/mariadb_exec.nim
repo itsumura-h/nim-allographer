@@ -27,6 +27,11 @@ proc getFreeConn(self:MariadbConnections | MariadbQuery | RawMariadbQuery):Futur
     for i in 0..<self.pools.conns.len:
       if not self.pools.conns[i].isBusy:
         self.pools.conns[i].isBusy = true
+        if self.pools.hasConnExpired(self.pools.conns[i]):
+          try:
+            discard self.pools.refreshConn(i)
+          except CatchableError:
+            discard
         when defined(check_pool):
           echo "=== getFreeConn ",i
         return i
@@ -56,6 +61,7 @@ proc wakeOnePoolWaiter(pools: Connections) =
 proc returnConn(self:MariadbConnections | MariadbQuery | RawMariadbQuery, i: int) {.async.} =
   if i != errorConnectionNum:
     self.pools.conns[i].isBusy = false
+    self.pools.conns[i].lastUsedAt = getTime().toUnix()
     wakeOnePoolWaiter(self.pools)
 
 
@@ -91,6 +97,67 @@ proc getStmtEntry(self: MariadbConnections, sql: string): MariadbPreparedEntry =
   )
   self.pools.preparedCache[sql] = entry
   return entry
+
+
+proc nowUnix(): int64 =
+  getTime().toUnix()
+
+
+proc hasConnExpired(self: Connections, conn: Connection): bool =
+  let now = nowUnix()
+  if self.maxConnectionLifetime > 0 and now - conn.createdAt >= self.maxConnectionLifetime.int64:
+    return true
+  if self.maxConnectionIdleTime > 0 and now - conn.lastUsedAt >= self.maxConnectionIdleTime.int64:
+    return true
+  return false
+
+
+proc openMariadbConn(self: Connections): PMySQL =
+  let conn = mariadb_rdb.init(nil)
+  if conn == nil:
+    mariadb_rdb.close(conn)
+    dbError("mariadb_rdb.init() failed")
+  if mariadb_rdb.options(conn, MYSQL_OPT_NONBLOCK, nil) != 0:
+    let errmsg = $mariadb_rdb.error(conn)
+    mariadb_rdb.close(conn)
+    dbError(errmsg)
+  if mariadb_rdb.real_connect(
+    conn,
+    self.info.host.cstring,
+    self.info.user.cstring,
+    self.info.password.cstring,
+    self.info.database.cstring,
+    self.info.port.int32,
+    nil,
+    0
+  ) == nil:
+    let errmsg = $mariadb_rdb.error(conn)
+    mariadb_rdb.close(conn)
+    dbError(errmsg)
+  return conn
+
+
+proc clearPreparedSlot(self: Connections, connI: int) =
+  for entry in self.preparedCache.values:
+    if connI < 0 or connI >= entry.stmts.len:
+      continue
+    if not entry.stmts[connI].isNil:
+      mariadb_impl.closePreparedStmt(entry.stmts[connI])
+      entry.stmts[connI] = nil
+
+
+proc refreshConn(self: Connections, connI: int): bool =
+  if connI < 0 or connI >= self.conns.len:
+    return false
+  let conn = openMariadbConn(self)
+  let oldConn = self.conns[connI].conn
+  self.clearPreparedSlot(connI)
+  if not oldConn.isNil:
+    mariadb_rdb.close(oldConn)
+  self.conns[connI].conn = conn
+  self.conns[connI].createdAt = nowUnix()
+  self.conns[connI].lastUsedAt = self.conns[connI].createdAt
+  return true
 
 
 proc prepare*(self: MariadbConnections, sql: string): MariadbPreparedStatement =
