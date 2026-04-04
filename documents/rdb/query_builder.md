@@ -53,6 +53,16 @@ let timeout = 30
 # Using connection URL (Recommended)
 let rdb = dbOpen(PostgreSQL, "postgresql://user:password@localhost:5432/database", maxConnections, timeout)
 
+# Optional pool aging controls
+# let rdb = dbOpen(
+#   PostgreSQL,
+#   "postgresql://user:password@localhost:5432/database",
+#   maxConnections,
+#   timeout,
+#   maxConnectionLifetime = 300,
+#   maxConnectionIdleTime = 300,
+# )
+
 # Using positional arguments
 # let rdb = dbOpen(PostgreSQL, "database", "user", "password", "localhost", 5432, maxConnections, timeout)
 

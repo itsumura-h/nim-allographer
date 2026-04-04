@@ -11,7 +11,9 @@ import ./mariadb_types
 
 proc dbOpen*(_: type MariaDB, database: string, user: string, password: string,
                   host: string, port: int, maxConnections=1, timeout=30,
-                  shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): MariadbConnections =
+                  shouldDisplayLog=false, shouldOutputLogFile=false, logDir="",
+                  maxConnectionLifetime=DEFAULT_CONN_MAX_LIFETIME_SECONDS,
+                  maxConnectionIdleTime=DEFAULT_CONN_MAX_IDLE_SECONDS): MariadbConnections =
   var conns = newSeq[Connection](maxConnections)
   for i in 0..<maxConnections:
     let conn = mariadb_rdb.init(nil)
@@ -29,36 +31,43 @@ proc dbOpen*(_: type MariaDB, database: string, user: string, password: string,
     conns[i] = Connection(
       conn: conn,
       isBusy: false,
-      createdAt: getTime().toUnix()
+      createdAt: getTime().toUnix(),
+      lastUsedAt: getTime().toUnix()
     )
   let pools = Connections(
     conns: conns,
     timeout: timeout,
+    maxConnectionLifetime: maxConnectionLifetime,
+    maxConnectionIdleTime: maxConnectionIdleTime,
+    info: ConnectionInfo(
+      database: database,
+      user: user,
+      password: password,
+      host: host,
+      port: port
+    ),
     waiters: initDeque[Future[void]](),
     columnTypeCache: initTable[string, seq[seq[string]]](),
     preparedCache: initTable[string, MariadbPreparedEntry](),
   )
-  let info = ConnectionInfo(
-    database:database,
-    user:user,
-    password:password,
-    host:host,
-    port:port
-  )
   result = MariadbConnections(
     pools: pools,
-    info: info,
+    info: pools.info,
     log: LogSetting(shouldDisplayLog:shouldDisplayLog, shouldOutputLogFile:shouldOutputLogFile, logDir:logDir)
   )
 
 
 proc dbOpen*(_:type MariaDB, url: string, maxConnections: int = 1, timeout=30,
-              shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): MariadbConnections =
-  return dbOpen(MariaDB, asDatabaseUrl(url), maxConnections, timeout, shouldDisplayLog, shouldOutputLogFile, logDir)
+              shouldDisplayLog=false, shouldOutputLogFile=false, logDir="",
+              maxConnectionLifetime=DEFAULT_CONN_MAX_LIFETIME_SECONDS,
+              maxConnectionIdleTime=DEFAULT_CONN_MAX_IDLE_SECONDS): MariadbConnections =
+  return dbOpen(MariaDB, asDatabaseUrl(url), maxConnections, timeout, shouldDisplayLog, shouldOutputLogFile, logDir, maxConnectionLifetime, maxConnectionIdleTime)
 
 
 proc dbOpen*(_:type MariaDB, databaseUrl: DatabaseUrl, maxConnections=1, timeout=30,
-             shouldDisplayLog=false, shouldOutputLogFile=false, logDir=""): MariadbConnections =
+             shouldDisplayLog=false, shouldOutputLogFile=false, logDir="",
+             maxConnectionLifetime=DEFAULT_CONN_MAX_LIFETIME_SECONDS,
+             maxConnectionIdleTime=DEFAULT_CONN_MAX_IDLE_SECONDS): MariadbConnections =
   let parsed = parseDatabaseUrl(databaseUrl)
   requireDatabaseUrlScheme(parsed, ["mariadb"], "MariaDB")
 
@@ -75,5 +84,7 @@ proc dbOpen*(_:type MariaDB, databaseUrl: DatabaseUrl, maxConnections=1, timeout
     timeout,
     shouldDisplayLog,
     shouldOutputLogFile,
-    logDir
+    logDir,
+    maxConnectionLifetime,
+    maxConnectionIdleTime
   )

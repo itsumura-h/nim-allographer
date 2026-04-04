@@ -1,0 +1,271 @@
+---
+description: 340-aged-connectionブランチでの開発時に読み込む
+alwaysApply: false
+---
+340-aged-connection コネクションプール改善調査
+===
+
+このブランチで実装することは以下の通りです。
+- 既存の SQLite / PostgreSQL / MySQL / MariaDB のコネクションプール実装を調査し、長寿命化した接続や壊れた接続を再利用し続けるリスクを洗い出す
+- https://please-sleep.cou929.nu/go-sql-db-connection-pool.html の `sql.DB` の考え方を参考に、allographer のプールへ取り込める改善点を整理する
+- 「使えないコネクションは破棄してから張り直す」方針を、公開 API を壊さず driver 内へ閉じ込めて実装できる設計に落とし込む
+- prepared statement cache / columnTypeCache / transaction 中の接続固定など、再接続時に影響する内部状態の整合条件を明確化する
+- 調査結果を踏まえて、各 driver の pool slot を差し替える実装へ進める
+
+## 進捗
+- [x] `.cursor/rules/project.mdc` / `.cursor/rules/branch.mdc` を確認した
+- [x] 現在のブランチ名 `340-aged-connection` に対応するブランチルールを新規作成した
+- [x] `src/allographer/query_builder/models/*/*_open.nim` を確認し、各 driver の接続生成方式を調査した
+- [x] `src/allographer/query_builder/models/*/*_exec.nim` を確認し、接続取得・返却・待機方式を調査した
+- [x] `src/allographer/query_builder/libs/*/*_impl.nim` を確認し、接続異常時の現在の振る舞いを調査した
+- [x] 参考記事の `sql.DB` の設計要点を読み、allographer へ適用できる論点を整理した
+- [x] 各 driver 共通で使える `ConnectionHealth` / `ConnectionFactory` 相当の内部構造を設計し、`Connections` に lifetime / factory 情報を持たせた
+- [x] 接続借用時の寿命判定・再生成手順を driver ごとに実装した
+- [x] prepared statement cache の slot 単位無効化を実装し、transaction 中は既存の固定接続をそのまま使う方針を維持した
+- [x] 影響範囲に応じた回帰テストを追加した
+
+## 参考資料
+- 参考記事
+  - https://please-sleep.cou929.nu/go-sql-db-connection-pool.html
+- 現在の接続初期化
+  - `src/allographer/query_builder/models/postgres/postgres_open.nim`
+  - `src/allographer/query_builder/models/sqlite/sqlite_open.nim`
+  - `src/allographer/query_builder/models/mysql/mysql_open.nim`
+  - `src/allographer/query_builder/models/mariadb/mariadb_open.nim`
+- 現在の接続プール管理
+  - `src/allographer/query_builder/models/postgres/postgres_exec.nim`
+  - `src/allographer/query_builder/models/sqlite/sqlite_exec.nim`
+  - `src/allographer/query_builder/models/mysql/mysql_exec.nim`
+  - `src/allographer/query_builder/models/mariadb/mariadb_exec.nim`
+- 現在の型定義
+  - `src/allographer/query_builder/models/postgres/postgres_types.nim`
+  - `src/allographer/query_builder/models/sqlite/sqlite_types.nim`
+  - `src/allographer/query_builder/models/mysql/mysql_types.nim`
+  - `src/allographer/query_builder/models/mariadb/mariadb_types.nim`
+- 接続利用時の低レベル実装
+  - `src/allographer/query_builder/libs/postgres/postgres_impl.nim`
+  - `src/allographer/query_builder/libs/sqlite/sqlite_impl.nim`
+  - `src/allographer/query_builder/libs/mysql/mysql_impl.nim`
+  - `src/allographer/query_builder/libs/mariadb/mariadb_impl.nim`
+
+## 調査結果・設計まとめ
+
+### 1. 現在の実装で見えたこと
+
+allographer のプールは、全 driver とも `dbOpen` 時に `maxConnections` 本を先に開いて配列へ保持する方式になっている。
+
+- PostgreSQL: `postgres_open.nim` で全接続を eager に生成し、`createdAt` を持つが、寿命判定にはまだ使っていない
+- SQLite: `sqlite_open.nim` でも同様に eager open で、`createdAt` は保持しているが再接続用途には未使用
+- MySQL: `mysql_open.nim` で eager open。`ConnectionInfo` はあるため再接続情報は保持しやすい
+- MariaDB: `mariadb_open.nim` も eager open。`ConnectionInfo` はある
+
+接続取得は、PostgreSQL / SQLite / MariaDB は waiter キューで通知ベース、MySQL はまだ `sleepAsync(10)` ポーリングで待っている。
+
+一方で、どの driver でも「借り出す前にその接続が寿命切れか」「壊れていないか」を判定して、不要なら捨てて張り直す仕組みはまだない。
+
+### 2. 参考記事から取り込める設計要点
+
+参考記事の `sql.DB` で特に重要だった論点は次の 5 点。
+
+1. idle 接続と利用中接続を分けて扱う
+2. 接続取得時に idle 接続を再利用し、必要なら新規接続する
+3. 待ち行列を持ち、上限到達時は空き通知で待つ
+4. `SetConnMaxLifetime` / `SetConnMaxIdleTime` 相当で、古い接続を使い回しすぎない
+5. 使えない接続は `ErrBadConn` 相当として捨て、再試行できるようにする
+
+allographer は 1. と 3. は一部できているが、4. と 5. が弱い。今回のブランチの主眼はここに置くのが自然。
+
+### 3. 今のプールで改善余地が大きい箇所
+
+#### 3.1 aged connection を判定する仕組みがない
+
+各 driver の `Connection` には `createdAt` があるが、現在は接続寿命の上限判定に使っていない。
+
+そのため、
+
+- DB サーバ側 `wait_timeout`
+- TCP 切断
+- 長時間放置された idle 接続
+- LB / proxy 配下でのコネクション寿命超過
+
+といった要因で「見た目はプール内にあるが、実際にはもう使えない接続」を抱え続ける可能性がある。
+
+特に MySQL は `mysql_impl.nim` の各所で `assert conn.ping == 0` を前提にしており、壊れた接続に対して graceful に「捨てて張り直す」制御へ入る前に異常化しやすい。
+
+#### 3.2 bad connection を pool slot 単位で交換できない
+
+現状は `self.pools.conns[i].conn` をそのまま実行系へ渡しており、途中で「この接続は再利用不可」と判断しても、その slot の中身を閉じて新しい接続に差し替える共通処理がない。
+
+必要なのは次のような流れである。
+
+1. 接続借用前に寿命・健全性を判定する
+2. 異常ならその slot の接続を close する
+3. 同じ slot に新しい接続を張り直す
+4. その slot にぶら下がる prepared statement 状態を無効化する
+5. その後でクエリ本体へ進む
+
+今は 2. から 4. の共通導線が存在しない。
+
+#### 3.3 reconnect に必要な情報が driver ごとに不揃い
+
+MySQL / MariaDB は `ConnectionInfo` を持つが、PostgreSQL / SQLite の `Connections` には再接続用の接続情報が保存されていない。
+
+したがって共通の「壊れた slot を再接続する」設計を入れるには、少なくとも内部的には各 driver の `Connections` に factory 情報を保持させる必要がある。
+
+例:
+
+- PostgreSQL: database / user / password / host / port / non-blocking 設定
+- SQLite: database path
+- MySQL / MariaDB: 既存 `ConnectionInfo` を `Connections` から参照できる形へ統一
+
+#### 3.4 prepared statement cache が再接続で壊れうる
+
+PostgreSQL / MySQL / MariaDB / SQLite は SQL 単位 cache を持ちつつ、物理 statement handle は conn index ごとに保持している。
+
+このため slot `i` の接続を捨てて張り直すなら、少なくとも slot `i` に紐づく prepared 情報はクリアしないといけない。
+
+- PostgreSQL: `stmtNames[i]` を空に戻す必要がある
+- MySQL / MariaDB: `stmts[i]` を close して nil に戻す必要がある
+- SQLite: `stmts[i]` を finalize して nil に戻す必要がある
+
+再接続だけして cache を残すと、「古い接続に prepare されたハンドルを新しい接続で再利用しようとする」不整合になる。
+
+#### 3.5 transaction 中は自動再接続の扱いを厳格に分ける必要がある
+
+通常クエリでは bad connection を破棄して retry できる余地があるが、transaction 中は話が変わる。
+
+- `BEGIN` 後の接続が死んだら、その transaction 文脈は失われる
+- 同じ API 呼び出しを別接続へ載せ替えても、意味上は同じ transaction ではない
+
+したがって transaction 中は、
+
+- 自動再接続して継続してよい場面
+- 明示的に `DbError` を返して transaction abort を促す場面
+
+を分ける必要がある。初期方針としては「transaction 中は bad connection を検知したら再接続はしても自動リトライしない」が安全。
+
+### 4. このブランチで採るべき基本方針
+
+#### 方針A: pool slot を生かし、接続だけ差し替える
+
+公開 API を崩さないため、接続プール自体を大きく作り変えるより、既存の `conns[i]` 配列を維持したまま「slot 内の接続実体だけ交換する」方がよい。
+
+これにより、
+
+- `getFreeConn` / `returnConn` の外形は維持できる
+- prepared cache の添字も維持できる
+- driver 差分を `*_open.nim` / `*_exec.nim` / `*_types.nim` に閉じ込めやすい
+
+#### 方針B: 借用時に寿命判定、実行失敗時に bad connection 判定を入れる
+
+初回実装は、次の 2 箇所で接続再生成を行うのがよい。
+
+1. `getFreeConn` で idle 接続を貸し出す直前
+2. クエリ / prepare 実行中に「接続断」と判断できる例外を受けた直後
+
+1 は proactive、2 は reactive な対策である。両方あると「古い接続をなるべく使わない」と「想定外に死んだ接続をすぐ交換する」の両立ができる。
+
+#### 方針C: ping 常用よりも age/lifetime と error 分類を優先する
+
+毎回 ping してから貸し出す設計は単純だが、MySQL/MariaDB では同期的な `ping` が待機コストや event loop 停止要因になりうる。
+
+そのため初手は、
+
+- `createdAt` ベースの `maxLifetime`
+- 必要なら `lastUsedAt` ベースの `maxIdleTime`
+- driver 固有の bad connection エラー分類
+
+を優先し、health check は「寿命超過時のみ」または「失敗後の再接続確認時のみ」に寄せるほうがよい。
+
+### 5. 具体的な内部設計案
+
+#### 5.1 `Connections` に再接続用メタデータを持たせる
+
+各 driver の `Connections` に、少なくとも次を持たせる。
+
+- 接続生成に必要な情報
+- `maxLifetimeSeconds`
+- `maxIdleSeconds`
+- `lastUsedAt` または `returnedAt`
+- 必要なら `isBroken`
+
+既存 `createdAt` はそのまま使う。
+
+#### 5.2 `replaceConn(i)` 相当の内部 proc を driver ごとに用意する
+
+責務:
+
+1. slot `i` の古い接続を close
+2. slot `i` に紐づく prepared state を破棄
+3. 新しい物理接続を開く
+4. `createdAt` / `isBusy` / `lastUsedAt` を初期化
+
+この proc は driver ごとの差分が大きいので、共通化しすぎず各 driver 実装へ置く。
+
+#### 5.3 `getFreeConn` に「借り出し前の再生成」フックを入れる
+
+通知ベース待機の有無に関係なく、空き slot を見つけたタイミングで次を行う。
+
+1. `isBusy = true`
+2. `shouldRecycle(conn)` を判定
+3. true なら `replaceConn(i)`
+4. 成功した slot を返す
+
+ここで失敗した場合は、その slot を unusable のまま返さず、別 slot 探索または例外へ進める。
+
+#### 5.4 実行ラッパで bad connection を捕捉して slot を再初期化する
+
+`query`, `exec`, `prepare` など接続を直接使う箇所は多いので、driver ごとに
+
+- `withBorrowedConn`
+- `runWithConnRecovery`
+
+のような内部ラッパへ寄せる余地がある。
+
+このラッパは、
+
+1. 実行
+2. bad connection 例外なら slot を破棄
+3. 非 transaction 時のみ 1 回だけ再接続して再試行
+
+を担当する。
+
+### 6. 影響の大きさから見た優先順位
+
+優先度 P0:
+- MySQL / MariaDB / PostgreSQL / SQLite で「壊れた接続を破棄して張り直す」最小導線を作る
+- prepared statement の conn index 単位 invalidation を入れる
+- transaction 中は自動リトライしない
+
+優先度 P1:
+- `maxLifetime` を導入して aged connection の再利用を減らす
+- `maxIdleTime` を導入する
+- MySQL の pool wait を通知ベースへ寄せる
+
+優先度 P2:
+- idle cleaner の別タスク化
+- lazy open 化
+- 統計情報の公開
+
+今回のブランチ名と依頼内容からすると、まずは P0 と P1 の前半までを対象にするのが適切。
+
+### 7. 現時点の結論
+
+現在のコネクションプールで最も改善効果が大きいのは、「接続をただ保持する」のではなく、「貸し出し時と失敗時に、その接続がまだ使えるかを判断し、ダメなら slot ごと再初期化する」層を追加することだと判断した。
+
+参考記事の `sql.DB` のうち、allographer にいま不足しているのは主に次の部分である。
+
+- 接続寿命管理
+- bad connection の廃棄と再試行
+- idle connection の掃除
+
+### 8. 実装後の方針
+
+- pool ごとに `maxConnectionLifetime` / `maxConnectionIdleTime` を持たせ、既定値は 300 秒にした
+- 借用時に `createdAt` / `lastUsedAt` を見て aged connection を `refreshConn` で差し替える
+- 差し替え時は prepared statement cache を slot 単位で無効化し、古い statement handle を新しい physical connection に持ち込まない
+- transaction 中は既存の接続固定を優先し、途中で別 slot に載せ替える振る舞いは入れない
+
+特に今回の要望である「コネクションが使えない時は破棄してから、新しくコネクションを張り直す」は、driver ごとの `replaceConn(i)` と、prepared cache invalidation を軸に設計するのが最も自然である。
+
+一方で transaction 中の自動再接続は意味論を壊しやすいため、通常クエリと同列には扱わない。ここは安全側に倒し、まずは「通常クエリのみ 1 回まで回復可能、transaction 中は即エラー」を初期設計とする。

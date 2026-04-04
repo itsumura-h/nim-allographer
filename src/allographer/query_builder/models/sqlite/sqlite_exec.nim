@@ -48,12 +48,61 @@ proc poolRemainingMs(deadline: MonoTime): int =
   if result < 1:
     result = 1
 
+
+proc nowUnix(): int64 =
+  getTime().toUnix()
+
+
+proc hasConnExpired(self: Connections, conn: Connection): bool =
+  let now = nowUnix()
+  if self.maxConnectionLifetime > 0 and now - conn.createdAt >= self.maxConnectionLifetime.int64:
+    return true
+  if self.maxConnectionIdleTime > 0 and now - conn.lastUsedAt >= self.maxConnectionIdleTime.int64:
+    return true
+  return false
+
+
+proc openSqliteConn(self: Connections): PSqlite3 =
+  var db: PSqlite3
+  discard sqlite_rdb.open(self.database.cstring, db)
+  if db.isNil:
+    raise newException(DbError, "SQLite connection could not be opened")
+  return db
+
+
+proc clearPreparedSlot(self: Connections, connI: int) =
+  for entry in self.preparedCache.values:
+    if connI < 0 or connI >= entry.stmts.len:
+      continue
+    if not entry.stmts[connI].isNil:
+      discard finalize(entry.stmts[connI])
+      entry.stmts[connI] = nil
+
+
+proc refreshConn(self: Connections, connI: int): bool =
+  if connI < 0 or connI >= self.conns.len:
+    return false
+  let db = openSqliteConn(self)
+  let oldConn = self.conns[connI].conn
+  self.clearPreparedSlot(connI)
+  if not oldConn.isNil:
+    discard sqlite_rdb.close(oldConn)
+  self.conns[connI].conn = db
+  self.conns[connI].createdAt = nowUnix()
+  self.conns[connI].lastUsedAt = self.conns[connI].createdAt
+  return true
+
 proc getFreeConn(self: SqliteConnections | SqliteQuery | RawSqliteQuery): Future[int] {.async.} =
   let deadline = getMonoTime() + initDuration(seconds = self.pools.timeout)
   while true:
     for i in 0 ..< self.pools.conns.len:
       if not self.pools.conns[i].isBusy:
         self.pools.conns[i].isBusy = true
+        if self.pools.hasConnExpired(self.pools.conns[i]):
+          try:
+            discard self.pools.refreshConn(i)
+          except CatchableError:
+            discard
         when defined(check_pool):
           echo "=== getFreeConn ", i
         return i
@@ -73,6 +122,7 @@ proc getFreeConn(self: SqliteConnections | SqliteQuery | RawSqliteQuery): Future
 proc returnConn(self: SqliteConnections | SqliteQuery | RawSqliteQuery, i: int) {.async.} =
   if i != errorConnectionNum:
     self.pools.conns[i].isBusy = false
+    self.pools.conns[i].lastUsedAt = nowUnix()
     wakeOnePoolWaiter(self.pools)
 
 
